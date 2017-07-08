@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mobile',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ ROOT_URLCONF = 'pters.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),'pters.templates',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,5 +122,5 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
   os.path.join(BASE_DIR,"static"),
-  '/home/ec2-user/PTers/static/',
+  'static/',
 )
