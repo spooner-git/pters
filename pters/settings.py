@@ -11,9 +11,19 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+<<<<<<< HEAD
 import pymysql
 pymysql.install_as_MySQLdb()
 
+=======
+#import MySQLdb
+#try:
+#import configparser as ConfigParser
+#import pymysql
+#pymysql.install_as_MySQLdb()
+#except ImportError:
+#    pass
+>>>>>>> eae06f78e9c52f4c614dfa1d570152ff1c50d1b3
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -81,10 +91,19 @@ DATABASES = {
     'default': {
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+<<<<<<< HEAD
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pters',
         'USER': 'bebep',
         'PASSWORD': 'bebep123',
+=======
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',    
+        'ENGINE' : 'django.db.backends.mysql',
+        'NAME': 'pters',
+        'USER': 'bebep',
+        'PASSWORD': 'bebep123',
+        #'HOST': 'bebepdb.cadl82fap4pj.ap-northeast-2.rds.amazonaws.com',
+>>>>>>> eae06f78e9c52f4c614dfa1d570152ff1c50d1b3
         'HOST': 'bebep-app.cq5h6gp98l9i.us-east-2.rds.amazonaws.com',
         'PORT': '3306',
     }
