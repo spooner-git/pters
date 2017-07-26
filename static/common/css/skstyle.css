@@ -1,0 +1,322 @@
+/*
+@font-face{
+	font-family:'NotoBlack';
+	src:url('../fonts/NotoSansCJKkr-Black.otf') format('opentype');
+}
+
+
+
+@font-face{
+	font-family:'NotoDemiLight';
+	src:url('../fonts/NotoSansCJKkr-DemiLight.otf') format('opentype');
+}
+
+@font-face{
+	font-family:'NotoLight';
+	src:url('../fonts/NotoSansCJKkr-Light.otf') format('opentype');
+}
+
+@font-face{
+	font-family:'NotoMedium';
+	src:url('../fonts/NotoSansCJKkr-Medium.otf') format('opentype');
+}
+
+@font-face{
+	font-family:'NotoRegular';
+	src:url('../fonts/NotoSansCJKkr-Regular.otf') format('opentype');
+}
+
+
+@font-face{
+	font-family:'NotoBold';
+	src:url('../fonts/NotoSansCJKkr-Bold.otf') format('opentype');
+}
+
+@font-face{
+	font-family:'NotoThin';
+	src:url('../fonts/NotoSansCJKkr-Thin.otf') format('opentype');
+}
+*/
+
+
+
+
+
+
+body{
+	padding-top: 50px;
+	width: 100%;
+	
+}
+
+#upbutton{
+	float:left;
+	left: 2%;
+}
+
+#upbutton-alarm{
+	float:right;
+	right: 2%;
+	margin-left: 15px;
+	margin-right: 0px;
+	margin-top:0px;
+	margin-bottom: 0px;
+}
+
+#uptext{
+	color: black;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	max-width: 250px;
+	font-weight: 600;
+	font-size: 18px;
+	text-align: center;
+	max-height: 48px;
+}
+
+#date{
+	padding-top: 4%;
+	padding-bottom: 4%;
+	height: auto;
+
+}
+
+#monthText{
+	color : #fe4e65;
+	font-size: 19.5px;
+	font-weight: 700;
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	top: 50%;
+}
+
+#yearText{
+	color : #ffffff;
+	font-size: 15px;
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	top: 25%;
+}
+
+#ymdText{
+	position: relative;
+	height: auto;
+}
+
+
+
+.week-style{ /*week 스타일*/
+	background-color: transparent;
+	position: relative;
+	width: 100%;
+	border-bottom: 1px solid #cccccc;
+	font-size: 14.4px;
+	height: 80px;
+	padding-bottom: 3%;
+}
+
+.calendar-style{  /*week 스타일하위 */
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+.calendar-day-style{  /*왈화수목금토일 스타일 */
+	font-size: 12px;
+}
+
+.calendar_image{
+	width: 100%;
+	margin: auto;
+}
+
+.weekday_style{
+	font-weight: 600;
+	font-size: 1em;
+}
+
+
+#calendar{
+	background-color: rgba(0,0,0,0);
+	width: 100%;
+	padding-left: 20px;
+	padding-right:20px;
+}
+
+
+.cal_box{
+	background-color: black;
+	height: 0px;
+	width: 100%;
+	position: absolute;
+	top:80%;
+}
+
+td{
+	width: 14.3%;
+	color : #282828;
+}
+
+.nextDates{
+	color : #b3b3b3 !important;
+}
+
+.prevDates{
+	color : #b3b3b3 !important;
+}
+
+.sunday{
+	color : #d21245 !important;
+}
+
+.saturday{
+	color : #115a8e !important;
+}
+
+.dateDisabled{
+	display:block;
+	margin:auto;
+	width: 30px;
+	height: 30px;
+	background: #f4f4f4;
+	position: absolute;
+	top: 0;
+	bottom:0;
+	left: 0;
+	right: 0;
+	border-radius: 50%;
+	z-index: -1;
+}
+
+.dateMytime{
+	display:block;
+	margin:auto;
+	width: 30px;
+	height: 30px;
+	background: #fe4e65;
+	position: absolute;
+	top: 0;
+	bottom:0;
+	left: 0;
+	right: 0;
+	border-radius: 50%;
+	opacity: 0.2;
+	z-index: -1;
+}
+
+
+
+.today{
+	position:absolute;
+	display: block;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	border-top: 3px solid #fe4e65;
+	width: 90%;
+	color: #fe4e65;
+	font-weight: 600;
+	font-size: 78%;
+	margin:auto;
+
+}
+
+
+.container-fluid>.navbar-collapse, .container-fluid>.navbar-header, .container>.navbar-collapse, .container>.navbar-header{
+	position: relative;
+}
+
+
+
+/*네비게이션바 색상  */
+.navbar-default{
+	background-color: white;
+}
+
+
+/*네비게이션바 메뉴 버튼 색상 접혔을때*/
+.navbar-default .navbar-toggle.collapsed .icon-bar{
+	background-color: rgb(64,186,210);
+}
+/*네비게이션바 메뉴 버튼 색상 펼쳤을때*/
+.navbar-default .navbar-toggle .icon-bar{
+	background-color: rgb(250,185,0);
+}
+
+/*네비게이션바 메뉴 버튼 색상 펼쳤을때 배경색상*/
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover{
+	background-color: rgb(64,186,210);
+}
+
+
+.navbar-default .navbar-toggle.collapsed:hover{
+	background-color: transparent;
+}
+
+
+
+.navbar-default .navbar-toggle{
+	border: 0px;
+}
+
+#navbar{
+	position: absolute;
+	background-color: rgb(64,186,210);
+	width: 200px;
+	max-height: 500px;
+}
+
+#navbar-alarm{
+	position: absolute;
+	background-color: rgb(64,186,210);
+	width: 250px;
+	max-height: 500px;	
+	right: 15px
+}
+
+.navbar-listcustom{
+	text-align: center;
+	font-size: 16px;
+	font-weight: 600;
+	background-color: rgb(217,241,246);
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .navbar-collapse.collapse.in{
+    	display:block!important;
+    }
+
+
