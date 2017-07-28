@@ -14,8 +14,8 @@ import os
 #import MySQLdb
 #try:
 #import configparser as ConfigParser
-#import pymysql
-#pymysql.install_as_MySQLdb()
+import pymysql
+pymysql.install_as_MySQLdb()
 #except ImportError:
 #    pass
 

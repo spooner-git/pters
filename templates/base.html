@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {% load static %}
-    <title>{% block title %}Pters by Bebep {% endblock %}</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="{% static "common/css/bootstrap.min.css" %}">
-    <script src="{% static "common/js/jquery-3.1.1.min.js" %} "></script>
-    <script src="{% static "common/js/bootstrap.min.js" %} "></script>
+    <head>
+        {% load static %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
 
-</head>
+        <title>{% block title %}PTers-Trainee Mode{% endblock %}</title>
 
-<body>
-    <div id="navbar">
+        <!-- Bootstrap core CSS -->
+        <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
+        <link rel="stylesheet" href={% static "common/css/skstyle.css" %}>
+        <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
+        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+              <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+              <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+    </head>
+
+    <body>
         {% block navbar %}
         {% endblock %}
-    </div>
 
-    <div id="content">
         {% block content %}
         {% endblock %}
-    </div>
 
-    <div id="footer">
         {% block footer %}
-            <footer class="container-fluid text-center">
-              <p>© 2017 BEBEP Project</p>
+            <footer>
+                <p>© 2017 BEBEP Project</p>
             </footer>
+
         {% endblock %}
-    </div>
-</body>
+    </body>
 
 </html>
