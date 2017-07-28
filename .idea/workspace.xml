@@ -2,53 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6960d82d-c9ed-4849-a7dc-d680f584a283" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/css/blueimp-gallery-indicator.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/css/blueimp-gallery-video.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/css/blueimp-gallery.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/css/blueimp-gallery.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/css/blueimp-gallery.min.css.map" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/css/demo/demo.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/img/error.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/img/error.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/img/loading.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/img/play-pause.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/img/play-pause.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/img/video-play.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/img/video-play.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/jason/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/blueimp-gallery-fullscreen.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/blueimp-gallery-indicator.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/blueimp-gallery-video.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/blueimp-gallery-vimeo.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/blueimp-gallery-youtube.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/blueimp-gallery.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/blueimp-gallery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/blueimp-gallery.min.js.map" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/blueimp-helper.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/demo/demo.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/jquery-3.1.1.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/jquery.blueimp-gallery.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/jquery.blueimp-gallery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/jquery.blueimp-gallery.min.js.map" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/common/js/vendor/jquery.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.eot" afterPath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.eot" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.ttf" afterPath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.ttf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.woff" afterPath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.woff" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.woff2" afterPath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.woff2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pters/settings.py" afterPath="$PROJECT_DIR$/pters/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pters/views.py" afterPath="$PROJECT_DIR$/pters/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/css/bootstrap-theme.css" afterPath="$PROJECT_DIR$/static/common/css/bootstrap-theme.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/css/bootstrap-theme.css.map" afterPath="$PROJECT_DIR$/static/common/css/bootstrap-theme.css.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/css/bootstrap-theme.min.css" afterPath="$PROJECT_DIR$/static/common/css/bootstrap-theme.min.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/css/bootstrap.css" afterPath="$PROJECT_DIR$/static/common/css/bootstrap.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/css/bootstrap.css.map" afterPath="$PROJECT_DIR$/static/common/css/bootstrap.css.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/css/bootstrap.min.css" afterPath="$PROJECT_DIR$/static/common/css/bootstrap.min.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.svg" afterPath="$PROJECT_DIR$/static/common/fonts/glyphicons-halflings-regular.svg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/js/bootstrap.js" afterPath="$PROJECT_DIR$/static/common/js/bootstrap.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/js/bootstrap.min.js" afterPath="$PROJECT_DIR$/static/common/js/bootstrap.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/common/js/npm.js" afterPath="$PROJECT_DIR$/static/common/js/npm.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/base.html" afterPath="$PROJECT_DIR$/templates/base.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/main_trainee.html" afterPath="$PROJECT_DIR$/templates/main_trainee.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -69,8 +24,8 @@
       <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pters/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="27" column="26" lean-forward="false" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
+            <state relative-caret-position="162">
+              <caret line="25" column="39" lean-forward="false" selection-start-line="25" selection-start-column="39" selection-end-line="25" selection-end-column="39" />
               <folding>
                 <element signature="e#309#318#0" expanded="true" />
               </folding>
@@ -81,11 +36,10 @@
       <file leaf-file-name="main_trainee.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/main_trainee.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="21" lean-forward="true" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
+            <state relative-caret-position="546">
+              <caret line="52" column="24" lean-forward="true" selection-start-line="52" selection-start-column="24" selection-end-line="52" selection-end-column="24" />
               <folding>
-                <element signature="n#style#0;n#img#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#img#0;n#div#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -111,11 +65,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="skcalendar.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="skcalendar.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/common/js/skcalendar.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="79" column="21" lean-forward="false" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="21" />
+            <state relative-caret-position="310">
+              <caret line="88" column="42" lean-forward="false" selection-start-line="88" selection-start-column="42" selection-end-line="88" selection-end-column="42" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <marker date="1501070280000" expanded="true" signature="3784:3809" ph="..." />
@@ -137,7 +91,7 @@
       <file leaf-file-name="swiper.min.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/common/js/swiper.min.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
+            <state relative-caret-position="-12312">
               <caret line="18" column="43" lean-forward="false" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="43" />
               <folding />
             </state>
@@ -157,12 +111,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="base.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/base.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="333">
+              <caret line="66" column="36" lean-forward="false" selection-start-line="66" selection-start-column="36" selection-end-line="66" selection-end-column="36" />
+              <folding>
+                <element signature="n#style#0;n#img#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -170,8 +126,8 @@
       <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+            <state relative-caret-position="60">
+              <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -193,6 +149,7 @@
       <find>yearText</find>
       <find>map</find>
       <find>monthText</find>
+      <find>skcalendar</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -203,10 +160,10 @@
       <list>
         <option value="$PROJECT_DIR$/templates/home.html" />
         <option value="$PROJECT_DIR$/pters/urls.py" />
-        <option value="$PROJECT_DIR$/templates/base.html" />
         <option value="$PROJECT_DIR$/pters/views.py" />
         <option value="$PROJECT_DIR$/pters/settings.py" />
         <option value="$PROJECT_DIR$/templates/main_trainee.html" />
+        <option value="$PROJECT_DIR$/templates/base.html" />
       </list>
     </option>
   </component>
@@ -799,7 +756,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="19" column="22" lean-forward="false" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -853,7 +812,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="19" column="22" lean-forward="true" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -930,32 +891,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pters/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="27" column="26" lean-forward="false" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
-          <folding>
-            <element signature="e#309#318#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/common/js/skstyle.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -982,7 +917,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/static/common/js/swiper.min.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
+        <state relative-caret-position="-12312">
           <caret line="18" column="43" lean-forward="false" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="43" />
           <folding />
         </state>
@@ -999,24 +934,51 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/main_trainee.html">
+    <entry file="file://$PROJECT_DIR$/static/common/js/skcalendar.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="21" lean-forward="true" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
+        <state relative-caret-position="310">
+          <caret line="88" column="42" lean-forward="false" selection-start-line="88" selection-start-column="42" selection-end-line="88" selection-end-column="42" />
           <folding>
-            <element signature="n#style#0;n#img#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#!!doc" expanded="true" />
+            <marker date="1501070280000" expanded="true" signature="3784:3809" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/common/js/skcalendar.js">
+    <entry file="file://$PROJECT_DIR$/pters/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="79" column="21" lean-forward="false" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="21" />
+        <state relative-caret-position="162">
+          <caret line="25" column="39" lean-forward="false" selection-start-line="25" selection-start-column="39" selection-end-line="25" selection-end-column="39" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <marker date="1501070280000" expanded="true" signature="3784:3809" ph="..." />
+            <element signature="e#309#318#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/main_trainee.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="546">
+          <caret line="52" column="24" lean-forward="true" selection-start-line="52" selection-start-column="24" selection-end-line="52" selection-end-column="24" />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="333">
+          <caret line="66" column="36" lean-forward="false" selection-start-line="66" selection-start-column="36" selection-end-line="66" selection-end-column="36" />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
