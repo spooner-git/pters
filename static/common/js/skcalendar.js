@@ -18,6 +18,8 @@ $(document).ready(function(){
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 	var currentDate = date.getDate(); //오늘 날짜
 	var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
+	
+
 	var weekDay = new Array('일','월','화','수','목','금','토');
 	var firstDayInfoPrevMonth = new Date(currentYear,currentMonth-1,1);
 	var firstDayPrevMonth = firstDayInfoPrevMonth.getDay();
@@ -26,6 +28,7 @@ $(document).ready(function(){
 	var currentPageMonth = currentMonth+1; //현재 달
 	var disabledDates = new Array('2017_7_3','2017_7_11','2017_7_20','2017_7_25','2017_7_31');
 	var mytimeDates = new Array('2017_7_5','2017_7_7','2017_7_10','2017_7_12','2017_7_14','2017_7_17','2017_7_19','2017_7_21','2017_7_24','2017_7_26','2017_7_28');
+
 
 	//currentPageMonth = 1,2,3,4,5,6,7,8,9,10,11,12
 
@@ -40,7 +43,7 @@ $(document).ready(function(){
 	alltdRelative(); //모든 td의 스타일 position을 relative로
 	dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
 	dateMytime(); //나의 PT일정에 핑크색 동그라미 표시
-	monthText();
+	monthText(); //상단에 연, 월 표시
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
@@ -106,15 +109,18 @@ $(document).ready(function(){
 		};
 
 		calendarSetting(Year,Month);
-
 	}; //calTable_Set
+
 
 	function calendarSetting(Year,Month){ //캘린더 테이블에 연월에 맞게 날짜 채우기
 		var currentPageFirstDayInfo = new Date(Year,Month-1,1); //현재달의 1일에 대한 연월일시간등 전체 정보
 		var firstDayCurrentPage = currentPageFirstDayInfo.getDay(); //현재달 1일의 요일
 		
-
-		//id="week'+i+Year+Month+'child"
+		if( (Year % 4 == 0 && Year % 100 != 0) || Year % 400 == 0 ){  //윤년
+			lastDay[1] = 29;
+		}else{
+			lastDay[1] = 28;
+		}
 
 
 		//1. 현재달에 전달 마지막 부분 채우기
@@ -186,7 +192,6 @@ $(document).ready(function(){
 		var textMonth = currentYMD.substr(9,2); //7
 		$('#yearText').text(textYear);
 		$('#monthText').text(textMonth+'월');
-
 	};
 
 
@@ -209,3 +214,9 @@ $(document).ready(function(){
 //monthText함수 추가 : 맨위에 연, 월을 표기하는 태그를 생성/업데이트 하는 함수
 //css 달력 디자인 반영
 //css 달력 디자인 반영위한 html 구조 수정
+//2017.07.25 업데이트 내역
+//html에서 상단 img와 달력 컨테이너가 겹치는 것 해결(absolute로 설정하면 부모가 height를 0을 가짐)
+//2017.07.26 업데이트 내역
+//해가 넘어가서 1월의 첫주에 12월 마지막주 일자가 표시가 안되는 것 해결 
+//2017.07.27 업데이트 내역
+//윤달 기능 적용
