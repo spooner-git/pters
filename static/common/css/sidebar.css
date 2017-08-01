@@ -1,0 +1,142 @@
+#user_name{
+    color: #fe4e65;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    position: absolute;
+    top: 57%;
+    width: 100%;
+}
+
+#welcome{
+    color: #fe4e65;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    position: absolute;
+    top: 68%;
+    width: 100%;
+
+}
+.sidebar_upper img{
+    width: 50px;
+   
+    margin: auto;
+} 
+
+.sidebar_upper div{
+    width: 100%;
+    position: absolute;
+    top: 25%;
+    text-align: center;
+
+}
+
+
+
+
+.outer_Sidenav{
+    background: black !important;
+    opacity: 0.8;
+
+}
+
+.sidebar_text{
+    color:#282828;
+    font-weight: 600;
+    text-align: center;
+
+   
+}
+
+.sidebar_upper{
+    height: 33%;
+    background: transparent;
+    position: relative;
+}
+
+
+.sidebar_icon{
+    position:absolute;
+    left: 33%;
+    padding: 15px 30px 15px 0px;
+    width: 50px;
+   
+}
+
+.sidebar_div{
+    height: 50px;
+    border-top: 0.5px solid #cccccc;
+    background-color: #ffffff;
+}
+
+.sidebar_div_last{
+   position: absolute;
+   bottom: 0%;
+   width: 100%;
+   border-top: 0px;
+}
+
+.sidebar_div_last1{
+    width: 80%;
+    border-top: 0.5px solid #cccccc
+}
+
+.sidebar_div_last2{
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    width: 16.7%;
+    height: 50px;
+    margin: auto;
+    border-top: 0.5px solid #cccccc
+}
+
+.sidebar_icon_setting{
+    left: 20.8%;
+    padding: 15px 30px 15px 0px;
+}
+
+.sidebar_icon_info{
+    
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #282828;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    transition: 0.5s;
+    padding-top: 0px;
+}
+
+.sidenav a {
+    padding: 16px 8px 18px 57px;
+    text-decoration: none;
+    display: block;
+    transition: 0.3s;
+}
+
+/* Sidebar에서 선택했을때 선택된 Text 색상 변경
+.sidenav a:hover, .offcanvas a:focus{
+    color: #cccccc;
+} 
+*/
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 3%;
+    font-size: 50px;
+    color: #ffffff;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}

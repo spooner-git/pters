@@ -14,6 +14,7 @@
         <!-- Bootstrap core CSS -->
         <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
         <link rel="stylesheet" href={% static "common/css/skstyle.css" %}>
+        <link rel="stylesheet" href={% static "common/css/sidebar.css" %}>
         <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
         <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -23,38 +24,45 @@
         <![endif]-->
 
     </head>
-
     <body>
     {% block navbar %}
         <nav class="navbar navbar-fixed-top navbar-default">
             <div class="container">
                 <div class="navbar-header">
-                    <button id="upbutton" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                    <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="openNav()">
+                        <span class="icon-bar" style="width: 20.5px;"></span>
+                        <span class="icon-bar" style="width:60%;"></span>
+                        <span class="icon-bar" style="width: 20.5px;"></span>
                     </button>
                     <a id="uptext" class="navbar-brand" href="#">유재석 회원님 월간 일정</a>
-                    <button id="upbutton-alarm" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-alarm" aria-expanded="false" aria-controls="navbar">
+                    <button id="upbutton-alarm" type="button">
                         <img src={% static "common/res/bell.png" %} style="width:30px;">
                     </button>
+                    <div id="outer_Sidenav" class="sidenav outer_Sidenav">
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    </div>
+
+                    <div id="inner_Sidenav" class="sidenav">
+                        <div class="sidebar_upper">
+                            <div><img src={% static "common/res/icon-pf.png" %} alt="#"></div>
+                            <div id="user_name"></div>
+                            <div id="welcome"></div>
+                        </div>                      
+                        <div class="sidebar_div"><img src={% static "common/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">오늘 일정</a></div>
+                        <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">주간 일정</a></div>
+                        <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">월간 일정</a></div>
+                        <div class="sidebar_div"><img src={% static "common/res/icon-user-setting.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">회원 관리</a></div>
+                        <div class="sidebar_div" style="height: 100%;"></div>
+                        <div class="sidebar_div sidebar_div_last">
+                          <div class="sidebar_div_last1">
+                            <img src={% static "common/res/icon-setting.png" %} class="sidebar_icon sidebar_icon_setting" alt="#"><a href="#" class="sidebar_text">서비스 설정</a>
+                          </div>
+                          <div class="sidebar_div_last2">
+                            <img src={% static "common/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon"></div>
+                          </div>
+                    </div>
+                    
                 </div>
-                <div id="navbar" class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li><img src={% static "common/res/profile.jpg" %} alt="profile" style="display: block;width: 150px; margin-left: auto; margin-right: auto;margin-top: 10px;margin-bottom: 20px;"></li>
-                        <li><a href="./page_month/PTers_month.html" class="navbar-listcustom" id="month">오늘 일정</a></li>
-                        <li><a href="#" class="navbar-listcustom">일정 관리</a></li>
-                        <li><a href="#" class="navbar-listcustom">회원 명단</a></li>
-                        <li><a href="#" class="navbar-listcustom">운동 목록</a></li>
-                        <li><a href="#" class="navbar-listcustom">설정</a></li>
-                    </ul>
-                </div>
-                <div id="navbar-alarm" class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="#" class="navbar-listcustom" style="background-color: transparent;">새로운 알림이 없습니다.</a></li>
-                    </ul>
-                </div><!-- /.nav-collapse -->
             </div><!-- /.container -->
         </nav><!-- /.navbar -->
     {% endblock %}
@@ -73,6 +81,26 @@
     <script type="text/javascript" src={% static "common/js/jquery.swipe.js" %}></script>
     <script type="text/javascript" src={% static "common/js/jquery.touch.js" %}></script>
     <script type="text/javascript" src={% static "common/js/swiper.jquery.min.js" %}></script>
+    <script type="text/javascript" src={% static "common/js/skstyle.js" %}></script>
+    <script>
+             function openNav(){
+               $("#outer_Sidenav").css("width","100%");
+               $("#inner_Sidenav").css("width","80%");
+               $(".sidebar_text").css({'font-size':"15px",'opacity':"1"})
+               $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
+               $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
+             }
+
+/* Set the width of the side navigation to 0 */
+             function closeNav(){
+              $(".sidebar_icon,.sidebar_upper img").css('opacity','0')
+              $("#outer_Sidenav").css("width","0");
+              $("#inner_Sidenav").css("width","0");
+              $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"})
+
+             }; 
+    </script>
+
 
     {% block js_footer %}
     {% endblock %}

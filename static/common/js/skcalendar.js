@@ -26,8 +26,8 @@ $(document).ready(function(){
 	var firstDayInfoNextMonth = new Date(currentYear,currentMonth+1,1);
 	var firstDayNextMonth = firstDayInfoNextMonth.getDay();
 	var currentPageMonth = currentMonth+1; //현재 달
-	var disabledDates = new Array('2017_7_3','2017_7_11','2017_7_20','2017_7_25','2017_7_31');
-	var mytimeDates = new Array('2017_7_5','2017_7_7','2017_7_10','2017_7_12','2017_7_14','2017_7_17','2017_7_19','2017_7_21','2017_7_24','2017_7_26','2017_7_28');
+	var disabledDates = new Array('2017_7_3','2017_7_11','2017_7_20','2017_7_25','2017_7_31','2017_8_2','2017_8_13','2017_8_21');
+	var mytimeDates = new Array('2017_7_5','2017_7_7','2017_7_10','2017_7_12','2017_7_14','2017_7_17','2017_7_19','2017_7_21','2017_7_24','2017_7_26','2017_7_28','2017_8_3','2017_8_11','2017_8_20','2017_8_30');
 
 
 	//currentPageMonth = 1,2,3,4,5,6,7,8,9,10,11,12
@@ -136,7 +136,11 @@ $(document).ready(function(){
 		
 		//2. 첫번째 주 채우기
 		for(var i=1; i<=7-firstDayCurrentPage; i++){
-			$('#week1'+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+i+'>'+'<span>'+i+'</span>'+'<div>'+'</div>'+'</td>');
+			if(i==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표시하기
+				$('#week1'+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+i+'>'+'<span>'+i+'</span>'+'<div>'+'</div>'+'<span class="today">TODAY</span>'+'</td>');
+			}else{
+				$('#week1'+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+i+'>'+'<span>'+i+'</span>'+'<div>'+'</div>'+'</td>');
+			}
 		};
 
 		//3.현재달에 두번째 주부터 나머지 모두 채우기
@@ -220,3 +224,6 @@ $(document).ready(function(){
 //해가 넘어가서 1월의 첫주에 12월 마지막주 일자가 표시가 안되는 것 해결 
 //2017.07.27 업데이트 내역
 //윤달 기능 적용
+//2017.08.01
+//첫번째 주에 Today가 있을때 출력이 되지 않던 문제 해결
+//이유: 첫번째주에서 조건문을 빠트림..

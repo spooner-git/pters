@@ -52,6 +52,8 @@ body{
 #upbutton{
 	float:left;
 	left: 2%;
+	border: 0px;
+
 }
 
 #upbutton-alarm{
@@ -73,7 +75,7 @@ body{
 	margin: auto;
 	max-width: 250px;
 	font-weight: 600;
-	font-size: 18px;
+	font-size: 15px;
 	text-align: center;
 	max-height: 48px;
 }
@@ -228,95 +230,14 @@ td{
 
 }
 
-
-.container-fluid>.navbar-collapse, .container-fluid>.navbar-header, .container>.navbar-collapse, .container>.navbar-header{
-	position: relative;
-}
-
-
-
-/*네비게이션바 색상  */
-.navbar-default{
-	background-color: white;
-}
-
-
-/*네비게이션바 메뉴 버튼 색상 접혔을때*/
-.navbar-default .navbar-toggle.collapsed .icon-bar{
-	background-color: rgb(64,186,210);
-}
-/*네비게이션바 메뉴 버튼 색상 펼쳤을때*/
-.navbar-default .navbar-toggle .icon-bar{
-	background-color: rgb(250,185,0);
-}
-
-/*네비게이션바 메뉴 버튼 색상 펼쳤을때 배경색상*/
-.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover{
-	background-color: rgb(64,186,210);
-}
-
-
-.navbar-default .navbar-toggle.collapsed:hover{
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
 	background-color: transparent;
 }
 
-
-
-.navbar-default .navbar-toggle{
-	border: 0px;
+.navbar-default .navbar-toggle .icon-bar{
+	background-color: black;
 }
 
-#navbar{
-	position: absolute;
-	background-color: rgb(64,186,210);
-	width: 200px;
-	max-height: 500px;
+.navbar-toggle .icon-bar{
+	height: 2.5px;
 }
-
-#navbar-alarm{
-	position: absolute;
-	background-color: rgb(64,186,210);
-	width: 250px;
-	max-height: 500px;	
-	right: 15px
-}
-
-.navbar-listcustom{
-	text-align: center;
-	font-size: 16px;
-	font-weight: 600;
-	background-color: rgb(217,241,246);
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-
-    .navbar-header {
-        float: none;
-    }
-    .navbar-toggle {
-        display: block;
-    }
-    .navbar-collapse {
-        border-top: 1px solid transparent;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-    .navbar-collapse.collapse {
-        display: none!important;
-    }
-    .navbar-nav {
-        float: none!important;
-        margin: 7.5px -15px;
-    }
-    .navbar-nav>li {
-        float: none;
-    }
-    .navbar-nav>li>a {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-
-    .navbar-collapse.collapse.in{
-    	display:block!important;
-    }
-
-
