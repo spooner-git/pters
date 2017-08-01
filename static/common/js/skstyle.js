@@ -9,6 +9,11 @@ $(document).ready(function(){
      $('#user_name').text(userID+"코치님"); //Sidebar 상단 유저 이름
      $('#welcome').text("안녕하세요!") //Sidebar 상단 유저 이름 아래 인사 메시지
 
+     
+
+
+
+
 });
 
 

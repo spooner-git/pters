@@ -66,10 +66,10 @@
             </div><!-- /.container -->
         </nav><!-- /.navbar -->
     {% endblock %}
-
+    
     {% block content %}
     {% endblock %}
-
+    
     {% block footer %}
         <footer>
             <p>© 2017 BEBEP Project </p>
@@ -89,6 +89,7 @@
                $(".sidebar_text").css({'font-size':"15px",'opacity':"1"})
                $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
                $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
+               $('body').css('overflow-y','hidden')
              }
 
 /* Set the width of the side navigation to 0 */
@@ -97,7 +98,7 @@
               $("#outer_Sidenav").css("width","0");
               $("#inner_Sidenav").css("width","0");
               $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"})
-
+              $('body').css('overflow-y','')
              }; 
     </script>
 
