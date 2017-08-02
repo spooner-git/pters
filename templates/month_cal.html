@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <!--Swiper-->
+    <div id="ymdText">
+        <img src={% static "common/res/bg.png" %} alt="bg-image" style="width: 100%;height:auto;position: relative;z-index: -1;">
+        <div id="yearText">
+        </div>
+        <div id="monthText">
+        </div>
+    </div>
+
+    <div id="calendar" class="container" > <!-- Calendar container-->
+        <div id="date" class="container-fluid week-style"> <!--월화수목금토일-->
+            <table class="calendar-style calendar-day-style">
+                <tr>
+                    <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
+                    <td id="monday"><p class="calendar_image weekday_style">월</p></td>
+                    <td id="tuesday"><p class="calendar_image weekday_style">화</p></td>
+                    <td id="wednesday"><p class="calendar_image weekday_style">수</p></td>
+                    <td id="thursday"><p class="calendar_image weekday_style">목</p></td>
+                    <td id="friday"><p class="calendar_image weekday_style">금</p></td>
+                    <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
+                </tr>
+            </table>
+        </div> <!--월화수목금토일-->
+
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" id="slide0"></div> <!--Index0-->
+                <div class="swiper-slide"></div> <!--Index1-->
+                <div class="swiper-slide" id="slide2"></div> <!--Index2-->
+            </div>  <!--Swiper-wrapper-->
+        </div> <!--Swiper-container-->
+        <!--Swiper-->
+        <div class="swiper-pagination"></div>
+        <div id="cal_box" class="cal_box"></div>
+
+    </div>
+{% endblock %}
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/javascript" src={% static "common/js/skcalendar.js" %}></script>
+        <script>
+            var myswiper = new Swiper('.swiper-container',{
+                initialSlide : 1,
+                speed : 50,
+                preventClicks : true,
+                pagination : '.swiper-pagination'
+            });
+        </script>
+{% endblock %}
