@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main_trainer_css %}
+    <link rel="stylesheet" href={% static "css/main/main_trainer.css" %}>
+{% endblock %}
+
+{% block main_trainer %}
+        <div id="main_content" class="container" > <!--main_content-->
+          <img src={% static "res/main/bg-image.png" %} style='width: 100%;' alt="">
+          <div class='center_box'>
+            <div class='center_box_text center_box_text_up'>
+              <div class='center_box_day'><p href="#"></p></div>
+              <div class='center_box_monthyear'><p href="#"></p></div>
+            </div>
+            <div class='center_box_text'>
+              <div class='center_box_plan'><p href="#"></p></div>
+              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="" class="center_box_num"></a>건</div>
+            </div>
+          </div>
+          <div class="lower_box">
+            <div class="lower_box_child" style="left:4.17%;">
+              <div class="lower_box_child_inner">
+              <div>총 회원</div>
+              <a href="" id='total_member' class='lower_box_num'></a>명
+              </div>
+            </div>
+            <div class="lower_box_child" style="left:35%;">
+              <div class="lower_box_child_inner">
+              <div>일정 변경</div>
+              <a href="" id='request_num' class='lower_box_num'></a>명
+              </div>
+            </div>
+            <div class="lower_box_child" style="left:65.83%;">
+              <div class="lower_box_child_inner">
+              <div>종료 임박</div>
+              <a href="" id='finish_member' class='lower_box_num'></a>명
+              </div>
+            </div>
+          </div>
+        </div> <!--main_content-->
+{% endblock %}
+
+{% block main_trainer_js %}
+    <script type="text/javascript" src="js/main_trainer.js"></script>
+{% endblock %}
