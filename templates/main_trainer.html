@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block main_trainer_css %}
-    <link rel="stylesheet" href={% static "css/main/main_trainer.css" %}>
+{% block local_css %}
+    <link rel="stylesheet" href={% static "common/css/main/main_trainer.css" %}>
 {% endblock %}
 
-{% block main_trainer %}
+{% block content %}
         <div id="main_content" class="container" > <!--main_content-->
-          <img src={% static "res/main/bg-image.png" %} style='width: 100%;' alt="">
+          <img src={% static "common/res/main/bg-image.png" %} style="width:100%;" alt="">
           <div class='center_box'>
             <div class='center_box_text center_box_text_up'>
               <div class='center_box_day'><p href="#"></p></div>
@@ -41,6 +41,6 @@
         </div> <!--main_content-->
 {% endblock %}
 
-{% block main_trainer_js %}
-    <script type="text/javascript" src="js/main_trainer.js"></script>
+{% block local_js_footer %}
+    <script type="text/javascript" src={% static "common/js/main/main_trainer.js" %}></script>
 {% endblock %}

@@ -17,9 +17,10 @@
         <link rel="stylesheet" href={% static "common/css/sidebar.css" %}>
         <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
         <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-        
 
-
+        {% block local_css %}
+        {% endblock %}
+    
     </head>
     <body>
     {% block navbar %}
@@ -31,7 +32,7 @@
                         <span class="icon-bar" style="width:60%;"></span>
                         <span class="icon-bar" style="width: 20.5px;"></span>
                     </button>
-                    <a id="uptext" class="navbar-brand" href="#"></a>
+                    <a id="uptext" class="navbar-brand" href="{% url 'home' %}"></a>
                     <button id="upbutton-alarm" type="button">
                         <img src={% static "common/res/bell.png" %} style="width:30px;">
                     </button>
@@ -47,7 +48,7 @@
                         </div>                      
                         <div class="sidebar_div"><img src={% static "common/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">오늘 일정</a></div>
                         <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">주간 일정</a></div>
-                        <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">월간 일정</a></div>
+                        <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="{% url 'cal_month' %}" class="sidebar_text">월간 일정</a></div>
                         <div class="sidebar_div"><img src={% static "common/res/icon-user-setting.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">회원 관리</a></div>
                         <div class="sidebar_div" style="height: 100%;"></div>
                         <div class="sidebar_div sidebar_div_last">
@@ -101,7 +102,7 @@
     </script>
 
 
-    {% block js_footer %}
+    {% block local_js_footer %}
     {% endblock %}
 
 
