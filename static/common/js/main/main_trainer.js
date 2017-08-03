@@ -15,18 +15,16 @@ $(document).ready(function(){
  	var requestNum = 3;
  	var finishMember = 8;
 
-
-	$('.icon-bar').css('background-color','white');
-	$('#uptext').css({'color':'#fe4e65','font-size':'16px'});
 	$('.center_box_day p').text(currentDate+','+currentDay[currentDayinfo]); //일, 요일 표시
 	$('.center_box_monthyear p').text(currentMonth+1+'월 '+currentYear+'년'); //월, 연도 표시
 
-	$('.center_box_plan p').text(plan);
-	$('.center_box_gun a').text(num);
+	$('.center_box_plan p').text(plan); //오늘의 수업 일정
+	$('.center_box_gun a').text(num); // 몇 건 있는지
 
-	$('#total_member').text(totalMember);
-	$('#request_num').text(requestNum);
-	$('#finish_member').text(finishMember);
-
-
+	$('#total_member').text(totalMember); //총 회원수
+	$('#request_num').text(requestNum); //일정 변경 수
+	$('#finish_member').text(finishMember); //종료 임박 회원수
 });
+
+//2017.8.3변경 내역
+//Navbar uppertext 셋팅관련 코드를 pters.base.set.js로 통합함

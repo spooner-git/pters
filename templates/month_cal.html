@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block local_css %}
+
+        <link rel="stylesheet" href={% static "common/css/pters.month.cal.css" %}>
+{% endblock %}
+
+
+
 {% block content %}
     <!--Swiper-->
     <div id="ymdText">
@@ -43,7 +51,7 @@
     <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/javascript" src={% static "common/js/skcalendar.js" %}></script>
+        <script type="text/javascript" src={% static "common/js/pters.month.cal.js" %}></script>
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 1,
