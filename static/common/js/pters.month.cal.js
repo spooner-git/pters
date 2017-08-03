@@ -9,8 +9,6 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 */
 
-
-
 $(document).ready(function(){
 
 	var date = new Date();
@@ -18,7 +16,7 @@ $(document).ready(function(){
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 	var currentDate = date.getDate(); //오늘 날짜
 	var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
-	
+	var krHolidayList = new Array('_1_1','_3_1','_4_8','_5_5','_6_6','_8_15','_10_3','_10_9','_12_25') //대한민국 공휴일 (구정, 추석 제외)
 
 	var weekDay = new Array('일','월','화','수','목','금','토');
 	var firstDayInfoPrevMonth = new Date(currentYear,currentMonth-1,1);
@@ -44,6 +42,7 @@ $(document).ready(function(){
 	dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
 	dateMytime(); //나의 PT일정에 핑크색 동그라미 표시
 	monthText(); //상단에 연, 월 표시
+	krHoliday(); //대한민국 공휴일
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
@@ -80,6 +79,7 @@ $(document).ready(function(){
 			dateDisabled();
 			dateMytime();
 			monthText();
+			krHoliday();
 			myswiper.update(); //슬라이드 업데이트
 
 		},
@@ -93,6 +93,7 @@ $(document).ready(function(){
 			dateDisabled();
 			dateMytime();
 			monthText();
+			krHoliday();
 			myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
@@ -189,6 +190,15 @@ $(document).ready(function(){
 		};
 	};
 
+	function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
+		for(var i=0; i<krHolidayList.length; i++){
+			$("td[data-date$="+krHolidayList[i]+"]").attr('style','color:red');
+		};
+	};
+
+
+
+
 	function monthText(){
 		var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
 		//currentYMD 형식  ex : week120177
@@ -227,3 +237,7 @@ $(document).ready(function(){
 //2017.08.01
 //첫번째 주에 Today가 있을때 출력이 되지 않던 문제 해결
 //이유: 첫번째주에서 조건문을 빠트림..
+//
+//2018.8.3
+//대한민국 공휴일 표기(krHoliday함수)
+//음력인 구정연휴와 추석연휴는 업데이트 필요함

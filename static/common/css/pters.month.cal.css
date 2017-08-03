@@ -130,11 +130,13 @@ td{
 }
 
 .nextDates{
-	color : #b3b3b3 !important;
+	color : #282828;
+	opacity: 0.5;
 }
 
 .prevDates{
-	color : #b3b3b3 !important;
+	color : #282828;
+	opacity: 0.5;
 }
 
 .sunday{
