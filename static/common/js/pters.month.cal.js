@@ -145,7 +145,7 @@ $(document).ready(function(){
 		};
 
 		//3.현재달에 두번째 주부터 나머지 모두 채우기
-		var lastOfweek1 = Number($('#week1'+Year+Month+'child td:last-child').text());
+		var lastOfweek1 = Number($('#week1'+Year+Month+'child td:last-child span:first-child').text());
 		for(var i=lastOfweek1+1; i<=lastOfweek1+7; i++){
 			for(var j=0;j<=4;j++){
 				if(Number(i+j*7)==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표기
@@ -241,3 +241,7 @@ $(document).ready(function(){
 //2018.8.3
 //대한민국 공휴일 표기(krHoliday함수)
 //음력인 구정연휴와 추석연휴는 업데이트 필요함
+//2018.8.5
+//첫번째주의 토요일에 Today(Span값)이 위치했을때 lastOfweek1이 Span 두개중에 어떤걸 읽어와야할지 몰라서 두번째 주부터 날짜가 표기가 안되는 버그
+//lastOfweek1 = Number($('#week1'+Year+Month+'child td:last-child span:first-child').text());
+//148행 수정 
