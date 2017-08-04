@@ -41,11 +41,14 @@
                     </div>
 
                     <div id="inner_Sidenav" class="sidenav">
+                        
                         <div class="sidebar_upper">
-                            <div><img src={% static "common/res/icon-pf.png" %} alt="#"></div>
+                            <a href="{% url 'home' %}" style="width:100%;height: 100%;z-index: 1"></a>
+                            <div style="z-index: -1"><img src={% static "common/res/icon-pf.png" %} alt="#"></div>
                             <div id="user_name"></div>
                             <div id="welcome"></div>
-                        </div>                      
+                        </div>                     
+
                         <div class="sidebar_div"><img src={% static "common/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">오늘 일정</a></div>
                         <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">주간 일정</a></div>
                         <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="{% url 'cal_month' %}" class="sidebar_text">월간 일정</a></div>

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block local_css %}
+
+        <link rel="stylesheet" href={% static "common/css/pters.day.cal.css" %}>
+{% endblock %}
+
+
+
+{% block content %}
+    <!--Swiper-->
+     <div id="ymdText">
+            <div class='arrowButton'>
+              <a href="" >&lt;</a>
+              <a href="" style="right: 0%">&gt;</a>
+            </div>
+            <img src={% static "common/res/bg.png" %} alt="bg-image" style="width: 100%;height:auto;position: relative;z-index: -1;">
+            <div id="yearText">
+            </div>
+            <div id="monthText">
+            </div>
+          </div>
+
+
+    <div id="calendar" class="container" > <!-- Calendar container-->
+        
+          <div class="swiper-container">
+            <div class="swiper-wrapper"> 
+              <div class="swiper-slide" id="slide0"></div> <!--Index0-->
+              <div class="swiper-slide"></div> <!--Index1-->
+              <div class="swiper-slide" id="slide2"></div> <!--Index2-->
+            </div>  <!--Swiper-wrapper-->
+          </div> <!--Swiper-container-->
+  
+<!--Swiper-->    
+          <div class="swiper-pagination"></div>
+          <div id="cal_box" class="cal_box"></div>    
+
+    </div>
+{% endblock %}
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/javascript" src={% static "common/js/pters.day.cal.js" %}></script>
+        <script>
+            var myswiper = new Swiper('.swiper-container',{
+                initialSlide : 1,
+                speed : 50,
+                preventClicks : true,
+                pagination : '.swiper-pagination'
+            });
+        </script>
+{% endblock %}
