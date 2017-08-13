@@ -22,19 +22,7 @@ $(document).ready(function(){
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 	var currentDate = date.getDate(); //오늘 날짜
 	var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
-	var krHolidayList = new Array('_1_1','_3_1','_4_8','_5_5','_6_6','_8_15','_10_3','_10_9','_12_25') //대한민국 공휴일 (구정, 추석 제외)
-
-	var weekDay = new Array('일','월','화','수','목','금','토');
-	var firstDayInfoPrevMonth = new Date(currentYear,currentMonth-1,1);
-	var firstDayPrevMonth = firstDayInfoPrevMonth.getDay();
-	var firstDayInfoNextMonth = new Date(currentYear,currentMonth+1,1);
-	var firstDayNextMonth = firstDayInfoNextMonth.getDay();
 	var currentPageMonth = currentMonth+1; //현재 달
-	var disabledDates = new Array('2017_7_3','2017_7_11','2017_7_20','2017_7_25','2017_7_31','2017_8_2','2017_8_13','2017_8_21');
-	var mytimeDates = new Array('2017_7_5','2017_7_7','2017_7_10','2017_7_12','2017_7_14','2017_7_17','2017_7_19','2017_7_21','2017_7_24','2017_7_26','2017_7_28','2017_8_3','2017_8_11','2017_8_20','2017_8_30');
-
-
-	//currentPageMonth = 1,2,3,4,5,6,7,8,9,10,11,12
 
 	//달력 슬라이드 초기 셋팅 3개달 (전달, 이번달, 다음달)
 	//(디버깅용 날짜 표시)$('.swiper-slide:nth-child(1)').text(currentYear+'년'+Number(currentPageMonth-1)+' currentPageMonth: '+Number(currentPageMonth-1)+'월');
@@ -183,11 +171,11 @@ $(document).ready(function(){
 	function alltdRelative(){ //날짜 밑에 동그라미 색상표기를 위해 모든 td의 css 포지션 값 relative로 설정
 		$('td').css('position','relative');
 	};
-	
+
 	function dateDisabled(){ //PT 불가일자를 DB로부터 받아서 disabledDates 배열에 넣으면, 날짜 회색 표시
 		for(var i=0; i<disabledDates.length; i++){
 			$("td[data-date="+disabledDates[i]+"] div").attr('class','dateDisabled');
-		};  
+		};
 	};
 
 	function dateMytime(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
@@ -202,7 +190,10 @@ $(document).ready(function(){
 		};
 	};
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 86c424826380ecae28692991cb0c22e73c0743c2
 	function monthText(){
 		var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
 		//currentYMD 형식  ex : week120177
@@ -211,8 +202,6 @@ $(document).ready(function(){
 		$('#yearText').text(textYear);
 		$('#monthText').text(textMonth+'월');
 	};
-
-
 
 });//document(ready)
 
@@ -248,4 +237,6 @@ $(document).ready(function(){
 //2018.8.5
 //첫번째주의 토요일에 Today(Span값)이 위치했을때 lastOfweek1이 Span 두개중에 어떤걸 읽어와야할지 몰라서 두번째 주부터 날짜가 표기가 안되는 버그
 //lastOfweek1 = Number($('#week1'+Year+Month+'child td:last-child span:first-child').text());
-//148행 수정 
+//148행 수정
+//2017.8.5
+//update for db by hk

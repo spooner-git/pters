@@ -6,9 +6,8 @@
         <link rel="stylesheet" href={% static "common/css/pters.month.cal.css" %}>
 {% endblock %}
 
-
-
 {% block content %}
+
     <!--Swiper-->
 
 
@@ -57,8 +56,13 @@
 {% endblock %}
 
 {% block local_js_footer %}
-    <!-- Bootstrap core JavaScript
-        ================================================== -->
+        <!-- for db by hk.kim 170805-->
+        <script>
+            var krHolidayList = new Array('_1_1','_3_1','_4_8','_5_5','_6_6','_8_15','_10_3','_10_9','_12_25') //대한민국 공휴일 (구정, 추석 제외)
+            var disabledDates = new Array('2017_7_3','2017_7_11','2017_7_20','2017_7_25','2017_7_31','2017_8_2','2017_8_13','2017_8_21');
+            var mytimeDates = new Array('2017_7_5','2017_7_7','2017_7_10','2017_7_12','2017_7_14','2017_7_17','2017_7_19','2017_7_21','2017_7_24','2017_7_26','2017_7_28','2017_8_3','2017_8_11','2017_8_20','2017_8_30');
+        </script>
+
         <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/javascript" src={% static "common/js/pters.month.cal.js" %}></script>
         <script>
@@ -70,4 +74,5 @@
                 pagination : '.swiper-pagination'
             });
         </script>
+
 {% endblock %}
