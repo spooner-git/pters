@@ -11,6 +11,20 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+
+	//플로팅 버튼
+	$('#float_btn').click(function(){
+		if($('#shade').css('z-index')<0){
+			$('#shade').css({'background-color':'black','z-index':'8'});
+			$('#float_inner1').animate({'opacity':'0.7','top':'80%'});
+			$('#float_inner2').animate({'opacity':'0.7','top':'70%'});
+		}else{
+			$('#shade').css({'background-color':'white','z-index':'-1'});
+			$('#float_inner1,#float_inner2').animate({'opacity':'0','top':'90%'})
+		}
+	});
+	//플로팅 버튼
+
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
