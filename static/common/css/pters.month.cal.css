@@ -48,7 +48,12 @@ body{
 #date{
 	padding-top: 4%;
 	padding-bottom: 4%;
+	padding-right: 37.5px;
+	padding-left: 37.5px;
 	height: auto;
+	position: fixed;
+	z-index: 2;
+	background-color: #ffffff;
 
 }
 
@@ -72,8 +77,18 @@ body{
 }
 
 #ymdText{
-	position: relative;
+	position: fixed;
 	height: auto;
+	z-index: 3;
+}
+
+#gapbox{
+	width: 100%;
+	height: 0px;
+	position: relative;
+	padding-bottom: 23.5%;
+	overflow-y: hidden;
+	background-color: #ffffff;
 }
 
 
@@ -113,6 +128,7 @@ body{
 	width: 100%;
 	padding-left: 20px;
 	padding-right:20px;
+	z-index: -1;
 }
 
 

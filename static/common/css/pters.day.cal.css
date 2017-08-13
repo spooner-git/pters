@@ -58,9 +58,20 @@
 }
 
 #ymdText{
-	position: relative;
+	position: fixed;
 	height: auto;
+	z-index: 3;
 }
+
+#gapbox{
+	width: 100%;
+	height: 0px;
+	position: relative;
+	padding-bottom: 23.5%;
+	overflow-y: hidden;
+	background-color: #ffffff;
+}
+
 
 .calendar-style{  /*week 스타일하위 */
 	width: 100%;

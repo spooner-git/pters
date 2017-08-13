@@ -13,11 +13,11 @@ $(document).ready(function(){
 
 
 	 if($('meta[name="upperText"]').attr('content') == "main_trainer"){ //상단바에 텍스트 표시. 각 페이지의 Meta를 읽어와서 upperText를 셋팅
-	 	$('#uptext').text(upText[0]); //Main페이지에서는 Peters 표시
-    $('.icon-bar').css('background-color','white');
-    $('#uptext').css({'color':'#fe4e65','font-size':'16px'});
+	 	  $('#uptext').text(upText[0]); //Main페이지에서는 Peters 표시
+      $('.icon-bar').css('background-color','white');
+      $('#uptext').css({'color':'#fe4e65','font-size':'16px'});
 	 }else{
-	 	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
+	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
 	 };
 });
 

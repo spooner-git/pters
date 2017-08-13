@@ -11,6 +11,12 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+
+	//스타일 적용
+	
+	//스타일 적용
+
+
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -195,8 +201,6 @@ $(document).ready(function(){
 			$("td[data-date$="+krHolidayList[i]+"]").attr('style','color:red');
 		};
 	};
-
-
 
 
 	function monthText(){
