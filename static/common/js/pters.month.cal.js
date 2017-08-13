@@ -190,10 +190,6 @@ $(document).ready(function(){
 		};
 	};
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 86c424826380ecae28692991cb0c22e73c0743c2
 	function monthText(){
 		var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
 		//currentYMD 형식  ex : week120177
