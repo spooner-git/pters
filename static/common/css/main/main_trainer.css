@@ -13,7 +13,7 @@ body{
 }
 
 #main_content img{
-	position: static;
+	position: fixed;
 }
 
 .center_box{
