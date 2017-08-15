@@ -196,7 +196,7 @@ $(document).ready(function(){
 
 	function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
 		for(var i=0; i<krHolidayList.length; i++){
-			$("td[data-date$="+krHolidayList[i]+"]").attr('style','color:red');
+			$("td[data-date$="+krHolidayList[i]+"]").addClass('holiday');
 		};
 	};
 
@@ -246,3 +246,10 @@ $(document).ready(function(){
 //148행 수정
 //2017.8.5
 //update for db by hk
+//
+//2017.08.15
+//199행 수정
+//Today표시 적용이 중앙에 길게 뜨는 현상 수정
+//공휴일날짜시 style을 Red로 지정하는 함수가 기존의 td styld중 relative를 지우기 때문에 발생한 문제.
+//공휴일시 글씨를 Red로 하는 것을 attr() --> addClass()로 변경.
+//holiday css class를 추가함 
