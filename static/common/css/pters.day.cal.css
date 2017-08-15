@@ -152,14 +152,14 @@ body{
 	background-color: transparent;
 	position: relative;
 	width: 100%;
-	
 	font-size: 14.4px;
-	height: 40px;
+	height: 35px;
 }
 
 .hour{
-	text-align: right;
+	text-align: center;
 	width: 10%;
+	background-color: #ffffff;
 }
 
 td{
@@ -168,37 +168,28 @@ td{
 	color : #282828;
 }
 
-.dateDisabled{
-	/*
-	display:block;
-	margin:auto;
-	width: 30px;
-	height: 30px;
-	background: #f4f4f4;
-	position: absolute;
-	top: 0;
-	bottom:0;
-	left: 0;
-	right: 0;
-	border-radius: 50%;
-	z-index: -1;
-	*/
-	background-color: grey;
+
+#calendar{
+	background-color: #f4f4f4;
+	padding-right: 0;
+	padding-left: 0;
 }
 
-.dateMytime{
-	display:block;
-	margin:auto;
-	width: 30px;
-	height: 30px;
-	background: #fe4e65;
+.classTime{
 	position: absolute;
 	top: 0;
-	bottom:0;
-	left: 0;
-	right: 0;
-	border-radius: 50%;
-	opacity: 0.2;
-	z-index: -1;
+	left: 25px;
+	width: 84%;
+	height: 20px;
+	background: #ffdce0;
 }
 
+.classTimeIndicator{
+	position: absolute;
+	top: 17.5px;
+	left: 0;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: #fe4e65;
+}

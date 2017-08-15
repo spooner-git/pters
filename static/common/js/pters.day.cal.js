@@ -45,10 +45,7 @@ $(document).ready(function(){
 	var firstDayInfoNextMonth = new Date(currentYear,currentMonth+1,1);
 	var firstDayNextMonth = firstDayInfoNextMonth.getDay(); //다음달 1일의 요일
 	var currentPageMonth = currentMonth+1; //현재 달
-	var disabledTime = new Array('2017_8_4_5H_2half','2017_8_4_10H_2half','2017_8_4_11H_1half','2017_8_4_14H_2half','2017_8_4_15H_1half');
-	var mytimeTime = new Array('2017_7_5','2017_7_7','2017_7_10','2017_7_12','2017_7_14','2017_7_17','2017_7_19','2017_7_21','2017_7_24','2017_7_26','2017_7_28');
-	//2017_8_4_5H_1half
-	//2017_8_4_5HR_1half
+	var classTimeArray = new Array('2017_8_15_12_00_1','2017_8_15_17_00_3');
 
 
 
@@ -57,8 +54,7 @@ $(document).ready(function(){
 	calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
 	alltdRelative(); //모든 td의 스타일 position을 relative로
-	timeDisabled(); //PT 불가 일정에 회색 동그라미 표시
-	timeMytime(); //나의 PT일정에 핑크색 동그라미 표시
+	classTime(); //PT수업 시간에 핑크색 박스 표시
 	dateText(); //상단에 연, 월 표시
 
 	//다음페이지로 슬라이드 했을때 액션
@@ -109,8 +105,7 @@ $(document).ready(function(){
 			//(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
 			calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //새로 추가되는 슬라이드에 달력 채우기	
 			alltdRelative();
-			timeDisabled();
-			timeMytime();
+			classTime();
 			dateText();
 			myswiper.update(); //슬라이드 업데이트
 
@@ -122,8 +117,7 @@ $(document).ready(function(){
 			//(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
 			calTable_Set(1,currentYear,currentPageMonth,currentDate-1);
 			alltdRelative();		
-			timeDisabled();
-			timeMytime();
+			classTime();
 			dateText();
 			myswiper.update(); //이전페이지로 넘겼을때
 		}
@@ -132,16 +126,25 @@ $(document).ready(function(){
 	
 	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
 		for(var i=5; i<=24; i++){
-			$('.swiper-slide:nth-child('+Index+')').append('<div id="'+i+'H_'+Year+'_'+Month+'_'+Day+'" class="container-fluid time-style" style="top: '+Number(10*i-30)+'%">')
+			$('.swiper-slide:nth-child('+Index+')').append('<div id="'+i+'H_'+Year+'_'+Month+'_'+Day+'" class="time-style" style="top: '+Number(10*i-30)+'%">')
 		};
 
 		for(var i=5; i<=24; i++){
-			$('.swiper-slide:nth-child('+Index+')'+' #'+i+'H_'+Year+'_'+Month+'_'+Day).append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'시'+'</td></tr><tr></tr></tbody></table>');
+			if(i<=12){
+				if(i<10){
+					$('.swiper-slide:nth-child('+Index+')'+' #'+i+'H_'+Year+'_'+Month+'_'+Day).append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'.00AM'+'<div></div></td></tr><tr></tr></tbody></table>');		
+				}else{
+					$('.swiper-slide:nth-child('+Index+')'+' #'+i+'H_'+Year+'_'+Month+'_'+Day).append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'.00AM'+'<div></div></td></tr><tr></tr></tbody></table>');		
+				};
+			}else{
+				$('.swiper-slide:nth-child('+Index+')'+' #'+i+'H_'+Year+'_'+Month+'_'+Day).append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'.00PM'+'<div></div></td></tr><tr></tr></tbody></table>');			
+			}
+			
 		};
 
 		for(var i=5; i<=24; i++){
-		$('#'+Year+'_'+Month+'_'+Day+'_'+i+'H'+' tbody tr:nth-child(1)').append('<td'+' data-time='+Year+'_'+Month+'_'+Day+'_'+i+'H'+'_1half'+'>'+'</td>'+'<td'+' data-time-range='+Year+'_'+Month+'_'+Day+'_'+i+'HR'+'_1half'+'>'+'</td>');
-		$('#'+Year+'_'+Month+'_'+Day+'_'+i+'H'+' tbody tr:nth-child(2)').append('<td'+' data-time='+Year+'_'+Month+'_'+Day+'_'+i+'H'+'_2half'+'>'+'</td>'+'<td'+' data-time-range='+Year+'_'+Month+'_'+Day+'_'+i+'HR'+'_2half'+'>'+'</td>');
+		$('#'+Year+'_'+Month+'_'+Day+'_'+i+'H'+' tbody tr:nth-child(1)').append('<td'+' data-time='+Year+'_'+Month+'_'+Day+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>');
+		$('#'+Year+'_'+Month+'_'+Day+'_'+i+'H'+' tbody tr:nth-child(2)').append('<td'+' data-time='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>');
 		};
 	}; //calTable_Set
 
@@ -151,16 +154,14 @@ $(document).ready(function(){
 	function alltdRelative(){ //날짜 밑에 동그라미 색상표기를 위해 모든 td의 css 포지션 값 relative로 설정
 		$('td').css('position','relative');
 	};
-	
-	function timeDisabled(){ //PT 불가일자를 DB로부터 받아서 disabledDates 배열에 넣으면, 날짜 회색 표시
-		for(var i=0; i<disabledTime.length; i++){
-			$("td[data-time="+disabledTime[i]+"]").attr('class','dateDisabled');
-		};  
-	};
 
-	function timeMytime(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
-		for(var i=0; i<mytimeTime.length; i++){
-			$("td[data-time="+mytimeTime[i]+"] div").attr('class','dateMytime');
+	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+		for(var i=0; i<classTimeArray.length; i++){
+			var datasplit = classTimeArray[i].split('_');  //2017_8_15_6_00_3
+			var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
+			var classDura = datasplit[5];
+			$("td[data-time="+classStart+"] div").addClass('classTime').attr('class-time',classTimeArray[i]);
+			$("td[data-time="+classStart+"] div").css({'height':Number(classDura*30)+'px'});
 		};
 	};
 
