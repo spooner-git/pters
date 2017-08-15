@@ -193,3 +193,15 @@ td{
 	border-radius: 50%;
 	background-color: #fe4e65;
 }
+
+.memberName{
+	position: absolute;
+	left: 3%;
+	margin-top: 5px;
+}
+
+.memberTime{
+	position: absolute;
+	right: 30%;
+	margin-top: 5px;
+}

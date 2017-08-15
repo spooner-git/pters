@@ -45,7 +45,7 @@ $(document).ready(function(){
 	var firstDayInfoNextMonth = new Date(currentYear,currentMonth+1,1);
 	var firstDayNextMonth = firstDayInfoNextMonth.getDay(); //다음달 1일의 요일
 	var currentPageMonth = currentMonth+1; //현재 달
-	var classTimeArray = new Array('2017_8_15_12_00_1','2017_8_15_17_00_3');
+	var classTimeArray = new Array('2017_8_16_5_00_1_김선겸','2017_8_16_10_00_2_김현기','2017_8_16_19_00_3_김소정','2017_8_16_13_00_1_이혜림');
 
 
 
@@ -160,8 +160,12 @@ $(document).ready(function(){
 			var datasplit = classTimeArray[i].split('_');  //2017_8_15_6_00_3
 			var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var classDura = datasplit[5];
-			$("td[data-time="+classStart+"] div").addClass('classTime').attr('class-time',classTimeArray[i]);
-			$("td[data-time="+classStart+"] div").css({'height':Number(classDura*30)+'px'});
+			var memberName = datasplit[6];
+			$("td[data-time="+classStart+"] div").addClass('classTime').attr('class-time',classTimeArray[i]).css({'height':Number(classDura*30)+'px'});
+			$("td[data-time="+classStart+"] div").html('<span>'+memberName+' 회원님</span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');	
+			$("td[data-time="+classStart+"] div span:first-child").addClass('memberName');
+			$("td[data-time="+classStart+"] div span:nth-child(2)").addClass('memberTime');
+
 		};
 	};
 
