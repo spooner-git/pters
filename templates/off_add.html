@@ -3,6 +3,8 @@
 
 {% block local_css %}
         <link rel="stylesheet" href={% static "common/css/pters.off.add.css" %}>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        
 {% endblock %}
 
 
@@ -11,7 +13,7 @@
 
 <div id="dateSelector">
   <div>날짜</div>
-  <div>날짜 선택 달력</div>  
+  <p>Date: <input type="text" id="datepicker"></p>
 </div>
   
 <div id="classTime">
@@ -85,6 +87,13 @@
     <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/javascript" src={% static "common/js/pters.off.add.js" %}></script>
+         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+         <script type="text/javascript" src={% static "common/js/pters.off.add.js" %}></script>
+
         
+
+
+
+
 {% endblock %}
