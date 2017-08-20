@@ -4,7 +4,7 @@
         {% load static %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <meta name="description" content="">
         <meta name="author" content="">
@@ -24,6 +24,8 @@
     </head>
     <body>
     {% block navbar %}
+    <div id="shade">
+        </div>
         <nav class="navbar navbar-fixed-top navbar-default">
             <div class="container">
                 <div class="navbar-header">
@@ -66,6 +68,7 @@
                 </div>
             </div><!-- /.container -->
         </nav><!-- /.navbar -->
+        
     {% endblock %}
     
     {% block content %}
@@ -90,6 +93,7 @@
                $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
                $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
                $('body').css('overflow-y','hidden')
+               $('#shade').css({'background-color':'black','z-index':'50'});
              }
 
              function closeNav(){
@@ -98,6 +102,7 @@
               $("#inner_Sidenav").css("width","0");
               $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"})
               $('body').css('overflow-y','')
+              $('#shade').css({'background-color':'white','z-index':'-1'});
              }; 
     </script>
 
