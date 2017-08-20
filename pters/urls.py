@@ -21,5 +21,7 @@ urlpatterns = [
     url(r'^$', views.HomeView.as_view(), name='home'),
     url(r'^cal_day/$', views.CalDayView.as_view(), name='cal_day'),
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
+    url(r'^add_pt/$', views.PtAddView.as_view(), name='add_pt'),
+    url(r'^add_off/$', views.OffAddView.as_view(), name='add_off'),
     url(r'^admin/', admin.site.urls),
 ]

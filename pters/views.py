@@ -29,3 +29,21 @@ class CalMonthView(TemplateView):
         context = super(CalMonthView, self).get_context_data(**kwargs)
 
         return context
+
+
+class PtAddView(TemplateView):
+    template_name = 'pt_add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PtAddView, self).get_context_data(**kwargs)
+
+        return context
+
+
+class OffAddView(TemplateView):
+    template_name = 'off_add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OffAddView, self).get_context_data(**kwargs)
+
+        return context
