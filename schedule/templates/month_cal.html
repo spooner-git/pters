@@ -12,12 +12,12 @@
     <div id="float_btn">
       <img src={% static "common/res/float_plus.png" %} alt="">
     </div>
-    <div id="float_inner1" class="float_inner" onclick="location.href='{% url 'add_pt' %}'">
-    <a href="{% url 'add_pt' %}">추가</a>
+    <div id="float_inner1" class="float_inner" onclick="location.href='{% url 'trainer:add_pt' %}'">
+    <a href="{% url 'trainer:add_pt' %}">추가</a>
     <img src="" alt="">
     </div>
-    <div id="float_inner2" class="float_inner" onclick="location.href='{% url 'add_off' %}'">
-    <a href="{% url 'add_off' %}">OFF</a>
+    <div id="float_inner2" class="float_inner" onclick="location.href='{% url 'trainer:add_off' %}'">
+    <a href="{% url 'trainer:add_off' %}">OFF</a>
     <img src="" alt="">
     </div>
 
