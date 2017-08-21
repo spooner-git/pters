@@ -2,3 +2,6 @@
 pters/__pycache__/
 mobile/__pycache__/
 mobile/migrations/__pycache__/
+schedule/__pycache__/
+trainer/__pycache__/
+trainee/__pycache__/

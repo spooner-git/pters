@@ -11,12 +11,12 @@
     <div id="float_btn">
       <img src={% static "common/res/float_plus.png" %} alt="">
     </div>
-    <div id="float_inner1" class="float_inner" onclick="location.href='http://m.daum.net'">
-    <a href="">링크</a>
+    <div id="float_inner1" class="float_inner" onclick="location.href='{% url 'add_pt' %}'">
+    <a href="{% url 'add_pt' %}">추가</a>
     <img src="" alt="">
     </div>
-    <div id="float_inner2" class="float_inner" onclick="location.href='http://m.naver.com'">
-    <a href="">링크2</a>
+    <div id="float_inner2" class="float_inner" onclick="location.href='{% url 'add_off' %}'">
+    <a href="{% url 'add_off' %}">OFF</a>
     <img src="" alt="">
     </div>
 
@@ -50,7 +50,7 @@
           </div> <!--Swiper-container-->
   
 <!--Swiper-->    
-          <div class="swiper-pagination"></div>
+          <!-- <div class="swiper-pagination"></div> -->
           <div id="cal_box" class="cal_box"></div>    
 
     </div>

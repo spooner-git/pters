@@ -14,9 +14,9 @@
               <div class='center_box_day'><p href="#"></p></div>
               <div class='center_box_monthyear'><p href="#"></p></div>
             </div>
-            <div class='center_box_text'>
-              <div class='center_box_plan'><p href="#"></p></div>
-              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="" class="center_box_num"></a>건</div>
+            <div class='center_box_text' onclick="location.href='{% url 'schedule:cal_day' %}'" >
+              <div class='center_box_plan'><p href=""></p></div>
+              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'schedule:cal_day' %}" class="center_box_num"></a>건</div>
             </div>
           </div>
           <div class="lower_box">
