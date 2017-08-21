@@ -1,0 +1,14 @@
+.btn-primary:hover{
+	background: #fe4e65 ;
+}
+.btn-group-vertical>.btn.active, .btn-group-vertical>.btn:active, .btn-group-vertical>.btn:focus, .btn-group-vertical>.btn:hover, .btn-group>.btn.active, .btn-group>.btn:active, .btn-group>.btn:focus, .btn-group>.btn:hover{
+	z-index: 1;
+}
+
+.btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover{
+	background-color: #fe4e65;
+}
+
+.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
+	background-color: #fe4e65;	
+}

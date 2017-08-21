@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "common/css/pters.off.repeat.add.css" %}>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        
+{% endblock %}
+
+
+
+{% block content %}
+  
+<div id="classTime">
+  <div>반복 설정</div>
+  <div>
+    <div>반복 빈도</div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">매주</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">격주</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">일주일만</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">매일</label>
+    </div>
+  </div>
+</div>
+
+<div id="dateSelector">
+  <div>반복 시작</div>
+  <p>Date: <input type="text" id="datepicker"></p>
+</div>
+
+<div id="dateSelector2">
+  <div>반복 종료</div>
+  <p>Date: <input type="text" id="datepicker2"></p>
+</div>
+
+<div id="classStartTime">
+  <div>요일별 일정</div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary">일</button>
+      <button type="button" class="btn btn-primary">월</button>
+      <button type="button" class="btn btn-primary">화</button>
+      <button type="button" class="btn btn-primary">수</button>
+      <button type="button" class="btn btn-primary">목</button>
+      <button type="button" class="btn btn-primary">금</button>
+      <button type="button" class="btn btn-primary">토</button>
+    </div>
+  </div>
+
+<button type="button" class="btn btn-info">OFF 반복 일정 등록</button>
+
+<div id="repeatSchedule">
+  <div>반복 일정</div>
+  <div>
+    <p>매주 월요일 오전 11시</p>
+    <p>반복종료 : PT 마감시</p>
+  </div>
+  <div>
+    <p>매주 수요일 오후 3시</p>
+    <p>반복종료 : 2017-12-31</p>
+  </div>
+
+</div>
+
+</div>
+
+
+    
+
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+         <script type="text/javascript" src={% static "common/js/pters.off.add.js" %}></script>
+
+        
+
+
+
+
+{% endblock %}

@@ -29,3 +29,12 @@ class OffAddView(TemplateView):
         context = super(OffAddView, self).get_context_data(**kwargs)
 
         return context
+
+
+class OffRepeatAddView(TemplateView):
+    template_name = 'off_repeat_add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OffRepeatAddView, self).get_context_data(**kwargs)
+
+        return context
