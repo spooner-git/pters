@@ -49,9 +49,9 @@
                             <div id="welcome"></div>
                         </div>                     
 
-                        <div class="sidebar_div"><img src={% static "common/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#"><a href="{% url 'cal_day' %}" class="sidebar_text">오늘 일정</a></div>
+                        <div class="sidebar_div"><img src={% static "common/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#"><a href="{% url 'schedule:cal_day' %}" class="sidebar_text">오늘 일정</a></div>
                         <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">주간 일정</a></div>
-                        <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="{% url 'cal_month' %}" class="sidebar_text">월간 일정</a></div>
+                        <div class="sidebar_div"><img src={% static "common/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="{% url 'schedule:cal_month' %}" class="sidebar_text">월간 일정</a></div>
                         <div class="sidebar_div"><img src={% static "common/res/icon-user-setting.png" %} class="sidebar_icon" alt="#"><a href="#" class="sidebar_text">회원 관리</a></div>
                         <div class="sidebar_div" style="height: 100%;"></div>
                         <div class="sidebar_div sidebar_div_last">

@@ -11,21 +11,3 @@ class HomeView(TemplateView):
         context = super(HomeView, self).get_context_data(**kwargs)
 
         return context
-
-
-class CalDayView(TemplateView):
-    template_name = 'daily_cal.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CalDayView, self).get_context_data(**kwargs)
-
-        return context
-
-
-class CalMonthView(TemplateView):
-    template_name = 'month_cal.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CalMonthView, self).get_context_data(**kwargs)
-
-        return context
