@@ -16,6 +16,8 @@
   <p>Date: <input type="text" id="datepicker"></p>
 </div>
   
+<hr>
+
 <div id="classTime">
   <div>진행 시간</div>
   <div>
@@ -43,6 +45,8 @@
   </div>
 </div>
 
+<hr>
+
 <div id="classStartTime">
   <div>시작 시각</div>
   <div>
@@ -57,7 +61,11 @@
     </div>
   </div>
 
+<hr>
+
 <button type="button" class="btn btn-info" onclick="location.href='{% url 'trainer:add_repeat_off' %}'">OFF 반복 일정 등록</button>
+
+<hr>
 
 <div id="repeatSchedule">
   <div>반복 일정</div>

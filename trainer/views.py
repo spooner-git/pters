@@ -38,3 +38,12 @@ class OffRepeatAddView(TemplateView):
         context = super(OffRepeatAddView, self).get_context_data(**kwargs)
 
         return context
+
+
+class ManageMemberView(TemplateView):
+    template_name = 'manage_member.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageMemberView, self).get_context_data(**kwargs)
+
+        return context
