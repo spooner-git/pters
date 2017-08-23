@@ -62,12 +62,12 @@ class MemberTbAdmin(admin.ModelAdmin):
 
 
 class SettingTbAdmin(admin.ModelAdmin):
-    list_display = ('member', 'setting_type_cd', 'setting_cd', 'state_cd',
+    list_display = ('setting_id', 'member', 'setting_type_cd', 'setting_cd', 'state_cd',
                     'reg_dt', 'mod_dt', 'use')
 
 
 class ShopEmployeeTbAdmin(admin.ModelAdmin):
-    list_display = ('member', 'company', 'reg_dt', 'mod_dt', 'use')
+    list_display = ('shop_employee_id', 'member', 'company', 'reg_dt', 'mod_dt', 'use')
 
 
 admin.site.register(ClassRepeatScheduleTb, ClassRepeatScheduleTbAdmin)
