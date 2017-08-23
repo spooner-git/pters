@@ -10,9 +10,19 @@
 
 
 {% block content %}
-  
+ 
+ <!--플로팅 버튼-->
+    <div id="float_btn" onclick="location.href='{% url 'trainer:member_add' %}'">
+      <img src={% static "common/res/float_plus.png" %} alt="">
+    </div>
+
+
+    <div id="shade">
+    </div>
+  <!--플로팅 버튼-->
+
 <div class="btn-group btn-group-justified">
-  <a href="#" class="btn btn-primary">진행 중 회원</a>
+  <a href="#" class="btn btn-primary active">진행 중 회원</a>
   <a href="#" class="btn btn-primary">종료된 회원</a>
 </div> 
 
@@ -23,7 +33,7 @@
     회원 정렬 기준
   </div>
   <div class="dropdown">
-    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">가나다순<span class="caret"></span></button>
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">정렬 기준<span class="caret"></span></button>
     <hr>
     <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
       <!-- 회원명 DB연동 필요-->
@@ -36,6 +46,7 @@
     </ul>
   </div>
 </div>
+
 
 <div class="container">
   <table class="table table-bordered">

@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^add_off/$', views.OffAddView.as_view(), name='add_off'),
     url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_repeat_off'),
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
+    url(r'^member_add/$', views.AddMemberView.as_view(), name='member_add'),
 ]

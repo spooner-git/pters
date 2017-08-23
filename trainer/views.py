@@ -47,3 +47,11 @@ class ManageMemberView(TemplateView):
         context = super(ManageMemberView, self).get_context_data(**kwargs)
 
         return context
+
+class AddMemberView(TemplateView):
+    template_name = 'member_add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AddMemberView, self).get_context_data(**kwargs)
+
+        return context
