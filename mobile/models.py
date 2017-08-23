@@ -171,6 +171,7 @@ class MemberTb(models.Model):
 
 
 class SettingTb(models.Model):
+    setting_id = models.CharField(db_column='SETTING_ID', primary_key=True, max_length=20)  # Field name made lowercase.
     member = models.ForeignKey(MemberTb, models.DO_NOTHING, db_column='MEMBER_ID')  # Field name made lowercase.
     setting_type_cd = models.CharField(db_column='SETTING_TYPE_CD', max_length=10)  # Field name made lowercase.
     setting_cd = models.CharField(db_column='SETTING_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
@@ -186,6 +187,7 @@ class SettingTb(models.Model):
 
 
 class ShopEmployeeTb(models.Model):
+    shop_employee_id = models.CharField(db_column='SHOP_EMPLOYEE_ID', primary_key=True, max_length=20)  # Field name made lowercase.
     member = models.ForeignKey(MemberTb, models.DO_NOTHING, db_column='MEMBER_ID')  # Field name made lowercase.
     company = models.ForeignKey(CompanyTb, models.DO_NOTHING, db_column='COMPANY_ID')  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
