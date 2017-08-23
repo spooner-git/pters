@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "common/css/pters.pt.add.css" %}>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+
+
+{% block content %}
+
+<div id="memberName">
+  <div>회원명</div>
+  <div class="dropdown">
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">회원명 선택<span class="caret"></span></button>
+    <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
+      <!-- 회원명 DB연동 필요-->
+      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">자이언티</a></li>
+      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">유재석</a></li>
+      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">마크</a></li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<div id="remainCount">
+  <div>남은 횟수</div>
+  <!-- 남은 횟수 DB연동 필요 -->
+  <div>5회</div>
+</div>
+
+<hr>
+
+<div id="dateSelector">
+  <div>날짜</div>
+  <p>Date: <input type="text" id="datepicker"></p>  
+</div>
+
+<hr>
+
+<div id="classTime">
+  <div>진행 시간</div>
+  <div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">1시간</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">2시간</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">3시간</label>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div id="classStartTime">
+  <div>시작 시각</div>
+  <div>
+    <div class="radio">
+      <label><input type="radio" name="optradio1">오전 9시</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio1">오후 12시</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio1">오후 7시</label>
+    </div>
+  </div>
+</div>
+
+
+    
+
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src={% static "common/js/pters.pt.add.js" %}></script>
+        
+{% endblock %}

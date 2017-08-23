@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "common/css/pters.off.repeat.add.css" %}>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        
+{% endblock %}
+
+
+
+{% block content %}
+  
+<div id="repeatSetting">
+  <div>반복 설정</div>
+  <div>
+    <div>반복 빈도</div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">매주</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">격주</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">일주일만</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">매일</label>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div id="dateSelector">
+  <div>반복 시작</div>
+  <p>Date: <input type="text" id="datepicker"></p>
+</div>
+
+<div id="dateSelector2">
+  <div>반복 종료</div>
+  <p>Date: <input type="text" id="datepicker2"></p>
+</div>
+
+<hr>
+
+<div id="daySelect">
+  <div>요일별 일정</div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" id="sun">일</button>
+      <button type="button" class="btn btn-primary" id="mon">월</button>
+      <button type="button" class="btn btn-primary" id="tue">화</button>
+      <button type="button" class="btn btn-primary" id="wed">수</button>
+      <button type="button" class="btn btn-primary" id="thr">목</button>
+      <button type="button" class="btn btn-primary" id="fri">금</button>
+      <button type="button" class="btn btn-primary" id="sat">토</button>
+    </div>
+  </div>
+
+<hr>
+
+<div id="classTime">
+  <div>반복 설정</div>
+  <div>
+    <div>진행 시간</div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">1시간</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">2시간</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio">3시간</label>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div id="startTime">
+  <div>시작 시각</div>
+  <div class="dropdown">
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">시간 선택<span class="caret"></span></button>
+    <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
+      <!-- 회원명 DB연동 필요-->
+      <li role="presentation"><a role="menuitem" tabindex="-1">오전 4시</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1">오전 5시</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1">오전 7시</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1">오전 9시</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1">오전 11시</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1">오전 12시</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1">오후 2시</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1">오후 7시</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1">오후 11시</a></li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <button type="button" class="btn btn-info">▼ 일정 추가 ▼</button>
+</div>
+
+<hr>
+
+
+<div id="summarySchedule">
+  <div>일정 요약</div>
+  <div>
+    <p>매주 월요일 오전 11시</p>
+    <p>반복종료 : PT 마감시</p>
+  </div>
+  <div>
+    <p>매주 수요일 오후 3시</p>
+    <p>반복종료 : 2017-12-31</p>
+  </div>
+
+</div>
+
+</div>
+
+
+    
+
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+         <script type="text/javascript" src={% static "common/js/pters.off.add.js" %}></script>
+
+        
+
+
+
+
+{% endblock %}

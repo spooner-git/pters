@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "common/css/pters.day.cal.css" %}>
+{% endblock %}
+
+{% block content %}
+    
+  <!--플로팅 버튼-->
+    <div id="float_btn">
+      <img src={% static "common/res/float_plus.png" %} alt="">
+    </div>
+    <div id="float_inner1" class="float_inner" onclick="location.href='{% url 'trainer:add_pt' %}'">
+    <a href="{% url 'trainer:add_pt' %}">추가</a>
+    <img src="" alt="">
+    </div>
+    <div id="float_inner2" class="float_inner" onclick="location.href='{% url 'trainer:add_off' %}'">
+    <a href="{% url 'trainer:add_off' %}">OFF</a>
+    <img src="" alt="">
+    </div>
+
+    <div id="shade">
+    </div>
+  <!--플로팅 버튼-->
+
+     <div id="ymdText">
+            <div class='arrowButton'>
+              <a href="" ><img src={% static "common/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+              <a href="" style="right: 0%"><img src={% static "common/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+            </div>
+            <img src={% static "common/res/bg.png" %} alt="bg-image" style="width: 100%;height:auto;position: relative;z-index: -1;">
+            <div id="yearText">
+            </div>
+            <div id="monthText">
+            </div>
+          </div>
+
+    <div id="gapbox">  
+    </div>
+
+    <div id="calendar" class="container" > <!-- Calendar container-->
+        
+          <div class="swiper-container">
+            <div class="swiper-wrapper"> 
+              <div class="swiper-slide" id="slide0"></div> <!--Index0-->
+              <div class="swiper-slide"></div> <!--Index1-->
+              <div class="swiper-slide" id="slide2"></div> <!--Index2-->
+            </div>  <!--Swiper-wrapper-->
+          </div> <!--Swiper-container-->
+  
+<!--Swiper-->    
+          <!-- <div class="swiper-pagination"></div> -->
+          <div id="cal_box" class="cal_box"></div>    
+
+    </div>
+{% endblock %}
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/javascript" src={% static "common/js/pters.day.cal.js" %}></script>
+        <script>
+            var myswiper = new Swiper('.swiper-container',{
+                initialSlide : 1,
+                speed : 50,
+                preventClicks : true,
+                keyboardControl : true,
+                pagination : '.swiper-pagination'
+            });
+        </script>
+{% endblock %}
