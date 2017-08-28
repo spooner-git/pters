@@ -5,4 +5,6 @@ mobile/migrations/__pycache__/
 schedule/__pycache__/
 trainer/__pycache__/
 trainee/__pycache__/
-
+schedule/migrations/__pycache__/
+trainer/migrations/__pycache__/
+trainee/migrations/__pycache__/

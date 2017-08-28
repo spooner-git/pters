@@ -16,18 +16,18 @@ from mobile.models import ShopEmployeeTb
 
 
 class ClassRepeatScheduleTbAdmin(admin.ModelAdmin):
-    list_display = ('class_repeat_schedule_id', 'class_field', 'en_dis_type_cd', 'repeat_type_cd'
+    list_display = ('class_repeat_schedule_id', 'class_field', 'repeat_type_cd'
                     , 'week_cd', 'start_date', 'end_date', 'start_time'
-                    , 'end_time', 'state_cd', 'reg_dt', 'mod_dt', 'use')
+                    , 'end_time', 'state_cd', 'en_dis_type', 'reg_dt', 'mod_dt', 'use')
 
 
 class ClassScheduleTbAdmin(admin.ModelAdmin):
-    list_display = ('class_schedule_id', 'class_field', 'en_dis_type_cd', 'start_dt', 'end_dt',
-                    'state_cd', 'reg_dt', 'mod_dt', 'use')
+    list_display = ('class_schedule_id', 'class_field', 'start_dt', 'end_dt',
+                    'state_cd', 'en_dis_type', 'reg_dt', 'mod_dt', 'use')
 
 
 class ClassTbAdmin(admin.ModelAdmin):
-    list_display = ('class_id', 'member', 'class_type_cd', 'subject_cd', 'start_date', 'end_date',
+    list_display = ('class_id', 'member', 'class_type_cd', 'subject_cd', 'subject_detail_nm', 'start_date', 'end_date',
                     'class_hour', 'start_hour_unit','class_member_num', 'state_cd', 'reg_dt', 'mod_dt', 'use')
 
 
@@ -42,8 +42,8 @@ class CompanyTbAdmin(admin.ModelAdmin):
 
 
 class LectureScheduleTbAdmin(admin.ModelAdmin):
-    list_display = ('lecture_schedule_id', 'lecture', 'en_dis_type_cd', 'start_dt','end_dt',
-                    'state_cd', 'sign_data_url', 'reg_dt', 'mod_dt', 'use')
+    list_display = ('lecture_schedule_id', 'lecture', 'start_dt','end_dt',
+                    'state_cd', 'sign_data_url', 'en_dis_type', 'reg_dt', 'mod_dt', 'use')
 
 
 class LectureTbAdmin(admin.ModelAdmin):
