@@ -11,6 +11,7 @@ from mobile.models import LogTb
 from mobile.models import MemberTb
 from mobile.models import SettingTb
 from mobile.models import ShopEmployeeTb
+from mobile.models import IdTb
 
 # Register your models here.
 
@@ -69,6 +70,8 @@ class SettingTbAdmin(admin.ModelAdmin):
 class ShopEmployeeTbAdmin(admin.ModelAdmin):
     list_display = ('shop_employee_id', 'member', 'company', 'reg_dt', 'mod_dt', 'use')
 
+class IdTbAdmin(admin.ModelAdmin):
+    list_display = ('idx', 'table_cd', 'id', 'reg_dt', 'use')
 
 admin.site.register(ClassRepeatScheduleTb, ClassRepeatScheduleTbAdmin)
 admin.site.register(ClassScheduleTb, ClassScheduleTbAdmin)
@@ -81,3 +84,4 @@ admin.site.register(LogTb, LogTbAdmin)
 admin.site.register(MemberTb, MemberTbAdmin)
 admin.site.register(SettingTb, SettingTbAdmin)
 admin.site.register(ShopEmployeeTb, ShopEmployeeTbAdmin)
+admin.site.register(IdTb, IdTbAdmin)

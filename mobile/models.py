@@ -70,7 +70,7 @@ class ClassTb(models.Model):
 class CommonCdTb(models.Model):
     group_cd = models.CharField(db_column='GROUP_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     common_cd = models.CharField(db_column='COMMON_CD', primary_key=True, max_length=10)  # Field name made lowercase.
-    common_cd_nm = models.CharField(db_column='COMMON_CD_NM', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    common_cd_nm = models.CharField(db_column='COMMON_CD_NM', max_length=100, blank=True, null=True)  # Field name made lowercase.
     group_cd_nm = models.CharField(db_column='GROUP_CD_NM', max_length=20, blank=True, null=True)  # Field name made lowercase.
     upper_common_cd = models.CharField(db_column='UPPER_COMMON_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     upper_group_cd = models.CharField(db_column='UPPER_GROUP_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
@@ -97,6 +97,18 @@ class CompanyTb(models.Model):
     class Meta:
         managed = False
         db_table = 'COMPANY_TB'
+
+
+class IdTb(models.Model):
+    idx = models.AutoField(db_column='IDX', primary_key=True)  # Field name made lowercase.
+    table_cd = models.CharField(db_column='TABLE_CD', max_length=20)  # Field name made lowercase.
+    id = models.CharField(db_column='ID', max_length=20)  # Field name made lowercase.
+    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'ID_TB'
 
 
 class LectureScheduleTb(models.Model):
