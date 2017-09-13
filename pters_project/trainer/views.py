@@ -1,11 +1,20 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, render_to_response, redirect
 
 # Create your views here.
+from django.template import RequestContext
+from django.urls import reverse
+from django.utils.regex_helper import Choice
 from django.views.generic import TemplateView
+from mobile.models import MemberTb
 
 
 class IndexView(TemplateView):
-    template_name = 'index.html'
+    def get(self, request):
+        if request.is_mobile:
+            return redirect('mobile:index')
+
+    template_name = 'login_trainer.html'
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)

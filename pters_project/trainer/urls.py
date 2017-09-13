@@ -18,6 +18,7 @@ from trainer import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
+    #url(r'^login/$', views.LoginView.as_view(), 'login'),
     url(r'^add_pt/$', views.PtAddView.as_view(), name='add_pt'),
     url(r'^add_off/$', views.OffAddView.as_view(), name='add_off'),
     url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_repeat_off'),

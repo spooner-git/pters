@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -23,7 +24,8 @@
                     <div class="panel-title">환영합니다!</div>
                 </div>
                 <div class="panel-body">
-                    <form id="login-form">
+                    <form action="/trainer/login/" id="login-form" method="post">
+                        {% csrf_token %}
                         <div>
                             <input type="text" class="form-control" name="username" placeholder="Username" autofocus>
                         </div>
