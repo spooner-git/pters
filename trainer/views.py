@@ -55,3 +55,11 @@ class AddMemberView(TemplateView):
         context = super(AddMemberView, self).get_context_data(**kwargs)
 
         return context
+
+class LogInTrainerView(TemplateView):
+    template_name = 'login_trainer.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LogInTrainerView, self).get_context_data(**kwargs)
+
+        return context

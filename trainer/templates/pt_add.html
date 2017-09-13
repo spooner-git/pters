@@ -13,12 +13,9 @@
 <div id="memberName">
   <div>회원명</div>
   <div class="dropdown">
-    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">회원명 선택<span class="caret"></span></button>
-    <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">회원명 선택<span class="caret"></span></button>
+    <ul class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
-      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">자이언티</a></li>
-      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">유재석</a></li>
-      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">마크</a></li>
     </ul>
   </div>
 </div>
@@ -28,14 +25,14 @@
 <div id="remainCount">
   <div>남은 횟수</div>
   <!-- 남은 횟수 DB연동 필요 -->
-  <div>5회</div>
+  <div></div>
 </div>
 
 <hr>
 
 <div id="dateSelector">
   <div>날짜</div>
-  <p>Date: <input type="text" id="datepicker"></p>  
+  <p class="datepicktext"><input type="text" id="datepicker"></p>  
 </div>
 
 <hr>
@@ -44,33 +41,36 @@
   <div>진행 시간</div>
   <div>
     <div class="radio">
-      <label><input type="radio" name="optradio">1시간</label>
+      <label id="onehour"><input type="radio" name="classtime" value="1">1시간</label>
     </div>
     <div class="radio">
-      <label><input type="radio" name="optradio">2시간</label>
+      <label id="twohour"><input type="radio" name="classtime" value="2">2시간</label>
     </div>
     <div class="radio">
-      <label><input type="radio" name="optradio">3시간</label>
+      <label id="threehour"><input type="radio" name="classtime" value="3">3시간</label>
     </div>
   </div>
-</div>
+</div> <!--id addPlanModal-->
 
 <hr>
 
 <div id="classStartTime">
   <div>시작 시각</div>
-  <div>
-    <div class="radio">
-      <label><input type="radio" name="optradio1">오전 9시</label>
+  <div id="startTimeSelect">
+      <div class="radio">
+      <label><input type="radio" name="classstarttime" value="5_00">오전 5시</label>
     </div>
     <div class="radio">
-      <label><input type="radio" name="optradio1">오후 12시</label>
+      <label><input type="radio" name="classstarttime" value="9_00">오전 9시</label>
     </div>
     <div class="radio">
-      <label><input type="radio" name="optradio1">오후 7시</label>
+      <label><input type="radio" name="classstarttime" value="16_00">오후 4시</label>
     </div>
   </div>
 </div>
+
+<hr>
+<button type="button" class="btn btn-info" id="addCompleteBtn">등록</button>
 
 
     

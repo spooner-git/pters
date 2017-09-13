@@ -1,27 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        <meta name="description" content="">
-        <meta name="author" content="">
+{% extends "base.html" %}
+{% load static %}
 
-        <!-- Bootstrap core CSS -->
-        <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
-        <link rel="stylesheet" href={% static "common/css/pters.base.set.css" %}>
-        <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
-        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+{% block local_css %}
+    <meta name="login" content="trainer_login">
+    <link rel="stylesheet" href={% static "common/css/login/pters.trainer.login.css" %}>
+{% endblock %}
 
-    </head>
-    <body>
-    <div class="container">
+{% block content %}
+
+    <div class="logintext">
+        <span>PTERS 로그인</span>
+    </div>
+    <div class="container loginbox">
         <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <div class="panel-title">환영합니다!</div>
-                </div>
+            <div class="">
                 <div class="panel-body">
                     <form id="login-form">
                         <div>
@@ -29,7 +21,10 @@
                         </div>
                         <div>
                             <input type="password" class="form-control" name="password" placeholder="Password">
-                       </div>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="login">다음부터 자동 로그인</label>
+                        </div>
                         <div>
                             <button type="submit" class="form-control btn btn-primary">로그인</button>
                         </div>
@@ -38,15 +33,11 @@
            </div>
         </div>
     </div>
+{% endblock %}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src={% static "common/js/bootstrap.min.js" %}></script>
-    <script type="text/javascript" src={% static "common/js/jquery.swipe.js" %}></script>
-    <script type="text/javascript" src={% static "common/js/jquery.touch.js" %}></script>
-    <script type="text/javascript" src={% static "common/js/swiper.jquery.min.js" %}></script>
-
-    </body>
-</html>
+{% block local_js_footer %}
+    <script type="text/javascript" src={% static "common/js/login/pters.trainer.login.js" %}></script>
+{% endblock %}
 
 <!--
 

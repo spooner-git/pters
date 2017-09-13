@@ -5,3 +5,140 @@ body{
 .pters_dropdown_custom{
 	width: 60%;
 }
+
+
+.datepicktext{
+	color: black;
+}
+
+#memberName{
+	height: 40px;
+	position: relative;
+	margin-top: 10px;
+}
+
+#memberName div:nth-child(1){
+	float: left;
+}
+
+.dropdown{
+	float: right;
+	width: 73%;
+	height: 40px;
+	top: 29%;
+}
+
+.dropdown button{
+	font-size: 15px;
+}
+
+.pters_dropdown_custom{
+	width: 100%;
+}
+
+.dropdown-menu li{
+	text-align: center;
+	font-size: 15px;
+	padding-top:10px;
+	padding-bottom:10px;
+	
+	border-bottom: 0.5px solid #282828;
+}
+
+.dropdown ul{
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.btn-default{
+	border: 0px;
+	border-bottom: 0.5px solid black;
+	border-radius: 0px;
+}
+
+#remainCount{
+	height: 40px;
+	position: relative;
+}
+
+#remainCount div:nth-child(2){
+	float: right;
+	height: 40px;
+	width: 73%;
+	text-align: center;
+}
+
+#remainCount div:nth-child(2) div{
+	border-bottom: 0.5px solid black;
+}
+
+
+#dateSelector{
+	height: 40px;
+}
+
+.datepicktext{
+	float: right;
+	width: 73%;
+}
+
+.datepicktext input{
+	width: 100%;
+	border: 0px;
+	border-bottom: 0.5px solid black;
+	text-align: center;
+	font-size: 15px;
+}
+
+#classTime{
+	height: 130px;
+
+}
+
+
+#onehour{
+	width: 73%;
+	float: right;
+	border-top: 0.5px solid black;
+	padding-top: 10px;
+	padding-bottom: 10px;	
+	text-align: center;
+	font-weight: 500;
+	height: 40px;
+}
+
+
+#twohour{
+	width: 73%;
+	float: right;
+	border-top: 0.5px solid black;
+	border-bottom: 0.5px solid black;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+	font-weight: 500;
+	height: 40px;
+}
+
+
+#threehour{
+	width: 73%;
+	float: right;
+	border-bottom: 0.5px solid black;
+	padding-top: 10px;
+	padding-bottom: 10px;	
+	text-align: center;
+	font-weight: 500;
+	height: 40px;
+}
+
+.radio label input{
+	right: 5%;
+}
+
+
+hr{
+	border-top: 1px solid transparent !important;
+}
+
+
