@@ -1,18 +1,5 @@
-<<<<<<< HEAD:trainer/templates/login_trainer.html
 {% extends "base.html" %}
 {% load static %}
-=======
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        <meta name="description" content="">
-        <meta name="author" content="">
->>>>>>> 90f3de6714a40aa68d48c6bfc90e727a1a389c81:pters_project/trainer/templates/login_trainer.html
 
 {% block local_css %}
     <meta name="login" content="trainer_login">
@@ -27,7 +14,7 @@
     <div class="container loginbox">
         <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
             <div class="">
-                <div class="panel-body">
+                <div>
                     <form action="/trainer/login/" id="login-form" method="post">
                         {% csrf_token %}
                         <div>

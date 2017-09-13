@@ -1,0 +1,16 @@
+body{
+	padding-top: 50px;
+}
+
+.loginbox{
+	padding-top: 37.8%;
+}
+
+.logintext{
+	padding-top: 21.7%;
+}
+
+.logintext span{
+	display: block;
+	text-align: center;
+}
