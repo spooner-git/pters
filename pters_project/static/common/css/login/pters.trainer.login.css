@@ -8,6 +8,10 @@ body{
 	z-index: -1;
 }
 
+#login-form img{
+	width: 5%;
+}
+
 #pterstext{
 	color: #fe4e65;
 }
@@ -38,6 +42,8 @@ body{
 	border: 0px;
 	border-bottom: 0.5px solid #ffffff;
 	border-radius: 0px;
+	width: 90%;
+	display: inline;
 }
 
 

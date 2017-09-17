@@ -19,9 +19,11 @@
                     <form action="/trainer/login/" id="login-form" method="post">
                         {% csrf_token %}
                         <div>
+                            <img src={% static "common/res/login/icon-user.png" %}>
                             <input type="text" class="loginboxstyle form-control" name="username" placeholder="아이디" autofocus>
                         </div>
-                        <div>
+                        <div style="margin-top:5%;">
+                            <img src={% static "common/res/login/icon-lock.png" %}>
                             <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
                         </div>
                         <div class="checkbox">
