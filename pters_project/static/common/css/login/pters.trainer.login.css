@@ -1,5 +1,5 @@
 body{
-	padding-top: 50px;
+	padding-top: 0px;
 }
 
 #loginimg{
@@ -10,6 +10,7 @@ body{
 
 #login-form img{
 	width: 5%;
+	margin-right: 2%;
 }
 
 #pterstext{
@@ -21,11 +22,11 @@ body{
 }
 
 .loginbox{
-	padding-top: 37.8%;
+	padding-top: 31%;
 }
 
 .logintext{
-	padding-top: 21.7%;
+	padding-top: 39%;
 }
 
 .logintext div{
@@ -38,12 +39,12 @@ body{
 }
 
 .loginboxstyle{
-	background-color: transparent;
-	border: 0px;
-	border-bottom: 0.5px solid #ffffff;
-	border-radius: 0px;
-	width: 90%;
-	display: inline;
+	background-color: transparent !important;
+	border: 0px !important;
+	border-bottom: 0.5px solid #ffffff !important;
+	border-radius: 0px !important;
+	width: 90% !important;
+	display: inline !important;
 }
 
 
@@ -56,26 +57,26 @@ body{
 }
 
 .form-control:focus{
-	border-color: #fe4e65;
-	box-shadow: inset 0 1px 1px transparent, 0 0 8px transparent;
+	border-color: #fe4e65 !important;
+	box-shadow: inset 0 1px 1px transparent, 0 0 8px transparent !important;
 }
 
 .btn-primary{
-	background-color: transparent;
-	border-color: #ffffff;
-	border-radius: 0px;
-	height: 50px;
-	font-size: 15px;
-	font-weight: bold;
-	margin-top: 50px;
+	background-color: transparent !important;
+	border-color: #ffffff !important;
+	border-radius: 0px !important;
+	height: 50px !important;
+	font-size: 15px !important;
+	font-weight: bold !important;
+	margin-top: 50px !important;
 }
 
 .btn-primary:hover{
-	background-color: transparent;
-	border-color: #ffffff;
-	border-radius: 0px;
-	height: 50px;
-	font-size: 15px;
-	font-weight: bold;
-	margin-top: 50px;
+	background-color: transparent !important;
+	border-color: #ffffff !important;
+	border-radius: 0px !important;
+	height: 50px !important;
+	font-size: 15px!important;
+	font-weight: bold !important;
+	margin-top: 50px !important;
 }
