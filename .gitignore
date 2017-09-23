@@ -1,7 +1,7 @@
 .idea/workspace.xml
-pters_project/pters/__pycache__/
-pters_project/mobile/__pycache__/
-pters_project/mobile/migrations/__pycache__/
+pters_project/config/__pycache__/
+pters_project/login/__pycache__/
+pters_project/login/migrations/__pycache__/
 pters_project/schedule/__pycache__/
 pters_project/trainer/__pycache__/
 pters_project/trainee/__pycache__/
