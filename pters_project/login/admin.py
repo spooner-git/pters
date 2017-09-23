@@ -1,17 +1,17 @@
 from django.contrib import admin
 
-from mobile.models import ClassRepeatScheduleTb
-from mobile.models import ClassScheduleTb
-from mobile.models import ClassTb
-from mobile.models import CommonCdTb
-from mobile.models import CompanyTb
-from mobile.models import LectureScheduleTb
-from mobile.models import LectureTb
-from mobile.models import LogTb
-from mobile.models import MemberTb
-from mobile.models import SettingTb
-from mobile.models import ShopEmployeeTb
-from mobile.models import IdTb
+from login.models import ClassRepeatScheduleTb
+from login.models import ClassScheduleTb
+from login.models import ClassTb
+from login.models import CommonCdTb
+from login.models import CompanyTb
+from login.models import LectureScheduleTb
+from login.models import LectureTb
+from login.models import LogTb
+from login.models import MemberTb
+from login.models import SettingTb
+from login.models import ShopEmployeeTb
+from login.models import IdTb
 
 # Register your models here.
 
