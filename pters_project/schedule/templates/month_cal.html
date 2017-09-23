@@ -3,14 +3,14 @@
 
 {% block local_css %}
 
-        <link rel="stylesheet" href={% static "common/css/pters.month.cal.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.month.cal.css" %}>
 {% endblock %}
 
 {% block content %}
 
   <!--플로팅 버튼-->
     <div id="float_btn">
-      <img src={% static "common/res/float_plus.png" %} alt="">
+      <img src={% static "user/res/float_plus.png" %} alt="">
     </div>
     <div id="float_inner1" class="float_inner" onclick="location.href='{% url 'trainer:add_pt' %}'">
     <a href="{% url 'trainer:add_pt' %}">추가</a>
@@ -27,7 +27,7 @@
 
 
     <div id="ymdText">
-        <img src={% static "common/res/bg.png" %} alt="bg-image" style="width: 100%;height:auto;position: relative;z-index: -1;">
+        <img src={% static "user/res/bg.png" %} alt="bg-image" style="width: 100%;height:auto;position: relative;z-index: -1;">
         <div id="yearText">
         </div>
         <div id="monthText">
@@ -79,7 +79,7 @@
         </script>
 
         <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/javascript" src={% static "common/js/pters.month.cal.js" %}></script>
+        <script type="text/javascript" src={% static "user/js/pters.month.cal.js" %}></script>
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 1,

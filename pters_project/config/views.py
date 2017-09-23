@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.views.generic import TemplateView
-from mobile.models import MemberTb
+from login.models import MemberTb
 
 
 class HomeView(TemplateView):
