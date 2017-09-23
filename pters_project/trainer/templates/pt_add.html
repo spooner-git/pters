@@ -10,35 +10,35 @@
 
 {% block content %}
 
-<div id="memberName">
-  <div>회원명</div>
+<div id="memberName" class="ptaddbox">
+  <div class="ptaddboxtext">회원명</div>
   <div class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">회원명 선택<span class="caret"></span></button>
     <ul class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
+      <li><a href="#">김종국</a></li>
+      <li><a href="#">유재석</a></li>
+      <li><a href="#">하하</a></li>
     </ul>
   </div>
 </div>
 
-<hr>
 
-<div id="remainCount">
-  <div>남은 횟수</div>
+<div id="remainCount" class="ptaddbox">
+  <div class="ptaddboxtext">남은 횟수</div>
   <!-- 남은 횟수 DB연동 필요 -->
   <div></div>
 </div>
 
-<hr>
 
-<div id="dateSelector">
-  <div>날짜</div>
+<div id="dateSelector" class="ptaddbox">
+  <div class="ptaddboxtext">날짜</div>
   <p class="datepicktext"><input type="text" id="datepicker"></p>  
 </div>
 
-<hr>
 
-<div id="classTime">
-  <div>진행 시간</div>
+<div id="classTime" class="ptaddbox">
+  <div class="ptaddboxtext">진행 시간</div>
   <div>
     <div class="radio">
       <label id="onehour"><input type="radio" name="classtime" value="1">1시간</label>
@@ -52,10 +52,9 @@
   </div>
 </div> <!--id addPlanModal-->
 
-<hr>
 
-<div id="classStartTime">
-  <div>시작 시각</div>
+<div id="classStartTime" class="ptaddbox">
+  <div class="ptaddboxtext">시작 시각</div>
   <div id="startTimeSelect">
       <div class="radio">
       <label><input type="radio" name="classstarttime" value="5_00">오전 5시</label>
@@ -68,10 +67,6 @@
     </div>
   </div>
 </div>
-
-<hr>
-<button type="button" class="btn btn-info" id="addCompleteBtn">등록</button>
-
 
     
 
