@@ -2,6 +2,8 @@
 
 body{
 	padding-top: 50px;
+	background-color: #f4f4f4;
+	font-family: 'Noto Sans KR';
 }
 
 .ptaddbox{
@@ -13,11 +15,11 @@ body{
 .ptaddboxtext{
 	font-size: 14px;
 	color: #3b3d3d;
-	font-family: 'Noto Sans KR', sans-serif;
 }
 
 .pters_dropdown_custom{
 	width: 60%;
+	font-family: 'Noto Sans KR';
 }
 
 
@@ -25,29 +27,22 @@ body{
 	color: black;
 }
 
-#memberName{
-	height: 40px;
-	position: relative;
-	margin-top: 10px;
-}
-
-#memberName div:nth-child(1){
-	float: left;
-}
 
 .dropdown{
-	float: right;
-	width: 73%;
+	width: 100%;
 	height: 40px;
-	top: 29%;
+	margin-top: 10px;
 }
 
 .dropdown button{
 	font-size: 15px;
+	height: 100%;
 }
 
 .pters_dropdown_custom{
 	width: 100%;
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 .dropdown-menu li{
@@ -55,9 +50,9 @@ body{
 	font-size: 15px;
 	padding-top:10px;
 	padding-bottom:10px;
-	
-	border-bottom: 0.5px solid #282828;
+	box-shadow: 0 0.5px 0 0 #3b3d3d;
 }
+
 
 .dropdown ul{
 	padding-top: 0px;
@@ -66,21 +61,21 @@ body{
 
 .btn-default{
 	border: 0px;
-	border-bottom: 0.5px solid black;
+	box-shadow: 0 0.5px 0 0 #3b3d3d;
 	border-radius: 0px;
 }
 
 #remainCount{
-	height: 40px;
 	position: relative;
 }
 
+
 #remainCount div:nth-child(2){
-	float: right;
-	height: 40px;
-	width: 73%;
+	background-color: #ffffff;
+	box-shadow: 0 0.5px 0 0 #3b3d3d;
 	text-align: center;
 }
+
 
 #remainCount div:nth-child(2) div{
 	border-bottom: 0.5px solid black;
@@ -88,71 +83,26 @@ body{
 
 
 #dateSelector{
-	height: 40px;
+	
 }
 
-.datepicktext{
-	float: right;
-	width: 73%;
-}
 
 .datepicktext input{
 	width: 100%;
+	height: 100%;
 	border: 0px;
-	border-bottom: 0.5px solid black;
+	box-shadow: 0 0.5px 0 0 #3b3d3d;
 	text-align: center;
 	font-size: 15px;
 }
 
-#classTime{
-	height: 145px;
-
+#ui-datepicker-div{
+	left: 0px !important;
+	width: 100%;
 }
 
-
-#onehour{
-	width: 73%;
-	float: right;
-	border-top: 0.5px solid black;
-	padding-top: 10px;
-	padding-bottom: 10px;	
-	text-align: center;
-	font-weight: 500;
-	height: 40px;
+#icons{
+	width: 15px;
+	padding-bottom: 4px;
 }
-
-
-#twohour{
-	width: 73%;
-	float: right;
-	border-top: 0.5px solid black;
-	border-bottom: 0.5px solid black;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	text-align: center;
-	font-weight: 500;
-	height: 40px;
-}
-
-
-#threehour{
-	width: 73%;
-	float: right;
-	border-bottom: 0.5px solid black;
-	padding-top: 10px;
-	padding-bottom: 10px;	
-	text-align: center;
-	font-weight: 500;
-	height: 40px;
-}
-
-.radio label input{
-	right: 5%;
-}
-
-
-hr{
-	border-top: 1px solid transparent !important;
-}
-
 
