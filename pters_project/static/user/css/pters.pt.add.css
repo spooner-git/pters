@@ -45,12 +45,18 @@ body{
 	padding-bottom: 0;
 }
 
+.dropdown_selected{
+	box-shadow: 0 0.5px 0 0 red !important;
+	-webkit-box-shadow: 0 0.5px 0 0 red !important;
+}
+
 .dropdown-menu li{
 	text-align: center;
 	font-size: 15px;
 	padding-top:10px;
 	padding-bottom:10px;
 	box-shadow: 0 0.5px 0 0 #3b3d3d;
+	-webkit-box-shadow: 0 0.5px 0 0 #3b3d3d;
 }
 
 
@@ -62,7 +68,9 @@ body{
 .btn-default{
 	border: 0px;
 	box-shadow: 0 0.5px 0 0 #3b3d3d;
+	-webkit-box-shadow: 0 0.5px 0 0 #3b3d3d;
 	border-radius: 0px;
+	-webkit-border-radius: 0px;
 }
 
 #remainCount{
@@ -73,6 +81,7 @@ body{
 #remainCount div:nth-child(2){
 	background-color: #ffffff;
 	box-shadow: 0 0.5px 0 0 #3b3d3d;
+	-webkit-box-shadow: 0 0.5px 0 0 #3b3d3d;
 	text-align: center;
 }
 
@@ -92,6 +101,7 @@ body{
 	height: 100%;
 	border: 0px;
 	box-shadow: 0 0.5px 0 0 #3b3d3d;
+	-webkit-box-shadow: 0 0.5px 0 0 #3b3d3d;
 	text-align: center;
 	font-size: 15px;
 }
