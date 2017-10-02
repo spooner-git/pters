@@ -1,43 +1,10 @@
-/*
-@font-face{
-	font-family:'NotoBlack';
-	src:url('../fonts/NotoSansCJKkr-Black.otf') format('opentype');
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body{
+	font-family: 'Noto Sans KR';
+	padding-top: 50px;
+	width: 100%;
 }
-
-
-
-@font-face{
-	font-family:'NotoDemiLight';
-	src:url('../fonts/NotoSansCJKkr-DemiLight.otf') format('opentype');
-}
-
-@font-face{
-	font-family:'NotoLight';
-	src:url('../fonts/NotoSansCJKkr-Light.otf') format('opentype');
-}
-
-@font-face{
-	font-family:'NotoMedium';
-	src:url('../fonts/NotoSansCJKkr-Medium.otf') format('opentype');
-}
-
-@font-face{
-	font-family:'NotoRegular';
-	src:url('../fonts/NotoSansCJKkr-Regular.otf') format('opentype');
-}
-
-
-@font-face{
-	font-family:'NotoBold';
-	src:url('../fonts/NotoSansCJKkr-Bold.otf') format('opentype');
-}
-
-@font-face{
-	font-family:'NotoThin';
-	src:url('../fonts/NotoSansCJKkr-Thin.otf') format('opentype');
-}
-*/
-
 
 
 #shade{
@@ -48,23 +15,21 @@
 	z-index: -1;
 }
 
-#float_btn{
+#float_btn{  /*2017.10.2*/
 	position: fixed;
 	width: 50px;
 	height: 50px;
 	bottom: 25px;
 	right: 25px;
-	background-color: grey;
-	opacity: 0.5;
 	border-radius: 50%;
 	z-index: 10;
 	cursor: pointer;
 }
 
-#float_btn img{
-	width: 30px;
-	height: 30px;
-	margin: 10px;
+#float_btn img{ /*2017.10.2*/
+	width: 100%;
+	height: 100%;
+	
 }
 
 .rotate_btn{
@@ -74,7 +39,41 @@
 
 
 
-.float_inner{
+#float_inner1{ /*2017.10.2*/
+	background-color: #fe4e65;
+}
+
+#float_inner1 a{ /*2017.10.2*/
+	color: #ffffff;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
+	height: 70%;
+	font-weight: bold;
+}
+
+#float_inner2{ /*2017.10.2*/
+	background-color: #ffffff;
+
+}
+
+#float_inner2 a{ /*2017.10.2*/
+	color: #282828;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
+	height: 70%;
+	font-weight: bold;
+}
+
+
+.float_inner{ /*2017.10.2*/
 	position: fixed;
 	width: 50px;
 	height: 50px;
@@ -84,6 +83,8 @@
 	opacity: 0;
 	border-radius: 50%;
 	z-index: 9;	
+	font-size: 13px;
+	text-align: center; 
 }
 
 #monthText{
@@ -128,10 +129,6 @@
 }
 
 
-body{
-	padding-top: 50px;
-	width: 100%;
-}
 
 .arrowButton{
 	position: absolute;
