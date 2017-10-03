@@ -1,17 +1,17 @@
 from django.contrib import admin
 
-from login.models import ClassRepeatScheduleTb
-from login.models import ClassScheduleTb
-from login.models import ClassTb
 from login.models import CommonCdTb
-from login.models import CompanyTb
-from login.models import LectureScheduleTb
-from login.models import LectureTb
 from login.models import LogTb
 from login.models import MemberTb
-from login.models import SettingTb
-from login.models import ShopEmployeeTb
 from login.models import IdTb
+from schedule.models import ClassRepeatScheduleTb
+from schedule.models import ClassScheduleTb
+from schedule.models import ClassTb
+from schedule.models import LectureScheduleTb
+from schedule.models import LectureTb
+from trainer.models import CompanyTb
+from trainer.models import SettingTb
+from trainer.models import ShopEmployeeTb
 
 # Register your models here.
 
@@ -33,7 +33,7 @@ class ClassTbAdmin(admin.ModelAdmin):
 
 
 class CommonCdTbAdmin(admin.ModelAdmin):
-    list_display = ('group_cd', 'common_cd', 'common_cd_nm', 'group_cd_nm',
+    list_display = ('common_cd', 'common_cd_nm', 'group_cd', 'group_cd_nm',
                     'upper_common_cd', 'upper_group_cd', 'attribute1', 'order', 'use')
 
 
@@ -58,7 +58,7 @@ class LogTbAdmin(admin.ModelAdmin):
 
 
 class MemberTbAdmin(admin.ModelAdmin):
-    list_display = ('member_id', 'member_type_cd', 'author_cd', 'id', 'pw', 'name', 'phone', 'age', 'sex',
+    list_display = ('user_id', 'name', 'phone', 'age', 'sex',
                     'address', 'job', 'contents', 'reg_dt', 'mod_dt', 'use')
 
 
@@ -70,8 +70,10 @@ class SettingTbAdmin(admin.ModelAdmin):
 class ShopEmployeeTbAdmin(admin.ModelAdmin):
     list_display = ('shop_employee_id', 'member', 'company', 'reg_dt', 'mod_dt', 'use')
 
+
 class IdTbAdmin(admin.ModelAdmin):
     list_display = ('idx', 'table_cd', 'id', 'reg_dt', 'use')
+
 
 admin.site.register(ClassRepeatScheduleTb, ClassRepeatScheduleTbAdmin)
 admin.site.register(ClassScheduleTb, ClassScheduleTbAdmin)

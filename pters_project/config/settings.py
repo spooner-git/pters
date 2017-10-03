@@ -11,9 +11,6 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-#import MySQLdb
-#try:
-#import configparser as ConfigParser
 import pymysql
 pymysql.install_as_MySQLdb()
 #except ImportError:
@@ -63,6 +60,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    # "allauth.account.auth_backends.AuthenticationBackend",
+)
 
 TEMPLATES = [
     {
@@ -144,3 +149,9 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR,"static"),
   'static/',
 )
+
+#AUTH_USER_MODEL = 'core.User'
+LOGIN_URL = '/trainer/trainer_login/'
+LOGIN_REDIRECT_URL = '/trainer/index/'
+#AUTH_USER_MODEL = 'login.models.MemberTb'
+

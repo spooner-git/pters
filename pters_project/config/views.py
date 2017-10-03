@@ -3,9 +3,12 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.generic import TemplateView
 from login.models import MemberTb
+from django.contrib.auth.mixins import LoginRequiredMixin
+from config.settings import LOGIN_URL
 
 
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
+    #login_url = LOGIN_URL
     template_name = 'main_trainer.html'
 
     def get_context_data(self, **kwargs):
@@ -16,8 +19,11 @@ class HomeView(TemplateView):
 
 
 def get_login_member_info(context):
-    member_detail = MemberTb.objects.filter(member_id='TB05000002')
-    context['login_member'] = list(member_detail)[0]
+    #user = User.objects.get(username='admin').select_related
+    #member_detail = MemberTb.objects.get(user_id='2')
+    #print(member_detail.user.username)
+    #print(member_detail.name)
+    #context['login_member'] = member_detail
 
     return context
 
