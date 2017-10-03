@@ -38,10 +38,10 @@
                         <span class="icon-bar" style="width: 20px;"></span>
                     </button>
                     {% block nav_center_img %}
-                        <a id="uptext" class="navbar-brand" href="{% url 'home' %}">{{login_member.name}} 코치님 일정</a>
+                        <a id="uptext" class="navbar-brand" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
-                        <img src={% static "user/res/main/alarm-on.png" %} style="width:20px;">
+                        <a href="{% url 'trainer:logout' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
                     </button>
                     <div id="outer_Sidenav" class="outer_Sidenav sidenav">
                         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -52,7 +52,7 @@
                         <div class="sidebar_upper">
                             <a href="{% url 'home' %}" style="width:100%;height: 100%;z-index: 1"></a>
                             <div style="z-index: -1"><img src={% static "user/res/icon-pf.png" %} alt="#"></div>
-                            <div id="user_name">{{login_member.name}} 코치님</div>
+                            <div id="user_name">{{user.first_name}} 코치님</div>
                             <div id="welcome">안녕하세요!</div>
                         </div>                     
 
@@ -63,11 +63,12 @@
                         <div class="sidebar_div" style="height: 100%;"></div>
                         <div class="sidebar_div sidebar_div_last">
                           <div class="sidebar_div_last1">
-                            <img src={% static "user/res/icon-setting.png" %} class="sidebar_icon sidebar_icon_setting" alt="#"><a href="{% url 'trainer:trainer_login' %}" class="sidebar_text">서비스 설정</a>
+                            <img src="{% static "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#"><a href="{% url 'trainer:trainer_login' %}" class="sidebar_text">서비스 설정</a>
                           </div>
                           <div class="sidebar_div_last2">
-                            <img src={% static "user/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon"></div>
+                            <img src={% static "user/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon">
                           </div>
+                        </div>
                     </div>
                     
                 </div>

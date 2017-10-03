@@ -19,6 +19,7 @@ from config import views
 
 urlpatterns = [
     url(r'^$', views.HomeView.as_view(), name='home'),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^schedule/', include('schedule.urls', namespace='schedule')),
     url(r'^trainer/', include('trainer.urls', namespace='trainer')),
     url(r'^trainee/', include('trainee.urls', namespace='trainee')),
