@@ -10,14 +10,14 @@
 
   <!--플로팅 버튼-->
     <div id="float_btn">
-      <img src={% static "user/res/float_plus.png" %} alt="">
+      <img src={% static "user/res/floatbtn/btn-plus.png" %} alt=""> <!--2017.10.2-->
     </div>
     <div id="float_inner1" class="float_inner" onclick="location.href='{% url 'trainer:add_pt' %}'">
-    <a href="{% url 'trainer:add_pt' %}">추가</a>
+    <a href="{% url 'trainer:add_pt' %}">PT<br/>일정</a>
     <img src="" alt="">
     </div>
     <div id="float_inner2" class="float_inner" onclick="location.href='{% url 'trainer:add_off' %}'">
-    <a href="{% url 'trainer:add_off' %}">OFF</a>
+    <a href="{% url 'trainer:add_off' %}">OFF<br/>일정</a>
     <img src="" alt="">
     </div>
 
@@ -41,11 +41,11 @@
             <table class="calendar-style calendar-day-style">
                 <tr>
                     <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
-                    <td id="monday"><p class="calendar_image weekday_style">월</p></td>
-                    <td id="tuesday"><p class="calendar_image weekday_style">화</p></td>
-                    <td id="wednesday"><p class="calendar_image weekday_style">수</p></td>
-                    <td id="thursday"><p class="calendar_image weekday_style">목</p></td>
-                    <td id="friday"><p class="calendar_image weekday_style">금</p></td>
+                    <td id="monday"><p class="calendar_image weekday_style weekdays">월</p></td>
+                    <td id="tuesday"><p class="calendar_image weekday_style weekdays">화</p></td>
+                    <td id="wednesday"><p class="calendar_image weekday_style weekdays">수</p></td>
+                    <td id="thursday"><p class="calendar_image weekday_style weekdays">목</p></td>
+                    <td id="friday"><p class="calendar_image weekday_style weekdays">금</p></td>
                     <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
                 </tr>
             </table>

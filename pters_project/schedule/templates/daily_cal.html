@@ -9,14 +9,14 @@
     
   <!--플로팅 버튼-->
     <div id="float_btn">
-      <img src={% static "user/res/float_plus.png" %} alt="">
+      <img src={% static "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
     </div>
     <div id="float_inner1" class="float_inner" onclick="location.href='{% url 'trainer:add_pt' %}'">
-    <a href="{% url 'trainer:add_pt' %}">추가</a>
+    <a href="{% url 'trainer:add_pt' %}">PT<br/>일정</a>
     <img src="" alt="">
     </div>
     <div id="float_inner2" class="float_inner" onclick="location.href='{% url 'trainer:add_off' %}'">
-    <a href="{% url 'trainer:add_off' %}">OFF</a>
+    <a href="{% url 'trainer:add_off' %}">OFF<br/>일정</a>
     <img src="" alt="">
     </div>
 
