@@ -59,24 +59,14 @@
       </tr>
     </thead>
     <tbody>
+        {% for lecture in trainer_member %}
       <tr>
-        <td>김멍멍</td>
-        <td>010-1234-6548</td>
-        <td>15</td>
-        <td>2017-07-07</td>
+        <td>{{ lecture.trainer_member.name }}</td>
+        <td>{{ lecture.trainer_member.phone }}</td>
+        <td>{{ lecture.lecture_count }}</td>
+        <td>{{ lecture.start_date }}</td>
       </tr>
-      <tr>
-        <td>데이비드</td>
-        <td>010-4848-6464</td>
-        <td>60</td>
-        <td>2017-08-22</td>
-      </tr>
-      <tr>
-        <td>주윤발</td>
-        <td>010-7777-1818</td>
-        <td>5</td>
-        <td>2017-01-03</td>
-      </tr>
+        {% endfor %}
     </tbody>
   </table>
 </div>

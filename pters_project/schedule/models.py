@@ -57,7 +57,7 @@ class LectureScheduleTb(models.Model):
 
 
 class LectureTb(models.Model):
-    lecture_id = models.CharField(db_column='LECTURE_ID', primary_key=True, max_length=20)  # Field name made lowercase.
+    lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_field = models.CharField(db_column='CLASS_ID', null=False, default='', max_length=20)  # Field name made lowercase.
     member = models.CharField(db_column='MEMBER_ID', null=False, default='', max_length=20)  # Field name made lowercase.
     lecture_count = models.IntegerField(db_column='LECTURE_COUNT', blank=True, null=True)  # Field name made lowercase.
@@ -77,7 +77,7 @@ class LectureTb(models.Model):
 
 
 class ClassTb(models.Model):
-    class_id = models.CharField(db_column='CLASS_ID', primary_key=True, max_length=20)  # Field name made lowercase.
+    class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.CharField(db_column='MEMBER_ID', default='', max_length=20)  # Field name made lowercase.
     class_type_cd = models.CharField(db_column='CLASS_TYPE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     subject_cd = models.CharField(db_column='SUBJECT_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.

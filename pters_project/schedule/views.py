@@ -2,7 +2,6 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.views.generic import TemplateView
-from config.views import get_login_member_info
 from django.contrib.auth.mixins import LoginRequiredMixin
 from config.settings import LOGIN_URL
 
@@ -21,7 +20,6 @@ class CalDayView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalDayView, self).get_context_data(**kwargs)
-        context = get_login_member_info(context)
 
         return context
 
@@ -31,6 +29,5 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
-        context = get_login_member_info(context)
 
         return context
