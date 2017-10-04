@@ -2,7 +2,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate,logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.db import transaction
@@ -12,8 +12,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from login.forms import AuthUserForm, MemberForm
-from login.models import MemberTb
-from schedule.models import ClassTb, LectureTb
+from login.models import MemberTb, LogTb
+from trainee.models import LectureTb
+from trainer.models import ClassTb
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -64,7 +65,7 @@ class ManageMemberView(LoginRequiredMixin, TemplateView):
         error = None
         trainer_class = None
         try:
-            trainer_class = ClassTb.objects.get(member=self.request.user.id)
+            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
             error = 'class가 존재하지 않습니다'
             # logger.error(error)
@@ -72,11 +73,11 @@ class ManageMemberView(LoginRequiredMixin, TemplateView):
         context['trainer_member'] = None
 
         if error is None :
-            context['trainer_member'] = LectureTb.objects.filter(class_field=trainer_class.class_id)
+            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
 
             for lecture in context['trainer_member']:
                 try:
-                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member)
+                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
                 except ObjectDoesNotExist:
                     error = 'lecture가 존재하지 않습니다'
                     # logger.error(error)
@@ -199,11 +200,13 @@ def member_registration(request, next='trainer:member_manage'):
         try:
             with transaction.atomic():
                 user = User.objects.create_user(username=email, email=email, first_name=name, password=password)
+                group = Group.objects.get(name='trainee')
+                user.groups.add(group)
                 member = MemberTb(name=name, phone=phone, contents=contents,
                                   mod_dt=timezone.now(),reg_dt=timezone.now(), user_id=user.id)
                 member.save()
-                trainer_class = ClassTb.objects.get(member=request.user.id)
-                lecture = LectureTb(class_field=trainer_class.class_id,member=member.member_id,
+                trainer_class = ClassTb.objects.get(member_id=request.user.id)
+                lecture = LectureTb(class_tb_id=trainer_class.class_id,member_id=member.member_id,
                                     lecture_count=counts,option_cd='DC', state_cd='IP',
                                     start_date=start_date,end_date=end_date, mod_dt=timezone.now(),
                                     reg_dt=timezone.now(), use=1)
@@ -227,6 +230,9 @@ def member_registration(request, next='trainer:member_manage'):
         # 48hours http://local.finers.co.kr:8000/users/confirm/%s" % (user.username, user.profile.activation_key)
         # send_mail(email_subject, email_body, 'test@finers.com', [user.email], fail_silently=False)
         # user = authenticate(username=email, password=password)
+        log_contents = request.user.first_name+'강사님께서 '+name+'회원님의 정보를 추가하였습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LB', contents=log_contents, reg_dt=timezone.now(),use=1)
+        log_data.save()
         return redirect(next)
     else:
         messages.info(request, error)

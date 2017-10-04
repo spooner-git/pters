@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 
 
 class MemberTb(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     name = models.CharField(db_column='NAME', max_length=20, blank=True, null=True)  # Field name made lowercase.
     phone = models.CharField(db_column='PHONE', max_length=20, blank=True, null=True)  # Field name made lowercase.
@@ -28,6 +28,9 @@ class MemberTb(models.Model):
     class Meta:
         managed = True
         db_table = 'MEMBER_TB'
+
+    def __str__(self):
+        return self.name
 
 
 class CommonCdTb(models.Model):
@@ -46,20 +49,8 @@ class CommonCdTb(models.Model):
         db_table = 'COMMON_CD_TB'
 
 
-class IdTb(models.Model):
-    idx = models.AutoField(db_column='IDX', primary_key=True)  # Field name made lowercase.
-    table_cd = models.CharField(db_column='TABLE_CD', max_length=20)  # Field name made lowercase.
-    id = models.CharField(db_column='ID', max_length=20)  # Field name made lowercase.
-    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
-    use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = 'ID_TB'
-
-
 class LogTb(models.Model):
-    log_id = models.CharField(db_column='LOG_ID', primary_key=True, max_length=20)  # Field name made lowercase.
+    log_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     external_id = models.CharField(db_column='EXTERNAL_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
     log_type = models.CharField(db_column='LOG_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
     contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, null=True)  # Field name made lowercase.

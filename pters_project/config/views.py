@@ -6,7 +6,8 @@ from django.views.generic import TemplateView
 from login.models import MemberTb
 from django.contrib.auth.mixins import LoginRequiredMixin
 from config.settings import LOGIN_URL
-from schedule.models import ClassTb, LectureTb
+from trainee.models import LectureTb
+from trainer.models import ClassTb
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
@@ -27,7 +28,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
         context['trainer_member_count'] = 0
 
         if error is None :
-            context['trainer_member_count'] = LectureTb.objects.filter(class_field=trainer_class.class_id).count()
+            context['trainer_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id).count()
 
         return context
 
