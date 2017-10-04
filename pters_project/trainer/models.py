@@ -14,7 +14,6 @@ class ShopEmployeeTb(models.Model):
     class Meta:
         managed = True
         db_table = 'SHOP_EMPLOYEE_TB'
-        #unique_together = (('member', 'company'),)
 
 
 class CompanyTb(models.Model):
@@ -46,5 +45,4 @@ class SettingTb(models.Model):
     class Meta:
         managed = True
         db_table = 'SETTING_TB'
-        #unique_together = (('member', 'setting_type_cd'),)
 
