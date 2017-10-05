@@ -77,7 +77,8 @@ input{
 	margin-top: 0px;
 	border: 0px;
 	border-radius: 0px;
-	-webkit-border-radius: 0px;	
+	-webkit-border-radius: 0px;
+	height: 100%;
 }
 
 

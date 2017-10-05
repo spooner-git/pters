@@ -22,36 +22,36 @@
     {% endif %}
     <form action="/trainer/member_registration/" method="POST" class="member-form">
         <div>
-            <div class="ptaddbox">
+            <div class="ptaddbox form-group">
                 <label for="memberEmail" class="ptaddboxtext">
                     <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail(아이디)
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="email" class="dropdown" id="memberEmail" name="email">
+                    <input type="email" class="dropdown form-control" id="memberEmail" name="email">
                 </div>
             </div>
-            <div class="ptaddbox">
+            <div class="ptaddbox form-group">
                 <label for="memberName" class="ptaddboxtext">
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="text" class="dropdown" id="memberName" name="name">
+                    <input type="text" class="dropdown form-control" id="memberName" name="name">
                 </div>
             </div>
-            <div class="ptaddbox">
+            <div class="ptaddbox form-group">
                 <label for="memberPhone" class="ptaddboxtext">
                     <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="number" class="dropdown" id="memberPhone" name="phone">
+                    <input type="tel" class="dropdown form-control" id="memberPhone" name="phone" required="required">
                 </div>
             </div>
-            <div class="ptaddbox">
+            <div class="ptaddbox form-group">
                 <label for="memberCount" class="ptaddboxtext">
                     <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="number" class="dropdown" id="memberCount" name="counts">
+                    <input type="tel" class="dropdown form-control" id="memberCount" name="counts">
                 </div>
             </div>
         </div>
@@ -65,12 +65,12 @@
             <p class="datepicktext dropdown"><input type="text" id="datepicker2" name="end_date"  readonly></p>
         </div>
 
-        <div class="ptaddbox">
+        <div class="ptaddbox form-group">
             <label for="comment" class="ptaddboxtext">
                 <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
             </label>
             <div class="dropdown pters_input_custom">
-                <textarea class="dropdown" rows="1" id="comment" name="contents"></textarea>    
+                <textarea class="dropdown form-control" rows="1" id="comment" name="contents"></textarea>    
             </div>  
         </div>
 
