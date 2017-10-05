@@ -17,9 +17,9 @@
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">회원명 선택<span class="caret"></span></button>
     <ul id="members" class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
-      <li><a>김종국</a></li>
-      <li><a>유재석</a></li>
-      <li><a>하하</a></li>
+        {% for lecture in trainer_member %}
+        <li><a>{{ lecture.trainer_member.name }}</a></li>
+        {% endfor %}
     </ul>
   </div>
 </div>
