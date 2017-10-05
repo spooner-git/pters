@@ -41,7 +41,7 @@
                         <a id="uptext" class="navbar-brand" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
-                        <a href="{% url 'trainer:logout' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
+                        <a href="{% url 'trainer:alarm' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
                     </button>
                     <div id="outer_Sidenav" class="outer_Sidenav sidenav">
                         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>

@@ -1,0 +1,55 @@
+{% extends "base_alarm.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "user/css/pters.alarm.css" %}>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="alarmBox">  <!-- 알림 박스 -->
+  <div id="modifyInfo">
+      <img id="bell" src="/static/user/res/alarm/icon-alarm-new.png"> <span>%DB.Name%</span>님이 일정을 <span class="status">변경</span>했습니다.<span class="timePast">3분전</span>
+  </div>
+  <div id="beforeInfo">2017년 11월 30일 월요일 오전 07:00 - 오전 08:30</div>
+  <div style="text-align: center"><img id="arrow" src="/static/user/res/alarm/icon-down-black.png"></div>
+  <div id="afterInfo">2017년 11월 30일 월요일 오후 08:00 - 오후 09:30</div>
+</div>
+
+
+<div class="alarmBox">  <!-- 알림 박스 -->
+  <div id="modifyInfo">
+      <span>%DB.Name%</span>님이 일정을 <span class="status">등록</span>했습니다.<span class="timePast">3시간전</span>
+  </div>
+  <div id="afterInfo">2017년 11월 30일 월요일 오후 08:00 - 오후 09:30</div>
+</div>
+
+
+<div class="alarmBox">  <!-- 알림 박스 -->
+  <div id="modifyInfo">
+      <span>%DB.Name%</span>님이 일정을 <span class="status">삭제</span>했습니다.<span class="timePast">3일전</span>
+  </div>
+  <div id="afterInfo">2017년 11월 30일 월요일 오후 08:00 - 오후 09:30</div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src={% static "user/js/pters.alarm.js" %}></script>
+        
+{% endblock %}

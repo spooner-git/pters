@@ -12,7 +12,7 @@
 {% block content %}
 
 <div id="memberName" class="ptaddbox">
-  <div class="ptaddboxtext"> <img id="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명</div>
+  <div class="ptaddboxtext"> <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명</div>
   <div id="membersSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">회원명 선택<span class="caret"></span></button>
     <ul id="members" class="dropdown-menu pters_dropdown_custom">
@@ -26,20 +26,20 @@
 
 
 <div id="remainCount" class="ptaddbox">
-  <div class="ptaddboxtext"><img id="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은 횟수</div>
+  <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은 횟수</div>
   <!-- 남은 횟수 DB연동 필요 -->
   <div class="dropdown"></div>
 </div>
 
 
 <div id="dateSelector" class="ptaddbox">
-  <div class="ptaddboxtext"><img id="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 날짜</div>
+  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 날짜</div>
   <p class="datepicktext dropdown"><input type="text" id="datepicker" readonly></p>  
 </div>
 
 
 <div id="classDuration" class="ptaddbox">
-  <div class="ptaddboxtext"><img id="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
   <div id="durationsSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="durations" class="dropdown-menu pters_dropdown_custom">
@@ -54,7 +54,7 @@
 
 
 <div id="classStartTime" class="ptaddbox">
-  <div class="ptaddboxtext"><img id="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
   <div id="starttimesSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
