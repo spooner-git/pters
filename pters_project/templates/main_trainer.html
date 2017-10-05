@@ -16,7 +16,7 @@
             </div>
             <div class='center_box_text' onclick="location.href='{% url 'schedule:cal_day' %}'" >
               <div class='center_box_plan'><p href=""></p></div>
-              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'schedule:cal_day' %}" class="center_box_num"></a>건</div>
+              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'schedule:cal_day' %}" class="center_box_num">{{ today_schedule_val }}</a>건</div>
             </div>
           </div>
           <div class="lower_box" onclick="location.href='{% url 'trainer:member_manage' %}'">
@@ -35,7 +35,7 @@
             <div class="lower_box_child" style="left:65.83%;">
               <div class="lower_box_child_inner">
               <div>종료 임박</div>
-              <a href="" id='finish_member' class='lower_box_num'></a>명
+              <a href="" id='finish_member' class='lower_box_num'>{{ trainer_end_member_count }}</a>명
               </div>
             </div>
           </div>
