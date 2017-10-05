@@ -11,16 +11,7 @@
 
 
 {% block content %}
-    {% if messages %}
-            <div id="messages">
-                <ul>
-                    {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-    {% endif %}
-    <form action="/trainer/member_registration/" method="POST" class="member-form">
+    <form action="/trainer/member_registration/" method="POST" class="member-form" id="member-add-form">
         <div>
             <div class="ptaddbox form-group">
                 <label for="memberEmail" class="ptaddboxtext">
@@ -78,8 +69,6 @@
             <span>PT 반복 일정 등록</span>
             <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
         </div>
-
-        <button type="submit" class="form-control btn btn-primary">등록</button>
 
     </form>
 

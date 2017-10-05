@@ -45,7 +45,6 @@ $(document).ready(function(){
 	var firstDayInfoNextMonth = new Date(currentYear,currentMonth+1,1);
 	var firstDayNextMonth = firstDayInfoNextMonth.getDay(); //다음달 1일의 요일
 	var currentPageMonth = currentMonth+1; //현재 달
-	var classTimeArray = new Array('2017_8_16_5_00_1_김선겸','2017_8_16_10_00_2_김현기','2017_8_16_19_00_3_김소정','2017_8_16_13_00_1_이혜림');
 
 
 

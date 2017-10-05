@@ -226,8 +226,8 @@ def member_registration(request, next='trainer:member_manage'):
 
     if error is None:
 
-        start_date = start_date.split('-')[0] + '-' + start_date.split('-')[1] + '-' + start_date.split('-')[2]
-        end_date = end_date.split('-')[0] + '-' + end_date.split('-')[1] + '-' + end_date.split('-')[2]
+#        start_date = start_date.split('-')[0] + '-' + start_date.split('-')[1] + '-' + start_date.split('-')[2]
+#        end_date = end_date.split('-')[0] + '-' + end_date.split('-')[1] + '-' + end_date.split('-')[2]
         password = email.split('@')[0] + phone[7:]
 
         try:
