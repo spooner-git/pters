@@ -35,6 +35,25 @@ class PtAddView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PtAddView, self).get_context_data(**kwargs)
+        error = None
+        trainer_class = None
+        try:
+            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+            # logger.error(error)
+
+        context['trainer_member'] = None
+
+        if error is None :
+            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+
+            for lecture in context['trainer_member']:
+                try:
+                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
+                except ObjectDoesNotExist:
+                    error = 'lecture가 존재하지 않습니다'
+                    # logger.error(error)
 
         return context
 
