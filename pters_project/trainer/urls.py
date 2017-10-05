@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^logout/$', views.logout_trainer, name='logout'),
     url(r'^login_page/$', views.login_trainer_view, name='login_page'),
     url(r'^add_pt/$', views.PtAddView.as_view(), name='add_pt'),
+    url(r'^add_pt_logic/$', views.add_pt_logic, name='add_pt_logic'),
     url(r'^add_off/$', views.OffAddView.as_view(), name='add_off'),
     url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_repeat_off'),
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
