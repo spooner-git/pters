@@ -94,6 +94,16 @@ class AddMemberView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class AlarmView(LoginRequiredMixin, TemplateView):
+    template_name = 'alarm.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AlarmView, self).get_context_data(**kwargs)
+
+        return context
+
+
+
 class LogInTrainerView(TemplateView):
     template_name = 'login_trainer.html'
 
