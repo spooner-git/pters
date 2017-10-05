@@ -1,8 +1,9 @@
-{% extends "base.html" %}
+{% extends "base_add_member.html" %}
 {% load static %}
 
 {% block local_css %}
-    <link rel="stylesheet" href={% static "user/css/pters.add.member.css" %}>
+    <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
+    <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 {% endblock %}
@@ -21,62 +22,65 @@
     {% endif %}
     <form action="/trainer/member_registration/" method="POST" class="member-form">
         <div>
-            <div class="form-group">
-                <label for="memberEmail">E-mail</label>
-                <input type="text" class="form-control" id="memberEmail" name="email">
+            <div class="ptaddbox">
+                <label for="memberEmail" class="ptaddboxtext">
+                    <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail(아이디)
+                </label>
+                <div class="dropdown pters_input_custom">
+                    <input type="email" class="dropdown" id="memberEmail" name="email">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="memberName">이름</label>
-                <input type="text" class="form-control" id="memberName" name="name">
+            <div class="ptaddbox">
+                <label for="memberName" class="ptaddboxtext">
+                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명
+                </label>
+                <div class="dropdown pters_input_custom">
+                    <input type="text" class="dropdown" id="memberName" name="name">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="memberPhone">연락처</label>
-                <input type="text" class="form-control" id="memberPhone" name="phone">
+            <div class="ptaddbox">
+                <label for="memberPhone" class="ptaddboxtext">
+                    <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처
+                </label>
+                <div class="dropdown pters_input_custom">
+                    <input type="number" class="dropdown" id="memberPhone" name="phone">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="memberCount">남은횟수</label>
-                <input type="text" class="form-control" id="memberCount" name="counts">
+            <div class="ptaddbox">
+                <label for="memberCount" class="ptaddboxtext">
+                    <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
+                </label>
+                <div class="dropdown pters_input_custom">
+                    <input type="number" class="dropdown" id="memberCount" name="counts">
+                </div>
             </div>
         </div>
 
-        <div id="dateSelector">
-            <div></div>
-            <p>시작일자 <input type="text" id="datepicker" name="start_date"></p>
+        <div id="dateSelector" class="ptaddbox">
+            <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
+            <p class="datepicktext dropdown"><input type="text" id="datepicker" name="start_date" readonly></p>
         </div>
-        <div id="dateSelector2">
-            <div></div>
-            <p>종료일자 <input type="text" id="datepicker2" name="end_date"></p>
-        </div>
-
-        <div class="form-group">
-              <label for="comment">특이사항</label>
-              <textarea class="form-control" rows="5" id="comment" name="contents"></textarea>
+        <div id="dateSelector2"  class="ptaddbox">
+            <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
+            <p class="datepicktext dropdown"><input type="text" id="datepicker2" name="end_date"  readonly></p>
         </div>
 
-        <div>
-            <div>최근 수정 : <span>2017-08-06 00:00</span></div>
-            <div>최초 등록 : <span>2017-05-08 00:00</span></div>
+        <div class="ptaddbox">
+            <label for="comment" class="ptaddboxtext">
+                <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
+            </label>
+            <div class="dropdown pters_input_custom">
+                <textarea class="dropdown" rows="1" id="comment" name="contents"></textarea>    
+            </div>  
         </div>
-        <div>
-            <button type="submit" class="form-control btn btn-primary">등록</button>
+
+        <div id="ptrepeat-btn">
+            <span>PT 반복 일정 등록</span>
+            <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
         </div>
+
+
     </form>
-    <hr>
-
-    <button type="button" class="btn btn-info" onclick="location.href='{% url 'trainer:add_repeat_off' %}'">OFF 반복 일정 등록</button>
-
-    <hr>
-
-    <div id="repeatSchedule">
-    <div>반복 일정</div>
-    <div>
-        <p style="margin-bottom: 0px;">매주 월요일 오전 11시</p>
-        <p>반복종료 : PT 마감시</p>
-    </div>
-    <div>
-        <p style="margin-bottom: 0px;">매주 수요일 오후 3시</p>
-        <p>반복종료 : 2017-12-31</p>
-    </div>
 
 
 {% endblock %}
@@ -90,7 +94,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script type="text/javascript" src={% static "user/js/pters.add.member.js" %}></script>
+    <script type="text/javascript" src={% static "user/js/pters.member.add.js" %}></script>
 
 
 
