@@ -1,4 +1,6 @@
 $(document).ready(function(){
+	  var select_all_check = false;
+
       $( "#datepicker" ).datepicker({
       	onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
       		$("#dateSelector p").addClass("dropdown_selected");
@@ -62,12 +64,23 @@ $(document).ready(function(){
         var startInput = $("#datepicker").parent("p");
         var endInput = $("#datepicker2").parent("p");
         if((emailInput).hasClass("dropdown_selected")==true && (nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true&&(startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
-            $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>")
+            $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+			select_all_check=true;
+
         }else{
-        	$("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>")
+        	$("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+            select_all_check=false;
+
         }
      }
 
+     $("#upbutton-alarm").click(function(){
+         if(select_all_check==true){
+             document.getElementById('member-add-form').submit();
+         }else{
+            //입력값 확인 메시지 출력 가능
+         }
+     })
 
      //작은달력 설정
      $.datepicker.setDefaults({
