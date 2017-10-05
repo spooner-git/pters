@@ -1,4 +1,5 @@
 # Create your views here.
+import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate,logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,11 +9,13 @@ from django.db import IntegrityError
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from login.forms import AuthUserForm, MemberForm
 from login.models import MemberTb, LogTb
+from schedule.models import LectureScheduleTb
 from trainee.models import LectureTb
 from trainer.models import ClassTb
 
@@ -46,7 +49,8 @@ class PtAddView(LoginRequiredMixin, TemplateView):
         context['trainer_member'] = None
 
         if error is None :
-            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
+                                                                 , lecture_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -268,3 +272,95 @@ def member_registration(request, next='trainer:member_manage'):
         next = 'trainer:member_add'
         return redirect(next)
 
+
+# pt 일정 추가
+@csrf_exempt
+def add_pt_logic(request, next='schedule:cal_month'):
+    lecture_id = request.POST.get('lecture_id')
+    member_name = request.POST.get('member_name')
+    training_date = request.POST.get('training_date')
+    time_duration = request.POST.get('time_duration')
+    training_time = request.POST.get('training_time')
+    print(lecture_id)
+    print(training_date)
+    print(time_duration)
+    print(training_time)
+
+    error = None
+    if lecture_id == '':
+        error = '회원을 선택해 주세요.'
+    elif training_date == '':
+        error = '날짜를 선택해 주세요.'
+    elif time_duration == '':
+        error = '진행 시간을 선택해 주세요.'
+    elif training_time == '':
+        error = '시작 시간을 선택해 주세요.'
+
+    print('1번')
+
+    if error is None:
+        print('2번')
+
+        start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
+        end_date = start_date + datetime.timedelta(hours=int(time_duration))
+
+        trainer_class = None
+        print('3번')
+        try:
+            trainer_class = ClassTb.objects.get(member_id=request.user.id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+            # logger.error(error)
+
+        print('4번')
+        try:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+
+            for lecture in month_lecture_data:
+                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
+                                                                            en_dis_type='1', use=1)
+                for month_lecture in lecture.lecture_schedule:
+                    if month_lecture.start_dt >= start_date:
+                        if month_lecture.start_dt < end_date:
+                            print('날짜11')
+                            error = '날짜가 겹칩니다.'
+                    if month_lecture.end_dt > start_date:
+                        if month_lecture.end_dt < end_date:
+                            print('날짜22')
+                            error = '날짜가 겹칩니다.'
+                    if month_lecture.start_dt <= start_date:
+                        if month_lecture.end_dt >= end_date:
+                            print('날짜33')
+                            error = '날짜가 겹칩니다.'
+
+            if error is None:
+                with transaction.atomic():
+                    lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date, end_dt=end_date,
+                                                              state_cd='NP',en_dis_type='1',
+                                                              reg_dt=timezone.now(),mod_dt=timezone.now(), use=1)
+                    lecture_schedule_data.save()
+                    lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
+                    member_lecture_count = lecture_date_update.lecture_count
+                    lecture_date_update.lecture_count = member_lecture_count-1
+                    print(lecture_date_update.lecture_count)
+                    lecture_date_update.save()
+
+        except ValueError as e:
+            #logger.error(e)
+            error = 'Registration ValueError!'
+        except IntegrityError as e:
+            #logger.error(e)
+            error = 'Registration IntegrityError!'
+        except TypeError as e:
+            error = 'Registration TypeError!'
+
+    if error is None:
+        log_contents = request.user.first_name + '강사님께서 ' + member_name + '회원님의 일정을 등록했습니다. \n'+training_date
+        log_data = LogTb(external_id=request.user.id, log_type='SA', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+        return redirect(next)
+    else:
+        messages.info(request, error)
+        next = 'trainer:add_pt'
+        return redirect(next)

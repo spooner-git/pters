@@ -11,6 +11,15 @@
 
 {% block content %}
 
+<form action="/trainer/add_pt_logic/" id="pt-add-form" method="post">
+    <input type="hidden" name="lecture_id"     id="id_lecture_id">
+    <input type="hidden" name="member_name"     id="id_member_name">
+    <input type="hidden" name="training_date" id="id_training_date">
+    <input type="hidden" name="time_duration" id="id_time_duration">
+    <input type="hidden" name="training_time" id="id_training_time">
+</form>
+
+
 <div id="memberName" class="ptaddbox">
   <div class="ptaddboxtext"> <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명</div>
   <div id="membersSelected" class="dropdown">
@@ -18,7 +27,9 @@
     <ul id="members" class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
         {% for lecture in trainer_member %}
-        <li><a>{{ lecture.trainer_member.name }}</a></li>
+        <li><a data-lecturecount="{{ lecture.lecture_count }}" data-lectureid="{{ lecture.lecture_id}}">
+            {{ lecture.trainer_member.name }}</a>
+        </li>
         {% endfor %}
     </ul>
   </div>
@@ -28,7 +39,7 @@
 <div id="remainCount" class="ptaddbox">
   <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은 횟수</div>
   <!-- 남은 횟수 DB연동 필요 -->
-  <div class="dropdown"></div>
+        <div id="countsSelected" class="dropdown"></div>
 </div>
 
 
@@ -44,9 +55,8 @@
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="durations" class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
-      <li><a data-dur="1h">1시간</a></li>
-      <li><a data-dur="1h">2시간</a></li>
-      <li><a data-dur="1h">3시간</a></li>
+      <li><a data-dur="1">1시간</a></li>
+      <li><a data-dur="2">2시간</a></li>
     </ul>
   </div>
 </div>
@@ -59,9 +69,23 @@
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
-      <li><a data-dur="1h">오전 5시</a></li>
-      <li><a data-dur="1h">오전 9시</a></li>
-      <li><a data-dur="1h">오후 4시</a></li>
+      <li><a data-trainingtime="05:00:00.000000">오전 5시</a></li>
+      <li><a data-trainingtime="06:00:00.000000">오전 6시</a></li>
+      <li><a data-trainingtime="07:00:00.000000">오전 7시</a></li>
+      <li><a data-trainingtime="08:00:00.000000">오전 8시</a></li>
+      <li><a data-trainingtime="09:00:00.000000">오전 9시</a></li>
+      <li><a data-trainingtime="10:00:00.000000">오전 10시</a></li>
+      <li><a data-trainingtime="11:00:00.000000">오전 11시</a></li>
+      <li><a data-trainingtime="12:00:00.000000">오후 12시</a></li>
+      <li><a data-trainingtime="13:00:00.000000">오후 1시</a></li>
+      <li><a data-trainingtime="14:00:00.000000">오후 2시</a></li>
+      <li><a data-trainingtime="15:00:00.000000">오후 3시</a></li>
+      <li><a data-trainingtime="16:00:00.000000">오후 4시</a></li>
+      <li><a data-trainingtime="17:00:00.000000">오후 5시</a></li>
+      <li><a data-trainingtime="18:00:00.000000">오후 6시</a></li>
+      <li><a data-trainingtime="19:00:00.000000">오후 7시</a></li>
+      <li><a data-trainingtime="20:00:00.000000">오후 8시</a></li>
+      <li><a data-trainingtime="21:00:00.000000">오후 9시</a></li>
     </ul>
   </div>
 </div>

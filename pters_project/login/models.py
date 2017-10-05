@@ -42,7 +42,7 @@ class CommonCdTb(models.Model):
     upper_group_cd = models.CharField(db_column='UPPER_GROUP_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     attribute1 = models.CharField(db_column='ATTRIBUTE1', max_length=255, blank=True, null=True)  # Field name made lowercase.
     order = models.IntegerField(db_column='ORDER', blank=True, null=True)  # Field name made lowercase.
-    use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -55,7 +55,7 @@ class LogTb(models.Model):
     log_type = models.CharField(db_column='LOG_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
     contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
-    use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:
         managed = True
