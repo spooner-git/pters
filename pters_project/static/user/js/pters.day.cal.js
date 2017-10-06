@@ -27,6 +27,21 @@ $(document).ready(function(){
 	});
 	//플로팅 버튼
 
+	//플로팅 버튼 스크롤시 숨기기
+		var ts;
+			$("body").bind("touchstart",function(e){
+			ts = e.originalEvent.touches[0].clientY;
+				});
+			$("body").bind("touchend",function(e){
+				var te = e.originalEvent.changedTouches[0].clientY;
+				if(ts>te+5){
+					$("#float_btn").animate({opacity:'0'})
+				}else if(ts<te-5){
+					$("#float_btn").animate({opacity:'1'})
+				}
+			});
+	//플로팅 버튼 스크롤시 숨기기
+
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -161,7 +176,7 @@ $(document).ready(function(){
 			var classDura = datasplit[5];
 			var memberName = datasplit[6];
 			$("td[data-time="+classStart+"] div").addClass('classTime').attr('class-time',classTimeArray[i]).css({'height':Number(classDura*30)+'px'});
-			$("td[data-time="+classStart+"] div").html('<span>'+memberName+' 회원님</span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');	
+			$("td[data-time="+classStart+"] div").html('<span>'+memberName+' </span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');	
 			$("td[data-time="+classStart+"] div span:first-child").addClass('memberName');
 			$("td[data-time="+classStart+"] div span:nth-child(2)").addClass('memberTime');
 
