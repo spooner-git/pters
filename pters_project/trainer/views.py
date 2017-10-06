@@ -281,10 +281,6 @@ def add_pt_logic(request, next='schedule:cal_month'):
     training_date = request.POST.get('training_date')
     time_duration = request.POST.get('time_duration')
     training_time = request.POST.get('training_time')
-    #print(lecture_id)
-    #print(training_date)
-    #print(time_duration)
-    #print(training_time)
 
     error = None
     if lecture_id == '':
@@ -296,23 +292,18 @@ def add_pt_logic(request, next='schedule:cal_month'):
     elif training_time == '':
         error = '시작 시간을 선택해 주세요.'
 
-    print('1번')
-
     if error is None:
-        print('2번')
 
         start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
         end_date = start_date + datetime.timedelta(hours=int(time_duration))
 
         trainer_class = None
-        print('3번')
         try:
             trainer_class = ClassTb.objects.get(member_id=request.user.id)
         except ObjectDoesNotExist:
             error = 'class가 존재하지 않습니다'
             # logger.error(error)
 
-        print('4번')
         try:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
 
@@ -322,15 +313,12 @@ def add_pt_logic(request, next='schedule:cal_month'):
                 for month_lecture in lecture.lecture_schedule:
                     if month_lecture.start_dt >= start_date:
                         if month_lecture.start_dt < end_date:
-                            print('날짜11')
                             error = '날짜가 겹칩니다.'
                     if month_lecture.end_dt > start_date:
                         if month_lecture.end_dt < end_date:
-                            print('날짜22')
                             error = '날짜가 겹칩니다.'
                     if month_lecture.start_dt <= start_date:
                         if month_lecture.end_dt >= end_date:
-                            print('날짜33')
                             error = '날짜가 겹칩니다.'
 
             if error is None:
@@ -342,7 +330,6 @@ def add_pt_logic(request, next='schedule:cal_month'):
                     lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
                     member_lecture_count = lecture_date_update.lecture_count
                     lecture_date_update.lecture_count = member_lecture_count-1
-                    print(lecture_date_update.lecture_count)
                     lecture_date_update.save()
 
         except ValueError as e:
