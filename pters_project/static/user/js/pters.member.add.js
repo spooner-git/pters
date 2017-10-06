@@ -16,7 +16,7 @@ $(document).ready(function(){
 
 
       $("#memberEmail").keyup(function(){  //이메일 입력시 하단에 핑크선
-      	if($(this).val().length>8){
+        if($(this).val().length>8){
       		$(this).parent("div").addClass("dropdown_selected")
       		check_dropdown_selected();
       	}else{
@@ -26,10 +26,12 @@ $(document).ready(function(){
       })
 
       $("#memberName").keyup(function(){  //이름 입력시 하단에 핑크선
-      	if($(this).val().length>1){
+        if($(this).val().length>1){
+          limit_char(this);
       		$(this).parent("div").addClass("dropdown_selected")
       		check_dropdown_selected();
       	}else{
+          limit_char(this);
       		$(this).parent("div").removeClass("dropdown_selected")
       		check_dropdown_selected();
       	}
@@ -37,9 +39,11 @@ $(document).ready(function(){
 
       $("#memberPhone").keyup(function(){  //전화번호 입력시 하단에 핑크선
       	if($(this).val().length>8){
+          limit_char(this);
       		$(this).parent("div").addClass("dropdown_selected")
       		check_dropdown_selected();
       	}else{
+          limit_char(this);
       		$(this).parent("div").removeClass("dropdown_selected")
       		check_dropdown_selected();
       	}
@@ -47,9 +51,11 @@ $(document).ready(function(){
 
       $("#memberCount").keyup(function(){  //남은횟수 입력시 하단에 핑크선
       	if($(this).val().length>0){
+          limit_char(this);
       		$(this).parent("div").addClass("dropdown_selected")
       		check_dropdown_selected();
       	}else{
+          limit_char(this);
       		$(this).parent("div").removeClass("dropdown_selected")
       		check_dropdown_selected();
       	}
@@ -73,6 +79,15 @@ $(document).ready(function(){
 
         }
      }
+
+     function limit_char(e){
+      var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
+      var temp = $(e).val();
+      if(limit.test(temp)){
+        $(e).val(temp.replace(limit,""));
+      };
+     };
+
 
      $("#upbutton-alarm").click(function(){
          if(select_all_check==true){
