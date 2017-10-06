@@ -281,10 +281,10 @@ def add_pt_logic(request, next='schedule:cal_month'):
     training_date = request.POST.get('training_date')
     time_duration = request.POST.get('time_duration')
     training_time = request.POST.get('training_time')
-    print(lecture_id)
-    print(training_date)
-    print(time_duration)
-    print(training_time)
+    #print(lecture_id)
+    #print(training_date)
+    #print(time_duration)
+    #print(training_time)
 
     error = None
     if lecture_id == '':
