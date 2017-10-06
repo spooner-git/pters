@@ -3,6 +3,7 @@
 
 {% block local_css %}
         <link rel="stylesheet" href={% static "user/css/pters.manage.member.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         
 {% endblock %}
@@ -13,7 +14,7 @@
  
  <!--플로팅 버튼-->
     <div id="float_btn" onclick="location.href='{% url 'trainer:member_add' %}'">
-      <img src={% static "user/res/float_plus.png" %} alt="">
+      <img src={% static "user/res/memberadd/float_plus_member.png" %} alt="">
     </div>
 
 
@@ -21,20 +22,16 @@
     </div>
   <!--플로팅 버튼-->
 
-<div class="btn-group btn-group-justified">
+<div id="selectBox" class="btn-group btn-group-justified">
   <a href="#" class="btn btn-primary active">진행 중 회원</a>
   <a href="#" class="btn btn-primary">종료된 회원</a>
 </div> 
-
-<hr>
-
-<div>
-  <div>
+<div id="alignBox">
+  <div style="font-size:14px;">
     회원 정렬 기준
   </div>
   <div class="dropdown">
-    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">정렬 기준<span class="caret"></span></button>
-    <hr>
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택    <span class="caret"></span></button>
     <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
       <!-- 회원명 DB연동 필요-->
       <li role="presentation"><a href="#" role="menuitem" tabindex="-1">남은 횟수 많은 순</a></li>
