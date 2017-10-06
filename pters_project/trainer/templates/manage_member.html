@@ -57,12 +57,14 @@
     </thead>
     <tbody>
         {% for lecture in trainer_member %}
+            {% if lecture.lecture_count > 0 %}
       <tr>
         <td>{{ lecture.trainer_member.name }}</td>
         <td>{{ lecture.trainer_member.phone }}</td>
         <td>{{ lecture.lecture_count }}</td>
         <td>{{ lecture.start_date }}</td>
       </tr>
+            {% endif %}
         {% endfor %}
     </tbody>
   </table>
@@ -81,12 +83,14 @@
     </thead>
     <tbody>
         {% for lecture in trainer_member %}
+            {% if lecture.lecture_count == 0 %}
       <tr>
         <td>{{ lecture.trainer_member.name }}</td>
         <td>{{ lecture.trainer_member.phone }}</td>
         <td>{{ lecture.lecture_count }}</td>
         <td>{{ lecture.start_date }}</td>
       </tr>
+            {% endif %}
         {% endfor %}
     </tbody>
   </table>
