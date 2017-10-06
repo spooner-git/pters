@@ -38,15 +38,18 @@ body{
 	-webkit-box-shadow:none;	
 }
 
-.btn-primary:hover{
-	background: transparent ;
+.btn-primary:hover, .btn-primary:active:hover,.btn-primary:active,.btn-primary:focus {
+	background-color: #ffffff;
+	color: #282828;
+	border-color: transparent;
 }
+
 .btn-group-vertical>.btn.active, .btn-group-vertical>.btn:active, .btn-group-vertical>.btn:focus, .btn-group-vertical>.btn:hover, .btn-group>.btn.active, .btn-group>.btn:active, .btn-group>.btn:focus, .btn-group>.btn:hover{
 	z-index: 1;
 }
 
 .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover{
-	background-color: white;
+	background-color: #ffffff;
 	color: #fe4e65;
 	font-weight: bold;
 	border-top: 3px solid #fe4e65;
@@ -56,7 +59,7 @@ body{
 }
 
 .btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
-	background-color: white;
+	background-color: #ffffff;
 	color: #fe4e65;
 	font-weight: bold;
 	border-top: 3px solid #fe4e65;
