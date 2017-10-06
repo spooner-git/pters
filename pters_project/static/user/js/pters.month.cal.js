@@ -17,12 +17,14 @@ $(document).ready(function(){
 	});
 	$("#calendar").bind("touchend",function(e){
 		var te = e.originalEvent.changedTouches[0].clientY;
-		if(ts>te+30){
+		if(ts>te+5){
 			$("nav").css("display","none")
 			$("body").css("padding-top","0px")
-		}else if(ts<te-30){
+			$("#float_btn").animate({opacity:'0',})
+		}else if(ts<te-5){
 			$("nav").css("display","block")
 			$("body").css("padding-top","50px")
+			$("#float_btn").animate({opacity:'1'})
 		}
 	})
 
