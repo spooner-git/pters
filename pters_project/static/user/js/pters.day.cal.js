@@ -161,7 +161,7 @@ $(document).ready(function(){
 			var classDura = datasplit[5];
 			var memberName = datasplit[6];
 			$("td[data-time="+classStart+"] div").addClass('classTime').attr('class-time',classTimeArray[i]).css({'height':Number(classDura*30)+'px'});
-			$("td[data-time="+classStart+"] div").html('<span>'+memberName+' 회원님</span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');	
+			$("td[data-time="+classStart+"] div").html('<span>'+memberName+' </span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');	
 			$("td[data-time="+classStart+"] div span:first-child").addClass('memberName');
 			$("td[data-time="+classStart+"] div span:nth-child(2)").addClass('memberTime');
 
