@@ -1,25 +1,105 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
 body{
 	padding-top: 50px;
+	background-color: #eeeeee;
+	font-family: 'Noto Sans KR';
+}
+
+
+
+
+
+#selectBox{
+	border-top: 1px solid black;
+}
+
+#alignBox{
+	margin-top: 15.5px;
+	margin-bottom: 16.5px;
+	margin-right: auto;
+	margin-left: auto;
+	width: 91.6%;
+}
+
+
+.btn{
+	border-radius: 0;
+}
+
+.btn-primary{
+	color: #282828;
+	background-color: #ffffff;
+	border-color: #ffffff;
+}
+
+.btn.active, .btn:active{
+	box-shadow: none;
+	-webkit-box-shadow:none;	
 }
 
 .btn-primary:hover{
-	background: #fe4e65 ;
+	background: transparent ;
 }
 .btn-group-vertical>.btn.active, .btn-group-vertical>.btn:active, .btn-group-vertical>.btn:focus, .btn-group-vertical>.btn:hover, .btn-group>.btn.active, .btn-group>.btn:active, .btn-group>.btn:focus, .btn-group>.btn:hover{
 	z-index: 1;
 }
 
 .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover{
-	background-color: #fe4e65;
+	background-color: white;
+	color: #fe4e65;
+	font-weight: bold;
+	border-top: 3px solid #fe4e65;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
+	border-right-color: transparent;
 }
 
 .btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
-	background-color: #fe4e65;	
+	background-color: white;
+	color: #fe4e65;
+	font-weight: bold;
+	border-top: 3px solid #fe4e65;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
+	border-right-color: transparent;
 }
 
+
 table{
-	font-size: 85%;
+	font-size: 81%;
+	text-align: center;
 }
+
+thead{
+	background-color: #cccccc;
+}
+
+tbody{
+	background-color: #ffffff;
+}
+
+th{
+	text-align: center;
+}
+
+tr td:nth-child(1){
+	width: 21.8%;
+}
+
+tr td:nth-child(2){
+	width: 30.56%;
+}
+
+tr td:nth-child(3){
+	width: 20%;
+}
+
+tr td:nth-child(4){
+	width: 22.2%;
+}
+
+
 
 #shade{
 	position: fixed;
@@ -29,26 +109,25 @@ table{
 	z-index: -1;
 }
 
-#float_btn{
+
+#float_btn{  /*2017.10.2*/
 	position: fixed;
 	width: 50px;
 	height: 50px;
 	bottom: 25px;
 	right: 25px;
-	background-color: grey;
-	opacity: 0.5;
 	border-radius: 50%;
 	z-index: 10;
 	cursor: pointer;
 }
 
-#float_btn img{
-	width: 30px;
-	height: 30px;
-	margin: 10px;
+#float_btn img{ /*2017.10.2*/
+	width: 100%;
+	height: 100%;
 }
 
 .rotate_btn{
 	-webkit-transform: rotate(47deg);
 	transform: rotate(47deg);
 }
+
