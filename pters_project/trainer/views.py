@@ -123,8 +123,18 @@ class AlarmView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AlarmView, self).get_context_data(**kwargs)
 
-        return context
+        log_data = LogTb.objects.filter(external_id=self.request.user.id).order_by('-reg_dt')
+        for log_data_detail in log_data:
+            temp_data = log_data_detail.contents.split('@')
+            if len(temp_data) == 2:
+                log_data_detail.log_contents = temp_data[0]
+                log_data_detail.log_date = temp_data[1]
+            else:
+                log_data_detail.log_contents = log_data_detail.contents
 
+        context['log_data'] = log_data
+
+        return context
 
 
 class LogInTrainerView(TemplateView):
@@ -263,7 +273,8 @@ def member_registration(request, next='trainer:member_manage'):
         # 48hours http://local.finers.co.kr:8000/users/confirm/%s" % (user.username, user.profile.activation_key)
         # send_mail(email_subject, email_body, 'test@finers.com', [user.email], fail_silently=False)
         # user = authenticate(username=email, password=password)
-        log_contents = request.user.first_name+'강사님께서 '+name+'회원님의 정보를 추가하였습니다.'
+        log_contents = '<span>' + request.user.first_name + ' 강사님께서 '\
+                       + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB', contents=log_contents, reg_dt=timezone.now(),use=1)
         log_data.save()
         return redirect(next)
@@ -342,7 +353,28 @@ def add_pt_logic(request, next='schedule:cal_month'):
             error = 'Registration TypeError!'
 
     if error is None:
-        log_contents = request.user.first_name + '강사님께서 ' + member_name + '회원님의 일정을 등록했습니다. \n'+training_date
+        week_info = ['일', '월', '화', '수', '목', '금', '토']
+
+        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        if start_date.strftime('%p') == 'AM':
+            log_start_date = str(log_start_date) + '오전'
+        elif start_date.strftime('%p') == 'PM':
+            log_start_date = str(log_start_date) + '오후'
+        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
+
+        if end_date.strftime('%p') == 'AM':
+            log_end_date = '오전'
+        elif end_date.strftime('%p') == 'PM':
+            log_end_date = '오후'
+
+        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
+        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
+        # + start_date.strftime('%p %I:%M')\
+        # + '- '+end_date.strftime('%p %I:%M')
+        log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
+                       + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
+                       + log_start_date\
+                       + ' - '+log_end_date
         log_data = LogTb(external_id=request.user.id, log_type='SA', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
