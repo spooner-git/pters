@@ -20,24 +20,15 @@
   <div id="afterInfo">2017년 11월 30일 월요일 오후 08:00 - 오후 09:30</div>
 </div>
 
+    {% for log_data_detail in log_data %}
 
 <div class="alarmBox">  <!-- 알림 박스 -->
   <div id="modifyInfo">
-      <span>%DB.Name%</span>님이 일정을 <span class="status">등록</span>했습니다.<span class="timePast">3시간전</span>
+      {% autoescape off %}{{ log_data_detail.log_contents }}{% endautoescape %}<span class="timePast">3시간전</span>
   </div>
-  <div id="afterInfo">2017년 11월 30일 월요일 오후 08:00 - 오후 09:30</div>
+  <div id="afterInfo">{{ log_data_detail.log_date }}</div>
 </div>
-
-
-<div class="alarmBox">  <!-- 알림 박스 -->
-  <div id="modifyInfo">
-      <span>%DB.Name%</span>님이 일정을 <span class="status">삭제</span>했습니다.<span class="timePast">3일전</span>
-  </div>
-  <div id="afterInfo">2017년 11월 30일 월요일 오후 08:00 - 오후 09:30</div>
-</div>
-
-
-
+    {% endfor %}
 
 {% endblock %}
 
