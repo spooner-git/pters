@@ -18,6 +18,7 @@ from trainee import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
 ]
 
 

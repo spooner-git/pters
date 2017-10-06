@@ -27,3 +27,21 @@ class LectureTb(models.Model):
 
     def __str__(self):
         return self.member.__str__()+'_lecture'
+
+
+class LectureScheduleTb(models.Model):
+    lecture_schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='')  # Field name made lowercase.
+    start_dt = models.DateTimeField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
+    end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
+    state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    sign_data_url = models.CharField(db_column='SIGN_DATA_URL', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
+    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = 'LECTURE_SCHEDULE_TB'
+
