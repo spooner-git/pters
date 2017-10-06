@@ -23,8 +23,8 @@
   <!--플로팅 버튼-->
 
 <div id="selectBox" class="btn-group btn-group-justified">
-  <a href="#" class="btn btn-primary active">진행 중 회원</a>
-  <a href="#" class="btn btn-primary">종료된 회원</a>
+  <a id="btnCallCurrent" href="#" class="btn btn-primary active">진행 중 회원</a>
+  <a id="btnCallFinished" href="#" class="btn btn-primary">종료된 회원</a>
 </div> 
 <div id="alignBox">
   <div style="font-size:14px;">
@@ -45,7 +45,7 @@
 </div>
 
 
-<div class="container">
+<div id="currentMemberList" class="container">
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -69,7 +69,28 @@
 </div>
 
 
-    
+<div id="finishedMemberList" class="container">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>회원명</th>
+        <th>연락처</th>
+        <th>남은횟수</th>
+        <th>시작일자</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for lecture in trainer_member %}
+      <tr>
+        <td>{{ lecture.trainer_member.name }}</td>
+        <td>{{ lecture.trainer_member.phone }}</td>
+        <td>{{ lecture.lecture_count }}</td>
+        <td>{{ lecture.start_date }}</td>
+      </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div> 
 
 
 {% endblock %}
