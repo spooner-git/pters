@@ -22,6 +22,24 @@ $(document).ready(function(){
 			}
 		})
 
+		$("#btnCallCurrent").click(function(){
+			var currentMemberList = $("#currentMemberList");
+			var finishedMemberList = $("#finishedMemberList");
+			if(currentMemberList.css("display")=="none"){
+				finishedMemberList.css("display","none");
+				currentMemberList.css("display","block");
+			}
+		})
+
+		$("#btnCallFinished").click(function(){
+			var currentMemberList = $("#currentMemberList");
+			var finishedMemberList = $("#finishedMemberList");
+			if(finishedMemberList.css("display")=="none"){
+				finishedMemberList.css("display","block");
+				currentMemberList.css("display","none");
+			}
+		})
+
 
      /* //플로팅 버튼
 	$('#float_btn').click(function(){
