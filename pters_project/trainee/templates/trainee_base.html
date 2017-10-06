@@ -9,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>{% block title %}PTers-Trainer Mode {% endblock %}</title>
+        <title>{% block title %}PTers-Trainee Mode {% endblock %}</title>
 
         <!-- Bootstrap core CSS -->
         <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
@@ -32,15 +32,13 @@
         <nav class="navbar navbar-fixed-top navbar-default">
             <div class="container">
                 <div class="navbar-header">
-                    <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="javascript:history.back()">
-                        <img src={% static "user/res/ptadd/btn-x.png" %} style="width:90%;">
-                    </button>
                     {% block nav_center_img %}
-                        <a id="uptext" class="navbar-brand">일정 변경 알림</a>
+                        <a id="uptext" class="navbar-brand" href="{% url 'home' %}">{{ user.first_name }} 회원님 월간 PT 일정</a>
                     {% endblock %}
-                    <button id="upbutton-alarm" type="submit" class="navbar-toggle" aria-controls="navbar">
-                        <img src={% static "user/res/alarm/icon-delete.png" %} style="width:100%;">
+                    <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
+                        <a href="{% url 'trainer:logout' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
                     </button>
+                    
                 </div>
             </div><!-- /.container -->
         </nav><!-- /.navbar -->
@@ -57,7 +55,32 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src={% static "common/js/bootstrap.min.js" %}></script>
+    <script type="text/javascript" src={% static "common/js/jquery.swipe.js" %}></script>
+    <script type="text/javascript" src={% static "common/js/jquery.touch.js" %}></script>
+    <script type="text/javascript" src={% static "common/js/swiper.jquery.min.js" %}></script>
     <script type="text/javascript" src={% static "user/js/pters.base.set.js" %}></script>
+    <script>
+             function openNav(){
+               $("#outer_Sidenav").animate({"width":"100%"},1);
+               $("#inner_Sidenav").css("width","80%");
+               $(".sidebar_text").css({'font-size':"15px",'opacity':"1"})
+               $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
+               $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
+               $('body').css('overflow-y','hidden')
+               $('#shade').css({'background-color':'black','z-index':'50'});
+             }
+
+             function closeNav(){
+              $(".sidebar_icon,.sidebar_upper img").css('opacity','0')
+              $("#outer_Sidenav").css("width","0");
+              $("#inner_Sidenav").css("width","0");
+              $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"})
+              $('body').css('overflow-y','')
+              $('#shade').css({'background-color':'transparent','z-index':'-1'});
+             }; 
+    </script>
+
+
     {% block local_js_footer %}
     {% endblock %}
 
