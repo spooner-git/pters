@@ -13,22 +13,80 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from login.forms import AuthUserForm, MemberForm
 from login.models import MemberTb, LogTb
-from schedule.models import LectureScheduleTb
-from trainee.models import LectureTb
+from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
-    #def get(self, request):
-    #    if request.is_mobile:
-    #        return redirect('mobile:index')
-
-    template_name = 'index.html'
+    template_name = 'main_trainer.html'
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+        error = None
+        trainer_class = None
+        try:
+            trainer_class = ClassTb.objects.get(member=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+
+        context['trainer_member_count'] = 0
+
+        if error is None :
+            context['trainer_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id).count()
+            context['trainer_end_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
+                                                                           lecture_count__gte=1,
+                                                                           lecture_count__lte=3).count()
+
+        today_time = datetime.datetime.now()
+        today_start_time = today_time.strftime('%Y-%m-%d 00:00:00.000000')
+        today_end_time = today_time.strftime('%Y-%m-%d 23:59:59.999999')
+        sum_val = 0;
+        if error is None:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+
+            for lecture in month_lecture_data:
+                sum_val = sum_val+LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+                                                                   start_dt__gte=today_start_time,
+                                                                   start_dt__lte=today_end_time,
+                                                                   en_dis_type='1',use='1').count()
+
+        context['today_schedule_val'] = sum_val
+
+        return context
+
+
+class CalDayView(LoginRequiredMixin, TemplateView):
+    template_name = 'daily_cal.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalDayView, self).get_context_data(**kwargs)
+        error = None
+        trainer_class = None
+        try:
+            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+            # logger.error(error)
+
+        daily_data = []
+        if error is None:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            for lecture in month_lecture_data:
+                member_data = MemberTb.objects.get(member_id=lecture.member_id)
+                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+                                                                      en_dis_type='1',use='1')
+                for month_lecture in lecture.lecture_schedule:
+                    month_lecture.data = month_lecture.start_dt.timetuple()
+                    result = month_lecture.end_dt-month_lecture.start_dt
+                    result_hour = int(result.seconds/60/60)
+                    #daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
+                    #                  + '_' + str(result_hour) + '_' + member_data.name)
+                    daily_data.append(str(month_lecture.data.tm_year)+'_'+str(month_lecture.data.tm_mon)+'_'
+                                      +str(month_lecture.data.tm_mday)+'_'+str(month_lecture.data.tm_hour)+'_'
+                                      +str(format(month_lecture.data.tm_min,'02d'))+'_'+str(result_hour)+'_'+member_data.name)
+
+        context['daily_lecture_data'] = daily_data
 
         return context
 
@@ -44,7 +102,6 @@ class PtAddView(LoginRequiredMixin, TemplateView):
             trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
             error = 'class가 존재하지 않습니다'
-            # logger.error(error)
 
         context['trainer_member'] = None
 
@@ -146,65 +203,6 @@ class LogInTrainerView(TemplateView):
         return context
 
 
-# 로그인 api
-@csrf_exempt
-def login_trainer(request, next='home'):
-    #login 완료시 main page로 이동
-    username = request.POST.get('username')
-    password = request.POST.get('password')
-
-    error = None
-
-    try:
-        trainer = User.objects.get(username=username)
-    except ObjectDoesNotExist:
-        error = '아이디가 존재하지 않습니다.'
-        # logger.error(error)
-
-    if not error:
-        user = authenticate(username=username, password=password)
-        if user is not None and user.is_active:
-            login(request, user)
-            #member_detail = MemberTb.objects.get(user_id=trainer.id)
-            #request.session['is_first_login'] = True
-            #request.session['trainer_name'] = member_detail.name
-
-            return redirect(next)
-        else:
-            error = '로그인에 실패하였습니다.'
-            #logger.error(error)
-
-    messages.info(request, error)
-    return redirect(next)
-
-
-# 로그아웃 api
-@csrf_exempt
-def logout_trainer(request):
-    #logout 끝나면 login page로 이동
-    next = 'trainer:trainer_login'
-    logout(request)
-
-    return redirect(next)
-
-
-# 로그인 페이지 아직 구현 x
-@csrf_exempt
-def login_trainer_view(request):
-    if request.user.is_authenticated():
-        return redirect('home')
-
-    next = request.GET.get('next', 'trainer:login')
-    fail = request.GET.get('fail', 'registration_page')
-
-    return render(request, 'login_web.html',
-                  {
-                      'next': next,
-                      'fail': fail
-                  })
-
-
-
 # 회원가입 api
 @csrf_exempt
 def member_registration(request, next='trainer:member_manage'):
@@ -286,7 +284,7 @@ def member_registration(request, next='trainer:member_manage'):
 
 # pt 일정 추가
 @csrf_exempt
-def add_pt_logic(request, next='schedule:cal_month'):
+def add_pt_logic(request, next='trainer:cal_day'):
     lecture_id = request.POST.get('lecture_id')
     member_name = request.POST.get('member_name')
     training_date = request.POST.get('training_date')
@@ -383,3 +381,61 @@ def add_pt_logic(request, next='schedule:cal_month'):
         messages.info(request, error)
         next = 'trainer:add_pt'
         return redirect(next)
+
+
+# 로그인 api
+@csrf_exempt
+def login_trainer(request, next='home'):
+    #login 완료시 main page로 이동
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+
+    error = None
+
+    try:
+        trainer = User.objects.get(username=username)
+    except ObjectDoesNotExist:
+        error = '아이디가 존재하지 않습니다.'
+        # logger.error(error)
+
+    if not error:
+        user = authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            login(request, user)
+            #member_detail = MemberTb.objects.get(user_id=trainer.id)
+            #request.session['is_first_login'] = True
+            #request.session['trainer_name'] = member_detail.name
+
+            return redirect(next)
+        else:
+            error = '로그인에 실패하였습니다.'
+            #logger.error(error)
+
+    messages.info(request, error)
+    return redirect(next)
+
+
+# 로그아웃 api
+@csrf_exempt
+def logout_trainer(request):
+    #logout 끝나면 login page로 이동
+    next = 'trainer:trainer_login'
+    logout(request)
+
+    return redirect(next)
+
+
+# 로그인 페이지 아직 구현 x
+@csrf_exempt
+def login_trainer_view(request):
+    if request.user.is_authenticated():
+        return redirect('home')
+
+    next = request.GET.get('next', 'trainer:login')
+    fail = request.GET.get('fail', 'registration_page')
+
+    return render(request, 'login_web.html',
+                  {
+                      'next': next,
+                      'fail': fail
+                  })

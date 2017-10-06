@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 from login.models import CommonCdTb
 from login.models import LogTb
 from login.models import MemberTb
-from schedule.models import ClassRepeatScheduleTb
-from schedule.models import ClassScheduleTb
+from trainer.models import ClassRepeatScheduleTb
+from trainer.models import ClassScheduleTb
 from trainer.models import ClassTb
-from schedule.models import LectureScheduleTb
+from trainee.models import LectureScheduleTb
 from trainee.models import LectureTb
 from trainer.models import CompanyTb
 from trainer.models import SettingTb
