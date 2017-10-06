@@ -243,7 +243,7 @@ def member_registration(request, next='trainer:member_manage'):
                 user = User.objects.create_user(username=email, email=email, first_name=name, password=password)
                 group = Group.objects.get(name='trainee')
                 user.groups.add(group)
-                member = MemberTb(name=name, phone=phone, contents=contents,
+                member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents,
                                   mod_dt=timezone.now(),reg_dt=timezone.now(), user_id=user.id)
                 member.save()
                 trainer_class = ClassTb.objects.get(member_id=request.user.id)
@@ -393,7 +393,7 @@ def login_trainer(request, next='home'):
     error = None
 
     try:
-        trainer = User.objects.get(username=username)
+        user_data = User.objects.get(username=username)
     except ObjectDoesNotExist:
         error = '아이디가 존재하지 않습니다.'
         # logger.error(error)
@@ -402,14 +402,14 @@ def login_trainer(request, next='home'):
         user = authenticate(username=username, password=password)
         if user is not None and user.is_active:
             login(request, user)
-            #member_detail = MemberTb.objects.get(user_id=trainer.id)
-            #request.session['is_first_login'] = True
-            #request.session['trainer_name'] = member_detail.name
+            #member_detail = MemberTb.objects.get(user_id=user_data.id)
+            # request.session['is_first_login'] = True
+            #request.session['member_id'] = member_detail.member_id
 
             return redirect(next)
         else:
             error = '로그인에 실패하였습니다.'
-            #logger.error(error)
+            # logger.error(error)
 
     messages.info(request, error)
     return redirect(next)
