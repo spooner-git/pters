@@ -12,7 +12,26 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 $(document).ready(function(){
 
 
-	//플로팅 버튼
+	//스케쥴 클릭시 팝업 Start
+		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
+			$("#cal_popup").css({'display':'block','z-index':'40'});
+			$('#shade').css({'background-color':'black','z-index':'15'});
+			console.log($(this).attr('class-time')); //현재 클릭한 요소의 class-time 요소 값 보기
+			                                         //형식예: 2017_10_7_6_00_2_원빈
+		})
+			
+
+		$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
+			if($('#cal_popup').css('display')=='block'){
+				$("#cal_popup").css({'display':'none','z-index':'-2'})
+				$('#shade').css({'background-color':'white','z-index':'-1'});
+			}
+		})
+	//스케쥴 클릭시 팝업 End
+
+
+
+	//플로팅 버튼 Start
 	$('#float_btn').click(function(){
 		if($('#shade').css('z-index')<0){
 			$('#shade').css({'background-color':'black','z-index':'8'});
@@ -25,9 +44,9 @@ $(document).ready(function(){
 			$('#float_btn').removeClass('rotate_btn');
 		}
 	});
-	//플로팅 버튼
+	//플로팅 버튼 End
 
-	//플로팅 버튼 스크롤시 숨기기
+	//플로팅 버튼 스크롤시 숨기기 Start
 		var ts;
 			$("body").bind("touchstart",function(e){
 			ts = e.originalEvent.touches[0].clientY;
@@ -40,7 +59,7 @@ $(document).ready(function(){
 					$("#float_btn").animate({opacity:'1'})
 				}
 			});
-	//플로팅 버튼 스크롤시 숨기기
+	//플로팅 버튼 스크롤시 숨기기 End
 
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
@@ -69,6 +88,7 @@ $(document).ready(function(){
 
 	alltdRelative(); //모든 td의 스타일 position을 relative로
 	classTime(); //PT수업 시간에 핑크색 박스 표시
+	offTime();
 	dateText(); //상단에 연, 월 표시
 
 	//다음페이지로 슬라이드 했을때 액션
@@ -106,7 +126,6 @@ $(document).ready(function(){
 			}
 		}else{
 			slideControl.prepend();	
-			console.log(currentDate);
 		};
 	});
 	
@@ -120,6 +139,7 @@ $(document).ready(function(){
 			calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //새로 추가되는 슬라이드에 달력 채우기	
 			alltdRelative();
 			classTime();
+			offTime();
 			dateText();
 			myswiper.update(); //슬라이드 업데이트
 
@@ -132,6 +152,7 @@ $(document).ready(function(){
 			calTable_Set(1,currentYear,currentPageMonth,currentDate-1);
 			alltdRelative();		
 			classTime();
+			offTime();
 			dateText();
 			myswiper.update(); //이전페이지로 넘겼을때
 		}
@@ -179,6 +200,21 @@ $(document).ready(function(){
 			$("td[data-time="+classStart+"] div").html('<span>'+memberName+' </span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');	
 			$("td[data-time="+classStart+"] div span:first-child").addClass('memberName');
 			$("td[data-time="+classStart+"] div span:nth-child(2)").addClass('memberTime');
+
+		};
+	};
+
+
+	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+		for(var i=0; i<offTimeArray.length; i++){
+			var datasplit = offTimeArray[i].split('_');  //2017_8_15_6_00_3
+			var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
+			var offDura = datasplit[5];
+			var memberName = datasplit[6];
+			$("td[data-time="+offStart+"] div").addClass('offTime').attr('off-time',offTimeArray[i]).css({'height':Number(offDura*30)+'px'});
+			$("td[data-time="+offStart+"] div").html('<span>'+memberName+' </span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');	
+			$("td[data-time="+offStart+"] div span:first-child").addClass('memberName');
+			$("td[data-time="+offStart+"] div span:nth-child(2)").addClass('memberTime');
 
 		};
 	};

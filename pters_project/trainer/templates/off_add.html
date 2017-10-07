@@ -1,7 +1,9 @@
-{% extends "trainer_base.html" %}
+{% extends "trainer_base_add_off.html" %}
 {% load static %}
 
 {% block local_css %}
+        <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.off.add.css" %}>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         
@@ -11,71 +13,72 @@
 
 {% block content %}
 
-<div id="dateSelector">
-  <div>날짜</div>
-  <p>Date: <input type="text" id="datepicker"></p>
+<div id="dateSelector" class="ptaddbox">
+  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 날짜</div>
+  <p class="datepicktext dropdown"><input type="text" id="datepicker" readonly></p>  
 </div>
+
+
+<div id="offDuration" class="ptaddbox">
+  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+  <div id="durationsSelected" class="dropdown">
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+    <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+      <!-- 회원명 DB연동 필요-->
+      <li><a data-dur="1">1시간</a></li>
+      <li><a data-dur="2">2시간</a></li>
+      <li><a data-dur="2">3시간</a></li>
+      <li><a data-dur="2">4시간</a></li>
+      <li><a data-dur="2">5시간</a></li>
+      <li><a data-dur="2">6시간</a></li>
+      <li><a data-dur="2">하루종일(불가)</a></li>
+    </ul>
+  </div>
+</div>
+
+
+<div id="offStartTime" class="ptaddbox">
+  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+  <div id="starttimesSelected" class="dropdown">
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+    <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
+      <!-- 회원명 DB연동 필요-->
+      <li><a data-trainingtime="05:00:00.000000">오전 5시</a></li>
+      <li><a data-trainingtime="06:00:00.000000">오전 6시</a></li>
+      <li><a data-trainingtime="07:00:00.000000">오전 7시</a></li>
+      <li><a data-trainingtime="08:00:00.000000">오전 8시</a></li>
+      <li><a data-trainingtime="09:00:00.000000">오전 9시</a></li>
+      <li><a data-trainingtime="10:00:00.000000">오전 10시</a></li>
+      <li><a data-trainingtime="11:00:00.000000">오전 11시</a></li>
+      <li><a data-trainingtime="12:00:00.000000">오후 12시</a></li>
+      <li><a data-trainingtime="13:00:00.000000">오후 1시</a></li>
+      <li><a data-trainingtime="14:00:00.000000">오후 2시</a></li>
+      <li><a data-trainingtime="15:00:00.000000">오후 3시</a></li>
+      <li><a data-trainingtime="16:00:00.000000">오후 4시</a></li>
+      <li><a data-trainingtime="17:00:00.000000">오후 5시</a></li>
+      <li><a data-trainingtime="18:00:00.000000">오후 6시</a></li>
+      <li><a data-trainingtime="19:00:00.000000">오후 7시</a></li>
+      <li><a data-trainingtime="20:00:00.000000">오후 8시</a></li>
+      <li><a data-trainingtime="21:00:00.000000">오후 9시</a></li>
+    </ul>
+  </div>
+</div>
+
+<div id="repeatSchedule" class="ptaddbox repeatbox">
+  <div id="repeatScheduleText" class="ptaddboxtext repeattext">
+    <img src={% static "user/res/ptadd/icon-repeat-cal.png" %} class="icons">
+     <span>반복일정</span>
+     <img class="icons-next-button" src={% static "user/res/ptadd/btn-next-white.png" %}>
+   </div>
   
-<hr>
-
-<div id="classTime">
-  <div>진행 시간</div>
-  <div>
-    <div class="radio">
-      <label><input type="radio" name="optradio">1시간</label>
-    </div>
-    <div class="radio">
-      <label><input type="radio" name="optradio">2시간</label>
-    </div>
-    <div class="radio">
-      <label><input type="radio" name="optradio">3시간</label>
-    </div>
-    <div class="radio">
-      <label><input type="radio" name="optradio">4시간</label>
-    </div>
-    <div class="radio">
-      <label><input type="radio" name="optradio">5시간</label>
-    </div>
-    <div class="radio">
-      <label><input type="radio" name="optradio">6시간</label>
-    </div>
-    <div class="radio">
-      <label><input type="radio" name="optradio" disabled>하루종일(불가)</label>
-    </div>
+  <!--반복일정 박스-->
+  <div class="repeatboxinner">
+    <span class="repeatstarttext">매주 월요일 오전 11시</span><span class="repeatfinishtext">반복종료 : PT 마감시</span>
   </div>
-</div>
-
-<hr>
-
-<div id="classStartTime">
-  <div>시작 시각</div>
-  <div>
-    <div class="radio">
-      <label><input type="radio" name="optradio1">오전 9시</label>
-    </div>
-    <div class="radio">
-      <label><input type="radio" name="optradio1">오후 12시</label>
-    </div>
-    <div class="radio">
-      <label><input type="radio" name="optradio1">오후 7시</label>
-    </div>
-  </div>
-
-<hr>
-
-<button type="button" class="btn btn-info" onclick="location.href='{% url 'trainer:add_repeat_off' %}'">OFF 반복 일정 등록</button>
-
-<hr>
-
-<div id="repeatSchedule">
-  <div>반복 일정</div>
-  <div>
-    <p>매주 월요일 오전 11시</p>
-    <p>반복종료 : PT 마감시</p>
-  </div>
-  <div>
-    <p>매주 수요일 오후 3시</p>
-    <p>반복종료 : 2017-12-31</p>
+  
+  <!--반복일정 박스-->
+  <div class="repeatboxinner">
+    <span class="repeatstarttext">매주 수요일 오후 3시</span><span class="repeatfinishtext">반복종료 : 2017-12-31</span>
   </div>
 
 </div>
