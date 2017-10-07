@@ -12,6 +12,10 @@
     <input type="hidden" name="member_name"   id="id_member_name">
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
   </form>
+  <form action="/trainer/daily_off_delete/" id="daily-off-delete-form" method="post">
+    <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+  </form>
 
 
   <!--팝업메뉴-->
@@ -81,6 +85,7 @@
         	var classTimeArray = new Array({% for daily_data in daily_lecture_data %}'{{ daily_data }}',{% endfor %});
             var scheduleIdArray = new Array({% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %});
             var offTimeArray = new Array({% for daily_off in daily_off_data %}'{{ daily_off }}',{% endfor %});
+            var offScheduleIdArray = new Array({% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %});
         </script>
         <script type="text/javascript" src={% static "user/js/pters.day.cal.js" %}></script>
         <script>
