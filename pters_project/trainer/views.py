@@ -9,10 +9,8 @@ from django.db import IntegrityError
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-
 from login.models import MemberTb, LogTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb
@@ -33,7 +31,8 @@ class IndexView(LoginRequiredMixin, TemplateView):
         context['trainer_member_count'] = 0
 
         if error is None :
-            context['trainer_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id).count()
+            context['trainer_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
+                                                                       lecture_count__gte=1).count()
             context['trainer_end_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
                                                                            lecture_count__gte=1,
                                                                            lecture_count__lte=3).count()
