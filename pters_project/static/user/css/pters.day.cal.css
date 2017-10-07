@@ -7,6 +7,66 @@ body{
 }
 
 
+#cal_popup{
+	display: none;
+	position: fixed;
+	top: 35%;
+	left: 10%;
+	width: 80%;
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	z-index: -2;
+	text-align: center;
+}
+
+#popup_img{
+	position: relative;
+	height: 70px;
+	padding-top: 22.5px;
+	padding-bottom: 22.5px;
+}
+
+
+#img_cal{
+	position: absolute;
+	top: 30%;
+	left:41.5%;
+	width: 25px;
+	margin-right: 14.845px;
+	margin-left: 14.845px;
+}
+
+#btn_close{
+	position: absolute;
+	top: 39%;
+	left: 90%;
+	width: 15px;
+	float: right;
+}
+
+.popup_inner{
+	position: relative;
+	height: 50px;
+	border-top: 1px solid #a2a2a2;
+}
+
+.popup_inner span{
+	position: absolute;
+	left: 41.5%;
+	top: 30%;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.popup_inner_change{
+	text-align: center;
+}
+
+.popup_inner_delete{
+	text-align: center;
+	color: #fe4e65;
+}
+
 #shade{
 	position: fixed;
 	width: 100%;
@@ -150,13 +210,14 @@ body{
 	position: relative;
 	width: 100%;
 	font-size: 14.4px;
-	height: 35px;
+	height: 30.5px;
 }
 
 .hour{
 	text-align: center;
 	width: 10%;
 	background-color: #ffffff;
+	border-bottom: 1px solid #ffffff;
 }
 
 td{
@@ -179,7 +240,17 @@ td{
 	width: 84%;
 	background: #ffffff;
 	border: 0.5px solid #fe4e65;
+	z-index: 100;
+}
 
+.offTime{
+	position: absolute;
+	top: 0;
+	left: 25px;
+	width: 84%;
+	background: #cccccc;
+	border: 0.5px solid #cccccc;
+	z-index: 100;
 }
 
 .classTimeIndicator{
@@ -196,10 +267,17 @@ td{
 	position: absolute;
 	left: 3%;
 	margin-top: 5px;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: -0.3px;
+	color: #282828;
 }
 
 .memberTime{
 	position: absolute;
 	right: 6%;
 	margin-top: 5px;
+	font-size: 14px;
+	letter-spacing: -0.3px;
+	color: #3b3d3d;
 }
