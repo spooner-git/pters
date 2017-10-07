@@ -217,6 +217,7 @@ body{
 	text-align: center;
 	width: 10%;
 	background-color: #ffffff;
+	border-bottom: 1px solid #ffffff;
 }
 
 td{
