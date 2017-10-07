@@ -6,6 +6,16 @@
 {% endblock %}
 
 {% block content %}
+
+  <!--팝업메뉴-->
+    <div id="cal_popup">
+      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div>
+      <div id="popup_text1" class="popup_inner popup_inner_change"  onclick="location.href='{% url 'trainer:add_pt' %}'"><span>일정 변경</span></div>
+      <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 삭제</span></div>
+    </div>
+  <!--팝업메뉴-->
+
+
     
   <!--플로팅 버튼-->
     <div id="float_btn">
