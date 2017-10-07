@@ -12,7 +12,30 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 $(document).ready(function(){
 
 
-	//플로팅 버튼
+	//스케쥴 클릭시 팝업 Start
+		$(document).on('click','div.classTime',function(){
+			$("#cal_popup").css({'display':'block','z-index':'40'});
+			$('#shade').css({'background-color':'black','z-index':'15'});
+		})
+			
+
+		$("#btn_close").click(function(){
+			if($('#cal_popup').css('display')=='block'){
+				$("#cal_popup").css({'display':'none','z-index':'-2'})
+				$('#shade').css({'background-color':'white','z-index':'-1'});
+			}
+		})
+
+
+
+
+
+
+	//스케쥴 클릭시 팝업 End
+
+
+
+	//플로팅 버튼 Start
 	$('#float_btn').click(function(){
 		if($('#shade').css('z-index')<0){
 			$('#shade').css({'background-color':'black','z-index':'8'});
@@ -25,9 +48,9 @@ $(document).ready(function(){
 			$('#float_btn').removeClass('rotate_btn');
 		}
 	});
-	//플로팅 버튼
+	//플로팅 버튼 End
 
-	//플로팅 버튼 스크롤시 숨기기
+	//플로팅 버튼 스크롤시 숨기기 Start
 		var ts;
 			$("body").bind("touchstart",function(e){
 			ts = e.originalEvent.touches[0].clientY;
@@ -40,7 +63,7 @@ $(document).ready(function(){
 					$("#float_btn").animate({opacity:'1'})
 				}
 			});
-	//플로팅 버튼 스크롤시 숨기기
+	//플로팅 버튼 스크롤시 숨기기 End
 
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
