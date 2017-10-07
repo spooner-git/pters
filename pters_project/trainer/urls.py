@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
     url(r'^cal_day/$', views.CalDayView.as_view(), name='cal_day'),
     url(r'^daily_pt_delete/$', views.daily_pt_delete, name='daily_pt_delete'),
+    url(r'^off_schedule_add_logic/$', views.off_schedule_add_logic, name='off_schedule_add_logic'),
 ]
