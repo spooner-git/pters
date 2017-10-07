@@ -31,4 +31,5 @@ urlpatterns = [
     url(r'^trainer_login/$', views.LogInTrainerView.as_view(), name='trainer_login'),
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
     url(r'^cal_day/$', views.CalDayView.as_view(), name='cal_day'),
+    url(r'^daily_pt_delete/$', views.daily_pt_delete, name='daily_pt_delete'),
 ]

@@ -11,6 +11,7 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
 
 	//스케쥴 클릭시 팝업 Start
 		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
@@ -18,8 +19,23 @@ $(document).ready(function(){
 			$('#shade').css({'background-color':'black','z-index':'15'});
 			console.log($(this).attr('class-time')); //현재 클릭한 요소의 class-time 요소 값 보기
 			                                         //형식예: 2017_10_7_6_00_2_원빈
+			console.log($(this).attr('schedule-id'));
+			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
+			schedule_on_off = 1;
+
 		})
-			
+
+		//일정 삭제 기능 추가 - hk.kim 171007
+		$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
+			if(schedule_on_off==1){
+				//PT 일정 삭제시
+				document.getElementById('daily-pt-delete-form').submit();
+			}
+			else{
+
+			}
+		})
 
 		$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup').css('display')=='block'){
@@ -196,8 +212,9 @@ $(document).ready(function(){
 			var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var classDura = datasplit[5];
 			var memberName = datasplit[6];
-			$("td[data-time="+classStart+"] div").addClass('classTime').attr('class-time',classTimeArray[i]).css({'height':Number(classDura*30)+'px'});
-			$("td[data-time="+classStart+"] div").html('<span>'+memberName+' </span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');	
+			//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
+			$("td[data-time="+classStart+"] div").addClass('classTime').attr('class-time',classTimeArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).css({'height':Number(classDura*30)+'px'});
+			$("td[data-time="+classStart+"] div").html('<span>'+memberName+' </span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');
 			$("td[data-time="+classStart+"] div span:first-child").addClass('memberName');
 			$("td[data-time="+classStart+"] div span:nth-child(2)").addClass('memberTime');
 

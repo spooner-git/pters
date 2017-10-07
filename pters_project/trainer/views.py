@@ -69,6 +69,7 @@ class CalDayView(LoginRequiredMixin, TemplateView):
             # logger.error(error)
 
         daily_data = []
+        lecture_schedule_data = []
         if error is None:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
             for lecture in month_lecture_data:
@@ -84,8 +85,10 @@ class CalDayView(LoginRequiredMixin, TemplateView):
                     daily_data.append(str(month_lecture.data.tm_year)+'_'+str(month_lecture.data.tm_mon)+'_'
                                       +str(month_lecture.data.tm_mday)+'_'+str(month_lecture.data.tm_hour)+'_'
                                       +str(format(month_lecture.data.tm_min,'02d'))+'_'+str(result_hour)+'_'+member_data.name)
+                    lecture_schedule_data.append(month_lecture.lecture_schedule_id)
 
         context['daily_lecture_data'] = daily_data
+        context['daily_lecture_schedule_id'] = lecture_schedule_data
 
         return context
 
@@ -438,3 +441,84 @@ def login_trainer_view(request):
                       'next': next,
                       'fail': fail
                   })
+
+
+# pt 일정 삭제
+@csrf_exempt
+def daily_pt_delete(request):
+    schedule_id = request.POST.get('schedule_id')
+    member_name = request.POST.get('member_name')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    if schedule_id == '':
+        error = '스케쥴을 선택하세요.'
+
+    if error is None:
+
+        lecture_schedule_data = None
+        try:
+            lecture_schedule_data = LectureScheduleTb.objects.get(lecture_schedule_id=schedule_id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+            # logger.error(error)
+
+        if error is None:
+            start_date = lecture_schedule_data.start_dt
+            end_date = lecture_schedule_data.end_dt
+
+        lecture_data = None
+        try:
+            lecture_data = LectureTb.objects.get(lecture_id=lecture_schedule_data.lecture_tb_id)
+        except ObjectDoesNotExist:
+            error = 'Lecture가 존재하지 않습니다'
+
+
+        try:
+            with transaction.atomic():
+                lecture_schedule_data.use = 0
+                member_lecture_count = lecture_data.lecture_count
+                lecture_data.lecture_count = member_lecture_count+1
+                lecture_schedule_data.save()
+                lecture_data.save()
+
+        except ValueError as e:
+            #logger.error(e)
+            error = 'Registration ValueError!'
+        except IntegrityError as e:
+            #logger.error(e)
+            error = 'Registration IntegrityError!'
+        except TypeError as e:
+            error = 'Registration TypeError!'
+
+    if error is None:
+        week_info = ['일', '월', '화', '수', '목', '금', '토']
+
+        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        if start_date.strftime('%p') == 'AM':
+            log_start_date = str(log_start_date) + '오전'
+        elif start_date.strftime('%p') == 'PM':
+            log_start_date = str(log_start_date) + '오후'
+        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
+
+        if end_date.strftime('%p') == 'AM':
+            log_end_date = '오전'
+        elif end_date.strftime('%p') == 'PM':
+            log_end_date = '오후'
+
+        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
+        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
+        # + start_date.strftime('%p %I:%M')\
+        # + '- '+end_date.strftime('%p %I:%M')
+        log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
+                       + ' 회원님의</span> 일정을 <span class="status">삭제</span>했습니다.@'\
+                       + log_start_date\
+                       + ' - '+log_end_date
+        log_data = LogTb(external_id=request.user.id, log_type='SA', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+        return redirect(next_page)
+    else:
+        messages.info(request, error)
+        next_page = 'trainer:cal_day'
+        return redirect(next_page)
