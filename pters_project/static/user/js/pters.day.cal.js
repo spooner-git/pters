@@ -13,24 +13,20 @@ $(document).ready(function(){
 
 
 	//스케쥴 클릭시 팝업 Start
-		$(document).on('click','div.classTime',function(){
+		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 			$("#cal_popup").css({'display':'block','z-index':'40'});
 			$('#shade').css({'background-color':'black','z-index':'15'});
+			console.log($(this).attr('class-time')); //현재 클릭한 요소의 class-time 요소 값 보기
+			                                         //형식예: 2017_10_7_6_00_2_원빈
 		})
 			
 
-		$("#btn_close").click(function(){
+		$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup').css('display')=='block'){
 				$("#cal_popup").css({'display':'none','z-index':'-2'})
 				$('#shade').css({'background-color':'white','z-index':'-1'});
 			}
 		})
-
-
-
-
-
-
 	//스케쥴 클릭시 팝업 End
 
 
