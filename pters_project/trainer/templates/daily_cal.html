@@ -80,8 +80,7 @@
         <script>
         	var classTimeArray = new Array({% for daily_data in daily_lecture_data %}'{{ daily_data }}',{% endfor %});
             var scheduleIdArray = new Array({% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %});
-            var offTimeArray = new Array('');
-            //var offTimeArray = new Array('2017_10_6_6_00_2_OFF','2017_10_6_10_00_5_OFF','2017_10_6_18_00_1_OFF','2017_10_7_5_00_1_OFF','2017_10_7_8_00_3_OFF','2017_10_7_14_00_1_OFF','2017_10_8_6_00_1_OFF','2017_10_8_13_00_8_OFF');
+            var offTimeArray = new Array({% for daily_off in daily_off_data %}'{{ daily_off }}',{% endfor %});
         </script>
         <script type="text/javascript" src={% static "user/js/pters.day.cal.js" %}></script>
         <script>

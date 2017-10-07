@@ -43,10 +43,17 @@ $(document).ready(function(){
         	    $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             	select_all_check=true;
         	}else{
-           	 select_all_check=false;
+           	    select_all_check=false;
        		}
     	 }
 
+    $("#upbutton-alarm").click(function(){
+         if(select_all_check==true){
+             document.getElementById('off-add-form').submit();
+         }else{
+            //입력값 확인 메시지 출력 가능
+         }
+     })
       //작은달력 설정
       $.datepicker.setDefaults({
         dateFormat: 'yy-mm-dd',
