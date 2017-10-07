@@ -26,6 +26,19 @@ $(document).ready(function(){
 
 		})
 
+	//Off 일정 클릭시 팝업 Start
+		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
+			$("#cal_popup").css({'display':'block','z-index':'40'});
+			$('#shade').css({'background-color':'black','z-index':'15'});
+			console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
+			                                         //형식예: 2017_10_7_6_00_2_원빈
+			console.log($(this).attr('off-schedule-id'));
+			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+			schedule_on_off = 0;
+
+		})
+
+
 		//일정 삭제 기능 추가 - hk.kim 171007
 		$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
 			if(schedule_on_off==1){
@@ -33,7 +46,7 @@ $(document).ready(function(){
 				document.getElementById('daily-pt-delete-form').submit();
 			}
 			else{
-
+				document.getElementById('daily-off-delete-form').submit();
 			}
 		})
 
@@ -228,7 +241,7 @@ $(document).ready(function(){
 			var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var offDura = datasplit[5];
 			var memberName = datasplit[6];
-			$("td[data-time="+offStart+"] div").addClass('offTime').attr('off-time',offTimeArray[i]).css({'height':Number(offDura*30)+'px'});
+			$("td[data-time="+offStart+"] div").addClass('offTime').attr('off-time',offTimeArray[i]).attr('off-schedule-id',offScheduleIdArray[i]).css({'height':Number(offDura*30)+'px'});
 			$("td[data-time="+offStart+"] div").html('<span>'+memberName+' </span>'+'<span>'+datasplit[3]+':'+datasplit[4]+'</span>');	
 			$("td[data-time="+offStart+"] div span:first-child").addClass('memberName');
 			$("td[data-time="+offStart+"] div span:nth-child(2)").addClass('memberTime');
