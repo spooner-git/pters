@@ -13,6 +13,21 @@ $(document).ready(function(){
 
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
 
+	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
+
+	$('#ymdText').click(function(){
+		var memberName = $(".memberName");
+		var memberTime = $(".memberTime");
+		if(memberName.css('display')!='none'){
+			memberName.css('display','none')
+			memberTime.css('display','none')
+		}else{
+			memberName.css('display','block')
+			memberTime.css('display','block')
+		};
+	});
+	//
+
 	//스케쥴 클릭시 팝업 Start
 		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 			$("#cal_popup").css({'display':'block','z-index':'40'});
@@ -217,6 +232,17 @@ $(document).ready(function(){
 
 	function weekNum_Set(){
 		var currentDayLoc = Number(currentDay+1)
+		
+		var dayKorean = new Array('일','월','화','수','목','금','토')
+		for(var i=1; i<=7; i++){
+			for(var j=0;j<=4;j++){
+				$('#slide'+j+' #weekNum_'+i+' span:nth-child(2)').html(dayKorean[i-1]);			
+			}
+		}
+		
+		
+
+
 		$('#slide2 #weekNum_'+currentDayLoc+' span:nth-child(3)').html(currentDate);
 		if(currentDayLoc==1){
 			for(i=1; i<=6; i++){
@@ -294,10 +320,18 @@ $(document).ready(function(){
 				$('#slide4 #weekNum_'+i+' span:nth-child(3)').html(slide2value+14);
 			}
 		}
+
+		for(i=1;i<=7;i++){
+		var scan = $('#slide2 #weekNum_'+i+' span:nth-child(3)').text()
+			if(scan==currentDate){
+				$('#slide2 #weekNum_'+i+' span:nth-child(1)').addClass('today')
+				$('#slide2 #weekNum_'+i+' span:nth-child(1)').html('TODAY')
+				$('#slide2 #weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
+			}
+		}
+
+
 	}
-
-
-
 
 
 	function alltdRelative(){ //날짜 밑에 동그라미 색상표기를 위해 모든 td의 css 포지션 값 relative로 설정
