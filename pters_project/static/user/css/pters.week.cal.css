@@ -216,19 +216,25 @@ body{
 .hour{
 	text-align: center;
 	width: 9.72%;
-	background-color: #ffffff;
 	border-bottom: 1px solid #ffffff;
+	font-size: 13px;
 }
 
 td{
 	width: 12.5%;
-	height: 50%;
+	height: 15px;
 	color : #282828;
+	border-bottom: 0.5px solid #a2a2a2;
+	border-right:  1px solid #ffffff;
+	border-left:  1px solid #ffffff;
+	padding-right: 1px;
+	padding-left: 1px;
 }
 
 tr{
-	height: 15px;
+	height: 50%;
 }
+
 
 #calendar{
 	background-color: #f4f4f4;
@@ -238,23 +244,24 @@ tr{
 
 .classTime{
 	position: absolute;
-	top: 0;
+	top: 0px;
 	left: 0px;
 	width: 100%;
 	background: #fe4e65;
 	opacity: 0.9;
 	border: 0.5px solid #fe4e65;
+	border-bottom: 0.5px solid #a2a2a2;
 	z-index: 100;
 }
 
 .offTime{
 	position: absolute;
-	top: 0;
+	top: 0px;
 	left: 0px;
 	width: 100%;
-	background: #cccccc;
+	background: #606363;
 	opacity: 0.9;
-	border: 0.5px solid #cccccc;
+	border: 0.5px solid #606363;
 	z-index: 100;
 }
 
@@ -281,7 +288,7 @@ tr{
 .memberTime{
 	position: absolute;
 	right: 6%;
-	margin-top: 18px;
+	margin-top: 17px;
 	font-size: 11.5px;
 	letter-spacing: -0.3px;
 	color: #3b3d3d;
@@ -298,4 +305,23 @@ tr{
 
 .weekToday-style{
 	height: 18px;
+	font-size: 14.1px;
+}
+
+.today-Number{
+	font-weight: bold;
+	font-size: 16px;
+}
+
+
+.today{
+	display: block;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	border-top: 3px solid #fe4e65;
+	color: #fe4e65;
+	font-weight: 600;
+	font-size: 78%;
 }
