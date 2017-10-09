@@ -141,6 +141,15 @@ class PtAddView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class CalWeekView(LoginRequiredMixin, TemplateView):
+    template_name = 'week_cal.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalWeekView, self).get_context_data(**kwargs)
+
+        return context
+
+
 class OffAddView(LoginRequiredMixin, TemplateView):
     template_name = 'off_add.html'
 
