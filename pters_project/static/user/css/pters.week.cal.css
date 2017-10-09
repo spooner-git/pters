@@ -1,0 +1,301 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body{
+	font-family: 'Noto Sans KR';
+	padding-top: 50px;
+	width: 100%;
+}
+
+
+#cal_popup{
+	display: none;
+	position: fixed;
+	top: 35%;
+	left: 10%;
+	width: 80%;
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	z-index: -2;
+	text-align: center;
+}
+
+#popup_img{
+	position: relative;
+	height: 70px;
+	padding-top: 22.5px;
+	padding-bottom: 22.5px;
+}
+
+
+#img_cal{
+	position: absolute;
+	top: 30%;
+	left:41.5%;
+	width: 25px;
+	margin-right: 14.845px;
+	margin-left: 14.845px;
+}
+
+#btn_close{
+	position: absolute;
+	top: 39%;
+	left: 90%;
+	width: 15px;
+	float: right;
+}
+
+.popup_inner{
+	position: relative;
+	height: 50px;
+	border-top: 1px solid #a2a2a2;
+}
+
+.popup_inner span{
+	position: absolute;
+	left: 41.5%;
+	top: 30%;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.popup_inner_change{
+	text-align: center;
+}
+
+.popup_inner_delete{
+	text-align: center;
+	color: #fe4e65;
+}
+
+#shade{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	opacity: 0.7;
+	z-index: -1;
+}
+
+#float_btn{  /*2017.10.2*/
+	position: fixed;
+	width: 50px;
+	height: 50px;
+	bottom: 25px;
+	right: 25px;
+	border-radius: 50%;
+	z-index: 10;
+	cursor: pointer;
+}
+
+#float_btn img{ /*2017.10.2*/
+	width: 100%;
+	height: 100%;
+	
+}
+
+.rotate_btn{
+	-webkit-transform: rotate(47deg);
+	transform: rotate(47deg);
+}
+
+
+
+#float_inner1{ /*2017.10.2*/
+	background-color: #fe4e65;
+}
+
+#float_inner1 a{ /*2017.10.2*/
+	color: #ffffff;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
+	height: 70%;
+	font-weight: bold;
+}
+
+#float_inner2{ /*2017.10.2*/
+	background-color: #ffffff;
+
+}
+
+#float_inner2 a{ /*2017.10.2*/
+	color: #282828;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
+	height: 70%;
+	font-weight: bold;
+}
+
+
+.float_inner{ /*2017.10.2*/
+	position: fixed;
+	width: 50px;
+	height: 50px;
+	bottom: 25px;
+	right: 25px;
+	background-color: grey;
+	opacity: 0;
+	border-radius: 50%;
+	z-index: 9;	
+	font-size: 13px;
+	text-align: center; 
+}
+
+#monthText{
+	color : #fe4e65;
+	font-size: 19.5px;
+	font-weight: 700;
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	top: 50%;
+}
+
+#yearText{
+	color : #ffffff;
+	font-size: 15px;
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	top: 25%;
+}
+
+#ymdText{
+	position: fixed;
+	height: auto;
+	z-index: 3;
+}
+
+#gapbox{
+	width: 100%;
+	height: 0px;
+	position: relative;
+	padding-bottom: 23.5%;
+	overflow-y: hidden;
+	background-color: #ffffff;
+}
+
+
+.calendar-style{  /*week ìŠ¤íƒ€ì¼í•˜ìœ„ */
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+
+
+.arrowButton{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+.arrowButton a{
+	position: absolute;
+	top: 20%;
+	font-size: 35px;
+	font-weight: 600;
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.time-style{ /*week ìŠ¤íƒ€ì¼*/
+	background-color: transparent;
+	position: relative;
+	width: 100%;
+	font-size: 14.4px;
+	height: 30px;
+}
+
+.hour{
+	text-align: center;
+	width: 9.72%;
+	background-color: #ffffff;
+	border-bottom: 1px solid #ffffff;
+}
+
+td{
+	width: 12.5%;
+	height: 50%;
+	color : #282828;
+}
+
+tr{
+	height: 15px;
+}
+
+#calendar{
+	background-color: #f4f4f4;
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.classTime{
+	position: absolute;
+	top: 0;
+	left: 0px;
+	width: 100%;
+	background: #fe4e65;
+	opacity: 0.9;
+	border: 0.5px solid #fe4e65;
+	z-index: 100;
+}
+
+.offTime{
+	position: absolute;
+	top: 0;
+	left: 0px;
+	width: 100%;
+	background: #cccccc;
+	opacity: 0.9;
+	border: 0.5px solid #cccccc;
+	z-index: 100;
+}
+
+.classTimeIndicator{
+	position: absolute;
+	top: 17.5px;
+	left: 0;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: #fe4e65;
+}
+
+.memberName{
+	position: absolute;
+	left: 3%;
+	margin-top: 0px;
+	font-size: 13.5px;
+	font-weight: bold;
+	letter-spacing: -0.3px;
+	color: #282828;
+}
+
+.memberTime{
+	position: absolute;
+	right: 6%;
+	margin-top: 18px;
+	font-size: 11.5px;
+	letter-spacing: -0.3px;
+	color: #3b3d3d;
+}
+
+
+#week{
+	height: auto;
+}
+
+#weekText span{
+	display: block;
+}
+
+.weekToday-style{
+	height: 18px;
+}
