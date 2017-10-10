@@ -73,6 +73,12 @@ class CalDayView(LoginRequiredMixin, TemplateView):
         daily_data = []
         lecture_schedule_data = []
 
+        daily_off_data_start_date = []
+        daily_off_data_end_date = []
+        daily_lecture_data_start_date = []
+        daily_lecture_data_end_date = []
+        daily_lecture_data_member = []
+
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
@@ -87,6 +93,8 @@ class CalDayView(LoginRequiredMixin, TemplateView):
                                   + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
                                   + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
                 class_schedule_data.append(month_class.class_schedule_id)
+                daily_off_data_start_date.append(month_class.start_dt)
+                daily_off_data_end_date.append(month_class.end_dt)
 
         if error is None:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
@@ -104,11 +112,20 @@ class CalDayView(LoginRequiredMixin, TemplateView):
                                       +str(month_lecture.data.tm_mday)+'_'+str(month_lecture.data.tm_hour)+'_'
                                       +str(format(month_lecture.data.tm_min,'02d'))+'_'+str(result_hour)+'_'+member_data.name)
                     lecture_schedule_data.append(month_lecture.lecture_schedule_id)
+                    daily_lecture_data_start_date.append(month_lecture.start_dt)
+                    daily_lecture_data_end_date.append(month_lecture.end_dt)
+                    daily_lecture_data_member.append(member_data.name)
 
         context['daily_off_data'] = daily_off_data
         context['daily_lecture_data'] = daily_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
         context['class_schedule_data'] = class_schedule_data
+
+        context['daily_off_data_start_date'] = daily_off_data_start_date
+        context['daily_off_data_end_date'] = daily_off_data_end_date
+        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
+        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
+        context['daily_lecture_data_member'] = daily_lecture_data_member
 
         return context
 

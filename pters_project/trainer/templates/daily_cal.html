@@ -82,6 +82,15 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
+            //front-end에서 다뤄야하는 데이터
+        	var classTimeArray_start_date = new Array({% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %});
+        	var classTimeArray_end_date = new Array({% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %});
+        	var classTimeArray_member_name = new Array({% for member_name in daily_lecture_data_member %}'{{ member_name }}',{% endfor %});
+            var offTimeArray_start_date = new Array({% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %});
+            var offTimeArray_end_date = new Array({% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %});
+
+            //
+
         	var classTimeArray = new Array({% for daily_data in daily_lecture_data %}'{{ daily_data }}',{% endfor %});
             var scheduleIdArray = new Array({% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %});
             var offTimeArray = new Array({% for daily_off in daily_off_data %}'{{ daily_off }}',{% endfor %});
