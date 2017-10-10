@@ -215,13 +215,13 @@ body{
 
 .hour{
 	text-align: center;
-	width: 10%;
+	width: 25%;
 	background-color: #ffffff;
 	border-bottom: 1px solid #ffffff;
 }
 
 td{
-	width: 40%;
+	width: 75%;
 	height: 50%;
 	color : #282828;
 }
@@ -280,4 +280,32 @@ td{
 	font-size: 14px;
 	letter-spacing: -0.3px;
 	color: #3b3d3d;
+}
+
+.currentTimeBox{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+
+}
+
+.currentTimeIndicator{
+	position: absolute;
+	left: 23.5%;
+	top: 35%;
+	width: 12px;
+	height: 12px;
+	background-color: #fe4e65;
+	border-radius: 6px;
+	z-index: 101;
+}
+
+.currentTimeLine{
+	position: absolute;
+	border-top: 1px dotted #fe4e65;
+	left: 23.5%;
+	top: 53%;
+	width: 75%;
+	z-index: 101;
 }
