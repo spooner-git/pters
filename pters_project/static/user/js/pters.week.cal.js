@@ -217,7 +217,7 @@ $(document).ready(function(){
 				};
 		};
 
-		for(var i=5; i<=24; i++){
+		for(var i=5; i<=24; i++){  //각 td 생성(td별 고유 id부여)
 			for(var j=0; j<=6;j++){
 				var slidevalue = $('#slide'+Index+' #weekNum_'+Number(j+1)+' span:nth-child(3)').text();
 				$('#'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+' tbody tr:nth-child(1)').append('<td'+' data-time='+Year+'_'+Month+'_'+slidevalue+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>');

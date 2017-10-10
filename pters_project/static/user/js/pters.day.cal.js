@@ -90,6 +90,14 @@ $(document).ready(function(){
 			});
 	//플로팅 버튼 스크롤시 숨기기 End
 
+	//날짜 불변
+	var dateorigin = new Date();
+	var OricurrentYear = dateorigin.getFullYear();
+	var OricurrentMonth = dateorigin.getMonth();
+	var OricurrentDate = dateorigin.getDate();
+	var OricurrentHour = dateorigin.getHours();
+	//
+
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -119,6 +127,7 @@ $(document).ready(function(){
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
 	dateText(); //상단에 연, 월 표시
+	addcurrentTimeIndicator(); //현재시간 표시
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
@@ -170,6 +179,7 @@ $(document).ready(function(){
 			classTime();
 			offTime();
 			dateText();
+			addcurrentTimeIndicator(); //현재시간 표시
 			myswiper.update(); //슬라이드 업데이트
 
 		},
@@ -183,6 +193,7 @@ $(document).ready(function(){
 			classTime();
 			offTime();
 			dateText();
+			addcurrentTimeIndicator(); //현재시간 표시
 			myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
@@ -266,6 +277,12 @@ $(document).ready(function(){
 		$('#monthText').text(textDay);
 	};
 
+	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
+		var where = '#'+OricurrentYear+'_'+Number(OricurrentMonth+1)+'_'+OricurrentDate+'_'+OricurrentHour+'H'
+		if($('.currentTimeBox').length==""){
+			$(where).parent('div').append("<div class='currentTimeBox'><div class='currentTimeIndicator'></div><div class='currentTimeLine'></div></div>")
+		}
+	}
 
 
 });//document(ready)
