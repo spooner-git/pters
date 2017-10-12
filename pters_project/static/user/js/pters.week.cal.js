@@ -130,7 +130,7 @@ $(document).ready(function(){
 	calTable_Set(0,currentYear,currentPageMonth,'W2'); //1번 슬라이드에 현재달, 현재주 -2 달력채우기
 	calTable_Set(1,currentYear,currentPageMonth,'W1');  //2번 슬라이드에 현재달, 현재주 -1 채우기
 
-	alltdRelative(); //모든 td의 스타일 position을 relative로
+	//alltdRelative(); //모든 td의 스타일 position을 relative로
 	dateText();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
@@ -138,13 +138,13 @@ $(document).ready(function(){
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
-			slideControl.next();
+			//slideControl.next();
 			dateText();
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
 	myswiper.on('SlidePrevEnd',function(){
-			slideControl.prev();
+			//slideControl.prev();
 			dateText();	
 	});
 
@@ -174,17 +174,17 @@ $(document).ready(function(){
 		},
 
 		'next': function(){
-			alltdRelative();
-			classTime();
-			offTime();
-			myswiper.update(); //슬라이드 업데이트
+			//alltdRelative();
+			//classTime();
+			//offTime();
+			//myswiper.update(); //슬라이드 업데이트
 		},
 
 		'prev': function(){
-			alltdRelative();		
-			classTime();
-			offTime();
-			myswiper.update(); //이전페이지로 넘겼을때
+			//alltdRelative();		
+			//classTime();
+			//offTime();
+			//myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
 
@@ -192,13 +192,17 @@ $(document).ready(function(){
 	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
 
 		//주간달력 상단표시줄 (요일, 날짜, Today표식)
-		$('#slide'+Index).append('<div id="week" class="time-style"><table class="calendar-style"><tbody><tr id="weekText"></tr></tbody></table></div>')
+		var slideIndex = $('#slide'+Index);
+
+		slideIndex.append('<div id="week" class="time-style"><table class="calendar-style"><tbody><tr id="weekText"></tr></tbody></table></div>')
+		
 		for(var i=0; i<=7; i++){
+			var slideIndexWeekText = $('#slide'+Index+ ' #weekText')
+			var weekUpperText = "<td id='weekNum_"+i+"'><span class='weekToday-style' id='weekToday_"+ i + "'></span><span class='weekToday-style'></span><span></span></td>"
 			if(i==0){
-				$('#slide'+Index+ ' #weekText').append("<td class='hour'><span></span><span></span><span></span></td>")	
+				slideIndexWeekText.append("<td class='hour'><span></span><span></span><span></span></td>")	
 			}else{
-				var weekUpperText = "<td id='weekNum_"+i+"'><span class='weekToday-style' id='weekToday_"+ i + "'></span><span class='weekToday-style'></span><span></span></td>"
-				$('#slide'+Index+ ' #weekText').append(weekUpperText);
+				slideIndexWeekText.append(weekUpperText);
 			};
 		};
 
@@ -210,10 +214,11 @@ $(document).ready(function(){
 		};
 
 		for(var i=5; i<=24; i++){
+				var jcurrentDay = $('#slide'+Index+' #'+i+'H_'+Year+'_'+Month+'_'+currentDate+'_'+Day)
 				if(i<10){
-					$('#slide'+Index+' #'+i+'H_'+Year+'_'+Month+'_'+currentDate+'_'+Day).append('<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'<div></div></td></tr><tr></tr></tbody></table>');		
+					jcurrentDay.append('<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'<div></div></td></tr><tr></tr></tbody></table>');		
 				}else{
-					$('#slide'+Index+' #'+i+'H_'+Year+'_'+Month+'_'+currentDate+'_'+Day).append('<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'<div></div></td></tr><tr></tr></tbody></table>');		
+					jcurrentDay.append('<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'<div></div></td></tr><tr></tr></tbody></table>');		
 				};
 		};
 
@@ -224,9 +229,6 @@ $(document).ready(function(){
 				$('#'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+' tbody tr:nth-child(2)').append('<td'+' data-time='+Year+'_'+Month+'_'+slidevalue+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>');
 			};
 		};
-
-
-
 	}; //calTable_Set
 
 
@@ -240,9 +242,6 @@ $(document).ready(function(){
 			}
 		}
 		
-		
-
-
 		$('#slide2 #weekNum_'+currentDayLoc+' span:nth-child(3)').html(currentDate);
 		if(currentDayLoc==1){
 			for(i=1; i<=6; i++){
@@ -329,17 +328,11 @@ $(document).ready(function(){
 				$('#slide2 #weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
 			}
 		}
-
-
 	}
 
-
-	function alltdRelative(){ //날짜 밑에 동그라미 색상표기를 위해 모든 td의 css 포지션 값 relative로 설정
-		$('td').css('position','relative');
-	};
-
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-		for(var i=0; i<classTimeArray.length; i++){
+		var classlen = classTimeArray.length;
+		for(var i=0; i<classlen; i++){
 			var datasplit = classTimeArray[i].split('_');  //2017_8_15_6_00_3
 			var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var classDura = datasplit[5];
@@ -353,7 +346,8 @@ $(document).ready(function(){
 	};
 
 	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-		for(var i=0; i<offTimeArray.length; i++){
+		var offlen = offTimeArray.length;
+		for(var i=0; i<offlen; i++){
 			var datasplit = offTimeArray[i].split('_');  //2017_8_15_6_00_3
 			var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var offDura = datasplit[5];
@@ -371,28 +365,5 @@ $(document).ready(function(){
 		$('#yearText').text(currentYear+'년');
 		$('#monthText').text(currentPageMonth+'월');
 	};
-
-
-	/*
-	function dateText(){ //
-		//currentYMD 형식  ex : 2017_8_4_5H
-		var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1) table').attr('id');
-		var YMDArray=currentYMD.split('_')
-		var textYear = YMDArray[0] //2017
-		var textMonth = YMDArray[1]; //8
-		var textDate = YMDArray[2]; //4
-		var monthEnglish = new Array('January','February','March','April','May','June','July','August','September','October','November','December')
-		var dayEnglish = new Array('일요일','월요일','화요일','수요일','목요일','금요일','토요일')
-		var dayTodayInfo = new Date(monthEnglish[textMonth-1]+','+textDate+','+textYear);
-		var dayToday = dayTodayInfo.getDay();
-		var textDay = dayEnglish[dayToday];
-
-		$('#yearText').text(textYear+'년 '+textMonth+'월 '+textDate+'일');
-		$('#monthText').text(textDay);
-	};
-    */
-
-
-
 });//document(ready)
 

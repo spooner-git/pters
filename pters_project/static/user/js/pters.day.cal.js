@@ -123,7 +123,6 @@ $(document).ready(function(){
 	calTable_Set(2,currentYear,currentPageMonth,currentDate);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
 	calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
-	alltdRelative(); //모든 td의 스타일 position을 relative로
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
 	dateText(); //상단에 연, 월 표시
@@ -174,8 +173,7 @@ $(document).ready(function(){
 			myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
 			myswiper.appendSlide('<div class="swiper-slide"></div>') //마지막 슬라이드에 새슬라이드 추가
 			//(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
-			calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //새로 추가되는 슬라이드에 달력 채우기	
-			alltdRelative();
+			calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //새로 추가되는 슬라이드에 달력 채우기				alltdRelative(
 			classTime();
 			offTime();
 			dateText();
@@ -188,8 +186,7 @@ $(document).ready(function(){
 			myswiper.removeSlide(2);
 			myswiper.prependSlide('<div class="swiper-slide"></div>'); //맨앞에 새슬라이드 추가
 			//(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
-			calTable_Set(1,currentYear,currentPageMonth,currentDate-1);
-			alltdRelative();		
+			calTable_Set(1,currentYear,currentPageMonth,currentDate-1);		
 			classTime();
 			offTime();
 			dateText();
@@ -205,14 +202,15 @@ $(document).ready(function(){
 		};
 
 		for(var i=5; i<=24; i++){
+			var jcurrentDay = $('.swiper-slide:nth-child('+Index+')'+' #'+i+'H_'+Year+'_'+Month+'_'+Day)
 			if(i<=12){
 				if(i<10){
-					$('.swiper-slide:nth-child('+Index+')'+' #'+i+'H_'+Year+'_'+Month+'_'+Day).append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'.00AM'+'<div></div></td></tr><tr></tr></tbody></table>');		
+					jcurrentDay.append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'.00AM'+'<div></div></td></tr><tr></tr></tbody></table>');		
 				}else{
-					$('.swiper-slide:nth-child('+Index+')'+' #'+i+'H_'+Year+'_'+Month+'_'+Day).append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'.00AM'+'<div></div></td></tr><tr></tr></tbody></table>');		
+					jcurrentDay.append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'.00AM'+'<div></div></td></tr><tr></tr></tbody></table>');		
 				};
 			}else{
-				$('.swiper-slide:nth-child('+Index+')'+' #'+i+'H_'+Year+'_'+Month+'_'+Day).append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'.00PM'+'<div></div></td></tr><tr></tr></tbody></table>');			
+				jcurrentDay.append('<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'.00PM'+'<div></div></td></tr><tr></tr></tbody></table>');			
 			}
 			
 		};
@@ -223,15 +221,9 @@ $(document).ready(function(){
 		};
 	}; //calTable_Set
 
-
-
-
-	function alltdRelative(){ //날짜 밑에 동그라미 색상표기를 위해 모든 td의 css 포지션 값 relative로 설정
-		$('td').css('position','relative');
-	};
-
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-		for(var i=0; i<classTimeArray.length; i++){
+		var classlen = classTimeArray.length;
+		for(var i=0; i<classlen; i++){
 			var datasplit = classTimeArray[i].split('_');  //2017_8_15_6_00_3
 			var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var classDura = datasplit[5];
@@ -247,7 +239,8 @@ $(document).ready(function(){
 
 
 	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-		for(var i=0; i<offTimeArray.length; i++){
+		var offlen = offTimeArray.length;
+		for(var i=0; i<offlen; i++){
 			var datasplit = offTimeArray[i].split('_');  //2017_8_15_6_00_3
 			var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var offDura = datasplit[5];

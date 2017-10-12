@@ -221,6 +221,7 @@ body{
 }
 
 td{
+	position: relative;
 	width: 75%;
 	height: 50%;
 	color : #282828;
