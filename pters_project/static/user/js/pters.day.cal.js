@@ -123,11 +123,14 @@ $(document).ready(function(){
 	calTable_Set(2,currentYear,currentPageMonth,currentDate);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
 	calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
+	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
+	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray);
+
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
 	dateText(); //상단에 연, 월 표시
 	addcurrentTimeIndicator(); //현재시간 표시
-
+	
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
 		++currentDate;
@@ -170,28 +173,28 @@ $(document).ready(function(){
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {
 		'append' : function(){ //다음페이지로 넘겼을때
-			myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
-			myswiper.appendSlide('<div class="swiper-slide"></div>') //마지막 슬라이드에 새슬라이드 추가
+			//myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
+			//myswiper.appendSlide('<div class="swiper-slide"></div>') //마지막 슬라이드에 새슬라이드 추가
 			//(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
-			calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //새로 추가되는 슬라이드에 달력 채우기				alltdRelative(
-			classTime();
-			offTime();
+			//calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //새로 추가되는 슬라이드에 달력 채우기				alltdRelative(
 			dateText();
+			//classTime();
+			//offTime();
 			addcurrentTimeIndicator(); //현재시간 표시
-			myswiper.update(); //슬라이드 업데이트
+			//myswiper.update(); //슬라이드 업데이트
 
 		},
 
 		'prepend' : function(){
-			myswiper.removeSlide(2);
-			myswiper.prependSlide('<div class="swiper-slide"></div>'); //맨앞에 새슬라이드 추가
+			//myswiper.removeSlide(2);
+			//myswiper.prependSlide('<div class="swiper-slide"></div>'); //맨앞에 새슬라이드 추가
 			//(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
-			calTable_Set(1,currentYear,currentPageMonth,currentDate-1);		
-			classTime();
-			offTime();
+			//calTable_Set(1,currentYear,currentPageMonth,currentDate-1);		
 			dateText();
+			//classTime();
+			//offTime();
 			addcurrentTimeIndicator(); //현재시간 표시
-			myswiper.update(); //이전페이지로 넘겼을때
+			//myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
 
@@ -255,11 +258,12 @@ $(document).ready(function(){
 
 	function dateText(){ //
 		//currentYMD 형식  ex : 2017_8_4_5H
-		var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1) table').attr('id');
+		var index = Number(myswiper.activeIndex)+1;
+		var currentYMD = $('.swiper-slide:nth-child('+index+') div').attr('id');
 		var YMDArray=currentYMD.split('_')
-		var textYear = YMDArray[0] //2017
-		var textMonth = YMDArray[1]; //8
-		var textDate = YMDArray[2]; //4
+		var textYear = YMDArray[1] //2017
+		var textMonth = YMDArray[2]; //8
+		var textDate = YMDArray[3]; //4
 		var monthEnglish = new Array('January','February','March','April','May','June','July','August','September','October','November','December')
 		var dayEnglish = new Array('일요일','월요일','화요일','수요일','목요일','금요일','토요일')
 		var dayTodayInfo = new Date(monthEnglish[textMonth-1]+','+textDate+','+textYear);
@@ -268,6 +272,8 @@ $(document).ready(function(){
 
 		$('#yearText').text(textYear+'년 '+textMonth+'월 '+textDate+'일');
 		$('#monthText').text(textDay);
+
+		console.log(index)
 	};
 
 	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
@@ -277,6 +283,38 @@ $(document).ready(function(){
 		}
 	}
 
+	function DBdataProcess(startarray,endarray,result,option){
+		//DB데이터 가공
+		var classTimeLength = startarray.length
+    	var startlength = startarray.length;
+    	var endlength = endarray.length;
+    	var resultarray = []
+
+    	for(i=0;i<classTimeLength; i++){
+    		var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
+    		var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
+    		var startSplitArray= start.split("_"); 
+    		var endSplitArray = end.split("_");
+    		//["2017", "10", "7", "6", "00", "오전"]
+   
+    		if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
+    			startSplitArray[3] = String(Number(startSplitArray[3])+12);
+    		}
+
+    		if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
+    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
+    		}
+    	
+    		startSplitArray[5] = String(endSplitArray[3] - startSplitArray[3])
+    		if(option=="class"){
+    			startSplitArray.push(classTimeArray_member_name[i])	
+    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]);
+    		}else{
+    			startSplitArray.push(classTimeArray_member_name[i])	
+    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF");		
+    		}	
+  	    }
+	}
 
 });//document(ready)
 

@@ -88,13 +88,15 @@
         	var classTimeArray_member_name = new Array({% for member_name in daily_lecture_data_member %}'{{ member_name }}',{% endfor %});
             var offTimeArray_start_date = new Array({% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %});
             var offTimeArray_end_date = new Array({% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %});
-
             //
 
-        	var classTimeArray = new Array({% for daily_data in daily_lecture_data %}'{{ daily_data }}',{% endfor %});
+        	var classTimeArray = [];
             var scheduleIdArray = new Array({% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %});
-            var offTimeArray = new Array({% for daily_off in daily_off_data %}'{{ daily_off }}',{% endfor %});
+            var offTimeArray = [];
             var offScheduleIdArray = new Array({% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %});
+
+
+
         </script>
         <script type="text/javascript" src={% static "user/js/pters.day.cal.js" %}></script>
         <script>
@@ -103,7 +105,8 @@
                 speed : 150,
                 preventClicks : true,
                 keyboardControl : true,
-                pagination : '.swiper-pagination'
+                pagination : '.swiper-pagination',
+                
             });
         </script>
 {% endblock %}
