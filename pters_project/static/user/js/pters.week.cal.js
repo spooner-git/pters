@@ -104,7 +104,15 @@ $(document).ready(function(){
 				}
 			});
 	//플로팅 버튼 스크롤시 숨기기 End
-
+	
+	//날짜 불변
+	var dateorigin = new Date();
+	var OricurrentYear = dateorigin.getFullYear();
+	var OricurrentMonth = dateorigin.getMonth();
+	var OricurrentDate = dateorigin.getDate();
+	var OricurrentHour = dateorigin.getHours();
+	//
+	
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -131,6 +139,8 @@ $(document).ready(function(){
 	calTable_Set(1,currentYear,currentPageMonth,'W1');  //2번 슬라이드에 현재달, 현재주 -1 채우기
 
 	//alltdRelative(); //모든 td의 스타일 position을 relative로
+	addcurrentTimeIndicator();
+	scrollToIndicator();
 	dateText();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
@@ -359,6 +369,19 @@ $(document).ready(function(){
 
 		};
 	};
+
+	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
+		var where2 = '#'+OricurrentYear+'_'+Number(OricurrentMonth+1)+'_'+OricurrentDate+'_'+"0W"+"_"+OricurrentHour+'H'
+		if($('.currentTimeBox').length==""){
+			$(where2).parent('div').append("<div class='currentTimeBox'><div class='currentTimeIndicator'></div><div class='currentTimeLine'></div></div>")
+		}
+	}
+
+	function scrollToIndicator(){
+		var offset = $('.currentTimeBox').offset();
+		$('html, body').animate({scrollTop : offset.top},1000)
+	}
+
 
 	function dateText(){ //
 		//currentYMD 형식  ex : 2017_8_4_5H

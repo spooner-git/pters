@@ -170,6 +170,7 @@ body{
 	position: fixed;
 	height: 50px;
 	z-index: 3;
+	width: 100%;
 }
 
 #gapbox{
@@ -238,9 +239,11 @@ tr{
 
 
 #calendar{
+	position: relative;
 	background-color: #f4f4f4;
 	padding-right: 0;
 	padding-left: 0;
+	padding-top: 50px;
 }
 
 .classTime{
@@ -325,4 +328,32 @@ tr{
 	color: #fe4e65;
 	font-weight: 600;
 	font-size: 78%;
+}
+
+.currentTimeBox{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+
+}
+
+.currentTimeIndicator{
+	position: absolute;
+	left: 8.25%;
+	top: 32%;
+	width: 12px;
+	height: 12px;
+	background-color: #fe4e65;
+	border-radius: 6px;
+	z-index: 101;
+}
+
+.currentTimeLine{
+	position: absolute;
+	border-top: 1px dotted #fe4e65;
+	left: 10.5%;
+	top: 52%;
+	width: 90%;
+	z-index: 101;
 }
