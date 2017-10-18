@@ -3,9 +3,9 @@ $(document).ready(function(){
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
 
 	//스케쥴 클릭시 팝업 Start
-	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
-			$("#cal_popup").css({'display':'block','z-index':'40'});
-			$('#shade').css({'background-color':'black','z-index':'15'});
+		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
+			$("#cal_popup").css({'display':'block','z-index':'103'});
+			$('#shade2').css({'display':'block'});
 			console.log($(this).attr('class-time')); //현재 클릭한 요소의 class-time 요소 값 보기
 			                                         //형식예: 2017_10_7_6_00_2_원빈
 			console.log($(this).attr('schedule-id'));
@@ -16,12 +16,12 @@ $(document).ready(function(){
 			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 			schedule_on_off = 1;
 
-	})
+		})
 
 	//Off 일정 클릭시 팝업 Start
-	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
-			$("#cal_popup").css({'display':'block','z-index':'40'});
-			$('#shade').css({'background-color':'black','z-index':'15'});
+		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
+			$("#cal_popup").css({'display':'block','z-index':'103'});
+			$('#shade2').css({'display':'block'});
 			console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
 			                                         //형식예: 2017_10_7_6_00_2_원빈
 			console.log($(this).attr('off-schedule-id'));
@@ -31,7 +31,15 @@ $(document).ready(function(){
 			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 			schedule_on_off = 0;
 
+		})
+
+	$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
+			if($('#cal_popup').css('display')=='block'){
+				$("#cal_popup").css({'display':'none','z-index':'-2'})
+				$('#shade2').css({'display':'none'});
+			}
 	})
+	//스케쥴 클릭시 팝업 End
 
 		//일정 삭제 기능 추가 - hk.kim 171007
 	$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
@@ -44,28 +52,20 @@ $(document).ready(function(){
 			}
 	})
 
-	$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
-			if($('#cal_popup').css('display')=='block'){
-				$("#cal_popup").css({'display':'none','z-index':'-2'})
-				$('#shade').css({'background-color':'white','z-index':'-1'});
-			}
-	})
-	//스케쥴 클릭시 팝업 End
 
 	//플로팅 버튼 Start
 	$('#float_btn').click(function(){
-			if($('#shade').css('z-index')<0){
-				$("#float_btn").animate({opacity:'1'})
-				$('#shade').css({'background-color':'black','z-index':'8'});
-				$('#float_inner1').animate({'opacity':'0.7','bottom':'85px'},120);
-				$('#float_inner2').animate({'opacity':'0.7','bottom':'145px'},120);
-				$('#float_btn').addClass('rotate_btn');
-			}else{
-				$("#float_btn").animate({opacity:'1'})
-				$('#shade').css({'background-color':'white','z-index':'-1'});
-				$('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-				$('#float_btn').removeClass('rotate_btn');
-			}
+		$("#float_btn").animate({opacity:'1'})
+		if($('#shade2').css('display')=='none'){
+			$('#shade2').css({'display':'block'});
+			$('#float_inner1').animate({'opacity':'0.7','bottom':'85px'},120);
+			$('#float_inner2').animate({'opacity':'0.7','bottom':'145px'},120);
+			$('#float_btn').addClass('rotate_btn');
+		}else{
+			$('#shade2').css({'display':'none'});
+			$('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+			$('#float_btn').removeClass('rotate_btn');
+		}
 	});
 	//플로팅 버튼 End
 
