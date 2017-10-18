@@ -132,8 +132,6 @@ $(document).ready(function(){
 	var currentPageMonth = currentMonth+1; //현재 달
 
 
-
-	
 	calTable_Set(2,currentYear,currentPageMonth,'0W'); //3번 슬라이드에 현재달, 현재주 채우기
 	calTable_Set(3,currentYear,currentPageMonth,'1L'); //4번 슬라이드에 현재달, 현재주 +1 달력채우기
 	calTable_Set(4,currentYear,currentPageMonth,'2L'); //5번 슬라이드에 현재달, 현재주 +2 달력채우기
@@ -434,109 +432,24 @@ $(document).ready(function(){
 			var firstDate = Number(dateID[2])
 			WeekArry[i].html(firstDate+i)
 		}
+		toDay();
 	}
 
-
-/*
-	function weekNum_Set(){
-		console.log('weekNum_Set');
-		var currentDayLoc = Number(currentDay+1)
-		
-		var dayKorean = ['일','월','화','수','목','금','토']
-		for(var i=1; i<=7; i++){
-			for(var j=0;j<=4;j++){
-				$('#slide'+j+' #weekNum_'+i+' span:nth-child(2)').html(dayKorean[i-1]);			
-			}
-		}
-		
-		$('#slide2 #weekNum_'+currentDayLoc+' span:nth-child(3)').html(currentDate);
-		if(currentDayLoc==1){
-			for(i=1; i<=6; i++){
-				$('#slide2 #weekNum_'+i+' span:nth-child(3)').html(Number(currentDate+i));
-			};
-		}else if(currentDayLoc==2){
-			$('#slide2 #weekNum_'+1+' span:nth-child(3)').html(Number(currentDate-1));
-			for(i=1; i<=5; i++){
-				$('#slide2 #weekNum_'+Number(i+2)+' span:nth-child(3)').html(Number(currentDate+i));
-			};
-		}else if(currentDayLoc==3){
-			$('#slide2 #weekNum_'+1+' span:nth-child(3)').html(Number(currentDate-2));
-			$('#slide2 #weekNum_'+2+' span:nth-child(3)').html(Number(currentDate-1));
-			for(i=1; i<=4; i++){
-				$('#slide2 #weekNum_'+Number(i+3)+' span:nth-child(3)').html(Number(currentDate+i));
-			};
-		}else if(currentDayLoc==4){
-			for(i=1; i<=3; i++){
-				$('#slide2 #weekNum_'+i+' span:nth-child(3)').html(Number(currentDate-4+i));
-			};
-			for(i=1; i<=3; i++){
-				$('#slide2 #weekNum_'+Number(i+4)+' span:nth-child(3)').html(Number(currentDate+i));
-			};
-		}else if(currentDayLoc==5){
-			for(i=1; i<=4; i++){
-				$('#slide2 #weekNum_'+i+' span:nth-child(3)').html(Number(currentDate-5+i));
-			};
-			for(i=1; i<=2; i++){
-				$('#slide2 #weekNum_'+Number(i+5)+' span:nth-child(3)').html(Number(currentDate+i));
-			};
-		}else if(currentDayLoc==6){
-			for(i=1; i<=5; i++){
-				$('#slide2 #weekNum_'+i+' span:nth-child(3)').html(Number(currentDate-6+i));
-			};
-			$('#slide2 #weekNum_'+7+' span:nth-child(3)').html(Number(currentDate+1));
-		}else if(currentDayLoc==7){
-			for(i=1; i<=6; i++){
-				$('#slide2 #weekNum_'+i+' span:nth-child(3)').html(Number(currentDate-7+i));
-			};	
-		}
-
-		for(var i=1; i<=7; i++){ //-2W 채우기
-			var slide2value = Number($('#slide2 #weekNum_'+i+' span:nth-child(3)').text());
-			if(slide2value-14<=0){
-				$('#slide0 #weekNum_'+i+' span:nth-child(3)').html(slide2value-14+lastDay[currentMonth-1]);
-			}else{
-				$('#slide0 #weekNum_'+i+' span:nth-child(3)').html(slide2value-14);	
-			}			
-		}
-
-		for(var i=1; i<=7; i++){ //-1W 채우기
-			var slide2value = Number($('#slide2 #weekNum_'+i+' span:nth-child(3)').text());
-			if(slide2value-7<=0){
-				$('#slide1 #weekNum_'+i+' span:nth-child(3)').html(slide2value-7+lastDay[currentMonth-1]);	
-			}else{
-				$('#slide1 #weekNum_'+i+' span:nth-child(3)').html(slide2value-7);
-			}
-			
-		}
-
-		for(var i=1; i<=7; i++){ //+1W 채우기
-			var slide2value = Number($('#slide2 #weekNum_'+i+' span:nth-child(3)').text());
-			if(slide2value+7>lastDay[currentMonth]){
-				$('#slide3 #weekNum_'+i+' span:nth-child(3)').html(slide2value+7-lastDay[currentMonth]);				
-			}else{
-				$('#slide3 #weekNum_'+i+' span:nth-child(3)').html(slide2value+7);
-			}
-		}
-
-		for(var i=1; i<=7; i++){ //+2W 채우기
-			var slide2value = Number($('#slide2 #weekNum_'+i+' span:nth-child(3)').text());
-			if(slide2value+14>lastDay[currentMonth]){
-				$('#slide4 #weekNum_'+i+' span:nth-child(3)').html(slide2value+14-lastDay[currentMonth]);				
-			}else{
-				$('#slide4 #weekNum_'+i+' span:nth-child(3)').html(slide2value+14);
-			}
-		}
-
+	function toDay(){
 		for(i=1;i<=7;i++){
-		var scan = $('#slide2 #weekNum_'+i+' span:nth-child(3)').text()
+		var scan = $('#weekNum_'+i+' span:nth-child(3)').text()
 			if(scan==currentDate){
-				$('#slide2 #weekNum_'+i+' span:nth-child(1)').addClass('today')
-				$('#slide2 #weekNum_'+i+' span:nth-child(1)').html('TODAY')
-				$('#slide2 #weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
+				$('#weekNum_'+i+' span:nth-child(1)').addClass('today')
+				$('#weekNum_'+i+' span:nth-child(1)').html('TODAY')
+				$('#weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
+			}else{
+				$('#weekNum_'+i+' span:nth-child(1)').removeClass('today')
+				$('#weekNum_'+i+' span:nth-child(1)').html('')
+				$('#weekNum_'+i+' span:nth-child(3)').removeClass('today-Number')
 			}
 		}
 	}
-*/
+
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var classlen = classTimeArray.length;
