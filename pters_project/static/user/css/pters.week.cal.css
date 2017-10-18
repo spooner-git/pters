@@ -6,21 +6,46 @@ body{
 	width: 100%;
 }
 
+#shade2{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	opacity: 0.7;
+	display: none;
+	z-index: 101;
+}
 
 #cal_popup{
 	display: none;
 	position: fixed;
+	background: transparent;
+	border-color: transparent;
 	top: 35%;
 	left: 10%;
 	width: 80%;
+	/*
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
+	*/
 	z-index: -2;
 	text-align: center;
 }
 
+#popup_info{
+	background: transparent;
+	position: relative;
+	margin-bottom: 10px;
+	width: 100%;
+	text-align: center;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
 #popup_img{
 	position: relative;
+	background: #ffffff;
 	height: 70px;
 	padding-top: 22.5px;
 	padding-bottom: 22.5px;
@@ -29,7 +54,8 @@ body{
 
 #img_cal{
 	position: absolute;
-	top: 30%;
+	/*top: 30%;*/
+	top: 42%;
 	left:41.5%;
 	width: 25px;
 	margin-right: 14.845px;
@@ -38,13 +64,15 @@ body{
 
 #btn_close{
 	position: absolute;
-	top: 39%;
-	left: 90%;
-	width: 15px;
+	top: 37%;
+	left: 85%;
+	padding: 10px;
+	width: 35px;
 	float: right;
 }
 
 .popup_inner{
+	background: #ffffff;
 	position: relative;
 	height: 50px;
 	border-top: 1px solid #a2a2a2;
@@ -67,13 +95,6 @@ body{
 	color: #fe4e65;
 }
 
-#shade{
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	opacity: 0.7;
-	z-index: -1;
-}
 
 #float_btn{  /*2017.10.2*/
 	position: fixed;
@@ -82,7 +103,7 @@ body{
 	bottom: 25px;
 	right: 25px;
 	border-radius: 50%;
-	z-index: 10;
+	z-index: 105;
 	cursor: pointer;
 }
 
@@ -142,7 +163,7 @@ body{
 	background-color: grey;
 	opacity: 0;
 	border-radius: 50%;
-	z-index: 9;	
+	z-index: 103;	
 	font-size: 13px;
 	text-align: center; 
 }
@@ -182,6 +203,16 @@ body{
 	background-color: #ffffff;
 }
 
+.slide-notice{
+	height: 50px;
+	padding-top: 50%;
+	text-align: center;
+}
+
+.slide-notice span{
+	display: block;
+}
+
 
 .calendar-style{  /*week ìŠ¤íƒ€ì¼í•˜ìœ„ */
 	width: 100%;
@@ -217,7 +248,7 @@ body{
 .hour{
 	text-align: center;
 	width: 9.72%;
-	border-bottom: 1px solid #ffffff;
+	border-bottom: 1px solid transparent;
 	font-size: 13px;
 }
 
@@ -239,11 +270,11 @@ tr{
 
 
 #calendar{
+	padding-top: 100px;
 	position: relative;
 	background-color: #f4f4f4;
 	padding-right: 0;
 	padding-left: 0;
-	padding-top: 50px;
 }
 
 .classTime{
@@ -300,7 +331,13 @@ tr{
 
 
 #week{
+	position: fixed;
+
+	z-index: 2;
+	background-color: #f4f4f4;
 	height: auto;
+	padding-top: 50px;
+
 }
 
 #weekText span{
@@ -352,8 +389,81 @@ tr{
 .currentTimeLine{
 	position: absolute;
 	border-top: 1px dotted #fe4e65;
-	left: 10.5%;
+	left: 9.5%;
 	top: 52%;
 	width: 90%;
 	z-index: 101;
 }
+
+
+/*미디어 쿼리*/
+@media(min-width:415px){
+	#cal_popup{
+		display: none;
+		position: fixed;
+		background: transparent;
+		border-color: transparent;
+		top: 35%;
+		left: 0;
+		width: 100%;
+		/*
+		background-color: #ffffff;
+		border: 1px solid #a2a2a2;
+		*/
+		z-index: -2;
+		text-align: center;
+	}
+
+	#popup_info{
+		background: transparent;
+		position: relative;
+		margin : 0 auto;
+		margin-bottom: 10px;
+		width: 330px;
+		text-align: center;
+		color: #ffffff;
+		font-size: 14px;
+		font-weight: bold;
+	}
+
+	#popup_img{
+		position: relative;
+		margin :0 auto;
+		background: #ffffff;
+		height: 70px;
+		padding-top: 22.5px;
+		padding-bottom: 22.5px;
+		width: 330px;
+	}
+
+
+	#img_cal{
+		position: absolute;
+		/*top: 30%;*/
+		top: 42%;
+		left:41.5%;
+		width: 25px;
+		margin-right: 14.845px;
+		margin-left: 14.845px;
+	}
+
+	#btn_close{
+		position: absolute;
+		top: 37%;
+		left: 85%;
+		padding: 10px;
+		width: 35px;
+		float: right;
+	}
+
+	.popup_inner{
+		background: #ffffff;
+		margin: 0 auto;
+		position: relative;
+		height: 50px;
+		border-top: 1px solid #a2a2a2;
+		width: 330px;
+	}
+}
+
+/*미디어 쿼리*/
