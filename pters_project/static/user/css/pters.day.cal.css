@@ -6,6 +6,10 @@ body{
 	width: 100%;
 }
 
+.swiper-slide{
+	height: auto;
+}
+
 .loaders{
 	position: absolute;
 	top: 40%;
@@ -18,17 +22,33 @@ body{
 #cal_popup{
 	display: none;
 	position: fixed;
+	background: transparent;
+	border-color: transparent;
 	top: 35%;
 	left: 10%;
 	width: 80%;
+	/*
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
+	*/
 	z-index: -2;
 	text-align: center;
 }
 
+#popup_info{
+	background: transparent;
+	position: relative;
+	margin-bottom: 10px;
+	width: 100%;
+	text-align: center;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
 #popup_img{
 	position: relative;
+	background: #ffffff;
 	height: 70px;
 	padding-top: 22.5px;
 	padding-bottom: 22.5px;
@@ -37,7 +57,8 @@ body{
 
 #img_cal{
 	position: absolute;
-	top: 30%;
+	/*top: 30%;*/
+	top: 42%;
 	left:41.5%;
 	width: 25px;
 	margin-right: 14.845px;
@@ -46,13 +67,15 @@ body{
 
 #btn_close{
 	position: absolute;
-	top: 39%;
+	/*top: 39%;*/
+	top: 48%;
 	left: 90%;
 	width: 15px;
 	float: right;
 }
 
 .popup_inner{
+	background: #ffffff;
 	position: relative;
 	height: 50px;
 	border-top: 1px solid #a2a2a2;
@@ -315,7 +338,7 @@ td{
 .currentTimeLine{
 	position: absolute;
 	border-top: 1px dotted #fe4e65;
-	left: 23.5%;
+	left: 25%;
 	top: 53%;
 	width: 75%;
 	z-index: 101;
