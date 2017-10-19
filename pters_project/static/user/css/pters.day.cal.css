@@ -4,7 +4,9 @@ body{
 	font-family: 'Noto Sans KR';
 	padding-top: 50px;
 	width: 100%;
+	background: black;
 }
+
 
 #shade2{
 	position: fixed;
@@ -17,7 +19,13 @@ body{
 }
 
 .swiper-slide{
-	height: auto;
+	height: 100%;
+	overflow-y: auto;
+	-webkit-overflow-scrolling:touch;
+}
+
+.swiper-container{
+	height: 100%;
 }
 
 .loaders{
@@ -275,12 +283,28 @@ td{
 
 
 #calendar{
-	position: relative;
+	position: fixed;
+	padding-top: 50px;
+	width: 100%;
 	background-color: #f4f4f4;
 	padding-right: 0;
 	padding-left: 0;
-	padding-top: 50px;
+	height: 92%;
 }
+
+@media(max-height: 568px){
+	#calendar{
+	position: fixed;
+	padding-top: 50px;
+	width: 100%;
+	background-color: #f4f4f4;
+	padding-right: 0;
+	padding-left: 0;
+	height: 90%;
+	}
+}
+
+
 
 .classTime{
 	position: absolute;

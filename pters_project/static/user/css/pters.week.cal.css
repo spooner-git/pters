@@ -4,6 +4,17 @@ body{
 	/*font-family: 'Noto Sans KR';*/
 	padding-top: 50px;
 	width: 100%;
+	background: black;
+}
+
+.swiper-slide{
+	height: 100%;
+	overflow-y: auto;
+	-webkit-overflow-scrolling:touch;
+}
+
+.swiper-container{
+	height: 100%;
 }
 
 #shade2{
@@ -270,11 +281,25 @@ tr{
 
 
 #calendar{
+	position: fixed;
+	width: 100%;
 	padding-top: 100px;
-	position: relative;
 	background-color: #f4f4f4;
 	padding-right: 0;
 	padding-left: 0;
+	height: 90%;
+}
+
+@media(max-height: 568px){
+	#calendar{
+	position: fixed;
+	padding-top: 50px;
+	width: 100%;
+	background-color: #f4f4f4;
+	padding-right: 0;
+	padding-left: 0;
+	height: 90%;
+	}
 }
 
 .classTime{
@@ -395,6 +420,7 @@ tr{
 	width: 90%;
 	z-index: 101;
 }
+
 
 
 /*미디어 쿼리*/
