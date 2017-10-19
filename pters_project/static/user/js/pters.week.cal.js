@@ -12,7 +12,6 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 $(document).ready(function(){
 
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
-
 	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
 
 	$('#ymdText').click(function(){
