@@ -377,14 +377,15 @@ tr{
 
 .currentTimeIndicator{
 	position: absolute;
-	left: 8.25%;
-	top: 32%;
-	width: 12px;
-	height: 12px;
+	left: 9%;
+	top: 37%;
+	width: 9px;
+	height: 9px;
 	background-color: #fe4e65;
-	border-radius: 6px;
+	border-radius: 4.5px;
 	z-index: 101;
 }
+
 
 .currentTimeLine{
 	position: absolute;

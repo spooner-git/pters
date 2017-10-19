@@ -260,15 +260,18 @@ body{
 	text-align: center;
 	width: 25%;
 	background-color: #ffffff;
-	border-bottom: 1px solid #ffffff;
+	border: 0.5px solid #ffffff;
+
 }
 
 td{
 	position: relative;
 	width: 75%;
-	height: 50%;
+	height: 15px;
 	color : #282828;
+	border: 0.5px solid transparent;
 }
+
 
 
 #calendar{
@@ -299,6 +302,7 @@ td{
 	z-index: 100;
 }
 
+/*
 .classTimeIndicator{
 	position: absolute;
 	top: 17.5px;
@@ -308,6 +312,7 @@ td{
 	border-radius: 50%;
 	background-color: #fe4e65;
 }
+*/
 
 .memberName{
 	position: absolute;
@@ -337,12 +342,12 @@ td{
 
 .currentTimeIndicator{
 	position: absolute;
-	left: 23.5%;
-	top: 35%;
-	width: 12px;
-	height: 12px;
+	left: 24%;
+	top: 37%;
+	width: 9px;
+	height: 9px;
 	background-color: #fe4e65;
-	border-radius: 6px;
+	border-radius: 4.5px;
 	z-index: 101;
 }
 
@@ -350,7 +355,7 @@ td{
 	position: absolute;
 	border-top: 1px dotted #fe4e65;
 	left: 25%;
-	top: 53%;
+	top: 49%;
 	width: 75%;
 	z-index: 101;
 }
