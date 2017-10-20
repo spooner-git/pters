@@ -293,7 +293,7 @@ tr{
 @media(max-height: 568px){
 	#calendar{
 	position: fixed;
-	padding-top: 50px;
+	padding-top: 100px;
 	width: 100%;
 	background-color: #f4f4f4;
 	padding-right: 0;
