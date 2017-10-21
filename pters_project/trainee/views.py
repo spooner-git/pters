@@ -25,6 +25,10 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         context = super(CalMonthView, self).get_context_data(**kwargs)
 
         month_data = []
+        lecture_schedule_data = []
+
+        daily_lecture_data_start_date = []
+        daily_lecture_data_end_date = []
         month_lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
 
         for lecture in month_lecture_data:
@@ -35,8 +39,14 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
                 #month_data.append(month_lecture.start_dt.strftime('%Y_%#m_%#d'))
                 month_data.append(str(month_lecture.data.tm_year)+'_'+str(month_lecture.data.tm_mon)+'_'
                                   + str(month_lecture.data.tm_mday))
+                lecture_schedule_data.append(month_lecture.lecture_schedule_id)
+                daily_lecture_data_start_date.append(month_lecture.start_dt)
+                daily_lecture_data_end_date.append(month_lecture.end_dt)
 
         context['month_lecture_data'] = month_data
+        context['daily_lecture_schedule_id'] = lecture_schedule_data
+        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
+        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
 
         return context
 

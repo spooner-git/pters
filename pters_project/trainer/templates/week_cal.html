@@ -104,11 +104,17 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
+
+            var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
+        	var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
+        	var classTimeArray_member_name = [{% for member_name in daily_lecture_data_member %}'{{ member_name }}',{% endfor %}];
+            var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}];
+            var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
+
         	var classTimeArray = [{% for daily_data in daily_lecture_data %}'{{ daily_data }}',{% endfor %}];
-            //var classTimeArray = new Array('2017_10_8_6_00_3_김선겸','2017_10_10_6_00_2_헬로우','2017_10_10_8_00_3_세시간','2017_10_12_14_00_2_두시간'); //김선겸 오프라인 디버깅용
-            var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
             var offTimeArray = [{% for daily_off in daily_off_data %}'{{ daily_off }}',{% endfor %}];
-            //var offTimeArray = new Array('2017_10_8_9_00_3_OFF','2017_10_9_8_00_12_OFF','2017_10_10_11_00_3_세시간','2017_10_12_14_00_1_한시간');
+
+            var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
             var offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %}];
         </script>
         <script type="text/javascript" src={% static "user/js/pters.week.cal.js" %}></script>
