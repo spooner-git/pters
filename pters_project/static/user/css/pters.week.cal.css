@@ -44,20 +44,20 @@ body{
 }
 
 #popup_info{
-	background: transparent;
+	background: #ffffff;
 	position: relative;
-	margin-bottom: 10px;
 	width: 100%;
 	text-align: center;
-	color: #ffffff;
+	color: #3b3d3d;
 	font-size: 14px;
 	font-weight: bold;
+	height: 32px;
 }
 
 #popup_img{
 	position: relative;
 	background: #ffffff;
-	height: 70px;
+	height: 56px;
 	padding-top: 22.5px;
 	padding-bottom: 22.5px;
 }
@@ -65,8 +65,7 @@ body{
 
 #img_cal{
 	position: absolute;
-	/*top: 30%;*/
-	top: 42%;
+	top: 41%;
 	left:41.5%;
 	width: 25px;
 	margin-right: 14.845px;
@@ -75,7 +74,7 @@ body{
 
 #btn_close{
 	position: absolute;
-	top: 37%;
+	top: 31%;
 	left: 85%;
 	padding: 10px;
 	width: 35px;
@@ -442,13 +441,12 @@ tr{
 	}
 
 	#popup_info{
-		background: transparent;
+		background: #ffffff;
 		position: relative;
 		margin : 0 auto;
-		margin-bottom: 10px;
 		width: 330px;
 		text-align: center;
-		color: #ffffff;
+		color: #3b3d3d;
 		font-size: 14px;
 		font-weight: bold;
 	}
@@ -466,8 +464,7 @@ tr{
 
 	#img_cal{
 		position: absolute;
-		/*top: 30%;*/
-		top: 42%;
+		top: 30%;
 		left:41.5%;
 		width: 25px;
 		margin-right: 14.845px;
@@ -476,7 +473,7 @@ tr{
 
 	#btn_close{
 		position: absolute;
-		top: 37%;
+		top: 22%;
 		left: 85%;
 		padding: 10px;
 		width: 35px;
