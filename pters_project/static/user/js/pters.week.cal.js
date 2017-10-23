@@ -99,6 +99,7 @@ $(document).ready(function(){
 			$("body").bind("touchstart",function(e){
 			ts = e.originalEvent.touches[0].clientY;
 				});
+			
 			$("body").bind("touchend",function(e){
 				var te = e.originalEvent.changedTouches[0].clientY;
 				if(ts>te+5){

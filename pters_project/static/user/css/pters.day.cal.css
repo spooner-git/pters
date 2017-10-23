@@ -20,7 +20,7 @@ body{
 
 .swiper-slide{
 	height: 100%;
-	overflow-y: auto;
+	overflow: auto;
 	-webkit-overflow-scrolling:touch;
 }
 
