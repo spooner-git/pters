@@ -54,20 +54,20 @@ body{
 }
 
 #popup_info{
-	background: transparent;
+	background: #ffffff;
 	position: relative;
-	margin-bottom: 10px;
 	width: 100%;
 	text-align: center;
-	color: #ffffff;
+	color: #3b3d3d;
 	font-size: 14px;
 	font-weight: bold;
+	height: 32px;
 }
 
 #popup_img{
 	position: relative;
 	background: #ffffff;
-	height: 70px;
+	height: 56px;
 	padding-top: 22.5px;
 	padding-bottom: 22.5px;
 }
@@ -75,8 +75,7 @@ body{
 
 #img_cal{
 	position: absolute;
-	/*top: 30%;*/
-	top: 42%;
+	top: 41%;
 	left:41.5%;
 	width: 25px;
 	margin-right: 14.845px;
@@ -85,7 +84,7 @@ body{
 
 #btn_close{
 	position: absolute;
-	top: 37%;
+	top: 31%;
 	left: 85%;
 	padding: 10px;
 	width: 35px;
@@ -257,19 +256,21 @@ body{
 }
 
 .time-style{ /*week ìŠ¤íƒ€ì¼*/
-	background-color: transparent;
+	background-color: #ffffff;
 	position: relative;
 	width: 100%;
 	font-size: 14.4px;
-	height: 30.5px;
+	height: 35px;
 }
 
 .hour{
 	text-align: center;
-	width: 25%;
-	background-color: #ffffff;
-	border: 0.5px solid #ffffff;
-
+	width: 21.5%;
+	background-color: #f4f4f4;
+	border: 0.5px solid #f4f4f4;
+	font-size: 13px;
+	letter-spacing: -0.3px;
+	color: #3b3d3d;
 }
 
 td{
@@ -286,7 +287,7 @@ td{
 	position: fixed;
 	padding-top: 50px;
 	width: 100%;
-	background-color: #f4f4f4;
+	/*background-color: #f4f4f4;*/
 	padding-right: 0;
 	padding-left: 0;
 	height: 92%;
@@ -308,9 +309,9 @@ td{
 
 .classTime{
 	position: absolute;
-	top: 0;
-	left: 25px;
-	width: 84%;
+	top: -1px;
+	left: 0px;
+	width: 100%;
 	background: #ffffff;
 	border: 0.5px solid #fe4e65;
 	z-index: 100;
@@ -318,12 +319,12 @@ td{
 
 .offTime{
 	position: absolute;
-	top: 0;
-	left: 25px;
-	width: 84%;
+	top: -1px;
+	left: 0px;
+	width: 100%;
 	background: #cccccc;
 	border: 0.5px solid #cccccc;
-	z-index: 100;
+	z-index: 99;
 }
 
 /*
@@ -338,24 +339,99 @@ td{
 }
 */
 
-.memberName{
+.memberName1{
 	position: absolute;
 	left: 3%;
-	margin-top: 5px;
+	line-height: 35px;
+	vertical-align: middle;
 	font-size: 14px;
 	font-weight: bold;
 	letter-spacing: -0.3px;
 	color: #282828;
 }
 
-.memberTime{
+.memberTime1{
 	position: absolute;
 	right: 6%;
-	margin-top: 5px;
-	font-size: 14px;
+	line-height: 35px;
+	vertical-align: middle;
+	font-size: 12px;
+	letter-spacing: -0.3px;
+	color: #fe4e65;
+}
+
+.offTimeText1{
+	position: absolute;
+	right: 6%;
+	line-height: 35px;
+	vertical-align: middle;
+	font-size: 12px;
 	letter-spacing: -0.3px;
 	color: #3b3d3d;
 }
+
+.memberName2{
+	position: absolute;
+	left: 3%;
+	line-height: 70px;
+	vertical-align: middle;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: -0.3px;
+	color: #282828;
+}
+
+.memberTime2{
+	position: absolute;
+	right: 6%;
+	line-height: 70px;
+	vertical-align: middle;
+	font-size: 12px;
+	letter-spacing: -0.3px;
+	color: #fe4e65;
+}
+
+.offTimeText2{
+	position: absolute;
+	right: 6%;
+	line-height: 70px;
+	vertical-align: middle;
+	font-size: 12px;
+	letter-spacing: -0.3px;
+	color: #3b3d3d;
+}
+
+.memberName3{
+	position: absolute;
+	left: 3%;
+	line-height: 105px;
+	vertical-align: middle;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: -0.3px;
+	color: #282828;
+}
+
+.memberTime3{
+	position: absolute;
+	right: 6%;
+	line-height: 105px;
+	vertical-align: middle;
+	font-size: 12px;
+	letter-spacing: -0.3px;
+	color: #fe4e65;
+}
+
+.offTimeText3{
+	position: absolute;
+	right: 6%;
+	line-height: 105px;
+	vertical-align: middle;
+	font-size: 12px;
+	letter-spacing: -0.3px;
+	color: #3b3d3d;
+}
+
 
 .currentTimeBox{
 	position: absolute;
@@ -384,6 +460,12 @@ td{
 	z-index: 101;
 }
 
+.currentTimeBlackBox{
+	background: black;
+	border-color: black;
+	color: #ffffff;
+}
+
 
 /*미디어 쿼리*/
 @media(min-width:415px){
@@ -404,13 +486,12 @@ td{
 	}
 
 	#popup_info{
-		background: transparent;
+		background: #ffffff;
 		position: relative;
 		margin : 0 auto;
-		margin-bottom: 10px;
 		width: 330px;
 		text-align: center;
-		color: #ffffff;
+		color: #3b3d3d;
 		font-size: 14px;
 		font-weight: bold;
 	}
@@ -428,8 +509,7 @@ td{
 
 	#img_cal{
 		position: absolute;
-		/*top: 30%;*/
-		top: 42%;
+		top: 30%;
 		left:41.5%;
 		width: 25px;
 		margin-right: 14.845px;
@@ -438,7 +518,7 @@ td{
 
 	#btn_close{
 		position: absolute;
-		top: 37%;
+		top: 22%;
 		left: 85%;
 		padding: 10px;
 		width: 35px;
