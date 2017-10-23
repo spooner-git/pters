@@ -139,6 +139,8 @@ $(document).ready(function(){
 	calTable_Set(1,currentYear,currentPageMonth,'1E');  //2번 슬라이드에 현재달, 현재주 -1 채우기
 	weekNum_Set()
 
+	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
+	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray);
 	addcurrentTimeIndicator();
 	scrollToIndicator();
 	dateText();
@@ -496,6 +498,8 @@ $(document).ready(function(){
 		$('#calendar').css('display','block');
 	};
 
+
+
 	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
 		var where2 = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+"0W"+"_"+currentHour+'H'
 		var where3 = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+"0W"+"_"+(currentHour+1)+'H'
@@ -516,5 +520,39 @@ $(document).ready(function(){
 		$('#yearText').text(currentYear+'년');
 		$('#monthText').text(currentPageMonth+'월');
 	};
+
+	function DBdataProcess(startarray,endarray,result,option){
+		//DB데이터 가공
+		var classTimeLength = startarray.length
+    	var startlength = startarray.length;
+    	var endlength = endarray.length;
+    	var resultarray = []
+
+    	for(i=0;i<classTimeLength; i++){
+    		var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
+    		var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
+    		var startSplitArray= start.split("_"); 
+    		var endSplitArray = end.split("_");
+    		//["2017", "10", "7", "6", "00", "오전"]
+   
+    		if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
+    			startSplitArray[3] = String(Number(startSplitArray[3])+12);
+    		}
+
+    		if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
+    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
+    		}
+    	
+    		startSplitArray[5] = String(endSplitArray[3] - startSplitArray[3])
+    		if(option=="class"){
+    			startSplitArray.push(classTimeArray_member_name[i])	
+    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
+    		}else{
+    			startSplitArray.push(classTimeArray_member_name[i])	
+    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);		
+    		}	
+  	    }
+	}
+
 });//document(ready)
 
