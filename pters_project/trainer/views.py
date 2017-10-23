@@ -68,11 +68,10 @@ class CalDayView(LoginRequiredMixin, TemplateView):
             error = 'class가 존재하지 않습니다'
             # logger.error(error)
 
-        daily_off_data = []
+        #daily_off_data = []
+        # daily_data = []
         class_schedule_data = []
-        daily_data = []
         lecture_schedule_data = []
-
         daily_off_data_start_date = []
         daily_off_data_end_date = []
         daily_lecture_data_start_date = []
@@ -86,12 +85,12 @@ class CalDayView(LoginRequiredMixin, TemplateView):
             for month_class in month_class_data:
                 month_class.data = month_class.start_dt.timetuple()
                 result = month_class.end_dt - month_class.start_dt
-                result_hour = int(result.seconds / 60 / 60)
+                #result_hour = int(result.seconds / 60 / 60)
                 # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
                 #                  + '_' + str(result_hour) + '_' + member_data.name)
-                daily_off_data.append(str(month_class.data.tm_year) + '_' + str(month_class.data.tm_mon) + '_'
-                                  + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
-                                  + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
+                #daily_off_data.append(str(month_class.data.tm_year) + '_' + str(month_class.data.tm_mon) + '_'
+                #                  + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
+                #                  + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
                 class_schedule_data.append(month_class.class_schedule_id)
                 daily_off_data_start_date.append(month_class.start_dt)
                 daily_off_data_end_date.append(month_class.end_dt)
@@ -105,19 +104,19 @@ class CalDayView(LoginRequiredMixin, TemplateView):
                 for month_lecture in lecture.lecture_schedule:
                     month_lecture.data = month_lecture.start_dt.timetuple()
                     result = month_lecture.end_dt-month_lecture.start_dt
-                    result_hour = int(result.seconds/60/60)
+                    #result_hour = int(result.seconds/60/60)
                     #daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
                     #                  + '_' + str(result_hour) + '_' + member_data.name)
-                    daily_data.append(str(month_lecture.data.tm_year)+'_'+str(month_lecture.data.tm_mon)+'_'
-                                      +str(month_lecture.data.tm_mday)+'_'+str(month_lecture.data.tm_hour)+'_'
-                                      +str(format(month_lecture.data.tm_min,'02d'))+'_'+str(result_hour)+'_'+member_data.name)
+                    #daily_data.append(str(month_lecture.data.tm_year)+'_'+str(month_lecture.data.tm_mon)+'_'
+                    #                  +str(month_lecture.data.tm_mday)+'_'+str(month_lecture.data.tm_hour)+'_'
+                    #                  +str(format(month_lecture.data.tm_min,'02d'))+'_'+str(result_hour)+'_'+member_data.name)
                     lecture_schedule_data.append(month_lecture.lecture_schedule_id)
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
                     daily_lecture_data_member.append(member_data.name)
 
-        context['daily_off_data'] = daily_off_data
-        context['daily_lecture_data'] = daily_data
+        #context['daily_off_data'] = daily_off_data
+        #context['daily_lecture_data'] = daily_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
         context['class_schedule_data'] = class_schedule_data
 
@@ -172,9 +171,15 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
             # logger.error(error)
 
         daily_off_data = []
-        class_schedule_data = []
         daily_data = []
+        class_schedule_data = []
         lecture_schedule_data = []
+
+        daily_off_data_start_date = []
+        daily_off_data_end_date = []
+        daily_lecture_data_start_date = []
+        daily_lecture_data_end_date = []
+        daily_lecture_data_member = []
 
         if error is None:
 
@@ -190,6 +195,8 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
                                       + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
                                       + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
                 class_schedule_data.append(month_class.class_schedule_id)
+                daily_off_data_start_date.append(month_class.start_dt)
+                daily_off_data_end_date.append(month_class.end_dt)
 
         if error is None:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
@@ -200,19 +207,28 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
                 for month_lecture in lecture.lecture_schedule:
                     month_lecture.data = month_lecture.start_dt.timetuple()
                     result = month_lecture.end_dt - month_lecture.start_dt
-                    result_hour = int(result.seconds / 60 / 60)
+                    #result_hour = int(result.seconds / 60 / 60)
                     # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
                     #                  + '_' + str(result_hour) + '_' + member_data.name)
                     daily_data.append(str(month_lecture.data.tm_year) + '_' + str(month_lecture.data.tm_mon) + '_'
                                       + str(month_lecture.data.tm_mday) + '_' + str(month_lecture.data.tm_hour) + '_'
-                                      + str(format(month_lecture.data.tm_min, '02d')) + '_' + str(
-                        result_hour) + '_' + member_data.name)
+                                      + str(format(month_lecture.data.tm_min, '02d')) + '_' + str(result_hour) + '_'
+                                      + member_data.name)
                     lecture_schedule_data.append(month_lecture.lecture_schedule_id)
+                    daily_lecture_data_start_date.append(month_lecture.start_dt)
+                    daily_lecture_data_end_date.append(month_lecture.end_dt)
+                    daily_lecture_data_member.append(member_data.name)
 
         context['daily_off_data'] = daily_off_data
         context['daily_lecture_data'] = daily_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
         context['class_schedule_data'] = class_schedule_data
+
+        context['daily_off_data_start_date'] = daily_off_data_start_date
+        context['daily_off_data_end_date'] = daily_off_data_end_date
+        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
+        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
+        context['daily_lecture_data_member'] = daily_lecture_data_member
 
         return context
 
