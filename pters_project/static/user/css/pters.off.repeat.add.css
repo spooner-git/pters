@@ -16,3 +16,93 @@ body{
 .btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
 	background-color: #fe4e65;	
 }
+
+
+#offRepeatSummary{
+	position: relative;
+	background: #282828;
+	padding-top: 16px;
+	padding-bottom: 16px;
+}
+
+#summaryText{
+	position: absolute;
+	font-size: 90%;
+	color: #ffffff;
+	top: 14px;
+	left: 3.5%;
+}
+
+.summaryInnerBox{
+	margin-top: 1px;
+	position: relative;
+	background:#ffffff; 
+	width: 77%;
+	height: 40px;
+	margin-left: auto;
+}
+
+.summaryInnerBoxText{
+	line-height: 40px;
+	margin-right: 5%;
+	margin-left: 3%;
+	font-size: 87%;
+	font-weight: 500;
+	letter-spacing: -0.3px;
+	color: #282828;
+}
+
+.summaryInnerBoxText2{
+	line-height: 40px;
+	font-size: 75%;
+	letter-spacing: -0.2px;
+	color: #666666;
+}
+
+.deleteBtn{
+	position: absolute;
+	line-height: 40px;
+	width: 15px;
+	margin-left: 15px;
+	right: 0;
+	text-align: center;
+	background: #cccccc;
+}
+
+.deleteBtnBin img{
+	display: none;
+	margin: 13px;
+}
+
+.deleteBtnBin{
+	position: absolute;
+	top: 0;
+	right: 0px;
+	width: 0px;
+	height: 40px;
+	background:#fe4e65;
+	z-index: 100;
+}
+
+.dateSelectBtn{
+	width: 14.285%;
+	border-radius: 0px;
+	background:#ffffff;
+	color: #cccccc;
+	font-size: 14.9px;
+}
+
+.btn.focus, .btn:focus, .btn:hover{
+	background: #3b3d3d;
+	color: #fe4e65;
+}
+
+#submitBtn{
+	width: 100%;
+	background: #eeeeee;
+	color: #ffffff;
+	height: 50px;
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 15px;
+}
