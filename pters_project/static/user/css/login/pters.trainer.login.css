@@ -2,6 +2,7 @@ body{
 	padding-top: 0px;
 }
 
+
 #loginimg{
 	position: fixed;
 	width: 	100%;
@@ -22,11 +23,21 @@ body{
 }
 
 .loginbox{
-	padding-top: 31%;
+	position: absolute;
+	top: 45%;
+	width: 100% !important;
+}
+
+.loginbox div{
+	width: 300px;
+	margin: 0 auto;
+	padding-left: 0;
 }
 
 .logintext{
-	padding-top: 39%;
+	position: absolute;
+	top: 25%;
+	width: 100%;
 }
 
 .logintext div{
@@ -80,3 +91,4 @@ body{
 	font-weight: bold !important;
 	margin-top: 50px !important;
 }
+
