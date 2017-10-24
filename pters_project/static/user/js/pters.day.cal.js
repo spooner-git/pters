@@ -165,28 +165,34 @@ $(document).ready(function(){
 		}
 	};
 
+	//Slide 10번째를 [오늘]로 기준으로 각페이지에 날짜에 맞춰 테이블 생성하기
 	var element = 10-currentDate
 		if(element>0){
 			for(i=1;i<=element;i++){
-				calTable_Set(i,currentYear,currentPageMonth-1,lastDay[currentPageMonth-1]-element+i)	
+				calTable_Set(i,currentYear,currentPageMonth-1,lastDay[currentPageMonth-1]-element+i-1)	
 			}
 			for(i=element+1;i<=23;i++){
 				calTable_Set(i,currentYear,currentPageMonth,currentDate-10+i)	
 			}
 		}else{
 			for(i=1;i<=23;i++){
-				calTable_Set(i,currentYear,currentPageMonth,currentDate-10+i)	
+				if(currentDate-10+i-1>lastDay[currentPageMonth]){
+					calTable_Set(i,currentYear,currentPageMonth+1,currentDate-10+i-lastDay[currentPageMonth+1])
+				}else{
+					calTable_Set(i,currentYear,currentPageMonth,currentDate-10+i)	
+				}
 			}
 		}
+	//Slide 10번째를 [오늘]로 기준으로 각페이지에 날짜에 맞춰 테이블 생성하기
 	
-	dateText();
-	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
-	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray);
-	//addcurrentTimeIndicator();
-	//scrollToIndicator();
-	addcurrentTimeIndicator_blackbox();
+	dateText(); //상단에 연월일요일 표시
+	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class"); //DB로 부터 받는 Class데이터 가공
+	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray); //DB로 부터 받는 Off 데이터 가공
+	//addcurrentTimeIndicator(); //현재 시간에 밑줄 긋기 (구버전)
+	//scrollToIndicator(); //현재 시간으로 스크롤 자동 이동
+	addcurrentTimeIndicator_blackbox(); //현재 시간 검은색 Background 표시
 	classTime(); //PT수업 시간에 핑크색 박스 표시
-	offTime();
+	offTime(); //Off 시간에 회색 박스 표시
 
 	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
 		var slideIndex = $('#slide'+Index);

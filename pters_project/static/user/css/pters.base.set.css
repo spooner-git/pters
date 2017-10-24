@@ -255,4 +255,39 @@ body{
     }
 }
 
+@media(min-width:1273px){
+/*모바일 이외 달력 사이즈 조정*/
+
+    #shade{
+    position: fixed;
+    width: 100%;
+    max-width: 1024px;
+    height: 100%;
+    opacity: 0.7;
+    z-index: -1;
+    }
+
+    .container{
+        width:  100%;
+        max-width: 1024px;
+        left:   250px;
+    }
+
+    .navbar{
+        width:  100%;
+        max-width: 1024px;
+        left:   250px;
+    }
+
+    .sidenav{
+        width: 250px;
+    }
+
+    #upbutton{
+        display:    none;
+    }
+
+
+}
+
 /*미디어 쿼리*/
