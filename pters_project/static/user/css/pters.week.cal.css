@@ -9,7 +9,7 @@ body{
 
 .swiper-slide{
 	height: 100%;
-	overflow-y: auto;
+	overflow-y: overlay;
 	-webkit-overflow-scrolling:touch;
 }
 
@@ -423,7 +423,7 @@ tr{
 
 
 /*미디어 쿼리*/
-@media(min-width:415px){
+@media(min-width:418px){
 	#cal_popup{
 		display: none;
 		position: fixed;
@@ -439,6 +439,8 @@ tr{
 		z-index: -2;
 		text-align: center;
 	}
+
+
 
 	#popup_info{
 		background: #ffffff;
@@ -488,6 +490,57 @@ tr{
 		border-top: 1px solid #a2a2a2;
 		width: 330px;
 	}
+}
+
+@media(min-width:1273px){
+  /*달력 크기 조정*/
+	.time-style{ /*week ìŠ¤íƒ€ì¼*/
+		background-color: transparent;
+		position: relative;
+		width: 	100%;
+		max-width: 1024px;
+		font-size: 14.4px;
+		height: 35px;
+	}
+
+	#calendar{
+		position: fixed;
+		width: 100%;
+		max-width: 1024px;
+		padding-top: 100px;
+		background-color: #f4f4f4;
+		padding-right: 0;
+		padding-left: 0;
+		height: 90%;
+		left: 	250px;
+	}
+
+	#ymdText{
+		position: fixed;
+		height: 50px;
+		z-index: 3;
+		width: 100%;
+		max-width: 1024px;
+		left: 	250px;
+	}
+
+	#week{
+		left: 	250px;
+	}
+
+	body{
+		/*font-family: 'Noto Sans KR';*/
+		padding-top: 50px;
+		width: 100%;
+		max-width: 1024px;
+		background: #f4f4f4;
+	}	
+
+	.swiper-slide{
+		height: 100%;
+		overflow-y: overlay;
+	}
+
 }
 
 /*미디어 쿼리*/
