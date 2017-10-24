@@ -37,12 +37,12 @@
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/offadd/icon-repeat.png" %} style="width:14px;"> 반복 빈도</div>
   <div id="repeattypeSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-    <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
+    <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
-      <li role="presentation"><a role="menuitem" tabindex="-1">매주</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1">격주</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1">일주일만</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1">매일</a></li>
+      <li><a data-repeat="everyweek">매주</a></li>
+      <li><a data-repeat="biweek">격주</a></li>
+      <li><a data-repeat="onlyweek">일주일만</a></li>
+      <li><a data-repeat="everyday">매일</a></li>
     </ul>
   </div>
 </div>

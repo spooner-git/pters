@@ -5,7 +5,7 @@ $(document).ready(function(){
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
       
-      $('span.deleteBtn').click(function(){
+      $('span.deleteBtn').click(function(){ //일정요약에서 반복일정 오른쪽 화살표 누르면 휴지통 열림
         var btn = $(this).find('div')
         if(btn.css('width')=='0px'){
           btn.animate({'width':'40px'},300)
@@ -15,32 +15,37 @@ $(document).ready(function(){
         }
       })
 
-      $('.summaryInnerBoxText').click(function(){
+      $('div.deleteBtnBin img').click(function(){
+        $(this).parents('.summaryInnerBox').detach();
+      })
+
+      $('.summaryInnerBoxText').click(function(){ //매주 월요일 오전 11시 누르면 휴지통 닫힘
         var btn = $('.deleteBtnBin')
           btn.animate({'width':'0px'},230)
           btn.find('img').css({'display':'none'})
       })
 
-      $('.summaryInnerBoxText2').click(function(){
+      $('.summaryInnerBoxText2').click(function(){ // 반복종료 :2017.12.31 누르면 휴지통 닫힘
         var btn = $('.deleteBtnBin')
           btn.animate({'width':'0px'},230)
           btn.find('img').css({'display':'none'})
       })
 
+      $("#repeats li a").click(function(){
+          $("#repeattypeSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-repeat'));
+          $("#id_time_duration").val($(this).attr('data-dur'));
+          check_dropdown_selected();
+      }); //반복 빈도 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
       $("#durations li a").click(function(){
-          $("#durationsSelected button").addClass("dropdown_selected");
-      		$("#durationsSelected .btn:first-child").text($(this).text());
-      		$("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
-            $("#id_time_duration").val($(this).attr('data-dur'));
+          $("#durationsSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
+          $("#id_time_duration").val($(this).attr('data-dur'));
           check_dropdown_selected();
   		}); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
       $("#starttimes li a").click(function(){
-      		$("#starttimesSelected button").addClass("dropdown_selected");
-          $("#starttimesSelected .btn:first-child").text($(this).text());
-      		$("#starttimesSelected .btn:first-child").val($(this).text());
-              $("#id_training_time").val($(this).attr('data-trainingtime'));
+      		$("#starttimesSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).text());
+          $("#id_training_time").val($(this).attr('data-trainingtime'));
           check_dropdown_selected();
   		}); //시작시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
@@ -58,14 +63,29 @@ $(document).ready(function(){
           }
       })
 
-       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-       	 var memberSelect = $("#membersSelected button");
+      $("#datepicker2").change(function(){
+          if($("#datepicker2").val() != '') {
+              $("#dateSelector2 p").addClass("dropdown_selected");
+              $("#id_training_date").val($("#datepicker2").val());
+              check_dropdown_selected();
+          }
+          else{
+              $("#dateSelector2 p").removeClass("dropdown_selected");
+              $("#id_training_date").val('');
+              check_dropdown_selected();
+          }
+      })
+
+       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->핑크색)
+       	 var repeatSelect = $("#repeattypeSelected button");
        	 var dateSelect = $("#dateSelector p");
+         var dateSelect2 = $("#dateSelector2 p");
        	 var durSelect = $("#durationsSelected button");
        	 var startSelect = $("#starttimesSelected button")
-       		 if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
+       		 if((repeatSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (dateSelect2).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
         	    $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-            	select_all_check=true;
+            	$('#submitBtn').addClass('submitBtnActivated');
+              select_all_check=true;
         	}else{
            	    select_all_check=false;
        		}
