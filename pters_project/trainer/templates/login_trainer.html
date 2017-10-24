@@ -14,12 +14,12 @@
 
 {% block content %}
         
-    <div><img src={% static "user/res/login/pterslogin.png" %} id="loginimg"></div>
+    <div id="imageBox"><img src={% static "user/res/login/pterslogin.png" %} id="loginimg"></div>
     <div class="logintext">
         <div><span id="pterstext">PTERS</span> <span id="logintext">로그인</span></div>
     </div>
     <div class="container loginbox">
-        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div>
             <div class="">
                 <div>
                     <form action="/trainer/login/" id="login-form" method="post">
@@ -31,7 +31,7 @@
                             <img src={% static "user/res/login/icon-lock.png" %} id="pwimg">
                             <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
                         </div>
-                        <div class="checkbox">
+                        <div class="checkbox" style="margin-top:15px;margin-left:15px;">
                             <label><input type="checkbox" value="login">다음부터 자동 로그인</label>
                         </div>
                         <div>
