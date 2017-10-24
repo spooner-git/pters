@@ -81,10 +81,10 @@ class CalDayView(LoginRequiredMixin, TemplateView):
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='1', use='1')
+                                                              en_dis_type='0', use='1')
             for month_class in month_class_data:
-                month_class.data = month_class.start_dt.timetuple()
-                result = month_class.end_dt - month_class.start_dt
+                #month_class.data = month_class.start_dt.timetuple()
+                #result = month_class.end_dt - month_class.start_dt
                 #result_hour = int(result.seconds / 60 / 60)
                 # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
                 #                  + '_' + str(result_hour) + '_' + member_data.name)
@@ -102,8 +102,8 @@ class CalDayView(LoginRequiredMixin, TemplateView):
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
                                                                             en_dis_type='1',use='1')
                 for month_lecture in lecture.lecture_schedule:
-                    month_lecture.data = month_lecture.start_dt.timetuple()
-                    result = month_lecture.end_dt-month_lecture.start_dt
+                    #month_lecture.data = month_lecture.start_dt.timetuple()
+                    #result = month_lecture.end_dt-month_lecture.start_dt
                     #result_hour = int(result.seconds/60/60)
                     #daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
                     #                  + '_' + str(result_hour) + '_' + member_data.name)
@@ -170,8 +170,8 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
             error = 'class가 존재하지 않습니다'
             # logger.error(error)
 
-        daily_off_data = []
-        daily_data = []
+        #daily_off_data = []
+        #daily_data = []
         class_schedule_data = []
         lecture_schedule_data = []
 
@@ -184,16 +184,16 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='1', use='1')
+                                                              en_dis_type='0', use='1')
             for month_class in month_class_data:
-                month_class.data = month_class.start_dt.timetuple()
-                result = month_class.end_dt - month_class.start_dt
-                result_hour = int(result.seconds / 60 / 60)
+                #month_class.data = month_class.start_dt.timetuple()
+                #result = month_class.end_dt - month_class.start_dt
+                #result_hour = int(result.seconds / 60 / 60)
                 # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
                 #                  + '_' + str(result_hour) + '_' + member_data.name)
-                daily_off_data.append(str(month_class.data.tm_year) + '_' + str(month_class.data.tm_mon) + '_'
-                                      + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
-                                      + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
+                #daily_off_data.append(str(month_class.data.tm_year) + '_' + str(month_class.data.tm_mon) + '_'
+                #                      + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
+                #                      + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
                 class_schedule_data.append(month_class.class_schedule_id)
                 daily_off_data_start_date.append(month_class.start_dt)
                 daily_off_data_end_date.append(month_class.end_dt)
@@ -205,22 +205,22 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
                                                                             en_dis_type='1', use='1')
                 for month_lecture in lecture.lecture_schedule:
-                    month_lecture.data = month_lecture.start_dt.timetuple()
-                    result = month_lecture.end_dt - month_lecture.start_dt
+                    #month_lecture.data = month_lecture.start_dt.timetuple()
+                    #result = month_lecture.end_dt - month_lecture.start_dt
                     #result_hour = int(result.seconds / 60 / 60)
                     # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
                     #                  + '_' + str(result_hour) + '_' + member_data.name)
-                    daily_data.append(str(month_lecture.data.tm_year) + '_' + str(month_lecture.data.tm_mon) + '_'
-                                      + str(month_lecture.data.tm_mday) + '_' + str(month_lecture.data.tm_hour) + '_'
-                                      + str(format(month_lecture.data.tm_min, '02d')) + '_' + str(result_hour) + '_'
-                                      + member_data.name)
+                    #daily_data.append(str(month_lecture.data.tm_year) + '_' + str(month_lecture.data.tm_mon) + '_'
+                    #                  + str(month_lecture.data.tm_mday) + '_' + str(month_lecture.data.tm_hour) + '_'
+                    #                  + str(format(month_lecture.data.tm_min, '02d')) + '_' + str(result_hour) + '_'
+                    #                  + member_data.name)
                     lecture_schedule_data.append(month_lecture.lecture_schedule_id)
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
                     daily_lecture_data_member.append(member_data.name)
 
-        context['daily_off_data'] = daily_off_data
-        context['daily_lecture_data'] = daily_data
+        #context['daily_off_data'] = daily_off_data
+        #context['daily_lecture_data'] = daily_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
         context['class_schedule_data'] = class_schedule_data
 
@@ -428,7 +428,7 @@ def add_pt_logic(request, next='trainer:cal_day'):
             # logger.error(error)
 
         try:
-            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id)
+            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id, en_dis_type='0', use=1)
             for month_class in month_class_data:
                 if month_class.start_dt >= start_date:
                     if month_class.start_dt < end_date:
@@ -476,6 +476,7 @@ def add_pt_logic(request, next='trainer:cal_day'):
                         lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
                         member_lecture_count = lecture_date_update.lecture_count
                         lecture_date_update.lecture_count = member_lecture_count-1
+                        lecture_date_update.mod_dt = timezone.now()
                         lecture_date_update.save()
 
             except ValueError as e:
@@ -610,9 +611,11 @@ def daily_pt_delete(request):
 
         try:
             with transaction.atomic():
+                lecture_schedule_data.mod_dt = timezone.now()
                 lecture_schedule_data.use = 0
                 member_lecture_count = lecture_data.lecture_count
                 lecture_data.lecture_count = member_lecture_count+1
+                lecture_data.mod_dt = timezone.now()
                 lecture_schedule_data.save()
                 lecture_data.save()
 
@@ -715,7 +718,7 @@ def off_schedule_add_logic(request, next='trainer:cal_day'):
         if error is None:
             try:
                 month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                                  en_dis_type='1', use=1)
+                                                                  en_dis_type='0', use=1)
                 for month_class in month_class_data:
                     if month_class.start_dt >= start_date:
                         if month_class.start_dt < end_date:
@@ -729,7 +732,7 @@ def off_schedule_add_logic(request, next='trainer:cal_day'):
 
                 if error is None:
                     class_schedule_data = ClassScheduleTb(class_tb_id=trainer_class.class_id, start_dt=start_date, end_dt=end_date,
-                                                          state_cd='NP',en_dis_type='1', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                                                          state_cd='NP',en_dis_type='0', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
                     class_schedule_data.save()
 
             except ValueError as e:
@@ -798,6 +801,7 @@ def daily_off_delete(request):
             end_date = class_schedule_data.end_dt
 
         try:
+            class_schedule_data.mod_dt = timezone.now()
             class_schedule_data.use = 0
             class_schedule_data.save()
 
