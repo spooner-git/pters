@@ -46,7 +46,7 @@
                     
                     <div id="inner_Sidenav" class="sidenav">
                         
-                        <div class="sidebar_upper">
+                        <div class="sidebar_upper" onclick="location.href='{% url 'home' %}'">
                             <a href="{% url 'home' %}" style="width:100%;height: 100%;z-index: 1"></a>
                             <div style="z-index: -1"><img src={% static "user/res/icon-pf.png" %} alt="#"></div>
                             <div id="user_name">{{user.first_name}} 코치님</div>

@@ -50,6 +50,8 @@
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
+
+      <!--
       <li><a data-trainingtime="05:00:00.000000">오전 5시</a></li>
       <li><a data-trainingtime="06:00:00.000000">오전 6시</a></li>
       <li><a data-trainingtime="07:00:00.000000">오전 7시</a></li>
@@ -67,6 +69,7 @@
       <li><a data-trainingtime="19:00:00.000000">오후 7시</a></li>
       <li><a data-trainingtime="20:00:00.000000">오후 8시</a></li>
       <li><a data-trainingtime="21:00:00.000000">오후 9시</a></li>
+    -->
     </ul>
   </div>
 </div>
@@ -107,11 +110,12 @@
         <!-- Placed at the end of the document so the pages load faster -->
          <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+         <script>
+          var offAddOkArray = ['5','6','8','11','15','19','21']; // OFF일정 추가 가능한 시간
+
+
+         </script>
          <script type="text/javascript" src={% static "user/js/pters.off.add.js" %}></script>
 
         
-
-
-
-
 {% endblock %}
