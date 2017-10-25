@@ -149,11 +149,11 @@ $(document).ready(function(){
 		//1. 현재달에 전달 마지막 부분 채우기
 		if(Month>1){ //2~12월
 			for(var j=lastDay[Month-2]-firstDayCurrentPage+1; j<=lastDay[Month-2] ;j++){
-				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span>'+j+'</span>'+'<div>'+'</div>'+'</td>');
+				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
 			};
 		}else if(Month==1){ //1월
 			for(var j=31-firstDayCurrentPage+1; j<=31 ;j++){
-				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span>'+j+'</span>'+'<div>'+'</div>'+'</td>');
+				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
 			};
 		}
 		
@@ -184,11 +184,11 @@ $(document).ready(function(){
 
 		if(howmanyWeek5<7){
 			for (var i=1; i<=7-howmanyWeek5;i++){
-			$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span>'+i+'</span>'+'<div>'+'</div>'+'</td>')
+			$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
 			};	
 		}else if(howmanyWeek6<7 && howmanyWeek6>0){
 			for (var i=1; i<=7-howmanyWeek6;i++){
-			$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span>'+i+'</span>'+'<div>'+'</div>'+'</td>')
+			$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
 			};
 		}
 		for(i=1;i<=6;i++){
