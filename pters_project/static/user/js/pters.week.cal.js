@@ -142,8 +142,7 @@ $(document).ready(function(){
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray);
 	addcurrentTimeIndicator();
-	scrollToIndicator();
-	//dateText();
+	//scrollToIndicator();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
 	
