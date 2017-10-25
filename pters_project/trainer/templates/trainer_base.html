@@ -90,13 +90,12 @@
     <script>
              function openNav(){
                $("#outer_Sidenav").animate({"width":"100%"},1);
-               $("#inner_Sidenav").css({'width':'250px'});
+               $("#inner_Sidenav").animate({'width':'250px'},50);
                //$("#inner_Sidenav").css({'width':'80%'});
                //$("#inner_Sidenav").addClass('sidenav-size');
                $(".sidebar_text").css({'font-size':"15px",'opacity':"1"})
                $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
                $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
-               $('body').css('overflow-y','hidden')
                $('#shade').css({'background-color':'black','z-index':'50'});
              }
 
@@ -106,7 +105,6 @@
               $("#inner_Sidenav").css({'width':'0'});
               //$("#inner_Sidenav").removeClass('sidenav-size');
               $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"})
-              $('body').css('overflow-y','')
               $('#shade').css({'background-color':'transparent','z-index':'-1'});
              }; 
     </script>
