@@ -131,12 +131,13 @@ $(document).ready(function(){
 	var firstDayNextMonth = firstDayInfoNextMonth.getDay(); //다음달 1일의 요일
 	var currentPageMonth = currentMonth+1; //현재 달
 
-
-	calTable_Set(2,currentYear,currentPageMonth,'0W'); //3번 슬라이드에 현재달, 현재주 채우기
-	calTable_Set(3,currentYear,currentPageMonth,'1L'); //4번 슬라이드에 현재달, 현재주 +1 달력채우기
-	calTable_Set(4,currentYear,currentPageMonth,'2L'); //5번 슬라이드에 현재달, 현재주 +2 달력채우기
-	calTable_Set(0,currentYear,currentPageMonth,'2E'); //1번 슬라이드에 현재달, 현재주 -2 달력채우기
-	calTable_Set(1,currentYear,currentPageMonth,'1E');  //2번 슬라이드에 현재달, 현재주 -1 채우기
+// ############################구동시 실행################################################################################
+// ****************************구동시 실행********************************************************************************
+	calTable_Set(2,currentYear,currentPageMonth,'0W'); //3번 슬라이드에 현재달, 현재주 채우기 0W : 0 Week
+	calTable_Set(3,currentYear,currentPageMonth,'1L'); //4번 슬라이드에 현재달, 현재주 +1 달력채우기 1L : 1 Week Later
+	calTable_Set(4,currentYear,currentPageMonth,'2L'); //5번 슬라이드에 현재달, 현재주 +2 달력채우기 2L : 2 Week Later
+	calTable_Set(0,currentYear,currentPageMonth,'2E'); //1번 슬라이드에 현재달, 현재주 -2 달력채우기 2E : 2 Week Early
+	calTable_Set(1,currentYear,currentPageMonth,'1E');  //2번 슬라이드에 현재달, 현재주 -1 채우기 1E : 1 Week Early
 	weekNum_Set()
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
@@ -145,7 +146,8 @@ $(document).ready(function(){
 	//scrollToIndicator();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
-	
+// ****************************구동시 실행********************************************************************************
+// ############################구동시 실행################################################################################
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
@@ -198,52 +200,6 @@ $(document).ready(function(){
 			//myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
-
-	/*
-	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
-
-		//주간달력 상단표시줄 (요일, 날짜, Today표식)
-		var slideIndex = $('#slide'+Index);
-
-		slideIndex.append('<div id="week" class="time-style"><table class="calendar-style"><tbody><tr id="weekText"></tr></tbody></table></div>')
-	
-		for(var i=0; i<=7; i++){
-			var slideIndexWeekText = $('#slide'+Index+ ' #weekText')
-			var weekUpperText = "<td id='weekNum_"+i+"'><span class='weekToday-style' id='weekToday_"+ i + "'></span><span class='weekToday-style'></span><span></span></td>"
-			if(i==0){
-				slideIndexWeekText.append("<td class='hour'><span></span><span></span><span></span></td>")	
-			}else{
-				slideIndexWeekText.append(weekUpperText);
-			};
-		};
-
-		weekNum_Set()
-
-
-		for(var i=5; i<=24; i++){
-			$('#slide'+Index).append('<div id="'+i+'H_'+Year+'_'+Month+'_'+currentDate+'_'+Day+'" class="time-style" style="top: '+'">')
-		};
-
-		for(var i=5; i<=24; i++){
-				var jcurrentDay = $('#slide'+Index+' #'+i+'H_'+Year+'_'+Month+'_'+currentDate+'_'+Day)
-				if(i<10){
-					jcurrentDay.append('<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'<div></div></td></tr><tr></tr></tbody></table>');		
-				}else{
-					jcurrentDay.append('<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'<div></div></td></tr><tr></tr></tbody></table>');		
-				};
-		};
-
-		for(var i=5; i<=24; i++){  //각 td 생성(td별 고유 id부여)
-			for(var j=0; j<=6;j++){
-				var slidevalue = $('#slide'+Index+' #weekNum_'+Number(j+1)+' span:nth-child(3)').text();
-				$('#'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+' tbody tr:nth-child(1)').append('<td'+' data-time='+Year+'_'+Month+'_'+slidevalue+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>');
-				$('#'+Year+'_'+Month+'_'+currentDate+'_'+Day+'_'+i+'H'+' tbody tr:nth-child(2)').append('<td'+' data-time='+Year+'_'+Month+'_'+slidevalue+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>');
-			};
-		};
-	}; //calTable_Set
-
-	*/
-
 
 	function calTable_Set(Index,Year,Month,Week){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성 
 		//Week 선택자 2E, 1E, 0W, 1L, 2L
@@ -508,7 +464,9 @@ $(document).ready(function(){
 
 	function scrollToIndicator(){
 		var offset = $('.currentTimeBox').offset();
-		$('html, body').animate({scrollTop : offset.top -180},500)
+		if(currentHour<=5){
+			$('html, body').animate({scrollTop : offset.top -180},500)	
+		}
 	}
 
 
