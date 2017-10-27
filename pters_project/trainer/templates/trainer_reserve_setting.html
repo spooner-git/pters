@@ -1,0 +1,41 @@
+{% extends "trainer_base.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "user/css/pters.trainer.setting.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+
+
+{% block content %}
+<div id="pushSetting" class="settingMenu">
+  <img src="/static/user/res/icon-setting.png" alt="" class="settingImg">
+  <span class="settingText">푸시 알림 설정</span>
+  <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+</div>
+<div id="reserveSetting" class="settingMenu">
+  <img src="/static/user/res/ptadd/icon-clock.png" alt="" class="settingImg">
+  <span class="settingText">예약 허용 시간</span>
+  <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+</div>
+
+<div id="logout">
+  <span onclick="location.href='{% url 'trainer:logout' %}'">로그아웃</span><img src="/static/user/res/icon-setting-arrow.png" alt="" class="logoutArrow">
+</div>
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src={% static "user/js/pters.trainer.setting.js" %}></script>
+        
+{% endblock %}
