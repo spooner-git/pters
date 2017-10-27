@@ -1,10 +1,19 @@
 $(document).ready(function(){
+
+     
+      var classDateData = []
+      var classTimeData = []
+      var offAddOkArray = []
+      var durAddOkArray = []
+
+      DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
+
       $("#datepicker").datepicker({
           onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
             if( curDate != instance.lastVal ){
               $("#dateSelector p").addClass("dropdown_selected");
               $("#id_training_date").val($("#datepicker").val()).submit();
-
+              timeGraphSet();  //시간 테이블 채우기
               startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
               check_dropdown_selected();
             }
@@ -14,22 +23,24 @@ $(document).ready(function(){
       var select_all_check = false;
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
-      
-      $("#durations li a").click(function(){
-          $("#durationsSelected button").addClass("dropdown_selected");
-      		$("#durationsSelected .btn:first-child").text($(this).text());
-      		$("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
-            $("#id_time_duration").val($(this).attr('data-dur'));
-          check_dropdown_selected();
-  		}); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
       $(document).on('click','#starttimes li a',function(){
           $("#starttimesSelected button").addClass("dropdown_selected");
           $("#starttimesSelected .btn:first-child").text($(this).text());
           $("#starttimesSelected .btn:first-child").val($(this).text());
           $("#id_training_time").val($(this).attr('data-trainingtime'));
+          var arry = $(this).attr('data-trainingtime').split(':')
+          durTimeSet(arry[0]);
           check_dropdown_selected();
       })
+
+      $(document).on('click',"#durations li a",function(){
+          $("#durationsSelected button").addClass("dropdown_selected");
+          $("#durationsSelected .btn:first-child").text($(this).text());
+          $("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
+          $("#id_time_duration").val($(this).attr('data-dur'));
+          check_dropdown_selected();
+      }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
        function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
        	 var memberSelect = $("#membersSelected button");
@@ -67,6 +78,7 @@ $(document).ready(function(){
     });
 
       function startTimeSet(){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21];
+        startTimeArraySet(); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
         var offOkLen = offAddOkArray.length
         var startTimeList = $('#starttimes');
         var timeArray = [];
@@ -87,5 +99,118 @@ $(document).ready(function(){
         }
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
+        console.log(offAddOkArray)
       }
+
+      function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
+    //DB데이터 가공
+      var classTimeLength = startarray.length
+      var startlength = startarray.length;
+      var endlength = endarray.length;
+      var resultarray = []
+
+      for(i=0;i<classTimeLength; i++){
+        var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
+        var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
+        var startSplitArray= start.split("_"); 
+        var endSplitArray = end.split("_");
+        //["2017", "10", "7", "6", "00", "오전"]
+   
+        if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
+          startSplitArray[3] = String(Number(startSplitArray[3])+12);
+        }
+
+        if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
+          endSplitArray[3] = String(Number(endSplitArray[3])+12); 
+        }
+
+        var memberClassDur = endSplitArray[3] - startSplitArray[3]
+      
+        startSplitArray[5] = String(endSplitArray[3] - startSplitArray[3])
+        if(option=="class"){
+          startSplitArray.push(classTimeArray_member_name[i]) 
+          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
+        }else if(option=="off"){
+          startSplitArray.push(classTimeArray_member_name[i]) 
+          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);   
+        }else if(option=="member"){
+          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);    
+          result2.push(startSplitArray[3]+":"+startSplitArray[4]);
+        }else if(option=="graph"){
+          if(startSplitArray[2].length<2){
+            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-0"+startSplitArray[2]); //2017_10_7
+            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ memberClassDur); //6_00_2  
+          }else{
+            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-"+startSplitArray[2]); //2017_10_7
+            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ memberClassDur); //6_00_2
+          }
+          
+        }
+        }
+     }
+
+     function timeGraphSet(){ //가능 시간 그래프 채우기
+        $('.tdgraph').removeClass('noktimegraph')
+        var date = $("#datepicker").val();
+        var Arraylength = classDateData.length;
+        for(var i=0;i<Arraylength;i++){
+          var splitTimeArray = classTimeData[i].split("_")
+          var targetTime = splitTimeArray[0]
+          var durTime = splitTimeArray[2]
+          if(classDateData[i] == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
+              for(var j=0; j<durTime; j++){
+                var time = Number(targetTime)+j
+                $('#'+(time)+'g').addClass('noktimegraph')
+              }
+          }else if(classDateData[i] == date && durTime==1){ //수업시간이 1시간짜리일때 칸 채우기
+              $('#'+targetTime+'g').addClass('noktimegraph')
+          }
+        }
+      }
+
+
+      function startTimeArraySet(){ //offAddOkArray 채우기
+        offAddOkArray = []
+        for(i=5;i<=24;i++){
+          if(!$('#'+i+'g').hasClass('noktimegraph') == true){
+            offAddOkArray.push(i);
+          }
+        }
+      }
+
+      function durTimeSet(selectedTime){ // durAddOkArray 채우기
+        var len = offAddOkArray.length;
+        var durTimeList = $('#durations')
+        var index = offAddOkArray.indexOf(Number(selectedTime));
+        var substr = offAddOkArray[index+1]-offAddOkArray[index];
+        console.log(index)
+        console.log(substr)
+        if(substr>1){
+          durTimeList.html('<li><a data-dur="1" class="pointerList">1시간</a></li>')
+          console.log(index)
+        }else{
+          durTimeList.html('')
+          for(var j=index; j<=len; j++){
+            if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>') 
+            }else if(offAddOkArray[j-1]== null && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
+            }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
+            }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]>=2){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
+              break;
+            }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
+              break;
+            }
+          }
+        }
+      }
+
+
+
 });
+
+
+
