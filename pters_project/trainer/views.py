@@ -142,6 +142,10 @@ class PtAddView(LoginRequiredMixin, TemplateView):
             error = 'class가 존재하지 않습니다'
 
         context['trainer_member'] = None
+        daily_off_data_start_date = []
+        daily_off_data_end_date = []
+        daily_lecture_data_start_date = []
+        daily_lecture_data_end_date = []
 
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
@@ -153,6 +157,28 @@ class PtAddView(LoginRequiredMixin, TemplateView):
                 except ObjectDoesNotExist:
                     error = 'lecture가 존재하지 않습니다'
                     # logger.error(error)
+
+        if error is None:
+
+            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
+                                                              en_dis_type='0', use='1')
+            for month_class in month_class_data:
+                daily_off_data_start_date.append(month_class.start_dt)
+                daily_off_data_end_date.append(month_class.end_dt)
+
+        if error is None:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            for lecture in month_lecture_data:
+                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+                                                                            en_dis_type='1', use='1')
+                for month_lecture in lecture.lecture_schedule:
+                    daily_lecture_data_start_date.append(month_lecture.start_dt)
+                    daily_lecture_data_end_date.append(month_lecture.end_dt)
+
+        context['daily_off_data_start_date'] = daily_off_data_start_date
+        context['daily_off_data_end_date'] = daily_off_data_end_date
+        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
+        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
 
         return context
 
@@ -238,6 +264,39 @@ class OffAddView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(OffAddView, self).get_context_data(**kwargs)
+        error = None
+        trainer_class = None
+        try:
+            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+
+        daily_off_data_start_date = []
+        daily_off_data_end_date = []
+        daily_lecture_data_start_date = []
+        daily_lecture_data_end_date = []
+
+        if error is None:
+
+            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
+                                                              en_dis_type='0', use='1')
+            for month_class in month_class_data:
+                daily_off_data_start_date.append(month_class.start_dt)
+                daily_off_data_end_date.append(month_class.end_dt)
+
+        if error is None:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            for lecture in month_lecture_data:
+                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+                                                                            en_dis_type='1', use='1')
+                for month_lecture in lecture.lecture_schedule:
+                    daily_lecture_data_start_date.append(month_lecture.start_dt)
+                    daily_lecture_data_end_date.append(month_lecture.end_dt)
+
+        context['daily_off_data_start_date'] = daily_off_data_start_date
+        context['daily_off_data_end_date'] = daily_off_data_end_date
+        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
+        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
 
         return context
 
