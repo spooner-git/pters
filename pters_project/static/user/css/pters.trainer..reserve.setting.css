@@ -1,0 +1,52 @@
+body{
+	padding-top: 50px;
+}
+
+.settingMenu{
+	width: 100%;
+	height: 50px;
+	background:#ffffff;
+	font-size: 13.9px;
+	color: #3b3d3d;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	border-bottom: 0.5px solid #a2a2a2;
+}
+
+.settingImg{
+	width: 20px;
+	margin-bottom: 5px;
+	margin-left: 15px;
+	margin-right: 10px;
+}
+
+.settingArrow{
+	width: 5px;
+	float: right;
+	margin-right: 22.5px;
+	margin-top: 5px;
+}
+
+.settingText{
+	cursor: pointer;
+}
+
+#logout{
+	width:100%;
+	position: absolute;
+	bottom : 10%;
+	font-size: 15px;
+	font-weight: bold;
+	color: #282828;
+	text-align: center;	
+}
+
+#logout span{
+	cursor: pointer;
+}
+
+.logoutArrow{
+	width: 5px;
+	margin-bottom: 2.5px;
+	margin-left: 10px;
+}

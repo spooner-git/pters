@@ -316,6 +316,32 @@ class LogInTrainerView(TemplateView):
 
         return context
 
+class TrainerSettingView(TemplateView):
+    template_name = 'trainer_setting.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TrainerSettingView, self).get_context_data(**kwargs)
+
+        return context
+
+
+class PushSettingView(TemplateView):
+    template_name = 'trainer_push_setting.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PushSettingView, self).get_context_data(**kwargs)
+
+        return context
+
+
+class ReserveSettingView(TemplateView):
+    template_name = 'trainer_reserve_setting.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReserveSettingView, self).get_context_data(**kwargs)
+
+        return context
+
 
 # 회원가입 api
 @csrf_exempt
