@@ -9,7 +9,13 @@
 
 
 {% block content %}
-
+  <form action="{% url 'trainer:alarm_delete' %}" id="alarm-delete-form" method="post">
+      <input type="hidden" name="log_id_size" value = "{{ log_data|length }}">
+      {% for log_data_detail in log_data %}
+          <input type="hidden" name="log_id_array[]" value ="{{ log_data_detail.log_id }}">
+      {% endfor %}
+    <input type="hidden" name="next_page" value = '{% url 'trainer:alarm' %}'>
+  </form>
 
 <div class="alarmBox">  <!-- 알림 박스 -->
   <div id="modifyInfo">
@@ -22,9 +28,9 @@
 
     {% for log_data_detail in log_data %}
 
-<div class="alarmBox">  <!-- 알림 박스 -->
+<div class="alarmBox" >  <!-- 알림 박스 -->
   <div id="modifyInfo">
-      {% autoescape off %}{{ log_data_detail.log_contents }}{% endautoescape %}<span class="timePast">3시간전</span>
+      {% autoescape off %}{{ log_data_detail.log_contents }}{% endautoescape %}<span class="timePast">{{ log_data_detail.reg_date }}</span>
   </div>
   <div id="afterInfo">{{ log_data_detail.log_date }}</div>
 </div>
