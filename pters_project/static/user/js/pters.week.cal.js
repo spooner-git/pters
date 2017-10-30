@@ -419,6 +419,9 @@ $(document).ready(function(){
 			var classMinute = datasplit[4]
 			var classDura = datasplit[5];
 			var memberName = datasplit[6];
+			if(memberName.length>3){
+				var memberName = memberName.substr(0,3) + ".."
+			}
 			var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
 			var classStart = classStartArr.join("_")
 			//var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
@@ -491,8 +494,22 @@ $(document).ready(function(){
     		if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
     			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
     		}
-    	
-    		startSplitArray[5] = String(endSplitArray[3] - startSplitArray[3])
+
+    		if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
+    			startSplitArray[3] = String(Number(startSplitArray[3])+12);	
+    		}
+
+    		if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
+    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
+    		}
+    		
+    		var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+    		if(dura>0){
+    			startSplitArray[5] = String(dura)	
+    		}else{
+    			startSplitArray[5] = String(dura+24)
+    		}
+
     		if(option=="class"){
     			startSplitArray.push(classTimeArray_member_name[i])	
     			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);

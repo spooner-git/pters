@@ -13,10 +13,11 @@ input{
 .pters_dropdown_custom{
 	font-family: 'Noto Sans KR';
 	width: 100%;
+	max-height: 210px;
+	overflow-y: overlay;
 	padding-top: 0;
 	padding-bottom: 0;
 }
-
 
 .dropdown{
 	width: 100%;
@@ -156,5 +157,27 @@ input{
 }
 
 .noktimegraph{
+	background: #616161;
+}
+
+.pinktimegraph{
 	background: #fe4e65;
+}
+
+.greytimegraph{
+	background: #616161;
+}
+
+.pointerList{
+	cursor: pointer;
+}
+
+.dropup{
+	height: 40px;
+	margin-top: 10px;
+}
+
+.dropup button{
+	font-size: 15px;
+	height: 100%;
 }
