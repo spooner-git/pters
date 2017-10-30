@@ -203,7 +203,7 @@ $(document).ready(function(){
 			//var td2 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>'
 			var td1 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>'
 			var td2 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>'
-			if(i<=12){
+			if(i<12){
 				if(i<10){
 					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'오전 0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
 				}else{
@@ -238,12 +238,19 @@ $(document).ready(function(){
 			//var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var tdClassStart = $("#"+classStart+" div");
 			//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
-			if(classDura<=3){
-				tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');		
+			if(Number(classHour)+Number(classDura)==25){	// 오전 1시에 일정이 차있을 경우 일정 박스가 Table 넘어가는 것 픽스
+				if(classDura<=3){
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');		
+				}else{
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+				}
 			}else{
-				tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+				if(classDura<=3){
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');		
+				}else{
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+				}	
 			}
-			
 		};
 		$('#calendar').css('display','block');
 	};
@@ -267,12 +274,19 @@ $(document).ready(function(){
 			var offStart = offStartArr.join("_")
 			//var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var tdOffStart = $("#"+offStart+" div");
-			if(offDura<=3){
-				tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*35.5)+'px'}).html('<span class="memberName'+offDura+'">'+memberName+' </span>'+'<span class="offTimeText'+offDura+'">'+offHour+':'+offMinute+' ~ '+offEndHour+':'+offEndMinute+'</span>');			
+			if(Number(offHour)+Number(offDura)==25){  // 오전 1시에 일정이 차있을 경우 일정 박스가 Table 넘어가는 것 픽스
+				if(offDura<=3){
+				tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*35)+'px'}).html('<span class="memberName'+offDura+'">'+memberName+' </span>'+'<span class="offTimeText'+offDura+'">'+offHour+':'+offMinute+' ~ '+offEndHour+':'+offEndMinute+'</span>');			
+				}else{
+				tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*35)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="offTimeText3">'+offHour+':'+offMinute+' ~ '+offEndHour+':'+offEndMinute+'</span>');
+				}
 			}else{
+				if(offDura<=3){
+				tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*35.5)+'px'}).html('<span class="memberName'+offDura+'">'+memberName+' </span>'+'<span class="offTimeText'+offDura+'">'+offHour+':'+offMinute+' ~ '+offEndHour+':'+offEndMinute+'</span>');			
+				}else{
 				tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*35.5)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="offTimeText3">'+offHour+':'+offMinute+' ~ '+offEndHour+':'+offEndMinute+'</span>');
+				}	
 			}
-			
 		};
 		$('#calendar').css('display','block');
 	};
@@ -336,8 +350,22 @@ $(document).ready(function(){
     		if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
     			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
     		}
-    	
-    		startSplitArray[5] = String(endSplitArray[3] - startSplitArray[3])
+
+    		if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
+    			startSplitArray[3] = String(Number(startSplitArray[3])+12);	
+    		}
+
+    		if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
+    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
+    		}
+    		
+    		var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+    		if(dura>0){
+    			startSplitArray[5] = String(dura)	
+    		}else{
+    			startSplitArray[5] = String(dura+24)
+    		}
+    		
     		if(option=="class"){
     			startSplitArray.push(classTimeArray_member_name[i])	
     			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
