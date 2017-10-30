@@ -3,17 +3,24 @@ $(document).ready(function(){
      
       var classDateData = []
       var classTimeData = []
-      var offAddOkArray = []
-      var durAddOkArray = []
+      var offDateData=[]
+      var offTimeData = []
+      var offAddOkArray = [] //OFF 등록 시작 시간 리스트
+      var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
 
       DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
+      DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
 
       $("#datepicker").datepicker({
           onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
             if( curDate != instance.lastVal ){
               $("#dateSelector p").addClass("dropdown_selected");
               $("#id_training_date").val($("#datepicker").val()).submit();
-              timeGraphSet();  //시간 테이블 채우기
+              if($('#timeGraph').css('display')=='none'){
+                $('#timeGraph').show(110,"swing");
+              }
+              timeGraphSet("class","pink");  //시간 테이블 채우기
+              timeGraphSet("off","grey")
               startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
               check_dropdown_selected();
             }
@@ -84,12 +91,18 @@ $(document).ready(function(){
         var timeArray = [];
         for(var i=0; i<offOkLen; i++){
           var offHour = offAddOkArray[i];
-          if(offHour>12){
-            var offText = '오후'
-            var offHours = offHour - 12;
-          }else{
-            var offHours = offHour
+          if(offHour<12){
             var offText = '오전'
+            var offHours = offHour;
+          }else if(offHour==24){
+            var offText = '오전'
+            var offHours = offHour-12
+          }else if(offHour==12){
+            var offText = '오후'
+            var offHours = offHour
+          }else{
+            var offHours = offHour-12
+            var offText = '오후'
           }
           if(offHour.length<2){
             timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
@@ -124,9 +137,21 @@ $(document).ready(function(){
           endSplitArray[3] = String(Number(endSplitArray[3])+12); 
         }
 
-        var memberClassDur = endSplitArray[3] - startSplitArray[3]
-      
-        startSplitArray[5] = String(endSplitArray[3] - startSplitArray[3])
+        if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
+          startSplitArray[3] = String(Number(startSplitArray[3])+12); 
+        }
+
+        if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
+          endSplitArray[3] = String(Number(endSplitArray[3])+12); 
+        }
+        
+        var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+        if(dura>0){
+          startSplitArray[5] = String(dura) 
+        }else{
+          startSplitArray[5] = String(dura+24)
+        }
+
         if(option=="class"){
           startSplitArray.push(classTimeArray_member_name[i]) 
           result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
@@ -139,46 +164,71 @@ $(document).ready(function(){
         }else if(option=="graph"){
           if(startSplitArray[2].length<2){
             result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-0"+startSplitArray[2]); //2017_10_7
-            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ memberClassDur); //6_00_2  
+            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
           }else{
             result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-"+startSplitArray[2]); //2017_10_7
-            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ memberClassDur); //6_00_2
+            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2
           }
           
         }
         }
      }
 
-     function timeGraphSet(){ //가능 시간 그래프 채우기
-        $('.tdgraph').removeClass('noktimegraph')
+
+      function timeGraphSet(option,CSStheme){ //가능 시간 그래프 채우기
+
+        //1. option인자 : "class", "off"
+        //2. CSS테마인자 : "grey", "pink"
+
+        switch(option){
+          case "class" :
+          var DateDataArray = classDateData;
+          var TimeDataArray = classTimeData;
+          $('.tdgraph').removeClass('greytimegraph').removeClass('pinktimegraph')  
+          break;
+          case "off" :
+          var DateDataArray = offDateData;
+          var TimeDataArray = offTimeData;
+          break;
+        }
+
+        switch(CSStheme){
+          case "grey" :
+          var cssClass = "greytimegraph"
+          break;
+          case "pink" :
+          var cssClass= "pinktimegraph"
+          break;
+        }
         var date = $("#datepicker").val();
-        var Arraylength = classDateData.length;
+        var Arraylength = DateDataArray.length;
         for(var i=0;i<Arraylength;i++){
-          var splitTimeArray = classTimeData[i].split("_")
+          var splitTimeArray = TimeDataArray[i].split("_")
           var targetTime = splitTimeArray[0]
           var durTime = splitTimeArray[2]
-          if(classDateData[i] == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
+          if(DateDataArray[i] == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
               for(var j=0; j<durTime; j++){
                 var time = Number(targetTime)+j
-                $('#'+(time)+'g').addClass('noktimegraph')
+                $('#'+(time)+'g').addClass(cssClass)
               }
-          }else if(classDateData[i] == date && durTime==1){ //수업시간이 1시간짜리일때 칸 채우기
-              $('#'+targetTime+'g').addClass('noktimegraph')
+          }else if(DateDataArray[i] == date && durTime==1){ //수업시간이 1시간짜리일때 칸 채우기
+              $('#'+targetTime+'g').addClass(cssClass)
           }
         }
       }
 
 
-      function startTimeArraySet(){ //offAddOkArray 채우기
+
+      function startTimeArraySet(){ //offAddOkArray 채우기 : 시작시간 리스트 채우기
         offAddOkArray = []
         for(i=5;i<=24;i++){
-          if(!$('#'+i+'g').hasClass('noktimegraph') == true){
+          if(!$('#'+i+'g').hasClass('pinktimegraph') == true && !$('#'+i+'g').hasClass('greytimegraph') == true){
             offAddOkArray.push(i);
           }
         }
       }
 
-      function durTimeSet(selectedTime){ // durAddOkArray 채우기
+      function durTimeSet(selectedTime){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
         var len = offAddOkArray.length;
         var durTimeList = $('#durations')
         var index = offAddOkArray.indexOf(Number(selectedTime));

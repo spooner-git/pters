@@ -49,18 +49,58 @@
   <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
 </div>
 
-
-<div id="classDuration" class="ptaddbox">
-  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
-  <div id="durationsSelected" class="dropdown">
-    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-    <ul id="durations" class="dropdown-menu pters_dropdown_custom">
-      <!-- 회원명 DB연동 필요-->
-      <li><a data-dur="1">1시간</a></li>
-      <li><a data-dur="2">2시간</a></li>
-    </ul>
-  </div>
+<div id="timeGraph" class="ptaddbox" style="display: none;">
+  <table class="timegraphtext">
+    <tbody>
+      <tr>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+        <td>14</td>
+        <td>15</td>
+        <td>16</td>
+        <td>17</td>
+        <td>18</td>
+        <td>19</td>
+        <td>20</td>
+        <td>21</td>
+        <td>22</td>
+        <td>23</td>
+        <td>24</td>
+      </tr>
+      <tr>
+        <td id="5g" class="tdgraph"></td>
+        <td id="6g" class="tdgraph"></td>
+        <td id="7g" class="tdgraph"></td>
+        <td id="8g" class="tdgraph"></td>
+        <td id="9g" class="tdgraph"></td>
+        <td id="10g" class="tdgraph"></td>
+        <td id="11g" class="tdgraph"></td>
+        <td id="12g" class="tdgraph"></td>
+        <td id="13g" class="tdgraph"></td>
+        <td id="14g" class="tdgraph"></td>
+        <td id="15g" class="tdgraph"></td>
+        <td id="16g" class="tdgraph"></td>
+        <td id="17g" class="tdgraph"></td>
+        <td id="18g" class="tdgraph"></td>
+        <td id="19g" class="tdgraph"></td>
+        <td id="20g" class="tdgraph"></td>
+        <td id="21g" class="tdgraph"></td>
+        <td id="22g" class="tdgraph"></td>
+        <td id="23g" class="tdgraph"></td>
+        <td id="24g" class="tdgraph"></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
+
+
 
 
 
@@ -69,28 +109,20 @@
   <div id="starttimesSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
-      <!-- 회원명 DB연동 필요-->
-      <li><a data-trainingtime="05:00:00.000000">오전 5시</a></li>
-      <li><a data-trainingtime="06:00:00.000000">오전 6시</a></li>
-      <li><a data-trainingtime="07:00:00.000000">오전 7시</a></li>
-      <li><a data-trainingtime="08:00:00.000000">오전 8시</a></li>
-      <li><a data-trainingtime="09:00:00.000000">오전 9시</a></li>
-      <li><a data-trainingtime="10:00:00.000000">오전 10시</a></li>
-      <li><a data-trainingtime="11:00:00.000000">오전 11시</a></li>
-      <li><a data-trainingtime="12:00:00.000000">오후 12시</a></li>
-      <li><a data-trainingtime="13:00:00.000000">오후 1시</a></li>
-      <li><a data-trainingtime="14:00:00.000000">오후 2시</a></li>
-      <li><a data-trainingtime="15:00:00.000000">오후 3시</a></li>
-      <li><a data-trainingtime="16:00:00.000000">오후 4시</a></li>
-      <li><a data-trainingtime="17:00:00.000000">오후 5시</a></li>
-      <li><a data-trainingtime="18:00:00.000000">오후 6시</a></li>
-      <li><a data-trainingtime="19:00:00.000000">오후 7시</a></li>
-      <li><a data-trainingtime="20:00:00.000000">오후 8시</a></li>
-      <li><a data-trainingtime="21:00:00.000000">오후 9시</a></li>
-    </ul>
+   
+   </ul>
   </div>
 </div>
-    
+
+<div id="classDuration" class="ptaddbox">
+  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+  <div id="durationsSelected" class="dropdown">
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+    <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+
+    </ul>
+  </div>
+</div>    
 
 
 {% endblock %}

@@ -57,19 +57,29 @@ body{
     position: relative;
 }
 
-
 .sidebar_icon{
     position:absolute;
     left: 33%;
     padding: 15px 30px 15px 0px;
     width: 50px;
-   
 }
 
 .sidebar_div{
     height: 50px;
     border-top: 0.5px solid #cccccc;
     background-color: #ffffff;
+}
+
+.sidebar_text:focus{
+    color: #fe4e65;
+    background-color: #a2a2a2;
+    -webkit-background-color: #a2a2a2;
+}
+
+.sidebar_text:hover{
+    color: #fe4e65;
+    background-color: #a2a2a2;
+    -webkit-background-color: #a2a2a2;
 }
 
 .sidebar_div_last{

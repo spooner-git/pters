@@ -98,12 +98,19 @@ body{
 	border-top: 1px solid #a2a2a2;
 }
 
+.popup_inner:hover{
+	background: #a2a2a2;
+	-webkit-background:#a2a2a2;
+}
+
+
 .popup_inner span{
 	position: absolute;
 	left: 41.5%;
 	top: 30%;
 	font-size: 14px;
 	font-weight: bold;
+	cursor: pointer;
 }
 
 .popup_inner_change{
@@ -317,6 +324,12 @@ td{
 	z-index: 100;
 }
 
+.classTime:active{
+	background: #d6d5d5;
+	-webkit-background: #d6d5d5;
+}
+
+
 .offTime{
 	position: absolute;
 	top: -1px;
@@ -326,6 +339,13 @@ td{
 	border: 0.5px solid #cccccc;
 	z-index: 99;
 }
+
+.offTime:hover{
+	background: #d6d5d5;
+	-webkit-background: #d6d5d5;
+}
+
+
 
 /*
 .classTimeIndicator{
@@ -348,6 +368,7 @@ td{
 	font-weight: bold;
 	letter-spacing: -0.3px;
 	color: #282828;
+	cursor: pointer;
 }
 
 .memberTime1{
@@ -358,6 +379,7 @@ td{
 	font-size: 12px;
 	letter-spacing: -0.3px;
 	color: #fe4e65;
+	cursor: pointer;
 }
 
 .offTimeText1{
@@ -368,6 +390,7 @@ td{
 	font-size: 12px;
 	letter-spacing: -0.3px;
 	color: #3b3d3d;
+	cursor: pointer;
 }
 
 .memberName2{
@@ -379,6 +402,7 @@ td{
 	font-weight: bold;
 	letter-spacing: -0.3px;
 	color: #282828;
+	cursor: pointer;
 }
 
 .memberTime2{
@@ -389,6 +413,7 @@ td{
 	font-size: 12px;
 	letter-spacing: -0.3px;
 	color: #fe4e65;
+	cursor: pointer;
 }
 
 .offTimeText2{
@@ -399,6 +424,7 @@ td{
 	font-size: 12px;
 	letter-spacing: -0.3px;
 	color: #3b3d3d;
+	cursor: pointer;
 }
 
 .memberName3{
@@ -410,6 +436,7 @@ td{
 	font-weight: bold;
 	letter-spacing: -0.3px;
 	color: #282828;
+	cursor: pointer;
 }
 
 .memberTime3{
@@ -420,6 +447,7 @@ td{
 	font-size: 12px;
 	letter-spacing: -0.3px;
 	color: #fe4e65;
+	cursor: pointer;
 }
 
 .offTimeText3{
@@ -430,6 +458,7 @@ td{
 	font-size: 12px;
 	letter-spacing: -0.3px;
 	color: #3b3d3d;
+	cursor: pointer;
 }
 
 
@@ -532,6 +561,11 @@ td{
 		height: 50px;
 		border-top: 1px solid #a2a2a2;
 		width: 330px;
+	}
+
+	.popup_inner:hover{
+	background: #a2a2a2;
+	-webkit-background:#a2a2a2;
 	}
 }
 
