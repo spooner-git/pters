@@ -353,8 +353,10 @@ class AlarmView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AlarmView, self).get_context_data(**kwargs)
 
-        log_data = LogTb.objects.filter(external_id=self.request.user.id).order_by('-reg_dt')
+        log_data = LogTb.objects.filter(external_id=self.request.user.id, use=1).order_by('-reg_dt')
         for log_data_detail in log_data:
+            log_data_detail.id = log_data_detail.log_id
+            log_data_detail.reg_date = log_data_detail.reg_dt
             temp_data = log_data_detail.contents.split('@')
             if len(temp_data) == 2:
                 log_data_detail.log_contents = temp_data[0]
@@ -374,6 +376,7 @@ class LogInTrainerView(TemplateView):
         context = super(LogInTrainerView, self).get_context_data(**kwargs)
 
         return context
+
 
 class TrainerSettingView(TemplateView):
     template_name = 'trainer_setting.html'
@@ -959,3 +962,34 @@ def daily_off_delete(request):
 #        context['month_lecture_data'] = month_data
 #
 #        return context
+
+
+# log 삭제
+@csrf_exempt
+def alarm_delete_logic(request):
+    log_size = request.POST.get('log_id_size')
+    delete_log_id = request.POST.getlist('log_id_array[]')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    if log_size == '0':
+        error = '로그가 없습니다.'
+
+    if error is None:
+
+        for i in range(0, int(log_size)):
+            try:
+                log_data = LogTb.objects.get(log_id=delete_log_id[i])
+            except ObjectDoesNotExist:
+                error = 'class가 존재하지 않습니다'
+                # logger.error(error)
+            if error is None:
+                log_data.use = 0
+                log_data.mod_dt = timezone.now()
+                log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.info(request, error)
+        next_page = 'trainer:alarm'
+        return redirect(next_page)
