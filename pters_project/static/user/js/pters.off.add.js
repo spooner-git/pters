@@ -16,6 +16,9 @@ $(document).ready(function(){
             if( curDate != instance.lastVal ){
               $("#dateSelector p").addClass("dropdown_selected");
               $("#id_training_date").val($("#datepicker").val()).submit();
+              if($('#timeGraph').css('display')=='none'){
+                $('#timeGraph').show(110,"swing");
+              }
               timeGraphSet("class","pink");  //시간 테이블 채우기
               timeGraphSet("off","grey")
               startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기

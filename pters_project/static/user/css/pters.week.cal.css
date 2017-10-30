@@ -88,6 +88,11 @@ body{
 	border-top: 1px solid #a2a2a2;
 }
 
+.popup_inner:hover{
+	background: #a2a2a2;
+	-webkit-background:#a2a2a2;
+}
+
 .popup_inner span{
 	position: absolute;
 	left: 41.5%;
@@ -313,6 +318,11 @@ tr{
 	z-index: 100;
 }
 
+.classTime:active{
+	background: #a2a2a2;
+	-webkit-background: #a2a2a2;
+}
+
 .offTime{
 	position: absolute;
 	top: 0px;
@@ -323,6 +333,12 @@ tr{
 	border: 0.5px solid #606363;
 	z-index: 100;
 }
+
+.offTime:active{
+	background: #d6d5d5;
+	-webkit-background: #d6d5d5;
+}
+
 
 .classTimeIndicator{
 	position: absolute;
@@ -338,10 +354,11 @@ tr{
 	position: absolute;
 	left: 3%;
 	margin-top: 0px;
-	font-size: 13.5px;
+	font-size: 80%;
 	font-weight: bold;
 	letter-spacing: -0.3px;
 	color: #282828;
+	cursor: pointer;
 }
 
 .memberTime{
@@ -351,6 +368,7 @@ tr{
 	font-size: 11.5px;
 	letter-spacing: -0.3px;
 	color: #3b3d3d;
+	cursor: pointer;
 }
 
 
@@ -489,6 +507,11 @@ tr{
 		height: 50px;
 		border-top: 1px solid #a2a2a2;
 		width: 330px;
+	}
+
+	.popup_inner:hover{
+	background: #a2a2a2;
+	-webkit-background:#a2a2a2;
 	}
 }
 
