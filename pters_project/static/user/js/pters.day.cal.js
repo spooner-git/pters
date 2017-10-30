@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 	//스케쥴 클릭시 팝업 Start
 		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
-			$("#cal_popup").css({'display':'block','z-index':'103'});
+			$("#cal_popup").show().css({'z-index':'103'});
 			$('#shade2').css({'display':'block'});
 			console.log($(this).attr('class-time')); //현재 클릭한 요소의 class-time 요소 값 보기
 			                                         //형식예: 2017_10_7_6_00_2_원빈
@@ -20,7 +20,7 @@ $(document).ready(function(){
 
 	//Off 일정 클릭시 팝업 Start
 		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
-			$("#cal_popup").css({'display':'block','z-index':'103'});
+			$("#cal_popup").show().css({'z-index':'103'});
 			$('#shade2').css({'display':'block'});
 			console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
 			                                         //형식예: 2017_10_7_6_00_2_원빈

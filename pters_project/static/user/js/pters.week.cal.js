@@ -419,6 +419,9 @@ $(document).ready(function(){
 			var classMinute = datasplit[4]
 			var classDura = datasplit[5];
 			var memberName = datasplit[6];
+			if(memberName.length>3){
+				var memberName = memberName.substr(0,3) + ".."
+			}
 			var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
 			var classStart = classStartArr.join("_")
 			//var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];

@@ -171,3 +171,13 @@ input{
 .pointerList{
 	cursor: pointer;
 }
+
+.dropup{
+	height: 40px;
+	margin-top: 10px;
+}
+
+.dropup button{
+	font-size: 15px;
+	height: 100%;
+}
