@@ -35,14 +35,18 @@ body{
 }
 
 #beforeInfo{
+	width: 100%;
 	text-align: center;
 	color: #666666;
+	display: inline-block;
 }
 
 #afterInfo{
+	width: 100%;
 	text-align: center;
 	color: #282828;
 	font-weight: 500;
+	display: inline-block;
 }
 
 .alarmBox{

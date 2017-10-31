@@ -19,7 +19,7 @@
 
 <div class="alarmBox">  <!-- 알림 박스 -->
   <div id="modifyInfo">
-      <img id="bell" src="/static/user/res/alarm/icon-alarm-new.png"> <span>%DB.Name%</span>님이 일정을 <span class="status">변경</span>했습니다.<span class="timePast">3분전</span>
+      <img id="bell" src="/static/user/res/alarm/icon-alarm-new.png"> <span>%DB.Name%</span>님이 일정을 <span class="status">변경</span>했습니다.<span class="timePast">2017년 10월 30일 10:50 오후</span>
   </div>
   <div id="beforeInfo">2017년 11월 30일 월요일 오전 07:00 - 오전 08:30</div>
   <div style="text-align: center"><img id="arrow" src="/static/user/res/alarm/icon-down-black.png"></div>
@@ -30,15 +30,48 @@
 
 <div class="alarmBox" >  <!-- 알림 박스 -->
   <div id="modifyInfo">
-      {% autoescape off %}{{ log_data_detail.log_contents }}{% endautoescape %}<span class="timePast">{{ log_data_detail.reg_date }}</span>
+      {% autoescape off %}{{ log_data_detail.log_contents }}{% endautoescape %}
+      <span class="timePast">
+        <script>
+          var date = new Date();
+          var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
+          var currentDate = date.getDate(); //오늘 날짜
+          var currentDay = date.getDay(); // 0,1,2,3,4,5,6,7
+          var currentHour = date.getHours();
+          var currentMin = date.getMinutes();
+
+          var date = '{{ log_data_detail.reg_date }}'
+          var dateInfo = date.replace(/년 |월 |일 |:| /gi,"_")
+          var dateInfoArry = dateInfo.split('_')
+
+          var hourInfo = currentHour - dateInfoArry[3];  //12시 - 11시 1시간
+          var minInfo = currentMin - dateInfoArry[4]
+          var dayInfo = currentDate - dateInfoArry[2]    // 30일 - 20일//  2일 28일
+          var monthInfo = currentMonth - dateInfoArry[1] //11월 - 10월 1
+          if(dateInfoArry[5]=='오후' && dateInfoArry[3] !=12){
+            var hourInfo = currentHour - dateInfoArry[3] + 12
+          }
+
+          if(hourInfo<=1 && minInfo<=60 && dayInfo>=0){
+            var timeInfo = minInfo + (hourInfo * 60)+'분 전'
+          }else if(hourInfo>1){
+            var timeInfo = hourInfo+'시간 전'
+          }else if(dayInfo>0 && monthInfo==0){
+            var timeInfo = dayInfo +'일 전'
+          }else if(dayInfo<0 && monthInfo==1){
+            var timeInfo = dayInfo+31+'일 전'
+          }else if(monthInfo>0){
+            var timeInfo = monthInfo+'달 전'
+          }
+          document.write(timeInfo)
+        </script>
+      </span>
   </div>
   <div id="afterInfo">{{ log_data_detail.log_date }}</div>
 </div>
     {% endfor %}
 
 {% endblock %}
-
-
 
 
 {% block local_js_footer %}
@@ -48,5 +81,4 @@
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src={% static "user/js/pters.alarm.js" %}></script>
-        
 {% endblock %}

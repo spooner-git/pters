@@ -90,14 +90,14 @@
     <script type="text/javascript" src={% static "user/js/pters.base.set.js" %}></script>
     <script>
              function openNav(){
-               $("#outer_Sidenav").animate({"width":"100%"},1);
-               $("#inner_Sidenav").animate({'width':'250px'},50);
+               $("#outer_Sidenav").css({"width":"100%"},1);
+               $("#inner_Sidenav").css({'width':'250px'},50);
                //$("#inner_Sidenav").css({'width':'80%'});
                //$("#inner_Sidenav").addClass('sidenav-size');
                $(".sidebar_text").css({'font-size':"15px",'opacity':"1"})
                $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
                $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
-               $('#shade').css({'background-color':'black','z-index':'50'});
+               $('#shade').show().css({'z-index':'50'});
              }
 
              function closeNav(){
@@ -106,7 +106,7 @@
               $("#inner_Sidenav").css({'width':'0'});
               //$("#inner_Sidenav").removeClass('sidenav-size');
               $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"})
-              $('#shade').css({'background-color':'transparent','z-index':'-1'});
+              $('#shade').hide().css({'z-index':'-1'});
              }; 
     </script>
 
