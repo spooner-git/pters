@@ -16,7 +16,7 @@ $(document).ready(function(){
       })
 
       $('div.deleteBtnBin img').click(function(){
-        $(this).parents('.summaryInnerBox').detach();
+        $(this).parents('.summaryInnerBox').hide('fast','swing',function(){$(this).parents('.summaryInnerBox').detach()});
       })
 
       $('.summaryInnerBoxText').click(function(){ //매주 월요일 오전 11시 누르면 휴지통 닫힘

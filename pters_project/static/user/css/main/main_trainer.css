@@ -46,6 +46,7 @@ body{
 	text-align: center;
 	color: black;
 	font-size: 14px;
+	cursor: pointer;
 }
 
 .lower_box_child div{
@@ -83,11 +84,19 @@ body{
 	letter-spacing: 3px;
 }
 
+.center_box_day p{
+	cursor: pointer;
+}
+
 .center_box_monthyear{
 	position: relative;
 	top: 33.33%;
 	font-size: 14.5px;
 	color: #fffefe;
+}
+
+.center_box_monthyear{
+	cursor: pointer;
 }
 
 .center_box_plan{
@@ -98,11 +107,19 @@ body{
 	color: #fffefe;
 }
 
+.center_box_plan{
+	cursor: pointer;
+}
+
 .center_box_num{
 	width: 100%;
 	font-size: 50px;
 	color: #fffefe;
 	font-weight: 600;
+}
+
+.center_box_num{
+	cursor: pointer;
 }
 
 .center_box_gun{
@@ -111,6 +128,10 @@ body{
 	width: 100%;
 	font-size: 14px;
 	color: #fffefe;
+}
+
+.center_box_gun{
+	cursor: pointer;
 }
 
 a:focus, a:hover{
