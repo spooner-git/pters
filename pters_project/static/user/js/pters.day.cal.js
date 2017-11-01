@@ -166,10 +166,12 @@ $(document).ready(function(){
 	};
 
 	//Slide 10번째를 [오늘]로 기준으로 각페이지에 날짜에 맞춰 테이블 생성하기
+
 	var element = 10-currentDate
+	console.log(currentMonth)
 		if(element>0){
 			for(i=1;i<=element;i++){
-				calTable_Set(i,currentYear,currentPageMonth-1,lastDay[currentPageMonth-1]-element+i-1)	
+				calTable_Set(i,currentYear,currentPageMonth-1,lastDay[currentMonth-1]-element+i)
 			}
 			for(i=element+1;i<=23;i++){
 				calTable_Set(i,currentYear,currentPageMonth,currentDate-10+i)	
