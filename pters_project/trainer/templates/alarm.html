@@ -34,12 +34,11 @@
       <span class="timePast">
         <script>
           var date = new Date();
-          var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
+          var currentMonth = date.getMonth()+1; //달은 0부터 출력해줌 0~11
           var currentDate = date.getDate(); //오늘 날짜
           var currentDay = date.getDay(); // 0,1,2,3,4,5,6,7
           var currentHour = date.getHours();
           var currentMin = date.getMinutes();
-
           var date = '{{ log_data_detail.reg_date }}'
           var dateInfo = date.replace(/년 |월 |일 |:| /gi,"_")
           var dateInfoArry = dateInfo.split('_')
@@ -51,10 +50,10 @@
           if(dateInfoArry[5]=='오후' && dateInfoArry[3] !=12){
             var hourInfo = currentHour - dateInfoArry[3] + 12
           }
-
+          console.log(dayInfo)
           if(hourInfo<=1 && minInfo<=60 && dayInfo>=0){
             var timeInfo = minInfo + (hourInfo * 60)+'분 전'
-          }else if(hourInfo>1){
+          }else if(hourInfo>1 && dayInfo<=0 ){
             var timeInfo = hourInfo+'시간 전'
           }else if(dayInfo>0 && monthInfo==0){
             var timeInfo = dayInfo +'일 전'
@@ -63,6 +62,7 @@
           }else if(monthInfo>0){
             var timeInfo = monthInfo+'달 전'
           }
+          
           document.write(timeInfo)
         </script>
       </span>
