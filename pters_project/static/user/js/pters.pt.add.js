@@ -15,6 +15,7 @@ $(document).ready(function(){
       console.log(offTimeData)
 
       $("#datepicker").datepicker({
+        minDate : 0,
           onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
             if( curDate != instance.lastVal ){
               $("#dateSelector p").addClass("dropdown_selected");

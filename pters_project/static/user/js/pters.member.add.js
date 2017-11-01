@@ -2,12 +2,14 @@ $(document).ready(function(){
 	  var select_all_check = false;
 
       $( "#datepicker" ).datepicker({
+        minDate : 0,
       	onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
       		$("#dateSelector p").addClass("dropdown_selected");
       		check_dropdown_selected();
       	}
       });
       $( "#datepicker2" ).datepicker({
+        minDate : 0,
       	onSelect:function(dateText,inst){ //달력날짜 선택시 하단에 핑크선
       		$("#dateSelector2 p").addClass("dropdown_selected");
       		check_dropdown_selected();

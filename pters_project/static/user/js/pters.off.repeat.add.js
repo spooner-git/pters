@@ -1,6 +1,10 @@
 $(document).ready(function(){
-      $( "#datepicker" ).datepicker();
-      $( "#datepicker2" ).datepicker();
+      $( "#datepicker" ).datepicker({
+        minDate : 0,
+      });
+      $( "#datepicker2" ).datepicker({
+        minDate : 0,
+      });
       var select_all_check = false;
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
