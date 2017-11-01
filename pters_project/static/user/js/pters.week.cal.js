@@ -114,8 +114,9 @@ $(document).ready(function(){
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-	var currentDate = date.getDate(); //오늘 날짜
-	var currentDay = date.getDay(); // 0,1,2,3,4,5,6,7
+	
+    var currentDate = date.getDate(); //오늘 날짜
+	var currentDay = date.getDay() // 0,1,2,3,4,5,6,7
 	var currentHour = date.getHours();
 	var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
 	if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
@@ -240,9 +241,12 @@ $(document).ready(function(){
 					if(currentDates+z>lastDay[currentMonth]){
 						td1[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';	
-					}else if(currentDates+z<=lastDay[currentMonth]){
+					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
+					}else if(currentDates+z<=0){
+						td1[z]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td2[z]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -256,9 +260,13 @@ $(document).ready(function(){
 					if(currentDates+z>lastDay[currentMonth]){
 						td1[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';	
-					}else if(currentDates+z<=lastDay[currentMonth]){
+					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
+					}
+					else if(currentDates+z<=0){
+						td1[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td2[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -272,9 +280,12 @@ $(document).ready(function(){
 					if(currentDates+z>lastDay[currentMonth]){
 						td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';	
-					}else if(currentDates+z<=lastDay[currentMonth]){
+					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
+					}else if(currentDates+z<=0){
+						td1[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td2[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -288,9 +299,12 @@ $(document).ready(function(){
 					if(currentDates+z>lastDay[currentMonth]){
 						td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';	
-					}else if(currentDates+z<=lastDay[currentMonth]){
+					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
+					}else if(currentDates+z<=0){
+						td1[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td2[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -304,9 +318,12 @@ $(document).ready(function(){
 					if(currentDates+z>lastDay[currentMonth]){
 						td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';	
-					}else if(currentDates+z<=lastDay[currentMonth]){
+					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
+					}else if(currentDates+z<=0){
+						td1[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td2[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -320,9 +337,12 @@ $(document).ready(function(){
 					if(currentDates+z>lastDay[currentMonth]){
 						td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';	
-					}else if(currentDates+z<=lastDay[currentMonth]){
+					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
+					}else if(currentDates+z<=0){
+						td1[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td2[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -336,9 +356,12 @@ $(document).ready(function(){
 					if(currentDates+z>lastDay[currentMonth]){
 						td1[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';	
-					}else if(currentDates+z<=lastDay[currentMonth]){
+					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
 						td2[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
+					}else if(currentDates+z<=0){
+						td1[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td2[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -372,6 +395,7 @@ $(document).ready(function(){
 		var WeekArry = [Sunday_date,Monday_date,Tuesday_date,Wednesday_date,Thursday_date,Friday_date,Saturday_date]
 		var lastDayThisMonth = lastDay[currentMonth];
 		var swiperPage = $('.swiper-slide:nth-child('+index+') div:first-child') 
+		/*
 		for(var i=0; i<7; i++){
 			var dateID = swiperPage.find('td:nth-child(2)').attr('id').split('_');
 			var firstDate = Number(dateID[2])
@@ -381,6 +405,13 @@ $(document).ready(function(){
 				WeekArry[i].html(firstDate+i-lastDayThisMonth)
 			}
 		}
+		*/
+		for(var i=2; i<=8; i++){
+			var dateID = swiperPage.find('td:nth-child('+i+')').attr('id').split('_');
+			WeekArry[i-2].html(dateID[2])
+		}
+
+
 		$('#yearText').text(currentYear+'년');
 		$('#monthText').text(dateID[1]+'월');
 		toDay();
