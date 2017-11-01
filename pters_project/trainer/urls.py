@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^add_pt/$', views.PtAddView.as_view(), name='add_pt'),
     url(r'^add_pt_logic/$', views.add_pt_logic, name='add_pt_logic'),
     url(r'^add_off/$', views.OffAddView.as_view(), name='add_off'),
+    url(r'^add_off_logic/$', views.add_off_logic, name='add_off_logic'),
     url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_repeat_off'),
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     url(r'^member_add/$', views.AddMemberView.as_view(), name='member_add'),
@@ -34,10 +35,13 @@ urlpatterns = [
     url(r'^cal_day/$', views.CalDayView.as_view(), name='cal_day'),
     url(r'^cal_week/$', views.CalWeekView.as_view(), name='cal_week'),
     url(r'^daily_pt_delete/$', views.daily_pt_delete, name='daily_pt_delete'),
-    url(r'^off_schedule_add_logic/$', views.off_schedule_add_logic, name='off_schedule_add_logic'),
     url(r'^daily_off_delete/$', views.daily_off_delete, name='daily_off_delete'),
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
+    url(r'^modify_pt/$', views.PtModifyView.as_view(), name='modify_pt'),
+    url(r'^modify_pt_logic/$', views.modify_pt_logic, name='modify_pt_logic'),
+    url(r'^modify_off/$', views.OffModifyView.as_view(), name='modify_off'),
+    url(r'^modify_off_logic/$', views.modify_off_logic, name='modify_off_logic'),
 
 ]
