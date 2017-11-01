@@ -34,19 +34,19 @@
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택    <span class="caret"></span></button>
     <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
       <!-- 회원명 DB연동 필요-->
-      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">남은 횟수 많은 순</a></li>
-      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">남은 횟수 적은 순</a></li>
-      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">시작 일자 과거 순</a></li>
-      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">시작 일자 최근 순</a></li>
-      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">수정 일자 최근 순</a></li>
-      <li role="presentation"><a href="#" role="menuitem" tabindex="-1">회원명 가나다 순</a></li>
+      <li role="presentation" id="countH"><a href="#" role="menuitem" tabindex="-1">남은 횟수 많은 순</a></li>
+      <li role="presentation" id="countL"><a href="#" role="menuitem" tabindex="-1">남은 횟수 적은 순</a></li>
+      <li role="presentation" id="startP"><a href="#" role="menuitem" tabindex="-1">시작 일자 과거 순</a></li>
+      <li role="presentation" id="startR"><a href="#" role="menuitem" tabindex="-1">시작 일자 최근 순</a></li>
+      <li role="presentation" id="recent"><a href="#" role="menuitem" tabindex="-1">수정 일자 최근 순</a></li>
+      <li role="presentation" id="name"><a href="#" role="menuitem" tabindex="-1">회원명 가나다 순</a></li>
     </ul>
   </div>
 </div>
 
 
 <div id="currentMemberList" class="container">
-  <table class="table table-bordered">
+  <table id="currentMember" class="table table-bordered">
     <thead>
       <tr>
         <th>회원명</th>
@@ -55,6 +55,7 @@
         <th>시작일자</th>
       </tr>
     </thead>
+    <!--
     <tbody>
         {% for lecture in trainer_member %}
             {% if lecture.lecture_count > 0 %}
@@ -67,12 +68,13 @@
             {% endif %}
         {% endfor %}
     </tbody>
+  -->
   </table>
 </div>
 
 
 <div id="finishedMemberList" class="container">
-  <table class="table table-bordered">
+  <table id="finishedMember" class="table table-bordered">
     <thead>
       <tr>
         <th>회원명</th>
@@ -109,6 +111,16 @@
          <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
          <script type="text/javascript" src={% static "user/js/pters.manage.member.js" %}></script>
+         <script>
+           
+          var nameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
+          var phoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
+          var countArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.lecture_count }}',{% endif %}{% endfor %}]
+          var startArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
+
+
+
+         </script>
 
         
 
