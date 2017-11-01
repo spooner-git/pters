@@ -14,8 +14,10 @@
         <!-- Bootstrap core CSS -->
         <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
         <link rel="stylesheet" href={% static "user/css/pters.base.set.css" %}>
+        <link rel="stylesheet" href={% static "user/css/mobile/jquery.mobile.custom.structure.min.css" %}>
+        <link rel="stylesheet" href={% static "user/css/mobile/jquery.mobile.custom.theme.min.css" %}>
         <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
-        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        
 
         {% block local_css %}
         {% endblock %}
@@ -83,6 +85,7 @@
     {% endblock %}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src={% static "user/js/mobile/jquery.mobile.custom.min.js" %}></script>
     <script src={% static "common/js/bootstrap.min.js" %}></script>
     <script type="text/javascript" src={% static "common/js/jquery.swipe.js" %}></script>
     <script type="text/javascript" src={% static "common/js/jquery.touch.js" %}></script>
