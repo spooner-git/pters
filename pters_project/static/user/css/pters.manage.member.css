@@ -87,19 +87,19 @@ th{
 }
 
 tr td:nth-child(1){
-	width: 21.8%;
-}
-
-tr td:nth-child(2){
-	width: 30.56%;
-}
-
-tr td:nth-child(3){
 	width: 20%;
 }
 
+tr td:nth-child(2){
+	width: 35%;
+}
+
+tr td:nth-child(3){
+	width: 15%;
+}
+
 tr td:nth-child(4){
-	width: 22.2%;
+	width: 30%;
 }
 
 
