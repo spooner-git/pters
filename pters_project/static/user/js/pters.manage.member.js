@@ -121,9 +121,9 @@ $(document).ready(function(){
       //날짜형식을 yyyymmdd 로 맞추기
         var countOri = finishcountArray[i]
         
-        finishcountList[i]=countFix+'_'+nameArray[i]+'_'+phoneArray[i]+'_'+date
-        finishnameList[i]=nameArray[i]+'_'+phoneArray[i]+'_'+countOri+'_'+date
-        finishdateList[i]=date+'_'+nameArray[i]+'_'+phoneArray[i]+'_'+countOri
+        finishcountList[i]=countFix+'_'+finishnameArray[i]+'_'+finishphoneArray[i]+'_'+date
+        finishnameList[i]=finishnameArray[i]+'_'+finishphoneArray[i]+'_'+countOri+'_'+date
+        finishdateList[i]=date+'_'+finishnameArray[i]+'_'+finishphoneArray[i]+'_'+countOri
       }
 //#####################페이지 들어오면 초기 DB 프로세싱 시작//#####################
 
@@ -172,7 +172,7 @@ $(document).ready(function(){
                   var count = count.substr(1,3)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+phone+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -197,7 +197,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+phone+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -222,7 +222,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+phone+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -266,7 +266,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+phone+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -291,7 +291,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+phone+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -316,7 +316,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+phone+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")

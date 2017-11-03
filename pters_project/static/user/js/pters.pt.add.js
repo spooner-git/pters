@@ -11,9 +11,6 @@ $(document).ready(function(){
       DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
       DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
 
-      console.log(offDateData)
-      console.log(offTimeData)
-
       $("#datepicker").datepicker({
         minDate : 0,
           onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
@@ -50,6 +47,7 @@ $(document).ready(function(){
           $("#starttimesSelected .btn:first-child").val($(this).text());
           $("#id_training_time").val($(this).attr('data-trainingtime'));
           var arry = $(this).attr('data-trainingtime').split(':')
+          console.log(arry)
           durTimeSet(arry[0]);
           check_dropdown_selected();
       })
@@ -139,7 +137,6 @@ $(document).ready(function(){
         }
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
-        console.log(offAddOkArray)
       }
 
       function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
@@ -261,11 +258,8 @@ $(document).ready(function(){
         var durTimeList = $('#durations')
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
-        console.log(index)
-        console.log(substr)
         if(substr>1){
           durTimeList.html('<li><a data-dur="1" class="pointerList">1시간</a></li>')
-          console.log(index)
         }else{
           durTimeList.html('')
           for(var j=index; j<=len; j++){
@@ -280,7 +274,11 @@ $(document).ready(function(){
               break;
             }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
               durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
-              break;
+              //break;
+            }else if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
+            }else if(offAddOkArray[j-1]==null && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
             }
           }
         }
