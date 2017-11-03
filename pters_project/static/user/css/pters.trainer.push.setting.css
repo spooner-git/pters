@@ -11,6 +11,9 @@ body{
 	margin-left: 5px;
 }
 
+li a{
+	cursor: pointer;
+}
 
 .dropdown ul{
 	width: 100%;
