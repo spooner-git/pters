@@ -12,7 +12,7 @@ $(document).ready(function(){
  	var gun = "건"
 
  	//var totalMember = 38;
- 	var requestNum = 3;
+ 	//var requestNum = 3;
  	//var finishMember = 8;
 
 	$('.center_box_day p').text(currentDate+','+currentDay[currentDayinfo]); //일, 요일 표시
@@ -22,7 +22,7 @@ $(document).ready(function(){
 	//$('.center_box_gun a').text(num); // 몇 건 있는지
 
 	//$('#total_member').text(totalMember); //총 회원수
-	$('#request_num').text(requestNum); //일정 변경 수
+	///$('#request_num').text(requestNum); //일정 변경 수
 	//$('#finish_member').text(finishMember); //종료 임박 회원수
 });
 

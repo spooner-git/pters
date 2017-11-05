@@ -1,5 +1,7 @@
 # Create your views here.
 import datetime
+import operator
+
 from django.contrib import messages
 from django.contrib.auth import authenticate,logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -41,7 +43,8 @@ class IndexView(LoginRequiredMixin, TemplateView):
         today_time = datetime.datetime.now()
         today_start_time = today_time.strftime('%Y-%m-%d 00:00:00.000000')
         today_end_time = today_time.strftime('%Y-%m-%d 23:59:59.999999')
-        sum_val = 0;
+        sum_val = 0
+        sum_mod_val = 0
         if error is None:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
 
@@ -50,8 +53,13 @@ class IndexView(LoginRequiredMixin, TemplateView):
                                                                    start_dt__gte=today_start_time,
                                                                    start_dt__lte=today_end_time,
                                                                    en_dis_type='1',use='1').count()
+                sum_mod_val = sum_mod_val+LogTb.objects.filter(external_id=lecture.member_id,
+                                                               reg_dt__gte=today_start_time,
+                                                               reg_dt__lte=today_end_time,
+                                                               log_type='LS03').count()
 
         context['today_schedule_val'] = sum_val
+        context['today_schedule_mod_val'] = sum_mod_val
 
         return context
 
@@ -377,7 +385,21 @@ class AlarmView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AlarmView, self).get_context_data(**kwargs)
         log_data = LogTb.objects.filter(external_id=self.request.user.id, use=1).order_by('-reg_dt')
-        log_type = []
+        trainer_class = None
+        error = None
+        try:
+            trainer_class = ClassTb.objects.get(member=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+
+        if error is None:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+
+            for lecture in month_lecture_data:
+                log_data |= LogTb.objects.filter(external_id=lecture.member_id, use=1).order_by('-reg_dt')
+
+        log_data.order_by('-reg_dt')
+
         for log_data_detail in log_data:
             log_data_detail.id = log_data_detail.log_id
             log_data_detail.reg_date = log_data_detail.reg_dt
@@ -506,7 +528,7 @@ def member_registration(request, next='trainer:member_manage'):
         # user = authenticate(username=email, password=password)
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 '\
                        + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB', contents=log_contents, reg_dt=timezone.now(),use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),use=1)
         log_data.save()
         return redirect(next)
     else:
@@ -630,7 +652,7 @@ def add_pt_logic(request, next='trainer:cal_day'):
                        + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
                        + log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS', contents=log_contents, reg_dt=timezone.now(),
+        log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
         return redirect(next)
@@ -770,7 +792,7 @@ def daily_pt_delete(request):
                        + ' 회원님의</span> 일정을 <span class="status">삭제</span>했습니다.@'\
                        + log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS', contents=log_contents, reg_dt=timezone.now(),
+        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
         return redirect(next_page)
@@ -886,7 +908,7 @@ def add_off_logic(request, next='trainer:cal_day'):
                        + ' OFF </span> 일정을 <span class="status">등록</span>했습니다.@'\
                        + log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='SA', contents=log_contents, reg_dt=timezone.now(),
+        log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
         return redirect(next)
@@ -956,7 +978,7 @@ def daily_off_delete(request):
                        + ' OFF </span> 일정을 <span class="status">삭제</span>했습니다.@'\
                        + log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='SA', contents=log_contents, reg_dt=timezone.now(),
+        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
         return redirect(next_page)
@@ -1304,7 +1326,7 @@ def modify_pt_logic(request, next='trainer:cal_day'):
                        + ' - '+modify_log_end_date\
                        + '@'+log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS', contents=log_contents, reg_dt=timezone.now(),
+        log_data = LogTb(external_id=request.user.id, log_type='LS03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
         return redirect(next)
@@ -1449,7 +1471,7 @@ def modify_off_logic(request, next='trainer:cal_day'):
                        + ' - '+modify_log_end_date\
                        + '@'+log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS', contents=log_contents, reg_dt=timezone.now(),
+        log_data = LogTb(external_id=request.user.id, log_type='LS03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
         return redirect(next)
