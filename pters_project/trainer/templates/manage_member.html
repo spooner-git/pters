@@ -119,7 +119,7 @@
           var phoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
           var countArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.lecture_count }}',{% endif %}{% endfor %}]
           var startArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
-
+          var modifyDateArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.trainer_member.mod_dt }}',{% endif %}{% endfor %}]
 
           var finishnameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
           var finishphoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
