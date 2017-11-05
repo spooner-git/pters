@@ -53,7 +53,7 @@
           console.log(dayInfo)
           if(hourInfo<=1 && minInfo<=60 && dayInfo>=0){
             var timeInfo = minInfo + (hourInfo * 60)+'분 전'
-          }else if(hourInfo>1 && dayInfo<=0 ){
+          }else if(hourInfo>1 && dayInfo<=0 && monthInfo==0){
             var timeInfo = hourInfo+'시간 전'
           }else if(dayInfo>0 && monthInfo==0){
             var timeInfo = dayInfo +'일 전'

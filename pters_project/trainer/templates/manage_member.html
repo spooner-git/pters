@@ -83,6 +83,7 @@
         <th>시작일자</th>
       </tr>
     </thead>
+    <!--
     <tbody>
         {% for lecture in trainer_member %}
             {% if lecture.lecture_count == 0 %}
@@ -95,6 +96,7 @@
             {% endif %}
         {% endfor %}
     </tbody>
+  -->
   </table>
 </div> 
 
@@ -119,7 +121,10 @@
           var startArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
 
 
-
+          var finishnameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
+          var finishphoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
+          var finishcountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.lecture_count }}',{% endif %}{% endfor %}]
+          var finishstartArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
          </script>
 
         
