@@ -67,7 +67,11 @@
         </script>
       </span>
   </div>
-  <div id="afterInfo">{{ log_data_detail.log_date }}</div>
+    {% if log_data_detail.log_type == 2 %}
+        <div id="beforeInfo">{{ log_data_detail.log_before_date }}</div>
+          <div style="text-align: center"><img id="arrow" src="/static/user/res/alarm/icon-down-black.png"></div>
+    {% endif %}
+    <div id="afterInfo">{{ log_data_detail.log_after_date }}</div>
 </div>
     {% endfor %}
 

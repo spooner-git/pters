@@ -13,7 +13,9 @@ $(document).ready(function(){
 			var infoText = info[6]+' 회원님 '+info[3]+'시 일정'
 			$('#popup_info').text(infoText)
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+			$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
+			$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 			schedule_on_off = 1;
 
 		})
@@ -29,6 +31,7 @@ $(document).ready(function(){
 			var infoText = info[3]+'시 OFF 일정'
 			$('#popup_info').text(infoText)
 			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+			$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 			schedule_on_off = 0;
 
 		})
@@ -41,6 +44,17 @@ $(document).ready(function(){
 	})
 	//스케쥴 클릭시 팝업 End
 
+		//일정 변경 기능 추가 - hk.kim 171007
+	$("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
+			if(schedule_on_off==1){
+				//PT 일정 변경시
+				document.getElementById('pt-modify-form').submit();
+			}
+			else{
+				document.getElementById('off-modify-form').submit();
+			}
+	})
+
 		//일정 삭제 기능 추가 - hk.kim 171007
 	$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
 			if(schedule_on_off==1){
@@ -51,7 +65,6 @@ $(document).ready(function(){
 				document.getElementById('daily-off-delete-form').submit();
 			}
 	})
-
 
 	//플로팅 버튼 Start
 	$('#float_btn').click(function(){
@@ -242,15 +255,15 @@ $(document).ready(function(){
 			//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
 			if(Number(classHour)+Number(classDura)==25){	// 오전 1시에 일정이 차있을 경우 일정 박스가 Table 넘어가는 것 픽스
 				if(classDura<=3){
-					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');		
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
 				}else{
-					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
 				}
 			}else{
 				if(classDura<=3){
-					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');		
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
 				}else{
-					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
 				}	
 			}
 		};

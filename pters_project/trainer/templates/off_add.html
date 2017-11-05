@@ -13,7 +13,7 @@
 
 {% block content %}
 
-<form action="/trainer/add_off_logic/" id="off-add-form" method="post">
+<form action="{% url 'trainer:add_off_logic' %}" id="off-add-form" method="post">
     <input type="hidden" name="training_date" id="id_training_date">
     <input type="hidden" name="time_duration" id="id_time_duration">
     <input type="hidden" name="training_time" id="id_training_time">
