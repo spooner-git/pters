@@ -10,24 +10,28 @@
 <!-- 로딩 
 <img src="/static/user/res/loader.gif" alt="데이터 로딩중" style="width:100%;" class="loaders">
   -->
-
-  
-
-  <form action="/trainer/daily_pt_delete/" id="daily-pt-delete-form" method="post">
+  <form action="{% url 'trainer:daily_pt_delete' %}" id="daily-pt-delete-form" method="post">
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="member_name"   id="id_member_name">
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
   </form>
-  <form action="/trainer/daily_off_delete/" id="daily-off-delete-form" method="post">
+  <form action="{% url 'trainer:daily_off_delete' %}" id="daily-off-delete-form" method="post">
     <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
   </form>
 
+  <form action="{% url 'trainer:modify_pt' %}" id="pt-modify-form" method="get">
+    <input type="hidden" name="schedule_id" id="id_schedule_id_modify">
+    <input type="hidden" name="lecture_id"   id="id_lecture_id_modify">
+  </form>
+  <form action="{% url 'trainer:modify_off' %}" id="off-modify-form" method="get">
+    <input type="hidden" name="off_schedule_id" id="id_off_schedule_id_modify">
+  </form>
    
   <!--팝업메뉴-->
     <div id="cal_popup">
       <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div>
-      <div id="popup_text1" class="popup_inner popup_inner_change"  onclick="location.href='{% url 'trainer:add_pt' %}'"><span>일정 변경</span></div>
+      <div id="popup_text1" class="popup_inner popup_inner_change"><span>일정 변경</span></div>
       <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 삭제</span></div>
     </div>
     <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
@@ -110,6 +114,7 @@
         	var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
         	var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
         	var classTimeArray_member_name = [{% for member_name in daily_lecture_data_member %}'{{ member_name }}',{% endfor %}];
+            var classArray_lecture_id = [{% for lecture_id in daily_lecture_data_id %}'{{ lecture_id }}',{% endfor %}];
             var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}];
             var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
 
