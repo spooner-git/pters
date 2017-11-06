@@ -67,6 +67,31 @@ $(document).ready(function(){
         finishMemberListSet('date')
     })
 
+
+//#####################회원정보 팝업 //#####################
+    $(document).on('click','._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+      $('#memberName').attr('placeholder',$(this).text())
+      $('#memberPhone').attr('placeholder',$(this).siblings('td:nth-child(2)').text())
+      $('#memberCount').attr('placeholder',$(this).siblings('td:nth-child(3)').text())
+    $('#memberInfoPopup').show().animate({'top':'0px'});
+    $('#shade').show()
+    })
+
+    $('#infoClose').click(function(){ //회원정보창에서 닫기 눌렀을때
+      $('#memberInfoPopup').animate({'top':'-800px'}).hide('fast');
+      $('#shade').hide()
+      $('#memberName').attr('readonly',true).val('')
+      $('#memberPhone').attr('readonly',true).val('')
+      $('#memberCount').attr('readonly',true).val('')
+    })
+
+    $('#infoEdit').click(function(){ //회원정보창에서 수정 눌렀을때
+      $('#memberName').attr('readonly',false)
+      $('#memberPhone').attr('readonly',false)
+      $('#memberCount').attr('readonly',false)
+    })
+//#####################회원정보 팝업 //#####################
+
 //#####################페이지 들어오면 초기 DB 프로세싱 시작//#####################
       //날짜형식을 yyyymmdd 로 맞추기
       var countList = []
@@ -172,7 +197,7 @@ $(document).ready(function(){
                   var count = count.substr(1,3)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td class="_tdname">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -197,7 +222,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td class="_tdname">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -222,7 +247,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td class="_tdname">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
