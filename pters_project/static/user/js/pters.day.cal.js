@@ -204,8 +204,8 @@ $(document).ready(function(){
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class"); //DB로 부터 받는 Class데이터 가공
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray); //DB로 부터 받는 Off 데이터 가공
 	//addcurrentTimeIndicator(); //현재 시간에 밑줄 긋기 (구버전)
-	//scrollToIndicator(); //현재 시간으로 스크롤 자동 이동
 	addcurrentTimeIndicator_blackbox(); //현재 시간 검은색 Background 표시
+	scrollToIndicator(); //현재 시간으로 스크롤 자동 이동
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime(); //Off 시간에 회색 박스 표시
 
@@ -340,8 +340,10 @@ $(document).ready(function(){
 	}
 
 	function scrollToIndicator(){
-		var offset = $('.currentTimeBox').offset();
-		$('html, body').animate({scrollTop : offset.top-180},500)
+		var offset = $('.currentTimeBlackBox').offset();
+		if(offset!=undefined){
+			$('#slide10').animate({scrollTop : offset.top-180},500)
+		}
 	}
 
 	function DBdataProcess(startarray,endarray,result,option){
