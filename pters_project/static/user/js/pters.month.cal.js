@@ -11,24 +11,17 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
-/* //달력 위아래 스와이프 했을때 상단 네비바 없애기
-	var ts;
-	$("#calendar").bind("touchstart",function(e){
-		ts = e.originalEvent.touches[0].clientY;
-	});
-	$("#calendar").bind("touchend",function(e){
-		var te = e.originalEvent.changedTouches[0].clientY;
-		if(ts>te+5){
-			$("nav").css("display","none")
-			$("body").css("padding-top","0px")
-			$("#float_btn").animate({opacity:'0',})
-		}else if(ts<te-5){
-			$("nav").css("display","block")
-			$("body").css("padding-top","50px")
-			$("#float_btn").animate({opacity:'1'})
-		}
-	})
-*/
+	var date = new Date();
+	var currentYear = date.getFullYear(); //현재 년도
+	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
+	var currentDate = date.getDate(); //오늘 날짜
+	var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
+	var currentPageMonth = currentMonth+1; //현재 달
+	var date2 = new Date();
+	var oriYear = date.getFullYear();
+	var oriMonth = date.getMonth()+1;
+	var oriDate = date.getDate();
+
 
 	//플로팅 버튼
 	$('#float_btn').click(function(){
@@ -46,12 +39,125 @@ $(document).ready(function(){
 	//플로팅 버튼
 
 
-	var date = new Date();
-	var currentYear = date.getFullYear(); //현재 년도
-	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-	var currentDate = date.getDate(); //오늘 날짜
-	var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
-	var currentPageMonth = currentMonth+1; //현재 달
+	//Off 일정 클릭시 팝업 Start
+		$(document).on('click','td',function(){ //일정을 클릭했을때 팝업 표시
+			
+			var tddataarry = $(this).attr('data-date').split('_');
+			var yearData = tddataarry[0]
+			var monthData = tddataarry[1]
+			if(monthData.length==1){
+				var monthData = '0'+tddataarry[1]
+			}
+			var dateData = tddataarry[2]
+			if(dateData.length==1){
+				var dateData = '0'+tddataarry[2]
+			}
+			var currentMonth_ = String(oriMonth)
+			if(oriMonth<10){
+				currentMonth_ = '0'+String(oriMonth)
+			}
+			var currentDate_ = String(oriDate)
+			var currentDate14__ = oriDate+14
+			if(currentDate<10){
+				currentDate_ = '0'+String(oriDate)
+			}
+
+			console.log(yearData+monthData+dateData,String(oriYear)+currentMonth_+currentDate14__)
+			//오늘보다 이전날짜 클릭 막기
+			if(yearData+monthData+dateData<String(oriYear)+currentMonth_+currentDate_){ 
+				$('#ng_popup').fadeIn(1000,function(){
+					$(this).fadeOut(2500)
+				})
+			}else if(yearData+monthData+dateData>String(oriYear)+currentMonth_+currentDate14__){
+				$('#ng_popup').fadeIn(1000,function(){
+					$(this).fadeOut(2500)
+				})
+			}
+			//여기에 달과 해가 넘어갔을때 조건문(else if)이 추가필요함
+ 				//만약 오늘이 11월 30일 이라면 위 기준대로라며는 12월 1일은 팝업 동작하지 않음 
+			//여기에 달과 해가 넘어갔을때조건문(else if)이 추가필요함
+			//일정이 있는 날짜 클릭 (일정 변경,삭제) 
+			else if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates') && $(this).find('div').hasClass('dateMytime')){
+				$("#cal_popup").show().css({'z-index':'103'});
+				$('#shade2').css({'display':'block'});
+				console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
+				                                         //형식예: 2017_10_7_6_00_2_원빈
+				console.log($(this).attr('off-schedule-id'));
+				var info = $(this).attr('data-date').split('_')
+				var infoText = info[0]+'년 '+info[1]+'월 '+info[2]+'일 일정 변경'
+				$('#popup_info').text(infoText)
+				$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+				$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+				schedule_on_off = 0;
+			}
+			//일정이 없는 날짜 클릭 (일정 예약)
+			else if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
+				$("#cal_popup2").show().css({'z-index':'103'});
+				$('#shade2').css({'display':'block'});
+				var info2 = $(this).attr('data-date').split('_')
+				var infoText2 = info2[0]+'년 '+info2[1]+'월 '+info2[2]+'일 일정 추가'
+				$('#popup_info2').text(infoText2)
+				$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+				$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+				schedule_on_off = 1;
+			}
+		})
+
+		
+
+/*
+	$("#popup_text1").click(function(){  //일정 변경 버튼 클릭
+        if(schedule_on_off==0){
+            //PT 일정 변경시
+            document.getElementById('pt-modify-form').submit();
+        }
+         else{
+            document.getElementById('off-modify-form').submit();
+        }
+    })
+
+    $("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
+        if(schedule_on_off==0){
+            //PT 일정 삭제시
+            document.getElementById('daily-pt-delete-form').submit();
+        }
+         else{
+            document.getElementById('daily-off-delete-form').submit();
+        }
+    })
+
+    $("#popup_text3").click(function(){  //일정 추가 버튼 클릭
+        if(schedule_on_off==1){
+            //PT 일정 삭제시
+            document.getElementById('daily-pt-delete-form').submit();
+        }
+         else{
+            document.getElementById('daily-off-delete-form').submit();
+        }
+    })
+*/
+
+
+	$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
+			if($('#cal_popup').css('display')=='block'){
+				$("#cal_popup").css({'display':'none','z-index':'-2'})
+				$('#shade2').css({'display':'none'});
+			}
+	})
+
+	$("#btn_close2").click(function(){
+			if($('#cal_popup2').css('display')=='block'){
+				$("#cal_popup2").css({'display':'none','z-index':'-2'})
+				$('#shade2').css({'display':'none'});
+			}
+	})
+
+
+
+	//스케쥴 클릭시 팝업 End
+
+
+	
 
 	
 	calTable_Set(1,currentYear,currentPageMonth-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기

@@ -8,12 +8,36 @@
 
 {% block content %}
 
+   <div id="shade2">
+    </div>
+
   <!--플로팅 버튼-->
     <div id="float_btn">
       <img src={% static "user/res/floatbtn/btn-plus.png" %} alt=""> <!--2017.10.2-->
     </div>
 
   <!--플로팅 버튼-->
+
+  <!--변경 팝업메뉴-->
+    <div id="cal_popup">
+      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div>
+      <div id="popup_text1" class="popup_inner popup_inner_change"><span>일정 변경</span></div>
+      <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 삭제</span></div>
+    </div>
+    <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
+  <!--변경 팝업메뉴-->
+
+    <!--예약 팝업메뉴-->
+    <div id="cal_popup2">
+      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close2"></div><div id="popup_info2"></div>
+      <div id="popup_text3" class="popup_inner popup_inner_change" onclick="location.href='{% url 'trainee:add_pt' %}'"><span>일정 예약</span></div>
+    </div>
+    <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
+  <!--예약 팝업메뉴-->
+
+    <div id="ng_popup">
+        <div>일정은 오늘 날짜 기준 </br>2주앞만 설정 가능합니다.</div>
+    </div>
 
 
     <div id="ymdText">
@@ -67,6 +91,8 @@
             var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
             var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
+            
+            
         </script>
 
         <!-- Placed at the end of the document so the pages load faster -->

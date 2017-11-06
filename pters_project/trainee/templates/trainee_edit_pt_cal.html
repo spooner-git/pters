@@ -1,0 +1,127 @@
+{% extends "trainer_base.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "user/css/pters.trainee.week.cal.css" %}>
+{% endblock %}
+
+{% block content %}
+
+  <form action="/trainer/daily_pt_delete/" id="daily-pt-delete-form" method="post">
+    <input type="hidden" name="schedule_id" id="id_schedule_id">
+    <input type="hidden" name="member_name"   id="id_member_name">
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
+  </form>
+  <form action="/trainer/daily_off_delete/" id="daily-off-delete-form" method="post">
+    <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
+  </form>
+
+
+  <!--팝업메뉴-->
+    <div id="cal_popup">
+      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div>
+      <div id="popup_text1" class="popup_inner popup_inner_change"  onclick="location.href='{% url 'trainee:add_pt' %}'"><span>일정 변경</span></div>
+      <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 삭제</span></div>
+    </div>
+    <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
+  <!--팝업메뉴-->
+    
+  <!--플로팅 버튼-->
+    <div id="float_btn">
+      <img src={% static "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
+    </div>
+    <div id="float_inner1" class="float_inner" onclick="location.href='{% url 'trainer:add_pt' %}'">
+    <a href="{% url 'trainer:add_pt' %}">PT<br/>일정</a>
+    <img src="" alt="">
+    </div>
+    <div id="float_inner2" class="float_inner" onclick="location.href='{% url 'trainer:add_off' %}'">
+    <a href="{% url 'trainer:add_off' %}">OFF<br/>일정</a>
+    <img src="" alt="">
+    </div>
+
+    <div id="shade2">
+    </div>
+  <!--플로팅 버튼-->
+
+    <div id="ymdText">
+      <div class='arrowButton'>
+        <a href="" ><img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+        <a href="" style="right: 0%"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+      </div>
+      <img src={% static "user/res/bg.png" %} alt="bg-image" style="width: 100%;height:100%;position: relative;z-index: -1;">
+      <div id="yearText">
+      </div>
+      <div id="monthText">
+      </div>
+    </div>
+    
+    <div id="week" class="time-style">
+      <table class="calendar-style">
+        <tbody>
+          <tr id="weekText">
+            <td class="hour"><span></span><span></span></td>
+            <td id="weekNum_1"><span class="weekToday-style"></span><span class="weekToday-style" style="color: red;">일</span><span id="sunDate" class="weekToday-style"></span></td>
+            <td id="weekNum_2"><span class="weekToday-style"></span><span class="weekToday-style">월</span><span id="monDate" class="weekToday-style"></span></td>
+            <td id="weekNum_3"><span class="weekToday-style"></span><span class="weekToday-style">화</span><span id="tueDate" class="weekToday-style"></span></td>
+            <td id="weekNum_4"><span class="weekToday-style"></span><span class="weekToday-style">수</span><span id="wedDate" class="weekToday-style"></span></td>
+            <td id="weekNum_5"><span class="weekToday-style"></span><span class="weekToday-style">목</span><span id="thrDate" class="weekToday-style"></span></td>
+            <td id="weekNum_6"><span class="weekToday-style"></span><span class="weekToday-style">금</span><span id="friDate" class="weekToday-style"></span></td>
+            <td id="weekNum_7"><span class="weekToday-style"></span><span class="weekToday-style" style="color: blue;">토</span><span id="satDate" class="weekToday-style"></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <div id="calendar" class="container" > <!-- Calendar container-->
+          <div class="swiper-container">
+            <div class="swiper-wrapper"> 
+              <div class="swiper-slide" id="slide_first">
+               <div class="slide-notice"><span>일정 설정 및 확인은 최대 2주전까지 가능합니다.</span><span>>>>>>>>>>></span></div>
+              </div> <!--마지막 페이지 안내-->
+              <div class="swiper-slide" id="slide0"></div> <!--Index-1 2주전-->
+              <div class="swiper-slide" id="slide1"></div> <!--Index0 1주전-->
+              <div class="swiper-slide" id="slide2"></div> <!--Index1 이번주-->
+              <div class="swiper-slide" id="slide3"></div> <!--Index2 1주후-->
+              <div class="swiper-slide" id="slide4"></div> <!--Index3 2주후-->
+              <div class="swiper-slide" id="slide_last2">
+               <div class="slide-notice"><span>일정 설정 및 확인은 최대 2주후까지 가능합니다.</span><span><<<<<<<<<<</span></div>
+              </div> <!--마지막 페이지 안내-->
+            </div>  <!--Swiper-wrapper-->
+          </div> <!--Swiper-container-->
+  
+<!--Swiper-->    
+          <!-- <div class="swiper-pagination"></div> -->
+          <div id="cal_box" class="cal_box"></div>    
+    </div>
+{% endblock %}
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+
+        <script>
+          //front-end에서 다뤄야하는 데이터
+          var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
+          var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
+          var classTimeArray_member_name = [{% for member_name in daily_lecture_data_member %}'{{ member_name }}',{% endfor %}];
+          var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}];
+          var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
+          var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
+          var offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %}];
+          var classTimeArray = [];
+          var offTimeArray = [];
+        </script>
+        <script type="text/javascript" src={% static "user/js/pters.trainee.week.cal.js" %}></script>
+        <script>
+            var myswiper = new Swiper('.swiper-container',{
+                initialSlide : 3,
+                speed : 300,
+                preventClicks : true,
+                keyboardControl : true,
+                pagination : '.swiper-pagination'
+            });
+        </script>
+{% endblock %}
