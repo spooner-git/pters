@@ -16,6 +16,13 @@ class IndexView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
 
+class WeekAddView(LoginRequiredMixin, TemplateView):
+    template_name = 'trainee_add_pt_cal.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(WeekAddView, self).get_context_data(**kwargs)
+
+        return context
 
 # trainee용 Month View
 class CalMonthView(LoginRequiredMixin, TemplateView):
