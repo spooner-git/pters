@@ -11,8 +11,23 @@ $(document).ready(function(){
       DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
       DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
 
-      console.log(offDateData)
-      console.log(offTimeData)
+      //console.log(offDateData)
+      //console.log(offTimeData)
+
+           //작은달력 설정
+     $.datepicker.setDefaults({
+        dateFormat: 'yy-mm-dd',
+        prevText: '이전 달',
+        nextText: '다음 달',
+        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        showMonthAfterYear: true,
+        yearSuffix: '년'
+    });
+
 
       $("#datepicker").datepicker({
         minDate : 0,
@@ -30,6 +45,21 @@ $(document).ready(function(){
             }
           }
       });
+
+      var modiDateArry = modify_date.replace(/년 |월 |일 |:| /gi,'_').split('_')
+      var modiDate = modiDateArry[0]+'-'+modiDateArry[1]+'-'+modiDateArry[2]
+      $("#datepicker").datepicker("setDate",modiDate) // 일정변경 초기값 셋팅
+
+      $("#dateSelector p").addClass("dropdown_selected");
+      $("#id_training_date").val($("#datepicker").val()).submit();
+      if($('#timeGraph').css('display')=='none'){
+        $('#timeGraph').show(110,"swing");
+      }
+      timeGraphSet("class","pink");  //시간 테이블 채우기
+      timeGraphSet("off","grey")
+      startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+      check_dropdown_selected();
+
       var select_all_check = false;
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
@@ -97,19 +127,6 @@ $(document).ready(function(){
          }
      })
 
-     //작은달력 설정
-     $.datepicker.setDefaults({
-        dateFormat: 'yy-mm-dd',
-        prevText: '이전 달',
-        nextText: '다음 달',
-        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-        showMonthAfterYear: true,
-        yearSuffix: '년'
-    });
 
       function startTimeSet(){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21];
         startTimeArraySet(); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
