@@ -287,7 +287,7 @@ tr{
 #calendar{
 	position: fixed;
 	width: 100%;
-	padding-top: 100px;
+	padding-top: 106px;
 	background-color: #f4f4f4;
 	padding-right: 0;
 	padding-left: 0;
@@ -297,7 +297,7 @@ tr{
 @media(max-height: 568px){
 	#calendar{
 	position: fixed;
-	padding-top: 100px;
+	padding-top: 106px;
 	width: 100%;
 	background-color: #f4f4f4;
 	padding-right: 0;
@@ -411,16 +411,20 @@ tr{
 
 .currentTimeBox{
 	position: absolute;
+	background: #c5c5b5;
+	opacity: 0.5;
+	z-index: -1;
 	width: 100%;
 	height: 100%;
 	top: 0;
 
 }
 
+/*
 .currentTimeIndicator{
 	position: absolute;
 	left: 9%;
-	top: 37%;
+	top: -14%;
 	width: 9px;
 	height: 9px;
 	background-color: #fe4e65;
@@ -433,11 +437,11 @@ tr{
 	position: absolute;
 	border-top: 1px dotted #fe4e65;
 	left: 9.5%;
-	top: 52%;
+	top: 0%;
 	width: 90%;
 	z-index: 101;
 }
-
+*/
 
 
 /*미디어 쿼리*/
@@ -530,7 +534,7 @@ tr{
 		position: fixed;
 		width: 100%;
 		max-width: 1024px;
-		padding-top: 100px;
+		padding-top: 106px;
 		background-color: #f4f4f4;
 		padding-right: 0;
 		padding-left: 0;
