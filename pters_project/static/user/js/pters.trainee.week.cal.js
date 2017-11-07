@@ -11,105 +11,35 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
-	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
-	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
+	var userCheckedHourArray = []
+	$('#upbutton-alarm').click(function(){
+		var userCheckedHourArray = []
+		var checkedLength = $('.ptersCheckboxInner').length
+		for(var i=0; i<checkedLength; i++){
+			var checkedHour = $('.ptersCheckboxInner').eq(i).attr('data-time')	
+			userCheckedHourArray[i]=checkedHour
+		}
+		alert('추가된 시간은 총 '+checkedLength+'건'+' Array = ['+userCheckedHourArray+'],') //디버깅용
+	})
+
+
+	$(document).on('click','.ptersCheckbox',function(){
+		var checkBox = $(this).find('div')
+		if(!checkBox.hasClass('ptersCheckboxInner')){
+			checkBox.addClass('ptersCheckboxInner').attr('data-time',$(this).parent('td').attr('id'))
+		}else if(checkBox.hasClass('ptersCheckboxInner')){
+			checkBox.removeClass('ptersCheckboxInner')
+		}
+	})
 
 	$('#ymdText').click(function(){
-		var memberName = $(".memberName");
-		var memberTime = $(".memberTime");
-		if(memberName.css('display')!='none'){
-			memberName.css('display','none')
-			memberTime.css('display','none')
-		}else{
-			memberName.css('display','block')
-			memberTime.css('display','block')
-		};
+		var checked = $('.ptersCheckbox div')
+		checked.removeClass('ptersCheckboxInner')
 	});
-	//
-
-	//스케쥴 클릭시 팝업 Start
-		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
-			$("#cal_popup").css({'display':'block','z-index':'103'});
-			$('#shade2').css({'display':'block'});
-			console.log($(this).attr('class-time')); //현재 클릭한 요소의 class-time 요소 값 보기
-			                                         //형식예: 2017_10_7_6_00_2_원빈
-			console.log($(this).attr('schedule-id'));
-			var info = $(this).attr('class-time').split('_')
-			var infoText = info[6]+' 회원님 '+info[3]+'시 일정'
-			$('#popup_info').text(infoText)
-			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
-			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
-			schedule_on_off = 1;
-
-		})
-
-	//Off 일정 클릭시 팝업 Start
-		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
-			$("#cal_popup").css({'display':'block','z-index':'103'});
-			$('#shade2').css({'display':'block'});
-			console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
-			                                         //형식예: 2017_10_7_6_00_2_원빈
-			console.log($(this).attr('off-schedule-id'));
-			var info = $(this).attr('off-time').split('_')
-			var infoText = info[3]+'시 OFF 일정'
-			$('#popup_info').text(infoText)
-			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
-			schedule_on_off = 0;
-
-		})
-
-		$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
-			if($('#cal_popup').css('display')=='block'){
-				$("#cal_popup").css({'display':'none','z-index':'-2'})
-				$('#shade2').css({'display':'none'});
-			}
-		})
-		//스케쥴 클릭시 팝업 End
-
-		//일정 삭제 기능 추가 - hk.kim 171007
-		$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
-			if(schedule_on_off==1){
-				//PT 일정 삭제시
-				document.getElementById('daily-pt-delete-form').submit();
-			}
-			else{
-				document.getElementById('daily-off-delete-form').submit();
-			}
-		})
 
 
-	//플로팅 버튼 Start
-	$('#float_btn').click(function(){
-		$("#float_btn").animate({opacity:'1'})
-		if($('#shade2').css('display')=='none'){
-			$('#shade2').css({'display':'block'});
-			$('#float_inner1').animate({'opacity':'0.7','bottom':'85px'},120);
-			$('#float_inner2').animate({'opacity':'0.7','bottom':'145px'},120);
-			$('#float_btn').addClass('rotate_btn');
-		}else{
-			$('#shade2').css({'display':'none'});
-			$('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-			$('#float_btn').removeClass('rotate_btn');
-		}
-	});
-	//플로팅 버튼 End
-
-	//플로팅 버튼 스크롤시 숨기기 Start
-		var ts;
-			$("body").bind("touchstart",function(e){
-			ts = e.originalEvent.touches[0].clientY;
-				});
-			
-			$("body").bind("touchend",function(e){
-				var te = e.originalEvent.changedTouches[0].clientY;
-				if(ts>te+5){
-					$("#float_btn").animate({opacity:'0'})
-				}else if(ts<te-5){
-					$("#float_btn").animate({opacity:'1'})
-				}
-			});
-	//플로팅 버튼 스크롤시 숨기기 End
-	
+	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
+	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
 
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
@@ -207,18 +137,23 @@ $(document).ready(function(){
 		switch(Week){
 			case '2E':
 			var W = -14;
+			var checkBoxClass = "ptersNotAvail"
 			break;
 			case '1E':
 			var W = -7;
+			var checkBoxClass = "ptersNotAvail"
 			break;
 			case '0W':
 			var W = 0;
+			var checkBoxClass = "ptersCheckbox"
 			break;
 			case '1L':
 			var W = 7;
+			var checkBoxClass = "ptersCheckbox"
 			break;
 			case '2L':
 			var W = 14;
+			var checkBoxClass = "ptersCheckbox"
 			break;
 		}
 		//주간달력 상단표시줄 (요일, 날짜, Today표식)
@@ -239,14 +174,14 @@ $(document).ready(function(){
 				var td2 = []
 				for(z=0; z<=6; z++){
 					if(currentDates+z>lastDay[currentMonth]){
-						td1[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';	
+						td1[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						
 					}else if(currentDates+z<=0){
-						td1[z]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						
 					}
 				}
 				var td1_1 = td1.join('')
@@ -258,15 +193,12 @@ $(document).ready(function(){
 				var td2 = []
 				for(z=-1; z<=5; z++){
 					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';	
+						td1[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}
 					else if(currentDates+z<=0){
-						td1[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -278,14 +210,11 @@ $(document).ready(function(){
 				var td2 = []
 				for(z=-2; z<=4; z++){
 					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';	
+						td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=0){
-						td1[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -297,14 +226,11 @@ $(document).ready(function(){
 				var td2 = []
 				for(z=-3; z<=3; z++){
 					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';	
+						td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=0){
-						td1[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -316,14 +242,11 @@ $(document).ready(function(){
 				var td2 = []
 				for(z=-4; z<=2; z++){
 					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';	
+						td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=0){
-						td1[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -335,14 +258,11 @@ $(document).ready(function(){
 				var td2 = []
 				for(z=-5; z<=1; z++){
 					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';	
+						td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=0){
-						td1[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -354,14 +274,11 @@ $(document).ready(function(){
 				var td2 = []
 				for(z=-6; z<=0; z++){
 					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';	
+						td1[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}else if(currentDates+z<=0){
-						td1[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
-						td2[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+'>'+'<div></div>'+'</td>';
+						td1[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -453,12 +370,15 @@ $(document).ready(function(){
 			if(memberName.length>3){
 				var memberName = memberName.substr(0,3) + ".."
 			}
-			var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
-			var classStart = classStartArr.join("_")
-			//var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
-			var tdClassStart = $("#"+classStart+" div");
-			//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
-			tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*30)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
+			for(var j=0; j<classDura; j++){
+				var classStartArr = [classYear,classMonth,classDate,Number(classHour)+j,classMinute]
+				var classStart = classStartArr.join("_")
+				var tdClassStart = $("#"+classStart+" div");
+				tdClassStart.removeClass('ptersCheckbox')
+				tdClassStart.addClass('ptersNotAvail')
+			}
+			//강사 주간달력용 코드
+			//tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*30)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
 		};
 		$('#calendar').css('display','block');
 	};
@@ -476,23 +396,25 @@ $(document).ready(function(){
 			var offMinute = datasplit[4]
 			var offDura = datasplit[5];
 			var memberName = datasplit[6];
-			var offStartArr = [offYear,offMonth,offDate,offHour,offMinute]
-			var offStart = offStartArr.join("_")
-			//var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
-			var tdOffStart = $("#"+offStart+" div");
-			tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*30)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
+			for(var j=0; j<offDura; j++){
+				var offStartArr = [offYear,offMonth,offDate,Number(offHour)+j,offMinute]
+				var offStart = offStartArr.join("_")
+				var tdOffStart = $("#"+offStart+" div");
+				tdOffStart.removeClass('ptersCheckbox')
+				tdOffStart.addClass('ptersNotAvail')
+			}
+			//강사 주간달력용 코드
+			//tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*30)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
 		};
 		$('#calendar').css('display','block');
 	};
 
 
-
 	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
 		var where2 = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+"0W"+"_"+currentHour+'H'
-		//var where3 = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+"0W"+"_"+(currentHour+1)+'H'
 		if($('.currentTimeBox').length==""){
 			$(where2).parent('div').append("<div class='currentTimeBox'><div class='currentTimeIndicator'></div><div class='currentTimeLine'></div></div>")
-			//$(where3).parent('div').append("<div class='currentTimeBox'><div class='currentTimeIndicator'></div><div class='currentTimeLine'></div></div>")
+			$(where2).find('.hour').css('color','white')
 		}
 	}
 

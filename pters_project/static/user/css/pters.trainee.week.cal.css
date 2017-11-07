@@ -267,20 +267,47 @@ body{
 	font-size: 13px;
 }
 
-td{
+td{ /*회원일정예약용으로 변경 */
 	position: relative;
 	width: 12.5%;
-	height: 15px;
+	height: 29.5px;
 	color : #282828;
-	border-bottom: 0.5px solid #a2a2a2;
 	border-right:  1px solid #ffffff;
 	border-left:  1px solid #ffffff;
 	padding-right: 1px;
 	padding-left: 1px;
 }
 
-tr{
-	height: 50%;
+tr{ /*회원일정예약용으로 변경 */
+	height: 100%;
+}
+
+.ptersCheckbox{
+	position: relative;
+	width: 22px;
+	height: 22px;
+	background: #ffffff;
+	border : 1px solid #a2a2a2;
+	border-radius: 11px;
+	margin: 0 auto;
+}
+
+.ptersCheckboxInner{
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	background: #fe4e65;
+	border-radius: 7px;
+	left: 3px;
+	top: 3px;
+}
+
+.ptersNotAvail{
+	width: 14px;
+	height: 2px;
+	background: #a2a2a2;
+	border-radius: 10px;
+	margin: 0 auto;
 }
 
 
@@ -411,8 +438,8 @@ tr{
 
 .currentTimeBox{
 	position: absolute;
-	background: #c5c5b5;
-	opacity: 0.5;
+	background: black;
+	opacity: 1;
 	z-index: -1;
 	width: 100%;
 	height: 100%;
