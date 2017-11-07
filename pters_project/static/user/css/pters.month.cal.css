@@ -202,7 +202,7 @@ span{
 	top:80%;
 }
 
-td{
+#calendar td{
 	width: 14.3%;
 	color : #282828;
 }
@@ -357,6 +357,22 @@ td{
 	text-align: center;
 }
 
+#cal_popup3{
+	display: none;
+	position: fixed;
+	background: transparent;
+	border-color: transparent;
+	top: 35%;
+	left: 10%;
+	width: 80%;
+	/*
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	*/
+	z-index: -2;
+	text-align: center;
+}
+
 #popup_info,#popup_info2{
 	background: #ffffff;
 	position: relative;
@@ -392,7 +408,7 @@ td{
 	margin-left: 14.845px;
 }
 
-#btn_close, #btn_close2{
+#btn_close, #btn_close2, #btn_close3{
 	position: absolute;
 	top: 31%;
 	left: 85%;
@@ -447,6 +463,16 @@ td{
 	z-index: -1;
 }
 
+#addpopup{
+	position: fixed;
+	display: none;
+	left: 5%;
+	top: 25%;
+	width: 90%;
+	background: #ffffff;
+	z-index: 105;
+}
+
 
 @media(min-width:415px){
 	#cal_popup{
@@ -466,6 +492,22 @@ td{
 	}
 
 	#cal_popup2{
+		display: none;
+		position: fixed;
+		background: transparent;
+		border-color: transparent;
+		top: 35%;
+		left: 0;
+		width: 100%;
+		/*
+		background-color: #ffffff;
+		border: 1px solid #a2a2a2;
+		*/
+		z-index: -2;
+		text-align: center;
+	}
+
+	#cal_popup3{
 		display: none;
 		position: fixed;
 		background: transparent;
@@ -516,7 +558,7 @@ td{
 		margin-left: 14.845px;
 	}
 
-	#btn_close, #btn_close2{
+	#btn_close, #btn_close2, #btn_close3{
 		position: absolute;
 		top: 22%;
 		left: 85%;

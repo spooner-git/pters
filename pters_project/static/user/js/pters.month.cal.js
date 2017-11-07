@@ -42,29 +42,29 @@ $(document).ready(function(){
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
 		if($(this).hasClass('available')){
 			if($(this).find('div').hasClass('dateMytime')){
-				$("#cal_popup").show().css({'z-index':'103'});
+				$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 				$('#shade2').css({'display':'block'});
-				console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
+				//console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
 					                                         //형식예: 2017_10_7_6_00_2_원빈
-				console.log($(this).attr('off-schedule-id'));
+				//console.log($(this).attr('off-schedule-id'));
 				var info = $(this).attr('data-date').split('_')
-				var infoText = info[0]+'년 '+info[1]+'월 '+info[2]+'일 일정 변경'
+				var infoText = info[0]+'년 '+info[1]+'월 '+info[2]+'일'
 				$('#popup_info').text(infoText)
-				$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
-				$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
-				schedule_on_off = 0;
+				//$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+				//$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+				//schedule_on_off = 0;
 			}else{
-				$("#cal_popup2").show().css({'z-index':'103'});
+				$("#cal_popup2").fadeIn('fast').css({'z-index':'103'});
 				$('#shade2').css({'display':'block'});
 				var info2 = $(this).attr('data-date').split('_')
 				var infoText2 = info2[0]+'년 '+info2[1]+'월 '+info2[2]+'일 일정 추가'
 				$('#popup_info2').text(infoText2)
-				$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
-				$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
-				schedule_on_off = 1;
+				//$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+				//$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+				//schedule_on_off = 1;
 			}
 		}else{
-			$('#ng_popup').fadeIn(1000,function(){
+			$('#ng_popup').fadeIn(1000,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
 			$(this).fadeOut(2500)
 			})
 		}
@@ -111,17 +111,28 @@ $(document).ready(function(){
 			}
 	})
 
-	$("#btn_close2").click(function(){
+	$("#btn_close2").click(function(){ //일정추가 팝업 X버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup2').css('display')=='block'){
 				$("#cal_popup2").css({'display':'none','z-index':'-2'})
 				$('#shade2').css({'display':'none'});
 			}
 	})
 
+	$("#btn_close3").click(function(){ //일정예약 상세화면 팝업 X버튼 눌렀을때 팝업 닫기
+			$('#starttimes').remove('li')
+			$('#durations').remove('li')
+			$("#starttimesSelected button").removeClass("dropdown_selected");
+			$("#durationsSelected button").removeClass("dropdown_selected");
+			$("#starttimesSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
+			$("#durationsSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
+			if($('#addpopup').css('display')=='block'){
+				$("#addpopup").css({'display':'none','z-index':'-2'})
+				$('#shade2').css({'display':'none'});
+			}
+	})
 
 
-	//스케쥴 클릭시 팝업 End
-
+//여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
 
 	calTable_Set(1,currentYear,currentPageMonth-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
 	calTable_Set(2,currentYear,currentPageMonth);  //2번 슬라이드에 현재년도, 현재달 달력 채우기

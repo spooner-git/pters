@@ -8,8 +8,8 @@ $(document).ready(function(){
       var offAddOkArray = [] //OFF 등록 시작 시간 리스트
       var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
 
-      DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
-      DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
+      DBdataProcess(classTimeArray_start_date1,classTimeArray_end_date1,classDateData,"graph",classTimeData)
+      DBdataProcess(offTimeArray_start_date1,offTimeArray_end_date1,offDateData,"graph",offTimeData)
 
     $.datepicker.setDefaults({
         dateFormat: 'yy-mm-dd',
@@ -33,13 +33,14 @@ $(document).ready(function(){
               if($('#timeGraph').css('display')=='none'){
                 $('#timeGraph').show(110,"swing");
               }
-              timeGraphSet("class","pink");  //시간 테이블 채우기
+              timeGraphSet("class","grey");  //시간 테이블 채우기
               timeGraphSet("off","grey")
               startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
               check_dropdown_selected();
             }
           }
       });
+
 
       var select_all_check = false;
       //달력 선택된 날짜

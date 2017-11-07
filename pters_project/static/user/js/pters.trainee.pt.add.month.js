@@ -8,38 +8,17 @@ $(document).ready(function(){
       var offAddOkArray = [] //OFF 등록 시작 시간 리스트
       var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
 
-      DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
-      DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
+      DBdataProcess(classTimeArray_start_date1,classTimeArray_end_date1,classDateData,"graph",classTimeData)
+      DBdataProcess(offTimeArray_start_date1,offTimeArray_end_date1,offDateData,"graph",offTimeData)
 
-    $.datepicker.setDefaults({
-        dateFormat: 'yy-mm-dd',
-        prevText: '이전 달',
-        nextText: '다음 달',
-        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-        showMonthAfterYear: true,
-        yearSuffix: '년',
-    });
 
-      $("#datepicker").datepicker({
-          minDate : 0,
-          onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
-            if( curDate != instance.lastVal ){
-              $("#dateSelector p").addClass("dropdown_selected");
-              $("#id_training_date").val($("#datepicker").val()).submit();
-              if($('#timeGraph').css('display')=='none'){
-                $('#timeGraph').show(110,"swing");
-              }
-              timeGraphSet("class","pink");  //시간 테이블 채우기
-              timeGraphSet("off","grey")
-              startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
-              check_dropdown_selected();
-            }
-          }
-      });
+      $('#popup_text3').click(function(){ //일정예약 팝업에서 일정예약 버튼을 눌렀을때 예약하는 팝업이 생성
+          $('#addpopup').fadeIn().css({'z-index':'103'})
+          $('#cal_popup2').hide()
+          timeGraphSet("class","grey");  //시간 테이블 채우기
+          timeGraphSet("off","grey")
+          startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+        })
 
       var select_all_check = false;
       //달력 선택된 날짜
@@ -63,13 +42,11 @@ $(document).ready(function(){
           check_dropdown_selected();
       }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
-       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-       	 var memberSelect = $("#membersSelected button");
-       	 var dateSelect = $("#dateSelector p");
+       function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화 
        	 var durSelect = $("#durationsSelected button");
        	 var startSelect = $("#starttimesSelected button")
-       		 if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
-        	    $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+       		 if((durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
+        	    $("#submitBtn").addClass('submitBtnActivated');
             	select_all_check=true;
         	}else{
            	    select_all_check=false;
@@ -166,10 +143,10 @@ $(document).ready(function(){
           result2.push(startSplitArray[3]+":"+startSplitArray[4]);
         }else if(option=="graph"){
           if(startSplitArray[2].length<2){
-            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-0"+startSplitArray[2]); //2017_10_7
+            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-0"+startSplitArray[2]); //2017_10_07
             result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
           }else{
-            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-"+startSplitArray[2]); //2017_10_7
+            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-"+startSplitArray[2]); //2017_10_17
             result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2
           }
           
@@ -203,7 +180,17 @@ $(document).ready(function(){
           var cssClass= "pinktimegraph"
           break;
         }
-        var date = $("#datepicker").val();
+        //var date = $("#datepicker").val(); 공용
+        var dateArry = $('#popup_info2').text().replace(/년 |월 |일 일정 추가|:| /gi,"_").split('_') //회원 월간일정 전용 
+        var monthD= dateArry[1]
+        var dateD = dateArry[2]
+        if(monthD.length==1){
+          var monthD = '0'+dateArry[1]
+        }
+        if(dateD.length==1){
+          var dateD = '0'+dateArry[2]
+        }
+        var date = dateArry[0]+'-'+monthD+'-'+dateD
         var Arraylength = DateDataArray.length;
         for(var i=0;i<Arraylength;i++){
           var splitTimeArray = TimeDataArray[i].split("_")

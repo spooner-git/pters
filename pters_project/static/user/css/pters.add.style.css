@@ -150,7 +150,7 @@ input{
 }
 
 .tdgraph{
-	width : 5%;
+	width : 5% !important;
 	height: 4px;
 	background: #cacaca;
 	border : 0.5px solid transparent;
@@ -180,4 +180,18 @@ input{
 .dropup button{
 	font-size: 15px;
 	height: 100%;
+}
+
+#submitBtn{
+	width: 100%;
+	background: #eeeeee;
+	color: #ffffff;
+	height: 50px;
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+
+.submitBtnActivated{
+	background: #fe4e65 !important;
 }
