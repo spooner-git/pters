@@ -39,49 +39,13 @@ $(document).ready(function(){
 	//플로팅 버튼
 
 
-	//Off 일정 클릭시 팝업 Start
-		$(document).on('click','td',function(){ //일정을 클릭했을때 팝업 표시
-			
-			var tddataarry = $(this).attr('data-date').split('_');
-			var yearData = tddataarry[0]
-			var monthData = tddataarry[1]
-			if(monthData.length==1){
-				var monthData = '0'+tddataarry[1]
-			}
-			var dateData = tddataarry[2]
-			if(dateData.length==1){
-				var dateData = '0'+tddataarry[2]
-			}
-			var currentMonth_ = String(oriMonth)
-			if(oriMonth<10){
-				currentMonth_ = '0'+String(oriMonth)
-			}
-			var currentDate_ = String(oriDate)
-			var currentDate14__ = oriDate+14
-			if(currentDate<10){
-				currentDate_ = '0'+String(oriDate)
-			}
-
-			console.log(yearData+monthData+dateData,String(oriYear)+currentMonth_+currentDate14__)
-			//오늘보다 이전날짜 클릭 막기
-			if(yearData+monthData+dateData<String(oriYear)+currentMonth_+currentDate_){ 
-				$('#ng_popup').fadeIn(1000,function(){
-					$(this).fadeOut(2500)
-				})
-			}else if(yearData+monthData+dateData>String(oriYear)+currentMonth_+currentDate14__){
-				$('#ng_popup').fadeIn(1000,function(){
-					$(this).fadeOut(2500)
-				})
-			}
-			//여기에 달과 해가 넘어갔을때 조건문(else if)이 추가필요함
- 				//만약 오늘이 11월 30일 이라면 위 기준대로라며는 12월 1일은 팝업 동작하지 않음 
-			//여기에 달과 해가 넘어갔을때조건문(else if)이 추가필요함
-			//일정이 있는 날짜 클릭 (일정 변경,삭제) 
-			else if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates') && $(this).find('div').hasClass('dateMytime')){
+	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
+		if($(this).hasClass('available')){
+			if($(this).find('div').hasClass('dateMytime')){
 				$("#cal_popup").show().css({'z-index':'103'});
 				$('#shade2').css({'display':'block'});
 				console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
-				                                         //형식예: 2017_10_7_6_00_2_원빈
+					                                         //형식예: 2017_10_7_6_00_2_원빈
 				console.log($(this).attr('off-schedule-id'));
 				var info = $(this).attr('data-date').split('_')
 				var infoText = info[0]+'년 '+info[1]+'월 '+info[2]+'일 일정 변경'
@@ -89,9 +53,7 @@ $(document).ready(function(){
 				$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 				$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 				schedule_on_off = 0;
-			}
-			//일정이 없는 날짜 클릭 (일정 예약)
-			else if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
+			}else{
 				$("#cal_popup2").show().css({'z-index':'103'});
 				$('#shade2').css({'display':'block'});
 				var info2 = $(this).attr('data-date').split('_')
@@ -101,8 +63,12 @@ $(document).ready(function(){
 				$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 				schedule_on_off = 1;
 			}
-		})
-
+		}else{
+			$('#ng_popup').fadeIn(1000,function(){
+			$(this).fadeOut(2500)
+			})
+		}
+	})
 		
 
 /*
@@ -157,9 +123,6 @@ $(document).ready(function(){
 	//스케쥴 클릭시 팝업 End
 
 
-	
-
-	
 	calTable_Set(1,currentYear,currentPageMonth-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
 	calTable_Set(2,currentYear,currentPageMonth);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
 	calTable_Set(3,currentYear,currentPageMonth+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
@@ -170,7 +133,10 @@ $(document).ready(function(){
 	//dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
 	classDates(); //나의 PT일정에 핑크색 동그라미 표시
 	monthText(); //상단에 연, 월 표시
+	availableDateIndicator();
 	krHoliday(); //대한민국 공휴일
+
+
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
@@ -208,6 +174,7 @@ $(document).ready(function(){
 			classDates();
 			monthText();
 			krHoliday();
+			availableDateIndicator();
 			myswiper.update(); //슬라이드 업데이트
 
 		},
@@ -222,6 +189,7 @@ $(document).ready(function(){
 			classDates();
 			monthText();
 			krHoliday();
+			availableDateIndicator();
 			myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
@@ -333,6 +301,18 @@ $(document).ready(function(){
 		$('#yearText').text(textYear);
 		$('#monthText').text(textMonth+'월');
 	};
+
+	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
+	function availableDateIndicator(){
+		for(i=currentDate;i<=currentDate+14;i++){
+			if(i>lastDay[oriMonth]){
+			 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
+			}else{
+			 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('available')
+			}
+		}
+	}
+	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
 
 	function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
 		//DB데이터 가공

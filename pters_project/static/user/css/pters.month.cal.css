@@ -442,6 +442,11 @@ td{
 	z-index: 101;
 }
 
+.available{
+	border-top: 3px solid #bcedff;
+	z-index: -1;
+}
+
 
 @media(min-width:415px){
 	#cal_popup{
