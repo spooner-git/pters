@@ -41,6 +41,23 @@ $(document).ready(function(){
           }
       });
 
+
+      var modiDateArry = modify_date.replace(/년 |월 |일 |:| /gi,'_').split('_')
+      var modiDate = modiDateArry[0]+'-'+modiDateArry[1]+'-'+modiDateArry[2]
+      $("#datepicker").datepicker("setDate",modiDate) // 일정변경 초기값 셋팅
+      
+      $("#dateSelector p").addClass("dropdown_selected");
+      $("#id_training_date").val($("#datepicker").val()).submit();
+      if($('#timeGraph').css('display')=='none'){
+        $('#timeGraph').show(110,"swing");
+      }
+      timeGraphSet("class","pink");  //시간 테이블 채우기
+      timeGraphSet("off","grey")
+      startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+      check_dropdown_selected();
+      
+
+
       var select_all_check = false;
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)

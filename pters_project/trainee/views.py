@@ -24,6 +24,15 @@ class WeekAddView(LoginRequiredMixin, TemplateView):
 
         return context
 
+class DayAddView(LoginRequiredMixin, TemplateView):
+    template_name = 'trainee_add_pt.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DayAddView, self).get_context_data(**kwargs)
+
+        return context
+
+
 # trainee용 Month View
 class CalMonthView(LoginRequiredMixin, TemplateView):
     template_name = 'month_cal.html'
