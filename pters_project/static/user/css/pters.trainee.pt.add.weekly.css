@@ -288,22 +288,22 @@ tr{ /*회원일정예약용으로 변경 */
 	height: 22px;
 	background: #ffffff;
 	border : 1px solid #a2a2a2;
-	border-radius: 11px;
+	border-radius: 8px;
 	margin: 0 auto;
 }
 
 .ptersCheckboxInner{
 	position: absolute;
-	width: 14px;
-	height: 14px;
+	width: 12px;
+	height: 12px;
 	background: #fe4e65;
-	border-radius: 7px;
-	left: 3px;
-	top: 3px;
+	border-radius: 4px;
+	left: 4px;
+	top: 4px;
 }
 
 .ptersNotAvail{
-	width: 14px;
+	width: 8px;
 	height: 2px;
 	background: #a2a2a2;
 	border-radius: 10px;

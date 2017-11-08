@@ -272,11 +272,14 @@ td{
 	width: 12.5%;
 	height: 15px;
 	color : #282828;
-	border-bottom: 0.5px solid #a2a2a2;
-	border-right:  1px solid #ffffff;
-	border-left:  1px solid #ffffff;
+	border-right:  1px solid transparent;
+	border-left:  1px solid transparent;
 	padding-right: 1px;
 	padding-left: 1px;
+}
+
+.td30{
+	border-bottom: 0.5px solid #a2a2a2;
 }
 
 tr{
@@ -312,7 +315,7 @@ tr{
 	left: 0px;
 	width: 100%;
 	background: #fe4e65;
-	opacity: 0.9;
+	opacity: 0.7;
 	border: 0.5px solid #fe4e65;
 	border-bottom: 0.5px solid #a2a2a2;
 	z-index: 100;
@@ -328,9 +331,9 @@ tr{
 	top: 0px;
 	left: 0px;
 	width: 100%;
-	background: #606363;
-	opacity: 0.9;
-	border: 0.5px solid #606363;
+	background: #3b3d3d;
+	opacity: 0.7;
+	border: 0.5px solid #3b3d3d;
 	z-index: 100;
 }
 
@@ -355,19 +358,20 @@ tr{
 	left: 3%;
 	margin-top: 0px;
 	font-size: 80%;
-	font-weight: bold;
+	font-weight: 400;
 	letter-spacing: -0.3px;
-	color: #282828;
+	color: #ffffff;
 	cursor: pointer;
 }
 
 .memberTime{
 	position: absolute;
 	right: 6%;
-	margin-top: 17px;
-	font-size: 11.5px;
+	font-weight: 300;
+	margin-top: 15px;
+	font-size: 10.5px;
 	letter-spacing: -0.3px;
-	color: #3b3d3d;
+	color: #ffffff;
 	cursor: pointer;
 }
 

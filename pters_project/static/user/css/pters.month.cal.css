@@ -160,12 +160,13 @@ span{
 	font-size: 14.4px;
 	height: 70px;
 	padding-bottom: 7px;
+	
 }
 
 .calendar-style{  /*week 스타일하위 */
 	width: 100%;
-	height: 100%;
 	text-align: center;
+	height: 98%;
 }
 
 .calendar-day-style{  /*왈화수목금토일 스타일 */
@@ -263,6 +264,20 @@ span{
 	z-index: -1;
 }
 
+.greydateMytime{
+	position: absolute;
+	display:block;
+	margin:auto;
+	width: 30px;
+	height: 30px;
+	background: #e4e4e4;
+	top: 0;
+	bottom:0;
+	left: 0;
+	right: 0;
+	border-radius: 50%;
+	z-index: -1;
+}
 
 
 .today{
@@ -286,7 +301,7 @@ span{
 
 .balloon{
 	position: absolute;
-	background: #ccc;
+	background: #e4e4e4;
 	height: 26%;
 	width: 90%;
 	margin: 0 auto;
@@ -298,6 +313,7 @@ span{
 	z-index: -2;
 }
 
+/*
 .balloon:after{
 	content: '';
 	position: absolute;
@@ -308,14 +324,43 @@ span{
 	left: 38%;
 	z-index: -3;
 }
+*/
 
+.blackballoon{
+	position: absolute;
+	color: #ffffff;
+	background: #3b3d3d;
+	height: 26%;
+	width: 90%;
+	margin: 0 auto;
+	margin-left: 5%;
+	bottom: -10%;
+	border-radius: 1px;
+	font-size: 12px;
+	font-weight: 300;
+	padding-top: 0.35px;
+	z-index: -2;
+}
+
+/*
+.blackballoon:after{
+	content: '';
+	position: absolute;
+	border-bottom: 10px solid #282828;
+	border-right:5px solid transparent;
+	border-left: 5px solid transparent;
+	top: -6px;
+	left: 38%;
+	z-index: -3;
+}
+*/
 
 /*팝업 css*/
 #ng_popup{
 	display: none;
 	position: fixed;
 	background: #e4e4e4;
-	top: 35%;
+	top: 42%;
 	left: 10%;
 	width: 80%;
 	border: 1px solid #a2a2a2;
@@ -385,7 +430,7 @@ span{
 }
 
 
-#popup_text3{
+#popup_text2{
 	color: #000ecc;
 }
 
@@ -473,6 +518,12 @@ span{
 	z-index: 105;
 }
 
+.admonth{
+	height: 50%;
+	opacity: 0.15;
+	margin-top: 18px;
+}
+
 
 @media(min-width:415px){
 	#cal_popup{
@@ -534,7 +585,7 @@ span{
 		font-weight: bold;
 	}
 
-	#popup_text3{
+	#popup_text2{
 		color: #000ecc;
 	}
 
