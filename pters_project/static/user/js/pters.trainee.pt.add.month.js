@@ -8,8 +8,8 @@ $(document).ready(function(){
       var offAddOkArray = [] //OFF 등록 시작 시간 리스트
       var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
 
-      DBdataProcess(classTimeArray_start_date1,classTimeArray_end_date1,classDateData,"graph",classTimeData)
-      DBdataProcess(offTimeArray_start_date1,offTimeArray_end_date1,offDateData,"graph",offTimeData)
+      DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
+      DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
 
       $('#popup_text2').click(function(){ //일정예약 팝업에서 일정예약 버튼을 눌렀을때 예약하는 팝업이 생성
         $('#addpopup').fadeIn().css({'z-index':'103'})
