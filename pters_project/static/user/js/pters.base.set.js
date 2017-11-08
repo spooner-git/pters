@@ -3,7 +3,7 @@ $(document).ready(function(){
 //      var userID = "박재범"
 //      var upText = new Array("Pters",userID+" 코치님 일정")
 //
-    var upText = "Pters";
+    var upText = "PTERS";
     var thisfilefullname = document.URL.substring(document.URL.lastIndexOf("/") + 1, document.URL.length);
 
      $("#outer_Sidenav").click(function(e){ // When any `div.container` is clicked

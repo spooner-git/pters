@@ -38,6 +38,9 @@ $(document).ready(function(){
 	});
 	//플로팅 버튼
 
+	$(document).on('click','.admonth',function(){
+		alert('까꿍~')
+	})
 
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
 		if($(this).hasClass('available')){
@@ -123,6 +126,7 @@ $(document).ready(function(){
 			$('#durations').remove('li')
 			$("#starttimesSelected button").removeClass("dropdown_selected");
 			$("#durationsSelected button").removeClass("dropdown_selected");
+			$("#submitBtn").removeClass('submitBtnActivated');		
 			$("#starttimesSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
 			$("#durationsSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
 			if($('#addpopup').css('display')=='block'){
@@ -130,6 +134,8 @@ $(document).ready(function(){
 				$('#shade2').css({'display':'none'});
 			}
 	})
+
+
 
 
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,10 +273,11 @@ $(document).ready(function(){
 		var howmanyWeek6 = $('#week6'+Year+Month+' td').length;
 		var howmanyWeek5 = $('#week5'+Year+Month+' td').length;
 
-		if(howmanyWeek5<7){
+		if(howmanyWeek5<=7 && howmanyWeek6==0){
 			for (var i=1; i<=7-howmanyWeek5;i++){
 			$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-			};	
+			};
+			ad_month($('#week6'+Year+Month+'child tbody tr')) //2017.11.08추가 달력이 5주일때, 비어있는 6주차에 광고 입력
 		}else if(howmanyWeek6<7 && howmanyWeek6>0){
 			for (var i=1; i<=7-howmanyWeek6;i++){
 			$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
@@ -293,8 +300,31 @@ $(document).ready(function(){
 
 	function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
 		for(var i=0; i<classDateArray.length; i++){
-			$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
-			$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').text(classStartArray[i])
+			var arr = classDateArray[i].split('_')
+			var yy = arr[0]
+			var mm = arr[1]
+			var dd = arr[2]
+			var omm = String(oriMonth)
+			var odd = String(oriDate)
+			if(mm.length==1){
+				var mm = '0'+arr[1]
+			}
+			if(dd.length==1){
+				var dd='0'+arr[2]
+			}
+			if(omm.length==1){
+				var omm = '0'+oriMonth
+			}
+			if(odd.length==1){
+				var odd='0'+oriDate
+			}
+			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
+				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
+				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').text(classStartArray[i])
+			}else{
+				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
+				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').text(classStartArray[i])
+			}
 		};
 	};
 
@@ -361,6 +391,10 @@ $(document).ready(function(){
     			result2.push(startSplitArray[3]+":"+startSplitArray[4]);
     		}	
   	    }
+	}
+
+	function ad_month(selector){ // 월간 달력 하단에 광고
+		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">')	
 	}
 
 });//document(ready)

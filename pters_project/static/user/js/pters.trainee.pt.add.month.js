@@ -11,14 +11,13 @@ $(document).ready(function(){
       DBdataProcess(classTimeArray_start_date1,classTimeArray_end_date1,classDateData,"graph",classTimeData)
       DBdataProcess(offTimeArray_start_date1,offTimeArray_end_date1,offDateData,"graph",offTimeData)
 
-
-      $('#popup_text3').click(function(){ //일정예약 팝업에서 일정예약 버튼을 눌렀을때 예약하는 팝업이 생성
-          $('#addpopup').fadeIn().css({'z-index':'103'})
-          $('#cal_popup2').hide()
-          timeGraphSet("class","grey");  //시간 테이블 채우기
-          timeGraphSet("off","grey")
-          startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
-        })
+      $('#popup_text2').click(function(){ //일정예약 팝업에서 일정예약 버튼을 눌렀을때 예약하는 팝업이 생성
+        $('#addpopup').fadeIn().css({'z-index':'103'})
+        $('#cal_popup2').hide()
+        timeGraphSet("class","grey");  //시간 테이블 채우기
+        timeGraphSet("off","grey")
+        startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+      })
 
       var select_all_check = false;
       //달력 선택된 날짜
