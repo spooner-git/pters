@@ -228,6 +228,7 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
         daily_lecture_data_start_date = []
         daily_lecture_data_end_date = []
         daily_lecture_data_member = []
+        daily_lecture_data_id = []
         today_dt = timezone.now()
         before_dt = today_dt - datetime.timedelta(days=14)
         after_dt = today_dt + datetime.timedelta(days=14)
@@ -271,6 +272,7 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
                     daily_lecture_data_member.append(member_data.name)
+                    daily_lecture_data_id.append(lecture.lecture_id)
 
         #context['daily_off_data'] = daily_off_data
         #context['daily_lecture_data'] = daily_data
@@ -282,6 +284,7 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
         context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
         context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
         context['daily_lecture_data_member'] = daily_lecture_data_member
+        context['daily_lecture_data_id'] = daily_lecture_data_id
 
         return context
 

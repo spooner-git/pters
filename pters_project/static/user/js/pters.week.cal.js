@@ -38,7 +38,9 @@ $(document).ready(function(){
 			var infoText = info[6]+' 회원님 '+info[3]+'시 일정'
 			$('#popup_info').text(infoText)
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+			$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
+			$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 			schedule_on_off = 1;
 
 		})
@@ -54,6 +56,7 @@ $(document).ready(function(){
 			var infoText = info[3]+'시 OFF 일정'
 			$('#popup_info').text(infoText)
 			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+			$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 			schedule_on_off = 0;
 
 		})
@@ -65,7 +68,16 @@ $(document).ready(function(){
 			}
 		})
 		//스케쥴 클릭시 팝업 End
-
+		//일정 변경 기능 추가 - hk.kim 171007
+	$("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
+			if(schedule_on_off==1){
+				//PT 일정 변경시
+				document.getElementById('pt-modify-form').submit();
+			}
+			else{
+				document.getElementById('off-modify-form').submit();
+			}
+	})
 		//일정 삭제 기능 추가 - hk.kim 171007
 		$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
 			if(schedule_on_off==1){
@@ -458,7 +470,7 @@ $(document).ready(function(){
 			//var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var tdClassStart = $("#"+classStart+" div");
 			//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
-			tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*30)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
+			tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*30)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
 		};
 		$('#calendar').css('display','block');
 	};

@@ -195,11 +195,16 @@
           var countArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.lecture_count }}',{% endif %}{% endfor %}]
           var startArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
           var modifyDateArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.trainer_member.mod_dt }}',{% endif %}{% endfor %}]
+          var emailArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.trainer_member.user.email }}',{% endif %}{% endfor %}]
+          var endArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
 
           var finishnameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
           var finishphoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
           var finishcountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.lecture_count }}',{% endif %}{% endfor %}]
           var finishstartArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
+          var finish_modifyDateArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.mod_dt }}',{% endif %}{% endfor %}]
+          var finish_emailArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.user.email }}',{% endif %}{% endfor %}]
+          var finish_endArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
          </script>
 
         
