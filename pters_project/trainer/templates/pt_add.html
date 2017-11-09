@@ -10,6 +10,9 @@
 
 
 {% block content %}
+<div id="inputError">
+        <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">경고! 모든 항목을 입력해주세요</p></div>
+</div>
 
 <form action="{% url 'trainer:add_pt_logic' %}" id="pt-add-form" method="post">
     <input type="hidden" name="lecture_id"    id="id_lecture_id">

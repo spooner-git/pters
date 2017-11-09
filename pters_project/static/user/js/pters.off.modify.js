@@ -97,6 +97,7 @@ $(document).ready(function(){
          if(select_all_check==true){
              document.getElementById('off-add-form').submit();
          }else{
+            $('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
          }
      })

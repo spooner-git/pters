@@ -10,6 +10,28 @@ input{
 	text-align: center;
 }
 
+span{
+	cursor: pointer;
+}
+
+#inputError{
+	position: relative;
+	width: 100%;
+	height: 35px;
+	display: none;
+}
+
+.inputErrorInner{
+	height: 35px;
+}
+
+#errorMsg{
+	background: #ff1533;
+	color:#ffffff;
+	font-size: 14px;
+	text-align: center;
+}
+
 .pters_dropdown_custom{
 	font-family: 'Noto Sans KR';
 	width: 100%;
