@@ -28,20 +28,19 @@
     <body>
     {% block navbar %}
     <div id="shade">
-        </div>
-        <nav class="navbar navbar-fixed-top navbar-default">
-            <div class="container">
-                <div class="navbar-header">
-                    {% block nav_center_img %}
-                        <a id="uptext" class="navbar-brand" href="{% url 'home' %}">{{ user.first_name }} 회원님 월간 PT 일정</a>
-                    {% endblock %}
-                    <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
-                        <a href="{% url 'trainer:logout' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
-                    </button>
-                    
-                </div>
-            </div><!-- /.container -->
-        </nav><!-- /.navbar -->
+    </div>
+    <nav class="navbar navbar-fixed-top navbar-default wrap">
+        <div class="">
+            <div class="navbar-header">
+                 {% block nav_center_img %}
+                 <a id="uptext" class="navbar-brand" href="{% url 'home' %}">{{ user.first_name }} 회원님 월간 PT 일정</a>
+                {% endblock %}
+                 <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
+                    <a href="{% url 'trainer:logout' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
+                 </button> 
+            </div>
+         </div><!-- /.container -->
+     </nav><!-- /.navbar -->
         
     {% endblock %}
     

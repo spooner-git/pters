@@ -143,16 +143,15 @@
     </div>
 
 
-
   <!-- 월간 달력 -->
-    <div id="ymdText">
+    <div id="ymdText" class="wrap">
         <img src={% static "user/res/bg.png" %} alt="bg-image" style="width: 100%;height:57px;position: fixed;z-index: -1;">
         <div id="ymdTextWrap">
             <div id="yearText"></div>
             <div id="monthText"></div>
             <div id="countRemain" style="position: absolute;top: 2px;right: 2px;color: #ffffff;font-size: 13.5px;font-weight: 300;">예약가능횟수: <span id="countRemainData"> xx회</span></div>
         </div>
-        <div id="date" class="container-fluid week-style"> <!--월화수목금토일-->
+        <div id="date" class="week-style"> <!--월화수목금토일-->
             <table class="calendar-style calendar-day-style">
                 <tr>
                     <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
@@ -170,8 +169,7 @@
     <div id="gapbox">  
     </div>
     
-    <div id="calendar" class="container" > <!-- Calendar container-->
-        
+    <div id="calendar" class="wrap" > <!-- Calendar container-->    
         <div class="swiper-container">
             <div class="swiper-wrapper">
                 <div class="swiper-slide" id="slide0"></div> <!--Index0-->
@@ -182,7 +180,6 @@
         <!--Swiper-->
         <!-- <div class="swiper-pagination"></div> -->
         <div id="cal_box" class="cal_box"></div>
-
     </div>
 
 <!--
