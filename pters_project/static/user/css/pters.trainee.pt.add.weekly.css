@@ -266,6 +266,16 @@ body{
 	font-size: 13px;
 }
 
+@media(min-width: 570px){
+	.hour{
+		text-align: center;
+		width: 9.72%;
+		border-bottom: 1px solid transparent;
+		font-size: 15px;
+		font-weight: bold;
+	}
+}
+
 td{ /*회원일정예약용으로 변경 */
 	position: relative;
 	width: 12.5%;
@@ -404,7 +414,9 @@ tr{ /*회원일정예약용으로 변경 */
 .weekToday-style{
 	height: 18px;
 	font-size: 14.1px;
+	font-weight: bold;
 }
+
 
 .today-Number{
 	font-weight: bold;

@@ -165,9 +165,11 @@ span{
 		position: relative;
 		width: 100%;
 		border-bottom: 1px solid #cccccc;
-		font-size: 14.4px;
 		height: 15%;
-		padding-bottom: 7px;	
+		padding-bottom: 7px;
+		font-size: 16px;
+		font-weight: bold;	
+
 	}
 }
 
@@ -179,6 +181,12 @@ span{
 
 .calendar-day-style{  /*왈화수목금토일 스타일 */
 	font-size: 12px;
+}
+
+@media(min-width:570px){
+	.calendar-day-style{  /*왈화수목금토일 스타일 */
+		font-size: 15px;
+	}
 }
 
 .calendar_image{
@@ -370,9 +378,9 @@ span{
 		height: 18px;
 		width: 40px;
 		bottom: 0%;
-		border-radius: 1px;
+		border-radius: 2px;
 		font-size: 12px;
-		padding-top: 1px;
+		padding-top: 1.5px;
 		z-index: -2;
 		left: 50%;
 		transform: translateX(-50%);
@@ -385,10 +393,10 @@ span{
 		height: 18px;
 		width: 40px;
 		bottom: 0%;
-		border-radius: 1px;
+		border-radius: 2px;
 		font-size: 12px;
 		font-weight: 300;
-		padding-top: 2.35px;
+		padding-top: 1.5px;
 		z-index: -2;
 		left: 50%;
 		transform: translateX(-50%);
@@ -546,7 +554,7 @@ span{
 }
 
 .available{
-	border-top: 3px solid #bcedff;
+	border-top: 3px solid #88dfff;
 	z-index: -1;
 }
 
