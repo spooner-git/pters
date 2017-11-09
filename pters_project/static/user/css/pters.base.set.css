@@ -2,7 +2,23 @@
 
 body{
     font-family: 'Noto Sans KR' !important;
+    background: #f4f4f4;
 }
+
+.wrap{
+    width: 100%;
+    max-width: 1000px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+
+.wraptrainer{
+    width: 100%;
+    max-width: 750px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+
 
 
 /* Sidebar CSS */
@@ -269,41 +285,6 @@ body{
         width: 35%;
     }
 }
-
-@media(min-width:1273px){
-/*모바일 이외 달력 사이즈 조정*/
-
-    #shade{
-    position: fixed;
-    display: none;
-    width: 100%;
-    max-width: 1024px;
-    height: 100%;
-    background: black;
-    opacity: 0.7;
-    z-index: -1;
-    }
-
-    .container{
-        width:  100%;
-        max-width: 1024px;
-        left:   250px;
-    }
-
-    .navbar{
-        width:  100%;
-        max-width: 1024px;
-        left:   250px;
-    }
-
-    .sidenav{
-        width: 250px;
-    }
-
-    #upbutton{
-        display:    none;
-    }
-
 
 }
 

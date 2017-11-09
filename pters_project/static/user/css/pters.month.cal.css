@@ -96,17 +96,14 @@ span{
 	text-align: center; 
 }
 #date{
+	position: relative;
 	padding-top: 10px;
-	padding-bottom: 4%;
 	padding-right: 35px;
 	padding-left: 35px;
 	height: auto;
-	position: fixed;
 	z-index: 3;
-	/*background-color: #ffffff;*/
 	background-color: transparent;
 	border-bottom: 0px;
-
 }
 
 
@@ -159,8 +156,19 @@ span{
 	border-bottom: 1px solid #cccccc;
 	font-size: 14.4px;
 	height: 70px;
-	padding-bottom: 7px;
-	
+	padding-bottom: 7px;	
+}
+
+@media(min-width:570px){
+	.week-style{ /*week 스타일*/
+		background-color: transparent;
+		position: relative;
+		width: 100%;
+		border-bottom: 1px solid #cccccc;
+		font-size: 14.4px;
+		height: 15%;
+		padding-bottom: 7px;	
+	}
 }
 
 .calendar-style{  /*week 스타일하위 */
@@ -185,13 +193,13 @@ span{
 
 
 #calendar{
+	position: fixed; /*2017.10.02*/
+	width: 100%;
 	height: 78%;
 	background-color: rgba(0,0,0,0);
-	width: 100%;
 	padding-left: 20px;
 	padding-right:20px;
 	z-index: -1;
-	position: fixed; /*2017.10.02*/
 }
 
 
@@ -304,13 +312,13 @@ span{
 	background: #e4e4e4;
 	height: 26%;
 	width: 90%;
-	margin: 0 auto;
-	margin-left: 5%;
 	bottom: -10%;
 	border-radius: 1px;
 	font-size: 12px;
 	padding-top: 1px;
 	z-index: -2;
+	left: 50%;
+	transform: translateX(-50%);
 }
 
 /*
@@ -332,14 +340,14 @@ span{
 	background: #3b3d3d;
 	height: 26%;
 	width: 90%;
-	margin: 0 auto;
-	margin-left: 5%;
 	bottom: -10%;
 	border-radius: 1px;
 	font-size: 12px;
 	font-weight: 300;
 	padding-top: 0.35px;
 	z-index: -2;
+	left: 50%;
+	transform: translateX(-50%);
 }
 
 /*
@@ -354,6 +362,40 @@ span{
 	z-index: -3;
 }
 */
+
+@media(min-width:570px){
+	.balloon{
+		position: absolute;
+		background: #e4e4e4;
+		height: 18px;
+		width: 40px;
+		bottom: 0%;
+		border-radius: 1px;
+		font-size: 12px;
+		padding-top: 1px;
+		z-index: -2;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.blackballoon{
+		position: absolute;
+		color: #ffffff;
+		background: #3b3d3d;
+		height: 18px;
+		width: 40px;
+		bottom: 0%;
+		border-radius: 1px;
+		font-size: 12px;
+		font-weight: 300;
+		padding-top: 2.35px;
+		z-index: -2;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+
 
 /*팝업 css*/
 #ng_popup{
