@@ -12,6 +12,9 @@
 
 
 {% block content %}
+<div id="inputError">
+        <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">경고! 모든 항목을 입력해주세요</p></div>
+</div>
 
 <form action="{% url 'trainer:modify_off_logic' %}" id="off-add-form" method="post">
     <input type="hidden" name="modify_off_schedule_id"    id="id_modify_off_schedule_id" value="{{ before_off_schedule_id }}">

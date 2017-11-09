@@ -7,6 +7,10 @@ body{
 	background: black;
 }
 
+span{
+	cursor: pointer;
+}
+
 .swiper-slide{
 	height: 100%;
 	overflow-y: overlay;
@@ -319,6 +323,7 @@ tr{
 	border: 0.5px solid #fe4e65;
 	border-bottom: 0.5px solid #a2a2a2;
 	z-index: 100;
+	cursor: pointer;
 }
 
 .classTime:active{
@@ -335,6 +340,7 @@ tr{
 	opacity: 0.7;
 	border: 0.5px solid #3b3d3d;
 	z-index: 100;
+	cursor: pointer;
 }
 
 .offTime:active{

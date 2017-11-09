@@ -7,6 +7,9 @@ body{
 	background: black;
 }
 
+span{
+	cursor: pointer;
+}
 
 #shade2{
 	position: fixed;
@@ -322,6 +325,7 @@ td{
 	background: #ffffff;
 	border: 0.5px solid #fe4e65;
 	z-index: 100;
+	cursor: pointer;
 }
 
 .classTime:active{
@@ -338,6 +342,7 @@ td{
 	background: #cccccc;
 	border: 0.5px solid #cccccc;
 	z-index: 99;
+	cursor: pointer;
 }
 
 .offTime:hover{
