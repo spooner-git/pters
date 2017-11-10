@@ -16,8 +16,8 @@
       {% endfor %}
     <input type="hidden" name="next_page" value = '{% url 'trainer:alarm' %}'>
   </form>
-
-<div class="alarmBox">  <!-- 알림 박스 -->
+<!--
+<div class="alarmBox">
   <div id="modifyInfo">
       <img id="bell" src="/static/user/res/alarm/icon-alarm-new.png"> <span>%DB.Name%</span>님이 일정을 <span class="status">변경</span>했습니다.<span class="timePast">2017년 10월 30일 10:50 오후</span>
   </div>
@@ -25,11 +25,15 @@
   <div style="text-align: center"><img id="arrow" src="/static/user/res/alarm/icon-down-black.png"></div>
   <div id="afterInfo">2017년 11월 30일 월요일 오후 08:00 - 오후 09:30</div>
 </div>
+-->
 
     {% for log_data_detail in log_data %}
 
 <div class="alarmBox" >  <!-- 알림 박스 -->
   <div id="modifyInfo">
+      {% if forloop.first %}
+        <img id="bell" src="/static/user/res/alarm/icon-alarm-new.png">
+      {% endif %}
       {% autoescape off %}{{ log_data_detail.log_contents }}{% endautoescape %}
       <span class="timePast">
         <script>
