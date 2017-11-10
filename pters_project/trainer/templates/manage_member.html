@@ -28,8 +28,8 @@
   <div id="btnCallFinished" href="#" class="btn btn-primary">종료된 회원</div>
 </div> 
 <div id="alignBox">
-  <div style="font-size:14px;">
-    회원 정렬 기준
+  <div style="font-size:14px;position: relative;">
+    회원 정렬 기준 <span id="currentMemberNum" class="memberNum"></span><span id="finishMemberNum" class="memberNum"></span>
   </div>
   <div class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택    <span class="caret"></span></button>
@@ -202,9 +202,29 @@
           var finishphoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
           var finishcountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.lecture_count }}',{% endif %}{% endfor %}]
           var finishstartArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
-          var finish_modifyDateArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.mod_dt }}',{% endif %}{% endfor %}]
-          var finish_emailArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.user.email }}',{% endif %}{% endfor %}]
-          var finish_endArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
+          var finishmodifyDateArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.mod_dt }}',{% endif %}{% endfor %}]
+          var finishemailArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.trainer_member.user.email }}',{% endif %}{% endfor %}]
+          var finishendArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count == 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
+         
+
+
+          var DB = {};
+          var DBe = {};
+          var DBlength = nameArray.length;
+          for(var i=0; i<DBlength;i++){
+            DB[nameArray[i]] = {'email':emailArray[i],'count':countArray[i],'phone':phoneArray[i],'start':startArray[i],'end':endArray[i]};
+          }
+          var DBendlength = finishnameArray.length;
+          for(var j=0; j<DBendlength;j++){
+            DBe[finishnameArray[j]] = {'email':finishemailArray[j],'count':finishcountArray[j],'phone':finishphoneArray[j],'start':finishstartArray[j],'end':finishendArray[j]}; 
+          }
+
+          $('#currentMemberNum').text("진행중 회원수 : "+DBlength)
+          $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
+
+
+
+
          </script>
 
         
