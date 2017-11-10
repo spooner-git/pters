@@ -159,7 +159,7 @@ tr td:nth-child(4){
 }
 
 
-._tdname{
+._tdname, ._tdnamee{
 	cursor: pointer;
 }
 
@@ -169,4 +169,12 @@ tr td:nth-child(4){
 	margin-bottom: 30px;
 	width: 50%;
 	height: 35px;
+}
+
+.memberNum{
+	float: right;
+}
+
+#finishMemberNum{
+	display: none;
 }
