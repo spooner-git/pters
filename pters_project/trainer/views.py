@@ -29,7 +29,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         try:
             trainer_class = ClassTb.objects.get(member=self.request.user.id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
 
         context['trainer_member_count'] = 0
 
@@ -74,7 +74,7 @@ class CalDayView(LoginRequiredMixin, TemplateView):
         try:
             trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
         #daily_off_data = []
@@ -156,7 +156,7 @@ class PtAddView(LoginRequiredMixin, TemplateView):
         try:
             trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
 
         context['trainer_member'] = None
         daily_off_data_start_date = []
@@ -175,7 +175,7 @@ class PtAddView(LoginRequiredMixin, TemplateView):
                 try:
                     lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
                 except ObjectDoesNotExist:
-                    error = 'lecture가 존재하지 않습니다'
+                    error = '회원 PT 정보가 존재하지 않습니다'
                     # logger.error(error)
 
         if error is None:
@@ -215,7 +215,7 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
         try:
             trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
         #daily_off_data = []
@@ -299,7 +299,7 @@ class OffAddView(LoginRequiredMixin, TemplateView):
         try:
             trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
 
         daily_off_data_start_date = []
         daily_off_data_end_date = []
@@ -355,7 +355,7 @@ class ManageMemberView(LoginRequiredMixin, TemplateView):
         try:
             trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
         context['trainer_member'] = None
@@ -367,7 +367,7 @@ class ManageMemberView(LoginRequiredMixin, TemplateView):
                 try:
                     lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
                 except ObjectDoesNotExist:
-                    error = 'lecture가 존재하지 않습니다'
+                    error = '회원 PT 정보가 존재하지 않습니다'
                     # logger.error(error)
 
         return context
@@ -393,7 +393,7 @@ class AlarmView(LoginRequiredMixin, TemplateView):
         try:
             trainer_class = ClassTb.objects.get(member=self.request.user.id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
 
         if error is None:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
@@ -513,12 +513,12 @@ def member_registration(request, next='trainer:member_manage'):
 
         except ValueError as e:
             #logger.error(e)
-            error = 'Registration ValueError!'
+            error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
             #logger.error(e)
-            error = 'Registration IntegrityError!'
+            error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
-            error = 'Registration TypeError!'
+            error = '등록 값의 형태가 문제 있습니다.'
 
     if error is None:
         # Send email with activation key
@@ -568,7 +568,7 @@ def add_pt_logic(request, next='trainer:cal_day'):
         try:
             trainer_class = ClassTb.objects.get(member_id=request.user.id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
         try:
@@ -576,22 +576,22 @@ def add_pt_logic(request, next='trainer:cal_day'):
             for month_class in month_class_data:
                 if month_class.start_dt >= start_date:
                     if month_class.start_dt < end_date:
-                        error = '날짜가 겹칩니다.'
+                        error = '등록 시간이 겹칩니다.'
                 if month_class.end_dt > start_date:
                     if month_class.end_dt < end_date:
-                        error = '날짜가 겹칩니다.'
+                        error = '등록 시간이 겹칩니다.'
                 if month_class.start_dt <= start_date:
                     if month_class.end_dt >= end_date:
-                        error = '날짜가 겹칩니다.'
+                        error = '등록 시간이 겹칩니다.'
 
         except ValueError as e:
             # logger.error(e)
-            error = 'Registration ValueError!'
+            error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
             # logger.error(e)
-            error = 'Registration IntegrityError'
+            error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
-            error = 'Registration TypeError!'
+            error = '등록 값의 형태에 문제가 있습니다.'
 
         if error is None:
             try:
@@ -603,13 +603,13 @@ def add_pt_logic(request, next='trainer:cal_day'):
                     for month_lecture in lecture.lecture_schedule:
                         if month_lecture.start_dt >= start_date:
                             if month_lecture.start_dt < end_date:
-                                error = '날짜가 겹칩니다.'
+                                error = '등록 시간이 겹칩니다.'
                         if month_lecture.end_dt > start_date:
                             if month_lecture.end_dt < end_date:
-                                error = '날짜가 겹칩니다.'
+                                error = '등록 시간이 겹칩니다.'
                         if month_lecture.start_dt <= start_date:
                             if month_lecture.end_dt >= end_date:
-                                error = '날짜가 겹칩니다.'
+                                error = '등록 시간이 겹칩니다.'
 
                 if error is None:
                     with transaction.atomic():
@@ -625,12 +625,12 @@ def add_pt_logic(request, next='trainer:cal_day'):
 
             except ValueError as e:
                 #logger.error(e)
-                error = 'Registration ValueError!'
+                error = '등록 값에 문제가 있습니다.'
             except IntegrityError as e:
                 #logger.error(e)
-                error = 'Registration IntegrityError!'
+                error = '등록 값에 문제가 있습니다.'
             except TypeError as e:
-                error = 'Registration TypeError!'
+                error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -740,7 +740,7 @@ def daily_pt_delete(request):
         try:
             lecture_schedule_data = LectureScheduleTb.objects.get(lecture_schedule_id=schedule_id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
         if error is None:
@@ -751,7 +751,7 @@ def daily_pt_delete(request):
         try:
             lecture_data = LectureTb.objects.get(lecture_id=lecture_schedule_data.lecture_tb_id)
         except ObjectDoesNotExist:
-            error = 'Lecture가 존재하지 않습니다'
+            error = '회원 PT 정보가 존재하지 않습니다'
 
         try:
             with transaction.atomic():
@@ -765,12 +765,12 @@ def daily_pt_delete(request):
 
         except ValueError as e:
             #logger.error(e)
-            error = 'Registration ValueError!'
+            error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
             #logger.error(e)
-            error = 'Registration IntegrityError!'
+            error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
-            error = 'Registration TypeError!'
+            error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -842,22 +842,22 @@ def add_off_logic(request, next='trainer:cal_day'):
                 for month_lecture in lecture.lecture_schedule:
                     if month_lecture.start_dt >= start_date:
                         if month_lecture.start_dt < end_date:
-                            error = '날짜가 겹칩니다.'
+                            error = '등록 시간이 겹칩니다.'
                     if month_lecture.end_dt > start_date:
                         if month_lecture.end_dt < end_date:
-                            error = '날짜가 겹칩니다.'
+                            error = '등록 시간이 겹칩니다.'
                     if month_lecture.start_dt <= start_date:
                         if month_lecture.end_dt >= end_date:
-                            error = '날짜가 겹칩니다.'
+                            error = '등록 시간이 겹칩니다.'
 
         except ValueError as e:
             #logger.error(e)
-            error = 'Registration ValueError!'
+            error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
             #logger.error(e)
-            error = 'Registration IntegrityError!'
+            error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
-            error = 'Registration TypeError!'
+            error = '등록 값의 형태에 문제가 있습니다.'
 
         if error is None:
             try:
@@ -881,12 +881,12 @@ def add_off_logic(request, next='trainer:cal_day'):
 
             except ValueError as e:
                 # logger.error(e)
-                error = 'Registration ValueError!'
+                error = '등록 값에 문제가 있습니다.'
             except IntegrityError as e:
                 # logger.error(e)
-                error = 'Registration IntegrityError'
+                error = '등록 값에 문제가 있습니다.'
             except TypeError as e:
-                error = 'Registration TypeError!'
+                error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -937,7 +937,7 @@ def daily_off_delete(request):
         try:
             class_schedule_data = ClassScheduleTb.objects.get(class_schedule_id=off_schedule_id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
         if error is None:

@@ -11,9 +11,15 @@
 
 
 {% block content %}
-    <div id="inputError">
-        <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">경고! 모든 항목을 입력해주세요</p></div>
-    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div id="inputError">
+                    <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <form action="/trainer/member_registration/" method="POST" class="member-form" id="member-add-form">
         <div>
             <div class="ptaddbox form-group">

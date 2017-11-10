@@ -10,6 +10,7 @@ $(document).ready(function(){
 
       DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
       DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
+      $('#inputError').fadeIn('slow')
 
       $("#datepicker").datepicker({
         minDate : 0,
@@ -91,7 +92,7 @@ $(document).ready(function(){
          if(select_all_check==true){
              document.getElementById('pt-add-form').submit();
          }else{
-             $('#inputError').fadeIn('slow')
+             //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
          }
      })

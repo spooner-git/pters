@@ -8,7 +8,8 @@ $(document).ready(function(){
       var select_all_check = false;
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
-      
+      $('#inputError').fadeIn('slow')
+
       $('span.deleteBtn').click(function(){ //일정요약에서 반복일정 오른쪽 화살표 누르면 휴지통 열림
         var btn = $(this).find('div')
         if(btn.css('width')=='0px'){
@@ -99,7 +100,7 @@ $(document).ready(function(){
          if(select_all_check==true){
              document.getElementById('off-add-form').submit();
          }else{
-            $('#inputError').fadeIn('slow')
+            //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
          }
      })
