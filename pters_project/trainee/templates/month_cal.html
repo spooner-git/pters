@@ -8,7 +8,18 @@
 {% endblock %}
 
 {% block content %}
-
+  <form action="{% url 'trainee:pt_delete_logic' %}" id="pt-delete-form" method="post">
+    <input type="hidden" name="schedule_id" id="id_schedule_id">
+    <input type="hidden" name="next_page" value = '{% url 'trainee:cal_month' %}'>
+  </form>
+    <form action="{% url 'trainee:pt_add_logic' %}" id="pt-add-form" method="post">
+    <input type="hidden" name="lecture_id"    id="id_lecture_id">
+    <input type="hidden" name="member_name"   id="id_member_name">
+    <input type="hidden" name="training_date" id="id_training_date">
+    <input type="hidden" name="time_duration" id="id_time_duration">
+    <input type="hidden" name="training_time" id="id_training_time">
+    <input type="hidden" name="next_page">
+</form>
    <div id="shade2">
     </div>
 
@@ -149,7 +160,7 @@
         <div id="ymdTextWrap">
             <div id="yearText"></div>
             <div id="monthText"></div>
-            <div id="countRemain" style="position: absolute;top: 2px;right: 2px;color: #ffffff;font-size: 13.5px;font-weight: 300;">예약가능횟수: <span id="countRemainData"> xx회</span></div>
+            <div id="countRemain" style="position: absolute;top: 2px;right: 2px;color: #ffffff;font-size: 13.5px;font-weight: 300;">예약가능횟수: <span id="countRemainData"> {{lecture_count}}회</span></div>
         </div>
         <div id="date" class="week-style"> <!--월화수목금토일-->
             <table class="calendar-style calendar-day-style">

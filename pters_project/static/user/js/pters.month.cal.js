@@ -49,11 +49,11 @@ $(document).ready(function(){
 				$('#shade2').css({'display':'block'});
 				//console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
 					                                         //형식예: 2017_10_7_6_00_2_원빈
-				//console.log($(this).attr('off-schedule-id'));
+				console.log($(this).attr('schedule-id'));
 				var info = $(this).attr('data-date').split('_')
 				var infoText = info[0]+'년 '+info[1]+'월 '+info[2]+'일'
 				$('#popup_info').text(infoText)
-				//$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+				$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 				//$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 				//schedule_on_off = 0;
 			}else{
@@ -72,7 +72,11 @@ $(document).ready(function(){
 			})
 		}
 	})
-		
+
+	$("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
+				//PT 일정 삭제시
+				document.getElementById('pt-delete-form').submit();
+	})
 
 /*
 	$("#popup_text1").click(function(){  //일정 변경 버튼 클릭
@@ -319,9 +323,11 @@ $(document).ready(function(){
 				var odd='0'+oriDate
 			}
 			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
-				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
+				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
+				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime').
 				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').text(classStartArray[i])
 			}else{
+				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
 				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').text(classStartArray[i])
 			}
