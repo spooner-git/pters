@@ -24,7 +24,9 @@ span{
 .swiper-slide{
 	height: 100%;
 	overflow: auto;
+	/* 가속도 스크롤
 	-webkit-overflow-scrolling:touch;
+	*/
 }
 
 .swiper-container{

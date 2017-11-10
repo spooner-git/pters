@@ -2,51 +2,186 @@ body{
 	padding-top: 50px;
 }
 
-.settingMenu{
+.pters_dropdown_setting_custom{
+	display: inline-block;
+	width: 26.4% !important;
+	height: 100%;
+	margin-top: 10px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+li a{
+	cursor: pointer;
+}
+
+
+.dropdown ul{
 	width: 100%;
+	min-width: 80px;
+}
+
+#pushTimeSet{
+	display: none;
+}
+
+#noRegMemberAlarm{
+	display: none;
+	text-align: center;
+}
+
+#noRegMemberAlarmSelect{
+	width: 55.416% !important;
+}
+
+#changedPlanAlarmSet{
+	display: none;
+	text-align: center;
+}
+
+#changedPlanAlarmSelect{
+	width: 91.527% !important;
+}
+
+#urgentAlarmSet{
+	display: none;
+	text-align: center;
+}
+
+#urgentMemberAlarmSelect{
+	width: 91.527% !important;
+}
+
+#urgentMemberAlarmWhenSelect{
+	width: 55.416% !important;
+}
+
+
+#time1, #time2{
 	height: 50px;
-	background:#ffffff;
-	font-size: 13.9px;
-	color: #3b3d3d;
+	text-align: center;
+}
+
+#prevset{
+	display: inline-block;
+	width: 33.4% !important;
+	height: 40px;
+	background: #3b3d3d;
+	color: #ffffff;
+	margin-top: 0px;
+	font-size: 12px;
+	vertical-align: middle;
+}
+
+#prevset div{
+	height: 40px;
+}
+
+#prevset span{
+	line-height: 40px;
+	vertical-align: middle;
+	font-size: 14.9px;
+	font-weight: 500;
+}
+
+.settingMenu{
+	position: relative;
+	height: 60.5px;
+	background: #ffffff;
+	font-size: 14.9px;
+	font-weight: 500;
+	color: #282828;
 	padding-top: 15px;
-	padding-bottom: 15px;
-	border-bottom: 0.5px solid #a2a2a2;
-}
-
-.settingImg{
-	width: 20px;
-	margin-bottom: 5px;
-	margin-left: 15px;
-	margin-right: 10px;
-}
-
-.settingArrow{
-	width: 5px;
-	float: right;
-	margin-right: 22.5px;
-	margin-top: 5px;
 }
 
 .settingText{
-	cursor: pointer;
+	margin: 0;
+	margin-left: 14.5px;
 }
 
-#logout{
-	width:100%;
+.settingText2{
+	margin: 0;
+	font-weight: 400;
+	font-size: 13px;
+	margin-left: 14.5px;
+	margin-top: 4px;
+}
+
+.settingText3{
+	margin-left: 14.5px;
+	line-height: 60.5px;
+	vertical-align: middle;
+}
+
+
+.iconText{
+	position: relative;
+	font-size: 13.9px;
+	color: #3b3d3d;
+	margin-left: 14.5px;
+	margin-top: 10px;
+	height:35px; 
+}
+
+.iconText span{
+	line-height: 35px;
+	vertical-align: middle;
+}
+
+.ulTimes{
+	height: 260px;
+	overflow-y: overlay;
+}
+
+.dropdown-menu li{
+	padding-top: 6.5px !important;
+	padding-bottom: 6.5px !important;
+}
+
+#trainerPushSettingText{
+	margin-top: 25px;
+}
+
+
+
+/*스위치*/
+.pters_switch{
 	position: absolute;
-	bottom : 10%;
-	font-size: 15px;
-	font-weight: bold;
-	color: #282828;
-	text-align: center;	
+	display: inline-block;
+	width: 53.5px;
+	height: 35px; 
+	top: 13px;
+	right: 14.5px;
 }
 
-#logout span{
-	cursor: pointer;
+.switchback{
+	position: absolute;
+	width:53.5px;
+	height: 100%;
+	border-radius: 27px;
+	border:0.5px solid #a2a2a2; 
+	background: #cbc9c4;
 }
 
-.logoutArrow{
-	width: 5px;
-	margin-bottom: 2.5px;
-	margin-left: 10px;
+.switchball{
+	position: absolute;
+	top: 3px;
+	width: 28px;
+	height: 28px; 
+	border-radius: 14px;
+	border:2px solid #282828;
+}
+
+.switchoff{
+	background: grey;
+	left: 4px;
+}
+
+.switchon{
+	background: #fe4e65;
+	right: 4px;
+}
+
+.switchon-back{
+	background: #ffffff;
 }
