@@ -24,19 +24,27 @@ $(document).ready(function(){
 
 		$("#btnCallCurrent").click(function(){
 			var currentMemberList = $("#currentMemberList");
+      var currentMemberNum = $('#currentMemberNum')
 			var finishedMemberList = $("#finishedMemberList");
+      var finishedMemberNum = $('#finishMemberNum')
 			if(currentMemberList.css("display")=="none"){
 				finishedMemberList.css("display","none");
+        finishedMemberNum.css("display","none")
 				currentMemberList.css("display","block");
+        currentMemberNum.css("display","block");
 			}
 		})
 
 		$("#btnCallFinished").click(function(){
 			var currentMemberList = $("#currentMemberList");
-			var finishedMemberList = $("#finishedMemberList");
+      var currentMemberNum = $('#currentMemberNum')
+      var finishedMemberList = $("#finishedMemberList");
+      var finishedMemberNum = $('#finishMemberNum')
 			if(finishedMemberList.css("display")=="none"){
 				finishedMemberList.css("display","block");
+        finishedMemberNum.css("display","block");
 				currentMemberList.css("display","none");
+        currentMemberNum.css("display","none");
 			}
 		})
 
@@ -69,12 +77,29 @@ $(document).ready(function(){
 
 
 //#####################회원정보 팝업 //#####################
+
     $(document).on('click','._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
-      $('#memberName').attr('placeholder',$(this).text())
-      $('#memberPhone').attr('placeholder',$(this).siblings('td:nth-child(2)').text())
-      $('#memberCount').attr('placeholder',$(this).siblings('td:nth-child(3)').text())
-    $('#memberInfoPopup').show().animate({'top':'0px'});
-    $('#shade').show()
+      var name = $(this).text()
+      $('#memberName').attr('placeholder',name)
+      $('#memberPhone').attr('placeholder',DB[name].phone)
+      $('#memberCount').attr('placeholder',DB[name].count)
+      $('#memberEmail').attr('placeholder',DB[name].email)
+      $('#datepicker').attr('placeholder',DB[name].start)
+      $('#datepicker2').attr('placeholder',DB[name].end)
+      $('#memberInfoPopup').show().animate({'top':'0px'});
+      $('#shade').show()
+    })
+
+    $(document).on('click','._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+      var name = $(this).text()
+      $('#memberName').attr('placeholder',name)
+      $('#memberPhone').attr('placeholder',DBe[name].phone)
+      $('#memberCount').attr('placeholder',DBe[name].count)
+      $('#memberEmail').attr('placeholder',DBe[name].email)
+      $('#datepicker').attr('placeholder',DBe[name].start)
+      $('#datepicker2').attr('placeholder',DBe[name].end)
+      $('#memberInfoPopup').show().animate({'top':'0px'});
+      $('#shade').show()
     })
 
     $('#infoClose').click(function(){ //회원정보창에서 닫기 눌렀을때
@@ -291,7 +316,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td class="_tdnamee">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -316,7 +341,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td class="_tdnamee">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -341,7 +366,7 @@ $(document).ready(function(){
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
                       
-                var td = '<tr><td>'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+                var td = '<tr><td class="_tdnamee">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
