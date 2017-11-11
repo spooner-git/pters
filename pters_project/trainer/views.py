@@ -1273,6 +1273,16 @@ def modify_pt_logic(request, next='trainer:cal_day'):
         try:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id, use=1)
 
+        except ValueError as e:
+            #logger.error(e)
+            error = 'Registration ValueError!'
+        except IntegrityError as e:
+            #logger.error(e)
+            error = 'Registration IntegrityError!'
+        except TypeError as e:
+            error = 'Registration TypeError!'
+
+        if error is None:
             for lecture in month_lecture_data:
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
                                                                             en_dis_type='1', use=1).exclude(
@@ -1288,33 +1298,24 @@ def modify_pt_logic(request, next='trainer:cal_day'):
                         if month_lecture.end_dt >= end_date:
                             error = '날짜가 겹칩니다.'
 
-            if error is None:
-                modify_schedule_data = LectureScheduleTb.objects.get(lecture_schedule_id=modify_schedule_id)
+        if error is None:
+            modify_schedule_data = LectureScheduleTb.objects.get(lecture_schedule_id=modify_schedule_id)
 
-                if modify_schedule_data.use == 0:
-                    error = '이미 변경된 스케쥴입니다.'
-                else:
-                    with transaction.atomic():
-                        lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date, end_dt=end_date,
-                                                                        state_cd='NP',en_dis_type='1',
-                                                                          reg_dt=timezone.now(),mod_dt=timezone.now(), use=1)
-                        lecture_schedule_data.save()
-                        modify_schedule_data.use = 0
-                        modify_schedule_data.mod_dt = timezone.now()
-                        modify_schedule_data.state_cd = 'CC'
-                        modify_schedule_data.save()
-                        lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
-                        lecture_date_update.mod_dt = timezone.now()
-                        lecture_date_update.save()
-
-        except ValueError as e:
-            #logger.error(e)
-            error = 'Registration ValueError!'
-        except IntegrityError as e:
-            #logger.error(e)
-            error = 'Registration IntegrityError!'
-        except TypeError as e:
-            error = 'Registration TypeError!'
+            if modify_schedule_data.use == 0:
+                error = '이미 변경된 스케쥴입니다.'
+            else:
+                with transaction.atomic():
+                    lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date, end_dt=end_date,
+                                                            state_cd='NP',en_dis_type='1',
+                                                            reg_dt=timezone.now(),mod_dt=timezone.now(), use=1)
+                    lecture_schedule_data.save()
+                    modify_schedule_data.use = 0
+                    modify_schedule_data.mod_dt = timezone.now()
+                    modify_schedule_data.state_cd = 'CC'
+                    modify_schedule_data.save()
+                    lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
+                    lecture_date_update.mod_dt = timezone.now()
+                    lecture_date_update.save()
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -1427,34 +1428,6 @@ def modify_off_logic(request, next='trainer:cal_day'):
                 month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
                                                                   en_dis_type='0', use=1).exclude(
                                                                 class_schedule_id=class_schedule_id)
-                for month_class in month_class_data:
-                    if month_class.start_dt >= start_date:
-                        if month_class.start_dt < end_date:
-                            error = '날짜가 겹칩니다.'
-                    if month_class.end_dt > start_date:
-                        if month_class.end_dt < end_date:
-                            error = '날짜가 겹칩니다.'
-                    if month_class.start_dt <= start_date:
-                        if month_class.end_dt >= end_date:
-                            error = '날짜가 겹칩니다.'
-
-                if error is None:
-                    modify_schedule_data = ClassScheduleTb.objects.get(class_schedule_id=class_schedule_id)
-                    if modify_schedule_data.use == 0:
-                        '이미 변경된 OFF일정 입니다.'
-                    else:
-                        with transaction.atomic():
-                            class_schedule_data = ClassScheduleTb(class_tb_id=trainer_class.class_id, start_dt=start_date,
-                                                                  end_dt=end_date,
-                                                                  state_cd='NP', en_dis_type='0', reg_dt=timezone.now(),
-                                                                  mod_dt=timezone.now(), use=1)
-                            class_schedule_data.save()
-
-                            modify_schedule_data.use = 0
-                            modify_schedule_data.state_cd = 'CC'
-                            modify_schedule_data.mod_dt = timezone.now()
-                            modify_schedule_data.save()
-
             except ValueError as e:
                 # logger.error(e)
                 error = 'Registration ValueError!'
@@ -1463,6 +1436,35 @@ def modify_off_logic(request, next='trainer:cal_day'):
                 error = 'Registration IntegrityError'
             except TypeError as e:
                 error = 'Registration TypeError!'
+
+        if error is None:
+            for month_class in month_class_data:
+                if month_class.start_dt >= start_date:
+                    if month_class.start_dt < end_date:
+                        error = '날짜가 겹칩니다.'
+                if month_class.end_dt > start_date:
+                    if month_class.end_dt < end_date:
+                        error = '날짜가 겹칩니다.'
+                if month_class.start_dt <= start_date:
+                    if month_class.end_dt >= end_date:
+                        error = '날짜가 겹칩니다.'
+
+        if error is None:
+            modify_schedule_data = ClassScheduleTb.objects.get(class_schedule_id=class_schedule_id)
+            if modify_schedule_data.use == 0:
+                    '이미 변경된 OFF일정 입니다.'
+            else:
+                with transaction.atomic():
+                    class_schedule_data = ClassScheduleTb(class_tb_id=trainer_class.class_id, start_dt=start_date,
+                                                            end_dt=end_date,
+                                                            state_cd='NP', en_dis_type='0', reg_dt=timezone.now(),
+                                                            mod_dt=timezone.now(), use=1)
+                    class_schedule_data.save()
+
+                    modify_schedule_data.use = 0
+                    modify_schedule_data.state_cd = 'CC'
+                    modify_schedule_data.mod_dt = timezone.now()
+                    modify_schedule_data.save()
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
