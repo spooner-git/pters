@@ -693,8 +693,11 @@ def login_trainer(request, next='home'):
             error = '로그인에 실패하였습니다.'
             # logger.error(error)
 
-    messages.info(request, error)
-    return redirect(next)
+    if error is None:
+        return redirect(next)
+    else:
+        messages.info(request, error)
+        return redirect(next)
 
 
 # 로그아웃 api
