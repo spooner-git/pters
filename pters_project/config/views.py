@@ -22,3 +22,31 @@ class HomeView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return super(HomeView, self).get_redirect_url(*args, **kwargs)
+
+
+class TrainerView(RedirectView):
+
+    def get(self, request, **kwargs):
+        user_for_group = User.objects.get(id=request.user.id)
+        group_1 = user_for_group.groups.get(user=request.user.id)
+        if group_1.name == 'trainee':
+            self.url = '/trainee/'
+        return super(TrainerView, self).get(request, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return super(TrainerView, self).get_redirect_url(*args, **kwargs)
+
+
+class TraineeView(RedirectView):
+
+    def get(self, request, **kwargs):
+        user_for_group = User.objects.get(id=request.user.id)
+        group_1 = user_for_group.groups.get(user=request.user.id)
+        if group_1.name == 'trainer':
+            self.url = '/trainer/'
+        return super(TraineeView, self).get(request, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return super(TraineeView, self).get_redirect_url(*args, **kwargs)
+
+

@@ -14,6 +14,8 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+
+from config.views import TrainerView
 from login.models import MemberTb, LogTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
@@ -765,24 +767,29 @@ def daily_pt_delete(request):
         except ObjectDoesNotExist:
             error = '회원 PT 정보가 존재하지 않습니다'
 
-        try:
-            with transaction.atomic():
-                lecture_schedule_data.mod_dt = timezone.now()
-                lecture_schedule_data.use = 0
-                member_lecture_count = lecture_data.lecture_count
-                lecture_data.lecture_count = member_lecture_count+1
-                lecture_data.mod_dt = timezone.now()
-                lecture_schedule_data.save()
-                lecture_data.save()
+        if error is None:
+            if lecture_schedule_data.use == 0:
+                error = '이미 삭제된 스케쥴입니다.'
 
-        except ValueError as e:
-            #logger.error(e)
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            #logger.error(e)
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
+        if error is None:
+            try:
+                with transaction.atomic():
+                    lecture_schedule_data.mod_dt = timezone.now()
+                    lecture_schedule_data.use = 0
+                    member_lecture_count = lecture_data.lecture_count
+                    lecture_data.lecture_count = member_lecture_count+1
+                    lecture_data.mod_dt = timezone.now()
+                    lecture_schedule_data.save()
+                    lecture_data.save()
+
+            except ValueError as e:
+                #logger.error(e)
+                error = '등록 값에 문제가 있습니다.'
+            except IntegrityError as e:
+                #logger.error(e)
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError as e:
+                error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -956,19 +963,24 @@ def daily_off_delete(request):
             start_date = class_schedule_data.start_dt
             end_date = class_schedule_data.end_dt
 
-        try:
-            class_schedule_data.mod_dt = timezone.now()
-            class_schedule_data.use = 0
-            class_schedule_data.save()
+        if error is None:
+            if class_schedule_data.use == 0:
+                error = '이미 삭제된 OFF 일정입니다.'
 
-        except ValueError as e:
-            #logger.error(e)
-            error = 'Registration ValueError!'
-        except IntegrityError as e:
-            #logger.error(e)
-            error = 'Registration IntegrityError!'
-        except TypeError as e:
-            error = 'Registration TypeError!'
+        if error is None:
+            try:
+                class_schedule_data.mod_dt = timezone.now()
+                class_schedule_data.use = 0
+                class_schedule_data.save()
+
+            except ValueError as e:
+                #logger.error(e)
+                error = 'Registration ValueError!'
+            except IntegrityError as e:
+                #logger.error(e)
+                error = 'Registration IntegrityError!'
+            except TypeError as e:
+                error = 'Registration TypeError!'
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
