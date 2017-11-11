@@ -322,9 +322,10 @@ $(document).ready(function(){
 			if(odd.length==1){
 				var odd='0'+oriDate
 			}
+
 			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
-				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime').
+				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
 				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').text(classStartArray[i])
 			}else{
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
