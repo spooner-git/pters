@@ -29,13 +29,13 @@
 
     {% for log_data_detail in log_data %}
 
-<div class="alarmBox" >  <!-- 알림 박스 -->
+<div class="alarmBox {% if log_data_detail.log_read == 0 %}unreadAlarm {% endif %}" >  <!-- 알림 박스 -->
   <div id="modifyInfo">
-      {% if forloop.first %}
+      {% if log_data_detail.log_read == 0 %}
         <img id="bell" src="/static/user/res/alarm/icon-alarm-new.png">
       {% endif %}
       {% autoescape off %}{{ log_data_detail.log_contents }}{% endautoescape %}
-      <span class="timePast">
+      <span class="timePast" >
         <script>
           var date = new Date();
           var currentMonth = date.getMonth()+1; //달은 0부터 출력해줌 0~11

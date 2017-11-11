@@ -420,6 +420,15 @@ class AlarmView(LoginRequiredMixin, TemplateView):
                 log_data_detail.log_type = 0
                 log_data_detail.log_contents = log_data_detail.contents
 
+            if log_data_detail.read == 0:
+                log_data_detail.log_read = 0
+                log_data_detail.read = 1
+                log_data_detail.save()
+            elif log_data_detail.read == 1:
+                log_data_detail.log_read = 1
+            else:
+                log_data_detail.log_read = 2
+
         context['log_data'] = log_data
 
         return context
