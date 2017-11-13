@@ -58,7 +58,23 @@ span{
 	text-align: center;
 }
 
-#popup_info{
+#cal_popup3{
+	display: none;
+	position: fixed;
+	background: transparent;
+	border-color: transparent;
+	top: 35%;
+	left: 10%;
+	width: 80%;
+	/*
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	*/
+	z-index: -2;
+	text-align: center;
+}
+
+#popup_info,#popup_info3{
 	background: #ffffff;
 	position: relative;
 	width: 100%;
@@ -87,7 +103,7 @@ span{
 	margin-left: 14.845px;
 }
 
-#btn_close{
+#btn_close,#btn_close3{
 	position: absolute;
 	top: 31%;
 	left: 85%;
@@ -521,7 +537,23 @@ td{
 		text-align: center;
 	}
 
-	#popup_info{
+	#cal_popup3{
+		display: none;
+		position: fixed;
+		background: transparent;
+		border-color: transparent;
+		top: 35%;
+		left: 0;
+		width: 100%;
+		/*
+		background-color: #ffffff;
+		border: 1px solid #a2a2a2;
+		*/
+		z-index: -2;
+		text-align: center;
+	}
+
+	#popup_info,#popup_info3{
 		background: #ffffff;
 		position: relative;
 		margin : 0 auto;
@@ -552,7 +584,7 @@ td{
 		margin-left: 14.845px;
 	}
 
-	#btn_close{
+	#btn_close,#btn_close3{
 		position: absolute;
 		top: 22%;
 		left: 85%;

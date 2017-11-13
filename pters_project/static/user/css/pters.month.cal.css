@@ -166,6 +166,7 @@ span{
 		width: 100%;
 		border-bottom: 1px solid #cccccc;
 		height: 15%;
+		min-height: 90px;
 		padding-bottom: 7px;
 		font-size: 16px;
 		font-weight: bold;	
@@ -468,7 +469,7 @@ span{
 	text-align: center;
 }
 
-#popup_info,#popup_info2{
+#popup_info,#popup_info2,#popup_info3{
 	background: #ffffff;
 	position: relative;
 	width: 100%;
@@ -503,7 +504,7 @@ span{
 	margin-left: 14.845px;
 }
 
-#btn_close, #btn_close2, #btn_close3{
+#btn_close, #btn_close2, #btn_close3, #btn_close4{
 	position: absolute;
 	top: 31%;
 	left: 85%;
@@ -624,7 +625,7 @@ span{
 		text-align: center;
 	}
 
-	#popup_info,#popup_info2{
+	#popup_info,#popup_info2,#popup_info3{
 		background: #ffffff;
 		position: relative;
 		margin : 0 auto;
@@ -659,7 +660,7 @@ span{
 		margin-left: 14.845px;
 	}
 
-	#btn_close, #btn_close2, #btn_close3{
+	#btn_close, #btn_close2, #btn_close3, #btn_close4{
 		position: absolute;
 		top: 22%;
 		left: 85%;

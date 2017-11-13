@@ -51,17 +51,34 @@ $(document).ready(function(){
 					                                         //형식예: 2017_10_7_6_00_2_원빈
 				console.log($(this).attr('schedule-id'));
 				var info = $(this).attr('data-date').split('_')
-				var infoText = info[0]+'년 '+info[1]+'월 '+info[2]+'일'
+				var info2 = $(this).find(".blackballoon").text().split(':')
+				var yy=info[0]
+				var mm=info[1]
+				var dd=info[2]
+				var dayobj = new Date(yy,mm-1,dd)
+				var dayraw = dayobj.getDay();
+				var dayarry = ['일','월','화','수','목','금','토']
+				var day = dayarry[dayraw];
+				var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+				var infoText2 = info2[0]+"시 일정을 삭제 하시겠습니까?"
 				$('#popup_info').text(infoText)
+				$('#popup_info2').text(infoText2)
 				$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 				//$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 				//schedule_on_off = 0;
 			}else{
 				$("#cal_popup2").fadeIn('fast').css({'z-index':'103'});
 				$('#shade2').css({'display':'block'});
-				var info2 = $(this).attr('data-date').split('_')
-				var infoText2 = info2[0]+'년 '+info2[1]+'월 '+info2[2]+'일 일정 추가'
-				$('#popup_info2').text(infoText2)
+				var info3 = $(this).attr('data-date').split('_')
+				var yy=info3[0]
+				var mm=info3[1]
+				var dd=info3[2]
+				var dayobj = new Date(yy,mm-1,dd)
+				var dayraw = dayobj.getDay();
+				var dayarry = ['일','월','화','수','목','금','토']
+				var day = dayarry[dayraw];
+				var infoText2 = yy+'년 '+ mm+'월 '+ dd+'일 ' +'('+day+')'+' 일정 추가'
+				$('#popup_info3').text(infoText2)
 				//$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 				//$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 				//schedule_on_off = 1;
@@ -75,7 +92,16 @@ $(document).ready(function(){
 
 	$("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
 				//PT 일정 삭제시
-				document.getElementById('pt-delete-form').submit();
+				$("#cal_popup").hide().css({'z-index':'-2'})
+				$("#cal_popup3").fadeIn('fast').css({'z-index':'103'});
+				$('#shade2').css({'display':'block'});
+				//var info2 = $(this).attr('data-date').split('_')
+				//var infoText2 = info2[0]+'년 '+info2[1]+'월 '+info2[2]+'일 일정 추가'
+				//$('#popup_info2').text(infoText2)
+	})
+
+	$('#popup_text3').click(function(){
+		document.getElementById('pt-delete-form').submit();
 	})
 
 /*
@@ -125,7 +151,22 @@ $(document).ready(function(){
 			}
 	})
 
-	$("#btn_close3").click(function(){ //일정예약 상세화면 팝업 X버튼 눌렀을때 팝업 닫기
+	$("#btn_close3").click(function(){ //일정삭제 확인 팝업 X버튼 눌렀을때 팝업 닫기
+			if($('#cal_popup3').css('display')=='block'){
+				$("#cal_popup3").css({'display':'none','z-index':'-2'})
+				$('#shade2').css({'display':'none'});
+			}
+	})
+
+	$('#popup_text4').click(function(){ //일정삭제 확인 팝업 X버튼 눌렀을때 팝업 닫기
+			if($('#cal_popup3').css('display')=='block'){
+				$("#cal_popup3").css({'display':'none','z-index':'-2'})
+				$('#shade2').css({'display':'none'});
+			}
+	})
+
+
+	$("#btn_close4").click(function(){ //일정예약 상세화면 팝업 X버튼 눌렀을때 팝업 닫기
 			$('#starttimes').remove('li')
 			$('#durations').remove('li')
 			$("#starttimesSelected button").removeClass("dropdown_selected");
