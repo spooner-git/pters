@@ -42,6 +42,21 @@ $(document).ready(function(){
 				$('#shade2').css({'display':'none'});
 			}
 	})
+
+	$('#btn_close3').click(function(){
+			if($('#cal_popup3').css('display')=='block'){
+					$("#cal_popup3").css({'display':'none','z-index':'-2'})
+					$('#shade2').css({'display':'none'});
+				}
+	})
+
+	$('#popup_text4').click(function(){
+			if($('#cal_popup3').css('display')=='block'){
+					$("#cal_popup3").css({'display':'none','z-index':'-2'})
+					$('#shade2').css({'display':'none'});
+				}
+	})
+
 	//스케쥴 클릭시 팝업 End
 
 		//일정 변경 기능 추가 - hk.kim 171007
@@ -57,13 +72,18 @@ $(document).ready(function(){
 
 		//일정 삭제 기능 추가 - hk.kim 171007
 	$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
-			if(schedule_on_off==1){
+			$('#cal_popup').hide().css({'z-index':'-2'})
+			$('#cal_popup3').fadeIn('fast').css({'z-index':'103'})
+	})
+
+	$('#popup_text3').click(function(){
+		if(schedule_on_off==1){
 				//PT 일정 삭제시
 				document.getElementById('daily-pt-delete-form').submit();
-			}
-			else{
+		}
+		else{
 				document.getElementById('daily-off-delete-form').submit();
-			}
+		}
 	})
 
 	//플로팅 버튼 Start
