@@ -177,7 +177,8 @@ $(document).ready(function(){
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray);
-	addcurrentTimeIndicator();
+	addcurrentTimeIndicator_blackbox()
+	//addcurrentTimeIndicator();
 	scrollToIndicator();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
@@ -520,7 +521,7 @@ $(document).ready(function(){
 	};
 
 
-
+	/*
 	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
 		var where2 = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+"0W"+"_"+currentHour+'H'
 		//var where3 = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+"0W"+"_"+(currentHour+1)+'H'
@@ -529,9 +530,16 @@ $(document).ready(function(){
 			//$(where3).parent('div').append("<div class='currentTimeBox'><div class='currentTimeIndicator'></div><div class='currentTimeLine'></div></div>")
 		}
 	}
+	*/
+
+	function addcurrentTimeIndicator_blackbox(){ //현재 시간에 밑줄 긋기
+		var where = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+'0W'+'_'+currentHour+'H .hour'
+		$(where).addClass('currentTimeBlackBox');
+		
+	}
 
 	function scrollToIndicator(){
-		var offset = $('.currentTimeBox').offset();
+		var offset = $('.currentTimeBlackBox').offset();
 		console.log(offset)
 		if(currentHour>=5){
 			$('#slide2').animate({scrollTop : offset.top -180},500)

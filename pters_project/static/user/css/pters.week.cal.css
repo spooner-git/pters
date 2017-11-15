@@ -285,7 +285,7 @@ span{
 .hour{
 	text-align: center;
 	width: 9.72%;
-	border-bottom: 1px solid transparent;
+	/*border-bottom: 1px solid transparent;*/
 	font-size: 13px;
 }
 
@@ -294,8 +294,8 @@ td{
 	width: 12.5%;
 	height: 15px;
 	color : #282828;
-	border-right:  1.5px solid #ffffff;
-	border-left:  1.5px solid #ffffff;
+	/*border-right:  1.5px solid #ffffff;*/
+	border-left:  1px solid #ffffff;
 	padding-right: 1px;
 	padding-left: 1px;
 }
@@ -381,6 +381,12 @@ tr{
 	height: 10px;
 	border-radius: 50%;
 	background-color: #fe4e65;
+}
+
+.currentTimeBlackBox{
+	background: black;
+	border-color: black;
+	color: #ffffff;
 }
 
 .memberName{
