@@ -51,25 +51,11 @@
     <thead>
       <tr>
         <th>회원명</th>
+        <th>남은 횟수</th>
+        <th>시작 일자</th>
         <th>연락처</th>
-        <th>남은횟수</th>
-        <th>시작일자</th>
       </tr>
     </thead>
-
-    <tbody>
-        {% for lecture in trainer_member %}
-            {% if lecture.lecture_count > 0 %}
-      <tr>
-        <td>{{ lecture.trainer_member.name }}</td>
-        <td>{{ lecture.trainer_member.phone }}</td>
-        <td>{{ lecture.lecture_count }}</td>
-        <td>{{ lecture.start_date }}</td>
-      </tr>
-            {% endif %}
-        {% endfor %}
-    </tbody>
-
   </table>
 </div>
 
@@ -79,25 +65,11 @@
     <thead>
       <tr>
         <th>회원명</th>
+        <th>남은 횟수</th>
+        <th>시작 일자</th>
         <th>연락처</th>
-        <th>남은횟수</th>
-        <th>시작일자</th>
       </tr>
     </thead>
-    <!--
-    <tbody>
-        {% for lecture in trainer_member %}
-            {% if lecture.lecture_count == 0 %}
-      <tr>
-        <td>{{ lecture.trainer_member.name }}</td>
-        <td>{{ lecture.trainer_member.phone }}</td>
-        <td>{{ lecture.lecture_count }}</td>
-        <td>{{ lecture.start_date }}</td>
-      </tr>
-            {% endif %}
-        {% endfor %}
-    </tbody>
-  -->
   </table>
 </div> 
 
