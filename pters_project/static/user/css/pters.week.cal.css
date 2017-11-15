@@ -267,7 +267,7 @@ span{
 
 .arrowButton a{
 	position: absolute;
-	top: 20%;
+	top: 0%;
 	font-size: 35px;
 	font-weight: 600;
 	color: #ffffff;
@@ -508,7 +508,7 @@ tr{
 		background: transparent;
 		border-color: transparent;
 		top: 35%;
-		left: 10%;
+		left: 0%;
 		width: 100%;
 		/*
 		background-color: #ffffff;
