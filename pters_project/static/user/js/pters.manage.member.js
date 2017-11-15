@@ -16,9 +16,9 @@ $(document).ready(function(){
 		$("body").bind("touchend",function(e){
 			var te = e.originalEvent.changedTouches[0].clientY;
 			if(ts>te+5){
-				$("#float_btn").animate({opacity:'0'})
+				$("#float_btn").fadeOut()
 			}else if(ts<te-5){
-				$("#float_btn").animate({opacity:'1'})
+				$("#float_btn").fadeIn()
 			}
 		})
 
@@ -79,7 +79,8 @@ $(document).ready(function(){
 //#####################회원정보 팝업 //#####################
 
     $(document).on('click','._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
-      var name = $(this).text()
+      var name = $(this).attr('data-name')
+      console.log(name)
       $('#memberName').attr('placeholder',name)
       $('#memberPhone').attr('placeholder',DB[name].phone)
       $('#memberCount').attr('placeholder',DB[name].count)
@@ -88,10 +89,11 @@ $(document).ready(function(){
       $('#datepicker2').attr('placeholder',DB[name].end)
       $('#memberInfoPopup').show().animate({'top':'0px'});
       $('#shade').show()
+      $('body').scrollTop();
     })
 
     $(document).on('click','._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
-      var name = $(this).text()
+      var name = $(this).attr('data-name')
       $('#memberName').attr('placeholder',name)
       $('#memberPhone').attr('placeholder',DBe[name].phone)
       $('#memberCount').attr('placeholder',DBe[name].count)
@@ -100,6 +102,7 @@ $(document).ready(function(){
       $('#datepicker2').attr('placeholder',DBe[name].end)
       $('#memberInfoPopup').show().animate({'top':'0px'});
       $('#shade').show()
+      $('body').scrollTop();
     })
 
     $('#infoClose').click(function(){ //회원정보창에서 닫기 눌렀을때
@@ -221,8 +224,14 @@ $(document).ready(function(){
                 }else if(count.substr(0,1)=="0"){
                   var count = count.substr(1,3)
                 }
-                      
-                var td = '<tr><td class="_tdname">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+
+                if(name.length>5){
+                  var name = array[1].substr(0,5)+'..'
+                }
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'     
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
+                var td = '<tr><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -246,8 +255,14 @@ $(document).ready(function(){
                 }else{
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
-                      
-                var td = '<tr><td class="_tdname">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+
+                if(name.length>5){
+                  var name = array[0].substr(0,5)+'..'
+                }
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
+                var td = '<tr><td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'     
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -271,8 +286,14 @@ $(document).ready(function(){
                 }else{
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
-                      
-                var td = '<tr><td class="_tdname">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+
+                if(name.length>5){
+                  var name = array[1].substr(0,5)+'..'
+                }
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'    
+                var td = '<tr><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -315,8 +336,14 @@ $(document).ready(function(){
                 }else{
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
-                      
-                var td = '<tr><td class="_tdnamee">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+
+                if(name.length>5){
+                  var name = array[1].substr(0,5)+'..'
+                }
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
+                var td = '<tr><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -340,8 +367,14 @@ $(document).ready(function(){
                 }else{
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
-                      
-                var td = '<tr><td class="_tdnamee">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+
+                if(name.length>5){
+                  var name = array[0].substr(0,5)+'..'
+                }
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'  
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
+                var td = '<tr><td class="_tdnamee" data-name="'+array[0]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -365,8 +398,14 @@ $(document).ready(function(){
                 }else{
                     var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
                 }
-                      
-                var td = '<tr><td class="_tdnamee">'+name+'</td><td>'+'<a href="tel:'+phone+'">'+phone+'</a>'+'</td><td>'+count+'</td><td>'+start+'</td></tr>'    
+
+                if(name.length>5){
+                  var name = array[1].substr(0,5)+'..'
+                }
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
+                var td = '<tr><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'       
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
