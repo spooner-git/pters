@@ -594,5 +594,29 @@ $(document).ready(function(){
   	    }
 	}
 
+/*
+	//ajax////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//연월 표기하는 상단 바를 눌렀을때 수업시간을 불러와서 표기한다.
+          $('#ymdText').click(function(){
+            $.ajax({
+              url:'/static/user/js/ajax/dblist.js',
+              dataType : 'script',
+              success:function(data){
+                var classTimeArray_start_date=[]
+                var classTimeArray_start_date = JSON.parse(data)
+                var jdata = JSON.parse(data)
+                for(i=0;i<jdata.length;i++){
+                  classTimeArray_start_date.push(jdata[i])
+                }
+                DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
+                classTime();
+              }
+
+            })
+          })
+
+	//ajax////////////////////////////////////////////////////////////////////////////////////////////////////////          
+*/
+
 });//document(ready)
 
