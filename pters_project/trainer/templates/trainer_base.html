@@ -14,8 +14,7 @@
         <!-- Bootstrap core CSS -->
         <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
         <link rel="stylesheet" href={% static "user/css/pters.base.set.css" %}>
-        <link rel="stylesheet" href={% static "user/css/mobile/jquery.mobile.custom.structure.min.css" %}>
-        <link rel="stylesheet" href={% static "user/css/mobile/jquery.mobile.custom.theme.min.css" %}>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
         
 
@@ -26,7 +25,7 @@
     <body>
     {% block navbar %}
     <div id="shade"></div>
-        <nav class="navbar navbar-fixed-top navbar-default">
+        <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
             <div class="container">
                 <div class="navbar-header">
                     <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="openNav()">
@@ -35,7 +34,7 @@
                         <span class="icon-bar" style="width: 20px;"></span>
                     </button>
                     {% block nav_center_img %}
-                        <a id="uptext" class="navbar-brand" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>
+                        <a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
                         <a href="{% url 'trainer:alarm' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
@@ -72,6 +71,22 @@
                 </div>
             </div><!-- /.container -->
         </nav><!-- /.navbar -->
+
+        <nav class="navbar navbar-fixed-top navbar-default" id="page-base-addstyle">
+            <div class="container">
+                <div class="navbar-header">
+                    <button id="upbutton-x" class="navbar-toggle" aria-controls="navbar">
+                        <img src={% static "user/res/ptadd/btn-x.png" %} style="width:90%;">
+                    </button>
+                    {% block nav_center_img1 %}
+                        <a id="uptext2" class="navbar-brand uptext"></a>
+                    {% endblock %}
+                    <button id="upbutton-check" class="navbar-toggle" aria-controls="navbar">
+                        <img src={% static "user/res/ptadd/btn-complete.png" %} style="width:100%;">
+                    </button>
+                </div>
+            </div><!-- /.container -->
+        </nav><!-- /.navbar -->
         
         
     {% endblock %}
@@ -100,7 +115,7 @@
                $(".sidebar_text").css({'font-size':"15px",'opacity':"1"})
                $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
                $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
-               $('#shade').show().css({'z-index':'50'});
+               $('#shade').show().css({'z-index':'150'});
              }
 
              function closeNav(){

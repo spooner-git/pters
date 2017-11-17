@@ -194,14 +194,3 @@ tr td:nth-child(4){
 	margin-top: 4px;
 }
 
-.icondown{
-	position: absolute;
-	width: 11px;
-	right: 5%;
-	top: 44%;
-}
-
-.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
-	background: #282828;
-	color: #fe4e65;
-}

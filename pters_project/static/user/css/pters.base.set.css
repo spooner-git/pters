@@ -5,6 +5,15 @@ body{
     background: #f4f4f4;
 }
 
+.navbar-default{ /*Nav bar 배경 색상*/
+    background: #ffffff;
+}
+
+.navbar-default .navbar-brand{
+    color:black;
+}
+
+
 .wrap{
     width: 100%;
     max-width: 1000px !important;
@@ -198,7 +207,16 @@ body{
     cursor: pointer;
 }
 
-#upbutton-alarm{
+#upbutton-x{
+    float:left;
+    left: 2%;
+    border: 0px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+}
+
+#upbutton-alarm, #upbutton-check{
     float:right;
     right: 2%;
     border: 0px;
@@ -207,12 +225,11 @@ body{
     width: 40px;
 }
 
-#upbutton-alarm:active{
+#upbutton-alarm:active, #upbutton-check:active{
     background: #4e4c4c;
 }
 
-#uptext{
-    color: black;
+.uptext{
     position: absolute;
     width: 100%;
     top: 0;
@@ -226,6 +243,10 @@ body{
     text-align: center;
     max-height: 48px;
     padding-top: 17px;
+}
+
+#uptext1,#uptext2{
+    color: black !important;
 }
 
 
@@ -289,3 +310,14 @@ body{
 }
 
 /*미디어 쿼리*/
+
+
+
+
+#page-base{
+    display: block;
+}
+
+#page-base-addstyle{
+    display: none;
+}

@@ -33,7 +33,7 @@
         <div class="">
             <div class="navbar-header">
                  {% block nav_center_img %}
-                 <a id="uptext" class="navbar-brand" href="{% url 'home' %}">{{ user.first_name }} 회원님 월간 PT 일정</a>
+                 <a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.first_name }} 회원님 월간 PT 일정</a>
                 {% endblock %}
                  <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
                     <a href="{% url 'trainer:logout' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
