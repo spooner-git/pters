@@ -10,7 +10,7 @@ $(document).ready(function(){
 
       DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
       DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
-      $('#inputError').fadeIn('slow')
+
 
     $.datepicker.setDefaults({
         dateFormat: 'yy-mm-dd',
@@ -25,17 +25,18 @@ $(document).ready(function(){
         yearSuffix: '년',
     });
 
-      $("#datepicker").datepicker({
+      $("#datepicker_off").datepicker({
           minDate : 0,
           onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
             if( curDate != instance.lastVal ){
-              $("#dateSelector p").addClass("dropdown_selected");
-              $("#id_training_date").val($("#datepicker").val()).submit();
-              if($('#timeGraph').css('display')=='none'){
-                $('#timeGraph').show(110,"swing");
+              $("#dateSelector_off p").addClass("dropdown_selected");
+              $("#id_training_date").val($("#datepicker_off").val()).submit();
+              if($('#timeGraph_off').css('display')=='none'){
+                $('#timeGraph_off').show(110,"swing");
               }
               timeGraphSet("class","pink");  //시간 테이블 채우기
               timeGraphSet("off","grey")
+              $('.tdgraph').removeClass('graphindicator')
               startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
               check_dropdown_selected();
             }
@@ -46,38 +47,44 @@ $(document).ready(function(){
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
 
-      $(document).on('click','#starttimes li a',function(){
-          $("#starttimesSelected button").addClass("dropdown_selected");
-          $("#starttimesSelected .btn:first-child").text($(this).text());
-          $("#starttimesSelected .btn:first-child").val($(this).text());
+      $(document).on('click','#starttimes_off li a',function(){
+          $('.tdgraph').removeClass('graphindicator')
+          $("#starttimesSelected_off button").addClass("dropdown_selected");
+          $("#starttimesSelected_off .btn:first-child").text($(this).text());
+          $("#starttimesSelected_off .btn:first-child").val($(this).text());
           $("#id_training_time").val($(this).attr('data-trainingtime'));
           var arry = $(this).attr('data-trainingtime').split(':')
           durTimeSet(arry[0]);
           check_dropdown_selected();
       })
 
-      $(document).on('click',"#durations li a",function(){
-          $("#durationsSelected button").addClass("dropdown_selected");
-          $("#durationsSelected .btn:first-child").text($(this).text());
-          $("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
+      $(document).on('click',"#durations_off li a",function(){
+          $("#durationsSelected_off button").addClass("dropdown_selected");
+          $("#durationsSelected_off .btn:first-child").text($(this).text());
+          $("#durationsSelected_off .btn:first-child").val($(this).attr('data-dur'));
           $("#id_time_duration").val($(this).attr('data-dur'));
           check_dropdown_selected();
+          addGraphIndicator($(this).attr('data-dur'))
       }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
+      $(document).on('click','#durationsSelected_off button',function(){
+        $('.tdgraph').removeClass('graphindicator');
+      })
+
        function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-       	 var memberSelect = $("#membersSelected button");
-       	 var dateSelect = $("#dateSelector p");
-       	 var durSelect = $("#durationsSelected button");
-       	 var startSelect = $("#starttimesSelected button")
+       	 //var memberSelect = $("#membersSelected button");
+       	 var dateSelect = $("#dateSelector_off p");
+       	 var durSelect = $("#durationsSelected_off button");
+       	 var startSelect = $("#starttimesSelected_off button")
        		 if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
-        	    $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+        	    $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             	select_all_check=true;
         	}else{
            	    select_all_check=false;
        		}
     	 }
 
-      $("#upbutton-alarm").click(function(){
+      $("#upbutton-check").click(function(){
          if(select_all_check==true){
              document.getElementById('off-add-form').submit();
          }else{
@@ -92,22 +99,22 @@ $(document).ready(function(){
       function startTimeSet(){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21];
         startTimeArraySet(); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
         var offOkLen = offAddOkArray.length
-        var startTimeList = $('#starttimes');
+        var startTimeList = $('#starttimes_off');
         var timeArray = [];
         for(var i=0; i<offOkLen; i++){
           var offHour = offAddOkArray[i];
           if(offHour<12){
-            var offText = '오전'
+            var offText = '오전 '
             var offHours = offHour;
           }else if(offHour==24){
-            var offText = '오전'
+            var offText = '오전 '
             var offHours = offHour-12
           }else if(offHour==12){
-            var offText = '오후'
+            var offText = '오후 '
             var offHours = offHour
           }else{
             var offHours = offHour-12
-            var offText = '오후'
+            var offText = '오후 '
           }
           if(offHour.length<2){
             timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
@@ -205,7 +212,7 @@ $(document).ready(function(){
           var cssClass= "pinktimegraph"
           break;
         }
-        var date = $("#datepicker").val();
+        var date = $("#datepicker_off").val();
         var Arraylength = DateDataArray.length;
         for(var i=0;i<Arraylength;i++){
           var splitTimeArray = TimeDataArray[i].split("_")
@@ -214,10 +221,10 @@ $(document).ready(function(){
           if(DateDataArray[i] == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
               for(var j=0; j<durTime; j++){
                 var time = Number(targetTime)+j
-                $('#'+(time)+'g').addClass(cssClass)
+                $('#'+(time)+'g_off').addClass(cssClass)
               }
           }else if(DateDataArray[i] == date && durTime==1){ //수업시간이 1시간짜리일때 칸 채우기
-              $('#'+targetTime+'g').addClass(cssClass)
+              $('#'+targetTime+'g_off').addClass(cssClass)
           }
         }
       }
@@ -227,7 +234,7 @@ $(document).ready(function(){
       function startTimeArraySet(){ //offAddOkArray 채우기 : 시작시간 리스트 채우기
         offAddOkArray = []
         for(i=5;i<=24;i++){
-          if(!$('#'+i+'g').hasClass('pinktimegraph') == true && !$('#'+i+'g').hasClass('greytimegraph') == true){
+          if(!$('#'+i+'g_off').hasClass('pinktimegraph') == true && !$('#'+i+'g_off').hasClass('greytimegraph') == true){
             offAddOkArray.push(i);
           }
         }
@@ -235,38 +242,97 @@ $(document).ready(function(){
 
       function durTimeSet(selectedTime){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
         var len = offAddOkArray.length;
-        var durTimeList = $('#durations')
+        var durTimeList = $('#durations_off')
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
-        console.log(index)
-        console.log(substr)
         if(substr>1){
-          durTimeList.html('<li><a data-dur="1" class="pointerList">1시간</a></li>')
-          console.log(index)
+
+          var fininfo = (Number(selectedTime)+1)
+          if(fininfo>12){
+             if(fininfo==25){
+               var fininfo = '오전 1'
+             }else if(fininfo==24){
+               var fininfo = '오전 12'
+             }else{
+               var fininfo = '오후'+(fininfo-12)  
+             }
+           }else if(fininfo==12){
+             var fininfo = '오후'+fininfo  
+           }else{
+             var fininfo = '오전'+fininfo
+           }
+          durTimeList.html('<li><a data-dur="1" class="pointerList">1시간'+' (~'+fininfo+'시)'+'</a></li>')
+        
         }else{
+
           durTimeList.html('')
           for(var j=index; j<=len; j++){
+            
+            var fininfo = Number(selectedTime)+(j-index+1)
+            if(fininfo>12){
+              if(fininfo==25){
+                var fininfo = '오전 1'
+              }else if(fininfo==24){
+                var fininfo = '오전 12'
+              }else{
+                var fininfo = '오후'+(fininfo-12)  
+              }
+            }else if(fininfo==12){
+              var fininfo = '오후'+fininfo  
+            }else{
+              var fininfo = '오전'+fininfo
+            }
+
             if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>') 
-            }else if(offAddOkArray[j-1]== null && offAddOkArray[j+1]-offAddOkArray[j]==1){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
-            }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
-            }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]>=2){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>') 
+            }
+            else if(offAddOkArray[j-1]== null && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]>=2){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
               break;
-            }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
               //break;
-            }else if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1] == null){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
-            }else if(offAddOkArray[j-1]==null && offAddOkArray[j+1] == null){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+            else if(offAddOkArray[j-1]==null && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
             }
           }
         }
       }
 
+      function addGraphIndicator(datadur){
+        $('.tdgraph').removeClass('graphindicator')
+        var starttext = $('#starttimesSelected_off button').val().split(' ');
+        var daymorning = starttext[0];
+        var startnum = starttext[1].replace(/시/gi,"")
+        if(daymorning=='오후'){
+          if(startnum==12){
+            var startnum = startnum
+          }else{
+            var startnum = Number(startnum)+12  
+          }
+        }else if(daymorning=='오전' && startnum==12){
+            var startnum = Number(startnum)+12 
+        }
+        var durnum = datadur
+        console.log(durnum)
+        var finnum = Number(startnum)+Number(durnum)
+        console.log(startnum, durnum,finnum)
+        for(var i=startnum; i<finnum; i++){
+          $('#'+i+'g_off').addClass('graphindicator')
+
+        }
+      }
 
 
 });

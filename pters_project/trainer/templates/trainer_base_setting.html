@@ -33,7 +33,7 @@
                         <span class="icon-bar" style="width: 20px;"></span>
                     </button>
                     {% block nav_center_img %}
-                        <a id="uptext" class="navbar-brand" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>
+                        <a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
                         <a href="{% url 'trainer:alarm' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>

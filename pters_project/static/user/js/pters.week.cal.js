@@ -11,6 +11,72 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+	$('#float_inner1').click(function(){
+	    $('#page-ptadd').fadeIn('fast');
+	    $('#shade3').fadeIn('fast');
+	    $('#shade2').hide();
+	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+	    $('#float_btn_wrap').fadeOut();
+	    $('#uptext2').text('PT 일정 등록')
+	    $('#page-base').fadeOut();
+	    $('#page-base-addstyle').fadeIn();
+	    $("#datepicker").datepicker('setDate',null)
+	})
+
+	$('#float_inner2').click(function(){
+	    $('#page-offadd').fadeIn('fast');
+	    $('#shade3').fadeIn('fast');
+	    $('#shade2').hide();
+	    $('#uptext2').text('OFF 일정 등록')
+	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+	    $('#float_btn_wrap').fadeOut();
+	    $('#page-base').fadeOut();
+	    $('#page-base-addstyle').fadeIn();
+	    $("#datepicker_off").datepicker('setDate',null)
+	})
+
+	$('#upbutton-x').click(function(){
+	    $('#shade3').fadeOut();
+	    $('#page-ptadd').fadeOut('fast','swing');
+	    $('#page-offadd').fadeOut('fast','swing');
+	    $('#float_btn_wrap').fadeIn();
+	    $('#float_btn').removeClass('rotate_btn');
+	    $('#page-base').fadeIn();
+	    $('#page-base-addstyle').fadeOut();
+
+	    $("#membersSelected button").removeClass("dropdown_selected");
+        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
+        $("#membersSelected .btn:first-child").val("");
+        $("#countsSelected").text("")
+        $("#dateSelector p").removeClass("dropdown_selected");
+        $('#timeGraph').hide();
+        $("#starttimesSelected button").removeClass("dropdown_selected");
+        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected .btn:first-child").val("");
+        $("#durationsSelected button").removeClass("dropdown_selected");
+        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected .btn:first-child").val("");
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+        $("#starttimes").empty();
+        $("#durations").empty();
+
+        $("#dateSelector_off p").removeClass("dropdown_selected");
+        $('#timeGraph_off').hide();
+        $("#starttimesSelected_off button").removeClass("dropdown_selected");
+        $("#starttimesSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected_off .btn:first-child").val("");
+        $("#durationsSelected_off button").removeClass("dropdown_selected");
+        $("#durationsSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected_off .btn:first-child").val("");
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+  		$("#starttimes_off").empty();
+        $("#durations_off").empty();
+
+        $('.tdgraph').removeClass('graphindicator')
+
+  	})
+  //모바일 스타일
+
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
 	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
 
@@ -35,8 +101,17 @@ $(document).ready(function(){
 			                                         //형식예: 2017_10_7_6_00_2_원빈
 			console.log($(this).attr('schedule-id'));
 			var info = $(this).attr('class-time').split('_')
-			var infoText = info[6]+' 회원님 '+info[3]+'시 일정'
+			var yy=info[0]
+			var mm=info[1]
+			var dd=info[2]
+			var dayobj = new Date(yy,mm-1,dd)
+			var dayraw = dayobj.getDay();
+			var dayarry = ['일','월','화','수','목','금','토']
+			var day = dayarry[dayraw];
+			var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
+			var infoText2 =  info[6]+' 회원님 '+info[3]+'시 일정'
 			$('#popup_info').text(infoText)
+			$('#popup_info2').text(infoText2)
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
@@ -53,8 +128,17 @@ $(document).ready(function(){
 			                                         //형식예: 2017_10_7_6_00_2_원빈
 			console.log($(this).attr('off-schedule-id'));
 			var info = $(this).attr('off-time').split('_')
-			var infoText = info[3]+'시 OFF 일정'
+			var yy=info[0]
+			var mm=info[1]
+			var dd=info[2]
+			var dayobj = new Date(yy,mm-1,dd)
+			var dayraw = dayobj.getDay();
+			var dayarry = ['일','월','화','수','목','금','토']
+			var day = dayarry[dayraw];
+			var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
+			var infoText2 = info[3]+'시 OFF 일정'
 			$('#popup_info').text(infoText)
+			$('#popup_info2').text(infoText2)
 			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 			$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 			schedule_on_off = 0;
@@ -85,15 +169,15 @@ $(document).ready(function(){
 
 		//스케쥴 클릭시 팝업 End
 		//일정 변경 기능 추가 - hk.kim 171007
-	$("#popup_text1").click(function(){  //일정 변경 버튼 클릭
-			if(schedule_on_off==1){
-				//PT 일정 변경시
-				document.getElementById('pt-modify-form').submit();
-			}
-			else{
-				document.getElementById('off-modify-form').submit();
-			}
-	})
+		$("#popup_text1").click(function(){  //일정 변경 버튼 클릭
+				if(schedule_on_off==1){
+					//PT 일정 변경시
+					document.getElementById('pt-modify-form').submit();
+				}
+				else{
+					document.getElementById('off-modify-form').submit();
+				}
+		})
 		//일정 삭제 기능 추가 - hk.kim 171007
 		$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
 			$('#cal_popup').hide().css({'z-index':'-2'});

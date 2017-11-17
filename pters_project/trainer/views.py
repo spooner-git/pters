@@ -79,6 +79,8 @@ class CalDayView(LoginRequiredMixin, TemplateView):
             error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
+        context['trainer_member'] = None #sk Test 추가 171117
+
         #daily_off_data = []
         # daily_data = []
         class_schedule_data = []
@@ -92,6 +94,19 @@ class CalDayView(LoginRequiredMixin, TemplateView):
         today_dt = timezone.now()
         before_dt = today_dt - datetime.timedelta(days=14)
         after_dt = today_dt + datetime.timedelta(days=14)
+
+        #sk Test 추가 171117
+        if error is None :
+            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
+                                                                 , lecture_count__gte=1)
+
+            for lecture in context['trainer_member']:
+                try:
+                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
+                except ObjectDoesNotExist:
+                    error = '회원 PT 정보가 존재하지 않습니다'
+                    # logger.error(error)
+        #sk Test 추가 171117
 
         if error is None:
 
@@ -220,6 +235,8 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
             error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
+        context['trainer_member'] = None #sk Test 추가 171117
+
         #daily_off_data = []
         #daily_data = []
         class_schedule_data = []
@@ -234,6 +251,20 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
         today_dt = timezone.now()
         before_dt = today_dt - datetime.timedelta(days=14)
         after_dt = today_dt + datetime.timedelta(days=14)
+
+        #sk Test 추가 171117
+        if error is None :
+            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
+                                                                 , lecture_count__gte=1)
+
+            for lecture in context['trainer_member']:
+                try:
+                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
+                except ObjectDoesNotExist:
+                    error = '회원 PT 정보가 존재하지 않습니다'
+                    # logger.error(error)
+
+        #sk Test 추가 171117
 
         if error is None:
 
