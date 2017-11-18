@@ -78,7 +78,8 @@ $(document).ready(function(){
 				var dayarry = ['일','월','화','수','목','금','토']
 				var day = dayarry[dayraw];
 				var infoText2 = yy+'년 '+ mm+'월 '+ dd+'일 ' +'('+day+')'+' 일정 추가'
-				$('#popup_info3').text(infoText2)
+				$('#popup_info3').text(infoText2);
+				$('#id_training_date').val(yy+'-'+mm+'-'+dd);
 				//$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 				//$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 				//schedule_on_off = 1;
