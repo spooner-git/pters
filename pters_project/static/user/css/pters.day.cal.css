@@ -21,6 +21,15 @@ span{
 	z-index: 101;
 }
 
+#shade3{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: #f4f4f4;
+	display: none;
+	z-index: 101;
+}
+
 .swiper-slide{
 	height: 100%;
 	overflow: auto;
@@ -58,7 +67,23 @@ span{
 	text-align: center;
 }
 
-#popup_info{
+#cal_popup3{
+	display: none;
+	position: fixed;
+	background: transparent;
+	border-color: transparent;
+	top: 35%;
+	left: 10%;
+	width: 80%;
+	/*
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	*/
+	z-index: -2;
+	text-align: center;
+}
+
+#popup_info,#popup_info2,#popup_info3{
 	background: #ffffff;
 	position: relative;
 	width: 100%;
@@ -87,7 +112,7 @@ span{
 	margin-left: 14.845px;
 }
 
-#btn_close{
+#btn_close,#btn_close3{
 	position: absolute;
 	top: 31%;
 	left: 85%;
@@ -252,13 +277,14 @@ span{
 
 .arrowButton a{
 	position: absolute;
-	top: 20%;
+	top: 0%;
 	font-size: 35px;
 	font-weight: 600;
 	color: #ffffff;
 	text-decoration: none;
 }
 
+/*
 .arrowButton a:nth-child(1){
 	margin-left: 7%;
 }
@@ -266,6 +292,7 @@ span{
 .arrowButton a:nth-child(2){
 	margin-right: 7%;
 }
+*/
 
 .time-style{ /*week ìŠ¤íƒ€ì¼*/
 	background-color: #ffffff;
@@ -285,14 +312,13 @@ span{
 	color: #3b3d3d;
 }
 
-td{
+.daytd{
 	position: relative;
 	width: 75%;
 	height: 15px;
 	color : #282828;
 	border: 0.5px solid transparent;
 }
-
 
 
 #calendar{
@@ -521,7 +547,23 @@ td{
 		text-align: center;
 	}
 
-	#popup_info{
+	#cal_popup3{
+		display: none;
+		position: fixed;
+		background: transparent;
+		border-color: transparent;
+		top: 35%;
+		left: 0;
+		width: 100%;
+		/*
+		background-color: #ffffff;
+		border: 1px solid #a2a2a2;
+		*/
+		z-index: -2;
+		text-align: center;
+	}
+
+	#popup_info,#popup_info2,#popup_info3{
 		background: #ffffff;
 		position: relative;
 		margin : 0 auto;
@@ -552,7 +594,7 @@ td{
 		margin-left: 14.845px;
 	}
 
-	#btn_close{
+	#btn_close,#btn_close3{
 		position: absolute;
 		top: 22%;
 		left: 85%;
@@ -577,3 +619,31 @@ td{
 }
 
 /*미디어 쿼리*/
+
+
+
+/*페이지 popup*/
+
+#page-ptadd{
+	display: none;
+	position: absolute;
+	width: 100%;
+	z-index: 102;
+	left: 0%;
+	background: #f4f4f4;
+}
+
+#page-offadd{
+	display: none;
+	position: absolute;	
+	width: 100%;
+	z-index: 102;
+	left: 0%;
+	background: #f4f4f4;
+}
+
+#page-weekcal{
+	display: block;
+	position: absolute;
+}
+

@@ -49,6 +49,9 @@ $(document).ready(function(){
 
       var modiDateArry = modify_date.replace(/년 |월 |일 |:| /gi,'_').split('_')
       var modiDate = modiDateArry[0]+'-'+modiDateArry[1]+'-'+modiDateArry[2]
+
+      console.log(modiDate)
+
       $("#datepicker").datepicker("setDate",modiDate) // 일정변경 초기값 셋팅
 
       $("#dateSelector p").addClass("dropdown_selected");
