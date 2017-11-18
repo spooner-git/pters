@@ -523,23 +523,13 @@ def member_registration(request, next='trainer:member_manage'):
                 lecture.save()
 
         except ValueError as e:
-            #logger.error(e)
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
-            #logger.error(e)
             error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
             error = '등록 값의 형태가 문제 있습니다.'
 
     if error is None:
-        # Send email with activation key
-        # user=User.objects.get(username=email)
-
-        # email_subject = 'Account confirmation'
-        # email_body = "Hey %s, thanks for signing up. To activate your account, click this link within \
-        # 48hours http://local.finers.co.kr:8000/users/confirm/%s" % (user.username, user.profile.activation_key)
-        # send_mail(email_subject, email_body, 'test@finers.com', [user.email], fail_silently=False)
-        # user = authenticate(username=email, password=password)
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 '\
                        + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),use=1)
@@ -572,76 +562,86 @@ def add_pt_logic(request, next='trainer:cal_day'):
 
     if error is None:
 
-        start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
-        end_date = start_date + datetime.timedelta(hours=int(time_duration))
+        try:
+            start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
+            end_date = start_date + datetime.timedelta(hours=int(time_duration))
 
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+
+    if error is None:
         trainer_class = None
         try:
             trainer_class = ClassTb.objects.get(member_id=request.user.id)
         except ObjectDoesNotExist:
             error = '강사 PT 정보가 존재하지 않습니다'
-            # logger.error(error)
 
+    if error is None:
         try:
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id, en_dis_type='0', use=1)
-            for month_class in month_class_data:
-                if month_class.start_dt >= start_date:
-                    if month_class.start_dt < end_date:
-                        error = '등록 시간이 겹칩니다.'
-                if month_class.end_dt > start_date:
-                    if month_class.end_dt < end_date:
-                        error = '등록 시간이 겹칩니다.'
-                if month_class.start_dt <= start_date:
-                    if month_class.end_dt >= end_date:
-                        error = '등록 시간이 겹칩니다.'
 
         except ValueError as e:
-            # logger.error(e)
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
-            # logger.error(e)
             error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
             error = '등록 값의 형태에 문제가 있습니다.'
 
-        if error is None:
-            try:
-                month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+    if error is None:
+        for month_class in month_class_data:
+            if month_class.start_dt >= start_date:
+                if month_class.start_dt < end_date:
+                    error = '등록 시간이 겹칩니다.'
+            if month_class.end_dt > start_date:
+                if month_class.end_dt < end_date:
+                    error = '등록 시간이 겹칩니다.'
+            if month_class.start_dt <= start_date:
+                if month_class.end_dt >= end_date:
+                    error = '등록 시간이 겹칩니다.'
 
-                for lecture in month_lecture_data:
-                    lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
-                                                                                en_dis_type='1', use=1)
-                    for month_lecture in lecture.lecture_schedule:
-                        if month_lecture.start_dt >= start_date:
-                            if month_lecture.start_dt < end_date:
-                                error = '등록 시간이 겹칩니다.'
-                        if month_lecture.end_dt > start_date:
-                            if month_lecture.end_dt < end_date:
-                                error = '등록 시간이 겹칩니다.'
-                        if month_lecture.start_dt <= start_date:
-                            if month_lecture.end_dt >= end_date:
-                                error = '등록 시간이 겹칩니다.'
+    if error is None:
+        try:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
 
-                if error is None:
-                    with transaction.atomic():
-                        lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date, end_dt=end_date,
-                                                                  state_cd='NP',en_dis_type='1',
-                                                                  reg_dt=timezone.now(),mod_dt=timezone.now(), use=1)
-                        lecture_schedule_data.save()
-                        lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
-                        member_lecture_count = lecture_date_update.lecture_count
-                        lecture_date_update.lecture_count = member_lecture_count-1
-                        lecture_date_update.mod_dt = timezone.now()
-                        lecture_date_update.save()
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
 
-            except ValueError as e:
-                #logger.error(e)
-                error = '등록 값에 문제가 있습니다.'
-            except IntegrityError as e:
-                #logger.error(e)
-                error = '등록 값에 문제가 있습니다.'
-            except TypeError as e:
-                error = '등록 값의 형태에 문제가 있습니다.'
+    if error is None:
+        for lecture in month_lecture_data:
+            lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
+                                                                        en_dis_type='1', use=1)
+
+            for month_lecture in lecture.lecture_schedule:
+                if month_lecture.start_dt >= start_date:
+                    if month_lecture.start_dt < end_date:
+                        error = '등록 시간이 겹칩니다.'
+                if month_lecture.end_dt > start_date:
+                    if month_lecture.end_dt < end_date:
+                        error = '등록 시간이 겹칩니다.'
+                if month_lecture.start_dt <= start_date:
+                    if month_lecture.end_dt >= end_date:
+                        error = '등록 시간이 겹칩니다.'
+
+    if error is None:
+        with transaction.atomic():
+            lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date,
+                                                        end_dt=end_date,
+                                                        state_cd='NP', en_dis_type='1',
+                                                        reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+            lecture_schedule_data.save()
+            lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
+            member_lecture_count = lecture_date_update.lecture_count
+            lecture_date_update.lecture_count = member_lecture_count - 1
+            lecture_date_update.mod_dt = timezone.now()
+            lecture_date_update.save()
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -783,10 +783,8 @@ def daily_pt_delete(request):
                     lecture_data.save()
 
             except ValueError as e:
-                #logger.error(e)
                 error = '등록 값에 문제가 있습니다.'
             except IntegrityError as e:
-                #logger.error(e)
                 error = '등록 값에 문제가 있습니다.'
             except TypeError as e:
                 error = '등록 값의 형태에 문제가 있습니다.'
@@ -842,19 +840,35 @@ def add_off_logic(request, next='trainer:cal_day'):
 
     if error is None:
 
-        start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
-        end_date = start_date + datetime.timedelta(hours=int(time_duration))
-
         trainer_class = None
+
+        try:
+            start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
+            end_date = start_date + datetime.timedelta(hours=int(time_duration))
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+
         try:
             trainer_class = ClassTb.objects.get(member_id=request.user.id)
         except ObjectDoesNotExist:
             error = 'class가 존재하지 않습니다'
             # logger.error(error)
 
-        try:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+        if error is None:
+            try:
+                month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            except ValueError as e:
+                error = '등록 값에 문제가 있습니다.'
+            except IntegrityError as e:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError as e:
+                error = '등록 값의 형태에 문제가 있습니다.'
 
+        if error is None:
             for lecture in month_lecture_data:
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
                                                                             en_dis_type='1', use=1)
@@ -869,43 +883,33 @@ def add_off_logic(request, next='trainer:cal_day'):
                         if month_lecture.end_dt >= end_date:
                             error = '등록 시간이 겹칩니다.'
 
-        except ValueError as e:
-            #logger.error(e)
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            #logger.error(e)
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
-
         if error is None:
             try:
                 month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
                                                                   en_dis_type='0', use=1)
-                for month_class in month_class_data:
-                    if month_class.start_dt >= start_date:
-                        if month_class.start_dt < end_date:
-                            error = '날짜가 겹칩니다.'
-                    if month_class.end_dt > start_date:
-                        if month_class.end_dt < end_date:
-                            error = '날짜가 겹칩니다.'
-                    if month_class.start_dt <= start_date:
-                        if month_class.end_dt >= end_date:
-                            error = '날짜가 겹칩니다.'
-
-                if error is None:
-                    class_schedule_data = ClassScheduleTb(class_tb_id=trainer_class.class_id, start_dt=start_date, end_dt=end_date,
-                                                          state_cd='NP',en_dis_type='0', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
-                    class_schedule_data.save()
-
             except ValueError as e:
-                # logger.error(e)
                 error = '등록 값에 문제가 있습니다.'
             except IntegrityError as e:
-                # logger.error(e)
                 error = '등록 값에 문제가 있습니다.'
             except TypeError as e:
                 error = '등록 값의 형태에 문제가 있습니다.'
+
+        if error is None:
+            for month_class in month_class_data:
+                if month_class.start_dt >= start_date:
+                    if month_class.start_dt < end_date:
+                        error = '날짜가 겹칩니다.'
+                if month_class.end_dt > start_date:
+                    if month_class.end_dt < end_date:
+                        error = '날짜가 겹칩니다.'
+                if month_class.start_dt <= start_date:
+                    if month_class.end_dt >= end_date:
+                        error = '날짜가 겹칩니다.'
+
+        if error is None:
+            class_schedule_data = ClassScheduleTb(class_tb_id=trainer_class.class_id, start_dt=start_date, end_dt=end_date,
+                                                    state_cd='NP',en_dis_type='0', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+            class_schedule_data.save()
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -959,28 +963,25 @@ def daily_off_delete(request):
             error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
-        if error is None:
-            start_date = class_schedule_data.start_dt
-            end_date = class_schedule_data.end_dt
+    if class_schedule_data.use == 0:
+        error = '이미 삭제된 OFF 일정입니다.'
 
-        if error is None:
-            if class_schedule_data.use == 0:
-                error = '이미 삭제된 OFF 일정입니다.'
+    if error is None:
+        start_date = class_schedule_data.start_dt
+        end_date = class_schedule_data.end_dt
 
-        if error is None:
-            try:
-                class_schedule_data.mod_dt = timezone.now()
-                class_schedule_data.use = 0
-                class_schedule_data.save()
+    if error is None:
+        try:
+            class_schedule_data.mod_dt = timezone.now()
+            class_schedule_data.use = 0
+            class_schedule_data.save()
 
-            except ValueError as e:
-                #logger.error(e)
-                error = 'Registration ValueError!'
-            except IntegrityError as e:
-                #logger.error(e)
-                error = 'Registration IntegrityError!'
-            except TypeError as e:
-                error = 'Registration TypeError!'
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -1237,8 +1238,17 @@ def modify_pt_logic(request, next='trainer:cal_day'):
 
     if error is None:
 
-        start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
-        end_date = start_date + datetime.timedelta(hours=int(time_duration))
+        try:
+            start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
+            end_date = start_date + datetime.timedelta(hours=int(time_duration))
+        except ValueError as e:
+            # logger.error(e)
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            # logger.error(e)
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
 
         trainer_class = None
         try:
@@ -1247,75 +1257,83 @@ def modify_pt_logic(request, next='trainer:cal_day'):
             error = 'class가 존재하지 않습니다'
             # logger.error(error)
 
+    if error is None:
         try:
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id, en_dis_type='0', use=1)
-            for month_class in month_class_data:
-                if month_class.start_dt >= start_date:
-                    if month_class.start_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_class.end_dt > start_date:
-                    if month_class.end_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_class.start_dt <= start_date:
-                    if month_class.end_dt >= end_date:
-                        error = '날짜가 겹칩니다.'
 
         except ValueError as e:
-            # logger.error(e)
-            error = 'Registration ValueError!'
+            error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
-            # logger.error(e)
-            error = 'Registration IntegrityError'
+            error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
-            error = 'Registration TypeError!'
+            error = '등록 값의 형태에 문제가 있습니다.'
+
+    if error is None:
+        for month_class in month_class_data:
+            if month_class.start_dt >= start_date:
+                if month_class.start_dt < end_date:
+                    error = '날짜가 겹칩니다.'
+            if month_class.end_dt > start_date:
+                if month_class.end_dt < end_date:
+                    error = '날짜가 겹칩니다.'
+            if month_class.start_dt <= start_date:
+                if month_class.end_dt >= end_date:
+                    error = '날짜가 겹칩니다.'
 
     if error is None:
         try:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id, use=1)
 
         except ValueError as e:
-            #logger.error(e)
-            error = 'Registration ValueError!'
+            error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
-            #logger.error(e)
-            error = 'Registration IntegrityError!'
+            error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
-            error = 'Registration TypeError!'
+            error = '등록 값의 형태에 문제가 있습니다.'
 
-        if error is None:
-            for lecture in month_lecture_data:
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
-                                                                            en_dis_type='1', use=1).exclude(
-                                                                            lecture_schedule_id=modify_schedule_id)
-                for month_lecture in lecture.lecture_schedule:
-                    if month_lecture.start_dt >= start_date:
-                        if month_lecture.start_dt < end_date:
-                            error = '날짜가 겹칩니다.'
-                    if month_lecture.end_dt > start_date:
-                        if month_lecture.end_dt < end_date:
-                            error = '날짜가 겹칩니다.'
-                    if month_lecture.start_dt <= start_date:
-                        if month_lecture.end_dt >= end_date:
-                            error = '날짜가 겹칩니다.'
+    if error is None:
+        for lecture in month_lecture_data:
+            lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
+                                                                        en_dis_type='1', use=1).exclude(
+                                                                        lecture_schedule_id=modify_schedule_id)
+            for month_lecture in lecture.lecture_schedule:
+                if month_lecture.start_dt >= start_date:
+                    if month_lecture.start_dt < end_date:
+                        error = '날짜가 겹칩니다.'
+                if month_lecture.end_dt > start_date:
+                    if month_lecture.end_dt < end_date:
+                        error = '날짜가 겹칩니다.'
+                if month_lecture.start_dt <= start_date:
+                    if month_lecture.end_dt >= end_date:
+                        error = '날짜가 겹칩니다.'
 
-        if error is None:
+    if error is None:
+        try:
             modify_schedule_data = LectureScheduleTb.objects.get(lecture_schedule_id=modify_schedule_id)
 
-            if modify_schedule_data.use == 0:
-                error = '이미 변경된 스케쥴입니다.'
-            else:
-                with transaction.atomic():
-                    lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date, end_dt=end_date,
-                                                            state_cd='NP',en_dis_type='1',
-                                                            reg_dt=timezone.now(),mod_dt=timezone.now(), use=1)
-                    lecture_schedule_data.save()
-                    modify_schedule_data.use = 0
-                    modify_schedule_data.mod_dt = timezone.now()
-                    modify_schedule_data.state_cd = 'CC'
-                    modify_schedule_data.save()
-                    lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
-                    lecture_date_update.mod_dt = timezone.now()
-                    lecture_date_update.save()
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+
+    if error is None:
+        if modify_schedule_data.use == 0:
+            error = '이미 변경된 스케쥴입니다.'
+        else:
+            with transaction.atomic():
+                lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date, end_dt=end_date,
+                                                        state_cd='NP',en_dis_type='1',
+                                                        reg_dt=timezone.now(),mod_dt=timezone.now(), use=1)
+                lecture_schedule_data.save()
+                modify_schedule_data.use = 0
+                modify_schedule_data.mod_dt = timezone.now()
+                modify_schedule_data.state_cd = 'CC'
+                modify_schedule_data.save()
+                lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
+                lecture_date_update.mod_dt = timezone.now()
+                lecture_date_update.save()
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -1397,74 +1415,80 @@ def modify_off_logic(request, next='trainer:cal_day'):
             error = 'class가 존재하지 않습니다'
             # logger.error(error)
 
+    if error is None:
         try:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-
-            for lecture in month_lecture_data:
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
-                                                                            en_dis_type='1', use=1)
-                for month_lecture in lecture.lecture_schedule:
-                    if month_lecture.start_dt >= start_date:
-                        if month_lecture.start_dt < end_date:
-                            error = '날짜가 겹칩니다.'
-                    if month_lecture.end_dt > start_date:
-                        if month_lecture.end_dt < end_date:
-                            error = '날짜가 겹칩니다.'
-                    if month_lecture.start_dt <= start_date:
-                        if month_lecture.end_dt >= end_date:
-                            error = '날짜가 겹칩니다.'
-
         except ValueError as e:
-            #logger.error(e)
-            error = 'Registration ValueError!'
+            error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
-            #logger.error(e)
-            error = 'Registration IntegrityError!'
+            error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
-            error = 'Registration TypeError!'
+            error = '등록 값의 형태에 문제가 있습니다.'
 
-        if error is None:
-            try:
-                month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
+    if error is None:
+        for lecture in month_lecture_data:
+            lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
+                                                                        en_dis_type='1', use=1)
+            for month_lecture in lecture.lecture_schedule:
+                if month_lecture.start_dt >= start_date:
+                    if month_lecture.start_dt < end_date:
+                        error = '날짜가 겹칩니다.'
+                if month_lecture.end_dt > start_date:
+                    if month_lecture.end_dt < end_date:
+                        error = '날짜가 겹칩니다.'
+                if month_lecture.start_dt <= start_date:
+                    if month_lecture.end_dt >= end_date:
+                        error = '날짜가 겹칩니다.'
+
+    if error is None:
+        try:
+            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
                                                                   en_dis_type='0', use=1).exclude(
                                                                 class_schedule_id=class_schedule_id)
-            except ValueError as e:
-                # logger.error(e)
-                error = 'Registration ValueError!'
-            except IntegrityError as e:
-                # logger.error(e)
-                error = 'Registration IntegrityError'
-            except TypeError as e:
-                error = 'Registration TypeError!'
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
 
-        if error is None:
-            for month_class in month_class_data:
-                if month_class.start_dt >= start_date:
-                    if month_class.start_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_class.end_dt > start_date:
-                    if month_class.end_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_class.start_dt <= start_date:
-                    if month_class.end_dt >= end_date:
-                        error = '날짜가 겹칩니다.'
+    if error is None:
+        for month_class in month_class_data:
+            if month_class.start_dt >= start_date:
+                if month_class.start_dt < end_date:
+                    error = '날짜가 겹칩니다.'
+            if month_class.end_dt > start_date:
+                if month_class.end_dt < end_date:
+                    error = '날짜가 겹칩니다.'
+            if month_class.start_dt <= start_date:
+                if month_class.end_dt >= end_date:
+                    error = '날짜가 겹칩니다.'
 
-        if error is None:
+    if error is None:
+        try:
             modify_schedule_data = ClassScheduleTb.objects.get(class_schedule_id=class_schedule_id)
-            if modify_schedule_data.use == 0:
-                    '이미 변경된 OFF일정 입니다.'
-            else:
-                with transaction.atomic():
-                    class_schedule_data = ClassScheduleTb(class_tb_id=trainer_class.class_id, start_dt=start_date,
-                                                            end_dt=end_date,
-                                                            state_cd='NP', en_dis_type='0', reg_dt=timezone.now(),
-                                                            mod_dt=timezone.now(), use=1)
-                    class_schedule_data.save()
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
 
-                    modify_schedule_data.use = 0
-                    modify_schedule_data.state_cd = 'CC'
-                    modify_schedule_data.mod_dt = timezone.now()
-                    modify_schedule_data.save()
+    if error is None:
+        if modify_schedule_data.use == 0:
+                '이미 변경된 OFF일정 입니다.'
+        else:
+            with transaction.atomic():
+                class_schedule_data = ClassScheduleTb(class_tb_id=trainer_class.class_id, start_dt=start_date,
+                                                        end_dt=end_date,
+                                                        state_cd='NP', en_dis_type='0', reg_dt=timezone.now(),
+                                                        mod_dt=timezone.now(), use=1)
+                class_schedule_data.save()
+
+                modify_schedule_data.use = 0
+                modify_schedule_data.state_cd = 'CC'
+                modify_schedule_data.mod_dt = timezone.now()
+                modify_schedule_data.save()
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']

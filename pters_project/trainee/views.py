@@ -51,13 +51,19 @@ class WeekAddView(LoginRequiredMixin, TemplateView):
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
 
-        try:
-            trainer_class = ClassTb.objects.get(class_id=month_lecture_data.class_tb_id)
-        except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+        if error is None:
+            try:
+                trainer_class = ClassTb.objects.get(class_id=month_lecture_data.class_tb_id)
+            except ObjectDoesNotExist:
+                error = 'class가 존재하지 않습니다'
 
         if error is None:
-            member_data = MemberTb.objects.get(member_id=month_lecture_data.member_id)
+            try:
+                member_data = MemberTb.objects.get(member_id=month_lecture_data.member_id)
+            except ObjectDoesNotExist:
+                error = 'Member가 존재하지 않습니다'
+
+        if error is None:
             lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=month_lecture_data.lecture_id,
                                                                 en_dis_type='1',use='1')
             for month_lecture in lecture_schedule:
@@ -207,9 +213,9 @@ def pt_delete_logic(request):
             error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
-        if error is None:
-            start_date = lecture_schedule_data.start_dt
-            end_date = lecture_schedule_data.end_dt
+    if error is None:
+        start_date = lecture_schedule_data.start_dt
+        end_date = lecture_schedule_data.end_dt
 
         lecture_data = None
         try:
@@ -217,24 +223,15 @@ def pt_delete_logic(request):
         except ObjectDoesNotExist:
             error = '회원 PT 정보가 존재하지 않습니다'
 
-        try:
-            with transaction.atomic():
-                lecture_schedule_data.mod_dt = timezone.now()
-                lecture_schedule_data.use = 0
-                member_lecture_count = lecture_data.lecture_count
-                lecture_data.lecture_count = member_lecture_count+1
-                lecture_data.mod_dt = timezone.now()
-                lecture_schedule_data.save()
-                lecture_data.save()
-
-        except ValueError as e:
-            #logger.error(e)
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            #logger.error(e)
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
+    if error is None:
+        with transaction.atomic():
+            lecture_schedule_data.mod_dt = timezone.now()
+            lecture_schedule_data.use = 0
+            member_lecture_count = lecture_data.lecture_count
+            lecture_data.lecture_count = member_lecture_count+1
+            lecture_data.mod_dt = timezone.now()
+            lecture_schedule_data.save()
+            lecture_data.save()
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -297,18 +294,9 @@ def pt_add_logic(request, next='trainee:cal_day'):
             error = '강사 PT 정보가 존재하지 않습니다'
             # logger.error(error)
 
+    if error is None:
         try:
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id, en_dis_type='0', use=1)
-            for month_class in month_class_data:
-                if month_class.start_dt >= start_date:
-                    if month_class.start_dt < end_date:
-                        error = '등록 시간이 겹칩니다.'
-                if month_class.end_dt > start_date:
-                    if month_class.end_dt < end_date:
-                        error = '등록 시간이 겹칩니다.'
-                if month_class.start_dt <= start_date:
-                    if month_class.end_dt >= end_date:
-                        error = '등록 시간이 겹칩니다.'
 
         except ValueError as e:
             # logger.error(e)
@@ -319,44 +307,58 @@ def pt_add_logic(request, next='trainee:cal_day'):
         except TypeError as e:
             error = '등록 값의 형태에 문제가 있습니다.'
 
-        if error is None:
-            try:
-                month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+    if error is None:
+        for month_class in month_class_data:
+            if month_class.start_dt >= start_date:
+                if month_class.start_dt < end_date:
+                    error = '등록 시간이 겹칩니다.'
+            if month_class.end_dt > start_date:
+                if month_class.end_dt < end_date:
+                    error = '등록 시간이 겹칩니다.'
+            if month_class.start_dt <= start_date:
+                if month_class.end_dt >= end_date:
+                    error = '등록 시간이 겹칩니다.'
 
-                for lecture in month_lecture_data:
-                    lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
-                                                                                en_dis_type='1', use=1)
-                    for month_lecture in lecture.lecture_schedule:
-                        if month_lecture.start_dt >= start_date:
-                            if month_lecture.start_dt < end_date:
-                                error = '등록 시간이 겹칩니다.'
-                        if month_lecture.end_dt > start_date:
-                            if month_lecture.end_dt < end_date:
-                                error = '등록 시간이 겹칩니다.'
-                        if month_lecture.start_dt <= start_date:
-                            if month_lecture.end_dt >= end_date:
-                                error = '등록 시간이 겹칩니다.'
+    if error is None:
+        try:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
 
-                if error is None:
-                    with transaction.atomic():
-                        lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date, end_dt=end_date,
-                                                                  state_cd='NP',en_dis_type='1',
-                                                                  reg_dt=timezone.now(),mod_dt=timezone.now(), use=1)
-                        lecture_schedule_data.save()
-                        lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
-                        member_lecture_count = lecture_date_update.lecture_count
-                        lecture_date_update.lecture_count = member_lecture_count-1
-                        lecture_date_update.mod_dt = timezone.now()
-                        lecture_date_update.save()
+        except ValueError as e:
+            #logger.error(e)
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+             #logger.error(e)
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
 
-            except ValueError as e:
-                #logger.error(e)
-                error = '등록 값에 문제가 있습니다.'
-            except IntegrityError as e:
-                #logger.error(e)
-                error = '등록 값에 문제가 있습니다.'
-            except TypeError as e:
-                error = '등록 값의 형태에 문제가 있습니다.'
+    if error is None:
+        for lecture in month_lecture_data:
+            lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
+                                                                        en_dis_type='1', use=1)
+            for month_lecture in lecture.lecture_schedule:
+                if month_lecture.start_dt >= start_date:
+                    if month_lecture.start_dt < end_date:
+                        error = '등록 시간이 겹칩니다.'
+                if month_lecture.end_dt > start_date:
+                    if month_lecture.end_dt < end_date:
+                        error = '등록 시간이 겹칩니다.'
+                if month_lecture.start_dt <= start_date:
+                    if month_lecture.end_dt >= end_date:
+                        error = '등록 시간이 겹칩니다.'
+
+    if error is None:
+        with transaction.atomic():
+            lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date,
+                                                        end_dt=end_date,
+                                                        state_cd='NP', en_dis_type='1',
+                                                        reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+            lecture_schedule_data.save()
+            lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
+            member_lecture_count = lecture_date_update.lecture_count
+            lecture_date_update.lecture_count = member_lecture_count - 1
+            lecture_date_update.mod_dt = timezone.now()
+            lecture_date_update.save()
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
