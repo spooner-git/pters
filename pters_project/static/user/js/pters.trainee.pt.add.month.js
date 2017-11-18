@@ -180,9 +180,11 @@ $(document).ready(function(){
           break;
         }
         //var date = $("#datepicker").val(); 공용
-        var dateArry = $('#popup_info2').text().replace(/년 |월 |일 일정 추가|:| /gi,"_").split('_') //회원 월간일정 전용 
+        var dateArry = $('#popup_info3').text().replace(/년 |월 |일 |일정 추가|:| /gi,"_").split('_') //회원 월간일정 전용 
         var monthD= dateArry[1]
         var dateD = dateArry[2]
+        console.log(monthD,dateD)
+
         if(monthD.length==1){
           var monthD = '0'+dateArry[1]
         }

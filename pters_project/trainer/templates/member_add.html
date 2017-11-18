@@ -35,7 +35,7 @@
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="text" class="dropdown form-control" id="memberName" name="name" placeholder="회원분의 성함을 입력해주세요.">
+                    <input type="text" class="dropdown form-control" id="memberName" name="name" placeholder="회원분의 성함을 입력해주세요." maxlength="10">
                 </div>
             </div>
             <div class="ptaddbox form-group">
@@ -43,7 +43,7 @@
                     <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="tel" class="dropdown form-control" id="memberPhone" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요.">
+                    <input type="tel" class="dropdown form-control" id="memberPhone" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
                 </div>
             </div>
             <div class="ptaddbox form-group">
@@ -51,18 +51,18 @@
                     <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="tel" class="dropdown form-control" id="memberCount" name="counts" placeholder="등록 횟수를 입력해주세요">
+                    <input type="tel" class="dropdown form-control" id="memberCount" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
                 </div>
             </div>
         </div>
 
         <div id="dateSelector" class="ptaddbox">
             <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
-            <p class="datepicktext dropdown"><input type="text" id="datepicker" name="start_date" placeholder="-" readonly></p>
+            <p class="datepicktext dropdown"><input type="text" id="datepicker" name="start_date" placeholder="선택" readonly></p>
         </div>
         <div id="dateSelector2"  class="ptaddbox">
             <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
-            <p class="datepicktext dropdown"><input type="text" id="datepicker2" name="end_date" placeholder="-"  readonly></p>
+            <p class="datepicktext dropdown"><input type="text" id="datepicker2" name="end_date" placeholder="선택"  readonly></p>
         </div>
 
         <div class="ptaddbox form-group">

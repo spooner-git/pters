@@ -32,7 +32,8 @@
     회원 정렬 기준 <span id="currentMemberNum" class="memberNum"></span><span id="finishMemberNum" class="memberNum"></span>
   </div>
   <div class="dropdown">
-    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택    <span class="caret"></span></button>
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택</button>
+    <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
     <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
       <!-- 회원명 DB연동 필요-->
       <li role="presentation" id="countH"><a href="#" role="menuitem" tabindex="-1">남은 횟수 많은 순</a></li>
@@ -51,25 +52,11 @@
     <thead>
       <tr>
         <th>회원명</th>
+        <th>남은 횟수</th>
+        <th>시작 일자</th>
         <th>연락처</th>
-        <th>남은횟수</th>
-        <th>시작일자</th>
       </tr>
     </thead>
-
-    <tbody>
-        {% for lecture in trainer_member %}
-            {% if lecture.lecture_count > 0 %}
-      <tr>
-        <td>{{ lecture.trainer_member.name }}</td>
-        <td>{{ lecture.trainer_member.phone }}</td>
-        <td>{{ lecture.lecture_count }}</td>
-        <td>{{ lecture.start_date }}</td>
-      </tr>
-            {% endif %}
-        {% endfor %}
-    </tbody>
-
   </table>
 </div>
 
@@ -79,25 +66,11 @@
     <thead>
       <tr>
         <th>회원명</th>
+        <th>남은 횟수</th>
+        <th>시작 일자</th>
         <th>연락처</th>
-        <th>남은횟수</th>
-        <th>시작일자</th>
       </tr>
     </thead>
-    <!--
-    <tbody>
-        {% for lecture in trainer_member %}
-            {% if lecture.lecture_count == 0 %}
-      <tr>
-        <td>{{ lecture.trainer_member.name }}</td>
-        <td>{{ lecture.trainer_member.phone }}</td>
-        <td>{{ lecture.lecture_count }}</td>
-        <td>{{ lecture.start_date }}</td>
-      </tr>
-            {% endif %}
-        {% endfor %}
-    </tbody>
-  -->
   </table>
 </div> 
 
@@ -189,6 +162,7 @@
          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
          <script type="text/javascript" src={% static "user/js/pters.manage.member.js" %}></script>
          <script>
+          $('#uptext').text("회원 관리")
            
           var nameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
           var phoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_count > 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
@@ -221,9 +195,6 @@
 
           $('#currentMemberNum').text("진행중 회원수 : "+DBlength)
           $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
-
-
-
 
          </script>
 
