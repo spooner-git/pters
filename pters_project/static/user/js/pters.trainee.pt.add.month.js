@@ -52,9 +52,9 @@ $(document).ready(function(){
        		}
     	 }
 
-      $("#upbutton-alarm").click(function(){
+      $("#submitBtn").click(function(){
          if(select_all_check==true){
-             document.getElementById('off-add-form').submit();
+             document.getElementById('pt-add-form').submit();
          }else{
             //입력값 확인 메시지 출력 가능
          }

@@ -142,10 +142,11 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
 
-        try:
-            trainer_class = ClassTb.objects.get(class_id=month_lecture_data.class_tb_id)
-        except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+        if error is None:
+            try:
+                trainer_class = ClassTb.objects.get(class_id=month_lecture_data.class_tb_id)
+            except ObjectDoesNotExist:
+                error = 'class가 존재하지 않습니다'
 
         if error is None:
             member_data = MemberTb.objects.get(member_id=month_lecture_data.member_id)
@@ -210,7 +211,7 @@ def pt_delete_logic(request):
         try:
             lecture_schedule_data = LectureScheduleTb.objects.get(lecture_schedule_id=schedule_id)
         except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
+            error = '스케쥴 정보가 정보가 존재하지 않습니다'
             # logger.error(error)
 
     if error is None:
@@ -259,23 +260,22 @@ def pt_delete_logic(request):
         return redirect(next_page)
     else:
         messages.info(request, error)
-        next_page = 'trainer:cal_day'
+        next_page = 'trainer:cal_month'
         return redirect(next_page)
 
 
 # pt 일정 추가
 @csrf_exempt
-def pt_add_logic(request, next='trainee:cal_day'):
-    lecture_id = request.POST.get('lecture_id')
-    member_name = request.POST.get('member_name')
+def pt_add_logic(request, next='trainee:cal_month'):
     training_date = request.POST.get('training_date')
     time_duration = request.POST.get('time_duration')
     training_time = request.POST.get('training_time')
 
     error = None
-    if lecture_id == '':
-        error = '회원을 선택해 주세요.'
-    elif training_date == '':
+    trainee_lecture = None
+    trainer_class = None
+
+    if training_date == '':
         error = '날짜를 선택해 주세요.'
     elif time_duration == '':
         error = '진행 시간을 선택해 주세요.'
@@ -287,12 +287,16 @@ def pt_add_logic(request, next='trainee:cal_day'):
         start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
         end_date = start_date + datetime.timedelta(hours=int(time_duration))
 
-        trainer_class = None
         try:
-            trainer_class = ClassTb.objects.get(member_id=request.user.id)
+            trainee_lecture = LectureTb.objects.get(member_id=request.user.id)
         except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
-            # logger.error(error)
+            error = 'lecture가 존재하지 않습니다.'
+
+    if error is None:
+        try:
+            trainer_class = ClassTb.objects.get(class_id=trainee_lecture.class_tb_id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
 
     if error is None:
         try:
@@ -349,12 +353,11 @@ def pt_add_logic(request, next='trainee:cal_day'):
 
     if error is None:
         with transaction.atomic():
-            lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date,
-                                                        end_dt=end_date,
-                                                        state_cd='NP', en_dis_type='1',
-                                                        reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+            lecture_schedule_data = LectureScheduleTb(lecture_tb_id=trainee_lecture.lecture_id, start_dt=start_date,
+                                                      end_dt=end_date, state_cd='NP', en_dis_type='1',
+                                                      reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
             lecture_schedule_data.save()
-            lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
+            lecture_date_update = LectureTb.objects.get(lecture_id=trainee_lecture.lecture_id)
             member_lecture_count = lecture_date_update.lecture_count
             lecture_date_update.lecture_count = member_lecture_count - 1
             lecture_date_update.mod_dt = timezone.now()
@@ -379,8 +382,8 @@ def pt_add_logic(request, next='trainee:cal_day'):
         # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
         # + start_date.strftime('%p %I:%M')\
         # + '- '+end_date.strftime('%p %I:%M')
-        log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
-                       + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
+        log_contents = '<span>'+request.user.first_name + ' 회원님께서 ' \
+                       + '</span> 일정을 <span class="status">등록</span>했습니다.@'\
                        + log_start_date\
                        + ' - '+log_end_date
         log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
@@ -389,5 +392,5 @@ def pt_add_logic(request, next='trainee:cal_day'):
         return redirect(next)
     else:
         messages.info(request, error)
-        next = 'trainer:add_pt'
+        next = 'trainee:cal_month'
         return redirect(next)
