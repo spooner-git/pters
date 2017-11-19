@@ -206,6 +206,7 @@ $(document).ready(function(){
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 	var currentDate = date.getDate(); //오늘 날짜
+
 	var currentDay = date.getDay(); // 0,1,2,3,4,5,6,7
 	var currentHour = date.getHours();
 	var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
@@ -284,21 +285,29 @@ $(document).ready(function(){
 	};
 
 	//Slide 10번째를 [오늘]로 기준으로 각페이지에 날짜에 맞춰 테이블 생성하기
-
+	console.log(lastDay[currentMonth])
 	var element = 10-currentDate
 	console.log(currentMonth)
-		if(element>0){
-			for(i=1;i<=element;i++){
-				calTable_Set(i,currentYear,currentPageMonth-1,lastDay[currentMonth-1]-element+i)
+		if(element>0){  //오늘 날짜가 10일 이하
+			for(i=1;i<=element;i++){ //전달 페이지
+				if(currentPageMonth-1<1){
+					calTable_Set(i,currentYear-1,currentPageMonth-1+12,lastDay[currentPageMonth-1+12-1]-element+i)
+				}else{
+					calTable_Set(i,currentYear,currentPageMonth-1,lastDay[currentMonth-1]-element+i)
+				}
 			}
-			for(i=element+1;i<=23;i++){
+			for(i=element+1;i<=23;i++){ //이번달 페이지
 				calTable_Set(i,currentYear,currentPageMonth,currentDate-10+i)	
 			}
-		}else{
+		}else{ //오늘 날짜가 10일 이상
 			for(i=1;i<=23;i++){
-				if(currentDate-10+i-1>lastDay[currentPageMonth]){
-					calTable_Set(i,currentYear,currentPageMonth+1,currentDate-10+i-lastDay[currentPageMonth+1])
-				}else{
+				if(currentDate-10+i>lastDay[currentMonth]){ //다음달로 넘어가는 페이지가 나올때
+					if(currentPageMonth+1>12){ // 해가 넘어갈때
+						calTable_Set(i,currentYear+1,currentPageMonth+1-12,currentDate-10+i-lastDay[currentMonth])
+					}else{ // 해 넘어가지 않을때
+						calTable_Set(i,currentYear,currentPageMonth+1,currentDate-10+i-lastDay[currentMonth])
+					}
+				}else{ //다음달로 넘어가는 페이지 없이 현재달만 보일때
 					calTable_Set(i,currentYear,currentPageMonth,currentDate-10+i)	
 				}
 			}
