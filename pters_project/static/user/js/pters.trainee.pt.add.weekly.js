@@ -67,9 +67,10 @@ $(document).ready(function(){
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-	
     var currentDate = date.getDate(); //오늘 날짜
 	var currentDay = date.getDay() // 0,1,2,3,4,5,6,7
+
+
 	var currentHour = date.getHours();
 	var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
 	if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
@@ -214,14 +215,36 @@ $(document).ready(function(){
 				case 1 :
 				var td1 = []
 				var td2 = []
-				for(z=-1; z<=5; z++){
-					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+				if(Week=='0W'){
+					if(currentDates-1>lastDay[currentMonth]){
+						td1[0]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates-1-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+					}else if(currentDates-1<=lastDay[currentMonth] && currentDates-1>0){
+						td1[0]='<td'+' id='+Year+'_'+Month+'_'+(currentDates-1)+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
 					}
-					else if(currentDates+z<=0){
-						td1[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+					else if(currentDates-1<=0){
+						td1[0]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates-1+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+					}
+					
+					for(z=0; z<=5; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
+						else if(currentDates+z<=0){
+							td1[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
+					}
+				}else{
+					for(z=-1; z<=5; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
+						else if(currentDates+z<=0){
+							td1[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
 					}
 				}
 				var td1_1 = td1.join('')
@@ -231,15 +254,37 @@ $(document).ready(function(){
 				case 2 :
 				var td1 = []
 				var td2 = []
-				for(z=-2; z<=4; z++){
-					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=0){
-						td1[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+				if(Week=='0W'){
+					for(z=-2; z<=-1; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}
+					}
+					for(z=0; z<=4; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
+					}
+				}else{
+					for(z=-2; z<=4; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
 					}
 				}
+				
 				var td1_1 = td1.join('')
 				var td2_1 = td2.join('')
 				break;
@@ -247,13 +292,34 @@ $(document).ready(function(){
 				case 3 :
 				var td1 = []
 				var td2 = []
-				for(z=-3; z<=3; z++){
-					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=0){
-						td1[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+				if(Week=='0W'){
+					for(z=-3; z<=-1; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}
+					}
+					for(z=0; z<=3; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
+					}
+				}else{
+					for(z=-3; z<=3; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
 					}
 				}
 				var td1_1 = td1.join('')
@@ -263,13 +329,34 @@ $(document).ready(function(){
 				case 4 :				
 				var td1 = []
 				var td2 = []
-				for(z=-4; z<=2; z++){
-					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=0){
-						td1[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+				if(Week=='0W'){
+					for(z=-4; z<=-1; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}
+					}
+					for(z=0; z<=2; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
+					}	
+				}else{
+					for(z=-4; z<=2; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
 					}
 				}
 				var td1_1 = td1.join('')
@@ -279,13 +366,34 @@ $(document).ready(function(){
 				case 5 :				
 				var td1 = []
 				var td2 = []
-				for(z=-5; z<=1; z++){
-					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=0){
-						td1[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+				if(Week=='0W'){
+					for(z=-5; z<=-1; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}
+					}
+					for(z=0; z<=1; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
+					}	
+				}else{
+					for(z=-5; z<=1; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
 					}
 				}
 				var td1_1 = td1.join('')
@@ -295,13 +403,32 @@ $(document).ready(function(){
 				case 6 :				
 				var td1 = []
 				var td2 = []
-				for(z=-6; z<=0; z++){
-					if(currentDates+z>lastDay[currentMonth]){
-						td1[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-						td1[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
-					}else if(currentDates+z<=0){
-						td1[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+				if(Week=='0W'){
+					for(z=-6; z<=-1; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="ptersNotAvail"><div></div></div>'+'</td>';
+						}
+					}
+					if(currentDates>lastDay[currentMonth]){
+						td1[6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+					}else if(currentDates<=lastDay[currentMonth] && currentDates>0){
+						td1[6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+					}else if(currentDates<=0){
+						td1[6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+					}
+				}else{
+					for(z=-6; z<=0; z++){
+						if(currentDates+z>lastDay[currentMonth]){
+							td1[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
+							td1[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}else if(currentDates+z<=0){
+							td1[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+'>'+'<div class="'+checkBoxClass+'"><div></div></div>'+'</td>';
+						}
 					}
 				}
 				var td1_1 = td1.join('')
