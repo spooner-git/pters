@@ -180,7 +180,7 @@ span{
 }
 
 .graphindicator{
-	background: blue;
+	background: #fe4e65;
 	-webkit-animation-name:blink;
 	-webkit-animation-duration:1s;
 	animation-name: blink;
@@ -189,13 +189,13 @@ span{
 }
 
 @keyframes blink {
-    from {background-color: blue;}
-    to {background-color: skyblue;}
+    from {background-color: #fe4e65;}
+    to {background-color: #ffffff;}
 }
 
 @-webkit-keyframes blink {
-    from {background-color: blue;}
-    to {background-color: skyblue;}
+    from {background-color: #fe4e65;}
+    to {background-color: #ffffff;}
 }
 
 .noktimegraph{

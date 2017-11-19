@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^add_pt_day/$', views.DayAddView.as_view(), name='add_pt_day'),
     url(r'^pt_delete_logic/$', views.pt_delete_logic, name='pt_delete_logic'),
     url(r'^pt_add_logic/$', views.pt_add_logic, name='pt_add_logic'),
+    url(r'^pt_add_array_logic/$', views.pt_add_array_logic, name='pt_add_array_logic'),
 
 ]
 
