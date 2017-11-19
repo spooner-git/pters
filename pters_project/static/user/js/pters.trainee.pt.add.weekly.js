@@ -47,10 +47,6 @@ $(document).ready(function(){
     var currentDate = date.getDate(); //오늘 날짜
 	var currentDay = date.getDay() // 0,1,2,3,4,5,6,7
 
-	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-    var currentDate = 25 //오늘 날짜
-	var currentDay = 6 // 0,1,2,3,4,5,6,7
-
 
 	var currentHour = date.getHours();
 	var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
