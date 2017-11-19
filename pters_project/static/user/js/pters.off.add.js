@@ -30,7 +30,7 @@ $(document).ready(function(){
           onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
             if( curDate != instance.lastVal ){
               $("#dateSelector_off p").addClass("dropdown_selected");
-              $("#id_training_date").val($("#datepicker_off").val()).submit();
+              $("#id_training_date_off").val($("#datepicker_off").val()).submit();
               if($('#timeGraph_off').css('display')=='none'){
                 $('#timeGraph_off').show(110,"swing");
               }
@@ -52,7 +52,7 @@ $(document).ready(function(){
           $("#starttimesSelected_off button").addClass("dropdown_selected");
           $("#starttimesSelected_off .btn:first-child").text($(this).text());
           $("#starttimesSelected_off .btn:first-child").val($(this).text());
-          $("#id_training_time").val($(this).attr('data-trainingtime'));
+          $("#id_training_time_off").val($(this).attr('data-trainingtime'));
           var arry = $(this).attr('data-trainingtime').split(':')
           durTimeSet(arry[0]);
           check_dropdown_selected();
@@ -62,7 +62,7 @@ $(document).ready(function(){
           $("#durationsSelected_off button").addClass("dropdown_selected");
           $("#durationsSelected_off .btn:first-child").text($(this).text());
           $("#durationsSelected_off .btn:first-child").val($(this).attr('data-dur'));
-          $("#id_time_duration").val($(this).attr('data-dur'));
+          $("#id_time_duration_off").val($(this).attr('data-dur'));
           check_dropdown_selected();
           addGraphIndicator($(this).attr('data-dur'))
       }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시

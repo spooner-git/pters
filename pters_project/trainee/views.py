@@ -87,9 +87,9 @@ class WeekAddView(LoginRequiredMixin, TemplateView):
 
         if error is None:
 
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id).exclude(
+            month_lecture_data_others = LectureTb.objects.filter(class_tb_id=trainer_class.class_id).exclude(
                                                             lecture_id=month_lecture_data.lecture_id)
-            for lecture in month_lecture_data:
+            for lecture in month_lecture_data_others:
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
                                                                             en_dis_type='1', start_dt__gte=before_dt,
                                                                             start_dt__lte=after_dt, use='1')
@@ -104,6 +104,7 @@ class WeekAddView(LoginRequiredMixin, TemplateView):
         context['daily_lecture_data_member'] = daily_lecture_data_member
         context['daily_off_data_start_date'] = daily_off_data_start_date
         context['daily_off_data_end_date'] = daily_off_data_end_date
+        context['lecture_count'] = month_lecture_data.lecture_count
 
         return context
 
@@ -362,6 +363,70 @@ def pt_add_logic(request, next='trainee:cal_month'):
             lecture_date_update.lecture_count = member_lecture_count - 1
             lecture_date_update.mod_dt = timezone.now()
             lecture_date_update.save()
+
+    if error is None:
+        week_info = ['일', '월', '화', '수', '목', '금', '토']
+
+        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        if start_date.strftime('%p') == 'AM':
+            log_start_date = str(log_start_date) + '오전'
+        elif start_date.strftime('%p') == 'PM':
+            log_start_date = str(log_start_date) + '오후'
+        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
+
+        if end_date.strftime('%p') == 'AM':
+            log_end_date = '오전'
+        elif end_date.strftime('%p') == 'PM':
+            log_end_date = '오후'
+
+        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
+        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
+        # + start_date.strftime('%p %I:%M')\
+        # + '- '+end_date.strftime('%p %I:%M')
+        log_contents = '<span>'+request.user.first_name + ' 회원님께서 ' \
+                       + '</span> 일정을 <span class="status">등록</span>했습니다.@'\
+                       + log_start_date\
+                       + ' - '+log_end_date
+        log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+        return redirect(next)
+    else:
+        messages.info(request, error)
+        next = 'trainee:cal_month'
+        return redirect(next)
+
+# pt 일정 추가
+@csrf_exempt
+def pt_add_array_logic(request):
+    add_pt_size = request.POST.get('add_pt_size')
+    training_date = request.POST.getlist('training_date[]')
+    time_duration = request.POST.getlist('time_duration[]')
+    training_time = request.POST.getlist('training_time[]')
+    next = request.POST.get('next')
+
+    error = None
+    trainee_lecture = None
+    trainer_class = None
+
+    if training_date == '':
+        error = '날짜를 선택해 주세요.'
+    elif time_duration == '':
+        error = '진행 시간을 선택해 주세요.'
+    elif training_time == '':
+        error = '시작 시간을 선택해 주세요.'
+
+        for i in range(0, int(log_size)):
+            try:
+                log_data = LogTb.objects.get(log_id=delete_log_id[i])
+            except ObjectDoesNotExist:
+                error = 'class가 존재하지 않습니다'
+                # logger.error(error)
+            if error is None:
+                log_data.use = 0
+                log_data.mod_dt = timezone.now()
+                log_data.save()
+
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']

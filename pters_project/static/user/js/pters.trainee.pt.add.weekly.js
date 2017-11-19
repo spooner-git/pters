@@ -20,15 +20,38 @@ $(document).ready(function(){
 			userCheckedHourArray[i]=checkedHour
 		}
 		alert('추가된 시간은 총 '+checkedLength+'건'+' Array = ['+userCheckedHourArray+'],') //디버깅용
+		if(checkedLength>0){
+             document.getElementById('pt-add-form').submit();
+		}
 	})
 
 
 	$(document).on('click','.ptersCheckbox',function(){
 		var checkBox = $(this).find('div')
+		var date_info = $(this).parent('td').attr('id')
 		if(!checkBox.hasClass('ptersCheckboxInner')){
 			checkBox.addClass('ptersCheckboxInner').attr('data-time',$(this).parent('td').attr('id'))
+			var add_form = '#pt-add-form'
+			var date_form = date_info.split('_')
+			var yy=date_form[0]
+			var mm=date_form[1]
+			var dd=date_form[2]
+			var hour=date_form[3]
+			var min=date_form[4]
+			var pt_size = '#add-pt-count'
+			//$("#id_schedule_id").val()
+			$(add_form).append("<input type='hidden' name='training_date[]' id='id_training_date_"+date_info+"' value='"+yy+"-"+mm+"-"+dd+"'>" +
+				"<input type='hidden' name='time_duration[]' id='id_time_duration_"+date_info+"' value='"+hour+":"+min+":00.000000'>" +
+				"<input type='hidden' name='training_time[]' id='id_training_time_"+date_info+"' value='1'>")
+
 		}else if(checkBox.hasClass('ptersCheckboxInner')){
 			checkBox.removeClass('ptersCheckboxInner')
+			var delete_input_form1 = '#id_training_date_'+date_info
+			var delete_input_form2 = '#id_time_duration_'+date_info
+			var delete_input_form3 = '#id_training_time_'+date_info
+			$(delete_input_form1).remove()
+			$(delete_input_form2).remove()
+			$(delete_input_form3).remove()
 		}
 	})
 

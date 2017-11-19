@@ -505,7 +505,7 @@ class ReserveSettingView(TemplateView):
 
 # 회원가입 api
 @csrf_exempt
-def member_registration(request, next='trainer:member_manage'):
+def member_registration(request, next_page='trainer:member_manage'):
     email = request.POST.get('email')
     name = request.POST.get('name')
     phone = request.POST.get('phone')
@@ -513,6 +513,7 @@ def member_registration(request, next='trainer:member_manage'):
     counts = request.POST.get('counts')
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
+    next_page = request.POST.get('next_page')
 
     error = None
     if MemberTb.objects.filter(name=name, phone=phone).exists():
@@ -565,21 +566,22 @@ def member_registration(request, next='trainer:member_manage'):
                        + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),use=1)
         log_data.save()
-        return redirect(next)
+        return redirect(next_page)
     else:
         messages.info(request, error)
-        next = 'trainer:member_add'
-        return redirect(next)
+        #next_page = 'trainer:member_add'
+        return redirect(next_page)
 
 
 # pt 일정 추가
 @csrf_exempt
-def add_pt_logic(request, next='trainer:cal_day'):
+def add_pt_logic(request, next_page='trainer:cal_day'):
     lecture_id = request.POST.get('lecture_id')
     member_name = request.POST.get('member_name')
     training_date = request.POST.get('training_date')
     time_duration = request.POST.get('time_duration')
     training_time = request.POST.get('training_time')
+    next_page = request.POST.get('next_page')
 
     error = None
     if lecture_id == '':
@@ -700,16 +702,16 @@ def add_pt_logic(request, next='trainer:cal_day'):
         log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
-        return redirect(next)
+        return redirect(next_page)
     else:
         messages.info(request, error)
-        next = 'trainer:add_pt'
-        return redirect(next)
+        #next_page = 'trainer:add_pt'
+        return redirect(next_page)
 
 
 # 로그인 api
 @csrf_exempt
-def login_trainer(request, next='home'):
+def login_trainer(request, next_page='home'):
     #login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
@@ -736,10 +738,10 @@ def login_trainer(request, next='home'):
             # logger.error(error)
 
     if error is None:
-        return redirect(next)
+        return redirect(next_page)
     else:
         messages.info(request, error)
-        return redirect(next)
+        return redirect(next_page)
 
 
 # 로그아웃 api
@@ -849,16 +851,17 @@ def daily_pt_delete(request):
         return redirect(next_page)
     else:
         messages.info(request, error)
-        next_page = 'trainer:cal_day'
+        #next_page = 'trainer:cal_day'
         return redirect(next_page)
 
 
 # Off 일정 추가
 @csrf_exempt
-def add_off_logic(request, next='trainer:cal_day'):
+def add_off_logic(request):
     training_date = request.POST.get('training_date')
     time_duration = request.POST.get('time_duration')
     training_time = request.POST.get('training_time')
+    next_page = request.POST.get('next_page')
 
     error = None
 
@@ -868,6 +871,9 @@ def add_off_logic(request, next='trainer:cal_day'):
         error = '진행 시간을 선택해 주세요.'
     elif training_time == '':
         error = '시작 시간을 선택해 주세요.'
+    elif next_page =='':
+        error = '시작 시간을 선택해 주세요.'
+
 
     if error is None:
 
@@ -968,11 +974,11 @@ def add_off_logic(request, next='trainer:cal_day'):
         log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
-        return redirect(next)
+        return redirect(next_page)
     else:
         messages.info(request, error)
-        next = 'trainer:add_off'
-        return redirect(next)
+        #next_page = 'trainer:add_off'
+        return redirect(next_page)
 
 
 # OFF 일정 삭제
@@ -1249,13 +1255,14 @@ class OffModifyView(LoginRequiredMixin, TemplateView):
 
 # pt 일정 수정
 @csrf_exempt
-def modify_pt_logic(request, next='trainer:cal_day'):
+def modify_pt_logic(request):
     modify_schedule_id = request.POST.get('modify_schedule_id')
     lecture_id = request.POST.get('lecture_id')
     member_name = request.POST.get('member_name')
     training_date = request.POST.get('training_date')
     time_duration = request.POST.get('time_duration')
     training_time = request.POST.get('training_time')
+    next_page = request.POST.get('next_page')
 
     error = None
     if lecture_id == '':
@@ -1410,20 +1417,21 @@ def modify_pt_logic(request, next='trainer:cal_day'):
         log_data = LogTb(external_id=request.user.id, log_type='LS03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
-        return redirect(next)
+        return redirect(next_page)
     else:
         messages.info(request, error)
-        next = 'trainer:add_pt'
-        return redirect(next)
+        #next_page = 'trainer:add_pt'
+        return redirect(next_page)
 
 
 # Off 일정 추가
 @csrf_exempt
-def modify_off_logic(request, next='trainer:cal_day'):
+def modify_off_logic(request):
     class_schedule_id = request.POST.get('modify_off_schedule_id')
     training_date = request.POST.get('training_date')
     time_duration = request.POST.get('time_duration')
     training_time = request.POST.get('training_time')
+    next_page = request.POST.get('next_page')
 
     error = None
 
@@ -1565,8 +1573,8 @@ def modify_off_logic(request, next='trainer:cal_day'):
         log_data = LogTb(external_id=request.user.id, log_type='LS03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
-        return redirect(next)
+        return redirect(next_page)
     else:
         messages.info(request, error)
-        next = 'trainer:add_off'
-        return redirect(next)
+        #next_page = 'trainer:add_off'
+        return redirect(next_page)

@@ -25,9 +25,12 @@
   <form action="{% url 'trainer:modify_pt' %}" id="pt-modify-form" method="get">
     <input type="hidden" name="schedule_id" id="id_schedule_id_modify">
     <input type="hidden" name="lecture_id"   id="id_lecture_id_modify">
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+
   </form>
   <form action="{% url 'trainer:modify_off' %}" id="off-modify-form" method="get">
     <input type="hidden" name="off_schedule_id" id="id_off_schedule_id_modify">
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
   </form>
    
   <!--팝업메뉴-->
@@ -126,7 +129,7 @@
         <input type="hidden" name="training_date" id="id_training_date">
         <input type="hidden" name="time_duration" id="id_time_duration">
         <input type="hidden" name="training_time" id="id_training_time">
-        <input type="hidden" name="next_page">
+        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
     </form>
 
 
@@ -245,10 +248,10 @@
         {% endif %}
 
     <form action="{% url 'trainer:add_off_logic' %}" id="off-add-form" method="post">
-        <input type="hidden" name="training_date" id="id_training_date">
-        <input type="hidden" name="time_duration" id="id_time_duration">
-        <input type="hidden" name="training_time" id="id_training_time">
-        <input type="hidden" name="next_page">
+        <input type="hidden" name="training_date" id="id_training_date_off">
+        <input type="hidden" name="time_duration" id="id_time_duration_off">
+        <input type="hidden" name="training_time" id="id_training_time_off">
+        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
     </form>
 
     <div id="dateSelector_off" class="ptaddbox">
