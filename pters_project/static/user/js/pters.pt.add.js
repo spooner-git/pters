@@ -14,6 +14,8 @@ $(document).ready(function(){
       //모바일 스타일
 
 
+
+
   $("#datepicker").datepicker({
         minDate : 0,
           onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
@@ -45,7 +47,7 @@ $(document).ready(function(){
       		$("#membersSelected .btn:first-child").val($(this).text());
       		$("#countsSelected").text($(this).attr('data-lecturecount'));
       		$("#id_lecture_id").val($(this).attr('data-lectureid'));
-            $("#id_member_name").val($(this).text());
+          $("#id_member_name").val($(this).text());
           check_dropdown_selected();
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
@@ -75,6 +77,10 @@ $(document).ready(function(){
 
       $(document).on('click','#durationsSelected button',function(){
         $('.tdgraph').removeClass('graphindicator');
+      })
+
+      $(document).on('click','button',function(){
+         scrollToIndicator($(this))
       })
 
 
@@ -143,6 +149,7 @@ $(document).ready(function(){
             timeArray[i] ='<li><a data-trainingtime="'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
           }
         }
+        timeArray[offOkLen]='<li><a data-trainingtime="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>'
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
       }
@@ -329,6 +336,7 @@ $(document).ready(function(){
             }
           }
         }
+         durTimeList.append('<li><a data-dur="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>')
       }
 
       function addGraphIndicator(datadur){
@@ -354,7 +362,9 @@ $(document).ready(function(){
         }
       }
 
-
-
-
+      function scrollToIndicator(dom){
+        var offset = dom.offset();
+        console.log(offset)
+          $('body, html').animate({scrollTop : offset.top-180},700)
+      }
 });

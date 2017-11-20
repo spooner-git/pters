@@ -74,6 +74,10 @@ $(document).ready(function(){
         $('.tdgraph').removeClass('graphindicator');
       })
 
+      $(document).on('click','button',function(){
+         scrollToIndicator($(this))
+      })
+
        function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
        	 //var memberSelect = $("#membersSelected button");
        	 var dateSelect = $("#dateSelector_off p");
@@ -126,6 +130,7 @@ $(document).ready(function(){
             timeArray[i] ='<li><a data-trainingtime="'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
           }
         }
+        timeArray[offOkLen]='<li><a data-trainingtime="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>'
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
         console.log(offAddOkArray)
@@ -312,6 +317,7 @@ $(document).ready(function(){
             }
           }
         }
+        durTimeList.append('<li><a data-dur="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>')
       }
 
       function addGraphIndicator(datadur){
@@ -336,6 +342,12 @@ $(document).ready(function(){
           $('#'+i+'g_off').addClass('graphindicator')
 
         }
+      }
+
+      function scrollToIndicator(dom){
+        var offset = dom.offset();
+        console.log(offset)
+          $('body, html').animate({scrollTop : offset.top-180},700)
       }
 
 
