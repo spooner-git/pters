@@ -4,7 +4,7 @@
         {% load static %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta name="viewport" content="width=device-width,user-scalable:no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <meta name="description" content="">
         <meta name="author" content="">
@@ -34,7 +34,8 @@
                         <span class="icon-bar" style="width: 20px;"></span>
                     </button>
                     {% block nav_center_img %}
-                        <a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>
+                        <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>-->
+                        <a id="uptext" class="uptext" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
                         <a href="{% url 'trainer:alarm' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>

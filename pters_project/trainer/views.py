@@ -732,7 +732,7 @@ def login_trainer(request, next_page='home'):
             # request.session['is_first_login'] = True
             #request.session['member_id'] = member_detail.member_id
 
-            return redirect(next)
+            return redirect(next_page)
         else:
             error = '로그인에 실패하였습니다.'
             # logger.error(error)

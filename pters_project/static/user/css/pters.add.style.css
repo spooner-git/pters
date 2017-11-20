@@ -111,11 +111,23 @@ span{
 	margin-top: 5%;
 }
 
+.ptaddbox_nomargin{  /*회원모드 팝업에서 사용*/
+	padding-right: 5%;
+	padding-left: 5%;
+}
+
 .ptaddboxtext{
 	font-size: 14px;
 	color: #3b3d3d;
 	font-weight: 400;
 	margin-bottom: 0;
+}
+
+.ptaddboxtext_trainee_popup{
+	position: absolute;
+	z-index: 1;
+	top: 15px;
+	font-weight: bold;
 }
 
 
@@ -179,6 +191,14 @@ span{
 	border-left : 0.5px solid #f4f4f4;
 }
 
+.tdgraph_trainee_popup{
+	height: 68px;
+	background: #f4f4f4;
+	border-top: 0.5px solid #3b3d3d;
+	border-bottom: 0.5px solid #3b3d3d;
+}
+
+
 .graphindicator{
 	background: #fe4e65;
 	-webkit-animation-name:blink;
@@ -237,16 +257,19 @@ span{
 	color: #fe4e65;
 }
 
-#submitBtn{
-	width: 100%;
-	background: #eeeeee;
-	color: #ffffff;
+.dropdown_trainee_popup{
+	width: 77%;
+	margin-left: 23%;
 	height: 50px;
-	font-size: 15px;
-	font-weight: bold;
-	margin-bottom: 15px;
 }
 
+
+#submitBtn{
+	height: 55px;
+	color: #3d3b3b;
+}
+
+
 .submitBtnActivated{
-	background: #fe4e65 !important;
+	color: #fe4e65 !important;
 }
