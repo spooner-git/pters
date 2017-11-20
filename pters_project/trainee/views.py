@@ -104,7 +104,7 @@ class WeekAddView(LoginRequiredMixin, TemplateView):
         context['daily_lecture_data_member'] = daily_lecture_data_member
         context['daily_off_data_start_date'] = daily_off_data_start_date
         context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['lecture_count'] = month_lecture_data.lecture_count
+        context['lecture_reg_count'] = month_lecture_data.lecture_reg_count
 
         return context
 
@@ -191,7 +191,7 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         context['daily_lecture_data_member'] = daily_lecture_data_member
         context['daily_off_data_start_date'] = daily_off_data_start_date
         context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['lecture_count'] = month_lecture_data.lecture_count
+        context['lecture_reg_count'] = month_lecture_data.lecture_reg_count
 
         return context
 
@@ -229,8 +229,8 @@ def pt_delete_logic(request):
         with transaction.atomic():
             lecture_schedule_data.mod_dt = timezone.now()
             lecture_schedule_data.use = 0
-            member_lecture_count = lecture_data.lecture_count
-            lecture_data.lecture_count = member_lecture_count+1
+            member_lecture_avail_count = lecture_data.lecture_avail_count
+            lecture_data.lecture_avail_count = member_lecture_avail_count+1
             lecture_data.mod_dt = timezone.now()
             lecture_schedule_data.save()
             lecture_data.save()
@@ -359,8 +359,8 @@ def pt_add_logic(request, next='trainee:cal_month'):
                                                       reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
             lecture_schedule_data.save()
             lecture_date_update = LectureTb.objects.get(lecture_id=trainee_lecture.lecture_id)
-            member_lecture_count = lecture_date_update.lecture_count
-            lecture_date_update.lecture_count = member_lecture_count - 1
+            member_lecture_avail_count = lecture_date_update.lecture_avail_count
+            lecture_date_update.lecture_avail_count = member_lecture_avail_count - 1
             lecture_date_update.mod_dt = timezone.now()
             lecture_date_update.save()
 

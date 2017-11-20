@@ -10,7 +10,9 @@ class LectureTb(models.Model):
     lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE)  # Field name made lowercase.
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-    lecture_count = models.IntegerField(db_column='LECTURE_COUNT', blank=True, null=True)  # Field name made lowercase.
+    lecture_reg_count = models.IntegerField(db_column='LECTURE_REG_COUNT', default=0)  # Field name made lowercase.
+    lecture_rem_count = models.IntegerField(db_column='LECTURE_REM_COUNT', default=0)
+    lecture_avail_count = models.IntegerField(db_column='LECTURE_AVAIL_COUNT', default=0)
     day_count = models.IntegerField(db_column='DAY_COUNT', blank=True, null=True)  # Field name made lowercase.
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.

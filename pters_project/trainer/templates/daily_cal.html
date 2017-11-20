@@ -149,7 +149,7 @@
         <ul id="members" class="dropdown-menu pters_dropdown_custom">
           <!-- 회원명 DB연동 필요-->
             {% for lecture in trainer_member %}
-            <li><a data-lecturecount="{{ lecture.lecture_count }}" data-lectureid="{{ lecture.lecture_id}}">
+            <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
                 {{ lecture.trainer_member.name }}</a>
             </li>
             {% endfor %}

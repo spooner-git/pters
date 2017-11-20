@@ -37,10 +37,10 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
         if error is None :
             context['trainer_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                                       lecture_count__gte=1).count()
+                                                                       lecture_rem_count__gte=1).count()
             context['trainer_end_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                                           lecture_count__gte=1,
-                                                                           lecture_count__lte=3).count()
+                                                                           lecture_rem_count__gte=1,
+                                                                           lecture_rem_count__lte=3).count()
 
         today_time = datetime.datetime.now()
         today_start_time = today_time.strftime('%Y-%m-%d 00:00:00.000000')
@@ -98,7 +98,7 @@ class CalDayView(LoginRequiredMixin, TemplateView):
         #sk Test 추가 171117
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_count__gte=1)
+                                                                 , lecture_avail_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -186,7 +186,7 @@ class PtAddView(LoginRequiredMixin, TemplateView):
 
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_count__gte=1)
+                                                                 , lecture_avail_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -255,7 +255,7 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
         #sk Test 추가 171117
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_count__gte=1)
+                                                                 , lecture_avail_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -505,7 +505,7 @@ class ReserveSettingView(TemplateView):
 
 # 회원가입 api
 @csrf_exempt
-def member_registration(request, next_page='trainer:member_manage'):
+def member_registration(request):
     email = request.POST.get('email')
     name = request.POST.get('name')
     phone = request.POST.get('phone')
@@ -549,7 +549,8 @@ def member_registration(request, next_page='trainer:member_manage'):
                 member.save()
                 trainer_class = ClassTb.objects.get(member_id=request.user.id)
                 lecture = LectureTb(class_tb_id=trainer_class.class_id,member_id=member.member_id,
-                                    lecture_count=counts,option_cd='DC', state_cd='IP',
+                                    lecture_reg_count=counts, lecture_rem_count=counts,
+                                    lecture_avail_count=counts, option_cd='DC', state_cd='IP',
                                     start_date=start_date,end_date=end_date, mod_dt=timezone.now(),
                                     reg_dt=timezone.now(), use=1)
                 lecture.save()
@@ -671,8 +672,8 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
                                                         reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
             lecture_schedule_data.save()
             lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
-            member_lecture_count = lecture_date_update.lecture_count
-            lecture_date_update.lecture_count = member_lecture_count - 1
+            member_lecture_avail_count = lecture_date_update.lecture_avail_count
+            lecture_date_update.lecture_avail_count = member_lecture_avail_count - 1
             lecture_date_update.mod_dt = timezone.now()
             lecture_date_update.save()
 
@@ -711,11 +712,11 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
 
 # 로그인 api
 @csrf_exempt
-def login_trainer(request, next_page='home'):
+def login_trainer(request):
     #login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
-
+    next_page = request.POST.get('next_page')
     error = None
 
     try:
@@ -809,8 +810,8 @@ def daily_pt_delete(request):
                 with transaction.atomic():
                     lecture_schedule_data.mod_dt = timezone.now()
                     lecture_schedule_data.use = 0
-                    member_lecture_count = lecture_data.lecture_count
-                    lecture_data.lecture_count = member_lecture_count+1
+                    member_lecture_avail_count = lecture_data.lecture_avail_count
+                    lecture_data.lecture_avail_count = member_lecture_avail_count+1
                     lecture_data.mod_dt = timezone.now()
                     lecture_schedule_data.save()
                     lecture_data.save()
@@ -873,7 +874,6 @@ def add_off_logic(request):
         error = '시작 시간을 선택해 주세요.'
     elif next_page =='':
         error = '시작 시간을 선택해 주세요.'
-
 
     if error is None:
 
@@ -1124,7 +1124,7 @@ class PtModifyView(LoginRequiredMixin, TemplateView):
         trainee_lecture = None
         trainee_info = None
         context['member_name'] = None
-        context['lecture_count'] = None
+        context['lecture_avail_count'] = None
         context['lecture_id'] = None
         context['modify_dt'] = None
 
@@ -1185,7 +1185,7 @@ class PtModifyView(LoginRequiredMixin, TemplateView):
         context['modify_schedule_id'] = lecture_schedule_id
         context['modify_dt'] = modify_lecture_schedule.start_dt
         context['member_name'] = trainee_info.name
-        context['lecture_count'] = trainee_lecture.lecture_count
+        context['lecture_avail_count'] = trainee_lecture.lecture_avail_count
         context['lecture_id'] = trainee_lecture.lecture_id
         context['daily_off_data_start_date'] = daily_off_data_start_date
         context['daily_off_data_end_date'] = daily_off_data_end_date

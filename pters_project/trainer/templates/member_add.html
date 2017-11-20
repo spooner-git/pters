@@ -20,7 +20,8 @@
         {% endfor %}
     {% endif %}
 
-    <form action="/trainer/member_registration/" method="POST" class="member-form" id="member-add-form">
+    <form action="{% url 'trainer:member_registration' %}" method="POST" class="member-form" id="member-add-form">
+        <input type="hidden" name="next_page" value="{% url 'trainer:member_manage' %}">
         <div>
             <div class="ptaddbox form-group">
                 <label for="memberEmail" class="ptaddboxtext">

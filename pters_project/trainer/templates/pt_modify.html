@@ -34,7 +34,7 @@
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" aria-expanded="false">회원명 선택<span class="caret"></span></button>
     <ul id="members" class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
-        <li><a data-lecturecount="{{ lecture_count }}" data-lectureid="{{ lecture_id}}">
+        <li><a data-lecturecount="{{ lecture_avail_count }}" data-lectureid="{{ lecture_id}}">
             {{ member_name }}</a>
         </li>
     </ul>
@@ -45,7 +45,7 @@
 <div id="remainCount" class="ptaddbox">
   <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은 횟수</div>
   <!-- 남은 횟수 DB연동 필요 -->
-        <div id="countsSelected" class="dropdown" placeholder="자동으로 입력됩니다.">{{ lecture_count }}</div>
+        <div id="countsSelected" class="dropdown" placeholder="자동으로 입력됩니다.">{{ lecture_reg_count }}</div>
 </div>
 
 
