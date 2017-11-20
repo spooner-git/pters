@@ -34,7 +34,7 @@ $(document).ready(function(){
               if($('#timeGraph_off').css('display')=='none'){
                 $('#timeGraph_off').show(110,"swing");
               }
-              timeGraphSet("class","pink");  //시간 테이블 채우기
+              timeGraphSet("class","grey");  //시간 테이블 채우기
               timeGraphSet("off","grey")
               $('.tdgraph').removeClass('graphindicator')
               startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
@@ -55,6 +55,9 @@ $(document).ready(function(){
           $("#id_training_time_off").val($(this).attr('data-trainingtime'));
           var arry = $(this).attr('data-trainingtime').split(':')
           durTimeSet(arry[0]);
+          $("#durationsSelected_off button").removeClass("dropdown_selected");
+          $("#durationsSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+          $("#durationsSelected_off .btn:first-child").val("");
           check_dropdown_selected();
       })
 
@@ -80,6 +83,7 @@ $(document).ready(function(){
         	    $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             	select_all_check=true;
         	}else{
+              $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
            	    select_all_check=false;
        		}
     	 }
