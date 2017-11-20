@@ -3,7 +3,7 @@ body{
 }
 
 .pters_dropdown_setting_custom{
-	display: inline-block;
+	display: inline-flex;
 	width: 26.4% !important;
 	height: 100%;
 	margin-top: 10px;
@@ -71,7 +71,9 @@ li a{
 	margin-top: 0px;
 	font-size: 12px;
 	vertical-align: middle;
+	margin-bottom: 52px; /*??? 이거 의미를 모르겠음*/
 }
+
 
 #prevset div{
 	height: 40px;
@@ -127,6 +129,7 @@ li a{
 	line-height: 35px;
 	vertical-align: middle;
 }
+
 
 .ulTimes{
 	height: 260px;

@@ -38,8 +38,42 @@ span{
 	*/
 }
 
+#slide_first,#slide_last{
+	background: #ffffff;
+}
+
+.slide-notice{
+	height: 50px;
+	padding-top: 40%;
+	text-align: center;
+}
+
+
+.slide-notice img{
+	width: 35px;
+}
+
+.slide-notice span{
+	display: block;
+	margin-top: 35px;
+	letter-spacing: -0.3px;
+}
+
 .swiper-container{
 	height: 100%;
+}
+
+.slide-notice{
+	background: #ffffff;
+}
+
+.slide-notice img{
+	width: 35px;
+}
+
+.slide-notice span{
+	margin-top: 35px;
+	letter-spacing: -0.3px;
 }
 
 .loaders{

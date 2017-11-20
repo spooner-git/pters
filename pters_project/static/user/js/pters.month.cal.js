@@ -15,6 +15,7 @@ $(document).ready(function(){
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 	var currentDate = date.getDate(); //오늘 날짜
+	var currentHour = date.getHours(); //현재시간
 	var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
 	var currentPageMonth = currentMonth+1; //현재 달
 	var date2 = new Date();
@@ -22,6 +23,8 @@ $(document).ready(function(){
 	var oriMonth = date.getMonth()+1;
 	var oriDate = date.getDate();
 
+	var notAvailableStartTime = 23;
+	var notAvailableEndTime = 7;
 
 	//플로팅 버튼
 	$('#float_btn').click(function(){
@@ -81,9 +84,33 @@ $(document).ready(function(){
 		        startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
 				$('#id_training_date').val(yy+'-'+mm+'-'+dd);
 			}
+		}else if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
+			$('#ng_popup_text').html('<p>현재시간은 일정 예약이 불가한 시간입니다.</p><p>설정불가 시간대 : '+notAvailableStartTime+'시 ~ '+notAvailableEndTime+'시</p>')
+			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
+			//$(this).fadeOut(5000)
+			})
+		}else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
+			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
+			$('#shade2').css({'display':'block'});
+			console.log($(this).attr('schedule-id'));
+			var info = $(this).attr('data-date').split('_')
+			var info2 = $(this).find(".blackballoon").text().split(':')
+			var yy=info[0]
+			var mm=info[1]
+			var dd=info[2]
+			var dayobj = new Date(yy,mm-1,dd)
+			var dayraw = dayobj.getDay();
+			var dayarry = ['일','월','화','수','목','금','토']
+			var day = dayarry[dayraw];
+			var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+			var infoText2 = info2[0]+"시 일정을 삭제 하시겠습니까?"
+			$('#popup_info').text(infoText)
+			$('#popup_info2').text(infoText2)
+			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 		}else{
-			$('#ng_popup').fadeIn(1000,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
-			$(this).fadeOut(2500)
+			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>')
+			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
+			//$(this).fadeOut(2800)
 			})
 		}
 	})
@@ -123,7 +150,8 @@ $(document).ready(function(){
           $("#id_training_time").val($(this).attr('data-trainingtime'));
           $("#id_time_duration").val(1);
           var arry = $(this).attr('data-trainingtime').split(':')
-          durTimeSet(arry[0]);
+          //durTimeSet(arry[0]);
+          addGraphIndicator(1)
           check_dropdown_selected();
       })
 
@@ -187,17 +215,22 @@ $(document).ready(function(){
 
 
 	$("#btn_close4").click(function(){ //일정예약 상세화면 팝업 X버튼 눌렀을때 팝업 닫기
-			$('#starttimes').remove('li')
-			$('#durations').remove('li')
-			$("#starttimesSelected button").removeClass("dropdown_selected");
-			$("#durationsSelected button").removeClass("dropdown_selected");
-			$("#submitBtn").removeClass('submitBtnActivated');		
-			$("#starttimesSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
-			$("#durationsSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
-			if($('#addpopup').css('display')=='block'){
-				$("#addpopup").css({'display':'none','z-index':'-2'})
-				$('#shade2').css({'display':'none'});
-			}
+		$('.tdgraph').removeClass('graphindicator')
+		$('#starttimes').remove('li')
+		$('#durations').remove('li')
+		$("#starttimesSelected button").removeClass("dropdown_selected");
+		$("#durationsSelected button").removeClass("dropdown_selected");
+		$("#submitBtn").removeClass('submitBtnActivated');		
+		$("#starttimesSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
+		$("#durationsSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
+		if($('#addpopup').css('display')=='block'){
+			$("#addpopup").css({'display':'none','z-index':'-2'})
+			$('#shade2').css({'display':'none'});
+		}
+	})
+
+	$('#ng_popup').click(function(){
+		$(this).fadeOut(100)
 	})
 
 
@@ -215,9 +248,10 @@ $(document).ready(function(){
 	//dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
 	classDates(); //나의 PT일정에 핑크색 동그라미 표시
 	monthText(); //상단에 연, 월 표시
-	availableDateIndicator();
+	availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 	krHoliday(); //대한민국 공휴일
 
+	console.log(currentHour)
 
 
 	//다음페이지로 슬라이드 했을때 액션
@@ -256,7 +290,7 @@ $(document).ready(function(){
 			classDates();
 			monthText();
 			krHoliday();
-			availableDateIndicator();
+			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 			myswiper.update(); //슬라이드 업데이트
 
 		},
@@ -271,7 +305,7 @@ $(document).ready(function(){
 			classDates();
 			monthText();
 			krHoliday();
-			availableDateIndicator();
+			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 			myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
@@ -412,14 +446,30 @@ $(document).ready(function(){
 	};
 
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
-	function availableDateIndicator(){
-		for(i=currentDate;i<=currentDate+14;i++){
-			if(i>lastDay[oriMonth]){
-			 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
-			}else{
-			 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('available')
+	function availableDateIndicator(not_AvailableStartTime,Endtime){ 
+	// 요소설명
+	// not_AvailableStartTime : 강사가 설정한 '회원이 예약 불가능한 시간대 시작시간'
+	// not_AvailableStartTime : 강사가 설정한 '회원이 예약 불가능한 시간대 종료시간'
+	// ex : 밤 22시 ~ 익일 새벽 6시까지 일정 설정 불가 (24시간제로 입력)
+	//Start : 17, End : 6 current: 14
+		if(currentHour<=Endtime || currentHour>=not_AvailableStartTime){
+			for(i=currentDate;i<=currentDate+14;i++){
+				if(i>lastDay[oriMonth]){
+				 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('notavailable')
+				}else{
+				 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')
+				}
+			}
+		}else{
+			for(i=currentDate;i<=currentDate+14;i++){
+				if(i>lastDay[oriMonth]){
+				 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
+				}else{
+				 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('available')
+				}
 			}
 		}
+		
 	}
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
 
@@ -493,17 +543,17 @@ $(document).ready(function(){
         for(var i=0; i<offOkLen; i++){
           var offHour = offAddOkArray[i];
           if(offHour<12){
-            var offText = '오전'
+            var offText = '오전 '
             var offHours = offHour;
           }else if(offHour==24){
-            var offText = '오전'
+            var offText = '오전 '
             var offHours = offHour-12
           }else if(offHour==12){
-            var offText = '오후'
+            var offText = '오후 '
             var offHours = offHour
           }else{
             var offHours = offHour-12
-            var offText = '오후'
+            var offText = '오후 '
           }
           if(offHour.length<2){
             timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
@@ -669,6 +719,29 @@ $(document).ready(function(){
               durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
             }
           }
+        }
+      }
+
+      function addGraphIndicator(datadur){
+        $('.tdgraph').removeClass('graphindicator');
+        var starttext = $('#starttimesSelected button').val().split(' ');
+        var daymorning = starttext[0];
+        var startnum = starttext[1].replace(/시/gi,"")
+        if(daymorning=='오후'){
+          if(startnum==12){
+            var startnum = startnum
+          }else{
+            var startnum = Number(startnum)+12  
+          }
+        }else if(daymorning=='오전' && startnum==12){
+            var startnum = Number(startnum)+12 
+        }
+        var durnum = datadur
+        console.log(durnum)
+        var finnum = Number(startnum)+Number(durnum)
+        console.log(startnum, durnum,finnum)
+        for(var i=startnum; i<finnum; i++){
+          $('#'+i+'g').addClass('graphindicator')
         }
       }
 
