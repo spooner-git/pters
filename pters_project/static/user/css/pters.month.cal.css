@@ -437,7 +437,7 @@ span{
 	display: none;
 	position: fixed;
 	background: #e4e4e4;
-	top: 42%;
+	top: 35%;
 	left: 10%;
 	width: 80%;
 	border: 1px solid #a2a2a2;
@@ -493,6 +493,16 @@ span{
 	*/
 	z-index: -2;
 	text-align: center;
+}
+
+#addpopup{
+	position: fixed;
+	display: none;
+	left: 5%;
+	top: 30%;
+	width: 90%;
+	background: #ffffff;
+	z-index: 105;
 }
 
 #popup_info,#popup_info2,#popup_info3,#popup_info4{
@@ -585,15 +595,12 @@ span{
 	z-index: -1;
 }
 
-#addpopup{
-	position: fixed;
-	display: none;
-	left: 5%;
-	top: 25%;
-	width: 90%;
-	background: #ffffff;
-	z-index: 105;
+.notavailable{
+	border-top: 3px solid #e61616;
+	z-index: -1;
 }
+
+
 
 .admonth{
 	height: 50%;
@@ -651,6 +658,30 @@ span{
 		text-align: center;
 	}
 
+	#addpopup{
+		position: fixed;
+		display: none;
+		left: 0;
+		top: 30%;
+		width: 100%;
+		background: transparent;
+		z-index: 105;
+	}
+
+	#dateSelector,#offStartTime,#offDuration,#submitBtn{
+		position: relative;
+		background: #ffffff;
+		margin : 0 auto;
+		width: 450px;
+	}
+
+	#timeGraph{
+		position: relative;
+		background: #f4f4f4;
+		margin : 0 auto;
+		width: 450px;
+	}
+
 	#popup_info,#popup_info2,#popup_info3,#popup_info4{
 		background: #ffffff;
 		position: relative;
@@ -693,6 +724,10 @@ span{
 		padding: 10px;
 		width: 35px;
 		float: right;
+	}
+
+	#btn_close4{
+		left: 100%;
 	}
 
 	.popup_inner{

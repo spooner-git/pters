@@ -255,8 +255,11 @@ $(document).ready(function(){
 	calTable_Set(2,currentYear,currentPageMonth,'0W'); //3번 슬라이드에 현재달, 현재주 채우기 0W : 0 Week
 	calTable_Set(3,currentYear,currentPageMonth,'1L'); //4번 슬라이드에 현재달, 현재주 +1 달력채우기 1L : 1 Week Later
 	calTable_Set(4,currentYear,currentPageMonth,'2L'); //5번 슬라이드에 현재달, 현재주 +2 달력채우기 2L : 2 Week Later
+	calTable_Set(5,currentYear,currentPageMonth,'3L'); //6번 슬라이드에 현재달, 현재주 +3 달력채우기 3L : 3 Week Later
+	//calTable_Set(6,currentYear,currentPageMonth,'4L'); //7번 슬라이드에 현재달, 현재주 +4 달력채우기 4L : 4 Week Later	
 	calTable_Set(0,currentYear,currentPageMonth,'2E'); //1번 슬라이드에 현재달, 현재주 -2 달력채우기 2E : 2 Week Early
 	calTable_Set(1,currentYear,currentPageMonth,'1E');  //2번 슬라이드에 현재달, 현재주 -1 채우기 1E : 1 Week Early
+	
 	weekNum_Set()
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
@@ -338,6 +341,12 @@ $(document).ready(function(){
 			break;
 			case '2L':
 			var W = 14;
+			break;
+			case '3L':
+			var W = 21;
+			break;
+			case '4L':
+			var W = 28;
 			break;
 		}
 		//주간달력 상단표시줄 (요일, 날짜, Today표식)
@@ -527,13 +536,22 @@ $(document).ready(function(){
 		*/
 		for(var i=2; i<=8; i++){
 			var dateID = swiperPage.find('td:nth-child('+i+')').attr('id').split('_');
-			WeekArry[i-2].html(dateID[2])
+			var yy = dateID[0];
+			var mm = dateID[1];
+			var dd = dateID[2];
+			WeekArry[i-2].html(dd);
+			if(mm.length<2){
+				var mm = '0'+dateID[1]
+			}
+			if(dd.length<2){
+				var dd = '0'+dateID[2]
+			}
+			$('#weekNum_'+Number(i-1)).attr('date-data',yy+mm+dd)
 		}
-
-
 		$('#yearText').text(currentYear+'년');
 		$('#monthText').text(dateID[1]+'월');
 		toDay();
+		reserveAvailable();
 	}
 
 	function dateText(){ //
@@ -555,6 +573,46 @@ $(document).ready(function(){
 		}
 	}
 
+
+	function reserveAvailable(){
+		var yy = currentYear;
+		var mm = currentPageMonth;
+		var dd = currentDate;
+		var ymdArry = [yy,mm,dd]
+		if(mm.length<2){
+			var mm = '0'+mm
+		}
+		if(dd.length<2){
+			var dd = '0'+dd
+		}
+		var yymmdd = ymdArry.join('')
+		console.log(yymmdd)
+		for(i=1;i<=7;i++){
+		var scan = $('#weekNum_'+i).attr('date-data')
+			if(yymmdd<=scan && scan<Number(yymmdd)+14){
+				$('#weekNum_'+i).addClass('reserveavailable')
+			}else if(scan.substr(4,2)!=mm && scan.substr(6,2)<dd+14-lastDay[currentMonth]){
+				$('#weekNum_'+i).addClass('reserveavailable')
+			}else{
+				$('#weekNum_'+i).removeClass('reserveavailable')
+			}
+		}
+	}
+
+/*
+	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
+	function availableDateIndicator(){
+		for(i=currentDate;i<=currentDate+14;i++){
+			if(i>lastDay[oriMonth]){
+			 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
+			}else{
+			 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('available')
+			}
+		}
+	}
+	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
+	// 14 30 20   20+14-30 = 4
+*/
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var classlen = classTimeArray.length;

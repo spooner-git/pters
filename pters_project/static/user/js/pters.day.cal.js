@@ -286,7 +286,7 @@ $(document).ready(function(){
 
 	//Slide 10번째를 [오늘]로 기준으로 각페이지에 날짜에 맞춰 테이블 생성하기
 	console.log(lastDay[currentMonth])
-	var element = 10-currentDate
+	var element = 9-currentDate
 	console.log(currentMonth)
 		if(element>0){  //오늘 날짜가 10일 이하
 			for(i=1;i<=element;i++){ //전달 페이지
@@ -296,19 +296,19 @@ $(document).ready(function(){
 					calTable_Set(i,currentYear,currentPageMonth-1,lastDay[currentMonth-1]-element+i)
 				}
 			}
-			for(i=element+1;i<=23;i++){ //이번달 페이지
-				calTable_Set(i,currentYear,currentPageMonth,currentDate-10+i)	
+			for(i=element+1;i<=29;i++){ //이번달 페이지
+				calTable_Set(i,currentYear,currentPageMonth,currentDate-9+i)	
 			}
 		}else{ //오늘 날짜가 10일 이상
-			for(i=1;i<=23;i++){
-				if(currentDate-10+i>lastDay[currentMonth]){ //다음달로 넘어가는 페이지가 나올때
+			for(i=1;i<=29;i++){
+				if(currentDate-9+i>lastDay[currentMonth]){ //다음달로 넘어가는 페이지가 나올때
 					if(currentPageMonth+1>12){ // 해가 넘어갈때
-						calTable_Set(i,currentYear+1,currentPageMonth+1-12,currentDate-10+i-lastDay[currentMonth])
+						calTable_Set(i,currentYear+1,currentPageMonth+1-12,currentDate-9+i-lastDay[currentMonth])
 					}else{ // 해 넘어가지 않을때
-						calTable_Set(i,currentYear,currentPageMonth+1,currentDate-10+i-lastDay[currentMonth])
+						calTable_Set(i,currentYear,currentPageMonth+1,currentDate-9+i-lastDay[currentMonth])
 					}
 				}else{ //다음달로 넘어가는 페이지 없이 현재달만 보일때
-					calTable_Set(i,currentYear,currentPageMonth,currentDate-10+i)	
+					calTable_Set(i,currentYear,currentPageMonth,currentDate-9+i)	
 				}
 			}
 		}
@@ -424,18 +424,23 @@ $(document).ready(function(){
 		//currentYMD 형식  ex : 2017_8_4_5H
 		var index = Number(myswiper.activeIndex)+1;
 		var currentYMD = $('.swiper-slide:nth-child('+index+') div').attr('id');
-		var YMDArray=currentYMD.split('_')
-		var textYear = YMDArray[1] //2017
-		var textMonth = YMDArray[2]; //8
-		var textDate = YMDArray[3]; //4
-		var monthEnglish = ['January','February','March','April','May','June','July','August','September','October','November','December']
-		var dayEnglish = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
-		var dayTodayInfo = new Date(monthEnglish[textMonth-1]+','+textDate+','+textYear);
-		var dayToday = dayTodayInfo.getDay();
-		var textDay = dayEnglish[dayToday];
-
-		$('#yearText').text(textYear+'년 '+textMonth+'월 '+textDate+'일');
-		$('#monthText').text(textDay);
+		if(currentYMD==undefined){
+			$('#yearText').text('-');
+			$('#monthText').text('-');
+		}else{
+			var YMDArray=currentYMD.split('_')
+			var textYear = YMDArray[1] //2017
+			var textMonth = YMDArray[2]; //8
+			var textDate = YMDArray[3]; //4
+			var monthEnglish = ['January','February','March','April','May','June','July','August','September','October','November','December']
+			var dayEnglish = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
+			var dayTodayInfo = new Date(monthEnglish[textMonth-1]+','+textDate+','+textYear);
+			var dayToday = dayTodayInfo.getDay();
+			var textDay = dayEnglish[dayToday];
+			console.log(currentYMD)
+			$('#yearText').text(textYear+'년 '+textMonth+'월 '+textDate+'일');
+			$('#monthText').text(textDay);
+		}
 	};
 
 	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
