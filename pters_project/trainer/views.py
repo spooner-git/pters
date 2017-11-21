@@ -377,6 +377,34 @@ class OffRepeatAddView(LoginRequiredMixin, TemplateView):
 
         return context
 
+#sk 추가 업무 관리
+class ManageWorkView(LoginRequiredMixin, TemplateView):
+    template_name = 'manage_work.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageWorkView, self).get_context_data(**kwargs)
+        error = None
+        trainer_class = None
+        try:
+            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = '강사 PT 정보가 존재하지 않습니다'
+            # logger.error(error)
+
+        context['trainer_member'] = None
+
+        if error is None :
+            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+
+            for lecture in context['trainer_member']:
+                try:
+                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
+                except ObjectDoesNotExist:
+                    error = '회원 PT 정보가 존재하지 않습니다'
+                    # logger.error(error)
+
+        return context
+#sk 추가 업무 관리
 
 class ManageMemberView(LoginRequiredMixin, TemplateView):
     template_name = 'manage_member.html'
