@@ -1,0 +1,106 @@
+{% extends "trainer_base.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "user/css/pters.trainer.manage.work.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        
+{% endblock %}
+
+
+
+{% block content %}
+<!--매출 그래프--> <!--총매출, 차감 매출, 등록 매출, 회원수(이번달신규등록, 이번달종료예정), 트레이너 고용임금, 관리비용-->
+  <div id="salesGraph">
+    <table>
+      <thead>
+        <tr>
+          <th id="description">항목</th>
+          <th id="gap"></th>
+          <th id="cost">비용</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="totalSales" class="salesRow"><td>총 매출</td><td class="tablegap"></td><td></td>
+        </tr>
+
+        
+        <tr id="subsSales" class="salesRow"><td>차감 매출<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="subsSalesChild" class="salesRow childRow"><td>>>차감 수</td><td class="tablegap"></td><td></td>
+        </tr>
+        
+
+        <tr id="regiSales" class="salesRow"><td>등록 매출<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="regiSalesChild" class="salesRow childRow"><td>>>신규 등록 수</td><td class="tablegap"></td><td></td>
+
+        <tr id="totalMember" class="salesRow"><td>총 회원수</td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="newMember" class="salesRow"><td>이번달 신규 회원수</td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="finMember" class="salesRow"><td>이번달 종료 회원수</td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="trainerSalary" class="salesRow"><td>트레이너 고용임금</td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="manageCost" class="salesRow"><td>운영 관리비용</td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="profit" class="profitRow"><td>이익금</td><td class="tablegap"></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<!--통계 그래프-->
+  <div id="analyGraph">
+    <div>
+      
+    </div>
+  </div>
+
+
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+         <script type="text/javascript" src={% static "user/js/pters.trainer.manage.work.js" %}></script>
+         <script>
+          $('#uptext').text("업무 통계")
+
+          var newSalesArrayThisMonth = [1400000,1400000,1400000,1400000,750000,750000,1950000,750000]
+          var newWalesArrayThisMonth_card = []
+          var subsSalesArray = [75000,65000,65000,70000,70000,70000,70000,70000,65000,650000,75000,75000,75000,75000,75000,75000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,75000,65000,65000,70000,70000,70000,70000,70000,65000,650000,75000,75000,75000,75000,75000,75000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000]
+          var arrayTest = ["김선겸_65000x30","원빈_70000x20","공유_75000x10"]
+           
+
+
+          var nameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
+          var countArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_rem_count }}',{% endif %}{% endfor %}]
+          var startArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
+
+
+          var finishnameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
+          var finishcountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_rem_count }}',{% endif %}{% endfor %}]
+          var finishstartArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
+
+          var len = nameArray.length;
+          var name_countArray=[]
+          for(i=0; i<len; i++){
+            name_countArray[i]=nameArray[i]+'_'+countArray[i]
+          }
+          console.log(name_countArray)
+
+
+         </script>
+
+{% endblock %}

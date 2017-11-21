@@ -43,5 +43,6 @@ urlpatterns = [
     url(r'^modify_pt_logic/$', views.modify_pt_logic, name='modify_pt_logic'),
     url(r'^modify_off/$', views.OffModifyView.as_view(), name='modify_off'),
     url(r'^modify_off_logic/$', views.modify_off_logic, name='modify_off_logic'),
+    url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
 
 ]
