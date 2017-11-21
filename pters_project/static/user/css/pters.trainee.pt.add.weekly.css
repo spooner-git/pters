@@ -230,7 +230,7 @@ body{
 
 .calendar-style{  /*week ìŠ¤íƒ€ì¼í•˜ìœ„ */
 	width: 100%;
-	height: 100%;
+	height: 50px;
 	text-align: center;
 }
 
@@ -261,16 +261,22 @@ body{
 
 .hour{
 	text-align: center;
-	width: 9.72%;
-	border-bottom: 1px solid transparent;
+	width: 29.445%;
+	border-bottom: 1px solid #f4f4f4;
 	font-size: 13px;
+	background: #f4f4f4;
+}
+
+.hour img{
+	max-width: 70.75%;
+	opacity: 0.4;
 }
 
 @media(min-width: 570px){
 	.hour{
 		text-align: center;
-		width: 9.72%;
-		border-bottom: 1px solid transparent;
+		width: 29.445%;
+		border-bottom: 1px solid #f4f4f4;
 		font-size: 15px;
 		font-weight: bold;
 	}
@@ -278,37 +284,56 @@ body{
 
 td{ /*회원일정예약용으로 변경 */
 	position: relative;
-	width: 12.5%;
+	width: 13.8%;
 	height: 29.5px;
 	color : #282828;
 	border-right:  1px solid #ffffff;
 	border-left:  1px solid #ffffff;
+	border-bottom: 0.5px solid #a2a2a2;
 	padding-right: 1px;
 	padding-left: 1px;
+	background: #ffffff;
+}
+
+#weekNum_1,#weekNum_2,#weekNum_3,#weekNum_4,#weekNum_5{
+	border-bottom: #ffffff;
+	background: #f4f4f4;
+}
+
+table{ /*회원일정예약용으로 변경 */
+	width: 100%;
 }
 
 tr{ /*회원일정예약용으로 변경 */
-	height: 100%;
+	height: 40px;
 }
 
 .ptersCheckbox{
 	position: relative;
-	width: 22px;
-	height: 22px;
+	width: 18px;
+	height: 18px;
 	background: #ffffff;
-	border : 1px solid #a2a2a2;
-	border-radius: 8px;
+	border : 1px solid #e9e9e9;
+	border-radius: 50%;
 	margin: 0 auto;
+}
+
+.checked{
+	border: 2px solid #fe4e65;
+}
+
+.notAvail{
+	background: #e9e9e9;
 }
 
 .ptersCheckboxInner{
 	position: absolute;
-	width: 12px;
-	height: 12px;
+	width: 8px;
+	height: 8px;
 	background: #fe4e65;
-	border-radius: 4px;
-	left: 4px;
-	top: 4px;
+	border-radius: 50%;
+	left: 3px;
+	top: 3px;
 }
 
 .ptersNotAvail{
@@ -323,13 +348,20 @@ tr{ /*회원일정예약용으로 변경 */
 #calendar{
 	position: fixed;
 	width: 100%;
-	padding-top: 106px;
-	background-color: #f4f4f4;
+	padding-top: 100px;
+	background-color: #ffffff;
 	padding-right: 0;
 	padding-left: 0;
 	height: 90%;
 }
 
+.satDay{
+	color:#115a8e;
+}
+
+.sunDay{
+	color:#d21245;
+}
 
 .classTime{
 	position: absolute;
@@ -411,10 +443,17 @@ tr{ /*회원일정예약용으로 변경 */
 	display: block;
 }
 
-.weekToday-style{
-	height: 18px;
-	font-size: 14.1px;
-	font-weight: bold;
+.weekDay-style{
+	line-height: 25px;
+	font-size: 12px;
+	vertical-align: middle;
+	
+}
+
+.weekDate-style{
+	line-height: 25px;
+	font-size: 14px;
+	vertical-align: middle;
 }
 
 
@@ -425,15 +464,8 @@ tr{ /*회원일정예약용으로 변경 */
 
 
 .today{
-	display: block;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	border-top: 3px solid #fe4e65;
-	color: #fe4e65;
-	font-weight: 600;
-	font-size: 78%;
+	border-bottom: 2px solid #fe4e65;
+	height: 25px;
 }
 
 .currentTimeBox{
