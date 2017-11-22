@@ -39,11 +39,13 @@ $(document).ready(function(){
 			var dd=date_form[2]
 			var hour=date_form[3]
 			var min=date_form[4]
-			var pt_size = '#add-pt-count'
+			var pt_size = Number($('#add-pt-count').val())
 			//$("#id_schedule_id").val()
+			pt_size += 1;
+			$("#add-pt-count").val(pt_size);
 			$(add_form).append("<input type='hidden' name='training_date[]' id='id_training_date_"+date_info+"' value='"+yy+"-"+mm+"-"+dd+"'>" +
-				"<input type='hidden' name='time_duration[]' id='id_time_duration_"+date_info+"' value='"+hour+":"+min+":00.000000'>" +
-				"<input type='hidden' name='training_time[]' id='id_training_time_"+date_info+"' value='1'>")
+				"<input type='hidden' name='training_time[]' id='id_training_time_"+date_info+"' value='"+hour+":"+min+":00.000000'>" +
+				"<input type='hidden' name='time_duration[]' id='id_time_duration_"+date_info+"' value='1'>")
 
 		}else if(checkBox.hasClass('ptersCheckboxInner')){
 			checkBox.removeClass('ptersCheckboxInner')
@@ -54,6 +56,10 @@ $(document).ready(function(){
 			$(delete_input_form1).remove()
 			$(delete_input_form2).remove()
 			$(delete_input_form3).remove()
+			var pt_size = Number($('#add-pt-count').val())
+			//$("#id_schedule_id").val()
+			pt_size -= 1;
+			$("#add-pt-count").val(pt_size);
 		}
 	})
 
