@@ -530,6 +530,14 @@ class ReserveSettingView(TemplateView):
 
         return context
 
+class SalesSettingView(TemplateView):
+    template_name = 'trainer_sales_setting.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SalesSettingView, self).get_context_data(**kwargs)
+
+        return context
+
 
 # 회원가입 api
 @csrf_exempt

@@ -1,0 +1,67 @@
+{% extends "trainer_base_setting_inner.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "user/css/pters.trainer.sales.setting.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+
+
+{% block content %}
+<div id="defaultFeeSettingText" class="settingMenu">
+  <p class="settingText">강의 기본 금액</p>
+  <p class="settingText2">강의의 금액을 설정합니다. 업무 관리의 매출 계산에 활용됩니다.</p>
+</div>
+<div id="defaultFeeSetting" class="settingBox">
+ <table>
+   <tbody>
+     <tr id="ten"><td class="countText">10회</td><td class="tablegap"></td><td><input type="tel"><span> 원</span><div id="tenOneTime" class="divideonetext">(1회당 ,000원)</div></td></tr>
+
+     <tr id="twenty"><td class="countText">20회</td><td class="tablegap"></td><td><input type="tel"><span> 원</span><div id="twentyOneTime" class="divideonetext">(1회당 ,000원)</div></td></tr>
+
+     <tr id="thirty"><td class="countText">30회</td><td class="tablegap"></td><td><input type="tel"><span> 원</span><div id="thirtyOneTime" class="divideonetext">(1회당 ,000원)</div></td></tr>
+
+
+     <tr id="fourty"><td class="countText">40회</td><td class="tablegap"></td><td><input type="tel"><span> 원</span><div id="fourtyOneTime" class="divideonetext">(1회당 ,000원)</div></td></tr>
+
+     <tr id="fifty"><td class="countText">50회</td><td class="tablegap"></td><td><input type="tel"><span> 원</span><div id="fiftyOneTime" class="divideonetext">(1회당 ,000원)</div></td></tr>
+
+   </tbody>
+ </table>
+ <div id="moreBtn"><img src="/static/user/res/icon-down-grey.png" alt=""></div>
+</div>
+
+
+
+
+<div id="trainerPushSettingText" class="settingMenu" style="padding:0;">
+      <p class="settingText">기타 강의 금액</p>
+      <p class="settingText2">1회당 강의 금액을 설정합니다.</p>
+      <p class="settingText2">(강의 기본금액과 동시 설정이 불가합니다.)</p><div id="switch" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
+</div>
+<div id="defaultFeeSetting" class="settingBox">
+ <table>
+   <tbody>
+     <tr id="one"><td class="countText">강의 1회당</td><td class="tablegap"></td><td><input type="tel"><span> 원</span><div id="oneTime" class="divideonetext">(10회당)</div><div id="oneTime1" class="divideonetext">(10회당)</div><div id="oneTime2" class="divideonetext">(10회당)</div></td></tr>
+   </tbody>
+ </table>
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src={% static "user/js/pters.trainer.sales.setting.js" %}></script>
+        
+{% endblock %}

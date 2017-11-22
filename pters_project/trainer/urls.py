@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
+    url(r'^sales_setting/$', views.SalesSettingView.as_view(), name='sales_setting'),
     url(r'^modify_pt/$', views.PtModifyView.as_view(), name='modify_pt'),
     url(r'^modify_pt_logic/$', views.modify_pt_logic, name='modify_pt_logic'),
     url(r'^modify_off/$', views.OffModifyView.as_view(), name='modify_off'),
