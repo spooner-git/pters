@@ -8,7 +8,7 @@
 {% block content %}
 
     <form action="{% url 'trainee:pt_add_array_logic' %}" id="pt-add-form" method="post">
-        <input type="hidden" name="next_page">
+        <input type="hidden" name="next_page" value="{% url 'trainee:cal_month'%}">
         <input type="hidden" name="add_pt_size" id="add-pt-count" value="0">
     </form>
 
