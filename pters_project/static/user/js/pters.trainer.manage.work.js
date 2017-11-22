@@ -1,6 +1,14 @@
 $(document).ready(function(){
 
 
+      var date = new Date();
+      var yy = date.getFullYear();
+      var mm = date.getMonth()+1;
+      console.log(yy,mm)
+
+      $('#yText').text(yy+' 년');
+      $('#mText').text(mm+' 월');
+
       var newSales = sum(newSalesArrayThisMonth)
       $('#regiSales td:nth-child(3)').text(numberWithCommas(newSales)+" 원")
       
@@ -18,6 +26,37 @@ $(document).ready(function(){
       $('#newMember td:nth-child(3)').text(newSalesArrayThisMonth.length+" 명")
 
 
+      var salary = $('#salaryInput').val();
+      var cost = $('#costInput').val()
+      var profit = totalSales-salary-cost
+      var profit_subs = subsSales- salary - cost
+      var profit_new = newSales - salary - cost
+      $('#profit td:nth-child(3)').text(numberWithCommas(profit+" 원"))
+      $('#profit2 td:nth-child(3)').text(numberWithCommas(profit_subs+" 원"))
+      $('#profit3 td:nth-child(3)').text(numberWithCommas(profit_new+" 원"))
+
+      $('#salaryInput').change(function(){
+        var salary = $('#salaryInput').val();
+        var cost = $('#costInput').val()
+        var profit = totalSales - salary - cost
+        var profit_subs = subsSales- salary - cost
+        var profit_new = newSales - salary - cost
+        $('#profit td:nth-child(3)').text(numberWithCommas(profit+" 원"))
+        $('#profit2 td:nth-child(3)').text(numberWithCommas(profit_subs+" 원"))
+        $('#profit3 td:nth-child(3)').text(numberWithCommas(profit_new+" 원"))
+      })
+
+      $('#costInput').change(function(){
+        var salary = $('#salaryInput').val();
+        var cost = $('#costInput').val()
+        var profit = totalSales - salary - cost
+        var profit_subs = subsSales- salary - cost
+        var profit_new = newSales - salary - cost
+        $('#profit td:nth-child(3)').text(numberWithCommas(profit+" 원"))
+        $('#profit2 td:nth-child(3)').text(numberWithCommas(profit_subs+" 원"))
+        $('#profit3 td:nth-child(3)').text(numberWithCommas(profit_new+" 원"))
+      })
+
 
       $('#subsSales').click(function(){
         if($('#subsSalesChild').css('display')=="none"){
@@ -33,8 +72,16 @@ $(document).ready(function(){
         }else{
           $('#regiSalesChild').fadeOut('fast')
         }
-        
       })
+
+      $('#totalMember').click(function(){
+        if($('#newMember').css('display')=="none"){
+          $('#newMember').fadeIn('fast')  
+        }else{
+          $('#newMember').fadeOut('fast')
+        }
+      })
+
 
       function sum(array) { //배열의 값 모두 더하기
         var result = 0;

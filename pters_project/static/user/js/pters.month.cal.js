@@ -452,7 +452,7 @@ $(document).ready(function(){
 	// not_AvailableStartTime : 강사가 설정한 '회원이 예약 불가능한 시간대 종료시간'
 	// ex : 밤 22시 ~ 익일 새벽 6시까지 일정 설정 불가 (24시간제로 입력)
 	//Start : 17, End : 6 current: 14
-		if(currentHour<=Endtime || currentHour>=not_AvailableStartTime){
+		if(currentHour<Endtime || currentHour>=not_AvailableStartTime){
 			for(i=currentDate;i<=currentDate+14;i++){
 				if(i>lastDay[oriMonth]){
 				 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('notavailable')

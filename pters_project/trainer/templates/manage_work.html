@@ -12,6 +12,13 @@
 
 
 {% block content %}
+
+  <div id="ymText">
+    <div id="yText"></div>
+    <div id="mText"></div>
+  </div>
+
+
 <!--매출 그래프--> <!--총매출, 차감 매출, 등록 매출, 회원수(이번달신규등록, 이번달종료예정), 트레이너 고용임금, 관리비용-->
   <div id="salesGraph">
     <table>
@@ -23,34 +30,39 @@
         </tr>
       </thead>
       <tbody>
-        <tr id="totalSales" class="salesRow"><td>총 매출</td><td class="tablegap"></td><td></td>
+        <tr id="totalSales" class="salesRow"><td>총 매출<br>(차감+등록)</td><td class="tablegap"></td><td></td>
         </tr>
 
-        
         <tr id="subsSales" class="salesRow"><td>차감 매출<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
         </tr>
         <tr id="subsSalesChild" class="salesRow childRow"><td>>>차감 수</td><td class="tablegap"></td><td></td>
         </tr>
         
-
         <tr id="regiSales" class="salesRow"><td>등록 매출<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
         </tr>
-        <tr id="regiSalesChild" class="salesRow childRow"><td>>>신규 등록 수</td><td class="tablegap"></td><td></td>
+        <tr id="regiSalesChild" class="salesRow childRow"><td>>>등록 건수</td><td class="tablegap"></td><td></td>
 
-        <tr id="totalMember" class="salesRow"><td>총 회원수</td><td class="tablegap"></td><td></td>
+        <tr id="totalMember" class="salesRow"><td>총 회원수<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
         </tr>
-        <tr id="newMember" class="salesRow"><td>이번달 신규 회원수</td><td class="tablegap"></td><td></td>
+        <tr id="newMember" class="salesRow childRow"><td>>>이번달 신규</td><td class="tablegap"></td><td></td>
         </tr>
-        <tr id="finMember" class="salesRow"><td>이번달 종료 회원수</td><td class="tablegap"></td><td></td>
+
+        <tr id="trainerSalary" class="salesRow"><td>트레이너 고용임금</td><td class="tablegap"></td><td><input type="tel" id=salaryInput></td>
         </tr>
-        <tr id="trainerSalary" class="salesRow"><td>트레이너 고용임금</td><td class="tablegap"></td><td></td>
+        <tr id="manageCost" class="salesRow"><td>운영 관리비용</td><td class="tablegap"></td><td><input type="tel" id="costInput"></td>
         </tr>
-        <tr id="manageCost" class="salesRow"><td>운영 관리비용</td><td class="tablegap"></td><td></td>
+        <tr id="profit" class="profitRow"><td>이익금<br>(총 매출 기준)</td><td class="tablegap"></td><td></td>
         </tr>
-        <tr id="profit" class="profitRow"><td>이익금</td><td class="tablegap"></td><td></td>
+        <tr id="profit2" class="profitRow"><td>이익금<br>(차감 매출 기준)</td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="profit3" class="profitRow"><td>이익금<br>(등록 매출 기준)</td><td class="tablegap"></td><td></td>
         </tr>
       </tbody>
     </table>
+  </div>
+  <div id="warningMsg">
+    <p>※ 이익금 계산은 세금(종합소득세, 부가가치세등)이 반영되지 않은 금액으로, 세무 증빙으로 사용할 수 없는 참고용 자료입니다.</p>
+    <img src="/static/user/res/PTERS_logo.jpg" alt="" style="width: 50%;opacity: 0.15; padding-top: 15px;">
   </div>
 
 <!--통계 그래프-->
@@ -98,9 +110,80 @@
           for(i=0; i<len; i++){
             name_countArray[i]=nameArray[i]+'_'+countArray[i]
           }
-          console.log(name_countArray)
 
 
+          //ajax////////////////////////////////////////////////////////////////////////////////////////////////////////
+          //연월 표기하는 상단 바를 눌렀을때 수업시간을 불러와서 표기한다.
+            $(document).on('click','#ymText',function(){
+              $.ajax({
+              url:'/static/user/js/ajax/db_work_oct.js',
+              dataType : 'script',
+              success:function(data){
+                var salary = $('#salaryInput').val("");
+                var cost = $('#costInput').val("")
+                var newSalesArrayThisMonth = [];
+                var subsSalesArray = [];
+
+                var len= newSalesArray_1.length;
+                var len2 = subsSalesArray_1.length;
+                for(var i=0; i<len; i++){
+                  newSalesArrayThisMonth[i] = newSalesArray_1[i]
+                }
+                for(var i=0; i<len2; i++){
+                  subsSalesArray[i] = subsSalesArray_1[i]
+                }
+
+                var date = new Date();
+                var yy = date.getFullYear();
+                var mm = date.getMonth()+1;
+
+                $('#yText').text(yy+' 년');
+                $('#mText').text(mm-1+' 월');
+
+                var newSales = sum(newSalesArrayThisMonth)
+                $('#regiSales td:nth-child(3)').text(numberWithCommas(newSales)+" 원")
+                
+                var subsSales = sum(subsSalesArray)
+                $('#subsSales td:nth-child(3)').text(numberWithCommas(subsSales)+" 원")
+
+                var totalSales = newSales+subsSales
+                $('#totalSales td:nth-child(3)').text(numberWithCommas(totalSales)+" 원")
+
+                $('#subsSalesChild td:nth-child(3)').text(subsSalesArray.length+" 건")
+
+                $('#regiSalesChild td:nth-child(3)').text(newSalesArrayThisMonth.length+" 건")
+
+                $('#totalMember td:nth-child(3)').text(len+' 명')
+                $('#newMember td:nth-child(3)').text(newSalesArrayThisMonth.length+" 명")
+
+
+                var salary = $('#salaryInput').val();
+                var cost = $('#costInput').val()
+                var profit = totalSales-salary-cost
+                var profit_subs = subsSales- salary - cost
+                var profit_new = newSales - salary - cost
+                $('#profit td:nth-child(3)').text(numberWithCommas(profit+" 원"))
+                $('#profit2 td:nth-child(3)').text(numberWithCommas(profit_subs+" 원"))
+                $('#profit3 td:nth-child(3)').text(numberWithCommas(profit_new+" 원"))
+
+                function sum(array) { //배열의 값 모두 더하기
+                  var result = 0;
+                  var len = array.length;
+                  for (var i = 0; i < len; i++){
+                    result += array[i];
+                  }
+                  return result
+                }
+
+                function numberWithCommas(x) { //천단위 콤마 찍기
+                  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+
+              }
+            })
+            })
+
+            //ajax////////////////////////////////////////////////////////////////////////////////////////////////////////          
          </script>
 
 {% endblock %}
