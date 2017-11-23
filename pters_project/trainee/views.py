@@ -13,7 +13,7 @@ from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
 from config.views import TraineeView, date_check_func
-from login.models import MemberTb, LogTb
+from login.models import MemberTb, LogTb, HolidayTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
 
@@ -126,6 +126,7 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         context = super(CalMonthView, self).get_context_data(**kwargs)
         error = None
         trainer_class = None
+        month_lecture_data = None
 
         month_data = []
         lecture_schedule_data = []
@@ -134,6 +135,7 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         daily_lecture_data_member = []
         daily_off_data_start_date = []
         daily_off_data_end_date = []
+        holiday = []
         today_dt = timezone.now()
         before_dt = today_dt - datetime.timedelta(days=14)
         after_dt = today_dt + datetime.timedelta(days=14)
@@ -184,6 +186,9 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
                     daily_off_data_start_date.append(month_lecture.start_dt)
                     daily_off_data_end_date.append(month_lecture.end_dt)
 
+#        holiday = HolidayTb.objects.filter(holiday_dt__gte=before_dt, holiday_dt__lte=after_dt, use='1')
+        holiday = HolidayTb.objects.filter(use='1')
+
         context['month_lecture_data'] = month_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
         context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
@@ -192,6 +197,7 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         context['daily_off_data_start_date'] = daily_off_data_start_date
         context['daily_off_data_end_date'] = daily_off_data_end_date
         context['lecture_reg_count'] = month_lecture_data.lecture_reg_count
+        context['holiday'] = holiday
 
         return context
 
