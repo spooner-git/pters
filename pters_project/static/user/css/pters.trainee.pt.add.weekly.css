@@ -9,11 +9,14 @@ body{
 .swiper-slide{
 	height: 100%;
 	overflow-y: overlay;
+	/*
 	-webkit-overflow-scrolling:touch;
+	*/
 }
 
 .swiper-container{
 	height: 100%;
+	overflow-y: auto;
 }
 
 #shade2{
@@ -265,9 +268,11 @@ body{
 	border-bottom: 1px solid #f4f4f4;
 	font-size: 13px;
 	background: #f4f4f4;
+	line-height: 40px;
 }
 
 .hour img{
+	width: 	100%;
 	max-width: 70.75%;
 	opacity: 0.4;
 }
@@ -324,6 +329,11 @@ tr{ /*회원일정예약용으로 변경 */
 
 .notAvail{
 	background: #e9e9e9;
+}
+
+.myClass{
+	background: #fe4e65;
+	opacity: 	0.5;
 }
 
 .ptersCheckboxInner{
@@ -437,6 +447,10 @@ tr{ /*회원일정예약용으로 변경 */
 	height: auto;
 	padding-top: 50px;
 
+}
+
+#weekText{
+	width: 	100%;
 }
 
 #weekText span{
