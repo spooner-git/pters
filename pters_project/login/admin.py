@@ -12,6 +12,7 @@ from trainee.models import LectureTb
 from trainer.models import CompanyTb
 from trainer.models import SettingTb
 from trainer.models import ShopEmployeeTb
+from login.models import HolidayTb
 
 # Register your models here.
 
@@ -90,4 +91,9 @@ class SettingTbAdmin(admin.ModelAdmin):
 @admin.register(ShopEmployeeTb)
 class ShopEmployeeTbAdmin(admin.ModelAdmin):
     list_display = ('shop_employee_id', 'member', 'company', 'reg_dt', 'mod_dt', 'use')
+
+
+@admin.register(HolidayTb)
+class HolidayTbAdmin(admin.ModelAdmin):
+    list_display = ('holiday_id', 'holiday_dt', 'use')
 

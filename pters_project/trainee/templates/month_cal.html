@@ -205,7 +205,7 @@
 {% block local_js_footer %}
         <!-- for db by hk.kim 170805-->
         <script>
-            var krHolidayList = new Array('_1_1','_3_1','_4_8','_5_5','_6_6','_8_15','_10_3','_10_9','_12_25') //대한민국 공휴일 (구정, 추석 제외)
+            var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
         
             //여기를 가져다 써야함 - hkkim 171021;
             var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
