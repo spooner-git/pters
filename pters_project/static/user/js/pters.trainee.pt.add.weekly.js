@@ -106,8 +106,8 @@ $(document).ready(function(){
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray);
 	addcurrentTimeIndicator();
 	scrollToIndicator();
-	classTime(); //PT수업 시간에 핑크색 박스 표시
-	offTime();
+	classTime(); //PT수업시간에 불가 checkbox 선택 불가표기
+	offTime(); //본인의 PT시간 이외 시간(다른사람 PT시간 & OFF시간)에 불가 checkbox 선택 불가표기
 // ****************************구동시 실행********************************************************************************
 // ############################구동시 실행################################################################################
 
@@ -282,7 +282,7 @@ $(document).ready(function(){
 				var tdClassStart = $("#"+classStart+" div");
 				tdClassStart.removeClass('ptersCheckbox')
 				tdClassStart.addClass('ptersNotAvail')
-				tdClassStart.parent('td').addClass('notAvail')
+				tdClassStart.parent('td').addClass('notAvail, myClass')
 			}
 		};
 		$('#calendar').css('display','block');

@@ -97,7 +97,8 @@ span{
 }
 #date{
 	position: relative;
-	padding-top: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	padding-right: 35px;
 	padding-left: 35px;
 	height: auto;
@@ -181,7 +182,7 @@ span{
 	width: 100%;
 	border-bottom: 1px solid #cccccc;
 	font-size: 14.4px;
-	height: 70px;
+	height: 69px;
 	padding-bottom: 7px;	
 }
 
@@ -295,13 +296,13 @@ span{
 .dateMytime{
 	position: absolute;
 	display:block;
-	margin:auto;
+	margin:0 auto;
 	width: 28px;
 	height: 28px;
 	background: #fddadf;
-	top: 1px;
+	top: 15px;
 	bottom:0;
-	left: 1px;
+	left: 0px;
 	right: 0;
 	border-radius: 50%;
 	z-index: -1;
@@ -310,13 +311,13 @@ span{
 .greydateMytime{
 	position: absolute;
 	display:block;
-	margin:auto;
+	margin:0 auto;
 	width: 28px;
 	height: 28px;
 	background: #e4e4e4;
-	top: 1px;
+	top: 16px;
 	bottom:0;
-	left: 1px;
+	left: 0px;
 	right: 0;
 	border-radius: 50%;
 	z-index: -1;
@@ -345,12 +346,12 @@ span{
 .balloon{
 	position: absolute;
 	background: #e4e4e4;
-	height: 26%;
+	height: 18px;
 	width: 90%;
-	bottom: -10%;
+	bottom: -7px;
 	border-radius: 1px;
 	font-size: 12px;
-	padding-top: 1px;
+	padding-top: 0.5px;
 	z-index: -2;
 	left: 50%;
 	transform: translateX(-50%);
@@ -373,13 +374,13 @@ span{
 	position: absolute;
 	color: #ffffff;
 	background: #3b3d3d;
-	height: 26%;
+	height: 16px;
 	width: 90%;
-	bottom: -10%;
+	bottom: -6px;
 	border-radius: 1px;
 	font-size: 12px;
 	font-weight: 300;
-	padding-top: 0.35px;
+	padding-top: 0.5px;
 	z-index: -2;
 	left: 50%;
 	transform: translateX(-50%);
