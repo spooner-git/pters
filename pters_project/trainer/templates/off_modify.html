@@ -29,12 +29,12 @@
     <input type="hidden" name="next_page">
 </form>
 
-<div id="dateSelector" class="ptaddbox">
+<div id="dateSelector" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 날짜</div>
   <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
 </div>
 
-<div id="timeGraph" class="ptaddbox" style="display: none;">
+<div id="timeGraph" class="ptaddbox centeralign" style="display: none;">
   <table class="timegraphtext">
     <tbody>
       <tr>
@@ -85,7 +85,7 @@
   </table>
 </div>
 
-<div id="offStartTime" class="ptaddbox">
+<div id="offStartTime" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
   <div id="starttimesSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
@@ -95,7 +95,7 @@
   </div>
 </div>
 
-<div id="offDuration" class="ptaddbox">
+<div id="offDuration" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
   <div id="durationsSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
@@ -115,7 +115,7 @@
 
 
 
-<div id="repeatSchedule" class="ptaddbox repeatbox">
+<div id="repeatSchedule" class="ptaddbox repeatbox centeralign">
   <div id="repeatScheduleText" class="ptaddboxtext repeattext">
     <img src={% static "user/res/ptadd/icon-repeat-cal.png" %} class="icons">
      <span onclick="location.href='{% url 'trainer:add_repeat_off' %}'">반복일정</span>

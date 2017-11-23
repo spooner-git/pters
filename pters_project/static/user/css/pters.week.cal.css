@@ -261,6 +261,12 @@ span{
 	width: 100%;
 }
 
+#ymdText img{
+	width: 100%;
+	position: relative;
+	z-index: -1;
+}
+
 #gapbox{
 	width: 100%;
 	height: 0px;
@@ -277,6 +283,7 @@ span{
 	width: 100%;
 	height: 100%;
 	text-align: center;
+	background: #f4f4f4;
 }
 
 
@@ -285,6 +292,7 @@ span{
 	position: absolute;
 	width: 100%;
 	height: 100%;
+	z-index: 0;
 }
 
 .arrowButton a{
@@ -340,17 +348,18 @@ tr{
 #calendar{
 	position: fixed;
 	width: 100%;
-	padding-top: 106px;
-	background-color: #f4f4f4;
+	padding-top: 104px;
+	background-color: transparent;
 	padding-right: 0;
 	padding-left: 0;
 	height: 90%;
+	z-index: 3;
 }
 
 @media(max-height: 568px){
 	#calendar{
 	position: fixed;
-	padding-top: 106px;
+	padding-top: 104px;
 	width: 100%;
 	background-color: #f4f4f4;
 	padding-right: 0;
@@ -436,9 +445,8 @@ tr{
 
 #week{
 	position: fixed;
-
-	z-index: 2;
-	background-color: #f4f4f4;
+	z-index: 3;
+	background-color: transparent;
 	height: auto;
 	padding-top: 50px;
 
@@ -603,39 +611,6 @@ tr{
 
 @media(min-width:1273px){
   /*달력 크기 조정*/
-	.time-style{ /*week ìŠ¤íƒ€ì¼*/
-		background-color: transparent;
-		position: relative;
-		width: 	100%;
-		max-width: 1024px;
-		font-size: 14.4px;
-		height: 35px;
-	}
-
-	#calendar{
-		position: fixed;
-		width: 100%;
-		max-width: 1024px;
-		padding-top: 106px;
-		background-color: #f4f4f4;
-		padding-right: 0;
-		padding-left: 0;
-		height: 90%;
-		left: 	250px;
-	}
-
-	#ymdText{
-		position: fixed;
-		height: 50px;
-		z-index: 3;
-		width: 100%;
-		max-width: 1024px;
-		left: 	250px;
-	}
-
-	#week{
-		left: 	250px;
-	}
 
 	body{
 		/*font-family: 'Noto Sans KR';*/

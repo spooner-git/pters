@@ -1,5 +1,7 @@
 body{
 	padding-top: 50px;
+	margin:0 auto;
+	max-width: 500px;
 }
 
 .pters_dropdown_setting_custom{

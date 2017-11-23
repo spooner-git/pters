@@ -26,7 +26,7 @@
     {% block navbar %}
     <div id="shade"></div>
         <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
-            <div class="container">
+            <div class="container" style="max-width:1000px;">
                 <div class="navbar-header">
                     <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="openNav()">
                         <span class="icon-bar" style="width: 20px;"></span>
@@ -81,7 +81,7 @@
                         <img src={% static "user/res/ptadd/btn-x.png" %} style="width:90%;">
                     </button>
                     {% block nav_center_img1 %}
-                        <a id="uptext2" class="navbar-brand uptext"></a>
+                        <a id="uptext2" class="uptext"></a>
                     {% endblock %}
                     <button id="upbutton-check" class="navbar-toggle" aria-controls="navbar">
                         <img src={% static "user/res/ptadd/btn-complete.png" %} style="width:100%;">

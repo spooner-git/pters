@@ -42,6 +42,11 @@ span{
 	margin-bottom: 50px;
 }
 
+.centeralign{
+	margin:0 auto;
+	max-width: 800px;
+}
+
 #members{ /*회원이름 dropdown은 조금 길게 보이도록..*/
 	max-height: 300px;
 }
