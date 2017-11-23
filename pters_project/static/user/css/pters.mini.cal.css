@@ -31,6 +31,9 @@ span.ui-datepicker-month{
 	left: 0px !important;
 	width: 100%;
 	z-index: 2000 !important;
+	max-width: 800px;
+	left: 50% !important;
+	transform: translateX(-50%);
 }
 
 

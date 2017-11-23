@@ -30,13 +30,13 @@
     <div id="shade">
         </div>
         <nav class="navbar navbar-fixed-top navbar-default">
-            <div class="container">
+            <div class="container" style="max-width:1000px;">
                 <div class="navbar-header">
                     <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="javascript:history.back()">
                         <img src={% static "user/res/ptadd/btn-x.png" %} style="width:90%;">
                     </button>
                     {% block nav_center_img %}
-                        <a id="uptext" class="uptext navbar-brand">OFF 일정변경</a>
+                        <a id="uptext" class="uptext">OFF 일정변경</a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
                         <img src={% static "user/res/ptadd/btn-complete.png" %} style="width:100%;">

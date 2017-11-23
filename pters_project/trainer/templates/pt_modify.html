@@ -28,7 +28,7 @@
 </form>
 
 
-<div id="memberName" class="ptaddbox">
+<div id="memberName" class="ptaddbox centeralign">
   <div class="ptaddboxtext"> <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명</div>
   <div id="membersSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" aria-expanded="false">회원명 선택<span class="caret"></span></button>
@@ -42,19 +42,19 @@
 </div>
 
 
-<div id="remainCount" class="ptaddbox">
+<div id="remainCount" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은 횟수</div>
   <!-- 남은 횟수 DB연동 필요 -->
         <div id="countsSelected" class="dropdown" placeholder="자동으로 입력됩니다.">{{ lecture_reg_count }}</div>
 </div>
 
 
-<div id="dateSelector" class="ptaddbox">
+<div id="dateSelector" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 날짜</div>
   <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
 </div>
 
-<div id="timeGraph" class="ptaddbox" style="display: none;">
+<div id="timeGraph" class="ptaddbox centeralign" style="display: none;">
   <table class="timegraphtext">
     <tbody>
       <tr>
@@ -109,7 +109,7 @@
 
 
 
-<div id="classStartTime" class="ptaddbox">
+<div id="classStartTime" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
   <div id="starttimesSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
@@ -119,7 +119,7 @@
   </div>
 </div>
 
-<div id="classDuration" class="ptaddbox">
+<div id="classDuration" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
   <div id="durationsSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>

@@ -283,6 +283,11 @@ span{
 	width: 100%;
 	height: 50px;
 	z-index: 3;
+	max-width: 1000px;
+}
+
+#ymdText img{
+	width: 100%;
 }
 
 #gapbox{
@@ -363,6 +368,13 @@ span{
 	padding-right: 0;
 	padding-left: 0;
 	height: 92%;
+	z-index: 3;
+	max-width: 1000px;
+}
+
+.wrap{
+	left: 50% !important;
+	transform: translateX(-50%);
 }
 
 @media(max-height: 568px){

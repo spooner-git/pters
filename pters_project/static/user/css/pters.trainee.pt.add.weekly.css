@@ -211,6 +211,12 @@ body{
 	width: 100%;
 }
 
+#ymdText img{
+	width: 100%;
+	position: relative;
+	z-index: -1;
+}
+
 #gapbox{
 	width: 100%;
 	height: 0px;
@@ -235,6 +241,7 @@ body{
 	width: 100%;
 	height: 50px;
 	text-align: center;
+	background: #f4f4f4;
 }
 
 
@@ -359,10 +366,11 @@ tr{ /*회원일정예약용으로 변경 */
 	position: fixed;
 	width: 100%;
 	padding-top: 100px;
-	background-color: #ffffff;
+	background-color: transparent;
 	padding-right: 0;
 	padding-left: 0;
 	height: 90%;
+	z-index: 3;
 }
 
 .satDay{
@@ -441,9 +449,8 @@ tr{ /*회원일정예약용으로 변경 */
 
 #week{
 	position: fixed;
-
-	z-index: 2;
-	background-color: #f4f4f4;
+	z-index: 4;
+	background-color: transparent;
 	height: auto;
 	padding-top: 50px;
 
