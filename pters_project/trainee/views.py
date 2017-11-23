@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
-from config.views import TraineeView
+from config.views import TraineeView, date_check_func
 from login.models import MemberTb, LogTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
@@ -282,9 +282,8 @@ def pt_add_logic(request):
     elif training_time == '':
         error = '시작 시간을 선택해 주세요.'
 
-    print(next_page)
-
-    error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name)
+    if error is None:
+        error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name)
 
     if error is None:
         return redirect(next_page)
@@ -304,6 +303,9 @@ def pt_add_array_logic(request):
     next_page = request.POST.get('next_page')
 
     error = None
+
+    if int(add_pt_size) == 0:
+        error = 'pt 일정을 선택하세요.'
 
     for i in range(0, int(add_pt_size)):
         error = pt_add_logic_func(training_date[i], time_duration[i], training_time[i],
@@ -362,15 +364,8 @@ def pt_add_logic_func(training_date, time_duration, training_time, user_id, user
 
     if error is None:
         for month_class in month_class_data:
-            if month_class.start_dt >= start_date:
-                if month_class.start_dt < end_date:
-                    error = training_date+'등록 시간이 겹칩니다.'
-            if month_class.end_dt > start_date:
-                if month_class.end_dt < end_date:
-                    error = training_date+'등록 시간이 겹칩니다.'
-            if month_class.start_dt <= start_date:
-                if month_class.end_dt >= end_date:
-                    error = training_date+'등록 시간이 겹칩니다.'
+            error = date_check_func(training_date, start_date, end_date,
+                                    month_class.start_dt, month_class.end_dt)
 
     if error is None:
         try:
@@ -390,15 +385,8 @@ def pt_add_logic_func(training_date, time_duration, training_time, user_id, user
             lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
                                                                         en_dis_type='1', use=1)
             for month_lecture in lecture.lecture_schedule:
-                if month_lecture.start_dt >= start_date:
-                    if month_lecture.start_dt < end_date:
-                        error = training_date+'등록 시간이 겹칩니다.'
-                if month_lecture.end_dt > start_date:
-                    if month_lecture.end_dt < end_date:
-                        error = training_date+'등록 시간이 겹칩니다.'
-                if month_lecture.start_dt <= start_date:
-                    if month_lecture.end_dt >= end_date:
-                        error = training_date+'등록 시간이 겹칩니다.'
+                error = date_check_func(training_date, start_date, end_date,
+                                        month_lecture.start_dt, month_lecture.end_dt)
 
     if error is None:
         with transaction.atomic():
@@ -428,9 +416,6 @@ def pt_add_logic_func(training_date, time_duration, training_time, user_id, user
             log_end_date = '오후'
 
         log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
-        # + start_date.strftime('%p %I:%M')\
-        # + '- '+end_date.strftime('%p %I:%M')
         log_contents = '<span>'+user_name + ' 회원님께서 ' \
                        + '</span> 일정을 <span class="status">등록</span>했습니다.@'\
                        + log_start_date\
@@ -440,5 +425,6 @@ def pt_add_logic_func(training_date, time_duration, training_time, user_id, user
         log_data.save()
 
     else:
-        #next_page = 'trainee:cal_month'
         return error
+
+
