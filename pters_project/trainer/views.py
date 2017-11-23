@@ -15,7 +15,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from config.views import TrainerView
+from config.views import TrainerView, date_check_func
 from login.models import MemberTb, LogTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
@@ -114,14 +114,6 @@ class CalDayView(LoginRequiredMixin, TemplateView):
                                                               en_dis_type='0', start_dt__gte=before_dt,
                                                               start_dt__lte=after_dt, use='1')
             for month_class in month_class_data:
-                #month_class.data = month_class.start_dt.timetuple()
-                #result = month_class.end_dt - month_class.start_dt
-                #result_hour = int(result.seconds / 60 / 60)
-                # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
-                #                  + '_' + str(result_hour) + '_' + member_data.name)
-                #daily_off_data.append(str(month_class.data.tm_year) + '_' + str(month_class.data.tm_mon) + '_'
-                #                  + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
-                #                  + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
                 class_schedule_data.append(month_class.class_schedule_id)
                 daily_off_data_start_date.append(month_class.start_dt)
                 daily_off_data_end_date.append(month_class.end_dt)
@@ -530,6 +522,7 @@ class ReserveSettingView(TemplateView):
 
         return context
 
+
 class SalesSettingView(TemplateView):
     template_name = 'trainer_sales_setting.html'
 
@@ -571,8 +564,6 @@ def member_registration(request):
 
     if error is None:
 
-#        start_date = start_date.split('-')[0] + '-' + start_date.split('-')[1] + '-' + start_date.split('-')[2]
-#        end_date = end_date.split('-')[0] + '-' + end_date.split('-')[1] + '-' + end_date.split('-')[2]
         password = email.split('@')[0] + phone[7:]
 
         try:
@@ -663,15 +654,8 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
 
     if error is None:
         for month_class in month_class_data:
-            if month_class.start_dt >= start_date:
-                if month_class.start_dt < end_date:
-                    error = '등록 시간이 겹칩니다.'
-            if month_class.end_dt > start_date:
-                if month_class.end_dt < end_date:
-                    error = '등록 시간이 겹칩니다.'
-            if month_class.start_dt <= start_date:
-                if month_class.end_dt >= end_date:
-                    error = '등록 시간이 겹칩니다.'
+            error = date_check_func(training_date, start_date, end_date,
+                                    month_class.start_dt, month_class.end_dt)
 
     if error is None:
         try:
@@ -690,15 +674,8 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
                                                                         en_dis_type='1', use=1)
 
             for month_lecture in lecture.lecture_schedule:
-                if month_lecture.start_dt >= start_date:
-                    if month_lecture.start_dt < end_date:
-                        error = '등록 시간이 겹칩니다.'
-                if month_lecture.end_dt > start_date:
-                    if month_lecture.end_dt < end_date:
-                        error = '등록 시간이 겹칩니다.'
-                if month_lecture.start_dt <= start_date:
-                    if month_lecture.end_dt >= end_date:
-                        error = '등록 시간이 겹칩니다.'
+                error = date_check_func(training_date, start_date, end_date,
+                                        month_lecture.start_dt, month_lecture.end_dt)
 
     if error is None:
         with transaction.atomic():
@@ -946,15 +923,8 @@ def add_off_logic(request):
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
                                                                             en_dis_type='1', use=1)
                 for month_lecture in lecture.lecture_schedule:
-                    if month_lecture.start_dt >= start_date:
-                        if month_lecture.start_dt < end_date:
-                            error = '등록 시간이 겹칩니다.'
-                    if month_lecture.end_dt > start_date:
-                        if month_lecture.end_dt < end_date:
-                            error = '등록 시간이 겹칩니다.'
-                    if month_lecture.start_dt <= start_date:
-                        if month_lecture.end_dt >= end_date:
-                            error = '등록 시간이 겹칩니다.'
+                    error = date_check_func(training_date, start_date, end_date,
+                                            month_lecture.start_dt, month_lecture.end_dt)
 
         if error is None:
             try:
@@ -969,15 +939,8 @@ def add_off_logic(request):
 
         if error is None:
             for month_class in month_class_data:
-                if month_class.start_dt >= start_date:
-                    if month_class.start_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_class.end_dt > start_date:
-                    if month_class.end_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_class.start_dt <= start_date:
-                    if month_class.end_dt >= end_date:
-                        error = '날짜가 겹칩니다.'
+                error = date_check_func(training_date, start_date, end_date,
+                                        month_class.start_dt, month_class.end_dt)
 
         if error is None:
             class_schedule_data = ClassScheduleTb(class_tb_id=trainer_class.class_id, start_dt=start_date, end_dt=end_date,
@@ -1087,35 +1050,6 @@ def daily_off_delete(request):
         messages.info(request, error)
         next_page = 'trainer:cal_day'
         return redirect(next_page)
-
-#class CalMonthView(LoginRequiredMixin, TemplateView):
-#    template_name = 'month_cal.html'
-#
-#    def get_context_data(self, **kwargs):
-#        context = super(CalMonthView, self).get_context_data(**kwargs)
-#        error = None
-#        trainer_class = None
-#        try:
-#            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
-#        except ObjectDoesNotExist:
-#            error = 'class가 존재하지 않습니다'
-#            # logger.error(error)
-#
-#        month_data = []
-#        if error is None:
-#            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-#
-#            for lecture in month_lecture_data:
-#                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-#                                                                            en_dis_type='1',use='1')
-#                for month_lecture in lecture.lecture_schedule:
-#                    month_lecture.data = month_lecture.start_dt.timetuple()
-#                    #month_data.append(month_lecture.start_dt.strftime('%Y_%#m_%#d'))
-#                    month_data.append(str(month_lecture.data.tm_year)+'_'+str(month_lecture.data.tm_mon)+'_'
-#                                      +str(month_lecture.data.tm_mday))
-#        context['month_lecture_data'] = month_data
-#
-#        return context
 
 
 # log 삭제
@@ -1344,15 +1278,8 @@ def modify_pt_logic(request):
 
     if error is None:
         for month_class in month_class_data:
-            if month_class.start_dt >= start_date:
-                if month_class.start_dt < end_date:
-                    error = '날짜가 겹칩니다.'
-            if month_class.end_dt > start_date:
-                if month_class.end_dt < end_date:
-                    error = '날짜가 겹칩니다.'
-            if month_class.start_dt <= start_date:
-                if month_class.end_dt >= end_date:
-                    error = '날짜가 겹칩니다.'
+            error = date_check_func(training_date, start_date, end_date,
+                                    month_class.start_dt, month_class.end_dt)
 
     if error is None:
         try:
@@ -1371,15 +1298,8 @@ def modify_pt_logic(request):
                                                                         en_dis_type='1', use=1).exclude(
                                                                         lecture_schedule_id=modify_schedule_id)
             for month_lecture in lecture.lecture_schedule:
-                if month_lecture.start_dt >= start_date:
-                    if month_lecture.start_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_lecture.end_dt > start_date:
-                    if month_lecture.end_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_lecture.start_dt <= start_date:
-                    if month_lecture.end_dt >= end_date:
-                        error = '날짜가 겹칩니다.'
+                error = date_check_func(training_date, start_date, end_date,
+                                        month_lecture.start_dt, month_lecture.end_dt)
 
     if error is None:
         try:
@@ -1505,15 +1425,8 @@ def modify_off_logic(request):
             lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb_id=lecture.lecture_id,
                                                                         en_dis_type='1', use=1)
             for month_lecture in lecture.lecture_schedule:
-                if month_lecture.start_dt >= start_date:
-                    if month_lecture.start_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_lecture.end_dt > start_date:
-                    if month_lecture.end_dt < end_date:
-                        error = '날짜가 겹칩니다.'
-                if month_lecture.start_dt <= start_date:
-                    if month_lecture.end_dt >= end_date:
-                        error = '날짜가 겹칩니다.'
+                error = date_check_func(training_date, start_date, end_date,
+                                        month_lecture.start_dt, month_lecture.end_dt)
 
     if error is None:
         try:
@@ -1529,15 +1442,8 @@ def modify_off_logic(request):
 
     if error is None:
         for month_class in month_class_data:
-            if month_class.start_dt >= start_date:
-                if month_class.start_dt < end_date:
-                    error = '날짜가 겹칩니다.'
-            if month_class.end_dt > start_date:
-                if month_class.end_dt < end_date:
-                    error = '날짜가 겹칩니다.'
-            if month_class.start_dt <= start_date:
-                if month_class.end_dt >= end_date:
-                    error = '날짜가 겹칩니다.'
+            error = date_check_func(training_date, start_date, end_date,
+                                    month_class.start_dt, month_class.end_dt)
 
     if error is None:
         try:
