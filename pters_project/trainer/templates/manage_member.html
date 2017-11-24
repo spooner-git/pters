@@ -14,80 +14,164 @@
 {% block content %}
 
  <!--플로팅 버튼-->
-    <div id="float_btn" onclick="location.href='{% url 'trainer:member_add' %}'">
+    <div id="float_btn">
       <img src={% static "user/res/memberadd/float_plus_member.png" %} alt="">
     </div>
 
 
     <div id="shade">
     </div>
+    <div id="shade3">
+    </div>
   <!--플로팅 버튼-->
 
-<div id="selectBox" class="btn-group btn-group-justified wrap">
-  <div id="btnCallCurrent" href="#" class="btn btn-primary active">진행 중 회원</div>
-  <div id="btnCallFinished" href="#" class="btn btn-primary">종료된 회원</div>
-</div> 
-<div id="alignBox">
-  <div style="font-size:14px;position: relative;">
-    회원 정렬 기준 <span id="currentMemberNum" class="memberNum"></span><span id="finishMemberNum" class="memberNum"></span>
-  </div>
-  <div class="dropdown">
-    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택</button>
-    <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-    <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
-      <!-- 회원명 DB연동 필요-->
-      <li role="presentation" id="countH"><a href="#" role="menuitem" tabindex="-1">남은 횟수 많은 순</a></li>
-      <li role="presentation" id="countL"><a href="#" role="menuitem" tabindex="-1">남은 횟수 적은 순</a></li>
-      <li role="presentation" id="startP"><a href="#" role="menuitem" tabindex="-1">시작 일자 과거 순</a></li>
-      <li role="presentation" id="startR"><a href="#" role="menuitem" tabindex="-1">시작 일자 최근 순</a></li>
-      <li role="presentation" id="recent"><a href="#" role="menuitem" tabindex="-1">수정 일자 최근 순</a></li>
-      <li role="presentation" id="name"><a href="#" role="menuitem" tabindex="-1">회원명 가나다 순</a></li>
-    </ul>
-  </div>
+<div id="page_managemember">
+
+    <div id="selectBox" class="btn-group btn-group-justified wrap">
+      <div id="btnCallCurrent" href="#" class="btn btn-primary active">진행 중 회원</div>
+      <div id="btnCallFinished" href="#" class="btn btn-primary">종료된 회원</div>
+    </div> 
+    <div id="alignBox">
+      <div style="font-size:14px;position: relative;">
+        회원 정렬 기준 <span id="currentMemberNum" class="memberNum"></span><span id="finishMemberNum" class="memberNum"></span>
+      </div>
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택</button>
+        <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
+        <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
+          <!-- 회원명 DB연동 필요-->
+          <li role="presentation" id="countH"><a href="#" role="menuitem" tabindex="-1">남은 횟수 많은 순</a></li>
+          <li role="presentation" id="countL"><a href="#" role="menuitem" tabindex="-1">남은 횟수 적은 순</a></li>
+          <li role="presentation" id="startP"><a href="#" role="menuitem" tabindex="-1">시작 일자 과거 순</a></li>
+          <li role="presentation" id="startR"><a href="#" role="menuitem" tabindex="-1">시작 일자 최근 순</a></li>
+          <li role="presentation" id="recent"><a href="#" role="menuitem" tabindex="-1">수정 일자 최근 순</a></li>
+          <li role="presentation" id="name"><a href="#" role="menuitem" tabindex="-1">회원명 가나다 순</a></li>
+        </ul>
+      </div>
+    </div>
+
+
+    <div id="currentMemberList" class="centeralign">
+      <table id="currentMember" class="table table-bordered">
+        <thead>
+          <tr>
+            <th>회원명</th>
+            <th>남은 횟수</th>
+            <th>시작 일자</th>
+            <th>연락처</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+
+
+    <div id="finishedMemberList" class="centeralign">
+      <table id="finishedMember" class="table table-bordered">
+        <thead>
+          <tr>
+            <th>회원명</th>
+            <th>남은 횟수</th>
+            <th>시작 일자</th>
+            <th>연락처</th>
+          </tr>
+        </thead>
+      </table>
+    </div> 
+
+
+    <div id="memberInfoPopup" class="infopopup wrap">
+      <div>
+        <button id="infoClose" style="display:inline-block;">닫기</button>
+        <button id="infoEdit" style="display:inline-block;">수정</button>
+      </div>
+      <form action="/trainer/member_registration/" method="POST" class="member-form" id="member-add-form">
+            <div>
+                <div class="ptaddbox form-group">
+                    <label for="memberEmail" class="ptaddboxtext">
+                        <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail(아이디)
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="email" class="dropdown form-control" id="memberEmail" name="email" placeholder="이메일의 @앞부분은 아이디로 사용됩니다." readonly>
+                    </div>
+                </div>
+                <div class="ptaddbox form-group">
+                    <label for="memberName" class="ptaddboxtext">
+                        <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="text" class="dropdown form-control" id="memberName" name="name" placeholder="회원분의 성함을 입력해주세요." readonly>
+                    </div>
+                </div>
+                <div class="ptaddbox form-group">
+                    <label for="memberPhone" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="tel" class="dropdown form-control" id="memberPhone" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." readonly>
+                    </div>
+                </div>
+                <div class="ptaddbox form-group">
+                    <label for="memberCount" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="tel" class="dropdown form-control" id="memberCount" name="counts" placeholder="등록 횟수를 입력해주세요" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dateSelector" class="ptaddbox">
+                <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
+                <p class="datepicktext dropdown"><input type="text" id="datepicker" name="start_date" placeholder="-" readonly></p>
+            </div>
+            <div id="dateSelector2"  class="ptaddbox">
+                <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
+                <p class="datepicktext dropdown"><input type="text" id="datepicker2" name="end_date" placeholder="-"  readonly></p>
+            </div>
+
+            <div class="ptaddbox form-group">
+                <label for="comment" class="ptaddboxtext">
+                    <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
+                </label>
+                <div class="dropdown pters_input_custom">
+                    <textarea class="dropdown form-control" rows="1" id="comment" name="contents"></textarea>    
+                </div>  
+            </div>
+
+            <div id="ptrepeat-btn">
+                <span>PT 반복 일정 등록</span>
+                <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
+            </div>
+            
+            <div style="text-align: center;">
+                <button id="memberDelete">
+                  회원 삭제
+                </button>
+            </div>
+        </form>
+      
+    </div>
 </div>
 
+<div id="page_addmember" class="wrap"> 
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div id="inputError">
+                    <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
+            </div>
+        {% endfor %}
+    {% endif %}
 
-<div id="currentMemberList" class="centeralign">
-  <table id="currentMember" class="table table-bordered">
-    <thead>
-      <tr>
-        <th>회원명</th>
-        <th>남은 횟수</th>
-        <th>시작 일자</th>
-        <th>연락처</th>
-      </tr>
-    </thead>
-  </table>
-</div>
-
-
-<div id="finishedMemberList" class="centeralign">
-  <table id="finishedMember" class="table table-bordered">
-    <thead>
-      <tr>
-        <th>회원명</th>
-        <th>남은 횟수</th>
-        <th>시작 일자</th>
-        <th>연락처</th>
-      </tr>
-    </thead>
-  </table>
-</div> 
-
-
-<div id="memberInfoPopup" class="infopopup wrap">
-  <div>
-    <button id="infoClose" style="display:inline-block;">닫기</button>
-    <button id="infoEdit" style="display:inline-block;">수정</button>
-  </div>
-  <form action="/trainer/member_registration/" method="POST" class="member-form" id="member-add-form">
+    <form action="{% url 'trainer:member_registration' %}" method="POST" class="member-form" id="member-add-form">
+        <input type="hidden" name="next_page" value="{% url 'trainer:member_manage' %}">
         <div>
             <div class="ptaddbox form-group">
                 <label for="memberEmail" class="ptaddboxtext">
                     <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail(아이디)
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="email" class="dropdown form-control" id="memberEmail" name="email" placeholder="이메일의 @앞부분은 아이디로 사용됩니다." readonly>
+                    <input type="email" class="dropdown form-control" id="memberEmail_add" name="email" placeholder="이메일의 @앞부분은 아이디로 사용됩니다.">
                 </div>
             </div>
             <div class="ptaddbox form-group">
@@ -95,7 +179,7 @@
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="text" class="dropdown form-control" id="memberName" name="name" placeholder="회원분의 성함을 입력해주세요." readonly>
+                    <input type="text" class="dropdown form-control" id="memberName_add" name="name" placeholder="회원분의 성함을 입력해주세요." maxlength="10">
                 </div>
             </div>
             <div class="ptaddbox form-group">
@@ -103,7 +187,7 @@
                     <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="tel" class="dropdown form-control" id="memberPhone" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." readonly>
+                    <input type="tel" class="dropdown form-control" id="memberPhone_add" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
                 </div>
             </div>
             <div class="ptaddbox form-group">
@@ -111,18 +195,18 @@
                     <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="tel" class="dropdown form-control" id="memberCount" name="counts" placeholder="등록 횟수를 입력해주세요" readonly>
+                    <input type="tel" class="dropdown form-control" id="memberCount_add" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
                 </div>
             </div>
         </div>
 
         <div id="dateSelector" class="ptaddbox">
             <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
-            <p class="datepicktext dropdown"><input type="text" id="datepicker" name="start_date" placeholder="-" readonly></p>
+            <p class="datepicktext dropdown"><input type="text" id="datepicker_add" name="start_date" placeholder="선택" readonly></p>
         </div>
         <div id="dateSelector2"  class="ptaddbox">
             <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
-            <p class="datepicktext dropdown"><input type="text" id="datepicker2" name="end_date" placeholder="-"  readonly></p>
+            <p class="datepicktext dropdown"><input type="text" id="datepicker2_add" name="end_date" placeholder="선택"  readonly></p>
         </div>
 
         <div class="ptaddbox form-group">
@@ -138,16 +222,9 @@
             <span>PT 반복 일정 등록</span>
             <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
         </div>
-        
-        <div style="text-align: center;">
-            <button id="memberDelete">
-              회원 삭제
-            </button>
-        </div>
     </form>
-  
-</div>
 
+</div>
 
 {% endblock %}
 
@@ -160,6 +237,7 @@
         <!-- Placed at the end of the document so the pages load faster -->
          <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+         <script type="text/javascript" src={% static "user/js/pters.add.member.js" %}></script>
          <script type="text/javascript" src={% static "user/js/pters.manage.member.js" %}></script>
          <script>
           $('#uptext').text("회원 관리")

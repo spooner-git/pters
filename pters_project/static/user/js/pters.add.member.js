@@ -1,24 +1,26 @@
 $(document).ready(function(){
 	  var select_all_check = false;
       $('#inputError').fadeIn('slow')
+     
 
-      $( "#datepicker" ).datepicker({
+      $("#datepicker_add").datepicker({
         minDate : 0,
-      	onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
-      		$("#dateSelector p").addClass("dropdown_selected");
-      		check_dropdown_selected();
-      	}
-      });
-      $( "#datepicker2" ).datepicker({
-        minDate : 0,
-      	onSelect:function(dateText,inst){ //달력날짜 선택시 하단에 핑크선
-      		$("#dateSelector2 p").addClass("dropdown_selected");
-      		check_dropdown_selected();
-      	}
+        onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+          $("#dateSelector p").addClass("dropdown_selected");
+          check_dropdown_selected();
+        }
       });
 
+      $("#datepicker2_add").datepicker({
+        minDate : 0,
+        onSelect:function(curDate,inst){ //달력날짜 선택시 하단에 핑크선
+          $("#dateSelector2 p").addClass("dropdown_selected");
+          check_dropdown_selected();
+        }
+      });
 
-      $("#memberEmail").keyup(function(){  //이메일 입력시 하단에 핑크선
+
+      $("#memberEmail_add").keyup(function(){  //이메일 입력시 하단에 핑크선
         if($(this).val().length>8){
       		$(this).parent("div").addClass("dropdown_selected")
       		check_dropdown_selected();
@@ -28,7 +30,7 @@ $(document).ready(function(){
       	}
       })
 
-      $("#memberName").keyup(function(){  //이름 입력시 하단에 핑크선
+      $("#memberName_add").keyup(function(){  //이름 입력시 하단에 핑크선
         if($(this).val().length>1){
           limit_char(this);
       		$(this).parent("div").addClass("dropdown_selected")
@@ -40,7 +42,7 @@ $(document).ready(function(){
       	}
       })
 
-      $("#memberPhone").keyup(function(){  //전화번호 입력시 하단에 핑크선
+      $("#memberPhone_add").keyup(function(){  //전화번호 입력시 하단에 핑크선
       	if($(this).val().length>8){
           limit_char(this);
       		$(this).parent("div").addClass("dropdown_selected")
@@ -52,7 +54,7 @@ $(document).ready(function(){
       	}
       })
 
-      $("#memberCount").keyup(function(){  //남은횟수 입력시 하단에 핑크선
+      $("#memberCount_add").keyup(function(){  //남은횟수 입력시 하단에 핑크선
       	if($(this).val().length>0){
           limit_char(this);
       		$(this).parent("div").addClass("dropdown_selected")
@@ -66,20 +68,19 @@ $(document).ready(function(){
 
 
      function check_dropdown_selected(){ //모든 입력란을 채웠을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-        var emailInput = $("#memberEmail").parent("div");
-        var nameInput = $("#memberName").parent("div");
-        var phoneInput = $("#memberPhone").parent("div");
-        var countInput = $("#memberCount").parent("div");
-        var startInput = $("#datepicker").parent("p");
-        var endInput = $("#datepicker2").parent("p");
+        var emailInput = $("#memberEmail_add").parent("div");
+        var nameInput = $("#memberName_add").parent("div");
+        var phoneInput = $("#memberPhone_add").parent("div");
+        var countInput = $("#memberCount_add").parent("div");
+        var startInput = $("#datepicker_add").parent("p");
+        var endInput = $("#datepicker2_add").parent("p");
         if((emailInput).hasClass("dropdown_selected")==true && (nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true&&(startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
-            $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
 			select_all_check=true;
 
         }else{
-        	$("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+        	$("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
             select_all_check=false;
-
         }
      }
 

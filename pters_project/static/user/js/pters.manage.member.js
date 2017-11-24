@@ -22,6 +22,31 @@ $(document).ready(function(){
 			}
 		})
 
+
+    $('#float_btn').click(function(){
+      $('#page_addmember').fadeIn('fast')
+      $('#shade3').fadeIn('fast');
+      $(this).fadeOut();
+      $('#uptext2').text('신규 회원 등록')
+      $('#page-base').fadeOut();
+      $('#page-base-addstyle').fadeIn();
+      scrollToIndicator($('#memberEmail_add'))
+
+    })
+
+    $('#upbutton-x').click(function(){
+      $('#page_addmember').fadeOut('fast');
+      $('#shade3').fadeOut('fast');
+      $('#float_btn').fadeIn('fast');
+      $('#page-base').fadeIn();
+      $('#page-base-addstyle').fadeOut();
+
+      $('input').val("")
+      $('p,.pters_input_custom').removeClass("dropdown_selected")
+      $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+     
+    })
+
 		$("#btnCallCurrent").click(function(){
 			var currentMemberList = $("#currentMemberList");
       var currentMemberNum = $('#currentMemberNum')
@@ -119,6 +144,7 @@ $(document).ready(function(){
       $('#memberCount').attr('readonly',false)
     })
 //#####################회원정보 팝업 //#####################
+
 
 //#####################페이지 들어오면 초기 DB 프로세싱 시작//#####################
       //날짜형식을 yyyymmdd 로 맞추기
@@ -415,5 +441,11 @@ $(document).ready(function(){
           break;
         }
       }  
+
+      function scrollToIndicator(dom){
+        var offset = dom.offset();
+        console.log(offset)
+          $('body, html').animate({scrollTop : offset.top-180},0)
+      }
 
 });
