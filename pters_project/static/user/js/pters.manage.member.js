@@ -22,7 +22,7 @@ $(document).ready(function(){
 			}
 		})
 
-
+////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
     $('#float_btn').click(function(){
       $('#page_addmember').fadeIn('fast')
       $('#shade3').fadeIn('fast');
@@ -43,9 +43,9 @@ $(document).ready(function(){
 
       $('input').val("")
       $('p,.pters_input_custom').removeClass("dropdown_selected")
-      $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-     
+      $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>"); 
     })
+////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
 		$("#btnCallCurrent").click(function(){
 			var currentMemberList = $("#currentMemberList");
