@@ -61,6 +61,7 @@ span{
 
 .swiper-container{
 	height: 100%;
+	z-index: 1;
 }
 
 .slide-notice{
@@ -287,18 +288,10 @@ span{
 }
 
 #ymdText img{
-	width: 100%;
-}
-
-#gapbox{
-	width: 100%;
-	height: 0px;
 	position: relative;
-	padding-bottom: 12.5%;
-	overflow-y: hidden;
-	background-color: #ffffff;
+	width: 100%;
+	z-index: -1;
 }
-
 
 .calendar-style{  /*week ìŠ¤íƒ€ì¼í•˜ìœ„ */
 	width: 100%;
@@ -312,6 +305,7 @@ span{
 	position: absolute;
 	width: 100%;
 	height: 100%;
+	z-index: 0;
 }
 
 .arrowButton a{
@@ -362,9 +356,9 @@ span{
 
 #calendar{
 	position: fixed;
-	padding-top: 50px;
 	width: 100%;
-	/*background-color: #f4f4f4;*/
+	padding-top: 50px;
+	background: transparent;
 	padding-right: 0;
 	padding-left: 0;
 	height: 92%;
@@ -376,19 +370,6 @@ span{
 	left: 50% !important;
 	transform: translateX(-50%);
 }
-
-@media(max-height: 568px){
-	#calendar{
-	position: fixed;
-	padding-top: 50px;
-	width: 100%;
-	background-color: #f4f4f4;
-	padding-right: 0;
-	padding-left: 0;
-	height: 90%;
-	}
-}
-
 
 
 .classTime{

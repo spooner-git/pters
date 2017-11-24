@@ -356,18 +356,6 @@ tr{
 	z-index: 3;
 }
 
-@media(max-height: 568px){
-	#calendar{
-	position: fixed;
-	padding-top: 104px;
-	width: 100%;
-	background-color: #f4f4f4;
-	padding-right: 0;
-	padding-left: 0;
-	height: 90%;
-	}
-}
-
 .classTime{
 	position: absolute;
 	top: 0px;
