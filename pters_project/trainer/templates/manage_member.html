@@ -190,24 +190,91 @@
                     <input type="tel" class="dropdown form-control" id="memberPhone_add" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
                 </div>
             </div>
-            <div class="ptaddbox form-group">
-                <label for="memberCount" class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
-                </label>
-                <div class="dropdown pters_input_custom">
-                    <input type="tel" class="dropdown form-control" id="memberCount_add" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
+            <div id="selectBox2" class="selectbox">
+                <div id="btnCallSimple" href="#" class="selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
+                <div id="btnCallManual" href="#" class="selectboxopt selectboxopt_right">세부 설정 방식</div>
+            </div>
+            <div id="manualReg">
+                <div class="ptaddbox form-group">
+                    <label for="memberCount" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록횟수
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="tel" class="dropdown form-control" id="memberCount_add" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
+                    </div>
+                </div>
+                <div id="dateSelector" class="ptaddbox">
+                    <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
+                    <p class="datepicktext dropdown"><input type="text" id="datepicker_add" name="start_date" placeholder="선택" readonly></p>
+                </div>
+                <div id="dateSelector2"  class="ptaddbox">
+                    <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
+                    <p class="datepicktext dropdown"><input type="text" id="datepicker2_add" name="end_date" placeholder="선택"  readonly></p>
+                </div>
+            </div>
+            <div id="simpleReg">
+                <div class="ptaddbox form-group _count">
+                    <label for="memberCount" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록 횟수
+                    </label>
+                    <div>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td class="checkboxtext">10회</td>
+                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td class="checkboxtext">20회</td>
+                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td class="checkboxtext">30회</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+                <div class="ptaddbox form-group _due">
+                    <label for="memberDue" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 진행 기간
+                    </label>
+                    <div>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td class="checkboxtext">1개월</td>
+                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td class="checkboxtext">2개월</td>
+                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td class="checkboxtext">3개월</td>
+                          </tr>
+                          <tr>
+                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td class="checkboxtext">6개월</td>
+                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td class="checkboxtext">12개월</td>
+                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td class="checkboxtext">소진시까지</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+                <div id="dateSelector3" class="ptaddbox">
+                    <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
+                    <p class="datepicktext dropdown"><input type="text" id="datepicker_fast" name="start_date" placeholder="선택" readonly></p>
+                </div>
+                <div class="ptaddbox form-group">
+                    <label for="memberDue" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-cal.png" %}> 종료 일자
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="tel" class="dropdown form-control" id="memberDue_add_2" name="counts" placeholder="자동 입력" maxlength="3" readonly>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="dateSelector" class="ptaddbox">
-            <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
-            <p class="datepicktext dropdown"><input type="text" id="datepicker_add" name="start_date" placeholder="선택" readonly></p>
-        </div>
-        <div id="dateSelector2"  class="ptaddbox">
-            <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
-            <p class="datepicktext dropdown"><input type="text" id="datepicker2_add" name="end_date" placeholder="선택"  readonly></p>
-        </div>
+
 
         <div class="ptaddbox form-group">
             <label for="comment" class="ptaddboxtext">

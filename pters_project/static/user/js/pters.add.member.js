@@ -20,6 +20,15 @@ $(document).ready(function(){
       });
 
 
+       $("#datepicker_fast").datepicker({
+        minDate : 0,
+        onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+          $("#dateSelector3 p").addClass("dropdown_selected");
+          check_dropdown_selected();
+        }
+      });
+
+
       $("#memberEmail_add").keyup(function(){  //이메일 입력시 하단에 핑크선
         if($(this).val().length>8){
       		$(this).parent("div").addClass("dropdown_selected")
@@ -65,6 +74,45 @@ $(document).ready(function(){
       		check_dropdown_selected();
       	}
       })
+
+      //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
+      $('#btnCallSimple').click(function(){
+        $('#manualReg').hide();
+        $('#simpleReg').fadeIn('fast');
+        $(this).addClass('selectbox_checked')
+        $('#btnCallManual').removeClass('selectbox_checked')
+        $('p').removeClass("dropdown_selected")
+        $('#memberCount_add').parent('div').removeClass('dropdown_selected')
+        $('#datepicker_add,#datepicker2_add,#memberCount_add').val("")
+        check_dropdown_selected();
+      })
+
+      $('#btnCallManual').click(function(){
+        $('#simpleReg').hide()
+        $('#manualReg').fadeIn('fast');
+        $(this).addClass('selectbox_checked')
+        $('#btnCallSimple').removeClass('selectbox_checked')
+        $('._due div.checked').removeClass('checked ptersCheckboxInner')
+        $('._count div.checked').removeClass('checked ptersCheckboxInner')
+        $('p').removeClass("dropdown_selected")
+        $('#datepicker_fast').val("")
+        check_dropdown_selected();
+      })
+
+      $('._due .ptersCheckbox').parent('td').click(function(){
+        $('._due div.checked').removeClass('checked ptersCheckboxInner')
+        var pterscheckbox = $(this).find('div')
+        $(this).find('div:nth-child(1)').addClass('checked')
+        pterscheckbox.find('div').addClass('ptersCheckboxInner')
+      })
+
+      $('._count .ptersCheckbox').parent('td').click(function(){
+        $('._count div.checked').removeClass('checked ptersCheckboxInner')
+        var pterscheckbox = $(this).find('div')
+        $(this).find('div:nth-child(1)').addClass('checked')
+        pterscheckbox.find('div').addClass('ptersCheckboxInner')
+      })
+      //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
 
      function check_dropdown_selected(){ //모든 입력란을 채웠을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
