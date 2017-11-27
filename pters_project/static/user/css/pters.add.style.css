@@ -386,3 +386,34 @@ span{
 	background: #f4f4f4;
 	width: 16.67%;
 }
+
+.inputunit{
+	position: absolute;
+	line-height: 40px;
+	top: 0px;
+	right: 25px;
+}
+
+.pricebutton{
+	width: 100%;
+	max-width: 450px;
+	height: 35px;
+	text-align: center;
+	margin:0 auto;
+}
+
+
+.pricebuttonchild{
+	display: inline-block;
+	line-height: 22px;
+	width: 17%;
+	border: 0.5px solid #cccccc;
+	background: #ffffff;
+	border-radius: 10%;
+	cursor: pointer;
+}
+
+.pricebuttonchild:active{
+	background: #fe4e65;
+	color: #ffffff;
+}

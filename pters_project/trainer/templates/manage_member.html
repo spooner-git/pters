@@ -14,15 +14,15 @@
 {% block content %}
 
  <!--플로팅 버튼-->
-    <div id="float_btn">
-      <img src={% static "user/res/memberadd/float_plus_member.png" %} alt="">
-    </div>
+<div id="float_btn">
+    <img src={% static "user/res/memberadd/float_plus_member.png" %} alt="">
+</div>
 
 
-    <div id="shade">
-    </div>
-    <div id="shade3">
-    </div>
+<div id="shade">
+</div>
+<div id="shade3">
+</div>
   <!--플로팅 버튼-->
 
 <div id="page_managemember">
@@ -194,13 +194,31 @@
                 <div id="btnCallSimple" href="#" class="selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
                 <div id="btnCallManual" href="#" class="selectboxopt selectboxopt_right">세부 설정 방식</div>
             </div>
-            <div id="manualReg">
+
+            <div id="manualReg"> <!-- 세부 설정 방식 -->
                 <div class="ptaddbox form-group">
                     <label for="memberCount" class="ptaddboxtext">
                         <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록횟수
                     </label>
                     <div class="dropdown pters_input_custom">
                         <input type="tel" class="dropdown form-control" id="memberCount_add" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
+                    </div>
+                </div>
+                <div class="ptaddbox form-group">
+                    <label for="lecturePrice" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 결제 요금
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="tel" class="dropdown form-control" id="lecturePrice_add" name="price" required="required" placeholder="숫자만 입력해주세요." maxlength="8">
+                        <span class="inputunit">원</span>
+                    </div>
+                    <div class="pricebutton">
+                        <div class="pricebuttonchild" id="price1">100만원</div>
+                        <div class="pricebuttonchild" id="price2">50만원</div>
+                        <div class="pricebuttonchild" id="price3">10만원</div>
+                        <div class="pricebuttonchild" id="price4">5만원</div>
+                        <div class="pricebuttonchild" id="price5">1만원</div>
+                        <div class="pricebuttonchild" id="price6" style="width: 7%;color: #fe4e65;">X</div>
                     </div>
                 </div>
                 <div id="dateSelector" class="ptaddbox">
@@ -212,7 +230,8 @@
                     <p class="datepicktext dropdown"><input type="text" id="datepicker2_add" name="end_date" placeholder="선택"  readonly></p>
                 </div>
             </div>
-            <div id="simpleReg">
+
+            <div id="simpleReg"> <!-- 빠른 입력 방식 -->
                 <div class="ptaddbox form-group _count">
                     <label for="memberCount" class="ptaddboxtext">
                         <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록 횟수
@@ -230,6 +249,23 @@
                           </tr>
                         </tbody>
                       </table>
+                    </div>
+                </div>
+                <div class="ptaddbox form-group">
+                    <label for="lecturePrice" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 결제 요금
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="tel" class="dropdown form-control" id="lecturePrice_add_2" name="price" required="required" placeholder="숫자만 입력해주세요." maxlength="8">
+                        <span class="inputunit">원</span>
+                    </div>
+                    <div class="pricebutton">
+                        <div class="pricebuttonchild" id="price1_2">100만원</div>
+                        <div class="pricebuttonchild" id="price2_2">50만원</div>
+                        <div class="pricebuttonchild" id="price3_2">10만원</div>
+                        <div class="pricebuttonchild" id="price4_2">5만원</div>
+                        <div class="pricebuttonchild" id="price5_2">1만원</div>
+                        <div class="pricebuttonchild" id="price6_2" style="width: 7%;color: #fe4e65;">X</div>
                     </div>
                 </div>
                 <div class="ptaddbox form-group _due">
@@ -290,7 +326,6 @@
             <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
         </div>
     </form>
-
 </div>
 
 {% endblock %}
