@@ -370,7 +370,7 @@ span{
 	font-size: 13.5px;
 }
 
-.ptaddbox tr{
+#simpleReg tr{
 	height: 35px;
 }
 
@@ -382,7 +382,7 @@ span{
 	width: 100%;
 }
 
-.ptaddbox td{
+#simpleReg td{
 	background: #f4f4f4;
 	width: 16.67%;
 }
