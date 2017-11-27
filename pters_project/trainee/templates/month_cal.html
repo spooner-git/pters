@@ -145,8 +145,8 @@
   <!-- 월간 달력 -->
     <div id="ymdText" class="wrap">
         <div class='arrowButton'>
-         <a href="" style="left: 6%"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
-         <a href="" style="right: 6%"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+         <a style="left: 6%;cursor: pointer;"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+         <a style="right: 6%;cursor: pointer;"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
         </div>
         <img src={% static "user/res/bg.png" %} alt="bg-image">
         <div id="ymdTextWrap">
@@ -230,6 +230,16 @@
                 keyboardControl : true,
                 pagination : '.swiper-pagination'
             });
+
+            $('.arrowButton a:nth-child(1)').click(function(){
+              myswiper.slidePrev(100)  
+            })
+
+            $('.arrowButton a:nth-child(2)').click(function(){
+              myswiper.slideNext(100)  
+            })
+
+            
         </script>
 
 {% endblock %}

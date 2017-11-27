@@ -250,6 +250,7 @@ body{
 	position: absolute;
 	width: 100%;
 	height: 100%;
+	z-index: -1;
 }
 
 .arrowButton a{
@@ -259,6 +260,8 @@ body{
 	font-weight: 600;
 	color: #ffffff;
 	text-decoration: none;
+	text-align: center;
+	width: 25px;
 }
 
 .time-style{ /*week ìŠ¤íƒ€ì¼*/
@@ -340,7 +343,12 @@ tr{ /*회원일정예약용으로 변경 */
 
 .myClass{
 	background: #fe4e65;
-	opacity: 	0.5;
+	opacity: 	1;
+	text-align: center;
+	color: #ffffff;
+	letter-spacing: -0.2px;
+	font-size: 12.5px;
+	font-weight: 300;
 }
 
 .ptersCheckboxInner{

@@ -112,15 +112,33 @@ span{
 	position: absolute;
 	width: 100%;
 	height: 100%;
+	z-index: 1;
 }
 
 .arrowButton a{
 	position: absolute;
-	top: 26%;
+	top: 70%;
 	font-size: 35px;
 	font-weight: 600;
 	color: #ffffff;
 	text-decoration: none;
+	width: 25px;
+	height: 25px;
+	text-align: center;
+}
+
+@media(min-width:570px){
+	.arrowButton a{
+		position: absolute;
+		top: 78%;
+		font-size: 35px;
+		font-weight: 600;
+		color: #ffffff;
+		text-decoration: none;
+		width: 25px;
+		height: 25px;
+		text-align: center;
+	}
 }
 
 
@@ -209,8 +227,7 @@ span{
 	width: 100%;
 	border-bottom: 1px solid #cccccc;
 	font-size: 14.4px;
-	height: 69px;
-	padding-bottom: 7px;	
+	height: 70px;
 }
 
 @media(min-width:570px){
@@ -221,7 +238,6 @@ span{
 		border-bottom: 1px solid #cccccc;
 		height: 100px;
 		min-height: 42px;
-		padding-bottom: 7px;
 		font-size: 16px;
 		font-weight: bold;	
 
@@ -231,7 +247,7 @@ span{
 .calendar-style{  /*week 스타일하위 */
 	width: 100%;
 	text-align: center;
-	height: 98%;
+	height: 100%;
 }
 
 .calendar-day-style{  /*왈화수목금토일 스타일 */
@@ -326,8 +342,9 @@ span{
 	margin:0 auto;
 	width: 28px;
 	height: 28px;
-	background: #fddadf;
-	top: 15px;
+	/*background: #fddadf;*/
+	background: #f9b4be;
+	top: 21px;
 	bottom:0;
 	left: 0px;
 	right: 0;
@@ -342,7 +359,7 @@ span{
 	width: 28px;
 	height: 28px;
 	background: #e4e4e4;
-	top: 16px;
+	top: 21px;
 	bottom:0;
 	left: 0px;
 	right: 0;
@@ -357,8 +374,9 @@ span{
 		margin:0 auto;
 		width: 30px;
 		height: 30px;
-		background: #fddadf;
-		top: 29.5px;
+		/*background: #fddadf;*/
+		background: #f9b4be;
+		top: 35px;
 		bottom:0;
 		left: 0px;
 		right: 0;
@@ -373,7 +391,7 @@ span{
 		width: 30px;
 		height: 30px;
 		background: #e4e4e4;
-		top: 30px;
+		top: 35px;
 		bottom:0;
 		left: 0px;
 		right: 0;
@@ -405,9 +423,9 @@ span{
 .balloon{
 	position: absolute;
 	background: #e4e4e4;
-	height: 18px;
+	height: 16px;
 	width: 90%;
-	bottom: -7px;
+	bottom: 1px;
 	border-radius: 1px;
 	font-size: 12px;
 	padding-top: 0.5px;
@@ -435,7 +453,7 @@ span{
 	background: #3b3d3d;
 	height: 16px;
 	width: 90%;
-	bottom: -6px;
+	bottom: 1px;
 	border-radius: 1px;
 	font-size: 12px;
 	font-weight: 300;
@@ -464,7 +482,7 @@ span{
 		background: #e4e4e4;
 		height: 21px;
 		width: 40px;
-		bottom: 0%;
+		bottom: 5%;
 		border-radius: 2px;
 		font-size: 13.5px;
 		font-weight: 400;
@@ -480,7 +498,7 @@ span{
 		background: #3b3d3d;
 		height: 21px;
 		width: 40px;
-		bottom: 0%;
+		bottom: 5%;
 		border-radius: 2px;
 		font-size: 13.5px;
 		font-weight: 300;
@@ -652,12 +670,13 @@ span{
 }
 
 .available{
-	border-top: 3px solid #88dfff;
+	background:  #fde5e8;
 	z-index: -1;
+	/*opacity: 1;*/
 }
 
 .notavailable{
-	border-top: 3px solid #e61616;
+	background: #dadada;
 	z-index: -1;
 }
 
