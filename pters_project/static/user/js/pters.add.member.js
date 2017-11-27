@@ -83,7 +83,7 @@ $(document).ready(function(){
         $('#btnCallManual').removeClass('selectbox_checked')
         $('p').removeClass("dropdown_selected")
         $('#memberCount_add').parent('div').removeClass('dropdown_selected')
-        $('#datepicker_add,#datepicker2_add,#memberCount_add').val("")
+        $('#datepicker_add,#datepicker2_add,#memberCount_add,#lecturePrice_add_2').val("")
         check_dropdown_selected();
       })
 
@@ -95,7 +95,7 @@ $(document).ready(function(){
         $('._due div.checked').removeClass('checked ptersCheckboxInner')
         $('._count div.checked').removeClass('checked ptersCheckboxInner')
         $('p').removeClass("dropdown_selected")
-        $('#datepicker_fast').val("")
+        $('#datepicker_fast,#lecturePrice_add').val("")
         check_dropdown_selected();
       })
 
@@ -112,6 +112,75 @@ $(document).ready(function(){
         $(this).find('div:nth-child(1)').addClass('checked')
         pterscheckbox.find('div').addClass('ptersCheckboxInner')
       })
+
+      $('#price1').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 1000000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price2').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 500000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price3').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 100000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price4').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 50000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price5').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 10000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price6').click(function(){
+        $('#lecturePrice_add').val("")
+      })
+
+      $('#price1_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 1000000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price2_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 500000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price3_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 100000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price4_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 50000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price5_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 10000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price6_2').click(function(){
+        $('#lecturePrice_add_2').val("")
+      })
+
       //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
 
@@ -163,5 +232,9 @@ $(document).ready(function(){
         showMonthAfterYear: true,
         yearSuffix: '년'
     });
+
+    function numberWithCommas(x) { //천단위 콤마 찍기
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
 });
