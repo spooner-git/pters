@@ -26,12 +26,14 @@ $(document).ready(function(){
 	})
 
 
-	$(document).on('click','.ptersCheckbox',function(){
-		var checkBox = $(this).find('div')
-		var date_info = $(this).parent('td').attr('id')
-		if(!checkBox.hasClass('ptersCheckboxInner')){
-			$(this).addClass('checked')
-			checkBox.addClass('ptersCheckboxInner').attr('data-time',$(this).parent('td').attr('id'))
+	$(document).on('click','td',function(){
+		var div_ptersCheckbox = $(this).find('div')
+		var div_ptersCheckboxInner = div_ptersCheckbox.find('div')
+		var date_info = $(this).attr('id')
+		if(!div_ptersCheckboxInner.hasClass('ptersCheckboxInner') && !$(this).hasClass('notAvail') && !$(this).hasClass('hour')){
+			duplicateCheck($(this).attr('id'))
+			div_ptersCheckbox.addClass('checked')
+			div_ptersCheckboxInner.addClass('ptersCheckboxInner').attr('data-time',$(this).parent('td').attr('id'))
 			var add_form = '#pt-add-form'
 			var date_form = date_info.split('_')
 			var yy=date_form[0]
@@ -47,9 +49,9 @@ $(document).ready(function(){
 				"<input type='hidden' name='training_time[]' id='id_training_time_"+date_info+"' value='"+hour+":"+min+":00.000000'>" +
 				"<input type='hidden' name='time_duration[]' id='id_time_duration_"+date_info+"' value='1'>")
 
-		}else if(checkBox.hasClass('ptersCheckboxInner')){
-			checkBox.removeClass('ptersCheckboxInner')
-			$(this).removeClass('checked')
+		}else if(div_ptersCheckboxInner.hasClass('ptersCheckboxInner')){
+			div_ptersCheckboxInner.removeClass('ptersCheckboxInner')
+			div_ptersCheckbox.removeClass('checked')
 			var delete_input_form1 = '#id_training_date_'+date_info
 			var delete_input_form2 = '#id_time_duration_'+date_info
 			var delete_input_form3 = '#id_training_time_'+date_info
@@ -282,7 +284,7 @@ $(document).ready(function(){
 				var tdClassStart = $("#"+classStart+" div");
 				tdClassStart.removeClass('ptersCheckbox')
 				tdClassStart.addClass('ptersNotAvail')
-				tdClassStart.parent('td').addClass('notAvail, myClass')
+				tdClassStart.parent('td').addClass('myClass').text("내 일정")
 			}
 		};
 		$('#calendar').css('display','block');
@@ -376,6 +378,23 @@ $(document).ready(function(){
     			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);		
     		}	
   	    }
+	}
+
+	function duplicateCheck(selector){ // 주간일정에서 이미 "내 일정"이 있는 날의 시간을 선택했을때 알림 출력(이미 선택한 날짜에 일정이 있다. 맞는지 확인하시오.) 
+		var alreadyExistCount = 0;
+		for(var i=5; i<24; i++){
+			var selectedId = selector.split('_')
+			var yy = selectedId[0];
+			var mm= selectedId[1];
+			var dd= selectedId[2];
+			var scanTdId = $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_00')
+			if(scanTdId.hasClass('myClass') || scanTdId.find('div').hasClass('checked')){
+				alreadyExistCount++
+			}
+		}
+		if(alreadyExistCount>0){
+			alert('선택한 날짜에 이미 일정이 ['+alreadyExistCount+'] 건 존재합니다.')
+		}
 	}
 
 });//document(ready)
