@@ -515,14 +515,15 @@ span{
 #ng_popup{
 	display: none;
 	position: fixed;
-	background: #e4e4e4;
+	background: #ffffff;
 	top: 35%;
 	left: 10%;
 	width: 80%;
 	border: 1px solid #a2a2a2;
 	z-index: 103;
 	text-align: center;
-	font-weight: bold;
+	font-weight: 500;
+	font-size: 14px;
 }
 
 
