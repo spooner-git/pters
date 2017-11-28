@@ -41,7 +41,9 @@ $(document).ready(function(){
       $('#page-base').fadeIn();
       $('#page-base-addstyle').fadeOut();
 
-      $('input').val("")
+      $('input,#memberDue_add_2').val("")
+      $('._due div.checked').removeClass('checked ptersCheckboxInner')
+      $('._count div.checked').removeClass('checked ptersCheckboxInner')
       $('p,.pters_input_custom').removeClass("dropdown_selected")
       $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>"); 
     })
