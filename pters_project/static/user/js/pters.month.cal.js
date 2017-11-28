@@ -23,8 +23,8 @@ $(document).ready(function(){
 	var oriMonth = date.getMonth()+1;
 	var oriDate = date.getDate();
 
-	var notAvailableStartTime = 23; //강사가 설정한 예약불가 시간 (시작)
-	var notAvailableEndTime = 7; //강사가 설정한 예약불가 시간 (종료)
+	var notAvailableStartTime = 22; //강사가 설정한 예약불가 시간 (시작)
+	var notAvailableEndTime = 8; //강사가 설정한 예약불가 시간 (종료)
 
 	//플로팅 버튼
 	$('#float_btn').click(function(){
@@ -85,7 +85,8 @@ $(document).ready(function(){
 				$('#id_training_date').val(yy+'-'+mm+'-'+dd);
 			}
 		}else if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
-			$('#ng_popup_text').html('<p>현재시간은 일정 예약이 불가한 시간입니다.</p><p>예약불가 시간대 : '+notAvailableStartTime+'시 ~ '+notAvailableEndTime+'시</p>')
+			$('#shade2').css({'display':'block'});
+			$('#ng_popup_text').html('<p>현재시간은 일정 예약이 불가한 시간입니다.</p><p style="color:#fe4e65;font-size=13px;">예약불가 시간대<br> '+notAvailableStartTime+'시 ~ '+notAvailableEndTime+'시</p>')
 			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
 			//$(this).fadeOut(5000)
 			})
@@ -108,6 +109,7 @@ $(document).ready(function(){
 			$('#popup_info2').text(infoText2)
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 		}else{
+			$('#shade2').css({'display':'block'});
 			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>')
 			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
 			//$(this).fadeOut(2800)
@@ -230,6 +232,7 @@ $(document).ready(function(){
 	})
 
 	$('#ng_popup').click(function(){
+		$('#shade2').css({'display':'none'});
 		$(this).fadeOut(100)
 	})
 
