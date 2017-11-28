@@ -248,10 +248,10 @@ $(document).ready(function(){
           }
 
           if(selectedD==undefined){
-            $('#memberDue_add_2').val("시작일자를 선택해주세요")
+            $('#memberDue_add_2').val("진행기간을 선택해주세요")
           }
 
-          if($('#memberDue_add_2').val()!="시작일자를 선택해주세요" && $('#memberDue_add_2').val()!="" ){
+          if($('#memberDue_add_2').val()!="진행기간을 선택해주세요" && $('#memberDue_add_2').val()!="" ){
             $('#memberDue_add_2').parent('div').addClass("dropdown_selected")
           }
           /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////

@@ -202,6 +202,91 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class MyPageView(LoginRequiredMixin, TemplateView):
+    template_name = 'trainee_mypage.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MyPageView, self).get_context_data(**kwargs)
+        error = None
+        trainer_class = None
+        month_lecture_data = None
+
+        month_data = []
+        lecture_schedule_data = []
+        daily_lecture_data_start_date = []
+        daily_lecture_data_end_date = []
+        daily_lecture_data_member = []
+        daily_off_data_start_date = []
+        daily_off_data_end_date = []
+        holiday = []
+        today_dt = timezone.now()
+        before_dt = today_dt - datetime.timedelta(days=14)
+        after_dt = today_dt + datetime.timedelta(days=14)
+
+        try:
+            month_lecture_data = LectureTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'lecture가 존재하지 않습니다.'
+
+        if error is None:
+            try:
+                trainer_class = ClassTb.objects.get(class_id=month_lecture_data.class_tb_id)
+            except ObjectDoesNotExist:
+                error = 'class가 존재하지 않습니다'
+
+        if error is None:
+            member_data = MemberTb.objects.get(member_id=month_lecture_data.member_id)
+            lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=month_lecture_data.lecture_id,
+                                                                en_dis_type='1',use='1')
+            for month_lecture in lecture_schedule:
+                month_lecture.data = month_lecture.start_dt.timetuple()
+                #month_data.append(month_lecture.start_dt.strftime('%Y_%#m_%#d'))
+                month_data.append(str(month_lecture.data.tm_year)+'_'+str(month_lecture.data.tm_mon)+'_'
+                                  + str(month_lecture.data.tm_mday))
+                lecture_schedule_data.append(month_lecture.lecture_schedule_id)
+                daily_lecture_data_start_date.append(month_lecture.start_dt)
+                daily_lecture_data_end_date.append(month_lecture.end_dt)
+                daily_lecture_data_member.append(member_data.name)
+
+        if error is None:
+
+            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
+                                                              en_dis_type='0', start_dt__gte=before_dt,
+                                                              start_dt__lte=after_dt, use='1')
+            for month_class in month_class_data:
+                daily_off_data_start_date.append(month_class.start_dt)
+                daily_off_data_end_date.append(month_class.end_dt)
+
+        if error is None:
+
+            month_lecture_data_others = LectureTb.objects.filter(class_tb_id=trainer_class.class_id).exclude(
+                                                            lecture_id=month_lecture_data.lecture_id)
+            for lecture in month_lecture_data_others:
+                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+                                                                            en_dis_type='1', start_dt__gte=before_dt,
+                                                                            start_dt__lte=after_dt, use='1')
+                for month_lecture in lecture.lecture_schedule:
+                    daily_off_data_start_date.append(month_lecture.start_dt)
+                    daily_off_data_end_date.append(month_lecture.end_dt)
+
+#        holiday = HolidayTb.objects.filter(holiday_dt__gte=before_dt, holiday_dt__lte=after_dt, use='1')
+        holiday = HolidayTb.objects.filter(use='1')
+
+        context['month_lecture_data'] = month_data
+        context['daily_lecture_schedule_id'] = lecture_schedule_data
+        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
+        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
+        context['daily_lecture_data_member'] = daily_lecture_data_member
+        context['daily_off_data_start_date'] = daily_off_data_start_date
+        context['daily_off_data_end_date'] = daily_off_data_end_date
+        context['lecture_reg_count'] = month_lecture_data.lecture_reg_count
+        context['holiday'] = holiday
+
+        return context
+
+
+
+
 # pt 일정 삭제
 @csrf_exempt
 def pt_delete_logic(request):

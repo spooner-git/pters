@@ -1,0 +1,75 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+
+.pters_graph{
+	margin-top: 30px;
+	margin-bottom: 30px;
+	text-align: center;
+	position: relative;
+}
+
+.graph_main table{
+	width: 100%;
+	height: 100%;
+}
+
+.graph_main td{
+	border:0.5px dotted #cccccc;
+}
+
+.graph_main{
+	position: absolute;
+	width: 92%;
+	height: 300px;
+	border: 1px solid black;
+	left: 24px;
+}
+
+.graph_horizontal{
+	position: absolute;
+	width: 92.1%;
+	height: 22px;
+	top: 300px;
+	left: 27px;
+}
+
+.graph_vertical{
+	position: absolute;
+	width: 8%;
+	height: 300px;
+	margin-bottom:8px;
+	left: -8%;
+	top: -9.3px;
+}
+
+.graph_vertical table{
+	width: 100%;
+	height: 99.5%;
+}
+
+.graph_vertical td{
+	width: 30px;
+	margin:0;
+	text-align: right;
+	vertical-align: top;
+	font-size: 10.5px;
+	border-color: transparent;
+}
+
+.graph_horizontal table{
+	width: 100%;
+	height: 100%;
+}
+
+.graph_horizontal td{
+	height: 100%;
+	width: 30px;
+	margin:0;
+	text-align: center;
+	vertical-align: top;
+	font-size: 12px;
+}
+
+.graphcoloring{
+	background: #fe4e65;
+}
