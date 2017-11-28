@@ -24,6 +24,44 @@ $(document).ready(function(){
         minDate : 0,
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
           $("#dateSelector3 p").addClass("dropdown_selected");
+
+          /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택///// 
+          var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31]
+          var selected = $('#datepicker_fast').val();
+          var selectedDate = Number(selected.replace(/-/g, ""));
+          var selectedD = $('._due div.checked').parent('td').attr('data-check'); // 1,2,3,6,12,99
+          var selectedDue = Number(selectedD + '00');
+          var finishDate =  selectedDate+selectedDue
+          var yy = String(finishDate).substr(0,4);
+          var mm = String(finishDate).substr(4,2);
+          var dd = String(finishDate).substr(6,2);
+          if(mm>12){ //해 넘어갈때 날짜처리
+            //var finishDate = finishDate + 10000 - 1200
+            var yy = Number(yy)+1;
+            var mm = Number(mm)-12;
+          }
+          if(String(mm).length<2){
+              var mm = "0"+mm;
+          }
+          var finishDate = yy +"-"+ mm +"-"+ dd
+          if(dd>lastDay[Number(mm)-1]){
+            var dd = Number(dd)-lastDay[Number(mm)-1]
+            var mm = Number(mm)+1
+            if(String(dd).length<2){
+              var dd = "0"+dd
+            }
+            if(String(mm).length<2){
+              var mm = "0"+mm
+            }
+            var finishDate = yy +"-"+ mm +"-"+ dd;
+            console.log(finishDate)
+          }
+          $('#memberDue_add_2').val(finishDate)
+          if(selectedD==99){
+            $('#memberDue_add_2').val("소진시까지")
+          }
+           /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
+
           check_dropdown_selected();
         }
       });
@@ -95,7 +133,7 @@ $(document).ready(function(){
         $('._due div.checked').removeClass('checked ptersCheckboxInner')
         $('._count div.checked').removeClass('checked ptersCheckboxInner')
         $('p').removeClass("dropdown_selected")
-        $('#datepicker_fast,#lecturePrice_add').val("")
+        $('#datepicker_fast,#lecturePrice_add,#memberDue_add_2').val("")
         check_dropdown_selected();
       })
 
