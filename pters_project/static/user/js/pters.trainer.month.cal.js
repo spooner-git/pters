@@ -45,6 +45,7 @@ $(document).ready(function(){
 		alert('까꿍~')
 	})
 
+/*
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
 		if($(this).hasClass('available')){
 			if($(this).find('div').hasClass('dateMytime')){
@@ -130,7 +131,7 @@ $(document).ready(function(){
 	$('#popup_text3').click(function(){
 		document.getElementById('pt-delete-form').submit();
 	})
-
+*/
 
 /*
 	$('#popup_text2').click(function(){ //일정예약 팝업에서 일정예약 버튼을 눌렀을때 예약하는 팝업이 생성
@@ -238,6 +239,8 @@ $(document).ready(function(){
 
 
 
+	var dateResult = []
+	var countResult = []
 
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -246,15 +249,17 @@ $(document).ready(function(){
 	calTable_Set(3,currentYear,currentPageMonth+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
+	DBdataProcessMonthTrainer(); //트레이너 월간일정에서 날짜별 PT갯수 표기를 위함
 
 	alltdRelative(); //모든 td의 스타일 position을 relative로
 	//dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
-	classDates(); //나의 PT일정에 핑크색 동그라미 표시
+	//classDates(); //나의 PT일정에 핑크색 동그라미 표시
+	classDatesTrainer(); // 트레이너 월간일정에 핑크색 동그라미 표시하고 PT 갯수 표기
+
+
 	monthText(); //상단에 연, 월 표시
 	availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 	krHoliday(); //대한민국 공휴일
-
-	console.log(currentHour)
 
 
 	//다음페이지로 슬라이드 했을때 액션
@@ -290,7 +295,8 @@ $(document).ready(function(){
 			calTable_Set(3,currentYear,currentPageMonth+1); //새로 추가되는 슬라이드에 달력 채우기	
 			alltdRelative();
 			//dateDisabled();
-			classDates();
+			//classDates();
+			classDatesTrainer();
 			monthText();
 			krHoliday();
 			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
@@ -305,7 +311,8 @@ $(document).ready(function(){
 			calTable_Set(1,currentYear,currentPageMonth-1);
 			alltdRelative();		
 			//dateDisabled();
-			classDates();
+			//classDates();
+			classDatesTrainer();
 			monthText();
 			krHoliday();
 			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
@@ -433,6 +440,43 @@ $(document).ready(function(){
 		};
 	};
 
+	function classDatesTrainer(){
+		for(var i=0; i<dateResult.length; i++){
+			var arr = dateResult[i].split('_')
+			var yy = arr[0]
+			var mm = arr[1]
+			var dd = arr[2]
+			var omm = String(oriMonth)
+			var odd = String(oriDate)
+			if(mm.length==1){
+				var mm = '0'+arr[1]
+			}
+			if(dd.length==1){
+				var dd='0'+arr[2]
+			}
+			if(omm.length==1){
+				var omm = '0'+oriMonth
+			}
+			if(odd.length==1){
+				var odd='0'+oriDate
+			}
+
+			console.log(yy+mm+dd , oriYear+omm+odd)
+			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
+				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
+				//$("td[data-date="+dateResult[i]+"] div._classDate").addClass('greydateMytime')
+				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('balloon_trainer').text(countResult[i])
+			}else{
+				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
+				//$("td[data-date="+dateResult[i]+"] div._classDate").addClass('dateMytime')
+				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('blackballoon_trainer').text(countResult[i])
+			}
+			console.log(countResult[i])
+		};
+	}
+
+
+
 	function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
 		for(var i=0; i<krHolidayList.length; i++){
 			$("td[data-date="+krHolidayList[i]+"]").addClass('holiday');
@@ -513,6 +557,49 @@ $(document).ready(function(){
     		}	
   	    }
 	}
+
+	
+
+	function DBdataProcessMonthTrainer(){
+		var len = classDateArray.length;
+		var summaryArray ={}
+		var summaryArrayResult = []
+
+		var datasum = []
+		for(var i=0; i<len; i++){ //객체화로 중복 제거
+			summaryArray[classDateArray[i]] = classDateArray[i]
+			datasum[i] = classDateArray[i]+"_"+classTimeArray_member_name[i]
+		}
+		for(var i in summaryArray){ //중복 제거된 배열
+			if(i.length<10){
+				i = i+"_"
+			}
+			summaryArrayResult.push(i)
+		}
+
+		var len2 = summaryArrayResult.length;
+		//var countResult = []
+		for(var i=0; i<len2; i++){
+			var scan = summaryArrayResult[i]
+			countResult[i]=0
+			for(var j=0; j<len; j++){
+				if(scan == datasum[j].substr(0,10)){
+					countResult[i] = countResult[i]+1
+				}
+			}
+		}
+		//var dateResult = []
+		for(var i=0; i<summaryArrayResult.length; i++){
+			var splited = summaryArrayResult[i].split("_")
+			var yy = splited[0];
+			var mm = splited[1];
+			var dd = splited[2];
+			dateResult[i] = yy+'_'+mm+'_'+dd
+		}
+		
+	}
+
+
 
 	function ad_month(selector){ // 월간 달력 하단에 광고
 		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">')	
