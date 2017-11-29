@@ -434,6 +434,22 @@ span{
 	transform: translateX(-50%);
 }
 
+.balloon_trainer{
+	position: absolute;
+	background: #e4e4e4;
+	height: 16px;
+	width: 45%;
+	bottom: 1px;
+	border-radius: 1px;
+	font-size: 12px;
+	padding-top: 0px;
+	z-index: -2;
+	left: 50%;
+	transform: translateX(-50%);
+
+	border-radius: 50%;
+}
+
 /*
 .balloon:after{
 	content: '';
@@ -461,6 +477,24 @@ span{
 	z-index: -2;
 	left: 50%;
 	transform: translateX(-50%);
+}
+
+.blackballoon_trainer{
+	position: absolute;
+	color: #ffffff;
+	background: #3b3d3d;
+	height: 16px;
+	width: 45%;
+	bottom: 1px;
+	border-radius: 1px;
+	font-size: 12px;
+	font-weight: 400;
+	padding-top: 0px;
+	z-index: -2;
+	left: 50%;
+	transform: translateX(-50%);
+
+	border-radius: 50%;
 }
 
 /*
