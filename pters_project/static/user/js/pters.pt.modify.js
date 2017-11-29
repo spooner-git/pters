@@ -79,12 +79,16 @@ $(document).ready(function(){
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
       $(document).on('click','#starttimes li a',function(){
+          $('.tdgraph').removeClass('graphindicator')
           $("#starttimesSelected button").addClass("dropdown_selected");
           $("#starttimesSelected .btn:first-child").text($(this).text());
           $("#starttimesSelected .btn:first-child").val($(this).text());
           $("#id_training_time").val($(this).attr('data-trainingtime'));
           var arry = $(this).attr('data-trainingtime').split(':')
           durTimeSet(arry[0]);
+          $("#durationsSelected button").removeClass("dropdown_selected");
+          $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+          $("#durationsSelected .btn:first-child").val("");
           check_dropdown_selected();
       })
 
@@ -93,9 +97,17 @@ $(document).ready(function(){
           $("#durationsSelected .btn:first-child").text($(this).text());
           $("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
           $("#id_time_duration").val($(this).attr('data-dur'));
+          addGraphIndicator($(this).attr('data-dur'))
           check_dropdown_selected();
       }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
+      $(document).on('click','#durationsSelected button',function(){
+        $('.tdgraph').removeClass('graphindicator');
+      })
+
+      $(document).on('click','button',function(){
+         scrollToIndicator($(this))
+      })
       
       $("#datepicker").change(function(){
           if($("#datepicker").val() != '') {
@@ -141,17 +153,17 @@ $(document).ready(function(){
         for(var i=0; i<offOkLen; i++){
           var offHour = offAddOkArray[i];
           if(offHour<12){
-            var offText = '오전'
+            var offText = '오전 '
             var offHours = offHour;
           }else if(offHour==24){
-            var offText = '오전'
+            var offText = '오전 '
             var offHours = offHour-12
           }else if(offHour==12){
-            var offText = '오후'
+            var offText = '오후 '
             var offHours = offHour
           }else{
             var offHours = offHour-12
-            var offText = '오후'
+            var offText = '오후 '
           }
           if(offHour.length<2){
             timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
@@ -283,32 +295,100 @@ $(document).ready(function(){
         var durTimeList = $('#durations')
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
-        console.log(index)
-        console.log(substr)
-        if(substr>1){
-          durTimeList.html('<li><a data-dur="1" class="pointerList">1시간</a></li>')
-          console.log(index)
+       if(substr>1){
+
+          var fininfo = Number(selectedTime)+1
+          if(fininfo>12){
+             if(fininfo==25){
+               var fininfo = '오전 1'
+             }else if(fininfo==24){
+               var fininfo = '오전 12'
+             }else{
+               var fininfo = '오후'+(fininfo-12)  
+             }
+           }else if(fininfo==12){
+             var fininfo = '오후'+fininfo  
+           }else{
+             var fininfo = '오전'+fininfo
+           }
+          durTimeList.html('<li><a data-dur="1" class="pointerList">1시간'+' (~'+fininfo+'시)'+'</a></li>')
+        
         }else{
+
           durTimeList.html('')
           for(var j=index; j<=len; j++){
+            
+            var fininfo = Number(selectedTime)+(j-index+1)
+            if(fininfo>12){
+              if(fininfo==25){
+                var fininfo = '오전 1'
+              }else if(fininfo==24){
+                var fininfo = '오전 12'
+              }else{
+                var fininfo = '오후'+(fininfo-12)  
+              }
+            }else if(fininfo==12){
+              var fininfo = '오후'+fininfo  
+            }else{
+              var fininfo = '오전'+fininfo
+            }
+
             if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>') 
-            }else if(offAddOkArray[j-1]== null && offAddOkArray[j+1]-offAddOkArray[j]==1){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
-            }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
-            }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]>=2){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>') 
+            }
+            else if(offAddOkArray[j-1]== null && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]>=2){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
               break;
-            }else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간</a></li>')
-              break;
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+              //break;
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+            else if(offAddOkArray[j-1]==null && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
             }
           }
         }
+         durTimeList.append('<li><a data-dur="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>')
       }
 
+       function addGraphIndicator(datadur){
+        $('.tdgraph').removeClass('graphindicator');
+        var starttext = $('#starttimesSelected button').val().split(' ');
+        var daymorning = starttext[0];
+        var startnum = starttext[1].replace(/시/gi,"")
+        if(daymorning=='오후'){
+          if(startnum==12){
+            var startnum = startnum
+          }else{
+            var startnum = Number(startnum)+12  
+          }
+        }else if(daymorning=='오전' && startnum==12){
+            var startnum = Number(startnum)+12 
+        }
+        var durnum = datadur
+        console.log(durnum)
+        var finnum = Number(startnum)+Number(durnum)
+        console.log(startnum, durnum,finnum)
+        for(var i=startnum; i<finnum; i++){
+          $('#'+i+'g').addClass('graphindicator')
+        }
+      }
 
+      function scrollToIndicator(dom){
+        var offset = dom.offset();
+        console.log(offset)
+          $('body, html').animate({scrollTop : offset.top-180},700)
+      }
 
 
 });
