@@ -1,4 +1,4 @@
-{% extends "trainee_base.html" %}
+{% extends "trainee_base_add_pt.html" %}
 {% load static %}
 
 {% block local_css %}
@@ -8,22 +8,29 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="subjectbar">
+    <span>나의 월별 현황</span>
+</div>
+
+<div id="ymdText">
+    <!--<img src="/static/user/res/icon-calendar-week.png" alt="" class="iconimg">-->
+    <a id="leftArrow" style="left: 6%;cursor: pointer;"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 6px;"></a>
+    <span id="yy"></span>
+    <a id="rightArrow" style="right: 6%;cursor: pointer;"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 6px;"></a>
+</div>
+
 <div id="graph" class="pters_graph">
   
   <div class="graph_main">
     <div class="graph_vertical">
-      <table>
-        <tr><td>30 -</td></tr>
-        <tr><td>27 -</td></tr>
-        <tr><td>24 -</td></tr>
-        <tr><td>21 -</td></tr>
-        <tr><td>18 -</td></tr>
-        <tr><td>15 -</td></tr>
-        <tr><td>12 -</td></tr>
-        <tr><td>9 -</td></tr>
-        <tr><td>6 -</td></tr>
-        <tr><td>3 -</td></tr>
-      </table>
+      <div class="verti">30</div>
+      <div class="verti">25</div>
+      <div class="verti">20</div>
+      <div class="verti">15</div>
+      <div class="verti">10</div>
+      <div class="verti">5</div>
+      <div class="verti"></div>
     </div>
   </div>  
   <div class="graph_horizontal">
@@ -70,22 +77,9 @@
 
         <script type="text/javascript" src={% static "user/js/pters.trainee.mypage.js" %}></script> <!--달력에 대한 JS-->
         <script>
-            var myswiper = new Swiper('.swiper-container',{
-                initialSlide : 1,
-                speed : 50,
-                preventClicks : true,
-                keyboardControl : true,
-                pagination : '.swiper-pagination'
-            });
 
-            $('.arrowButton a:nth-child(1)').click(function(){
-              myswiper.slidePrev(100)  
-            })
-
-            $('.arrowButton a:nth-child(2)').click(function(){
-              myswiper.slideNext(100)  
-            })
-
+            $('#uptext').text("마이페이지")
+            $('#upbutton-alarm').html("")
             
         </script>
 
