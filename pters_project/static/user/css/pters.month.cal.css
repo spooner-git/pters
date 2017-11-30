@@ -417,12 +417,13 @@ span{
 }
 
 .holiday{
-	color: red;
+	color: #d21245 !important;
 }
 
 .balloon{
 	position: absolute;
 	background: #e4e4e4;
+	color: #333;
 	height: 16px;
 	width: 90%;
 	bottom: 1px;
@@ -437,6 +438,7 @@ span{
 .balloon_trainer{
 	position: absolute;
 	background: #e4e4e4;
+	color: #333;
 	height: 16px;
 	width: 45%;
 	bottom: 1px;
@@ -706,13 +708,13 @@ span{
 
 .available{
 	background:  #fde5e8;
-	z-index: -1;
+	z-index: 0;
 	/*opacity: 1;*/
 }
 
 .notavailable{
 	background: #dadada;
-	z-index: -1;
+	z-index: 0;
 }
 
 

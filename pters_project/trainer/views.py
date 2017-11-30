@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from config.views import TrainerView, date_check_func
-from login.models import MemberTb, LogTb
+from login.models import MemberTb, LogTb ,HolidayTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
 
@@ -339,6 +339,7 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         daily_lecture_data_end_date = []
         daily_lecture_data_member = []
         daily_lecture_data_id = []
+        holiday = []
         today_dt = timezone.now()
         before_dt = today_dt - datetime.timedelta(days=14)
         after_dt = today_dt + datetime.timedelta(days=14)
@@ -400,6 +401,8 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
 
         #context['daily_off_data'] = daily_off_data
         #context['daily_lecture_data'] = daily_data
+#        holiday = HolidayTb.objects.filter(holiday_dt__gte=before_dt, holiday_dt__lte=after_dt, use='1')
+        holiday = HolidayTb.objects.filter(use='1')
         context['daily_lecture_schedule_id'] = lecture_schedule_data
         context['class_schedule_data'] = class_schedule_data
 
@@ -409,6 +412,7 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
         context['daily_lecture_data_member'] = daily_lecture_data_member
         context['daily_lecture_data_id'] = daily_lecture_data_id
+        context['holiday'] = holiday
 
         return context
 
