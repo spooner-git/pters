@@ -308,13 +308,7 @@ body{
         width: 35%;
     }
 }
-
-}
-
 /*미디어 쿼리*/
-
-
-
 
 #page-base{
     display: block;
@@ -323,3 +317,114 @@ body{
 #page-base-addstyle{
     display: none;
 }
+
+#pcver{
+    display: none;
+}
+
+.fixfooter{
+    display: none;
+}
+
+.bottomfooter1{
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 400;
+    width: 100%;
+    max-width: 1000px;
+    margin:0 auto;
+    height: 50px;
+}
+
+.bottomfooter1 span{
+    line-height: 50px;
+    margin-left: 10px;
+}
+
+.bottomfooter2{
+    width: 100%;
+    max-width: 1000px;
+    margin:0 auto;
+    color: #a2a2a2;
+    font-size: 10px;
+}
+
+.bottomfooter2 p{
+    margin-bottom:1px;
+    margin-left: 10px;
+}
+
+.footergap{
+
+}
+
+/*미디어 쿼리*/
+@media(min-width:600px){
+    #page-base{
+        display: none;
+    }
+    
+    #pcver{
+        display: block;
+        background: #ffffff;
+        border-top: 3px solid #fe4e65;
+        border-bottom: 0.5px solid #a2a2a2;
+        height: 65px;
+    }
+
+    .fixfooter{
+        display: block;
+        position: fixed;
+        width: 100%;
+        height: 170px;
+        bottom: -56px;
+        background: #454b55;
+        z-index: 1;
+        opacity: 0.9;
+    }
+
+    body{
+        padding-top: 65px !important;
+    }
+}
+/*미디어 쿼리*/
+
+
+
+
+/*PC버전 상단네비바*/
+
+.centermenu{
+    height: 100%;
+    width: 100%;
+    max-width: 1000px;
+    margin:0 auto;
+    
+}
+
+.centermenu_div{
+    display: inline-block;
+    margin-left:20px;
+    margin-right: 20px;
+}
+
+.centermenu_text{
+    line-height: 60px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #282828;
+}
+
+.centermenu_logo{
+    height: 20px;
+    opacity: 0.8;
+    margin-left: 20px;
+    margin-right: 27px;
+    margin-bottom: 6px;
+}
+
+
+
+/*PC버전 상단,하단네비바*/
+
+
