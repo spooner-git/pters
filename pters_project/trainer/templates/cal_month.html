@@ -1,0 +1,246 @@
+{% extends "trainer_base.html" %}
+{% load static %}
+
+{% block local_css %}
+
+        <link rel="stylesheet" href={% static "user/css/pters.month.cal.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'trainee:pt_delete_logic' %}" id="pt-delete-form" method="post">
+    <input type="hidden" name="schedule_id" id="id_schedule_id">
+    <input type="hidden" name="next_page" value = '{% url 'trainee:cal_month' %}'>
+  </form>
+    <form action="{% url 'trainee:pt_add_logic' %}" id="pt-add-form" method="post">
+    <input type="hidden" name="training_date" id="id_training_date">
+    <input type="hidden" name="time_duration" id="id_time_duration">
+    <input type="hidden" name="training_time" id="id_training_time">
+    <input type="hidden" name="next_page" value="{% url 'trainee:cal_month' %}">
+</form>
+   <div id="shade2">
+    </div>
+
+  <!--플로팅 버튼-->
+    <div id="float_btn" style="display:none;">
+      <img src={% static "user/res/floatbtn/btn-plus.png" %} alt=""  onclick="location.href='{% url 'trainee:add_pt' %}'"> <!--2017.10.2-->
+    </div>
+
+  <!--플로팅 버튼-->
+
+  <!--변경 팝업메뉴-->
+    <div id="cal_popup">
+      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div>
+      <div id="popup_text1" class="popup_inner popup_inner_delete"><span>일정 삭제</span></div>
+    </div>
+    <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
+  <!--변경 팝업메뉴-->
+
+    <!--예약 팝업메뉴-
+    <div id="cal_popup2">
+      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close2"></div><div id="popup_info3"></div>
+      <div id="popup_text2" class="popup_inner popup_inner_change"><span>일정 예약</span></div>
+    </div>
+  예약 팝업메뉴-->
+
+  <!--삭제 확인 팝업메뉴-->
+    <div id="cal_popup3">
+      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close3"></div><div id="popup_info3">정말 일정을 삭제하시겠습니까?</div>
+      <div id="popup_text3" class="popup_inner popup_inner_delete"><span style="left:48%;color:#282828;">예</span></div>
+      <div id="popup_text4" class="popup_inner popup_inner_delete"><span style="left:44.5%;">아니오</span></div>
+    </div>
+    <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
+  <!--삭제 확인 팝업메뉴-->
+
+
+    <div id="ng_popup">
+       <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
+        <div id="ng_popup_text" style="margin-bottom: 20px;">
+          <p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>
+        </div>
+    </div>
+
+    <!-- 일정추가 팝업 -->
+    <div id="addpopup">
+
+        <div id="dateSelector" class="ptaddbox_nomargin">
+        <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close4"></div><div id="popup_info4"></div>
+        <div id="dateInfo"></div>
+        </div>
+
+        <div id="timeGraph" class="ptaddbox_nomargin tdgraph_trainee_popup" style="display: block;">
+            <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">선택 가능 시간 <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
+          <table class="timegraphtext">
+            <tbody>
+              <tr>
+                <td>05</td>
+                <td>06</td>
+                <td>07</td>
+                <td>08</td>
+                <td>09</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+                <td>19</td>
+                <td>20</td>
+                <td>21</td>
+                <td>22</td>
+                <td>23</td>
+                <td>24</td>
+              </tr>
+              <tr>
+                <td id="5g" class="tdgraph"></td>
+                <td id="6g" class="tdgraph"></td>
+                <td id="7g" class="tdgraph"></td>
+                <td id="8g" class="tdgraph"></td>
+                <td id="9g" class="tdgraph"></td>
+                <td id="10g" class="tdgraph"></td>
+                <td id="11g" class="tdgraph"></td>
+                <td id="12g" class="tdgraph"></td>
+                <td id="13g" class="tdgraph"></td>
+                <td id="14g" class="tdgraph"></td>
+                <td id="15g" class="tdgraph"></td>
+                <td id="16g" class="tdgraph"></td>
+                <td id="17g" class="tdgraph"></td>
+                <td id="18g" class="tdgraph"></td>
+                <td id="19g" class="tdgraph"></td>
+                <td id="20g" class="tdgraph"></td>
+                <td id="21g" class="tdgraph"></td>
+                <td id="22g" class="tdgraph"></td>
+                <td id="23g" class="tdgraph"></td>
+                <td id="24g" class="tdgraph"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="offStartTime" class="ptaddbox_nomargin addpopupinner" style="position:relative;">
+          <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+          <div id="starttimesSelected" class="dropdown_trainee_popup dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+            <ul id="starttimes" class="dropdown-menu pters_dropdown_custom" style="max-height: 194px;">
+
+            </ul>
+          </div>
+        </div>
+
+        <div id="offDuration" class="ptaddbox_nomargin addpopupinner" style="margin-bottom:40px;display:none">
+          <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+          <div id="durationsSelected" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+            <ul id="durations" class="dropdown-menu pters_dropdown_custom" style="max-height: 103px;">
+            </ul>
+          </div>
+        </div>
+        <div id="submitBtn" class="popup_inner popup_inner_delete" name=submit><span>일정 예약</span></div>
+    </div>
+
+
+  <!-- 월간 달력 -->
+    <div id="ymdText" class="wrap">
+        <div class='arrowButton'>
+         <a style="left: 6%;cursor: pointer;"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+         <a style="right: 6%;cursor: pointer;"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+        </div>
+        <img src={% static "user/res/bg.png" %} alt="bg-image" class="wrap">
+        <div id="ymdTextWrap">
+             <div id="countRemain"><div style="position: absolute;width: 100%;height: 100%;background: #ffffff;opacity: 0.16;"></div>
+                <span id="countRemainData"> 예약 가능 횟수 <span style="color:#fe4e65;font-weight: bold;font-size: 16px;">{{lecture_reg_count}} </span>회</span>
+             </div>
+            <div id="yearText"></div>
+            <div id="monthText"></div>
+        </div>
+        
+    </div>
+
+    <div id="gapbox">  
+    </div>
+
+    <div id="date" class="week-style"> <!--월화수목금토일-->
+            <table class="calendar-style calendar-day-style">
+                <tr>
+                    <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
+                    <td id="monday"><p class="calendar_image weekday_style weekdays">월</p></td>
+                    <td id="tuesday"><p class="calendar_image weekday_style weekdays">화</p></td>
+                    <td id="wednesday"><p class="calendar_image weekday_style weekdays">수</p></td>
+                    <td id="thursday"><p class="calendar_image weekday_style weekdays">목</p></td>
+                    <td id="friday"><p class="calendar_image weekday_style weekdays">금</p></td>
+                    <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
+                </tr>
+            </table>
+    </div> <!--월화수목금토일-->
+
+    <div id="calendar" class="wrap" > <!-- Calendar container-->    
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" id="slide0"></div> <!--Index0-->
+                <div class="swiper-slide"></div> <!--Index1-->
+                <div class="swiper-slide" id="slide2"></div> <!--Index2-->
+            </div>  <!--Swiper-wrapper-->
+        </div> <!--Swiper-container-->
+        <!--Swiper-->
+        <!-- <div class="swiper-pagination"></div> -->
+        <div id="cal_box" class="cal_box"></div>
+    </div>
+
+<!--
+    <div id="cal_popup">
+      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div>
+      <div id="popup_text1" class="popup_inner popup_inner_change"><span>일정 변경</span></div>
+      <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 삭제</span></div>
+    </div>
+-->
+
+
+
+
+{% endblock %}
+
+{% block local_js_footer %}
+        <!-- for db by hk.kim 170805-->
+        <script>
+            var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+            
+
+          var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}"{{ daily_data_start_date }}",{% endfor %}];
+          var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}"{{ daily_data_end_date }}",{% endfor %}];
+          var classTimeArray_member_name = [{% for member_name in daily_lecture_data_member %}"{{ member_name }}",{% endfor %}];
+          var classArray_lecture_id = [{% for lecture_id in daily_lecture_data_id %}"{{ lecture_id }}",{% endfor %}];
+          var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}"{{ daily_off_start_date }}",{% endfor %}];
+          var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}"{{ daily_off_end_date }}",{% endfor %}];
+
+          var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}"{{ daily_lecture_schedule_id }}",{% endfor %}];
+          var offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}"{{ daily_class_schedule_id }}", {% endfor %}];
+          var classDateArray = [];
+          var classStartArray = [];
+
+
+        </script>
+
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.month.js" %}></script> <!--달력에 대한 JS-->
+        <script>
+            var myswiper = new Swiper('.swiper-container',{
+                initialSlide : 1,
+                speed : 50,
+                preventClicks : true,
+                keyboardControl : true,
+                pagination : '.swiper-pagination'
+            });
+
+            $('.arrowButton a:nth-child(1)').click(function(){
+              myswiper.slidePrev(100)  
+            })
+
+            $('.arrowButton a:nth-child(2)').click(function(){
+              myswiper.slideNext(100)  
+            })
+        </script>
+
+{% endblock %}

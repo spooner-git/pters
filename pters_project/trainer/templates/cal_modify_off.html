@@ -1,10 +1,10 @@
-{% extends "trainee_base_add_pt.html" %}
+{% extends "trainer_base_off_modify.html" %}
 {% load static %}
 
 {% block local_css %}
         <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.trainee.pt.add.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.off.add.css" %}>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         
 {% endblock %}
@@ -13,19 +13,28 @@
 
 {% block content %}
 
-<form action="{% url 'trainer:add_off_logic' %}" id="off-add-form" method="post">
+    {% if messages %}
+        {% for message in messages %}
+            <div id="inputError">
+                    <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+<form action="{% url 'trainer:modify_off_logic' %}" id="off-add-form" method="post">
+    <input type="hidden" name="modify_off_schedule_id"    id="id_modify_off_schedule_id" value="{{ before_off_schedule_id }}">
     <input type="hidden" name="training_date" id="id_training_date">
     <input type="hidden" name="time_duration" id="id_time_duration">
     <input type="hidden" name="training_time" id="id_training_time">
     <input type="hidden" name="next_page">
 </form>
 
-<div id="dateSelector" class="ptaddbox">
+<div id="dateSelector" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 날짜</div>
   <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
 </div>
 
-<div id="timeGraph" class="ptaddbox" style="display: none;">
+<div id="timeGraph" class="ptaddbox centeralign" style="display: none;">
   <table class="timegraphtext">
     <tbody>
       <tr>
@@ -76,7 +85,7 @@
   </table>
 </div>
 
-<div id="offStartTime" class="ptaddbox">
+<div id="offStartTime" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
   <div id="starttimesSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
@@ -86,15 +95,46 @@
   </div>
 </div>
 
-<div id="offDuration" class="ptaddbox">
+<div id="offDuration" class="ptaddbox centeralign">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
   <div id="durationsSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+      <!-- 회원명 DB연동 필요-->
+      <!--<li><a data-dur="1">1시간</a></li>-->
+      <!--<li><a data-dur="2">2시간</a></li>-->
+      <!--<li><a data-dur="2">3시간</a></li>
+      <li><a data-dur="2">4시간</a></li>
+      <li><a data-dur="2">5시간</a></li>
+      <li><a data-dur="2">6시간</a></li>
+      <li><a data-dur="2">하루종일(불가)</a></li>-->
     </ul>
   </div>
 </div>
 
+
+
+
+<div id="repeatSchedule" class="ptaddbox repeatbox centeralign">
+  <div id="repeatScheduleText" class="ptaddboxtext repeattext">
+    <img src={% static "user/res/ptadd/icon-repeat-cal.png" %} class="icons">
+     <span onclick="location.href='{% url 'trainer:add_repeat_off' %}'">반복일정</span>
+     <img class="icons-next-button" src={% static "user/res/ptadd/btn-next-white.png" %}>
+   </div>
+  
+  <!--반복일정 박스-->
+  <div class="repeatboxinner">
+    <span class="repeatstarttext">매주 월요일 오전 11시</span><span class="repeatfinishtext">반복종료 : PT 마감시</span>
+  </div>
+  
+  <!--반복일정 박스-->
+  <div class="repeatboxinner">
+    <span class="repeatstarttext">매주 수요일 오후 3시</span><span class="repeatfinishtext">반복종료 : 2017-12-31</span>
+  </div>
+
+</div>
+
+</div>
 
 
     
@@ -112,20 +152,14 @@
          <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
          <script>
-          /*
+             var modify_date = '{{ modify_dt }}'
              var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}]
              var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}]
              var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
              var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
-          */
-             //임의 데이터 베이스
-          var classTimeArray_start_date1 = ['2017년 11월 5일 5:00 오전','2017년 11월 7일 6:00 오전','2017년 11월 8일 3:00 오후','2017년 11월 7일 3:00 오후','2017년 11월 7일 8:00 오후','2017년 11월 9일 8:00 오후','2017년 11월 11일 2:00 오후','2017년 11월 7일 8:00 오전','2017년 11월 8일 2:00 오후','2017년 11월 6일 1:00 오후','2017년 11월 7일 9:00 오전','2017년 11월 8일 10:00 오전','2017년 11월 6일 6:00 오후','2017년 11월 7일 10:00 오전','2017년 11월 6일 10:00 오전',];
-          var classTimeArray_end_date1 = ['2017년 11월 5일 7:00 오전','2017년 11월 7일 8:00 오전','2017년 11월 8일 4:00 오후','2017년 11월 7일 4:00 오후','2017년 11월 7일 9:00 오후','2017년 11월 9일 9:00 오후','2017년 11월 11일 3:00 오후','2017년 11월 7일 9:00 오전','2017년 11월 8일 3:00 오후','2017년 11월 6일 2:00 오후','2017년 11월 7일 10:00 오전','2017년 11월 8일 11:00 오전','2017년 11월 6일 7:00 오후','2017년 11월 7일 11:00 오전','2017년 11월 6일 11:00 오전',];
-          var classTimeArray_member_name = ['테스트1','테스트1','테스트1','테스트1','김선겸','김선겸','김선겸','김선겸','피피겸','피피겸','피피겸','지메일선겸','지메일선겸','지메일선겸','변경테스트',];
-          var offTimeArray_start_date1 = ['2017년 11월 12일 5:00 오전','2017년 11월 11일 3:00 오후','2017년 11월 5일 9:00 오전','2017년 11월 6일 5:00 오전','2017년 11월 7일 5:00 오전','2017년 11월 8일 5:00 오전','2017년 11월 9일 9:00 오후','2017년 11월 8일 11:00 오전','2017년 11월 9일 5:00 오전','2017년 11월 6일 11:00 오전','2017년 11월 6일 7:00 오후','2017년 11월 7일 4:00 오후','2017년 11월 7일 9:00 오후','2017년 11월 8일 4:00 오후',];
-          var offTimeArray_end_date1 = ['2017년 11월 13일 1:00 오전','2017년 11월 12일 1:00 오전','2017년 11월 5일 11:00 오전','2017년 11월 6일 10:00 오전','2017년 11월 7일 6:00 오전','2017년 11월 8일 10:00 오전','2017년 11월 10일 1:00 오전','2017년 11월 8일 2:00 오후','2017년 11월 9일 2:00 오후','2017년 11월 6일 1:00 오후','2017년 11월 7일 1:00 오전','2017년 11월 7일 8:00 오후','2017년 11월 8일 1:00 오전','2017년 11월 8일 6:00 오후',];
+
          </script>
-         <script type="text/javascript" src={% static "user/js/pters.trainee.pt.add.js" %}></script>
+         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.modify.off.js" %}></script>
 
         
 {% endblock %}

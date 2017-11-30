@@ -28,7 +28,7 @@ class IndexView(RedirectView):
 
 
 class WeekAddView(LoginRequiredMixin, TemplateView):
-    template_name = 'trainee_add_pt_cal.html'
+    template_name = 'cal_week_trainee.html'
 
     def get_context_data(self, **kwargs):
         context = super(WeekAddView, self).get_context_data(**kwargs)
@@ -120,7 +120,7 @@ class DayAddView(LoginRequiredMixin, TemplateView):
 
 # trainee용 Month View
 class CalMonthView(LoginRequiredMixin, TemplateView):
-    template_name = 'month_cal.html'
+    template_name = 'cal_month_trainee.html'
 
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
@@ -203,7 +203,7 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
 
 
 class MyPageView(LoginRequiredMixin, TemplateView):
-    template_name = 'trainee_mypage.html'
+    template_name = 'mypage_trainee.html'
 
     def get_context_data(self, **kwargs):
         context = super(MyPageView, self).get_context_data(**kwargs)
