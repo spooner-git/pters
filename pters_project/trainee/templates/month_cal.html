@@ -209,13 +209,27 @@
         
             //여기를 가져다 써야함 - hkkim 171021;
             var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
-        	var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
+        	  var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
             var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
             var classTimeArray_member_name = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
             var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}];
             var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
             var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
+
+
+            ///********************* 회원 월간 달력 옵션*************************************///
+            ///********************* 회원 월간 달력 옵션*************************************///
+            var Options = {
+                        "reserve":"enable", //회원 일정 기능을 enable/disable
+                        "stoptimeStart":21, //강사가 설정한 예약불가 시간 (시작)
+                        "stoptimeEnd":8,    //강사가 설정한 예약불가 시간 (종료)
+            }
+            ///********************* 회원 월간 달력 옵션*************************************///
+            ///********************* 회원 월간 달력 옵션*************************************///
+
+
+
         </script>
 
         <!-- Placed at the end of the document so the pages load faster -->

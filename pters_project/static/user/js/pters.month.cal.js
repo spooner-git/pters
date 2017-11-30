@@ -11,6 +11,7 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+	
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -23,8 +24,11 @@ $(document).ready(function(){
 	var oriMonth = date.getMonth()+1;
 	var oriDate = date.getDate();
 
-	var notAvailableStartTime = 22; //강사가 설정한 예약불가 시간 (시작)
-	var notAvailableEndTime = 8; //강사가 설정한 예약불가 시간 (종료)
+
+	var notAvailableStartTime = Options.stoptimeStart; //강사가 설정한 예약불가 시간 (시작)
+	var notAvailableEndTime = Options.stoptimeEnd; //강사가 설정한 예약불가 시간 (종료)
+	var reserveOption = Options.reserve 
+
 
 	//플로팅 버튼
 	$('#float_btn').click(function(){
@@ -131,59 +135,40 @@ $(document).ready(function(){
 		document.getElementById('pt-delete-form').submit();
 	})
 
-
-/*
-	$('#popup_text2').click(function(){ //일정예약 팝업에서 일정예약 버튼을 눌렀을때 예약하는 팝업이 생성
-        $('#addpopup').fadeIn().css({'z-index':'103'})
-        $('#cal_popup2').hide()
-        timeGraphSet("class","grey");  //시간 테이블 채우기
-        timeGraphSet("off","grey")
-        startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
-      })
-*/
       var select_all_check = false;
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
 
-      $(document).on('click','#starttimes li a',function(){
-          $("#starttimesSelected button").addClass("dropdown_selected");
-          $("#starttimesSelected .btn:first-child").text($(this).text());
-          $("#starttimesSelected .btn:first-child").val($(this).text());
-          $("#id_training_time").val($(this).attr('data-trainingtime'));
-          $("#id_time_duration").val(1);
-          var arry = $(this).attr('data-trainingtime').split(':')
-          //durTimeSet(arry[0]);
-          addGraphIndicator(1)
-          check_dropdown_selected();
-      })
+    $(document).on('click','#starttimes li a',function(){
+        $("#starttimesSelected button").addClass("dropdown_selected");
+        $("#starttimesSelected .btn:first-child").text($(this).text());
+        $("#starttimesSelected .btn:first-child").val($(this).text());
+        $("#id_training_time").val($(this).attr('data-trainingtime'));
+        $("#id_time_duration").val(1);
+        var arry = $(this).attr('data-trainingtime').split(':')
+        //durTimeSet(arry[0]);
+        addGraphIndicator(1)
+        check_dropdown_selected();
+    })
 
-/*
-      $(document).on('click',"#durations li a",function(){
-          $("#durationsSelected button").addClass("dropdown_selected");
-          $("#durationsSelected .btn:first-child").text($(this).text());
-          $("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
-          $("#id_time_duration").val($(this).attr('data-dur'));
-          check_dropdown_selected();
-      }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
-*/
-       function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화 
-       	 var durSelect = $("#durationsSelected button");
-       	 var startSelect = $("#starttimesSelected button")
-       		 if((startSelect).hasClass("dropdown_selected")==true){
-        	    $("#submitBtn").addClass('submitBtnActivated');
-            	select_all_check=true;
-        	}else{
-           	    select_all_check=false;
-       		}
-    	 }
+    function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화 
+   		var durSelect = $("#durationsSelected button");
+       	var startSelect = $("#starttimesSelected button")
+    	if((startSelect).hasClass("dropdown_selected")==true){
+       	    $("#submitBtn").addClass('submitBtnActivated');
+           	select_all_check=true;
+       	}else{
+       	    select_all_check=false;
+    	}
+    }
 
-      $("#submitBtn").click(function(){
-         if(select_all_check==true){
-             document.getElementById('pt-add-form').submit();
-         }else{
+    $("#submitBtn").click(function(){
+        if(select_all_check==true){
+            document.getElementById('pt-add-form').submit();
+        }else{
             //입력값 확인 메시지 출력 가능
-         }
-     })
+        }
+    })
 
 	$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup').css('display')=='block'){
@@ -236,8 +221,10 @@ $(document).ready(function(){
 		$(this).fadeOut(100)
 	})
 
-
-
+	if(reserveOption=="disable"){
+		$(document).off('click','td');
+		$('#float_btn').hide()
+	}
 
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -253,9 +240,6 @@ $(document).ready(function(){
 	monthText(); //상단에 연, 월 표시
 	availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 	krHoliday(); //대한민국 공휴일
-
-	console.log(currentHour)
-
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
