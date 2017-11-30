@@ -67,7 +67,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
 
 class CalDayView(LoginRequiredMixin, TemplateView):
-    template_name = 'daily_cal.html'
+    template_name = 'cal_day.html'
 
     def get_context_data(self, **kwargs):
         context = super(CalDayView, self).get_context_data(**kwargs)
@@ -215,7 +215,7 @@ class PtAddView(LoginRequiredMixin, TemplateView):
 
 
 class CalWeekView(LoginRequiredMixin, TemplateView):
-    template_name = 'week_cal.html'
+    template_name = 'cal_week.html'
 
     def get_context_data(self, **kwargs):
         context = super(CalWeekView, self).get_context_data(**kwargs)
@@ -314,7 +314,7 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
         return context
 
 class CalMonthView(LoginRequiredMixin, TemplateView):
-    template_name = 'trainer_month_cal.html'
+    template_name = 'cal_month.html'
 
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
@@ -466,7 +466,7 @@ class OffAddView(LoginRequiredMixin, TemplateView):
 
 
 class OffRepeatAddView(LoginRequiredMixin, TemplateView):
-    template_name = 'off_repeat_add.html'
+    template_name = 'cal_add_off_repeat.html'
 
     def get_context_data(self, **kwargs):
         context = super(OffRepeatAddView, self).get_context_data(**kwargs)
@@ -601,7 +601,7 @@ class LogInTrainerView(TemplateView):
 
 
 class TrainerSettingView(TemplateView):
-    template_name = 'trainer_setting.html'
+    template_name = 'setting.html'
 
     def get_context_data(self, **kwargs):
         context = super(TrainerSettingView, self).get_context_data(**kwargs)
@@ -610,7 +610,7 @@ class TrainerSettingView(TemplateView):
 
 
 class PushSettingView(TemplateView):
-    template_name = 'trainer_push_setting.html'
+    template_name = 'setting_push.html'
 
     def get_context_data(self, **kwargs):
         context = super(PushSettingView, self).get_context_data(**kwargs)
@@ -619,7 +619,7 @@ class PushSettingView(TemplateView):
 
 
 class ReserveSettingView(TemplateView):
-    template_name = 'trainer_reserve_setting.html'
+    template_name = 'setting_reserve.html'
 
     def get_context_data(self, **kwargs):
         context = super(ReserveSettingView, self).get_context_data(**kwargs)
@@ -628,7 +628,7 @@ class ReserveSettingView(TemplateView):
 
 
 class SalesSettingView(TemplateView):
-    template_name = 'trainer_sales_setting.html'
+    template_name = 'setting_sales.html'
 
     def get_context_data(self, **kwargs):
         context = super(SalesSettingView, self).get_context_data(**kwargs)
@@ -1189,7 +1189,7 @@ def alarm_delete_logic(request):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PtModifyView(LoginRequiredMixin, TemplateView):
-    template_name = 'pt_modify.html'
+    template_name = 'cal_modify_pt.html'
 
     def get_context_data(self, **kwargs):
         context = super(PtModifyView, self).get_context_data(**kwargs)
@@ -1271,7 +1271,7 @@ class PtModifyView(LoginRequiredMixin, TemplateView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class OffModifyView(LoginRequiredMixin, TemplateView):
-    template_name = 'off_modify.html'
+    template_name = 'cal_modify_off.html'
 
     def get_context_data(self, **kwargs):
         context = super(OffModifyView, self).get_context_data(**kwargs)
