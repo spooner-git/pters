@@ -386,7 +386,8 @@ $(document).ready(function(){
 			};
 		}
 		for(i=1;i<=6;i++){
-			$('#week'+i+Year+Month+'child td:first-child').css({color:'red'}); //일요일 날짜는 빨갛게 표기
+			$('#week'+i+Year+Month+'child td:first-child').css({color:'#d21245'}); //일요일 날짜는 Red 표기
+			$('#week'+i+Year+Month+'child td:last-child').css({color:'#115a8e'}); //토요일 날짜는 Blue 표기
 		} 
 	}; //calendarSetting()
 
@@ -458,17 +459,17 @@ $(document).ready(function(){
 		if(currentHour<Endtime || currentHour>=not_AvailableStartTime){
 			for(i=currentDate;i<=currentDate+14;i++){
 				if(i>lastDay[oriMonth]){
-				 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('notavailable')
+				 $('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('notavailable')
 				}else{
-				 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')
+				 $('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')
 				}
 			}
 		}else{
 			for(i=currentDate;i<=currentDate+14;i++){
 				if(i>lastDay[oriMonth]){
-				 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
+				 $('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
 				}else{
-				 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('available')
+				 $('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('available')
 				}
 			}
 		}
