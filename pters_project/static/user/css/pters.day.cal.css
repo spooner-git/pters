@@ -293,6 +293,7 @@ span{
 	z-index: -1;
 }
 
+
 .calendar-style{  /*week ìŠ¤íƒ€ì¼í•˜ìœ„ */
 	width: 100%;
 	height: 100%;
@@ -366,10 +367,8 @@ span{
 	max-width: 1000px;
 }
 
-.wrap{
-	left: 50% !important;
-	transform: translateX(-50%);
-}
+
+
 
 
 .classTime{
@@ -645,10 +644,6 @@ span{
 	}
 }
 
-/*미디어 쿼리*/
-
-
-
 /*페이지 popup*/
 
 #page-ptadd{
@@ -673,4 +668,153 @@ span{
 	display: block;
 	position: absolute;
 }
+
+
+/*미디어 쿼리*/
+
+@media(min-width: 600px){
+	#calendar{
+		position: relative;
+		margin:0 auto;
+		left: 0 !important;
+		transform: none;
+		padding-top: 0px;
+	}
+	
+	.hour{
+		font-size: 14px;
+		font-weight: bold;
+		width: 13.5%;
+	}
+
+	#ymdText{
+		position: relative;
+		height: 100px;
+	}
+
+	#yearText{
+		font-size: 26px;
+		top: 15%;
+	}
+
+	#monthText{
+		font-size: 21.5px;
+		top: 60%;
+	}
+
+	.memberName1{
+		position: absolute;
+		left: 4%;
+		line-height: 35px;
+		vertical-align: middle;
+		font-size: 16px;
+		font-weight: bold;
+		letter-spacing: -0.3px;
+		color: #282828;
+		cursor: pointer;
+	}
+
+	.memberTime1{
+		position: absolute;
+		left: 15%;
+		right: unset;
+		line-height: 35px;
+		vertical-align: middle;
+		font-size: 15px;
+		letter-spacing: -0.3px;
+		color: #fe4e65;
+		cursor: pointer;
+	}
+
+	.offTimeText1{
+		position: absolute;
+		left: 15%;
+		right: unset;
+		line-height: 35px;
+		vertical-align: middle;
+		font-size: 15px;
+		letter-spacing: -0.3px;
+		color: #3b3d3d;
+		cursor: pointer;
+	}
+
+	.memberName2{
+		position: absolute;
+		left: 4%;
+		line-height: 70px;
+		vertical-align: middle;
+		font-size: 16px;
+		font-weight: bold;
+		letter-spacing: -0.3px;
+		color: #282828;
+		cursor: pointer;
+	}
+
+	.memberTime2{
+		position: absolute;
+		left: 15%;
+		right: unset;
+		line-height: 70px;
+		vertical-align: middle;
+		font-size: 15px;
+		letter-spacing: -0.3px;
+		color: #fe4e65;
+		cursor: pointer;
+	}
+
+	.offTimeText2{
+		position: absolute;
+		left: 15%;
+		right: unset;
+		line-height: 70px;
+		vertical-align: middle;
+		font-size: 15px;
+		letter-spacing: -0.3px;
+		color: #3b3d3d;
+		cursor: pointer;
+	}
+
+	.memberName3{
+		position: absolute;
+		left: 4%;
+		line-height: 105px;
+		vertical-align: middle;
+		font-size: 16px;
+		font-weight: bold;
+		letter-spacing: -0.3px;
+		color: #282828;
+		cursor: pointer;
+	}
+
+	.memberTime3{
+		position: absolute;
+		left: 15%;
+		right: unset;
+		line-height: 105px;
+		vertical-align: middle;
+		font-size: 15px;
+		letter-spacing: -0.3px;
+		color: #fe4e65;
+		cursor: pointer;
+	}
+
+	.offTimeText3{
+		position: absolute;
+		left: 15%;
+		right: unset;
+		line-height: 105px;
+		vertical-align: middle;
+		font-size: 15px;
+		letter-spacing: -0.3px;
+		color: #3b3d3d;
+		cursor: pointer;
+	}
+
+	#page-ptadd, #page-offadd{
+		top: 50px;
+	}
+
+}
+
+
 

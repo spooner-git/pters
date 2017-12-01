@@ -356,6 +356,11 @@ tr{
 	z-index: 3;
 }
 
+
+
+
+
+
 .classTime{
 	position: absolute;
 	top: 0px;
@@ -433,7 +438,7 @@ tr{
 
 #week{
 	position: fixed;
-	z-index: 3;
+	z-index: 4;
 	background-color: transparent;
 	height: auto;
 	padding-top: 50px;
@@ -597,31 +602,6 @@ tr{
 	}
 }
 
-@media(min-width:1273px){
-  /*달력 크기 조정*/
-
-	body{
-		/*font-family: 'Noto Sans KR';*/
-		padding-top: 50px;
-		width: 100%;
-		max-width: 1024px;
-		background: #f4f4f4;
-	}	
-
-	.swiper-slide{
-		height: 100%;
-		overflow-y: overlay;
-	}
-
-}
-
-/*미디어 쿼리*/
-
-
-
-
-
-
 /*페이지 popup*/
 
 #page-ptadd{
@@ -646,3 +626,64 @@ tr{
 	display: block;
 	position: absolute;
 }
+
+
+
+@media(min-width: 600px){
+	#calendar{
+		position: relative;
+		margin:0 auto;
+		left: 0 !important;
+		transform: none;
+	}
+	
+	#page-weekcal{
+		position: relative !important;
+	}
+
+	.memberName{
+		position: absolute;
+		left: 3%;
+		margin-top: 0px;
+		font-size: 100%;
+		font-weight: 400;
+		letter-spacing: -0.3px;
+		color: #ffffff;
+		cursor: pointer;
+		}
+
+	.memberTime{
+		position: absolute;
+		right: 6%;
+		font-weight: 300;
+		margin-top: 5px;
+		font-size: 13px;
+		letter-spacing: -0.3px;
+		color: #eaeaea;
+		cursor: pointer;
+	}
+
+	.swiper-slide{
+		overflow-y: hidden;
+	}
+	
+	.weekToday-style{
+		height: 18px;
+		font-size: 15px;
+		font-weight: bold;
+	}
+
+	.hour{
+		font-weight: bold;
+	}
+
+	#page-ptadd, #page-offadd{
+		top: 50px;
+	}
+
+}
+
+
+
+
+

@@ -440,7 +440,7 @@ span{
 	background: #e4e4e4;
 	color: #333;
 	height: 16px;
-	width: 45%;
+	width: 16px;
 	bottom: 1px;
 	border-radius: 1px;
 	font-size: 12px;
@@ -486,7 +486,7 @@ span{
 	color: #ffffff;
 	background: #3b3d3d;
 	height: 16px;
-	width: 45%;
+	width: 16px;
 	bottom: 1px;
 	border-radius: 1px;
 	font-size: 12px;
@@ -863,3 +863,38 @@ span{
 }
 
 /*미디어 쿼리*/
+
+@media(min-width: 600px){
+	#calendar{
+		position: relative;
+	}
+	
+	#ymdText{
+		position: relative;
+		height: 100px;
+	}
+
+	#yearText{
+		font-size: 26px;
+		top: 15%;
+	}
+
+	#monthText{
+		font-size: 21.5px;
+		top: 60%;
+	}
+
+	#gapbox{
+		padding-bottom: 0px;
+	}
+
+	#countRemain{
+		margin-bottom: 0px;
+	}
+
+	#calendar td{
+		border-left:0.5px solid #cccccc;
+		border-right: 0.5px solid #cccccc;
+	}
+
+}
