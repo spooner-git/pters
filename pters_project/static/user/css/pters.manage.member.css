@@ -34,7 +34,6 @@ body{
 	margin-right: auto;
 	margin-left: auto;
 	width: 91.6%;
-	max-width: 916px;
 }
 
 .centeralign{
@@ -262,5 +261,32 @@ th{
 	width: 6px;
 	float: right;
 	margin-top: 4px;
+}
+
+@media(min-width: 600px){
+	#selectBox,#alignBox{
+		width: 800px;
+	}
+	
+	#alignBox{
+		width: 800px;
+	}
+
+	._tdname{
+		font-size: 15px;
+	}
+
+	#currentMember tr td:nth-child(2){
+		font-size: 15px;
+	}
+
+	#currentMember tr td:nth-child(3){
+		font-size: 15px;
+	}
+
+	th{
+		font-size: 13.5px; 
+	}
+
 }
 

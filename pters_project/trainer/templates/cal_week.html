@@ -64,10 +64,16 @@
   </div>
   <!--플로팅 버튼-->
 
+  <!--PC버전 Arrow-->
+    <div class="arrowButtonPC">
+        <a id="leftarrowPC" style="left: 10%"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 20px;left: 0;"></a>
+        <a id="rightarrowPC" style="right: 10%"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 20px;right: 0;"></a>
+    </div>
+
     <div id="ymdText" class="wrap">
       <div class='arrowButton'>
-        <a href="" style="left: 10%"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
-        <a href="" style="right: 10%"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+        <a style="left: 10%"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+        <a style="right: 10%"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
       </div>
       <img src={% static "user/res/bg.png" %} alt="bg-image">
       <div id="yearText">
@@ -391,6 +397,14 @@
                 keyboardControl : true,
                 pagination : '.swiper-pagination'
             });
+
+            $('.arrowButtonPC a:nth-child(1)').click(function(){
+              myswiper.slidePrev(100)  
+            })
+
+            $('.arrowButtonPC a:nth-child(2)').click(function(){
+              myswiper.slideNext(100)  
+            })
         </script>
          <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
