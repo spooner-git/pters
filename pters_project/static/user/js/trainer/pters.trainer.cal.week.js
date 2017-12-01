@@ -232,10 +232,15 @@ $(document).ready(function(){
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-	
     var currentDate = date.getDate(); //오늘 날짜
 	var currentDay = date.getDay() // 0,1,2,3,4,5,6,7
 	var currentHour = date.getHours();
+
+	//var currentYear = date.getFullYear();
+	//var currentMonth = 10
+    //var currentDate = 29 //오늘 날짜
+    //var currentDay = 3 // 0,1,2,3,4,5,6,7
+
 	var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
 	if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
 			lastDay[1] = 29;
@@ -576,25 +581,27 @@ $(document).ready(function(){
 
 	function reserveAvailable(){
 		var yy = currentYear;
-		var mm = currentPageMonth;
-		var dd = currentDate;
-		var ymdArry = [yy,mm,dd]
+		var mm = String(currentPageMonth);
+		var dd = String(currentDate);
 		if(mm.length<2){
 			var mm = '0'+mm
 		}
 		if(dd.length<2){
 			var dd = '0'+dd
 		}
+		var ymdArry = [yy,mm,dd]
 		var yymmdd = ymdArry.join('')
-		console.log(yymmdd)
 		for(i=1;i<=7;i++){
 		var scan = $('#weekNum_'+i).attr('date-data')
-			if(yymmdd<=scan && scan<Number(yymmdd)+14){
+			if(yymmdd<=scan && scan<14+Number(yymmdd)){
 				$('#weekNum_'+i).addClass('reserveavailable')
-			}else if(scan.substr(4,2)!=mm && scan.substr(6,2)<dd+14-lastDay[currentMonth]){
+				
+			}else if(scan.substr(4,2) > mm && scan.substr(6,2)<Number(dd)+14-lastDay[currentMonth]){
 				$('#weekNum_'+i).addClass('reserveavailable')
+				
 			}else{
 				$('#weekNum_'+i).removeClass('reserveavailable')
+				
 			}
 		}
 	}
