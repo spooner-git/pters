@@ -73,7 +73,6 @@ $(document).ready(function(){
 
 
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
-	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
 
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
@@ -99,9 +98,9 @@ $(document).ready(function(){
 
 // ############################구동시 실행################################################################################
 // ****************************구동시 실행********************************************************************************
-	mWeek_calTable_Set(1,2017,11,'0W')
-	mWeek_calTable_Set(2,2017,11,'1L')
-	mWeek_calTable_Set(3,2017,11,'2L')
+	mWeek_calTable_Set(1,currentYear,currentMonth+1,'0W')
+	mWeek_calTable_Set(2,currentYear,currentMonth+1,'1L')
+	mWeek_calTable_Set(3,currentYear,currentMonth+1,'2L')
 	weekNum_Set()
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
@@ -174,6 +173,7 @@ $(document).ready(function(){
 			break;
 		}
 
+
 		var slideIndex = $('#slide'+Index); //Index 시작 1
 		var tableArray=[];
 
@@ -183,7 +183,12 @@ $(document).ready(function(){
 				var Dates = currentDate+j+W
 				if(Dates>lastDay[currentMonth]){
 					var Dates = Dates-lastDay[currentMonth]
-					tdArray[j]='<td id="'+Year+'_'+(Month+1)+'_'+Dates+'_'+i+'_00'+'">'+'<div class="ptersCheckbox"><div></div></div>'+'</td>'
+					var Months=Month+1;
+					if(Months>12){
+						var Months = Months -12
+						var Year = Year +1
+					}
+					tdArray[j]='<td id="'+Year+'_'+Months+'_'+Dates+'_'+i+'_00'+'">'+'<div class="ptersCheckbox"><div></div></div>'+'</td>'
 				}else{
 					tdArray[j]='<td id="'+Year+'_'+Month+'_'+Dates+'_'+i+'_00'+'">'+'<div class="ptersCheckbox"><div></div></div>'+'</td>'
 				}
@@ -212,6 +217,7 @@ $(document).ready(function(){
 		var lastDayThisMonth = lastDay[currentMonth];
 		var mmInfoArry = $('#slide'+index+' td:nth-child(2)').attr('id').split('_')
 		var month = mmInfoArry[1]
+		var Year = mmInfoArry[0]
 
 		for(i=1; i<=5; i++){
 			var dateSpan = $('._day'+i)
@@ -226,7 +232,7 @@ $(document).ready(function(){
 			dateSpan.text(dd)
 			daySpan.text(dayKor[day])
 		}
-		$('#yearText').text(currentYear+'년');
+		$('#yearText').text(Year+'년');
 		$('#monthText').text(month+'월');
 		toDay();
 	}
