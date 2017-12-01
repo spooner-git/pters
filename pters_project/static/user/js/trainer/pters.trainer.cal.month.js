@@ -322,6 +322,14 @@ $(document).ready(function(){
 
 	
 	function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
+		if(Month>12){
+            var Month = Month-12
+            var Year = Year+1
+        }else if(Month<1){
+            var Month = Month+12
+            var Year = Year-1
+        }
+
 		for(var i=1; i<=6; i++){
 			$('.swiper-slide:nth-child('+Index+')').append('<div id="week'+i+Year+Month+'" class="container-fluid week-style">')
 		};
