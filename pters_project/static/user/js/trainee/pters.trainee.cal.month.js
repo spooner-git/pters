@@ -24,11 +24,9 @@ $(document).ready(function(){
 	var oriMonth = date.getMonth()+1;
 	var oriDate = date.getDate();
 
-
 	var notAvailableStartTime = Options.stoptimeStart; //강사가 설정한 예약불가 시간 (시작)
 	var notAvailableEndTime = Options.stoptimeEnd; //강사가 설정한 예약불가 시간 (종료)
 	var reserveOption = Options.reserve 
-
 
 	//플로팅 버튼
 	$('#float_btn').click(function(){
@@ -299,6 +297,14 @@ $(document).ready(function(){
 
 	
 	function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
+		if(Month>12){
+			var Month = Month-12
+			var Year = Year+1
+		}else if(Month<1){
+			var Month = Month+12
+			var Year = Year-1
+		}
+
 		for(var i=1; i<=6; i++){
 			$('.swiper-slide:nth-child('+Index+')').append('<div id="week'+i+Year+Month+'" class="container-fluid week-style">')
 		};
@@ -307,12 +313,14 @@ $(document).ready(function(){
 		for(var i=1; i<=6; i++){
 			$('.swiper-slide:nth-child('+Index+')'+' #week'+i+Year+Month).append('<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>');
 		};
-
+		
+		console.log(Year,Month)
 		calendarSetting(Year,Month);
 	}; //calTable_Set
 
 
 	function calendarSetting(Year,Month){ //캘린더 테이블에 연월에 맞게 날짜 채우기
+		console.log(Year,Month)
 		var currentPageFirstDayInfo = new Date(Year,Month-1,1); //현재달의 1일에 대한 연월일시간등 전체 정보
 		var firstDayCurrentPage = currentPageFirstDayInfo.getDay(); //현재달 1일의 요일
 		
