@@ -309,6 +309,10 @@ span{
 	z-index: 0;
 }
 
+.arrowButtonPC{
+	display: none;
+}
+
 .arrowButton a{
 	position: absolute;
 	top: 0%;
@@ -854,7 +858,7 @@ span{
 		position: fixed;
 		top: 40%;
 	}
-
+	
 
 	.arrowButton{
 		display:none;
