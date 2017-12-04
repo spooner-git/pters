@@ -91,9 +91,11 @@ $(document).ready(function(){
         var startSelect = $("#starttimesSelected button")
         if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+            $('.submitBtn').css({'color':'#115a8e'})
             select_all_check=true;
         }else{
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+            $('.submitBtn').css({'color':'#f4f4f4'})
             select_all_check=false;
         }
      }

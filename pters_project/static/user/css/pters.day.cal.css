@@ -706,6 +706,30 @@ span{
 		top: 60%;
 	}
 
+
+	.classTime{
+		background: #fe4e65;
+		opacity: 0.9;
+		border:0.5px solid #ffffff;
+	}
+
+	.offTime{
+		background: #616161;
+	}
+
+	table{
+		border-top: 0.5px solid #f4f4f4;
+	}
+	
+	.daytd{
+		border:none;
+	}
+
+	.hour{
+		border-left:0.5px solid #cccccc;
+	}
+
+
 	.memberName1{
 		position: absolute;
 		left: 4%;
@@ -714,7 +738,7 @@ span{
 		font-size: 16px;
 		font-weight: bold;
 		letter-spacing: -0.3px;
-		color: #282828;
+		color: #ffffff;
 		cursor: pointer;
 	}
 
@@ -726,7 +750,7 @@ span{
 		vertical-align: middle;
 		font-size: 15px;
 		letter-spacing: -0.3px;
-		color: #fe4e65;
+		color: #ffffff;
 		cursor: pointer;
 	}
 
@@ -738,7 +762,7 @@ span{
 		vertical-align: middle;
 		font-size: 15px;
 		letter-spacing: -0.3px;
-		color: #3b3d3d;
+		color: #ffffff;
 		cursor: pointer;
 	}
 
@@ -750,7 +774,7 @@ span{
 		font-size: 16px;
 		font-weight: bold;
 		letter-spacing: -0.3px;
-		color: #282828;
+		color: #ffffff;
 		cursor: pointer;
 	}
 
@@ -762,7 +786,7 @@ span{
 		vertical-align: middle;
 		font-size: 15px;
 		letter-spacing: -0.3px;
-		color: #fe4e65;
+		color: #ffffff;
 		cursor: pointer;
 	}
 
@@ -774,7 +798,7 @@ span{
 		vertical-align: middle;
 		font-size: 15px;
 		letter-spacing: -0.3px;
-		color: #3b3d3d;
+		color: #ffffff;
 		cursor: pointer;
 	}
 
@@ -786,7 +810,7 @@ span{
 		font-size: 16px;
 		font-weight: bold;
 		letter-spacing: -0.3px;
-		color: #282828;
+		color: #ffffff;
 		cursor: pointer;
 	}
 
@@ -798,7 +822,7 @@ span{
 		vertical-align: middle;
 		font-size: 15px;
 		letter-spacing: -0.3px;
-		color: #fe4e65;
+		color: #ffffff;
 		cursor: pointer;
 	}
 
@@ -810,7 +834,7 @@ span{
 		vertical-align: middle;
 		font-size: 15px;
 		letter-spacing: -0.3px;
-		color: #3b3d3d;
+		color: #ffffff;
 		cursor: pointer;
 	}
 

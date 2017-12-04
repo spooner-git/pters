@@ -115,6 +115,10 @@ span{
 	z-index: 1;
 }
 
+.arrowButtonPC{
+	display: none;
+}
+
 .arrowButton a{
 	position: absolute;
 	top: 70%;
@@ -895,6 +899,46 @@ span{
 	#calendar td{
 		border-left:0.5px solid #cccccc;
 		border-right: 0.5px solid #cccccc;
+	}
+
+	.arrowButtonPC{
+		display: block;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+	}
+
+	.arrowButtonPC a:first-child{
+		height: 100%;
+		width: 25%;
+		float: left;
+		cursor: pointer;
+	}
+
+	.arrowButtonPC a:last-child{
+		height: 100%;
+		width: 25%;
+		float: right;
+		cursor: pointer;
+	}
+
+	.arrowButtonPC a:first-child:active{
+		background: #cccccc;
+	}
+	
+	.arrowButtonPC a:last-child:active{
+		background: #cccccc;
+	}
+
+	.arrowButtonPC img{
+		position: fixed;
+		top: 40%;
+	}
+	
+
+	.arrowButton{
+		display:none;
 	}
 
 }

@@ -337,11 +337,12 @@ span{
 
 .td00{
 	background: #ffffff;
+	border-top: 0px solid #c3c3c3;
 }
 
 .td30{
 	background: #ffffff;
-	border-bottom: 2px solid #c3c3c3;
+	border-bottom: 1px solid #c3c3c3;
 }
 
 tr{
@@ -371,7 +372,7 @@ tr{
 	left: 0px;
 	width: 100%;
 	background: #fe4e65;
-	opacity: 0.7;
+	opacity: 0.9;
 	border: 0.5px solid #fe4e65;
 	border-bottom: 0.5px solid #a2a2a2;
 	z-index: 100;
@@ -389,7 +390,7 @@ tr{
 	left: 0px;
 	width: 100%;
 	background: #3b3d3d;
-	opacity: 0.7;
+	opacity: 0.8;
 	border: 0.5px solid #3b3d3d;
 	z-index: 100;
 	cursor: pointer;
@@ -490,29 +491,6 @@ tr{
 	top: 0;
 
 }
-
-/*
-.currentTimeIndicator{
-	position: absolute;
-	left: 9%;
-	top: -14%;
-	width: 9px;
-	height: 9px;
-	background-color: #fe4e65;
-	border-radius: 4.5px;
-	z-index: 101;
-}
-
-
-.currentTimeLine{
-	position: absolute;
-	border-top: 1px dotted #fe4e65;
-	left: 9.5%;
-	top: 0%;
-	width: 90%;
-	z-index: 101;
-}
-*/
 
 
 /*미디어 쿼리*/
@@ -640,6 +618,7 @@ tr{
 		margin:0 auto;
 		left: 0 !important;
 		transform: none;
+		padding-top: 0px;
 	}
 	
 	#page-weekcal{
@@ -670,6 +649,16 @@ tr{
 
 	.swiper-slide{
 		overflow-y: hidden;
+	}
+
+	.td00{
+		background: #ffffff;
+		border-top: 1px solid #c3c3c3;
+	}
+
+	.td30{
+		background: #ffffff;
+		border-bottom: 1px solid #c3c3c3;
 	}
 	
 	.weekToday-style{
@@ -730,6 +719,26 @@ tr{
 
 	.arrowButton{
 		display:none;
+	}
+
+	#ymdText{
+		height: 100px;
+		position: relative;
+	}
+
+	#week{
+		position: relative;
+		padding-top: 0px;
+	}
+
+	#yearText{
+		font-size: 26px;
+		top: 15%;
+	}
+
+	#monthText{
+		font-size:21.5px;
+		top: 60%;
 	}
 
 }
