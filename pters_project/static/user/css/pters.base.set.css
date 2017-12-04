@@ -28,6 +28,9 @@ body{
     transform: translateX(-50%);
 }
 
+table{
+    table-layout: fixed;
+}
 
 
 /* Sidebar CSS */
@@ -147,7 +150,7 @@ body{
     background-color: #282828;
     overflow-x: hidden;
     overflow-y: hidden;
-    transition: 0.5s;
+    transition: 0.15s;
     padding-top: 0px;
 }
 
@@ -419,6 +422,33 @@ body{
     opacity: 0.8;
     margin-bottom: 6px;
     margin-left: -25px;
+}
+
+.pclogout{
+    font-size: 11px;
+    border:0.5px solid #a2a2a2;
+    border-radius: 10%;
+    background: #f4f4f4;
+    padding: 3px;
+    color: #505050;
+    cursor: pointer;
+}
+
+.pclogout:hover,.pclogout:active{
+    background: #fe4e65;
+    color: #ffffff;
+}
+
+.pcwho{
+    font-size: 12px;
+    margin-right: 10px;
+    font-weight: 500;
+}
+
+.pcwhere{
+    color: #115a8e;
+    font-size: 12px;
+    margin-right: 5px;
 }
 
 

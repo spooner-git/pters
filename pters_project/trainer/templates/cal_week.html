@@ -70,12 +70,11 @@
         <a id="rightarrowPC" style="right: 10%"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 20px;right: 0;"></a>
     </div>
 
-    <div id="ymdText" class="wrap">
+    <div id="ymdText" class="wrap" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
       <div class='arrowButton'>
         <a style="left: 10%"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
         <a style="right: 10%"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
       </div>
-      <img src={% static "user/res/bg.png" %} alt="bg-image">
       <div id="yearText">
       </div>
       <div id="monthText">
@@ -111,7 +110,6 @@
               <div class="swiper-slide" id="slide2"></div> <!--Index1 이번주-->
               <div class="swiper-slide" id="slide3"></div> <!--Index2 1주후-->
               <div class="swiper-slide" id="slide4"></div> <!--Index3 2주후-->
-
               <div class="swiper-slide" id="slide5"></div> <!--Index2 3주후-->
               
               <div class="swiper-slide" id="slide_last">
@@ -247,6 +245,12 @@
         </ul>
       </div>
     </div> 
+
+    <div class='popupBtn'>
+      <div class="submitBtn"><span>일정 등록</span></div>
+      <div class="cancelBtn"><span>취소</span></div>
+    </div>
+
 </div>
 
 
@@ -362,7 +366,15 @@
         <span class="repeatstarttext">매주 수요일 오후 3시</span><span class="repeatfinishtext">반복종료 : 2017-12-31</span>
       </div>
     </div>
+
+    <div class='popupBtn'>
+      <div class="submitBtn"><span>일정 등록</span></div>
+      <div class="cancelBtn"><span>취소</span></div>
+    </div>
+
   </div>
+
+
 </div>
 
 {% endblock %}

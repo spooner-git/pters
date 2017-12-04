@@ -65,6 +65,48 @@ $(document).ready(function(){
   	})
   //모바일 스타일
 
+  //PC 스타일
+  	$('.cancelBtn').click(function(){
+	    $('#shade3').fadeOut();
+	    $('#page-ptadd').fadeOut('fast','swing');
+	    $('#page-offadd').fadeOut('fast','swing');
+	    $('#float_btn_wrap').fadeIn();
+	    $('#float_btn').removeClass('rotate_btn');
+	    $('#page-base').fadeIn();
+	    $('#page-base-addstyle').fadeOut();
+	    $('.submitBtn').css({'color':'#f4f4f4'})
+
+	    $("#membersSelected button").removeClass("dropdown_selected");
+        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
+        $("#membersSelected .btn:first-child").val("");
+        $("#countsSelected").text("")
+        $("#dateSelector p").removeClass("dropdown_selected");
+        $('#timeGraph').hide();
+        $("#starttimesSelected button").removeClass("dropdown_selected");
+        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected .btn:first-child").val("");
+        $("#durationsSelected button").removeClass("dropdown_selected");
+        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected .btn:first-child").val("");
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+        $("#starttimes").empty();
+        $("#durations").empty();
+
+        $("#dateSelector_off p").removeClass("dropdown_selected");
+        $('#timeGraph_off').hide();
+        $("#starttimesSelected_off button").removeClass("dropdown_selected");
+        $("#starttimesSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected_off .btn:first-child").val("");
+        $("#durationsSelected_off button").removeClass("dropdown_selected");
+        $("#durationsSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected_off .btn:first-child").val("");
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+  		$("#starttimes_off").empty();
+        $("#durations_off").empty();
+        $('.tdgraph').removeClass('graphindicator')
+  	})
+  //PC 스타일
+
 
 
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
