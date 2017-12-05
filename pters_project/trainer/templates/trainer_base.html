@@ -10,6 +10,10 @@
         <meta name="author" content="">
 
         <title>{% block title %}PTers-Trainer Mode {% endblock %}</title>
+            
+        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+        <link rel="shortcut icon" href="/static/common/favicon-152.png">
 
         <!-- Bootstrap core CSS -->
         <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
@@ -17,7 +21,7 @@
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
         
-
+        
         {% block local_css %}
         {% endblock %}
     
@@ -101,7 +105,7 @@
                 <div class="centermenu_div"><a href="{% url 'trainer:work_manage' %}" class="centermenu_text">업무 통계</a></div>
                 <div class="centermenu_div"><a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text">서비스 설정</a></div>
                 <div class="centermenu_div"></div>
-                <div class="centermenu_div" style="float:right;margin-right: 0;">
+                <div id="loginInfo" class="centermenu_div" style="float:right;margin-right: 0;">
                     <span class="centermenu_text pcwhere">PTERS 트레이닝센터</span>
                     <span class="centermenu_text pcwho">{{user.first_name}} 님</span>
                     <span class="centermenu_text pclogout" onclick="location.href='{% url 'trainer:logout' %}'">로그아웃</span>

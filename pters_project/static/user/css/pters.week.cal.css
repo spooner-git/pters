@@ -323,6 +323,10 @@ span{
 	font-size: 13px;
 }
 
+._morningday{
+	display:none;
+}
+
 #page-weekcal td{
 	position: relative;
 	width: 12.5%;
@@ -379,7 +383,7 @@ tr{
 	cursor: pointer;
 }
 
-.classTime:active{
+.classTime:active,.classTime:hover{
 	background: #a2a2a2;
 	-webkit-background: #a2a2a2;
 }
@@ -396,7 +400,7 @@ tr{
 	cursor: pointer;
 }
 
-.offTime:active{
+.offTime:active,.offTime:hover{
 	background: #d6d5d5;
 	-webkit-background: #d6d5d5;
 }
@@ -671,6 +675,7 @@ tr{
 		font-weight: bold;
 	}
 
+
 	#page-ptadd, #page-offadd{
 		top: 150px;
 		width: 500px;
@@ -741,6 +746,12 @@ tr{
 		top: 60%;
 	}
 
+}
+
+@media(min-width: 800px){
+	._morningday{
+		display:inline;
+	}
 }
 
 
