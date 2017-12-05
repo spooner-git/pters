@@ -1,5 +1,8 @@
 $(document).ready(function(){
 
+      var Options = {
+                        "limit": 1, // 현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+                    }
 
       var classDateData = []
       var classTimeData = []
@@ -257,9 +260,33 @@ $(document).ready(function(){
               $('#'+targetTime+'g').addClass(cssClass)
           }
         }
+        timeGraphLimitSet(Options.limit)
       }
 
-
+      function timeGraphLimitSet(limit){
+        var selecteddate = $("#datepicker").val();
+        var date = new Date();
+        var yy = date.getFullYear();
+        var mm = String(date.getMonth()+1);
+        if(mm.length<2){
+          var mm = '0'+mm
+        }
+        var dd = String(date.getDate());
+        if(dd.length<2){
+          var dd = '0'+dd
+        }
+        var hh = date.getHours();
+        var today = yy+'-'+mm+'-'+dd
+        console.log(selecteddate,today)
+        if(selecteddate==today){
+          for(var i=5;i<=24;i++){
+            var time = $('#'+i+'g')
+            if(i<=hh+limit){
+              time.addClass('greytimegraph')
+            }
+          }
+        }
+      }
 
       function startTimeArraySet(){ //offAddOkArray 채우기 : 시작시간 리스트 채우기
         offAddOkArray = []

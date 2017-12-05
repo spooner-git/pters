@@ -671,6 +671,44 @@ $(document).ready(function(){
               $('#'+targetTime+'g').addClass(cssClass)
           }
         }
+        timeGraphLimitSet(Options.limit)
+      }
+
+    function timeGraphLimitSet(limit){  //회원달력 전용 timeGraphLimitSet 함수 
+        var selecteddatearry = $('#popup_info4').text().replace(/년 |월 |일 |:| /gi,"_").split("_")
+        var yy_ = selecteddatearry[0];
+        var mm_ = selecteddatearry[1];
+        var dd_ = selecteddatearry[2];
+        if(mm_.length<2){
+        	var mm_ = '0'+mm_
+        }
+        if(dd_.length<2){
+        	var dd_ = '0'+dd_
+        }
+        var selecteddate = yy_+'-'+mm_+'-'+dd_
+
+        //var selecteddate = $("#datepicker").val();
+        var date = new Date();
+        var yy = date.getFullYear();
+        var mm = String(date.getMonth()+1);
+        if(mm.length<2){
+          var mm = '0'+mm
+        }
+        var dd = String(date.getDate());
+        if(dd.length<2){
+          var dd = '0'+dd
+        }
+        var hh = date.getHours();
+        var today = yy+'-'+mm+'-'+dd
+        console.log(selecteddate,today)
+        if(selecteddate==today){
+          for(var i=5;i<=24;i++){
+            var time = $('#'+i+'g')
+            if(i<=hh+limit){
+              time.addClass('greytimegraph')
+            }
+          }
+        }
       }
 
 
