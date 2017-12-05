@@ -11,7 +11,7 @@ body{
 	height: 100%;
 }
 
-span{
+span,p{
 	cursor: pointer;
 }
 
@@ -434,6 +434,25 @@ span{
 	z-index: -3;
 }
 */
+
+#cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
+	display: none;
+	position: fixed;
+	top: 35%;
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	z-index: -2;
+	text-align: center;
+	left:50%;
+	transform: translateX(-50%);
+	z-index: 150;
+}
+
+#cal_popup_plancheck .popup_inner:hover{
+	background : white;
+}
+
+
 
 @media(min-width:570px){
 	.balloon{
@@ -866,6 +885,10 @@ span{
 @media(min-width: 600px){
 	#calendar{
 		position: relative;
+	}
+
+	#calendar td:hover{
+		background : #e4e4e4;
 	}
 	
 	#ymdText{
