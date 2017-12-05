@@ -28,9 +28,6 @@ body{
     transform: translateX(-50%);
 }
 
-table{
-    table-layout: fixed;
-}
 
 
 /* Sidebar CSS */
@@ -304,6 +301,13 @@ table{
     display:block!important;
 }
 
+#loginInfo{
+    display: block;
+}
+
+.pcwhere, .pcwho{
+    display: none;
+}
 
 /*미디어 쿼리*/
 @media(min-width:415px){
@@ -391,6 +395,15 @@ table{
 }
 /*미디어 쿼리*/
 
+@media(min-width:860px){
+    #loginInfo{
+        display: block;
+    }
+
+    .pcwhere, .pcwho{
+        display: inline-block;
+    }
+}
 
 
 

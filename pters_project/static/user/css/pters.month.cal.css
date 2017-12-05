@@ -131,19 +131,6 @@ span{
 	text-align: center;
 }
 
-@media(min-width:570px){
-	.arrowButton a{
-		position: absolute;
-		top: 78%;
-		font-size: 35px;
-		font-weight: 600;
-		color: #ffffff;
-		text-decoration: none;
-		width: 25px;
-		height: 25px;
-		text-align: center;
-	}
-}
 
 
 #ymdText{
@@ -182,17 +169,6 @@ span{
 	margin-bottom: 3px;
 }
 
-@media(min-width:570px){
-	#yearText{
-		display: block;
-		margin-bottom: 5px;
-	}
-	#countRemain{
-		margin-bottom: 15px
-	}
-}
-
-
 
 #countRemainData{
 	line-height: 24px;
@@ -217,12 +193,6 @@ span{
 	background-color: transparent;
 }
 
-@media(min-width:570px){
-	#gapbox{
-		padding-bottom: 100px;
-	}
-
-}
 
 
 .week-style{ /*week 스타일*/
@@ -234,19 +204,6 @@ span{
 	height: 70px;
 }
 
-@media(min-width:570px){
-	.week-style{ /*week 스타일*/
-		background-color: transparent;
-		position: relative;
-		width: 100%;
-		border-bottom: 1px solid #cccccc;
-		height: 100px;
-		min-height: 42px;
-		font-size: 16px;
-		font-weight: bold;	
-
-	}
-}
 
 .calendar-style{  /*week 스타일하위 */
 	width: 100%;
@@ -258,11 +215,6 @@ span{
 	font-size: 12px;
 }
 
-@media(min-width:570px){
-	.calendar-day-style{  /*왈화수목금토일 스타일 */
-		font-size: 15px;
-	}
-}
 
 .calendar_image{
 	width: 100%;
@@ -371,39 +323,7 @@ span{
 	z-index: -1;
 }
 
-@media(min-width:570px){
-	.dateMytime{
-		position: absolute;
-		display:block;
-		margin:0 auto;
-		width: 30px;
-		height: 30px;
-		/*background: #fddadf;*/
-		background: #f9b4be;
-		top: 35px;
-		bottom:0;
-		left: 0px;
-		right: 0;
-		border-radius: 50%;
-		z-index: -1;
-	}
 
-	.greydateMytime{
-		position: absolute;
-		display:block;
-		margin:0 auto;
-		width: 30px;
-		height: 30px;
-		background: #e4e4e4;
-		top: 35px;
-		bottom:0;
-		left: 0px;
-		right: 0;
-		border-radius: 50%;
-		z-index: -1;
-	}
-
-}
 
 .today{
 	position:absolute;
@@ -452,7 +372,6 @@ span{
 	z-index: -2;
 	left: 50%;
 	transform: translateX(-50%);
-
 	border-radius: 50%;
 }
 
@@ -547,6 +466,82 @@ span{
 		left: 50%;
 		transform: translateX(-50%);
 	}
+
+	.dateMytime{
+		position: absolute;
+		display:block;
+		margin:0 auto;
+		width: 30px;
+		height: 30px;
+		/*background: #fddadf;*/
+		background: #f9b4be;
+		top: 35px;
+		bottom:0;
+		left: 0px;
+		right: 0;
+		border-radius: 50%;
+		z-index: -1;
+	}
+
+	.greydateMytime{
+		position: absolute;
+		display:block;
+		margin:0 auto;
+		width: 30px;
+		height: 30px;
+		background: #e4e4e4;
+		top: 35px;
+		bottom:0;
+		left: 0px;
+		right: 0;
+		border-radius: 50%;
+		z-index: -1;
+	}
+
+	.calendar-day-style{  /*왈화수목금토일 스타일 */
+		font-size: 15px;
+	}
+
+	.arrowButton a{
+		position: absolute;
+		top: 78%;
+		font-size: 35px;
+		font-weight: 600;
+		color: #ffffff;
+		text-decoration: none;
+		width: 25px;
+		height: 25px;
+		text-align: center;
+	}
+
+	#yearText{
+		display: block;
+		margin-bottom: 5px;
+	}
+	#countRemain{
+		margin-bottom: 15px
+	}
+
+	#gapbox{
+		padding-bottom: 100px;
+	}
+
+	.week-style{ /*week 스타일*/
+		background-color: transparent;
+		position: relative;
+		width: 100%;
+		border-bottom: 1px solid #cccccc;
+		height: 100px;
+		min-height: 42px;
+		font-size: 23px;
+		font-weight: bold;	
+	}
+
+	.blackballoon_trainer,.balloon_trainer{
+		bottom: 9px;
+	}
+
+
 }
 
 
@@ -936,9 +931,12 @@ span{
 		top: 40%;
 	}
 	
-
 	.arrowButton{
 		display:none;
+	}
+
+	.prevDates,.nextDates{
+		opacity: 0.2;
 	}
 
 }
