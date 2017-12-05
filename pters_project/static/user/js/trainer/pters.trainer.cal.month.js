@@ -45,6 +45,32 @@ $(document).ready(function(){
 		alert('까꿍~')
 	})
 
+
+	$(document).on('click','td',function(){
+		$('#cal_popup_plancheck').fadeIn('fast');
+		$('#shade2').css({'display':'block'});
+		var info = $(this).attr('data-date').split('_')
+		var yy=info[0]
+		var mm=info[1]
+		var dd=info[2]
+		var dayobj = new Date(yy,mm-1,dd)
+		var dayraw = dayobj.getDay();
+		var dayarry = ['일','월','화','수','목','금','토']
+		var day = dayarry[dayraw];
+		var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+		$('.popup_ymdText').html(infoText)
+		plancheck(yy+'_'+mm+'_'+dd)
+	})
+
+	$('#cal_popup_plancheck').click(function(){
+		$(this).fadeOut('fast');
+		$('#shade2').css({'display':'none'});
+	})
+
+
+
+
+
 /*
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
 		if($(this).hasClass('available')){
@@ -241,7 +267,7 @@ $(document).ready(function(){
 
 	var dateResult = []
 	var countResult = []
-
+	
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
 
 	calTable_Set(1,currentYear,currentPageMonth-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
@@ -249,6 +275,7 @@ $(document).ready(function(){
 	calTable_Set(3,currentYear,currentPageMonth+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
+	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classNameArray,'class')
 	DBdataProcessMonthTrainer(); //트레이너 월간일정에서 날짜별 PT갯수 표기를 위함
 
 	alltdRelative(); //모든 td의 스타일 position을 relative로
@@ -614,6 +641,42 @@ $(document).ready(function(){
 	}
 
 
+	function plancheck(dateinfo){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
+		var len = classNameArray.length;
+		var dateplans = []
+		for(var i=0; i<len; i++){
+			var splited = classNameArray[i].split('_');
+			var yy = splited[0]
+			var mm = splited[1]
+			var dd = splited[2]
+			var stime1 = splited[3]
+			if(stime1.length<2){
+				var stime1 = '0'+stime1
+			}
+			var stime = stime1+'_'+splited[4]
+			var etime = splited[7]+'_'+splited[8]
+			var name = splited[6]
+			var ymd = yy+'_'+mm+'_'+dd
+			if(ymd==dateinfo){
+				dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd)
+			}
+		}
+		dateplans.sort();
+		console.log(dateplans)
+		var htmltojoin = []
+		for(var i=0;i<dateplans.length;i++){
+			var splited = dateplans[i].split('_')
+			var stime = splited[0]+"시"
+			if(stime.substr(0,1)=='0'){
+				var stime = stime.substr(1,1) + "시"
+			}
+			var etime = splited[2]+"시"
+			var name = splited[4]+" 회원님"
+			htmltojoin.push('<p>'+stime+' ~ '+etime+'     :     '+name+'</p>')
+		}
+		console.log(htmltojoin.join(''))
+		$('#cal_popup_plancheck .popup_inner').html(htmltojoin.join(''))
+	}
 
 
 

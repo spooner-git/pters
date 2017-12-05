@@ -28,6 +28,16 @@
 
   <!--플로팅 버튼-->
 
+  <!-- 일정조회(강사)팝업 -->
+    <div id="cal_popup_plancheck">
+      <div>
+        <p style="font-size: 16px;font-weight: bold;margin:0;">일정 조회</p>
+        <p style="font-size: 11px;color:#fe4e65;">※조회만 가능합니다.</p>
+        <p class="popup_ymdText">yy년,mm월,dd일,O요일</p></div>
+      <div class="popup_inner" style="height: auto;"></div>
+    </div>
+  <!-- 일정조회(강사)팝업 -->
+
   <!--변경 팝업메뉴-->
     <div id="cal_popup">
       <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div>
@@ -36,12 +46,6 @@
     <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
   <!--변경 팝업메뉴-->
 
-    <!--예약 팝업메뉴-
-    <div id="cal_popup2">
-      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close2"></div><div id="popup_info3"></div>
-      <div id="popup_text2" class="popup_inner popup_inner_change"><span>일정 예약</span></div>
-    </div>
-  예약 팝업메뉴-->
 
   <!--삭제 확인 팝업메뉴-->
     <div id="cal_popup3">
@@ -194,13 +198,7 @@
         <div id="cal_box" class="cal_box"></div>
     </div>
 
-<!--
-    <div id="cal_popup">
-      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div>
-      <div id="popup_text1" class="popup_inner popup_inner_change"><span>일정 변경</span></div>
-      <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 삭제</span></div>
-    </div>
--->
+
 
 
 
@@ -212,7 +210,6 @@
         <script>
             var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
             
-
           var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}"{{ daily_data_start_date }}",{% endfor %}];
           var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}"{{ daily_data_end_date }}",{% endfor %}];
           var classTimeArray_member_name = [{% for member_name in daily_lecture_data_member %}"{{ member_name }}",{% endfor %}];
@@ -224,7 +221,7 @@
           var offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}"{{ daily_class_schedule_id }}", {% endfor %}];
           var classDateArray = [];
           var classStartArray = [];
-
+          var classNameArray = []; //2017_11_21_21_00_1_김선겸_22_00
 
         </script>
 
