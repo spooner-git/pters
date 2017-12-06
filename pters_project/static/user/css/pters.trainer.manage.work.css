@@ -15,10 +15,16 @@ body{
 	font-weight: bold;
 	color: #ffffff;
 	text-align: center;
+	cursor: pointer;
 }
 
 #mText{
 	color: #fe4e65;
+	cursor: pointer;
+}
+
+#yText{
+	cursor: pointer;
 }
 
 #salesGraph{
