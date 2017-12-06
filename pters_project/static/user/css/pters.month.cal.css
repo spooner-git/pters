@@ -213,6 +213,7 @@ span,p{
 
 .calendar-day-style{  /*왈화수목금토일 스타일 */
 	font-size: 12px;
+	line-height: 31px;
 }
 
 
