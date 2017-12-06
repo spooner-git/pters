@@ -554,12 +554,18 @@ span,p{
 		min-height: 42px;
 		font-size: 23px;
 		font-weight: bold;	
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+
+	#date{
+		padding-left: 20px;
+		padding-right: 20px;
 	}
 
 	.blackballoon_trainer,.balloon_trainer{
 		bottom: 9px;
 	}
-
 
 }
 
@@ -578,6 +584,11 @@ span,p{
 	text-align: center;
 	font-weight: 500;
 	font-size: 14px;
+}
+
+.paddingside15px{
+	padding-left:20px;
+	padding-right: 20px;
 }
 
 
@@ -697,9 +708,8 @@ span,p{
 
 
 .popup_inner span{
-	position: absolute;
-	left: 41.5%;
-	top: 30%;
+	margin:0 auto;
+	line-height: 55px;
 	font-size: 14px;
 	font-weight: bold;
 	cursor: pointer;
@@ -725,14 +735,14 @@ span,p{
 }
 
 .available{
-	background:  #fde5e8;
-	z-index: 0;
+	background:  #ffebee;
+	z-index: -1;
 	/*opacity: 1;*/
 }
 
 .notavailable{
 	background: #dadada;
-	z-index: 0;
+	z-index: -1;
 }
 
 
@@ -885,6 +895,7 @@ span,p{
 @media(min-width: 600px){
 	#calendar{
 		position: relative;
+		background-color: 	#ffffff;
 	}
 
 	#calendar td:hover{
@@ -960,6 +971,16 @@ span,p{
 
 	.prevDates,.nextDates{
 		opacity: 0.2;
+		background:grey;
 	}
-
+	
+	.greydateMytime,.dateMytime{
+		width: 	38px;
+		height: 38px;
+		top: 	31px;
+	}
+		
+	.admonth{
+		margin-top: 25px;
+	}
 }
