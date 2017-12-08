@@ -34,7 +34,7 @@ $(document).ready(function(){
 
     })
 
-    $('#upbutton-x').click(function(){
+    $('#upbutton-x,.cancelBtn').click(function(){
       $('#page_addmember').fadeOut('fast');
       $('#shade3').fadeOut('fast');
       $('#float_btn').fadeIn('fast');

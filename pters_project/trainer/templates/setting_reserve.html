@@ -29,16 +29,16 @@
             <ul id="ulTimes" class="dropdown-menu pters_dropdown_custom ulTimes">
               <li><a data-dur="1">1시</a></li>
               <li><a data-dur="2">2시</a></li>
-              <li><a data-dur="2">3시</a></li>
-              <li><a data-dur="2">4시</a></li>
-              <li><a data-dur="2">5시</a></li>
-              <li><a data-dur="2">6시</a></li>
-              <li><a data-dur="2">7시</a></li>
-              <li><a data-dur="2">8시</a></li>
-              <li><a data-dur="2">9시</a></li>
-              <li><a data-dur="2">10시</a></li>
-              <li><a data-dur="2">11시</a></li>
-              <li><a data-dur="2">12시</a></li>
+              <li><a data-dur="3">3시</a></li>
+              <li><a data-dur="4">4시</a></li>
+              <li><a data-dur="5">5시</a></li>
+              <li><a data-dur="6">6시</a></li>
+              <li><a data-dur="7">7시</a></li>
+              <li><a data-dur="8">8시</a></li>
+              <li><a data-dur="9">9시</a></li>
+              <li><a data-dur="10">10시</a></li>
+              <li><a data-dur="11">11시</a></li>
+              <li><a data-dur="12">12시</a></li>
             </ul>
       </div>
     </div>
@@ -58,22 +58,59 @@
                 <ul id="ulTimes2" class="dropdown-menu pters_dropdown_custom ulTimes">
                   <li><a data-dur="1">1시</a></li>
                   <li><a data-dur="2">2시</a></li>
-                  <li><a data-dur="2">3시</a></li>
-                  <li><a data-dur="2">4시</a></li>
-                  <li><a data-dur="2">5시</a></li>
-                  <li><a data-dur="2">6시</a></li>
-                  <li><a data-dur="2">7시</a></li>
-                  <li><a data-dur="2">8시</a></li>
-                  <li><a data-dur="2">9시</a></li>
-                  <li><a data-dur="2">10시</a></li>
-                  <li><a data-dur="2">11시</a></li>
-                  <li><a data-dur="2">12시</a></li>
+                  <li><a data-dur="3">3시</a></li>
+                  <li><a data-dur="4">4시</a></li>
+                  <li><a data-dur="5">5시</a></li>
+                  <li><a data-dur="6">6시</a></li>
+                  <li><a data-dur="7">7시</a></li>
+                  <li><a data-dur="8">8시</a></li>
+                  <li><a data-dur="9">9시</a></li>
+                  <li><a data-dur="10">10시</a></li>
+                  <li><a data-dur="11">11시</a></li>
+                  <li><a data-dur="12">12시</a></li>
                 </ul>
           </div>
     </div>  
 </div>
-<div id="trainerPushSettingText" class="settingMenu" style="padding:0;">
-      <span class="settingText3">회원 예약 일시 정지</span><div id="switch" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
+
+<div id="memberDisableSettingText" class="settingMenu" style="margin-top:25px;">
+  <p class="settingText">회원 근접시간 예약 불가 설정</p>
+  <p class="settingText2">회원이 근접해서 예약을 하는 것을 방지하는 시간설정입니다.</p>
+  <div id="switch1" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
+</div>
+<div id="memberDisableSetting" class="settingBox" style="display: none;">
+    <div class="iconText">
+        <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 시간 설정</span>
+        <div id="timeSelect" class="dropdown pters_dropdown_setting_custom" style="margin-left:62px;">
+              <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+              <ul id="ulTimes3" class="dropdown-menu pters_dropdown_custom ulTimes">
+                <li><a data-dur="1">1시간 전</a></li>
+                <li><a data-dur="2">2시간 전</a></li>
+                <li><a data-dur="3">3시간 전</a></li>
+                <li><a data-dur="4">4시간 전</a></li>
+                <li><a data-dur="5">5시간 전</a></li>
+                <li><a data-dur="6">6시간 전</a></li>
+                <li><a data-dur="7">7시간 전</a></li>
+                <li><a data-dur="8">8시간 전</a></li>
+                <li><a data-dur="9">9시간 전</a></li>
+                <li><a data-dur="10">10시간 전</a></li>
+                <li><a data-dur="11">11시간 전</a></li>
+                <li><a data-dur="12">12시간 전</a></li>
+                <li><a data-dur="24">1일 전</a></li>
+                <li><a data-dur="48">2일 전</a></li>
+                <li><a data-dur="72">3일 전</a></li>
+              </ul>
+        </div>
+        <div class="dropdown pters_dropdown_setting_custom">
+              예약해야 합니다.
+        </div>
+    </div> 
+</div>
+
+<div id="trainerPushSettingText" class="settingMenu">
+      <span class="settingText">회원 예약 일시 정지</span>
+      <p class="settingText2">회원이 예약하는 기능을 일시적으로 정지합니다.(일정조회는 가능)</p>
+      <div id="switch2" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
 </div>
 
 
@@ -89,6 +126,14 @@
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+          var Options = { "stoptimeStart":21,     //강사가 설정한 예약불가 시간 (시작)
+                          "stoptimeEnd":8,        //강사가 설정한 예약불가 시간 (종료)
+                          "rsvDisableSet" : 'on', //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅 on/off
+                          "limit":4,              //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+                          "reserve":"disable",     //회원 일정 기능을 enable/disable
+          }
+        </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.setting.reserve.js" %}></script>
         
 {% endblock %}

@@ -6,10 +6,7 @@
         <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        
 {% endblock %}
-
-
 
 {% block content %}
 
@@ -50,7 +47,6 @@
       </div>
     </div>
 
-
     <div id="currentMemberList" class="centeralign">
       <table id="currentMember" class="table table-bordered">
         <thead>
@@ -64,7 +60,6 @@
         </thead>
       </table>
     </div>
-
 
     <div id="finishedMemberList" class="centeralign">
       <table id="finishedMember" class="table table-bordered">
@@ -151,7 +146,6 @@
                 </button>
             </div>
         </form>
-      
     </div>
 </div>
 
@@ -312,8 +306,6 @@
             </div>
         </div>
 
-
-
         <div class="ptaddbox form-group">
             <label for="comment" class="ptaddboxtext">
                 <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
@@ -326,6 +318,14 @@
         <div id="ptrepeat-btn">
             <span>PT 반복 일정 등록</span>
             <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
+        </div>
+        <div style="text-align: center;">
+            <div class="submitBtn">
+                <span class="btnok">등록</span>
+            </div>
+            <div class="cancelBtn">
+                <span class="btncancel">취소</span>
+            </div>
         </div>
     </form>
 </div>
@@ -362,7 +362,6 @@
           var finishendArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
          
 
-
           var DB = {};
           var DBe = {};
           var DBlength = nameArray.length;
@@ -378,10 +377,6 @@
           $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
 
          </script>
-
-        
-
-
 
 
 {% endblock %}
