@@ -39,7 +39,7 @@
                     </button>
                     {% block nav_center_img %}
                         <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>-->
-                        <a id="uptext" class="uptext" href="{% url 'home' %}">{{ user.first_name }}  코치님 일정</a>
+                        <a id="uptext" class="uptext" href="{% url 'home' %}">{{ user.first_name }}  <span></span></a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
                         <a href="{% url 'trainer:alarm' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
@@ -55,19 +55,38 @@
                         <div class="sidebar_upper" onclick="location.href='{% url 'home' %}'">
                             <a href="{% url 'home' %}" style="width:100%;height: 100%;z-index: 1"></a>
                             <div style="z-index: -1"><img src={% static "user/res/icon-pf.png" %} alt="#"></div>
-                            <div id="user_name">{{user.first_name}} 코치님</div>
-                            <div id="welcome">안녕하세요!</div>
+                            <div id="user_name">{{user.first_name}} 
+                                <span class="KRtext">코치님</span><span class="JPtext">様</span><span class="ENtext"></span>
+                            </div>
+                            <div id="welcome"><span class="KRtext">안녕하세요!</span><span class="JPtext">こんにちは</span><span class="ENtext">What a nice day!</span></div>
                         </div>                     
 
-                        <div class="sidebar_div"><img src={% static "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#"><a href="{% url 'trainer:cal_day' %}" class="sidebar_text">오늘 일정</a></div>
-                        <div class="sidebar_div"><img src={% static "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="{% url 'trainer:cal_week' %}" class="sidebar_text">주간 일정</a></div>
-                        <div class="sidebar_div"><img src={% static "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#"><a href="{% url 'trainer:cal_month' %}" class="sidebar_text">월간 달력</a></div>
-                        <div class="sidebar_div"><img src={% static "user/res/icon-user-setting.png" %} class="sidebar_icon" alt="#"><a href="{% url 'trainer:member_manage' %}" class="sidebar_text">회원 관리</a></div>
-                        <div class="sidebar_div"><img src={% static "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#"><a href="{% url 'trainer:work_manage' %}" class="sidebar_text">업무 통계</a></div>
+                        <div class="sidebar_div"><img src={% static "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:cal_day' %}" class="sidebar_text __todayplan">
+                            </a>
+                        </div>
+                        <div class="sidebar_div"><img src={% static "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:cal_week' %}" class="sidebar_text __weekplan">
+                            </a>
+                        </div>
+                        <div class="sidebar_div"><img src={% static "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:cal_month' %}" class="sidebar_text __monthplan">
+                            </a>
+                        </div>
+                        <div class="sidebar_div"><img src={% static "user/res/icon-user-setting.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:member_manage' %}" class="sidebar_text __membermanage">
+                            </a>
+                        </div>
+                        <div class="sidebar_div"><img src={% static "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:work_manage' %}" class="sidebar_text __workmanage">
+                            </a>
+                        </div>
                         <div class="sidebar_div" style="height: 100%;"></div>
                         <div class="sidebar_div sidebar_div_last">
                           <div class="sidebar_div_last1">
-                            <img src="{% static "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#"><a href="{% url 'trainer:trainer_setting' %}" class="sidebar_text">서비스 설정</a>
+                            <img src="{% static "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
+                            <a href="{% url 'trainer:trainer_setting' %}" class="sidebar_text __setting">
+                            </a>
                           </div>
                           <div class="sidebar_div_last2">
                             <img src={% static "user/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon">
@@ -98,17 +117,29 @@
         <nav class="navbar navbar-fixed-top" id="pcver">
             <div class="centermenu">
                 <img src="/static/user/res/PTERS_logo_pure.jpg" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
-                <div class="centermenu_div"><a href="{% url 'trainer:cal_day' %}" class="centermenu_text">오늘 일정</a></div>
-                <div class="centermenu_div"><a href="{% url 'trainer:cal_week' %}" class="centermenu_text">주간 일정</a></div>
-                <div class="centermenu_div"><a href="{% url 'trainer:cal_month' %}" class="centermenu_text">월간 달력</a></div>
-                <div class="centermenu_div"><a href="{% url 'trainer:member_manage' %}" class="centermenu_text">회원 관리</a></div>
-                <div class="centermenu_div"><a href="{% url 'trainer:work_manage' %}" class="centermenu_text">업무 통계</a></div>
-                <div class="centermenu_div"><a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text">서비스 설정</a></div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:cal_week' %}" class="centermenu_text __weekplan"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:cal_month' %}" class="centermenu_text __monthplan"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:member_manage' %}" class="centermenu_text __membermanage"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:work_manage' %}" class="centermenu_text __workmanage"></a>
+                </div>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
+                </div>
                 <div class="centermenu_div"></div>
                 <div id="loginInfo" class="centermenu_div" style="float:right;margin-right: 0;">
-                    <span class="centermenu_text pcwhere">PTERS 트레이닝센터</span>
-                    <span class="centermenu_text pcwho">{{user.first_name}} 님</span>
-                    <span class="centermenu_text pclogout" onclick="location.href='{% url 'trainer:logout' %}'">로그아웃</span>
+                    <span class="centermenu_text pcwhere"></span>
+                    <span class="centermenu_text pcwho">{{user.first_name}} <span></span></span>
+                    <span class="centermenu_text pclogout" onclick="location.href='{% url 'trainer:logout' %}'"></span>
                 </div>
             </div>
         </nav>
@@ -164,6 +195,22 @@
               //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
               $('#shade').hide().css({'z-index':'-1'});
              }; 
+
+             var Options = {
+                          "language" : "Japan", //Korea, Japan, English, Chinese
+                          "location" : "Japan", //Korea, Japan, English, Chinese
+              }
+
+              if(Options.language=="Japan"){
+                $(".KRtext, .ENtext").remove();
+                $(".JPtext").show();
+              }else if(Options.language=="English"){
+                $(".KRtext, .JPtext").remove();
+                $(".ENtext").show();
+              }else if(Options.language=="Korea"){
+                $(".ENtext, .JPtext").remove();
+                $(".KRtext").show();
+              }
     </script>
 
     {% block local_js_footer %}
