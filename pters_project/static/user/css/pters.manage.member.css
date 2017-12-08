@@ -20,6 +20,7 @@ body{
 	position: absolute;
 	top: 50px;
 	width:100%;
+	max-width: 700px !important;
 	background: #f4f4f4;
 	z-index: 105;
 }
@@ -220,9 +221,10 @@ th{
 .infopopup{
 	display: none;
 	position: absolute;
-	background: #d6d6d6;
+	background: #f4f4f4;
 	width: 90%;
 	z-index: 1500;
+	max-width: 700px !important;
 	top: -800px;
 	left: 5%;
 }
@@ -311,6 +313,10 @@ th{
 	#currentMember tr td:nth-child(4),#finishedMember tr td:nth-child(4){
 		font-size: 14px;
 	}
-
+	
+	#shade3{
+		background-color: #282828;
+		opacity: 0.8;
+	}
 }
 

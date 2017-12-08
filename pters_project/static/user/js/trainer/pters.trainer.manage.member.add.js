@@ -77,6 +77,7 @@ $(document).ready(function(){
       	}
       })
 
+
       //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
       $('#btnCallSimple').click(function(){
         $('#manualReg').hide();
