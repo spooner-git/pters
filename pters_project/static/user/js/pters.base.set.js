@@ -20,8 +20,43 @@ $(document).ready(function(){
       $('#uptext').css({'color':'#fe4e65','font-size':'16px'});
 	 }else{
 //	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
-
 	 };
+
+
+   if(Options.language == "Japan"){
+      $('.__todayplan').text("今日の日程")
+      $('.__weekplan').text("週間日程")
+      $('.__monthplan').text("カレンダー")
+      $('.__membermanage').text("会員管理")
+      $('.__workmanage').text("業務管理")
+      $('.__setting').text("設定")
+      $('.pcwho span').text("様")
+      $('.pcwhere').text("PTERSトレーニングセンター")
+      $('.pclogout').text("ログアウト")
+      $('#uptext span').text("様のスケジュール")
+   }else if(Options.language == "English"){
+      $('.__todayplan').text("Daily")
+      $('.__weekplan').text("Weekly")
+      $('.__monthplan').text("Calendar")
+      $('.__membermanage').text("Members")
+      $('.__workmanage').text("Work")
+      $('.__setting').text("Settings")
+      $('.pcwho span').text("")
+      $('.pcwhere').text("PTERS Traning Center")
+      $('.pclogout').text("Logout")
+      $('#uptext span').text("'s schedule")
+   }else if(Options.language == "Korea"){
+      $('.__todayplan').text("오늘 일정")
+      $('.__weekplan').text("주간 일정")
+      $('.__monthplan').text("월간 달력")
+      $('.__membermanage').text("회원 관리")
+      $('.__workmanage').text("업무 통계")
+      $('.__setting').text("서비스 설정")
+      $('.pcwho span').text("님")
+      $('.pcwhere').text("PTERS 트레이닝센터")
+      $('.pclogout').text("로그아웃")
+      $('#uptext span').text("코치님 일정")
+   }
 });
 
 

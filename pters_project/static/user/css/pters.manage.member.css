@@ -276,6 +276,10 @@ th{
 	margin-top: 4px;
 }
 
+#pcBtn{
+	display: none;
+}
+
 @media(min-width: 600px){
 	#selectBox,#alignBox{
 		width: 800px;
@@ -317,6 +321,10 @@ th{
 	#shade3{
 		background-color: #282828;
 		opacity: 0.8;
+	}
+
+	#pcBtn{
+		display:block;
 	}
 }
 
