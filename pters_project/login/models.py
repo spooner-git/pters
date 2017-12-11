@@ -65,7 +65,8 @@ class LogTb(models.Model):
 
 class HolidayTb(models.Model):
     holiday_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    holiday_dt = models.CharField(db_column='HOLIDAY_DT',max_length=10, blank=True, null=True)  # Field name made lowercase.
+    holiday_dt = models.CharField(db_column='HOLIDAY_DT', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    holiday_name = models.CharField(db_column='HOLIDAY_NAME', max_length=20, blank=True, null=True)
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:
