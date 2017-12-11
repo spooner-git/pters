@@ -23,8 +23,8 @@ $(document).ready(function(){
 	var oriMonth = date.getMonth()+1;
 	var oriDate = date.getDate();
 
-	var notAvailableStartTime = 23; //강사가 설정한 예약불가 시간 (시작)
-	var notAvailableEndTime = 7; //강사가 설정한 예약불가 시간 (종료)
+	var notAvailableStartTime = 22; //강사가 설정한 예약불가 시간 (시작)
+	var notAvailableEndTime = 8; //강사가 설정한 예약불가 시간 (종료)
 
 	//플로팅 버튼
 	$('#float_btn').click(function(){
@@ -45,6 +45,33 @@ $(document).ready(function(){
 		alert('까꿍~')
 	})
 
+
+	$(document).on('click','td',function(){
+		$('#cal_popup_plancheck').fadeIn('fast');
+		$('#shade2').css({'display':'block'});
+		var info = $(this).attr('data-date').split('_')
+		var yy=info[0]
+		var mm=info[1]
+		var dd=info[2]
+		var dayobj = new Date(yy,mm-1,dd)
+		var dayraw = dayobj.getDay();
+		var dayarry = ['일','월','화','수','목','금','토']
+		var day = dayarry[dayraw];
+		var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+		$('.popup_ymdText').html(infoText)
+		plancheck(yy+'_'+mm+'_'+dd)
+	})
+
+	$('#cal_popup_plancheck').click(function(){
+		$(this).fadeOut('fast');
+		$('#shade2').css({'display':'none'});
+	})
+
+
+
+
+
+/*
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
 		if($(this).hasClass('available')){
 			if($(this).find('div').hasClass('dateMytime')){
@@ -85,7 +112,8 @@ $(document).ready(function(){
 				$('#id_training_date').val(yy+'-'+mm+'-'+dd);
 			}
 		}else if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
-			$('#ng_popup_text').html('<p>현재시간은 일정 예약이 불가한 시간입니다.</p><p>예약불가 시간대 : '+notAvailableStartTime+'시 ~ '+notAvailableEndTime+'시</p>')
+			$('#shade2').css({'display':'block'});
+			$('#ng_popup_text').html('<p>현재시간은 일정 예약이 불가한 시간입니다.</p><p style="color:#fe4e65;font-size=13px;">예약불가 시간대<br> '+notAvailableStartTime+'시 ~ '+notAvailableEndTime+'시</p>')
 			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
 			//$(this).fadeOut(5000)
 			})
@@ -108,6 +136,7 @@ $(document).ready(function(){
 			$('#popup_info2').text(infoText2)
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 		}else{
+			$('#shade2').css({'display':'block'});
 			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>')
 			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
 			//$(this).fadeOut(2800)
@@ -128,7 +157,7 @@ $(document).ready(function(){
 	$('#popup_text3').click(function(){
 		document.getElementById('pt-delete-form').submit();
 	})
-
+*/
 
 /*
 	$('#popup_text2').click(function(){ //일정예약 팝업에서 일정예약 버튼을 눌렀을때 예약하는 팝업이 생성
@@ -230,12 +259,15 @@ $(document).ready(function(){
 	})
 
 	$('#ng_popup').click(function(){
+		$('#shade2').css({'display':'none'});
 		$(this).fadeOut(100)
 	})
 
 
 
-
+	var dateResult = []
+	var countResult = []
+	
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
 
 	calTable_Set(1,currentYear,currentPageMonth-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
@@ -243,15 +275,18 @@ $(document).ready(function(){
 	calTable_Set(3,currentYear,currentPageMonth+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
+	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classNameArray,'class')
+	DBdataProcessMonthTrainer(); //트레이너 월간일정에서 날짜별 PT갯수 표기를 위함
 
 	alltdRelative(); //모든 td의 스타일 position을 relative로
 	//dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
-	classDates(); //나의 PT일정에 핑크색 동그라미 표시
+	//classDates(); //나의 PT일정에 핑크색 동그라미 표시
+	classDatesTrainer(); // 트레이너 월간일정에 핑크색 동그라미 표시하고 PT 갯수 표기
+
+
 	monthText(); //상단에 연, 월 표시
 	availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 	krHoliday(); //대한민국 공휴일
-
-	console.log(currentHour)
 
 
 	//다음페이지로 슬라이드 했을때 액션
@@ -287,7 +322,8 @@ $(document).ready(function(){
 			calTable_Set(3,currentYear,currentPageMonth+1); //새로 추가되는 슬라이드에 달력 채우기	
 			alltdRelative();
 			//dateDisabled();
-			classDates();
+			//classDates();
+			classDatesTrainer();
 			monthText();
 			krHoliday();
 			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
@@ -302,7 +338,8 @@ $(document).ready(function(){
 			calTable_Set(1,currentYear,currentPageMonth-1);
 			alltdRelative();		
 			//dateDisabled();
-			classDates();
+			//classDates();
+			classDatesTrainer();
 			monthText();
 			krHoliday();
 			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
@@ -312,6 +349,14 @@ $(document).ready(function(){
 
 	
 	function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
+		if(Month>12){
+            var Month = Month-12
+            var Year = Year+1
+        }else if(Month<1){
+            var Month = Month+12
+            var Year = Year-1
+        }
+
 		for(var i=1; i<=6; i++){
 			$('.swiper-slide:nth-child('+Index+')').append('<div id="week'+i+Year+Month+'" class="container-fluid week-style">')
 		};
@@ -383,7 +428,8 @@ $(document).ready(function(){
 			};
 		}
 		for(i=1;i<=6;i++){
-			$('#week'+i+Year+Month+'child td:first-child').css({color:'red'}); //일요일 날짜는 빨갛게 표기
+			$('#week'+i+Year+Month+'child td:first-child').css({color:'#d21245'}); //일요일 날짜는 Red 표기
+			$('#week'+i+Year+Month+'child td:last-child').css({color:'#115a8e'}); //토요일 날짜는 Blue 표기
 		} 
 	}; //calendarSetting()
 
@@ -430,9 +476,43 @@ $(document).ready(function(){
 		};
 	};
 
+	function classDatesTrainer(){
+		for(var i=0; i<dateResult.length; i++){
+			var arr = dateResult[i].split('_')
+			var yy = arr[0]
+			var mm = arr[1]
+			var dd = arr[2]
+			var omm = String(oriMonth)
+			var odd = String(oriDate)
+			if(mm.length==1){
+				var mm = '0'+arr[1]
+			}
+			if(dd.length==1){
+				var dd='0'+arr[2]
+			}
+			if(omm.length==1){
+				var omm = '0'+oriMonth
+			}
+			if(odd.length==1){
+				var odd='0'+oriDate
+			}
+
+			console.log(yy+mm+dd , oriYear+omm+odd)
+			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
+				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
+				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('balloon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
+			}else{
+				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
+				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('blackballoon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
+			}
+			console.log(countResult[i])
+		};
+	}
+
 	function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
+		console.log(krHolidayList)
 		for(var i=0; i<krHolidayList.length; i++){
-			$("td[data-date$="+krHolidayList[i]+"]").addClass('holiday');
+			$("td[data-date="+krHolidayList[i]+"]").addClass('holiday');
 		};
 	};
 
@@ -455,17 +535,17 @@ $(document).ready(function(){
 		if(currentHour<Endtime || currentHour>=not_AvailableStartTime){
 			for(i=currentDate;i<=currentDate+14;i++){
 				if(i>lastDay[oriMonth]){
-				 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('notavailable')
+				 $('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('notavailable')
 				}else{
-				 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')
+				 $('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')
 				}
 			}
 		}else{
 			for(i=currentDate;i<=currentDate+14;i++){
 				if(i>lastDay[oriMonth]){
-				 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
+				 $('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
 				}else{
-				 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('available')
+				 $('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('available')
 				}
 			}
 		}
@@ -511,11 +591,90 @@ $(document).ready(function(){
   	    }
 	}
 
-	function ad_month(selector){ // 월간 달력 하단에 광고
-		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">')	
+	
+
+	function DBdataProcessMonthTrainer(){
+		var len = classDateArray.length;
+		var summaryArray ={}
+		var summaryArrayResult = []
+
+		var datasum = []
+		for(var i=0; i<len; i++){ //객체화로 중복 제거
+			summaryArray[classDateArray[i]] = classDateArray[i]
+			datasum[i] = classDateArray[i]+"_"+classTimeArray_member_name[i]
+		}
+		for(var i in summaryArray){ //중복 제거된 배열
+			if(i.length<10){
+				i = i+"_"
+			}
+			summaryArrayResult.push(i)
+		}
+
+		var len2 = summaryArrayResult.length;
+		//var countResult = []
+		for(var i=0; i<len2; i++){
+			var scan = summaryArrayResult[i]
+			countResult[i]=0
+			for(var j=0; j<len; j++){
+				if(scan == datasum[j].substr(0,10)){
+					countResult[i] = countResult[i]+1
+				}
+			}
+		}
+		//var dateResult = []
+		for(var i=0; i<summaryArrayResult.length; i++){
+			var splited = summaryArrayResult[i].split("_")
+			var yy = splited[0];
+			var mm = splited[1];
+			var dd = splited[2];
+			dateResult[i] = yy+'_'+mm+'_'+dd
+		}
+		
 	}
 
 
+
+	function ad_month(selector){ // 월간 달력 하단에 광고
+		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
+	}
+
+
+	function plancheck(dateinfo){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
+		var len = classNameArray.length;
+		var dateplans = []
+		for(var i=0; i<len; i++){
+			var splited = classNameArray[i].split('_');
+			var yy = splited[0]
+			var mm = splited[1]
+			var dd = splited[2]
+			var stime1 = splited[3]
+			if(stime1.length<2){
+				var stime1 = '0'+stime1
+			}
+			var stime = stime1+'_'+splited[4]
+			var etime = splited[7]+'_'+splited[8]
+			var name = splited[6]
+			var ymd = yy+'_'+mm+'_'+dd
+			if(ymd==dateinfo){
+				dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd)
+			}
+		}
+		dateplans.sort();
+		console.log(dateplans)
+		var htmltojoin = []
+		for(var i=0;i<dateplans.length;i++){
+			var splited = dateplans[i].split('_')
+			var stime = splited[0]+"시"
+			if(stime.substr(0,1)=='0'){
+				var stime = stime.substr(1,1) + "시"
+			}
+			var etime = splited[2]+"시"
+			var name = splited[4]+" 회원님"
+			htmltojoin.push('<p>'+stime+' ~ '+etime+'     :     '+name+'</p>')
+		}
+		console.log(htmltojoin.join(''))
+		$('#cal_popup_plancheck .popup_inner').html(htmltojoin.join(''))
+	}
 
 
 

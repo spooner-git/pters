@@ -7,6 +7,10 @@ body{
 	background: black;
 }
 
+table{
+	table-layout: fixed;
+}
+
 span{
 	cursor: pointer;
 }
@@ -295,6 +299,10 @@ span{
 	z-index: 0;
 }
 
+.arrowButtonPC{
+	display:none;
+}
+
 .arrowButton a{
 	position: absolute;
 	top: 0%;
@@ -319,10 +327,14 @@ span{
 	font-size: 13px;
 }
 
+._morningday{
+	display:none;
+}
+
 #page-weekcal td{
 	position: relative;
 	width: 12.5%;
-	height: 15px;
+	height: 14.5px;
 	color : #282828;
 	/*border-right:  1.5px solid #ffffff;*/
 	border-left:  1px solid #ffffff;
@@ -333,11 +345,12 @@ span{
 
 .td00{
 	background: #ffffff;
+	border-top: 0px solid #c3c3c3;
 }
 
 .td30{
 	background: #ffffff;
-	border-bottom: 2px solid #c3c3c3;
+	border-bottom: 1px solid #c3c3c3;
 }
 
 tr{
@@ -356,21 +369,33 @@ tr{
 	z-index: 3;
 }
 
+
+
+
+
+
 .classTime{
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	width: 100%;
 	background: #fe4e65;
-	opacity: 0.7;
+	opacity: 0.8;
 	border: 0.5px solid #fe4e65;
 	border-bottom: 0.5px solid #a2a2a2;
 	z-index: 100;
 	cursor: pointer;
 }
 
-.classTime:active{
-	background: #a2a2a2;
+.classTime_re{
+	background: blue;
+	border: 0.5px solid blue;
+}
+
+.classTime:active,.classTime:hover{
+	background: #fe4e65;
+	opacity: 1;
+	border:0.5px solid #fe4e65
 	-webkit-background: #a2a2a2;
 }
 
@@ -380,14 +405,19 @@ tr{
 	left: 0px;
 	width: 100%;
 	background: #3b3d3d;
-	opacity: 0.7;
+	opacity: 0.8;
 	border: 0.5px solid #3b3d3d;
 	z-index: 100;
 	cursor: pointer;
 }
 
-.offTime:active{
-	background: #d6d5d5;
+.offTime_re{
+	background: black;
+}
+
+.offTime:active,.offTime:hover{
+	background: #3b3d3d;
+	opacity: 1;
 	-webkit-background: #d6d5d5;
 }
 
@@ -433,7 +463,7 @@ tr{
 
 #week{
 	position: fixed;
-	z-index: 3;
+	z-index: 4;
 	background-color: transparent;
 	height: auto;
 	padding-top: 50px;
@@ -468,7 +498,7 @@ tr{
 }
 
 .reserveavailable{
-	background: #c0e8ff
+	background: #e9f5ff;
 }
 
 .currentTimeBox{
@@ -481,29 +511,6 @@ tr{
 	top: 0;
 
 }
-
-/*
-.currentTimeIndicator{
-	position: absolute;
-	left: 9%;
-	top: -14%;
-	width: 9px;
-	height: 9px;
-	background-color: #fe4e65;
-	border-radius: 4.5px;
-	z-index: 101;
-}
-
-
-.currentTimeLine{
-	position: absolute;
-	border-top: 1px dotted #fe4e65;
-	left: 9.5%;
-	top: 0%;
-	width: 90%;
-	z-index: 101;
-}
-*/
 
 
 /*미디어 쿼리*/
@@ -597,31 +604,6 @@ tr{
 	}
 }
 
-@media(min-width:1273px){
-  /*달력 크기 조정*/
-
-	body{
-		/*font-family: 'Noto Sans KR';*/
-		padding-top: 50px;
-		width: 100%;
-		max-width: 1024px;
-		background: #f4f4f4;
-	}	
-
-	.swiper-slide{
-		height: 100%;
-		overflow-y: overlay;
-	}
-
-}
-
-/*미디어 쿼리*/
-
-
-
-
-
-
 /*페이지 popup*/
 
 #page-ptadd{
@@ -646,3 +628,167 @@ tr{
 	display: block;
 	position: absolute;
 }
+
+
+
+
+@media(min-width: 600px){
+	#calendar{
+		position: relative;
+		margin:0 auto;
+		left: 0 !important;
+		transform: none;
+		padding-top: 0px;
+	}
+	
+	#page-weekcal{
+		position: relative !important;
+	}
+
+	.memberName{
+		position: absolute;
+		left: 3%;
+		margin-top: 0px;
+		font-size: 100%;
+		font-weight: 400;
+		letter-spacing: -0.3px;
+		color: #ffffff;
+		cursor: pointer;
+		}
+
+	.memberTime{
+		position: absolute;
+		right: 6%;
+		font-weight: 300;
+		margin-top: 5px;
+		font-size: 13px;
+		letter-spacing: -0.3px;
+		color: #ffffff;
+		cursor: pointer;
+	}
+
+	.swiper-slide{
+		overflow-y: hidden;
+	}
+
+	.td00{
+		background: #ffffff;
+		border-top: 1px solid #c3c3c3;
+	}
+
+	.td30{
+		background: #ffffff;
+		border-bottom: 0.5px solid #c3c3c3;
+	}
+	
+	.weekToday-style{
+		height: 18px;
+		font-size: 14px;
+		font-weight: 400;
+	}
+
+	.hour{
+		font-weight: 500;
+	}
+
+
+	#page-ptadd, #page-offadd{
+		top: 150px;
+		width: 500px;
+	}
+
+	#shade3{
+		background: black;
+		opacity: 0.8;
+	}
+
+	.arrowButtonPC{
+		display: block;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+	}
+
+	.arrowButtonPC a:first-child{
+		height: 100%;
+		width: 25%;
+		float: left;
+		cursor: pointer;
+	}
+
+	.arrowButtonPC a:last-child{
+		height: 100%;
+		width: 25%;
+		float: right;
+		cursor: pointer;
+	}
+
+	.arrowButtonPC a:first-child:active{
+		background: #cccccc;
+	}
+	
+	.arrowButtonPC a:last-child:active{
+		background: #cccccc;
+	}
+
+	.arrowButtonPC img{
+		position: fixed;
+		top: 50%;
+	}
+
+
+	.arrowButton{
+		display:none;
+	}
+
+	#ymdText{
+		height: 100px;
+		position: relative;
+	}
+
+	#week{
+		position: relative;
+		padding-top: 0px;
+	}
+
+	#weekText span{
+		margin-bottom: 5px;
+	}
+
+	#yearText{
+		font-size: 26px;
+		top: 15%;
+	}
+
+	#monthText{
+		font-size:21.5px;
+		top: 60%;
+	}
+
+	.today{
+		color: transparent;
+		border-top: 5px solid #fe4e65;
+	}
+
+	td span:nth-child(1){
+		height: 5px;
+	}
+
+	td span:nth-child(3){
+		font-size: 17px;
+		margin-bottom: 10px !important;
+	}
+
+}
+
+@media(min-width: 800px){
+	._morningday{
+		display:inline;
+	}
+}
+
+
+
+
+

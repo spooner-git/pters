@@ -291,6 +291,41 @@ span{
 	color: #fe4e65 !important;
 }
 
+.popupBtn{
+	text-align: center;
+	margin-top: 20px;
+}
+
+.submitBtn{
+	height: 50px;
+	background: #ffffff;
+	/*color: #115a8e;*/
+	color: #f4f4f4;
+	border-top: 0.5px solid #cccccc;
+	border-bottom: 0.5px solid #cccccc;
+}
+
+.submitBtn:active,.cancelBtn:active{
+	background: #282828;
+	color: #fe4e65;
+}
+
+.submitBtn span{
+	line-height: 53px;
+	font-size: 17px;
+	font-weight: bold;
+}
+
+.cancelBtn{
+	height: 50px;
+	background: #ffffff;
+	color: #fe4e65;
+}
+
+.cancelBtn span{
+	line-height: 55px;
+	font-size: 15px;
+}
 
 /* 신규 회원 등록  */
 
@@ -370,7 +405,7 @@ span{
 	font-size: 13.5px;
 }
 
-.ptaddbox tr{
+#simpleReg tr{
 	height: 35px;
 }
 
@@ -382,7 +417,38 @@ span{
 	width: 100%;
 }
 
-.ptaddbox td{
+#simpleReg td{
 	background: #f4f4f4;
 	width: 16.67%;
+}
+
+.inputunit{
+	position: absolute;
+	line-height: 40px;
+	top: 0px;
+	right: 25px;
+}
+
+.pricebutton{
+	width: 100%;
+	max-width: 450px;
+	height: 35px;
+	text-align: center;
+	margin:0 auto;
+}
+
+
+.pricebuttonchild{
+	display: inline-block;
+	line-height: 22px;
+	width: 17%;
+	border: 0.5px solid #cccccc;
+	background: #ffffff;
+	border-radius: 10%;
+	cursor: pointer;
+}
+
+.pricebuttonchild:active{
+	background: #fe4e65;
+	color: #ffffff;
 }

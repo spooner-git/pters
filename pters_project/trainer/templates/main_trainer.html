@@ -4,44 +4,60 @@
 {% block local_css %}
     <meta name="upperText" content="main_trainer">
     <link rel="stylesheet" href={% static "user/css/main/main_trainer.css" %}>
+    <style>
+      .KRtext,.JPtext,.ENtext{
+        display: none;
+      }
+    </style>
 {% endblock %}
 
 {% block content %}
         <div id="main_content" class="container" > <!--main_content-->
           <img src={% static "user/res/main/bg-image.png" %} style="width:100%;" alt="" class="wrap">
+          <div id="windowTop" class="mainwindow"></div>
           <div class='center_box wrap'>
             <div class='center_box_text center_box_text_up' onclick="location.href='{% url 'trainer:cal_day' %}'">
               <div class='center_box_day'><p href="#"></p></div>
               <div class='center_box_monthyear'><p href="#"></p></div>
             </div>
             <div class='center_box_text' onclick="location.href='{% url 'trainer:cal_day' %}'" >
-              <div class='center_box_plan'><p href=""></p></div>
-              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_day' %}" class="center_box_num">{{ today_schedule_val }}</a>건</div>
+              <div class='center_box_plan'>
+                <p></p>
+              </div>
+              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_day' %}" class="center_box_num">{{ today_schedule_val }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
             </div>
           </div>
           <div class="lower_box wrap" onclick="location.href='{% url 'trainer:member_manage' %}'">
             <div class="lower_box_child" style="left:4.17%;">
               <div class="lower_box_child_inner">
-              <div>총 회원</div>
-              <a href="" id='total_member' class='lower_box_num'>{{trainer_member_count}}</a>명
+              <div class="KRtext">총 회원</div><div class="JPtext">総会員</div><div class="ENtext">Total Member</div>
+              <a href="" id='total_member' class='lower_box_num'>{{trainer_member_count}}</a>
+              <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
               </div>
             </div>
             <div class="lower_box_child" style="left:35%;">
               <div class="lower_box_child_inner">
-              <div>일정 변경</div>
-              <a href="" id='request_num' class='lower_box_num'>{{ today_schedule_mod_val }}</a>명
+              <div class="KRtext">일정 변경</div><div class="JPtext">日程変更</div><div class="ENtext">--</div>
+              <a href="" id='request_num' class='lower_box_num'>{{ today_schedule_mod_val }}</a>
+              <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
               </div>
             </div>
             <div class="lower_box_child" style="left:65.83%;">
               <div class="lower_box_child_inner">
-              <div>종료 임박</div>
-              <a href="" id='finish_member' class='lower_box_num'>{{ trainer_end_member_count }}</a>명
+              <div class="KRtext">종료 임박</div><div class="JPtext">終了切迫</div><div class="ENtext">Need re-contract</div>
+              <a href="" id='finish_member' class='lower_box_num'>{{ trainer_end_member_count }}</a>
+              <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
               </div>
             </div>
           </div>
+          <div id="windowBottom" class="mainwindow"></div>
         </div> <!--main_content-->
+
+
+        
 {% endblock %}
 
 {% block local_js_footer %}
     <script type="text/javascript" src={% static "user/js/main/main_trainer.js" %}></script>
+
 {% endblock %}

@@ -34,14 +34,16 @@ $(document).ready(function(){
 
     })
 
-    $('#upbutton-x').click(function(){
+    $('#upbutton-x,.cancelBtn').click(function(){
       $('#page_addmember').fadeOut('fast');
       $('#shade3').fadeOut('fast');
       $('#float_btn').fadeIn('fast');
       $('#page-base').fadeIn();
       $('#page-base-addstyle').fadeOut();
 
-      $('input').val("")
+      $('input,#memberDue_add_2').val("")
+      $('._due div.checked').removeClass('checked ptersCheckboxInner')
+      $('._count div.checked').removeClass('checked ptersCheckboxInner')
       $('p,.pters_input_custom').removeClass("dropdown_selected")
       $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>"); 
     })
@@ -254,10 +256,11 @@ $(document).ready(function(){
                 if(name.length>5){
                   var name = array[1].substr(0,5)+'..'
                 }
-                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'     
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-                var td = '<tr><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'    
+                var td = '<tr><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -285,10 +288,11 @@ $(document).ready(function(){
                 if(name.length>5){
                   var name = array[0].substr(0,5)+'..'
                 }
-                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-                var td = '<tr><td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'     
+                var td = '<tr><td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'     
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -316,10 +320,11 @@ $(document).ready(function(){
                 if(name.length>5){
                   var name = array[1].substr(0,5)+'..'
                 }
-                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'    
-                var td = '<tr><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
+                var td = '<tr><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -366,10 +371,11 @@ $(document).ready(function(){
                 if(name.length>5){
                   var name = array[1].substr(0,5)+'..'
                 }
-                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
-                var td = '<tr><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
+                var td = '<tr><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -397,10 +403,11 @@ $(document).ready(function(){
                 if(name.length>5){
                   var name = array[0].substr(0,5)+'..'
                 }
-                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'  
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
-                var td = '<tr><td class="_tdnamee" data-name="'+array[0]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
+                var td = '<tr><td class="_tdnamee" data-name="'+array[0]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -428,10 +435,11 @@ $(document).ready(function(){
                 if(name.length>5){
                   var name = array[1].substr(0,5)+'..'
                 }
-                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>'
+                var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
+                var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
-                var td = '<tr><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'       
+                var td = '<tr><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'       
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")

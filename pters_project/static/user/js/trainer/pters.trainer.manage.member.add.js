@@ -24,6 +24,8 @@ $(document).ready(function(){
         minDate : 0,
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
           $("#dateSelector3 p").addClass("dropdown_selected");
+
+          autoDateInput();
           check_dropdown_selected();
         }
       });
@@ -75,6 +77,7 @@ $(document).ready(function(){
       	}
       })
 
+
       //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
       $('#btnCallSimple').click(function(){
         $('#manualReg').hide();
@@ -83,7 +86,7 @@ $(document).ready(function(){
         $('#btnCallManual').removeClass('selectbox_checked')
         $('p').removeClass("dropdown_selected")
         $('#memberCount_add').parent('div').removeClass('dropdown_selected')
-        $('#datepicker_add,#datepicker2_add,#memberCount_add').val("")
+        $('#datepicker_add,#datepicker2_add,#memberCount_add,#lecturePrice_add_2').val("")
         check_dropdown_selected();
       })
 
@@ -95,7 +98,7 @@ $(document).ready(function(){
         $('._due div.checked').removeClass('checked ptersCheckboxInner')
         $('._count div.checked').removeClass('checked ptersCheckboxInner')
         $('p').removeClass("dropdown_selected")
-        $('#datepicker_fast').val("")
+        $('#datepicker_fast,#lecturePrice_add,#memberDue_add_2').val("")
         check_dropdown_selected();
       })
 
@@ -104,6 +107,10 @@ $(document).ready(function(){
         var pterscheckbox = $(this).find('div')
         $(this).find('div:nth-child(1)').addClass('checked')
         pterscheckbox.find('div').addClass('ptersCheckboxInner')
+
+        if($("#datepicker_fast").val()!=""){
+          autoDateInput();
+        }
       })
 
       $('._count .ptersCheckbox').parent('td').click(function(){
@@ -112,6 +119,75 @@ $(document).ready(function(){
         $(this).find('div:nth-child(1)').addClass('checked')
         pterscheckbox.find('div').addClass('ptersCheckboxInner')
       })
+
+      $('#price1').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 1000000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price2').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 500000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price3').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 100000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price4').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 50000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price5').click(function(){
+        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
+        var priceInputValue = 10000 + Number(priceInputValue);
+        $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price6').click(function(){
+        $('#lecturePrice_add').val("")
+      })
+
+      $('#price1_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 1000000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price2_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 500000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price3_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 100000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price4_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 50000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price5_2').click(function(){
+        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
+        var priceInputValue = 10000 + Number(priceInputValue);
+        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+      })
+
+      $('#price6_2').click(function(){
+        $('#lecturePrice_add_2').val("")
+      })
+
       //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
 
@@ -131,6 +207,57 @@ $(document).ready(function(){
             select_all_check=false;
         }
      }
+
+
+     function autoDateInput(){
+
+          /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택///// 
+          var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31]
+          var selected = $('#datepicker_fast').val();
+          var selectedDate = Number(selected.replace(/-/g, ""));
+          var selectedD = $('._due div.checked').parent('td').attr('data-check'); // 1,2,3,6,12,99
+          var selectedDue = Number(selectedD + '00');
+          var finishDate =  selectedDate+selectedDue
+          var yy = String(finishDate).substr(0,4);
+          var mm = String(finishDate).substr(4,2);
+          var dd = String(finishDate).substr(6,2);
+          
+
+          if(mm>12){ //해 넘어갈때 날짜처리
+            //var finishDate = finishDate + 10000 - 1200
+            var yy = Number(yy)+1;
+            var mm = Number(mm)-12;
+          }
+          if(String(mm).length<2){
+              var mm = "0"+mm;
+          }
+          var finishDate = yy +"-"+ mm +"-"+ dd
+          if(dd>lastDay[Number(mm)-1]){
+            var dd = Number(dd)-lastDay[Number(mm)-1]
+            var mm = Number(mm)+1
+            if(String(dd).length<2){
+              var dd = "0"+dd
+            }
+            if(String(mm).length<2){
+              var mm = "0"+mm
+            }
+            var finishDate = yy +"-"+ mm +"-"+ dd;
+          }
+          $('#memberDue_add_2').val(finishDate)
+          if(selectedD==99){
+            $('#memberDue_add_2').val("소진시까지")
+          }
+
+          if(selectedD==undefined){
+            $('#memberDue_add_2').val("진행기간을 선택해주세요")
+          }
+
+          if($('#memberDue_add_2').val()!="진행기간을 선택해주세요" && $('#memberDue_add_2').val()!="" ){
+            $('#memberDue_add_2').parent('div').addClass("dropdown_selected")
+          }
+          /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
+     }
+
 
      function limit_char(e){
       var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
@@ -163,5 +290,9 @@ $(document).ready(function(){
         showMonthAfterYear: true,
         yearSuffix: '년'
     });
+
+    function numberWithCommas(x) { //천단위 콤마 찍기
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
 });

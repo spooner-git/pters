@@ -11,7 +11,7 @@ body{
 	height: 100%;
 }
 
-span{
+span,p{
 	cursor: pointer;
 }
 
@@ -112,16 +112,25 @@ span{
 	position: absolute;
 	width: 100%;
 	height: 100%;
+	z-index: 1;
+}
+
+.arrowButtonPC{
+	display: none;
 }
 
 .arrowButton a{
 	position: absolute;
-	top: 26%;
+	top: 70%;
 	font-size: 35px;
 	font-weight: 600;
 	color: #ffffff;
 	text-decoration: none;
+	width: 25px;
+	height: 25px;
+	text-align: center;
 }
+
 
 
 #ymdText{
@@ -160,17 +169,6 @@ span{
 	margin-bottom: 3px;
 }
 
-@media(min-width:570px){
-	#yearText{
-		display: block;
-		margin-bottom: 5px;
-	}
-	#countRemain{
-		margin-bottom: 15px
-	}
-}
-
-
 
 #countRemainData{
 	line-height: 24px;
@@ -195,12 +193,6 @@ span{
 	background-color: transparent;
 }
 
-@media(min-width:570px){
-	#gapbox{
-		padding-bottom: 100px;
-	}
-
-}
 
 
 .week-style{ /*week 스타일*/
@@ -209,44 +201,26 @@ span{
 	width: 100%;
 	border-bottom: 1px solid #cccccc;
 	font-size: 14.4px;
-	height: 69px;
-	padding-bottom: 7px;	
+	height: 70px;
 }
 
-@media(min-width:570px){
-	.week-style{ /*week 스타일*/
-		background-color: transparent;
-		position: relative;
-		width: 100%;
-		border-bottom: 1px solid #cccccc;
-		height: 100px;
-		min-height: 42px;
-		padding-bottom: 7px;
-		font-size: 16px;
-		font-weight: bold;	
-
-	}
-}
 
 .calendar-style{  /*week 스타일하위 */
 	width: 100%;
 	text-align: center;
-	height: 98%;
+	height: 100%;
 }
 
 .calendar-day-style{  /*왈화수목금토일 스타일 */
 	font-size: 12px;
+	line-height: 31px;
 }
 
-@media(min-width:570px){
-	.calendar-day-style{  /*왈화수목금토일 스타일 */
-		font-size: 15px;
-	}
-}
 
 .calendar_image{
-	width: 100%;
+	/*width: 100%;*/
 	margin: auto;
+	margin-right: 8px;
 }
 
 .weekday_style{
@@ -326,8 +300,9 @@ span{
 	margin:0 auto;
 	width: 28px;
 	height: 28px;
-	background: #fddadf;
-	top: 15px;
+	/*background: #fddadf;*/
+	background: #f9b4be;
+	top: 21px;
 	bottom:0;
 	left: 0px;
 	right: 0;
@@ -342,7 +317,7 @@ span{
 	width: 28px;
 	height: 28px;
 	background: #e4e4e4;
-	top: 16px;
+	top: 21px;
 	bottom:0;
 	left: 0px;
 	right: 0;
@@ -350,38 +325,7 @@ span{
 	z-index: -1;
 }
 
-@media(min-width:570px){
-	.dateMytime{
-		position: absolute;
-		display:block;
-		margin:0 auto;
-		width: 30px;
-		height: 30px;
-		background: #fddadf;
-		top: 29.5px;
-		bottom:0;
-		left: 0px;
-		right: 0;
-		border-radius: 50%;
-		z-index: -1;
-	}
 
-	.greydateMytime{
-		position: absolute;
-		display:block;
-		margin:0 auto;
-		width: 30px;
-		height: 30px;
-		background: #e4e4e4;
-		top: 30px;
-		bottom:0;
-		left: 0px;
-		right: 0;
-		border-radius: 50%;
-		z-index: -1;
-	}
-
-}
 
 .today{
 	position:absolute;
@@ -399,15 +343,16 @@ span{
 }
 
 .holiday{
-	color: red;
+	color: #d21245 !important;
 }
 
 .balloon{
 	position: absolute;
 	background: #e4e4e4;
-	height: 18px;
+	color: #333;
+	height: 16px;
 	width: 90%;
-	bottom: -7px;
+	bottom: 1px;
 	border-radius: 1px;
 	font-size: 12px;
 	padding-top: 0.5px;
@@ -416,18 +361,22 @@ span{
 	transform: translateX(-50%);
 }
 
-/*
-.balloon:after{
-	content: '';
+.balloon_trainer{
 	position: absolute;
-	border-bottom: 10px solid #ccc;
-	border-right:5px solid transparent;
-	border-left: 5px solid transparent;
-	top: -6px;
-	left: 38%;
-	z-index: -3;
+	background: #e4e4e4;
+	color: #333;
+	height: 16px;
+	width: 16px;
+	bottom: 1px;
+	border-radius: 1px;
+	font-size: 12px;
+	padding-top: 0px;
+	z-index: -2;
+	left: 53%;
+	transform: translateX(-50%);
+	border-radius: 50%;
 }
-*/
+
 
 .blackballoon{
 	position: absolute;
@@ -435,7 +384,7 @@ span{
 	background: #3b3d3d;
 	height: 16px;
 	width: 90%;
-	bottom: -6px;
+	bottom: 1px;
 	border-radius: 1px;
 	font-size: 12px;
 	font-weight: 300;
@@ -445,66 +394,67 @@ span{
 	transform: translateX(-50%);
 }
 
-/*
-.blackballoon:after{
-	content: '';
+.blackballoon_trainer{
 	position: absolute;
-	border-bottom: 10px solid #282828;
-	border-right:5px solid transparent;
-	border-left: 5px solid transparent;
-	top: -6px;
-	left: 38%;
-	z-index: -3;
-}
-*/
+	color: #ffffff;
+	background: #3b3d3d;
+	height: 16px;
+	width: 16px;
+	bottom: 1px;
+	border-radius: 1px;
+	font-size: 12px;
+	font-weight: 400;
+	padding-top: 0px;
+	z-index: -2;
+	left: 53%;
+	transform: translateX(-50%);
 
-@media(min-width:570px){
-	.balloon{
-		position: absolute;
-		background: #e4e4e4;
-		height: 21px;
-		width: 40px;
-		bottom: 0%;
-		border-radius: 2px;
-		font-size: 13.5px;
-		font-weight: 400;
-		padding-top: 1px;
-		z-index: -2;
-		left: 50%;
-		transform: translateX(-50%);
-	}
-
-	.blackballoon{
-		position: absolute;
-		color: #ffffff;
-		background: #3b3d3d;
-		height: 21px;
-		width: 40px;
-		bottom: 0%;
-		border-radius: 2px;
-		font-size: 13.5px;
-		font-weight: 300;
-		padding-top: 1px;
-		z-index: -2;
-		left: 50%;
-		transform: translateX(-50%);
-	}
+	border-radius: 50%;
 }
 
+
+#cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
+	display: none;
+	position: fixed;
+	top: 35%;
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	z-index: -2;
+	text-align: center;
+	left:50%;
+	transform: translateX(-50%);
+	z-index: 150;
+}
+
+#cal_popup_plancheck .popup_inner:hover{
+	background : white;
+}
+
+._classTime img{
+	display: none;
+}
 
 
 /*팝업 css*/
 #ng_popup{
 	display: none;
 	position: fixed;
-	background: #e4e4e4;
+	background: #ffffff;
 	top: 35%;
-	left: 10%;
+	left: 50%;
+	transform: translateX(-50%);
 	width: 80%;
+	max-width: 330px;
 	border: 1px solid #a2a2a2;
 	z-index: 103;
 	text-align: center;
-	font-weight: bold;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+.paddingside15px{
+	padding-left:20px;
+	padding-right: 20px;
 }
 
 
@@ -624,9 +574,8 @@ span{
 
 
 .popup_inner span{
-	position: absolute;
-	left: 41.5%;
-	top: 30%;
+	margin:0 auto;
+	line-height: 55px;
 	font-size: 14px;
 	font-weight: bold;
 	cursor: pointer;
@@ -652,12 +601,13 @@ span{
 }
 
 .available{
-	border-top: 3px solid #88dfff;
+	background:  #ffebee;
 	z-index: -1;
+	/*opacity: 1;*/
 }
 
 .notavailable{
-	border-top: 3px solid #e61616;
+	background: #dadada;
 	z-index: -1;
 }
 
@@ -668,6 +618,8 @@ span{
 	opacity: 0.15;
 	margin-top: 18px;
 }
+
+
 
 
 @media(min-width:415px){
@@ -807,3 +759,215 @@ span{
 }
 
 /*미디어 쿼리*/
+
+@media(min-width: 600px){
+	#calendar{
+		position: relative;
+		background-color: 	#ffffff;
+	}
+
+	#calendar td:hover{
+		background : #eaeaea;
+		opacity: 0.2;
+	}
+	
+	#ymdText{
+		position: relative;
+		height: 100px;
+	}
+
+	#yearText{
+		font-size: 26px;
+		top: 15%;
+	}
+
+	#monthText{
+		font-size: 21.5px;
+		top: 60%;
+	}
+
+	#gapbox{
+		padding-bottom: 0px;
+	}
+
+	#countRemain{
+		margin-bottom: 0px;
+	}
+
+	#calendar td{
+		border-left:0.5px solid #cccccc;
+		border-right: 0.5px solid #cccccc;
+	}
+
+	.arrowButtonPC{
+		display: block;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+	}
+
+	.arrowButtonPC a:first-child{
+		height: 100%;
+		width: 25%;
+		float: left;
+		cursor: pointer;
+	}
+
+	.arrowButtonPC a:last-child{
+		height: 100%;
+		width: 25%;
+		float: right;
+		cursor: pointer;
+	}
+
+	.arrowButtonPC a:first-child:active{
+		background: #cccccc;
+	}
+	
+	.arrowButtonPC a:last-child:active{
+		background: #cccccc;
+	}
+
+	.arrowButtonPC img{
+		position: fixed;
+		top: 50%;
+	}
+	
+	.arrowButton{
+		display:none;
+	}
+
+	.prevDates,.nextDates{
+		opacity: 0.2;
+		background:grey;
+	}
+	
+	.greydateMytime,.dateMytime{
+		width: 	38px;
+		height: 38px;
+		top: 	31px;
+	}
+		
+	.admonth{
+		margin-top: 25px;
+	}
+
+	.balloon{
+		position: absolute;
+		background: #e4e4e4;
+		height: 21px;
+		width: 40px;
+		top: 43px;
+		border-radius: 2px;
+		font-size: 13.5px;
+		font-weight: 400;
+		padding-top: 1px;
+		z-index: -2;
+		left: 50%;
+		transform: translateX(-50%);
+		text-align: center;
+	}
+
+	.blackballoon{
+		position: absolute;
+		color: #ffffff;
+		background: #3b3d3d;
+		height: 21px;
+		width: 40px;
+		top: 43px;
+		border-radius: 2px;
+		font-size: 13.5px;
+		font-weight: 300;
+		padding-top: 1px;
+		z-index: -2;
+		left: 50%;
+		transform: translateX(-50%);
+		text-align: center;
+	}
+
+	.dateMytime{
+		display: none;
+
+	}
+
+	.greydateMytime{
+		display: none;
+
+	}
+
+	.calendar-day-style{  /*왈화수목금토일 스타일 */
+		font-size: 15px;
+	}
+
+	.arrowButton a{
+		position: absolute;
+		top: 78%;
+		font-size: 35px;
+		font-weight: 600;
+		color: #ffffff;
+		text-decoration: none;
+		width: 25px;
+		height: 25px;
+		text-align: center;
+	}
+
+	#yearText{
+		display: block;
+		margin-bottom: 5px;
+	}
+	#countRemain{
+		margin-bottom: 0px
+	}
+
+	#gapbox{
+		padding-bottom: 0px;
+	}
+
+	.week-style{ /*week 스타일*/
+		background-color: transparent;
+		position: relative;
+		width: 100%;
+		border-bottom: 1px solid #cccccc;
+		height: 100px;
+		min-height: 42px;
+		font-size: 16px;
+		font-weight: 400;	
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+
+	#date{
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.blackballoon_trainer,.balloon_trainer{
+		bottom: 40px;
+		color :#282828;
+		background-color: transparent;
+		font-size: 15px;
+		font-weight: 500;
+		width:27px;
+	}
+
+	._classTime img{
+		display: inline;
+		margin-right: 4px;
+		margin-bottom: 3px;
+	}
+
+	.calendar-style{
+		text-align: right;
+	}
+
+	#calendar td{
+		vertical-align: unset;
+		padding-top: 3px;
+		padding-right: 10px;
+	}
+
+	.today{
+		color: transparent;
+	}
+}

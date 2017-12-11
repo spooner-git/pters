@@ -6,23 +6,20 @@
         <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        
 {% endblock %}
-
-
 
 {% block content %}
 
  <!--플로팅 버튼-->
-    <div id="float_btn">
-      <img src={% static "user/res/memberadd/float_plus_member.png" %} alt="">
-    </div>
+<div id="float_btn">
+    <img src={% static "user/res/memberadd/float_plus_member.png" %} alt="">
+</div>
 
 
-    <div id="shade">
-    </div>
-    <div id="shade3">
-    </div>
+<div id="shade">
+</div>
+<div id="shade3">
+</div>
   <!--플로팅 버튼-->
 
 <div id="page_managemember">
@@ -50,12 +47,12 @@
       </div>
     </div>
 
-
     <div id="currentMemberList" class="centeralign">
       <table id="currentMember" class="table table-bordered">
         <thead>
           <tr>
             <th>회원명</th>
+            <th class="_regcount">등록 횟수</th>
             <th>남은 횟수</th>
             <th>시작 일자</th>
             <th>연락처</th>
@@ -64,12 +61,12 @@
       </table>
     </div>
 
-
     <div id="finishedMemberList" class="centeralign">
       <table id="finishedMember" class="table table-bordered">
         <thead>
           <tr>
             <th>회원명</th>
+            <th class="_regcount">등록 횟수</th>
             <th>남은 횟수</th>
             <th>시작 일자</th>
             <th>연락처</th>
@@ -149,7 +146,6 @@
                 </button>
             </div>
         </form>
-      
     </div>
 </div>
 
@@ -194,13 +190,31 @@
                 <div id="btnCallSimple" href="#" class="selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
                 <div id="btnCallManual" href="#" class="selectboxopt selectboxopt_right">세부 설정 방식</div>
             </div>
-            <div id="manualReg">
+
+            <div id="manualReg"> <!-- 세부 설정 방식 -->
                 <div class="ptaddbox form-group">
                     <label for="memberCount" class="ptaddboxtext">
                         <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록횟수
                     </label>
                     <div class="dropdown pters_input_custom">
                         <input type="tel" class="dropdown form-control" id="memberCount_add" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
+                    </div>
+                </div>
+                <div class="ptaddbox form-group">
+                    <label for="lecturePrice" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 결제 요금
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="tel" class="dropdown form-control" id="lecturePrice_add" name="price" required="required" placeholder="숫자만 입력해주세요." maxlength="8">
+                        <span class="inputunit">원</span>
+                    </div>
+                    <div class="pricebutton">
+                        <div class="pricebuttonchild" id="price1">100만원</div>
+                        <div class="pricebuttonchild" id="price2">50만원</div>
+                        <div class="pricebuttonchild" id="price3">10만원</div>
+                        <div class="pricebuttonchild" id="price4">5만원</div>
+                        <div class="pricebuttonchild" id="price5">1만원</div>
+                        <div class="pricebuttonchild" id="price6" style="width: 7%;color: #fe4e65;">X</div>
                     </div>
                 </div>
                 <div id="dateSelector" class="ptaddbox">
@@ -212,7 +226,8 @@
                     <p class="datepicktext dropdown"><input type="text" id="datepicker2_add" name="end_date" placeholder="선택"  readonly></p>
                 </div>
             </div>
-            <div id="simpleReg">
+
+            <div id="simpleReg"> <!-- 빠른 입력 방식 -->
                 <div class="ptaddbox form-group _count">
                     <label for="memberCount" class="ptaddboxtext">
                         <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록 횟수
@@ -232,6 +247,23 @@
                       </table>
                     </div>
                 </div>
+                <div class="ptaddbox form-group">
+                    <label for="lecturePrice" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 결제 요금
+                    </label>
+                    <div class="dropdown pters_input_custom">
+                        <input type="tel" class="dropdown form-control" id="lecturePrice_add_2" name="price" required="required" placeholder="숫자만 입력해주세요." maxlength="8">
+                        <span class="inputunit">원</span>
+                    </div>
+                    <div class="pricebutton">
+                        <div class="pricebuttonchild" id="price1_2">100만원</div>
+                        <div class="pricebuttonchild" id="price2_2">50만원</div>
+                        <div class="pricebuttonchild" id="price3_2">10만원</div>
+                        <div class="pricebuttonchild" id="price4_2">5만원</div>
+                        <div class="pricebuttonchild" id="price5_2">1만원</div>
+                        <div class="pricebuttonchild" id="price6_2" style="width: 7%;color: #fe4e65;">X</div>
+                    </div>
+                </div>
                 <div class="ptaddbox form-group _due">
                     <label for="memberDue" class="ptaddboxtext">
                         <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 진행 기간
@@ -240,19 +272,19 @@
                       <table>
                         <tbody>
                           <tr>
-                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td data-check="1"><div class="ptersCheckbox"><div></div></div></td>
                             <td class="checkboxtext">1개월</td>
-                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td data-check="2"><div class="ptersCheckbox"><div></div></div></td>
                             <td class="checkboxtext">2개월</td>
-                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td data-check="3"><div class="ptersCheckbox"><div></div></div></td>
                             <td class="checkboxtext">3개월</td>
                           </tr>
                           <tr>
-                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td data-check="6"><div class="ptersCheckbox"><div></div></div></td>
                             <td class="checkboxtext">6개월</td>
-                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td data-check="12"><div class="ptersCheckbox"><div></div></div></td>
                             <td class="checkboxtext">12개월</td>
-                            <td><div class="ptersCheckbox"><div></div></div></td>
+                            <td data-check="99"><div class="ptersCheckbox"><div></div></div></td>
                             <td class="checkboxtext">소진시까지</td>
                           </tr>
                         </tbody>
@@ -274,8 +306,6 @@
             </div>
         </div>
 
-
-
         <div class="ptaddbox form-group">
             <label for="comment" class="ptaddboxtext">
                 <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
@@ -289,12 +319,18 @@
             <span>PT 반복 일정 등록</span>
             <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
         </div>
+        <div id="pcBtn" style="text-align: center;">
+            <div class="submitBtn">
+                <span class="btnok">등록</span>
+            </div>
+            <div class="cancelBtn">
+                <span class="btncancel">취소</span>
+            </div>
+        </div>
     </form>
-
 </div>
 
 {% endblock %}
-
 
 
 
@@ -304,8 +340,8 @@
         <!-- Placed at the end of the document so the pages load faster -->
          <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-         <script type="text/javascript" src={% static "user/js/pters.add.member.js" %}></script>
-         <script type="text/javascript" src={% static "user/js/pters.manage.member.js" %}></script>
+         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.manage.member.add.js" %}></script>
+         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.manage.member.js" %}></script>
          <script>
           $('#uptext').text("회원 관리")
            
@@ -326,7 +362,6 @@
           var finishendArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
          
 
-
           var DB = {};
           var DBe = {};
           var DBlength = nameArray.length;
@@ -342,10 +377,6 @@
           $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
 
          </script>
-
-        
-
-
 
 
 {% endblock %}

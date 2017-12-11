@@ -10,11 +10,19 @@
     <link rel="stylesheet" href={% static "user/css/login/pters.trainer.login.css" %}>
     <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
 
+    <link rel="icon" href="/static/common/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+    <link rel="shortcut icon" href="/static/common/favicon-152.png">
+
 {% endblock %}
 
 {% block content %}
+    <body class="loginbody" style="background-color: black;">
         
-    <div id="imageBox"><img src={% static "user/res/login/pterslogin.png" %} id="loginimg"></div>
+
+    <div id="imageBox">
+        <!--<img src={% static "user/res/login/pterslogin.png" %} id="loginimg">
+--></div>
     <div class="logintext">
         <div><span id="pterstext">PTERS</span> <span id="logintext">로그인</span></div>
     </div>
@@ -64,6 +72,7 @@
     skstyle.js ->> pters.base.set.js 상단바, 사이드바 js
 
 -->
+    </body>
 
 
 

@@ -10,105 +10,12 @@ $(document).ready(function(){
 
       DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
       DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
+      $('#inputError').fadeIn('slow')
 
-      //모바일 스타일
+      //console.log(offDateData)
+      //console.log(offTimeData)
 
-
-
-
-  $("#datepicker").datepicker({
-        minDate : 0,
-          onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
-            if( curDate != instance.lastVal ){
-              $("#dateSelector p").addClass("dropdown_selected");
-              $("#id_training_date").val($("#datepicker").val()).submit();
-              if($('#timeGraph').css('display')=='none'){
-                $('#timeGraph').show(110,"swing");
-              }
-              $('.tdgraph').removeClass('graphindicator')
-              timeGraphSet("class","grey");  //시간 테이블 채우기
-              timeGraphSet("off","grey")
-              startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
-              check_dropdown_selected();
-            }
-          }
-      });
-
-
-
-      var select_all_check = false;
-      //달력 선택된 날짜
-      //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
-
-      $("#members li a").click(function(){
-          //$('.tdgraph').removeClass('graphindicator')
-          $("#membersSelected button").addClass("dropdown_selected");
-      		$("#membersSelected .btn:first-child").text($(this).text());
-      		$("#membersSelected .btn:first-child").val($(this).text());
-      		$("#countsSelected").text($(this).attr('data-lecturecount'));
-      		$("#id_lecture_id").val($(this).attr('data-lectureid'));
-          $("#id_member_name").val($(this).text());
-          check_dropdown_selected();
-  		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
-
-      $(document).on('click','#starttimes li a',function(){
-          $('.tdgraph').removeClass('graphindicator')
-          $("#starttimesSelected button").addClass("dropdown_selected");
-          $("#starttimesSelected .btn:first-child").text($(this).text());
-          $("#starttimesSelected .btn:first-child").val($(this).text());
-          $("#id_training_time").val($(this).attr('data-trainingtime'));
-          var arry = $(this).attr('data-trainingtime').split(':')
-          console.log(arry)
-          durTimeSet(arry[0]);
-          $("#durationsSelected button").removeClass("dropdown_selected");
-          $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-          $("#durationsSelected .btn:first-child").val("");
-          check_dropdown_selected();
-      })
-
-      $(document).on('click',"#durations li a",function(){
-          $("#durationsSelected button").addClass("dropdown_selected");
-          $("#durationsSelected .btn:first-child").text($(this).text());
-          $("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
-          $("#id_time_duration").val($(this).attr('data-dur'));
-          check_dropdown_selected();
-          addGraphIndicator($(this).attr('data-dur'))
-      }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
-
-      $(document).on('click','#durationsSelected button',function(){
-        $('.tdgraph').removeClass('graphindicator');
-      })
-
-      $(document).on('click','button',function(){
-         scrollToIndicator($(this))
-      })
-
-
-     function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-        var memberSelect = $("#membersSelected button");
-        var dateSelect = $("#dateSelector p");
-        var durSelect = $("#durationsSelected button");
-        var startSelect = $("#starttimesSelected button")
-        if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
-            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-            select_all_check=true;
-        }else{
-            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-            select_all_check=false;
-        }
-     }
-
-     $("#upbutton-check").click(function(){
-         if(select_all_check==true){
-             document.getElementById('pt-add-form').submit();
-         }else{
-             //$('#inputError').fadeIn('slow')
-            //입력값 확인 메시지 출력 가능
-         }
-     })
-
-
-     //작은달력 설정
+           //작은달력 설정
      $.datepicker.setDefaults({
         dateFormat: 'yy-mm-dd',
         prevText: '이전 달',
@@ -121,6 +28,121 @@ $(document).ready(function(){
         showMonthAfterYear: true,
         yearSuffix: '년'
     });
+
+
+      $("#datepicker").datepicker({
+        minDate : 0,
+          onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+            if( curDate != instance.lastVal ){
+              $("#dateSelector p").addClass("dropdown_selected");
+              $("#id_training_date").val($("#datepicker").val()).submit();
+              if($('#timeGraph').css('display')=='none'){
+                $('#timeGraph').show(110,"swing");
+              }
+              timeGraphSet("class","pink");  //시간 테이블 채우기
+              timeGraphSet("off","grey")
+              startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+              check_dropdown_selected();
+            }
+          }
+      });
+
+      var modiDateArry = modify_date.replace(/년 |월 |일 |:| /gi,'_').split('_')
+      var modiDate = modiDateArry[0]+'-'+modiDateArry[1]+'-'+modiDateArry[2]
+
+      console.log(modiDate)
+
+      $("#datepicker").datepicker("setDate",modiDate) // 일정변경 초기값 셋팅
+
+      $("#dateSelector p").addClass("dropdown_selected");
+      $("#id_training_date").val($("#datepicker").val()).submit();
+      if($('#timeGraph').css('display')=='none'){
+        $('#timeGraph').show(110,"swing");
+      }
+      timeGraphSet("class","pink");  //시간 테이블 채우기
+      timeGraphSet("off","grey")
+      startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+      check_dropdown_selected();
+
+      var select_all_check = false;
+      //달력 선택된 날짜
+      //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
+
+      $("#members li a").click(function(){
+          $("#membersSelected button").addClass("dropdown_selected");
+      		$("#membersSelected .btn:first-child").text($(this).text());
+      		$("#membersSelected .btn:first-child").val($(this).text());
+      		$("#countsSelected").text($(this).attr('data-lecturecount'));
+      		$("#id_lecture_id").val($(this).attr('data-lectureid'));
+            $("#id_member_name").val($(this).text());
+          check_dropdown_selected();
+  		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
+
+      $(document).on('click','#starttimes li a',function(){
+          $('.tdgraph').removeClass('graphindicator')
+          $("#starttimesSelected button").addClass("dropdown_selected");
+          $("#starttimesSelected .btn:first-child").text($(this).text());
+          $("#starttimesSelected .btn:first-child").val($(this).text());
+          $("#id_training_time").val($(this).attr('data-trainingtime'));
+          var arry = $(this).attr('data-trainingtime').split(':')
+          durTimeSet(arry[0]);
+          $("#durationsSelected button").removeClass("dropdown_selected");
+          $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+          $("#durationsSelected .btn:first-child").val("");
+          check_dropdown_selected();
+      })
+
+      $(document).on('click',"#durations li a",function(){
+          $("#durationsSelected button").addClass("dropdown_selected");
+          $("#durationsSelected .btn:first-child").text($(this).text());
+          $("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
+          $("#id_time_duration").val($(this).attr('data-dur'));
+          addGraphIndicator($(this).attr('data-dur'))
+          check_dropdown_selected();
+      }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
+
+      $(document).on('click','#durationsSelected button',function(){
+        $('.tdgraph').removeClass('graphindicator');
+      })
+
+      $(document).on('click','button',function(){
+         scrollToIndicator($(this))
+      })
+      
+      $("#datepicker").change(function(){
+          if($("#datepicker").val() != '') {
+              $("#dateSelector p").addClass("dropdown_selected");
+              $("#id_training_date").val($("#datepicker").val());
+              check_dropdown_selected();
+          }
+          else{
+              $("#dateSelector p").removeClass("dropdown_selected");
+              $("#id_training_date").val('');
+              check_dropdown_selected();
+          }
+      })
+
+     function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
+        var memberSelect = $("#membersSelected button");
+        var dateSelect = $("#dateSelector p");
+        var durSelect = $("#durationsSelected button");
+        var startSelect = $("#starttimesSelected button")
+        if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
+            $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+            select_all_check=true;
+        }else{
+            select_all_check=false;
+        }
+     }
+
+     $("#upbutton-alarm").click(function(){
+         if(select_all_check==true){
+             document.getElementById('pt-add-form').submit();
+         }else{
+            //$('#inputError').fadeIn('slow')
+            //입력값 확인 메시지 출력 가능
+         }
+     })
 
 
       function startTimeSet(){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21];
@@ -149,9 +171,9 @@ $(document).ready(function(){
             timeArray[i] ='<li><a data-trainingtime="'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
           }
         }
-        timeArray[offOkLen]='<li><a data-trainingtime="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>'
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
+        console.log(offAddOkArray)
       }
 
       function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
@@ -339,7 +361,7 @@ $(document).ready(function(){
          durTimeList.append('<li><a data-dur="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>')
       }
 
-      function addGraphIndicator(datadur){
+       function addGraphIndicator(datadur){
         $('.tdgraph').removeClass('graphindicator');
         var starttext = $('#starttimesSelected button').val().split(' ');
         var daymorning = starttext[0];
@@ -367,4 +389,6 @@ $(document).ready(function(){
         console.log(offset)
           $('body, html').animate({scrollTop : offset.top-180},700)
       }
+
+
 });

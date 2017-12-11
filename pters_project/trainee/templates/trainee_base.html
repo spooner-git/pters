@@ -13,10 +13,9 @@
 
         <!-- Bootstrap core CSS -->
         <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
-        <script>
-
-
-        </script>
+        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+        <link rel="shortcut icon" href="/static/common/favicon-152.png">
         <link rel="stylesheet" href={% static "user/css/pters.base.set.css" %}>
         <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
         <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
@@ -32,14 +31,14 @@
     <nav class="navbar navbar-fixed-top navbar-default wrap">
         <div class="">
             <div class="navbar-header">
-                <button id="upbutton" class="navbar-toggle" aria-controls="navbar">
-                    <a href="#"><img src={% static "user/res/icon-user-setting.png" %} style="width:25px;"></a>
+                <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
+                    <a href="{% url 'trainee:mypage_trainee' %}"><img src={% static "user/res/icon-user-setting.png" %} style="width:25px;"></a>
                  </button> 
                  {% block nav_center_img %}
                  <a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.first_name }} 회원님 월간 PT 일정</a>
                 {% endblock %}
-                 <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
-                    <a href="{% url 'trainer:logout' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
+                 <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'trainer:logout' %}'"">
+                    <a href="{% url 'trainer:logout' %}"><img src={% static "user/res/login/icon-unlock-pink.png" %} style="width:20px;"></a>
                  </button> 
             </div>
          </div><!-- /.container -->

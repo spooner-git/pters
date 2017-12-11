@@ -1,5 +1,8 @@
 body{
-	padding-top: 0px;
+	background-image: url(/static/user/res/login/pterslogin.png);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
 }
 
 
@@ -90,5 +93,10 @@ body{
 	font-size: 15px!important;
 	font-weight: bold !important;
 	margin-top: 50px !important;
+}
+
+.form-control{
+	color: #ffffff !important;
+	font-size: 15px !important;
 }
 

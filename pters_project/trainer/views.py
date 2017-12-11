@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from config.views import TrainerView, date_check_func
-from login.models import MemberTb, LogTb
+from login.models import MemberTb, LogTb ,HolidayTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
 
@@ -67,7 +67,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
 
 class CalDayView(LoginRequiredMixin, TemplateView):
-    template_name = 'daily_cal.html'
+    template_name = 'cal_day.html'
 
     def get_context_data(self, **kwargs):
         context = super(CalDayView, self).get_context_data(**kwargs)
@@ -215,7 +215,7 @@ class PtAddView(LoginRequiredMixin, TemplateView):
 
 
 class CalWeekView(LoginRequiredMixin, TemplateView):
-    template_name = 'week_cal.html'
+    template_name = 'cal_week.html'
 
     def get_context_data(self, **kwargs):
         context = super(CalWeekView, self).get_context_data(**kwargs)
@@ -313,6 +313,110 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
 
         return context
 
+class CalMonthView(LoginRequiredMixin, TemplateView):
+    template_name = 'cal_month.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalMonthView, self).get_context_data(**kwargs)
+        error = None
+        trainer_class = None
+        try:
+            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = '강사 PT 정보가 존재하지 않습니다'
+            # logger.error(error)
+
+        context['trainer_member'] = None #sk Test 추가 171117
+
+        #daily_off_data = []
+        #daily_data = []
+        class_schedule_data = []
+        lecture_schedule_data = []
+
+        daily_off_data_start_date = []
+        daily_off_data_end_date = []
+        daily_lecture_data_start_date = []
+        daily_lecture_data_end_date = []
+        daily_lecture_data_member = []
+        daily_lecture_data_id = []
+        holiday = []
+        today_dt = timezone.now()
+        before_dt = today_dt - datetime.timedelta(days=14)
+        after_dt = today_dt + datetime.timedelta(days=14)
+
+        #sk Test 추가 171117
+        if error is None :
+            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
+                                                                 , lecture_avail_count__gte=1)
+
+            for lecture in context['trainer_member']:
+                try:
+                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
+                except ObjectDoesNotExist:
+                    error = '회원 PT 정보가 존재하지 않습니다'
+                    # logger.error(error)
+
+        #sk Test 추가 171117
+
+        if error is None:
+
+            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
+                                                              en_dis_type='0', start_dt__gte=before_dt,
+                                                              start_dt__lte=after_dt, use='1')
+            for month_class in month_class_data:
+                #month_class.data = month_class.start_dt.timetuple()
+                #result = month_class.end_dt - month_class.start_dt
+                #result_hour = int(result.seconds / 60 / 60)
+                # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
+                #                  + '_' + str(result_hour) + '_' + member_data.name)
+                #daily_off_data.append(str(month_class.data.tm_year) + '_' + str(month_class.data.tm_mon) + '_'
+                #                      + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
+                #                      + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
+                class_schedule_data.append(month_class.class_schedule_id)
+                daily_off_data_start_date.append(month_class.start_dt)
+                daily_off_data_end_date.append(month_class.end_dt)
+
+        if error is None:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            for lecture in month_lecture_data:
+                member_data = MemberTb.objects.get(member_id=lecture.member_id)
+                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+                                                                            en_dis_type='1', start_dt__gte=before_dt,
+                                                                            start_dt__lte=after_dt, use='1')
+                for month_lecture in lecture.lecture_schedule:
+                    #month_lecture.data = month_lecture.start_dt.timetuple()
+                    #result = month_lecture.end_dt - month_lecture.start_dt
+                    #result_hour = int(result.seconds / 60 / 60)
+                    # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
+                    #                  + '_' + str(result_hour) + '_' + member_data.name)
+                    #daily_data.append(str(month_lecture.data.tm_year) + '_' + str(month_lecture.data.tm_mon) + '_'
+                    #                  + str(month_lecture.data.tm_mday) + '_' + str(month_lecture.data.tm_hour) + '_'
+                    #                  + str(format(month_lecture.data.tm_min, '02d')) + '_' + str(result_hour) + '_'
+                    #                  + member_data.name)
+                    lecture_schedule_data.append(month_lecture.lecture_schedule_id)
+                    daily_lecture_data_start_date.append(month_lecture.start_dt)
+                    daily_lecture_data_end_date.append(month_lecture.end_dt)
+                    daily_lecture_data_member.append(member_data.name)
+                    daily_lecture_data_id.append(lecture.lecture_id)
+
+        #context['daily_off_data'] = daily_off_data
+        #context['daily_lecture_data'] = daily_data
+#        holiday = HolidayTb.objects.filter(holiday_dt__gte=before_dt, holiday_dt__lte=after_dt, use='1')
+        holiday = HolidayTb.objects.filter(use='1')
+        context['daily_lecture_schedule_id'] = lecture_schedule_data
+        context['class_schedule_data'] = class_schedule_data
+
+        context['daily_off_data_start_date'] = daily_off_data_start_date
+        context['daily_off_data_end_date'] = daily_off_data_end_date
+        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
+        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
+        context['daily_lecture_data_member'] = daily_lecture_data_member
+        context['daily_lecture_data_id'] = daily_lecture_data_id
+        context['holiday'] = holiday
+
+        return context
+
+
 
 class OffAddView(LoginRequiredMixin, TemplateView):
     template_name = 'off_add.html'
@@ -362,7 +466,7 @@ class OffAddView(LoginRequiredMixin, TemplateView):
 
 
 class OffRepeatAddView(LoginRequiredMixin, TemplateView):
-    template_name = 'off_repeat_add.html'
+    template_name = 'cal_add_off_repeat.html'
 
     def get_context_data(self, **kwargs):
         context = super(OffRepeatAddView, self).get_context_data(**kwargs)
@@ -497,7 +601,7 @@ class LogInTrainerView(TemplateView):
 
 
 class TrainerSettingView(TemplateView):
-    template_name = 'trainer_setting.html'
+    template_name = 'setting.html'
 
     def get_context_data(self, **kwargs):
         context = super(TrainerSettingView, self).get_context_data(**kwargs)
@@ -506,7 +610,7 @@ class TrainerSettingView(TemplateView):
 
 
 class PushSettingView(TemplateView):
-    template_name = 'trainer_push_setting.html'
+    template_name = 'setting_push.html'
 
     def get_context_data(self, **kwargs):
         context = super(PushSettingView, self).get_context_data(**kwargs)
@@ -515,7 +619,7 @@ class PushSettingView(TemplateView):
 
 
 class ReserveSettingView(TemplateView):
-    template_name = 'trainer_reserve_setting.html'
+    template_name = 'setting_reserve.html'
 
     def get_context_data(self, **kwargs):
         context = super(ReserveSettingView, self).get_context_data(**kwargs)
@@ -524,7 +628,7 @@ class ReserveSettingView(TemplateView):
 
 
 class SalesSettingView(TemplateView):
-    template_name = 'trainer_sales_setting.html'
+    template_name = 'setting_sales.html'
 
     def get_context_data(self, **kwargs):
         context = super(SalesSettingView, self).get_context_data(**kwargs)
@@ -1085,7 +1189,7 @@ def alarm_delete_logic(request):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PtModifyView(LoginRequiredMixin, TemplateView):
-    template_name = 'pt_modify.html'
+    template_name = 'cal_modify_pt.html'
 
     def get_context_data(self, **kwargs):
         context = super(PtModifyView, self).get_context_data(**kwargs)
@@ -1167,7 +1271,7 @@ class PtModifyView(LoginRequiredMixin, TemplateView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class OffModifyView(LoginRequiredMixin, TemplateView):
-    template_name = 'off_modify.html'
+    template_name = 'cal_modify_off.html'
 
     def get_context_data(self, **kwargs):
         context = super(OffModifyView, self).get_context_data(**kwargs)
