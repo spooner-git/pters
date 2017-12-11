@@ -27,7 +27,7 @@ body{
 	left: 16.67%;
 	right: 16.67%;
 	text-align: center;
-	max-width: 800px !important;
+	max-width: 600px !important;
 }
 
 .lower_box{
@@ -141,6 +141,75 @@ a:focus, a:hover{
 	color: grey;
 }
 
+@media(min-width: 600px){
+	#main_content img{
+		position: relative;
+	}
+	
+	.center_box{
+		position: fixed;
+		height: 350px;
+		top: 180px;
+	}
+
+	.lower_box{
+		position: fixed;
+		height: 105px;
+		top: 600px;
+	}
+	
+	body{
+		overflow-y: auto;
+	}
+
+	.center_box_day{
+		top: 30%;
+		font-size: 40px
+	}
+
+	.center_box_monthyear{
+		font-size: 22px;
+	}
+
+	.center_box_plan{
+		font-size: 30px;
+	}
+
+	.center_box_gun{
+		font-size: 25px;
+	}
+
+	.lower_box_child div{
+		top: 12%;
+	}
+
+	.lower_box_child{
+		font-size: 22px;
+	}
+	
+	.lower_box_num{
+		font-size: 27px;
+	}
+
+	#windowTop{
+		background: #f4f4f4;
+		width: 100%;
+		position: fixed;
+		top: 62px;
+		height: 53px;
+	}
+
+	#windowBottom{
+		background: #f4f4f4;
+		width: 100%;
+		position: fixed;
+		top: 770px;
+		height: 230px;
+		margin-top: 20px;
+	}
+
+
+}
 
 
 

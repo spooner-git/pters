@@ -1,0 +1,97 @@
+{% extends "trainee_base_add_pt.html" %}
+{% load static %}
+
+{% block local_css %}
+
+        <link rel="stylesheet" href={% static "user/css/pters.trainee.mypage.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+{% endblock %}
+
+{% block content %}
+
+<div class="subjectbar">
+    <span>나의 월별 현황</span>
+</div>
+
+<div id="ymdText">
+    <!--<img src="/static/user/res/icon-calendar-week.png" alt="" class="iconimg">-->
+    <a id="leftArrow" style="left: 6%;cursor: pointer;"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 6px;"></a>
+    <span id="yy"></span>
+    <a id="rightArrow" style="right: 6%;cursor: pointer;"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 6px;"></a>
+</div>
+
+<div id="graph" class="pters_graph">
+  
+  <div class="graph_main">
+    <div class="graph_vertical">
+      <div class="verti">30</div>
+      <div class="verti">25</div>
+      <div class="verti">20</div>
+      <div class="verti">15</div>
+      <div class="verti">10</div>
+      <div class="verti">5</div>
+      <div class="verti"></div>
+    </div>
+  </div>  
+  <div class="graph_horizontal">
+    <table>
+      <tr>
+        <td>1월</td>
+        <td>2월</td>
+        <td>3월</td>
+        <td>4월</td>
+        <td>5월</td>
+        <td>6월</td>
+        <td>7월</td>
+        <td>8월</td>
+        <td>9월</td>
+        <td>10월</td>
+        <td>11월</td>
+        <td>12월</td>
+      </tr>
+    </table>
+  </div>
+</div> 
+
+
+{% endblock %}
+
+{% block local_js_footer %}
+        <!-- for db by hk.kim 170805-->
+        <script>
+            var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+        
+            //여기를 가져다 써야함 - hkkim 171021;
+            var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
+        	var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
+            var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
+            var classTimeArray_member_name = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
+            var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}];
+            var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
+            var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
+            var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
+
+            ///********************* 회원 월간 달력 옵션*************************************///
+            ///********************* 회원 월간 달력 옵션*************************************///
+            var Options = {
+                        "reserve":"enable", //회원 일정 기능을 enable/disable
+                        "stoptimeStart":21, //강사가 설정한 예약불가 시간 (시작)
+                        "stoptimeEnd":8,    //강사가 설정한 예약불가 시간 (종료)
+                        "limit":4,          // 현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+            }
+            ///********************* 회원 월간 달력 옵션*************************************///
+            ///********************* 회원 월간 달력 옵션*************************************///
+            
+        </script>
+
+        <!-- Placed at the end of the document so the pages load faster -->
+
+        <script type="text/javascript" src={% static "user/js/trainee/pters.trainee.mypage.js" %}></script> <!--달력에 대한 JS-->
+        <script>
+
+            $('#uptext').text("마이페이지")
+            $('#upbutton-alarm').html("")
+            
+        </script>
+
+{% endblock %}

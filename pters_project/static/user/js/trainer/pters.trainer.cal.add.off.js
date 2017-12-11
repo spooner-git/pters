@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+      var Options = {
+                        "limit": 1, // 현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+                    }
+
      
       var classDateData = []
       var classTimeData = []
@@ -85,10 +89,12 @@ $(document).ready(function(){
        	 var startSelect = $("#starttimesSelected_off button")
        		 if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
         	    $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-            	select_all_check=true;
+            	$('.submitBtn').css({'color':'#115a8e'})
+              select_all_check=true;
         	}else{
               $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-           	    select_all_check=false;
+           	  $('.submitBtn').css({'color':'f4f4f4'})
+              select_all_check=false;
        		}
     	 }
 
@@ -236,8 +242,33 @@ $(document).ready(function(){
               $('#'+targetTime+'g_off').addClass(cssClass)
           }
         }
+        timeGraphLimitSet(Options.limit)
       }
 
+      function timeGraphLimitSet(limit){
+        var selecteddate = $("#datepicker_off").val();
+        var date = new Date();
+        var yy = date.getFullYear();
+        var mm = String(date.getMonth()+1);
+        if(mm.length<2){
+          var mm = '0'+mm
+        }
+        var dd = String(date.getDate());
+        if(dd.length<2){
+          var dd = '0'+dd
+        }
+        var hh = date.getHours();
+        var today = yy+'-'+mm+'-'+dd
+        console.log(selecteddate,today)
+        if(selecteddate==today){
+          for(var i=5;i<=24;i++){
+            var time = $('#'+i+'g_off')
+            if(i<=hh+limit){
+              time.addClass('greytimegraph')
+            }
+          }
+        }
+      }
 
 
       function startTimeArraySet(){ //offAddOkArray 채우기 : 시작시간 리스트 채우기

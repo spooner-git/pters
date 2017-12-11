@@ -1,0 +1,133 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+
+
+/*그래프 ↓↓↓↓↓↓↓↓*/
+.pters_graph{
+	margin-top: 10px;
+	margin-bottom: 30px;
+	text-align: center;
+	position: relative;
+}
+
+.graph_main table{
+	width: 100%;
+	height: 100%;
+}
+
+.graph_main td{
+	border-top :0.5px dotted #cccccc;
+}
+
+.graph_main{
+	position: absolute;
+	width: 92%;
+	height: 200px;
+	border: 1px solid black;
+	left: 24px;
+	background: #ffffff;
+}
+
+.graph_horizontal{
+	position: absolute;
+	width: 92.1%;
+	height: 22px;
+	top: 200px;
+	left: 22px;
+}
+
+.verti{
+	font-size: 11px;
+	text-align: right;
+}
+
+.graph_vertical div:nth-child(1){
+	height: 34px;
+}
+
+.graph_vertical div:nth-child(2){
+	height: 33px;
+}
+
+.graph_vertical div:nth-child(3){
+	height : 33px;
+}
+
+.graph_vertical div:nth-child(4),.graph_vertical div:nth-child(5){
+	height: 33px;
+}
+
+.graph_vertical{
+	position: absolute;
+	width: 8%;
+	height: 230px;
+	left: -10%;
+	top: -8.5px;
+}
+
+.graphunit{
+	border-top: 0.5px solid #ff93a1 !important;
+}
+
+
+.graph_horizontal table{
+	width: 100%;
+	height: 100%;
+}
+
+.graph_horizontal td{
+	height: 100%;
+	width: 8.33%;
+	margin:0;
+	text-align: center;
+	vertical-align: top;
+	font-size: 12px;
+}
+
+.graphcoloring{
+	background: #fe4e65;
+}
+
+/*그래프 ↑↑↑↑↑↑↑↑*/
+
+.subjectbar{
+	width: 100%;
+	height: 45px;
+	background: #ffffff;
+}
+
+.subjectbar span{
+	margin-left: 15px;
+	line-height: 45px;
+	font-size: 15px;
+	font-weight: 500;
+	color: #282828;
+}
+
+.iconimg{
+	width: 20px;
+	display: block;
+	margin:0 auto;
+}
+
+
+#ymdText{
+	width: 100%;
+	margin-top: 10px;
+	text-align: center;
+}
+
+#yy{
+	font-size: 14.5px;
+	font-weight: bold;
+	color: #fe4e65;
+	vertical-align: middle;
+	margin-right: 25px;
+	margin-left: 25px;
+}
+
+.mm{
+	font-size: 12.5px;
+	font-weight: bold;
+	color: #fe4e65;
+}

@@ -26,12 +26,14 @@ $(document).ready(function(){
 	})
 
 
-	$(document).on('click','.ptersCheckbox',function(){
-		var checkBox = $(this).find('div')
-		var date_info = $(this).parent('td').attr('id')
-		if(!checkBox.hasClass('ptersCheckboxInner')){
-			$(this).addClass('checked')
-			checkBox.addClass('ptersCheckboxInner').attr('data-time',$(this).parent('td').attr('id'))
+	$(document).on('click','td',function(){
+		var div_ptersCheckbox = $(this).find('div')
+		var div_ptersCheckboxInner = div_ptersCheckbox.find('div')
+		var date_info = $(this).attr('id')
+		if(!div_ptersCheckboxInner.hasClass('ptersCheckboxInner') && !$(this).hasClass('notAvail') && !$(this).hasClass('hour')){
+			duplicateCheck($(this).attr('id'))
+			div_ptersCheckbox.addClass('checked')
+			div_ptersCheckboxInner.addClass('ptersCheckboxInner').attr('data-time',$(this).parent('td').attr('id'))
 			var add_form = '#pt-add-form'
 			var date_form = date_info.split('_')
 			var yy=date_form[0]
@@ -47,9 +49,9 @@ $(document).ready(function(){
 				"<input type='hidden' name='training_time[]' id='id_training_time_"+date_info+"' value='"+hour+":"+min+":00.000000'>" +
 				"<input type='hidden' name='time_duration[]' id='id_time_duration_"+date_info+"' value='1'>")
 
-		}else if(checkBox.hasClass('ptersCheckboxInner')){
-			checkBox.removeClass('ptersCheckboxInner')
-			$(this).removeClass('checked')
+		}else if(div_ptersCheckboxInner.hasClass('ptersCheckboxInner')){
+			div_ptersCheckboxInner.removeClass('ptersCheckboxInner')
+			div_ptersCheckbox.removeClass('checked')
 			var delete_input_form1 = '#id_training_date_'+date_info
 			var delete_input_form2 = '#id_time_duration_'+date_info
 			var delete_input_form3 = '#id_training_time_'+date_info
@@ -71,7 +73,6 @@ $(document).ready(function(){
 
 
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
-	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
 
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
@@ -97,9 +98,9 @@ $(document).ready(function(){
 
 // ############################구동시 실행################################################################################
 // ****************************구동시 실행********************************************************************************
-	mWeek_calTable_Set(1,2017,11,'0W')
-	mWeek_calTable_Set(2,2017,11,'1L')
-	mWeek_calTable_Set(3,2017,11,'2L')
+	mWeek_calTable_Set(1,currentYear,currentMonth+1,'0W')
+	mWeek_calTable_Set(2,currentYear,currentMonth+1,'1L')
+	mWeek_calTable_Set(3,currentYear,currentMonth+1,'2L')
 	weekNum_Set()
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
@@ -172,6 +173,7 @@ $(document).ready(function(){
 			break;
 		}
 
+
 		var slideIndex = $('#slide'+Index); //Index 시작 1
 		var tableArray=[];
 
@@ -181,7 +183,12 @@ $(document).ready(function(){
 				var Dates = currentDate+j+W
 				if(Dates>lastDay[currentMonth]){
 					var Dates = Dates-lastDay[currentMonth]
-					tdArray[j]='<td id="'+Year+'_'+(Month+1)+'_'+Dates+'_'+i+'_00'+'">'+'<div class="ptersCheckbox"><div></div></div>'+'</td>'
+					var Months=Month+1;
+					if(Months>12){
+						var Months = Months -12
+						var Year = Year +1
+					}
+					tdArray[j]='<td id="'+Year+'_'+Months+'_'+Dates+'_'+i+'_00'+'">'+'<div class="ptersCheckbox"><div></div></div>'+'</td>'
 				}else{
 					tdArray[j]='<td id="'+Year+'_'+Month+'_'+Dates+'_'+i+'_00'+'">'+'<div class="ptersCheckbox"><div></div></div>'+'</td>'
 				}
@@ -210,6 +217,7 @@ $(document).ready(function(){
 		var lastDayThisMonth = lastDay[currentMonth];
 		var mmInfoArry = $('#slide'+index+' td:nth-child(2)').attr('id').split('_')
 		var month = mmInfoArry[1]
+		var Year = mmInfoArry[0]
 
 		for(i=1; i<=5; i++){
 			var dateSpan = $('._day'+i)
@@ -224,7 +232,7 @@ $(document).ready(function(){
 			dateSpan.text(dd)
 			daySpan.text(dayKor[day])
 		}
-		$('#yearText').text(currentYear+'년');
+		$('#yearText').text(Year+'년');
 		$('#monthText').text(month+'월');
 		toDay();
 	}
@@ -282,7 +290,7 @@ $(document).ready(function(){
 				var tdClassStart = $("#"+classStart+" div");
 				tdClassStart.removeClass('ptersCheckbox')
 				tdClassStart.addClass('ptersNotAvail')
-				tdClassStart.parent('td').addClass('notAvail, myClass')
+				tdClassStart.parent('td').addClass('myClass').text("내 일정")
 			}
 		};
 		$('#calendar').css('display','block');
@@ -376,6 +384,23 @@ $(document).ready(function(){
     			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);		
     		}	
   	    }
+	}
+
+	function duplicateCheck(selector){ // 주간일정에서 이미 "내 일정"이 있는 날의 시간을 선택했을때 알림 출력(이미 선택한 날짜에 일정이 있다. 맞는지 확인하시오.) 
+		var alreadyExistCount = 0;
+		for(var i=5; i<24; i++){
+			var selectedId = selector.split('_')
+			var yy = selectedId[0];
+			var mm= selectedId[1];
+			var dd= selectedId[2];
+			var scanTdId = $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_00')
+			if(scanTdId.hasClass('myClass') || scanTdId.find('div').hasClass('checked')){
+				alreadyExistCount++
+			}
+		}
+		if(alreadyExistCount>0){
+			alert('선택한 날짜에 이미 일정이 ['+alreadyExistCount+'] 건 존재합니다.')
+		}
 	}
 
 });//document(ready)

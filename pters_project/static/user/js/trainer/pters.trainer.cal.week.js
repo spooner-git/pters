@@ -11,6 +11,11 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+
+	var repeatData = ['김선겸_tue_16_1_20171203_20180301','김선겸_fri_7_1_20171203_20180301','박신혜_mon_16_1_20171126_20180301']
+	var offrepeatData = ['OFF_sun_5_20_20171224_20180301','OFF_sat_16_9_20171209_20180301']
+
+
 	$('#float_inner1').click(function(){
 	    $('#page-ptadd').fadeIn('fast');
 	    $('#shade3').fadeIn('fast');
@@ -71,11 +76,53 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
   		$("#starttimes_off").empty();
         $("#durations_off").empty();
-
         $('.tdgraph').removeClass('graphindicator')
-
   	})
   //모바일 스타일
+
+  //PC 스타일
+  	$('.cancelBtn').click(function(){
+	    $('#shade3').fadeOut();
+	    $('#page-ptadd').fadeOut('fast','swing');
+	    $('#page-offadd').fadeOut('fast','swing');
+	    $('#float_btn_wrap').fadeIn();
+	    $('#float_btn').removeClass('rotate_btn');
+	    $('#page-base').fadeIn();
+	    $('#page-base-addstyle').fadeOut();
+	    $('.submitBtn').css({'color':'#f4f4f4'})
+
+	    $("#membersSelected button").removeClass("dropdown_selected");
+        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
+        $("#membersSelected .btn:first-child").val("");
+        $("#countsSelected").text("")
+        $("#dateSelector p").removeClass("dropdown_selected");
+        $('#timeGraph').hide();
+        $("#starttimesSelected button").removeClass("dropdown_selected");
+        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected .btn:first-child").val("");
+        $("#durationsSelected button").removeClass("dropdown_selected");
+        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected .btn:first-child").val("");
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+        $("#starttimes").empty();
+        $("#durations").empty();
+
+        $("#dateSelector_off p").removeClass("dropdown_selected");
+        $('#timeGraph_off').hide();
+        $("#starttimesSelected_off button").removeClass("dropdown_selected");
+        $("#starttimesSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected_off .btn:first-child").val("");
+        $("#durationsSelected_off button").removeClass("dropdown_selected");
+        $("#durationsSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected_off .btn:first-child").val("");
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+  		$("#starttimes_off").empty();
+        $("#durations_off").empty();
+        $('.tdgraph').removeClass('graphindicator')
+  	})
+  //PC 스타일
+
+
 
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
 	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
@@ -232,10 +279,15 @@ $(document).ready(function(){
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-	
     var currentDate = date.getDate(); //오늘 날짜
 	var currentDay = date.getDay() // 0,1,2,3,4,5,6,7
 	var currentHour = date.getHours();
+
+	//var currentYear = date.getFullYear();
+	//var currentMonth = 10
+    //var currentDate = 29 //오늘 날짜
+    //var currentDay = 3 // 0,1,2,3,4,5,6,7
+
 	var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
 	if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
 			lastDay[1] = 29;
@@ -269,6 +321,9 @@ $(document).ready(function(){
 	scrollToIndicator();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
+	DBrepeatdata(repeatData,'class')
+	DBrepeatdata(offrepeatData,'off')
+
 // ****************************구동시 실행********************************************************************************
 // ############################구동시 실행################################################################################
 
@@ -355,18 +410,17 @@ $(document).ready(function(){
 		for(var i=5; i<=24; i++){
 			var textToAppend = '<div id="'+i+'H_'+Year+'_'+Month+'_'+currentDate+'_'+Week+'" class="time-style" style="top: '+'">'
 			var divToAppend = $(textToAppend)
-			//var slidevalue = $('#slide'+Index+' #weekNum_'+Number(j+1)+' span:nth-child(3)').text();
 			var slidevalue = "test"
-
-			//var td1= '<td'+' data-time='+Year+'_'+Month+'_'+slidevalue+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
-			//var td2= '<td'+' data-time='+Year+'_'+Month+'_'+slidevalue+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
 
 			switch(currentDay){
 				case 0 :
 				var td1 = []
 				var td2 = []
 				for(z=0; z<=6; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -385,7 +439,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-1; z<=5; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+1]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+1]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -405,7 +462,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-2; z<=4; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+2]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+2]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -424,7 +484,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-3; z<=3; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+3]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+3]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -443,7 +506,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-4; z<=2; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+4]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+4]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -462,7 +528,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-5; z<=1; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+5]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+5]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -481,7 +550,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-6; z<=0; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+6]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+6]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -498,14 +570,15 @@ $(document).ready(function(){
 			}
 			//var td = td1_1+td1_2+td1_3+td1_4+td1_5+td1_6+td1_7+'</tr><tr>'+td2_1+td2_2+td2_3+td2_4+td2_5+td2_6+td2_7+'</tr></tbody></table></div>'
 			var td= td1_1+'</tr><tr>'+td2_1+'</tr></tbody></table></div>'
-			if(i<10){
-					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'<div></div></td>'+td
+			if(i<12){
+					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="_morningday">오전 </span>'+i+'<div></div></td>'+td
 			}else{
-					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+i+'<div></div></td>'+td
+					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="_morningday">오후 </span>'+i+'<div></div></td>'+td
 			};
 			var sum = textToAppend+textToAppend2
-			divToAppend.html(sum)
-			slideIndex.append(divToAppend);
+			//divToAppend.html(sum)
+			//slideIndex.append(divToAppend);
+			slideIndex.append(sum);
 		};
 	}; //calTable_Set
 
@@ -546,19 +619,14 @@ $(document).ready(function(){
 			if(dd.length<2){
 				var dd = '0'+dateID[2]
 			}
-			$('#weekNum_'+Number(i-1)).attr('date-data',yy+mm+dd)
+			$('#weekNum_'+Number(i-1)).attr('data-date',yy+mm+dd)
 		}
-		$('#yearText').text(currentYear+'년');
+		$('#yearText').text(dateID[0]+'년');
 		$('#monthText').text(dateID[1]+'월');
 		toDay();
 		reserveAvailable();
 	}
 
-	function dateText(){ //
-		//currentYMD 형식  ex : 2017_8_4_5H
-		$('#yearText').text(currentYear+'년');
-		$('#monthText').text(currentPageMonth+'월');
-	};
 
 	function toDay(){
 		for(i=1;i<=7;i++){
@@ -576,43 +644,30 @@ $(document).ready(function(){
 
 	function reserveAvailable(){
 		var yy = currentYear;
-		var mm = currentPageMonth;
-		var dd = currentDate;
-		var ymdArry = [yy,mm,dd]
+		var mm = String(currentPageMonth);
+		var dd = String(currentDate);
 		if(mm.length<2){
 			var mm = '0'+mm
 		}
 		if(dd.length<2){
 			var dd = '0'+dd
 		}
+		var ymdArry = [yy,mm,dd]
 		var yymmdd = ymdArry.join('')
-		console.log(yymmdd)
 		for(i=1;i<=7;i++){
-		var scan = $('#weekNum_'+i).attr('date-data')
-			if(yymmdd<=scan && scan<Number(yymmdd)+14){
+		var scan = $('#weekNum_'+i).attr('data-date')
+			if(yymmdd<=scan && scan<14+Number(yymmdd)){
 				$('#weekNum_'+i).addClass('reserveavailable')
-			}else if(scan.substr(4,2)!=mm && scan.substr(6,2)<dd+14-lastDay[currentMonth]){
+				
+			}else if(scan.substr(4,2) > mm && scan.substr(6,2)<Number(dd)+14-lastDay[currentMonth]){
 				$('#weekNum_'+i).addClass('reserveavailable')
+				
 			}else{
 				$('#weekNum_'+i).removeClass('reserveavailable')
+				
 			}
 		}
 	}
-
-/*
-	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
-	function availableDateIndicator(){
-		for(i=currentDate;i<=currentDate+14;i++){
-			if(i>lastDay[oriMonth]){
-			 $('td[data-date='+currentYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
-			}else{
-			 $('td[data-date='+currentYear+'_'+oriMonth+'_'+i+']').addClass('available')
-			}
-		}
-	}
-	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
-	// 14 30 20   20+14-30 = 4
-*/
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var classlen = classTimeArray.length;
@@ -735,6 +790,68 @@ $(document).ready(function(){
     		}	
   	    }
 	}
+
+
+
+	
+
+	function DBrepeatdata(repeat,option){ // 김선겸_tue_16_1_fri_10_2_20171203_20180301  이름_요일_시작시간_진행시간_시작시간_진행시간_반복시작날짜_반복종료날짜
+		
+		switch(option){
+			case 'class':
+			var cssClass= 'classTime classTime_re'
+			break;
+			case 'off':
+			var cssClass= 'offTime offTime_re'
+			break;
+		}
+			var len = repeat.length;
+		for(var j=0; j<=5; j++){
+			var page = '#slide'+j;
+
+
+			for(var i=0; i<len; i++){
+				var arry = repeat[i].split('_');
+				var who = arry[0];
+				var day = arry[1];
+				var time = arry[2];
+				var dur = arry[3];
+				var start = arry[4];
+				var end = arry[5];
+				var days = ['','','sun','mon','tue','wed','thr','fri','sat'];
+
+				var loc_ = $(page+' tr td:nth-child('+days.indexOf(day)+')').attr('id') //2017_12_11_5_00		
+				var loc_a = loc_.split('_')
+
+				var idYear = loc_a[0]
+				var idMonth = loc_a[1]
+				var idDay = loc_a[2]
+				if(idDay.length<2){
+					var idDay = '0'+idDay
+				}
+				if(idMonth.length<2){
+					var idMonth = '0'+idMonth
+				}
+
+				console.log(idYear,idMonth,idDay)
+
+				
+				if(idYear+idMonth+idDay>=start && idYear+idMonth+idDay<=end){
+					if(idDay.substr(0,1)=='0'){
+						var idDay = idDay.substr(1,1);
+					}
+					if(idMonth.substr(0,1)=='0'){
+						var idMonth = idMonth.substr(1,1);
+					}
+					var loc = $('#'+idYear+'_'+idMonth+'_'+idDay+'_'+time+'_00')
+					loc.find('div').attr('data-memberName',who).attr('class-time',time).addClass(cssClass).css({'height':Number(dur*30)+'px'}).html('<span class="memberName">'+who+' </span>'+'<span class="memberTime">'+time+':'+'00'+'</span>');
+					}
+				}
+		}
+	}
+
+
+
 
 /*
 	//ajax////////////////////////////////////////////////////////////////////////////////////////////////////////

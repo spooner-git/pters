@@ -52,3 +52,17 @@ body{
 	margin-bottom: 2.5px;
 	margin-left: 10px;
 }
+
+@media(min-width: 600px){
+	#logout{
+		position: relative;
+		margin-top: 500px;
+		margin-bottom: 22px;
+	}
+
+	.settingMenu{
+		border-left:0.5px solid #a2a2a2;
+		border-right: 0.5px solid #a2a2a2;
+	}
+
+}
