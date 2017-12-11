@@ -500,12 +500,10 @@ $(document).ready(function(){
 			console.log(yy+mm+dd , oriYear+omm+odd)
 			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
 				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
-				//$("td[data-date="+dateResult[i]+"] div._classDate").addClass('greydateMytime')
-				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('balloon_trainer').text(countResult[i])
+				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('balloon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
 			}else{
 				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
-				//$("td[data-date="+dateResult[i]+"] div._classDate").addClass('dateMytime')
-				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('blackballoon_trainer').text(countResult[i])
+				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('blackballoon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
 			}
 			console.log(countResult[i])
 		};
@@ -637,7 +635,7 @@ $(document).ready(function(){
 
 
 	function ad_month(selector){ // 월간 달력 하단에 광고
-		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">')	
+		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
 	}
 
 
