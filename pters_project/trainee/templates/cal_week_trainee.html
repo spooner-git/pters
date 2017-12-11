@@ -85,6 +85,17 @@
           var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
           var classTimeArray = [];
           var offTimeArray = [];
+
+          ///********************* 회원 월간 달력 옵션*************************************///
+            ///********************* 회원 월간 달력 옵션*************************************///
+            var Options = {
+                        "reserve":"enable", //회원 일정 기능을 enable/disable
+                        "stoptimeStart":21, //강사가 설정한 예약불가 시간 (시작)
+                        "stoptimeEnd":8,    //강사가 설정한 예약불가 시간 (종료)
+                        "limit":4,          // 현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+            }
+            ///********************* 회원 월간 달력 옵션*************************************///
+            ///********************* 회원 월간 달력 옵션*************************************///
         
         </script>
         <script type="text/javascript" src={% static "user/js/trainee/pters.trainee.cal.week.js" %}></script>
