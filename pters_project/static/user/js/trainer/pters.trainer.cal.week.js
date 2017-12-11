@@ -11,6 +11,10 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+
+	var repeatData = ['김선겸_tue_16_1_20171203_20180301','김선겸_fri_7_1_20171203_20180301','박신혜_mon_16_1_20171126_20180301',]
+
+
 	$('#float_inner1').click(function(){
 	    $('#page-ptadd').fadeIn('fast');
 	    $('#shade3').fadeIn('fast');
@@ -316,6 +320,7 @@ $(document).ready(function(){
 	scrollToIndicator();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
+	DBrepeatdata(repeatData)
 
 // ****************************구동시 실행********************************************************************************
 // ############################구동시 실행################################################################################
@@ -403,18 +408,17 @@ $(document).ready(function(){
 		for(var i=5; i<=24; i++){
 			var textToAppend = '<div id="'+i+'H_'+Year+'_'+Month+'_'+currentDate+'_'+Week+'" class="time-style" style="top: '+'">'
 			var divToAppend = $(textToAppend)
-			//var slidevalue = $('#slide'+Index+' #weekNum_'+Number(j+1)+' span:nth-child(3)').text();
 			var slidevalue = "test"
-
-			//var td1= '<td'+' data-time='+Year+'_'+Month+'_'+slidevalue+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>';
-			//var td2= '<td'+' data-time='+Year+'_'+Month+'_'+slidevalue+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>';
 
 			switch(currentDay){
 				case 0 :
 				var td1 = []
 				var td2 = []
 				for(z=0; z<=6; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -433,7 +437,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-1; z<=5; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+1]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+1]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -453,7 +460,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-2; z<=4; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+2]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+2]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -472,7 +482,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-3; z<=3; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+3]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+3]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -491,7 +504,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-4; z<=2; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+4]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+4]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -510,7 +526,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-5; z<=1; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+5]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+5]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -529,7 +548,10 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=-6; z<=0; z++){
-					if(currentDates+z>lastDay[currentMonth]){
+					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
+						td1[z+6]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						td2[z+6]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
@@ -594,19 +616,14 @@ $(document).ready(function(){
 			if(dd.length<2){
 				var dd = '0'+dateID[2]
 			}
-			$('#weekNum_'+Number(i-1)).attr('date-data',yy+mm+dd)
+			$('#weekNum_'+Number(i-1)).attr('data-date',yy+mm+dd)
 		}
-		$('#yearText').text(currentYear+'년');
+		$('#yearText').text(dateID[0]+'년');
 		$('#monthText').text(dateID[1]+'월');
 		toDay();
 		reserveAvailable();
 	}
 
-	function dateText(){ //
-		//currentYMD 형식  ex : 2017_8_4_5H
-		$('#yearText').text(currentYear+'년');
-		$('#monthText').text(currentPageMonth+'월');
-	};
 
 	function toDay(){
 		for(i=1;i<=7;i++){
@@ -635,7 +652,7 @@ $(document).ready(function(){
 		var ymdArry = [yy,mm,dd]
 		var yymmdd = ymdArry.join('')
 		for(i=1;i<=7;i++){
-		var scan = $('#weekNum_'+i).attr('date-data')
+		var scan = $('#weekNum_'+i).attr('data-date')
 			if(yymmdd<=scan && scan<14+Number(yymmdd)){
 				$('#weekNum_'+i).addClass('reserveavailable')
 				
@@ -770,6 +787,60 @@ $(document).ready(function(){
     		}	
   	    }
 	}
+
+
+
+	
+
+	function DBrepeatdata(repeat){ // 김선겸_tue_16_1_fri_10_2_20171203_20180301  이름_요일_시작시간_진행시간_시작시간_진행시간_반복시작날짜_반복종료날짜
+		
+			var len = repeatData.length;
+		for(var j=0; j<=5; j++){
+			var page = '#slide'+j;
+
+
+			for(var i=0; i<len; i++){
+				var arry = repeatData[i].split('_');
+				var who = arry[0];
+				var day = arry[1];
+				var time = arry[2];
+				var dur = arry[3];
+				var start = arry[4];
+				var end = arry[5];
+				var days = ['','','sun','mon','tue','wed','thr','fri','sat'];
+
+				var loc_ = $(page+' tr td:nth-child('+days.indexOf(day)+')').attr('id') //2017_12_11_5_00		
+				var loc_a = loc_.split('_')
+
+				var idYear = loc_a[0]
+				var idMonth = loc_a[1]
+				var idDay = loc_a[2]
+				if(idDay.length<2){
+					var idDay = '0'+idDay
+				}
+				if(idMonth.length<2){
+					var idMonth = '0'+idMonth
+				}
+
+				console.log(idYear,idMonth,idDay)
+
+				
+				if(idYear+idMonth+idDay>start && idYear+idMonth+idDay<end){
+					if(idDay.substr(0,1)=='0'){
+						var idDay = idDay.substr(1,1);
+					}
+					if(idMonth.substr(0,1)=='0'){
+						var idMonth = idMonth.substr(1,1);
+					}
+					var loc = $('#'+idYear+'_'+idMonth+'_'+idDay+'_'+time+'_00')
+					loc.find('div').attr('data-memberName',who).attr('class-time',time).addClass('classTime classTime_re').css({'height':Number(dur*30)+'px'}).html('<span class="memberName">'+who+' </span>'+'<span class="memberTime">'+time+':'+'00'+'</span>');
+					}
+				}
+		}
+	}
+
+
+
 
 /*
 	//ajax////////////////////////////////////////////////////////////////////////////////////////////////////////
