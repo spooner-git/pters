@@ -7,6 +7,10 @@ body{
 	background: black;
 }
 
+table{
+	table-layout: fixed;
+}
+
 span{
 	cursor: pointer;
 }

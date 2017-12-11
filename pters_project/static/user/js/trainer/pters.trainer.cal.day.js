@@ -384,8 +384,9 @@ $(document).ready(function(){
 				var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'오후 '+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';			
 			}
 			var sum = textToAppend+textToAppend2
-			divToAppend.html(sum)
-			slideIndex.append(divToAppend);
+			//divToAppend.html(sum)
+			//slideIndex.append(divToAppend);
+			slideIndex.append(sum);
 		};	
 	}; //calTable_Set
 
