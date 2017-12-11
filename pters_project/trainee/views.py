@@ -20,14 +20,14 @@ from trainer.models import ClassTb, ClassScheduleTb
 from django.utils import timezone
 
 
-class IndexView(RedirectView):
+class IndexView(TraineeView):
     url = '/trainee/cal_month/'
 
     def get_redirect_url(self, *args, **kwargs):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
 
 
-class WeekAddView(LoginRequiredMixin, TemplateView):
+class WeekAddView(LoginRequiredMixin, TraineeView, TemplateView):
     template_name = 'trainee_add_pt_cal.html'
 
     def get_context_data(self, **kwargs):
