@@ -387,8 +387,8 @@ span{
 }
 
 .classTime:active,.classTime:hover{
-	background: #a2a2a2;
-	-webkit-background: #a2a2a2;
+	background: #f3b5bd;
+	-webkit-background: #f3b5bd;
 }
 
 
@@ -404,8 +404,9 @@ span{
 }
 
 .offTime:active,.offTime:hover{
-	background: #d6d5d5;
-	-webkit-background: #d6d5d5;
+	background: #3b3d3d;
+	-webkit-background: #3b3d3d;
+	color:white !important;
 }
 
 
@@ -687,7 +688,7 @@ span{
 	
 	.hour{
 		font-size: 14px;
-		font-weight: bold;
+		font-weight: 400;
 		width: 13.5%;
 	}
 
@@ -709,12 +710,26 @@ span{
 
 	.classTime{
 		background: #fe4e65;
-		opacity: 0.9;
+		opacity: 0.8;
 		border:0.5px solid #ffffff;
 	}
 
 	.offTime{
-		background: #616161;
+		background: #3b3d3d;
+		opacity: 0.8;
+	}
+
+	.classTime:active,.classTime:hover{
+		background: #fe4e65;
+		-webkit-background: #fe4e65;
+		opacity: 1;
+	}
+
+	.offTime:active,.offTime:hover{
+		background: #3b3d3d;
+		-webkit-background: #3b3d3d;
+		opacity: 1;
+		color: white;
 	}
 
 	table{
@@ -880,7 +895,7 @@ span{
 
 	.arrowButtonPC img{
 		position: fixed;
-		top: 40%;
+		top: 50%;
 	}
 	
 

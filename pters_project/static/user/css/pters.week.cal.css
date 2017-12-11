@@ -376,7 +376,7 @@ tr{
 	left: 0px;
 	width: 100%;
 	background: #fe4e65;
-	opacity: 0.9;
+	opacity: 0.8;
 	border: 0.5px solid #fe4e65;
 	border-bottom: 0.5px solid #a2a2a2;
 	z-index: 100;
@@ -384,7 +384,9 @@ tr{
 }
 
 .classTime:active,.classTime:hover{
-	background: #a2a2a2;
+	background: #fe4e65;
+	opacity: 1;
+	border:0.5px solid #fe4e65
 	-webkit-background: #a2a2a2;
 }
 
@@ -401,7 +403,8 @@ tr{
 }
 
 .offTime:active,.offTime:hover{
-	background: #d6d5d5;
+	background: #3b3d3d;
+	opacity: 1;
 	-webkit-background: #d6d5d5;
 }
 
@@ -482,7 +485,7 @@ tr{
 }
 
 .reserveavailable{
-	background: #c0e8ff
+	background: #e9f5ff;
 }
 
 .currentTimeBox{
@@ -647,7 +650,7 @@ tr{
 		margin-top: 5px;
 		font-size: 13px;
 		letter-spacing: -0.3px;
-		color: #eaeaea;
+		color: #ffffff;
 		cursor: pointer;
 	}
 
@@ -662,17 +665,17 @@ tr{
 
 	.td30{
 		background: #ffffff;
-		border-bottom: 1px solid #c3c3c3;
+		border-bottom: 0.5px solid #c3c3c3;
 	}
 	
 	.weekToday-style{
 		height: 18px;
-		font-size: 15px;
-		font-weight: bold;
+		font-size: 14px;
+		font-weight: 400;
 	}
 
 	.hour{
-		font-weight: bold;
+		font-weight: 500;
 	}
 
 
@@ -718,7 +721,7 @@ tr{
 
 	.arrowButtonPC img{
 		position: fixed;
-		top: 40%;
+		top: 50%;
 	}
 
 
@@ -736,6 +739,10 @@ tr{
 		padding-top: 0px;
 	}
 
+	#weekText span{
+		margin-bottom: 5px;
+	}
+
 	#yearText{
 		font-size: 26px;
 		top: 15%;
@@ -744,6 +751,20 @@ tr{
 	#monthText{
 		font-size:21.5px;
 		top: 60%;
+	}
+
+	.today{
+		color: transparent;
+		border-top: 5px solid #fe4e65;
+	}
+
+	td span:nth-child(1){
+		height: 5px;
+	}
+
+	td span:nth-child(3){
+		font-size: 17px;
+		margin-bottom: 10px !important;
 	}
 
 }
