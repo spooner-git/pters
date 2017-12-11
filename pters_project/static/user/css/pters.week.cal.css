@@ -383,6 +383,11 @@ tr{
 	cursor: pointer;
 }
 
+.classTime_re{
+	background: blue;
+	border: 0.5px solid blue;
+}
+
 .classTime:active,.classTime:hover{
 	background: #fe4e65;
 	opacity: 1;
