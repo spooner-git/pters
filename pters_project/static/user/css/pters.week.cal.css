@@ -407,6 +407,10 @@ tr{
 	cursor: pointer;
 }
 
+.offTime_re{
+	background: black;
+}
+
 .offTime:active,.offTime:hover{
 	background: #3b3d3d;
 	opacity: 1;

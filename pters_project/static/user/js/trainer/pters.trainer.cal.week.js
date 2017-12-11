@@ -12,7 +12,8 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 $(document).ready(function(){
 
 
-	var repeatData = ['김선겸_tue_16_1_20171203_20180301','김선겸_fri_7_1_20171203_20180301','박신혜_mon_16_1_20171126_20180301',]
+	var repeatData = ['김선겸_tue_16_1_20171203_20180301','김선겸_fri_7_1_20171203_20180301','박신혜_mon_16_1_20171126_20180301']
+	var offrepeatData = ['OFF_sun_5_20_20171224_20180301','OFF_sat_16_9_20171209_20180301']
 
 
 	$('#float_inner1').click(function(){
@@ -320,7 +321,8 @@ $(document).ready(function(){
 	scrollToIndicator();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
-	DBrepeatdata(repeatData)
+	DBrepeatdata(repeatData,'class')
+	DBrepeatdata(offrepeatData,'off')
 
 // ****************************구동시 실행********************************************************************************
 // ############################구동시 실행################################################################################
@@ -792,15 +794,23 @@ $(document).ready(function(){
 
 	
 
-	function DBrepeatdata(repeat){ // 김선겸_tue_16_1_fri_10_2_20171203_20180301  이름_요일_시작시간_진행시간_시작시간_진행시간_반복시작날짜_반복종료날짜
+	function DBrepeatdata(repeat,option){ // 김선겸_tue_16_1_fri_10_2_20171203_20180301  이름_요일_시작시간_진행시간_시작시간_진행시간_반복시작날짜_반복종료날짜
 		
-			var len = repeatData.length;
+		switch(option){
+			case 'class':
+			var cssClass= 'classTime classTime_re'
+			break;
+			case 'off':
+			var cssClass= 'offTime offTime_re'
+			break;
+		}
+			var len = repeat.length;
 		for(var j=0; j<=5; j++){
 			var page = '#slide'+j;
 
 
 			for(var i=0; i<len; i++){
-				var arry = repeatData[i].split('_');
+				var arry = repeat[i].split('_');
 				var who = arry[0];
 				var day = arry[1];
 				var time = arry[2];
@@ -825,7 +835,7 @@ $(document).ready(function(){
 				console.log(idYear,idMonth,idDay)
 
 				
-				if(idYear+idMonth+idDay>start && idYear+idMonth+idDay<end){
+				if(idYear+idMonth+idDay>=start && idYear+idMonth+idDay<=end){
 					if(idDay.substr(0,1)=='0'){
 						var idDay = idDay.substr(1,1);
 					}
@@ -833,7 +843,7 @@ $(document).ready(function(){
 						var idMonth = idMonth.substr(1,1);
 					}
 					var loc = $('#'+idYear+'_'+idMonth+'_'+idDay+'_'+time+'_00')
-					loc.find('div').attr('data-memberName',who).attr('class-time',time).addClass('classTime classTime_re').css({'height':Number(dur*30)+'px'}).html('<span class="memberName">'+who+' </span>'+'<span class="memberTime">'+time+':'+'00'+'</span>');
+					loc.find('div').attr('data-memberName',who).attr('class-time',time).addClass(cssClass).css({'height':Number(dur*30)+'px'}).html('<span class="memberName">'+who+' </span>'+'<span class="memberTime">'+time+':'+'00'+'</span>');
 					}
 				}
 		}
