@@ -205,11 +205,12 @@ span{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 #float_inner2{ /*2017.10.2*/
 	background-color: #ffffff;
-
 }
 
 #float_inner2 a{ /*2017.10.2*/
@@ -222,6 +223,8 @@ span{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 
@@ -370,10 +373,6 @@ tr{
 }
 
 
-
-
-
-
 .classTime{
 	position: absolute;
 	top: 0px;
@@ -388,8 +387,8 @@ tr{
 }
 
 .classTime_re{
-	background: blue;
-	border: 0.5px solid blue;
+	background: #ff3b00a6;
+	border: 0.5px solid #ff3b00a6;
 }
 
 .classTime:active,.classTime:hover{
@@ -630,8 +629,6 @@ tr{
 }
 
 
-
-
 @media(min-width: 600px){
 	#calendar{
 		position: relative;
@@ -670,6 +667,17 @@ tr{
 	.swiper-slide{
 		overflow-y: hidden;
 	}
+
+	.slide-notice{
+		height: 600px;
+		padding:0;
+	}
+
+
+	.slide-notice img{
+		margin-top: 200px;
+	}
+
 
 	.td00{
 		background: #ffffff;

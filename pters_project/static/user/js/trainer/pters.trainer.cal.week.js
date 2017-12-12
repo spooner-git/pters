@@ -89,7 +89,7 @@ $(document).ready(function(){
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
 	    $('#page-base-addstyle').fadeOut();
-	    $('.submitBtn').css({'color':'#f4f4f4'})
+	    $('.submitBtn').removeClass('submitBtnActivated')
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
