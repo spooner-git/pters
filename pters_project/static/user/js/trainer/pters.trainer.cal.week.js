@@ -800,9 +800,11 @@ $(document).ready(function(){
 		switch(option){
 			case 'class':
 			var cssClass= 'classTime classTime_re'
+			var attr = 'class-time'
 			break;
 			case 'off':
 			var cssClass= 'offTime offTime_re'
+			var attr = 'off-time'
 			break;
 		}
 			var len = repeat.length;
@@ -816,6 +818,7 @@ $(document).ready(function(){
 				var day = arry[1];
 				var time = arry[2];
 				var dur = arry[3];
+				var etime = time + dur
 				var start = arry[4];
 				var end = arry[5];
 				var days = ['','','sun','mon','tue','wed','thr','fri','sat'];
@@ -844,8 +847,8 @@ $(document).ready(function(){
 						var idMonth = idMonth.substr(1,1);
 					}
 					var loc = $('#'+idYear+'_'+idMonth+'_'+idDay+'_'+time+'_00')
-					loc.find('div').attr('data-memberName',who).attr('class-time',time).addClass(cssClass).css({'height':Number(dur*30)+'px'}).html('<span class="memberName">'+who+' </span>'+'<span class="memberTime">'+time+':'+'00'+'</span>');
-					}
+					loc.find('div').attr('data-memberName',who).attr(attr,idYear+'_'+idMonth+'_'+idDay+'_'+time+'_00_'+dur+'_'+who+'_'+etime+'_00').addClass(cssClass).css({'height':Number(dur*30)+'px'}).html('<span class="memberName">'+who+' </span>'+'<span class="memberTime">'+time+':'+'00'+'</span>');
+					} //2017_12_13_6_00_1_지창욱_7_00
 				}
 		}
 	}
