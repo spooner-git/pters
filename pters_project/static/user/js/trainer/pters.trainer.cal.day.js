@@ -61,7 +61,6 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
   		$("#starttimes_off").empty();
         $("#durations_off").empty();
-
   	})
   //모바일 스타일
 
@@ -74,7 +73,7 @@ $(document).ready(function(){
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
 	    $('#page-base-addstyle').fadeOut();
-	    $('.submitBtn').css({'color':'#f4f4f4'})
+	    $('.submitBtn').removeClass('submitBtnActivated')
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
@@ -124,10 +123,28 @@ $(document).ready(function(){
 			var dd=info[2]
 			var dayobj = new Date(yy,mm-1,dd)
 			var dayraw = dayobj.getDay();
-			var dayarry = ['일','월','화','수','목','금','토']
-			var day = dayarry[dayraw];
+			var dayarryKR = ['일','월','화','수','목','금','토']
+			var dayarryJP = ['日','月','火','水','木','金','土']
+			var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+			switch(Options.language){
+				case "Korea" :
+				var member = " 회원님　";
+				var yourplan = "시 일정";
+				var day = dayarryKR[dayraw];
+				break;
+				case "Japan" :
+				var member = "様の  ";
+				var yourplan = "時日程";
+				var day = dayarryJP[dayraw];
+				break;
+				case "English" :
+				var member = "'s schedule at ";
+				var yourplan = ":00";
+				var day = dayarryEN[dayraw];
+				break; 
+			}
 			var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
-			var infoText2 = info[6]+' 회원님 '+info[3]+'시 일정'
+			var infoText2 = info[6]+member+info[3]+yourplan
 			$('#popup_info').text(infoText);
 			$('#popup_info2').text(infoText2);
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
@@ -135,8 +152,8 @@ $(document).ready(function(){
 			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 			$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 			schedule_on_off = 1;
-
 		})
+
 
 	//Off 일정 클릭시 팝업 Start
 		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
@@ -151,10 +168,28 @@ $(document).ready(function(){
 			var dd=info[2]
 			var dayobj = new Date(yy,mm-1,dd)
 			var dayraw = dayobj.getDay();
-			var dayarry = ['일','월','화','수','목','금','토']
-			var day = dayarry[dayraw];
+			var dayarryKR = ['일','월','화','수','목','금','토']
+			var dayarryJP = ['日','月','火','水','木','金','土']
+			var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+			switch(Options.language){
+				case "Korea" :
+				var comment = ""
+				var yourplan = "시 OFF 일정";
+				var day = dayarryKR[dayraw];
+				break;
+				case "Japan" :
+				var comment = ""
+				var yourplan = "時 OFF日程";
+				var day = dayarryJP[dayraw];
+				break;
+				case "English" :
+				var comment = "OFF at "
+				var yourplan = ":00";
+				var day = dayarryEN[dayraw];
+				break; 
+			}
 			var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
-			var infoText2 = info[3]+'시 OFF 일정'
+			var infoText2 = comment + info[3]+yourplan
 			$('#popup_info').text(infoText);
 			$('#popup_info2').text(infoText2);
 			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
@@ -365,6 +400,7 @@ $(document).ready(function(){
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime(); //Off 시간에 회색 박스 표시
 
+/*
 	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
 		var slideIndex = $('#slide'+Index);
 		for(var i=5; i<=24; i++){
@@ -389,6 +425,55 @@ $(document).ready(function(){
 			slideIndex.append(sum);
 		};	
 	}; //calTable_Set
+*/
+
+	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
+		switch(Options.language){
+			case "Korea" :
+			var morning = "오전";
+			var afternoon = "오후";
+			break;
+			case "Japan" :
+			var morning = "午前";
+			var afternoon = "午後";
+			break;
+			case "English" :
+			var morning = "AM";
+			var afternoon = "PM";
+			break; 
+		}
+
+		var slideIndex = $('#slide'+Index);
+		for(var i=5; i<=24; i++){
+			var textToAppend = '<div id="'+i+'H_'+Year+'_'+Month+'_'+Day+'" class="time-style"'+'>'
+			var divToAppend = $(textToAppend)
+			//var td1 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+(i-1)+'_'+'30'+'>'+'<div></div>'+'</td>'
+			//var td2 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'00'+'>'+'<div></div>'+'</td>'
+			var td1 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'00'+' class="daytd">'+'<div></div>'+'</td>'
+			var td2 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'30'+' class="daytd">'+'<div></div>'+'</td>'
+			if(i<12){
+				if(i==5){
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="morningtext">'+morning+'</span> 0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
+				}else if(i<10 && i>5){
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+				}else{
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+				};
+			}else{
+				if(i==12){
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="morningtext">'+afternoon+'</span> '+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+				}else{
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
+				}
+							
+			}
+			var sum = textToAppend+textToAppend2
+			//divToAppend.html(sum)
+			//slideIndex.append(divToAppend);
+			slideIndex.append(sum);
+		};	
+	}; //calTable_Set
+
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var classlen = classTimeArray.length;
@@ -476,12 +561,35 @@ $(document).ready(function(){
 			var textMonth = YMDArray[2]; //8
 			var textDate = YMDArray[3]; //4
 			var monthEnglish = ['January','February','March','April','May','June','July','August','September','October','November','December']
-			var dayEnglish = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
+			var dayKorea = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
+			var dayJapan = ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日']
+			var dayEnglish = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 			var dayTodayInfo = new Date(monthEnglish[textMonth-1]+','+textDate+','+textYear);
 			var dayToday = dayTodayInfo.getDay();
-			var textDay = dayEnglish[dayToday];
-			console.log(currentYMD)
-			$('#yearText').text(textYear+'년 '+textMonth+'월 '+textDate+'일');
+			var textDay
+
+			switch(Options.language){
+				case "Korea" :
+				var year = "년 ";
+				var month = "월 ";
+				var date = "일 ";
+				var textDay = dayKorea[dayToday];
+				break;
+				case "Japan" :
+				var year = "年 ";
+				var month = "月 ";
+				var date = "日 ";
+				var textDay = dayJapan[dayToday];
+				break;
+				case "English" :
+				var year = ". ";
+				var month = ". ";
+				var date = ". ";
+				var textDay = dayEnglish[dayToday]
+				break; 
+			}
+
+			$('#yearText').text(textYear+year+textMonth+month+textDate+date);
 			$('#monthText').text(textDay);
 		}
 	};

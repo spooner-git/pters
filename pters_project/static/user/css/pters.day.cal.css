@@ -175,7 +175,8 @@ span{
 
 .popup_inner span{
 	position: absolute;
-	left: 41.5%;
+	left: 50%;
+	transform: translateX(-50%);
 	top: 30%;
 	font-size: 14px;
 	font-weight: bold;
@@ -230,6 +231,8 @@ span{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 #float_inner2{ /*2017.10.2*/
@@ -247,6 +250,8 @@ span{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 
@@ -352,6 +357,10 @@ span{
 	font-size: 13px;
 	letter-spacing: -0.3px;
 	color: #3b3d3d;
+}
+
+.morningtext{
+	display:none;
 }
 
 .daytd{
@@ -689,6 +698,16 @@ span{
 		transform: none;
 		padding-top: 0px;
 	}
+
+	.slide-notice{
+		height: 600px;
+		padding:0;
+	}
+
+
+	.slide-notice img{
+		margin-top: 200px;
+	}
 	
 	.hour{
 		font-size: 14px;
@@ -905,6 +924,13 @@ span{
 
 	.arrowButton{
 		display:none;
+	}
+
+	.morningtext{
+		display:inline;
+		position: absolute;
+		left: 21px;
+		font-weight: bold;
 	}
 
 }

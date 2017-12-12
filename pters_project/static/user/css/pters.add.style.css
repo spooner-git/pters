@@ -140,6 +140,10 @@ span{
 	font-weight: bold;
 }
 
+#pcaddpopup{
+	display: none;
+}
+
 
 #remainCount{
 	position: relative;
@@ -286,9 +290,10 @@ span{
 	color: #3d3b3b;
 }
 
-
 .submitBtnActivated{
-	color: #fe4e65 !important;
+	color: #ffffff !important;
+	background:#fe4e65 !important;
+	border:0 !important;
 }
 
 .popupBtn{
@@ -297,34 +302,7 @@ span{
 }
 
 .submitBtn{
-	height: 50px;
-	background: #ffffff;
-	/*color: #115a8e;*/
-	color: #f4f4f4;
-	border-top: 0.5px solid #cccccc;
-	border-bottom: 0.5px solid #cccccc;
-}
-
-.submitBtn:active,.cancelBtn:active{
-	background: #282828;
-	color: #fe4e65;
-}
-
-.submitBtn span{
-	line-height: 53px;
-	font-size: 17px;
-	font-weight: bold;
-}
-
-.cancelBtn{
-	height: 50px;
-	background: #ffffff;
-	color: #fe4e65;
-}
-
-.cancelBtn span{
-	line-height: 55px;
-	font-size: 15px;
+	display:none;
 }
 
 /* 신규 회원 등록  */
@@ -451,4 +429,39 @@ span{
 .pricebuttonchild:active{
 	background: #fe4e65;
 	color: #ffffff;
+}
+
+@media(min-width: 600px){
+	#pcaddpopup{
+		display: block;
+		font-size: 16px;
+		font-weight: bold;
+		text-align: center;
+	}
+
+	#pcaddpopup img{
+		float: right;
+	}
+
+
+	.submitBtn{
+		display:block;
+		height: 50px;
+		background: #ffffff;
+		color: #f4f4f4;
+		border-top: 0.5px solid #cccccc;
+		border-bottom: 0.5px solid #cccccc;
+	}
+
+	.submitBtn:active{
+		background: #282828;
+		color: #fe4e65;
+	}
+
+	.submitBtn span{
+		line-height: 53px;
+		font-size: 17px;
+		font-weight: bold;
+	}
+
 }

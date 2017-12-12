@@ -142,7 +142,11 @@
         <input type="hidden" name="training_time" id="id_training_time">
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
     </form>
+  
 
+    <div class="ptaddbox" id="pcaddpopup">
+      <span>PT 일정 추가</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+    </div>
 
     <div id="memberName" class="ptaddbox">
       <div class="ptaddboxtext"> <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명</div>
@@ -248,7 +252,6 @@
 
     <div class='popupBtn'>
       <div class="submitBtn"><span>일정 등록</span></div>
-      <div class="cancelBtn"><span>취소</span></div>
     </div>
 
 </div>
@@ -270,6 +273,10 @@
         <input type="hidden" name="training_time" id="id_training_time_off">
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
     </form>
+
+    <div class="ptaddbox" id="pcaddpopup">
+      <span>OFF 일정 추가</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+    </div>
 
     <div id="dateSelector_off" class="ptaddbox">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 날짜</div>
@@ -369,7 +376,6 @@
 
     <div class='popupBtn'>
       <div class="submitBtn"><span>일정 등록</span></div>
-      <div class="cancelBtn"><span>취소</span></div>
     </div>
 
   </div>
