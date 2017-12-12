@@ -9,6 +9,7 @@ body{
 
 table{
 	table-layout: fixed;
+	border-bottom:0.5px solid #dedede;
 }
 
 span{
@@ -151,7 +152,8 @@ span{
 
 .popup_inner span{
 	position: absolute;
-	left: 41.5%;
+	left: 50%;
+	transform: translateX(-50%);
 	top: 30%;
 	font-size: 14px;
 	font-weight: bold;
@@ -326,7 +328,7 @@ span{
 .hour{
 	text-align: center;
 	width: 9.72% !important;
-	/*border-bottom: 1px solid transparent;*/
+	border: 0.5px solid #f4f4f4;
 	font-size: 13px;
 }
 
@@ -337,7 +339,7 @@ span{
 #page-weekcal td{
 	position: relative;
 	width: 12.5%;
-	height: 14.5px;
+
 	color : #282828;
 	/*border-right:  1.5px solid #ffffff;*/
 	border-left:  1px solid #ffffff;
@@ -346,18 +348,9 @@ span{
 }
 
 
-.td00{
+.td00,.td30{
 	background: #ffffff;
-	border-top: 0px solid #c3c3c3;
-}
 
-.td30{
-	background: #ffffff;
-	border-bottom: 1px solid #c3c3c3;
-}
-
-tr{
-	height: 50%;
 }
 
 
@@ -637,6 +630,10 @@ tr{
 		transform: none;
 		padding-top: 0px;
 	}
+
+	table{
+		border-bottom:0.5px solid #f4f4f4;
+	}
 	
 	#page-weekcal{
 		position: relative !important;
@@ -679,16 +676,11 @@ tr{
 	}
 
 
-	.td00{
+	.td00,.td30{
 		background: #ffffff;
-		border-top: 1px solid #c3c3c3;
+		
 	}
 
-	.td30{
-		background: #ffffff;
-		border-bottom: 0.5px solid #c3c3c3;
-	}
-	
 	.weekToday-style{
 		height: 18px;
 		font-size: 14px;

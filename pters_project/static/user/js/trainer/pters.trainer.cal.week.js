@@ -153,19 +153,37 @@ $(document).ready(function(){
 			var dd=info[2]
 			var dayobj = new Date(yy,mm-1,dd)
 			var dayraw = dayobj.getDay();
-			var dayarry = ['일','월','화','수','목','금','토']
-			var day = dayarry[dayraw];
-			var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
-			var infoText2 =  info[6]+' 회원님 '+info[3]+'시 일정'
-			$('#popup_info').text(infoText)
-			$('#popup_info2').text(infoText2)
+			var dayarryKR = ['일','월','화','수','목','금','토']
+			var dayarryJP = ['日','月','火','水','木','金','土']
+			var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+			switch(Options.language){
+				case "Korea" :
+				var member = " 회원님　";
+				var yourplan = "시 일정";
+				var day = dayarryKR[dayraw];
+				break;
+				case "Japan" :
+				var member = "様の  ";
+				var yourplan = "時日程";
+				var day = dayarryJP[dayraw];
+				break;
+				case "English" :
+				var member = "'s schedule at ";
+				var yourplan = ":00";
+				var day = dayarryEN[dayraw];
+				break; 
+			}
+			var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
+			var infoText2 = info[6]+member+info[3]+yourplan
+			$('#popup_info').text(infoText);
+			$('#popup_info2').text(infoText2);
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 			$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 			schedule_on_off = 1;
-
 		})
+
 
 	//Off 일정 클릭시 팝업 Start
 		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
@@ -180,12 +198,30 @@ $(document).ready(function(){
 			var dd=info[2]
 			var dayobj = new Date(yy,mm-1,dd)
 			var dayraw = dayobj.getDay();
-			var dayarry = ['일','월','화','수','목','금','토']
-			var day = dayarry[dayraw];
+			var dayarryKR = ['일','월','화','수','목','금','토']
+			var dayarryJP = ['日','月','火','水','木','金','土']
+			var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+			switch(Options.language){
+				case "Korea" :
+				var comment = ""
+				var yourplan = "시 OFF 일정";
+				var day = dayarryKR[dayraw];
+				break;
+				case "Japan" :
+				var comment = ""
+				var yourplan = "時 OFF日程";
+				var day = dayarryJP[dayraw];
+				break;
+				case "English" :
+				var comment = "OFF at "
+				var yourplan = ":00";
+				var day = dayarryEN[dayraw];
+				break; 
+			}
 			var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
-			var infoText2 = info[3]+'시 OFF 일정'
-			$('#popup_info').text(infoText)
-			$('#popup_info2').text(infoText2)
+			var infoText2 = comment + info[3]+yourplan
+			$('#popup_info').text(infoText);
+			$('#popup_info2').text(infoText2);
 			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 			$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 			schedule_on_off = 0;

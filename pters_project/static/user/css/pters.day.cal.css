@@ -9,6 +9,7 @@ body{
 
 table{
 	table-layout: fixed;
+	border-bottom : 0.5px solid #dedede;
 }
 
 span{
@@ -368,7 +369,6 @@ span{
 	width: 75%;
 	height: 15px;
 	color : #282828;
-	border: 0.5px solid transparent;
 }
 
 
@@ -756,7 +756,7 @@ span{
 	}
 
 	table{
-		border-top: 0.5px solid #f4f4f4;
+		border-bottom: 0.5px solid #f4f4f4;
 	}
 	
 	.daytd{
