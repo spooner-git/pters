@@ -29,7 +29,7 @@ class MemberTb(models.Model):
         managed = True
         db_table = 'MEMBER_TB'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 

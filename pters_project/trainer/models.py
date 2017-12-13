@@ -68,8 +68,8 @@ class ClassTb(models.Model):
         managed = True
         db_table = 'CLASS_TB'
 
-    def __str__(self):
-        return self.member.__str__()+'_class'
+    def __unicode__(self):
+        return self.member.__unicode__()+'_class'
 
 
 class ClassRepeatScheduleTb(models.Model):

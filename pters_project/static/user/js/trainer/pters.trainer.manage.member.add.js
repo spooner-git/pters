@@ -268,9 +268,9 @@ $(document).ready(function(){
      };
 
 
-     $("#upbutton-alarm").click(function(){
+     $("#upbutton-check").click(function(){
          if(select_all_check==true){
-             document.getElementById('member-add-form').submit();
+             document.getElementById('member-add-form-new').submit();
          }else{
             //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
