@@ -329,7 +329,10 @@ def pt_delete_logic(request):
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
         if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
         elif start_date.strftime('%p') == 'PM':
@@ -494,7 +497,10 @@ def pt_add_logic_func(training_date, time_duration, training_time, user_id, user
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
         if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
         elif start_date.strftime('%p') == 'PM':

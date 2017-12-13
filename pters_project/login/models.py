@@ -29,8 +29,8 @@ class MemberTb(models.Model):
         managed = True
         db_table = 'MEMBER_TB'
 
-    def __unicode__(self):
-        return u"%s" % self.name
+    def __str__(self):
+        return self.name
 
 
 class CommonCdTb(models.Model):
