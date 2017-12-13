@@ -103,19 +103,21 @@
     <div id="calendar" class="container wrap"> <!-- Calendar container-->
           <div class="swiper-container">
             <div class="swiper-wrapper"> 
+              <!--
               <div class="swiper-slide" id="slide_first">
                <div class="slide-notice"><img src="/static/user/res/stopmark.png" alt="Stop!"><span>일정 설정 및 확인은 최대 2주전까지 가능합니다.</span></div>
-              </div> <!--마지막 페이지 안내-->
-              <div class="swiper-slide" id="slide0"></div> <!--Index-1 2주전-->
-              <div class="swiper-slide" id="slide1"></div> <!--Index0 1주전-->
-              <div class="swiper-slide" id="slide2"></div> <!--Index1 이번주-->
-              <div class="swiper-slide" id="slide3"></div> <!--Index2 1주후-->
-              <div class="swiper-slide" id="slide4"></div> <!--Index3 2주후-->
-              <div class="swiper-slide" id="slide5"></div> <!--Index2 3주후-->
-              
+              </div>-->
+              <div class="swiper-slide" id="slide1"></div> <!--Index0 2주전-->
+              <div class="swiper-slide" id="slide2"></div> <!--Index1 1주전-->
+              <div class="swiper-slide" id="slide3"></div> <!--Index2 이번주-->
+              <div class="swiper-slide" id="slide4"></div> <!--Index3 1주후-->
+              <div class="swiper-slide" id="slide5"></div> <!--Index2 2주후-->
+              <!--
               <div class="swiper-slide" id="slide_last">
                <div class="slide-notice"><img src="/static/user/res/stopmark.png" alt="Stop!"><span>일정 설정 및 확인은 최대 2주후까지 가능합니다.</span></div>
-              </div> <!--마지막 페이지 안내-->
+              </div>
+            -->
+
             </div>  <!--Swiper-wrapper-->
           </div> <!--Swiper-container-->
   
@@ -435,8 +437,8 @@
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.week.js" %}></script>
         <script>
             var myswiper = new Swiper('.swiper-container',{
-                initialSlide : 3,
-                speed : 300,
+                initialSlide : 2,
+                speed : 50,
                 preventClicks : true,
                 keyboardControl : true,
                 pagination : '.swiper-pagination'
