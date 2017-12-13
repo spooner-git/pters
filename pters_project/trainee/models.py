@@ -27,8 +27,8 @@ class LectureTb(models.Model):
         managed = True
         db_table = 'LECTURE_TB'
 
-    def __str__(self):
-        return self.member.__str__()+'_lecture'
+    def __unicode__(self):
+        return self.member.__unicode__()+'_lecture'
 
 
 class LectureScheduleTb(models.Model):

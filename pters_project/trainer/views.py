@@ -1,6 +1,5 @@
 # Create your views here.
 import datetime
-import operator
 
 from django.contrib import messages
 from django.contrib.auth import authenticate,logout, login
@@ -502,6 +501,7 @@ class ManageWorkView(LoginRequiredMixin, TemplateView):
         return context
 #sk 추가 업무 관리
 
+
 class ManageMemberView(LoginRequiredMixin, TemplateView):
     template_name = 'manage_member.html'
 
@@ -644,6 +644,7 @@ def member_registration(request):
     phone = request.POST.get('phone')
     contents = request.POST.get('contents')
     counts = request.POST.get('counts')
+    price = request.POST.get('price')
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     next_page = request.POST.get('next_page')
@@ -681,7 +682,7 @@ def member_registration(request):
                 trainer_class = ClassTb.objects.get(member_id=request.user.id)
                 lecture = LectureTb(class_tb_id=trainer_class.class_id,member_id=member.member_id,
                                     lecture_reg_count=counts, lecture_rem_count=counts,
-                                    lecture_avail_count=counts, option_cd='DC', state_cd='IP',
+                                    lecture_avail_count=counts, price=price, option_cd='DC', state_cd='IP',
                                     start_date=start_date,end_date=end_date, mod_dt=timezone.now(),
                                     reg_dt=timezone.now(), use=1)
                 lecture.save()
