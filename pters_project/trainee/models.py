@@ -28,7 +28,7 @@ class LectureTb(models.Model):
         db_table = 'LECTURE_TB'
 
     def __unicode__(self):
-        return self.member.__unicode__()+'_lecture'
+        return u"%s" % self.member.__unicode__()+'_lecture'
 
 
 class LectureScheduleTb(models.Model):
