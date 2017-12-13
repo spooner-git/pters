@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+	var repeatData = ['김선겸_tue_16_1_20171203_20180301','김선겸_fri_7_1_20171203_20180301','박신혜_mon_16_1_20171126_20180301']
+	var offrepeatData = ['OFF_sun_5_20_20171224_20180301','OFF_sat_16_9_20171209_20180301']
 
 	$('#float_inner1').click(function(){
 	    $('#page-ptadd').fadeIn('fast');
@@ -61,7 +63,6 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
   		$("#starttimes_off").empty();
         $("#durations_off").empty();
-
   	})
   //모바일 스타일
 
@@ -74,7 +75,7 @@ $(document).ready(function(){
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
 	    $('#page-base-addstyle').fadeOut();
-	    $('.submitBtn').css({'color':'#f4f4f4'})
+	    $('.submitBtn').removeClass('submitBtnActivated')
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
@@ -124,10 +125,28 @@ $(document).ready(function(){
 			var dd=info[2]
 			var dayobj = new Date(yy,mm-1,dd)
 			var dayraw = dayobj.getDay();
-			var dayarry = ['일','월','화','수','목','금','토']
-			var day = dayarry[dayraw];
+			var dayarryKR = ['일','월','화','수','목','금','토']
+			var dayarryJP = ['日','月','火','水','木','金','土']
+			var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+			switch(Options.language){
+				case "Korea" :
+				var member = " 회원님　";
+				var yourplan = "시 일정";
+				var day = dayarryKR[dayraw];
+				break;
+				case "Japan" :
+				var member = "様の  ";
+				var yourplan = "時日程";
+				var day = dayarryJP[dayraw];
+				break;
+				case "English" :
+				var member = "'s schedule at ";
+				var yourplan = ":00";
+				var day = dayarryEN[dayraw];
+				break; 
+			}
 			var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
-			var infoText2 = info[6]+' 회원님 '+info[3]+'시 일정'
+			var infoText2 = info[6]+member+info[3]+yourplan
 			$('#popup_info').text(infoText);
 			$('#popup_info2').text(infoText2);
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
@@ -135,8 +154,8 @@ $(document).ready(function(){
 			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 			$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 			schedule_on_off = 1;
-
 		})
+
 
 	//Off 일정 클릭시 팝업 Start
 		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
@@ -151,10 +170,28 @@ $(document).ready(function(){
 			var dd=info[2]
 			var dayobj = new Date(yy,mm-1,dd)
 			var dayraw = dayobj.getDay();
-			var dayarry = ['일','월','화','수','목','금','토']
-			var day = dayarry[dayraw];
+			var dayarryKR = ['일','월','화','수','목','금','토']
+			var dayarryJP = ['日','月','火','水','木','金','土']
+			var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+			switch(Options.language){
+				case "Korea" :
+				var comment = ""
+				var yourplan = "시 OFF 일정";
+				var day = dayarryKR[dayraw];
+				break;
+				case "Japan" :
+				var comment = ""
+				var yourplan = "時 OFF日程";
+				var day = dayarryJP[dayraw];
+				break;
+				case "English" :
+				var comment = "OFF at "
+				var yourplan = ":00";
+				var day = dayarryEN[dayraw];
+				break; 
+			}
 			var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
-			var infoText2 = info[3]+'시 OFF 일정'
+			var infoText2 = comment + info[3]+yourplan
 			$('#popup_info').text(infoText);
 			$('#popup_info2').text(infoText2);
 			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
@@ -248,10 +285,9 @@ $(document).ready(function(){
 	var currentYear = date.getFullYear(); //현재 년도
 	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 	var currentDate = date.getDate(); //오늘 날짜
-
 	var currentDay = date.getDay(); // 0,1,2,3,4,5,6,7
 	var currentHour = date.getHours();
-	var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
+	var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
 	if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
 			lastDay[1] = 29;
 		}else{
@@ -268,93 +304,51 @@ $(document).ready(function(){
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
 		dateText();
-		/*
-		if(currentDate+1>lastDay[currentPageMonth-1]){ //다음달 넘어갈때
-			if(currentPageMonth+1>12){//다음해 넘어갈떄
-				slideControl.append();
-			}else{
-				slideControl.append();
-			}
-		}else{
-			slideControl.append();
-		};
-		*/
+		slideControl.append();
+		
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
 	myswiper.on('SlidePrevEnd',function(){
 		dateText();
-		/*
-		if(currentDate-1<1){ //전달 넘어갈떄
-			if(currentPageMonth-1<1){ //전해로 넘어갈때 	
-				slideControl.prepend();
-			}else{
-				slideControl.prepend();	
-			}
-		}else{
-			slideControl.prepend();	
-		};
-		*/
+		slideControl.prepend();
+		
 	});
 	
-
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {
 		'append' : function(){ //다음페이지로 넘겼을때
-			//myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
-			//myswiper.appendSlide('<div class="swiper-slide"></div>') //마지막 슬라이드에 새슬라이드 추가
-			//(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
-			//calTable_Set(3,currentYear,currentPageMonth,currentDate+1); //새로 추가되는 슬라이드에 달력 채우기
-			dateText();
-			//classTime();
-			//offTime();
-			//addcurrentTimeIndicator(); //현재시간 표시
-			//myswiper.update(); //슬라이드 업데이트
-
+			var last = Number($('.swiper-slide:last-child').attr('id').replace(/slide/gi,""))
+			var lastdateinfo = $('.swiper-slide:last-child').find('div').attr('id').split('_');
+			var lastYY = lastdateinfo[1];
+			var lastMM = lastdateinfo[2];
+			var lastDD = Number(lastdateinfo[3]);
+			myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
+			myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>') //마지막 슬라이드에 새슬라이드 추가
+			calTable_Set(last+1,lastYY,lastMM,lastDD+1); //새로 추가되는 슬라이드에 달력 채우기
+			classTime();
+			offTime();
 		},
 
 		'prepend' : function(){
-			//myswiper.removeSlide(2);
-			//myswiper.prependSlide('<div class="swiper-slide"></div>'); //맨앞에 새슬라이드 추가
-			//(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
-			//calTable_Set(1,currentYear,currentPageMonth,currentDate-1);		
-			dateText();
-			//classTime();
-			//offTime();
-			//addcurrentTimeIndicator(); //현재시간 표시
-			//myswiper.update(); //이전페이지로 넘겼을때
+			var first = Number($('.swiper-slide:first-child').attr('id').replace(/slide/gi,""));
+			var firstdateinfo = $('.swiper-slide:first-child').find('div').attr('id').split('_');
+			var firstYY = firstdateinfo[1];
+			var firstMM = firstdateinfo[2];
+			var firstDD = firstdateinfo[3];
+			myswiper.removeSlide(4);
+			myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
+			calTable_Set(first-1,firstYY,firstMM,firstDD-1);		
+			classTime();
+			offTime();
 		}
 	};
 
-	//Slide 10번째를 [오늘]로 기준으로 각페이지에 날짜에 맞춰 테이블 생성하기
-	console.log(lastDay[currentMonth])
-	var element = 9-currentDate
-	console.log(currentMonth)
-		if(element>0){  //오늘 날짜가 10일 이하
-			for(i=1;i<=element;i++){ //전달 페이지
-				if(currentPageMonth-1<1){
-					calTable_Set(i,currentYear-1,currentPageMonth-1+12,lastDay[currentPageMonth-1+12-1]-element+i)
-				}else{
-					calTable_Set(i,currentYear,currentPageMonth-1,lastDay[currentMonth-1]-element+i)
-				}
-			}
-			for(i=element+1;i<=29;i++){ //이번달 페이지
-				calTable_Set(i,currentYear,currentPageMonth,currentDate-9+i)	
-			}
-		}else{ //오늘 날짜가 10일 이상
-			for(i=1;i<=29;i++){
-				if(currentDate-9+i>lastDay[currentMonth]){ //다음달로 넘어가는 페이지가 나올때
-					if(currentPageMonth+1>12){ // 해가 넘어갈때
-						calTable_Set(i,currentYear+1,currentPageMonth+1-12,currentDate-9+i-lastDay[currentMonth])
-					}else{ // 해 넘어가지 않을때
-						calTable_Set(i,currentYear,currentPageMonth+1,currentDate-9+i-lastDay[currentMonth])
-					}
-				}else{ //다음달로 넘어가는 페이지 없이 현재달만 보일때
-					calTable_Set(i,currentYear,currentPageMonth,currentDate-9+i)	
-				}
-			}
-		}
-	//Slide 10번째를 [오늘]로 기준으로 각페이지에 날짜에 맞춰 테이블 생성하기
+	//Slide3을 [오늘]로 기준으로 각페이지에 날짜에 맞춰 테이블 생성하기
+	for(var i=1;i<=5;i++){
+		calTable_Set(i,currentYear,currentPageMonth,currentDate-3+i)
+	}
+	//Slide3을 [오늘]로 기준으로 각페이지에 날짜에 맞춰 테이블 생성하기
 	
 	dateText(); //상단에 연월일요일 표시
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class"); //DB로 부터 받는 Class데이터 가공
@@ -365,7 +359,42 @@ $(document).ready(function(){
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime(); //Off 시간에 회색 박스 표시
 
+
 	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
+		switch(Options.language){
+			case "Korea" :
+			var morning = "오전";
+			var afternoon = "오후";
+			break;
+			case "Japan" :
+			var morning = "午前";
+			var afternoon = "午後";
+			break;
+			case "English" :
+			var morning = "AM";
+			var afternoon = "PM";
+			break; 
+		}
+
+		if(Day>lastDay[Month-1]){
+			var Day = Day - lastDay[Month-1]
+			Month++
+			if(Month>12){
+				var Month = Month-12;
+				Year++
+			}
+		}else if(Day<=0){
+			var Day = Day + lastDay[11]
+			Month--
+			if(Month<1){
+				var Month = Month + 12;
+				Year--
+			}
+		}
+
+
+
+
 		var slideIndex = $('#slide'+Index);
 		for(var i=5; i<=24; i++){
 			var textToAppend = '<div id="'+i+'H_'+Year+'_'+Month+'_'+Day+'" class="time-style"'+'>'
@@ -375,13 +404,20 @@ $(document).ready(function(){
 			var td1 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'00'+' class="daytd">'+'<div></div>'+'</td>'
 			var td2 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'30'+' class="daytd">'+'<div></div>'+'</td>'
 			if(i<12){
-				if(i<10){
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'오전 0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+				if(i==5){
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="morningtext">'+morning+'</span> 0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
+				}else if(i<10 && i>5){
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
 				}else{
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'오전 '+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
 				};
 			}else{
-				var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'오후 '+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';			
+				if(i==12){
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="morningtext">'+afternoon+'</span> '+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+				}else{
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
+				}
+							
 			}
 			var sum = textToAppend+textToAppend2
 			//divToAppend.html(sum)
@@ -389,6 +425,7 @@ $(document).ready(function(){
 			slideIndex.append(sum);
 		};	
 	}; //calTable_Set
+
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var classlen = classTimeArray.length;
@@ -476,12 +513,35 @@ $(document).ready(function(){
 			var textMonth = YMDArray[2]; //8
 			var textDate = YMDArray[3]; //4
 			var monthEnglish = ['January','February','March','April','May','June','July','August','September','October','November','December']
-			var dayEnglish = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
+			var dayKorea = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
+			var dayJapan = ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日']
+			var dayEnglish = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 			var dayTodayInfo = new Date(monthEnglish[textMonth-1]+','+textDate+','+textYear);
 			var dayToday = dayTodayInfo.getDay();
-			var textDay = dayEnglish[dayToday];
-			console.log(currentYMD)
-			$('#yearText').text(textYear+'년 '+textMonth+'월 '+textDate+'일');
+			var textDay
+
+			switch(Options.language){
+				case "Korea" :
+				var year = "년 ";
+				var month = "월 ";
+				var date = "일 ";
+				var textDay = dayKorea[dayToday];
+				break;
+				case "Japan" :
+				var year = "年 ";
+				var month = "月 ";
+				var date = "日 ";
+				var textDay = dayJapan[dayToday];
+				break;
+				case "English" :
+				var year = ". ";
+				var month = ". ";
+				var date = ". ";
+				var textDay = dayEnglish[dayToday]
+				break; 
+			}
+
+			$('#yearText').text(textYear+year+textMonth+month+textDate+date);
 			$('#monthText').text(textDay);
 		}
 	};
@@ -554,6 +614,64 @@ $(document).ready(function(){
     		}	
   	    }
 	}
+
+	function DBrepeatdata(repeat,option){ // 김선겸_tue_16_1_fri_10_2_20171203_20180301  이름_요일_시작시간_진행시간_시작시간_진행시간_반복시작날짜_반복종료날짜
+		
+		switch(option){
+			case 'class':
+			var cssClass= 'classTime classTime_re'
+			var attr = 'class-time'
+			break;
+			case 'off':
+			var cssClass= 'offTime offTime_re'
+			var attr = 'off-time'
+			break;
+		}
+			var len = repeat.length;
+		for(var j=1; j<=29; j++){
+			var page = '#slide'+j;
+
+			for(var i=0; i<len; i++){
+				var arry = repeat[i].split('_');
+				var who = arry[0];
+				var day = arry[1];
+				var time = arry[2];
+				var dur = arry[3];
+				var etime = time + dur
+				var start = arry[4];
+				var end = arry[5];
+				var days = ['','','sun','mon','tue','wed','thr','fri','sat'];
+
+				var loc_ = $(page+' tr td:nth-child('+days.indexOf(day)+')').attr('id') //2017_12_11_5_00		
+				var loc_a = loc_.split('_')
+
+				var idYear = loc_a[0]
+				var idMonth = loc_a[1]
+				var idDay = loc_a[2]
+				if(idDay.length<2){
+					var idDay = '0'+idDay
+				}
+				if(idMonth.length<2){
+					var idMonth = '0'+idMonth
+				}
+
+				console.log(idYear,idMonth,idDay)
+
+				
+				if(idYear+idMonth+idDay>=start && idYear+idMonth+idDay<=end){
+					if(idDay.substr(0,1)=='0'){
+						var idDay = idDay.substr(1,1);
+					}
+					if(idMonth.substr(0,1)=='0'){
+						var idMonth = idMonth.substr(1,1);
+					}
+					var loc = $('#'+idYear+'_'+idMonth+'_'+idDay+'_'+time+'_00')
+					loc.find('div').attr('data-memberName',who).attr(attr,idYear+'_'+idMonth+'_'+idDay+'_'+time+'_00_'+dur+'_'+who+'_'+etime+'_00').addClass(cssClass).css({'height':Number(dur*30)+'px'}).html('<span class="memberName">'+who+' </span>'+'<span class="memberTime">'+time+':'+'00'+'</span>');
+				} //2017_12_13_6_00_1_지창욱_7_00
+			}
+		}
+	}
+
 
 });//document(ready)
 

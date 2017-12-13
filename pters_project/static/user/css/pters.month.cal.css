@@ -1,5 +1,6 @@
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
+
 body{
 	font-family: 'Noto Sans KR';
 	padding-top: 50px;
@@ -370,9 +371,8 @@ span,p{
 	bottom: 1px;
 	border-radius: 1px;
 	font-size: 12px;
-	padding-top: 0px;
 	z-index: -2;
-	left: 53%;
+	left: 50%;
 	transform: translateX(-50%);
 	border-radius: 50%;
 }
@@ -383,12 +383,12 @@ span,p{
 	color: #ffffff;
 	background: #3b3d3d;
 	height: 16px;
+	-ms-height: 100%;
 	width: 90%;
 	bottom: 1px;
 	border-radius: 1px;
 	font-size: 12px;
 	font-weight: 300;
-	padding-top: 0.5px;
 	z-index: -2;
 	left: 50%;
 	transform: translateX(-50%);
@@ -399,6 +399,7 @@ span,p{
 	color: #ffffff;
 	background: #3b3d3d;
 	height: 16px;
+	-ms-height: 100%;
 	width: 16px;
 	bottom: 1px;
 	border-radius: 1px;
@@ -406,9 +407,8 @@ span,p{
 	font-weight: 400;
 	padding-top: 0px;
 	z-index: -2;
-	left: 53%;
+	left: 50%;
 	transform: translateX(-50%);
-
 	border-radius: 50%;
 }
 
@@ -943,12 +943,14 @@ span,p{
 	}
 
 	.blackballoon_trainer,.balloon_trainer{
-		bottom: 40px;
+		position: relative;
 		color :#282828;
 		background-color: transparent;
 		font-size: 15px;
 		font-weight: 500;
 		width:27px;
+		margin-top: 20px;
+		left:58%;
 	}
 
 	._classTime img{

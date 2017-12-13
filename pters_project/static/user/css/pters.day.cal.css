@@ -9,6 +9,7 @@ body{
 
 table{
 	table-layout: fixed;
+	border-bottom : 0.5px solid #dedede;
 }
 
 span{
@@ -175,7 +176,8 @@ span{
 
 .popup_inner span{
 	position: absolute;
-	left: 41.5%;
+	left: 50%;
+	transform: translateX(-50%);
 	top: 30%;
 	font-size: 14px;
 	font-weight: bold;
@@ -230,6 +232,8 @@ span{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 #float_inner2{ /*2017.10.2*/
@@ -247,6 +251,8 @@ span{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 
@@ -354,12 +360,15 @@ span{
 	color: #3b3d3d;
 }
 
+.morningtext{
+	display:none;
+}
+
 .daytd{
 	position: relative;
 	width: 75%;
 	height: 15px;
 	color : #282828;
-	border: 0.5px solid transparent;
 }
 
 
@@ -388,6 +397,11 @@ span{
 	border: 0.5px solid #fe4e65;
 	z-index: 100;
 	cursor: pointer;
+}
+
+.classTime_re{
+	background: #ff3b00a6;
+	border: 0.5px solid #ff3b00a6;
 }
 
 .classTime:active,.classTime:hover{
@@ -689,6 +703,16 @@ span{
 		transform: none;
 		padding-top: 0px;
 	}
+
+	.slide-notice{
+		height: 600px;
+		padding:0;
+	}
+
+
+	.slide-notice img{
+		margin-top: 200px;
+	}
 	
 	.hour{
 		font-size: 14px;
@@ -715,7 +739,7 @@ span{
 	.classTime{
 		background: #fe4e65;
 		opacity: 0.8;
-		border:0.5px solid #ffffff;
+		border:0.5px solid #ffbbbb;
 	}
 
 	.offTime{
@@ -737,7 +761,7 @@ span{
 	}
 
 	table{
-		border-top: 0.5px solid #f4f4f4;
+		border-bottom: 0.5px solid #f4f4f4;
 	}
 	
 	.daytd{
@@ -905,6 +929,13 @@ span{
 
 	.arrowButton{
 		display:none;
+	}
+
+	.morningtext{
+		display:inline;
+		position: absolute;
+		left: 21px;
+		font-weight: bold;
 	}
 
 }
