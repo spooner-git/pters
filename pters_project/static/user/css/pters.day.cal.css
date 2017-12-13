@@ -399,6 +399,11 @@ span{
 	cursor: pointer;
 }
 
+.classTime_re{
+	background: #ff3b00a6;
+	border: 0.5px solid #ff3b00a6;
+}
+
 .classTime:active,.classTime:hover{
 	background: #f3b5bd;
 	-webkit-background: #f3b5bd;
@@ -734,7 +739,7 @@ span{
 	.classTime{
 		background: #fe4e65;
 		opacity: 0.8;
-		border:0.5px solid #ffffff;
+		border:0.5px solid #ffbbbb;
 	}
 
 	.offTime{
