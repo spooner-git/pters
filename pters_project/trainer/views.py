@@ -798,7 +798,10 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
         if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
         elif start_date.strftime('%p') == 'PM':
@@ -944,7 +947,10 @@ def daily_pt_delete(request):
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
         if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
         elif start_date.strftime('%p') == 'PM':
@@ -1055,7 +1061,10 @@ def add_off_logic(request):
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
         if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
         elif start_date.strftime('%p') == 'PM':
@@ -1127,7 +1136,10 @@ def daily_off_delete(request):
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
         if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
         elif start_date.strftime('%p') == 'PM':
@@ -1440,7 +1452,9 @@ def modify_pt_logic(request):
         modify_start_date = modify_schedule_data.start_dt
         modify_end_date = modify_schedule_data.end_dt
 
-        modify_log_start_date = modify_start_date.strftime('%Y년 %m월 %d일 ')\
+        modify_log_start_date = modify_start_date.strftime('%Y')+'년 ' \
+                                + modify_start_date.strftime('%m')+'월 ' \
+                                + modify_start_date.strftime('%d')+'일 ' \
                                 + week_info[int(modify_start_date.strftime('%w'))] + '요일 '
         if modify_start_date.strftime('%p') == 'AM':
             modify_log_start_date = str(modify_log_start_date) + '오전'
@@ -1455,7 +1469,10 @@ def modify_pt_logic(request):
 
         modify_log_end_date = str(modify_log_end_date) + modify_end_date.strftime(' %I:%M')
 
-        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
         if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
         elif start_date.strftime('%p') == 'PM':
@@ -1582,7 +1599,9 @@ def modify_off_logic(request):
         modify_start_date = modify_schedule_data.start_dt
         modify_end_date = modify_schedule_data.end_dt
 
-        modify_log_start_date = modify_start_date.strftime('%Y년 %m월 %d일 ')\
+        modify_log_start_date = modify_start_date.strftime('%Y')+'년 ' \
+                                + modify_start_date.strftime('%m')+'월 ' \
+                                + modify_start_date.strftime('%d')+'일 ' \
                                 + week_info[int(modify_start_date.strftime('%w'))] + '요일 '
         if modify_start_date.strftime('%p') == 'AM':
             modify_log_start_date = str(modify_log_start_date) + '오전'
@@ -1597,7 +1616,10 @@ def modify_off_logic(request):
 
         modify_log_end_date = str(modify_log_end_date) + modify_end_date.strftime(' %I:%M')
 
-        log_start_date = start_date.strftime('%Y년 %m월 %d일 ') + week_info[int(start_date.strftime('%w'))] + '요일 '
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
         if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
         elif start_date.strftime('%p') == 'PM':
