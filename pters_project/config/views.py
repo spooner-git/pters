@@ -42,7 +42,7 @@ class TraineeView(RedirectView):
     def get(self, request, **kwargs):
         user_for_group = User.objects.get(id=request.user.id)
         group_1 = user_for_group.groups.get(user=request.user.id)
-        print(self.url)
+        #print(self.url)
         if group_1.name == 'trainer':
             self.url = '/trainer/'
         else:
