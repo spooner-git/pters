@@ -319,11 +319,6 @@ $(document).ready(function(){
 	var currentDay = date.getDay() // 0,1,2,3,4,5,6,7
 	var currentHour = date.getHours();
 
-	//var currentYear = date.getFullYear();
-	//var currentMonth = 10
-    //var currentDate = 29 //오늘 날짜
-    //var currentDay = 3 // 0,1,2,3,4,5,6,7
-
 	var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
 	if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
 			lastDay[1] = 29;
@@ -388,6 +383,8 @@ $(document).ready(function(){
 			calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기	
 			classTime();
 			offTime();
+			//DBrepeatdata(repeatData,'class')
+			//DBrepeatdata(offrepeatData,'off')
 		},
 
 		'prepend' : function(){
@@ -401,6 +398,8 @@ $(document).ready(function(){
 			calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);		
 			classTime();
 			offTime();
+			//DBrepeatdata(repeatData,'class')
+			//DBrepeatdata(offrepeatData,'off')
 		},
 	};
 
@@ -600,8 +599,7 @@ $(document).ready(function(){
 					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="_morningday">오후 </span>'+i+'<div></div></td>'+td
 			};
 			var sum = textToAppend+textToAppend2
-			//divToAppend.html(sum)
-			//slideIndex.append(divToAppend);
+
 			slideIndex.append(sum);
 		};
 	}; //calTable_Set
@@ -620,17 +618,7 @@ $(document).ready(function(){
 		var WeekArry = [Sunday_date,Monday_date,Tuesday_date,Wednesday_date,Thursday_date,Friday_date,Saturday_date]
 		var lastDayThisMonth = lastDay[currentMonth];
 		var swiperPage = $('.swiper-slide:nth-child('+index+') div:first-child') 
-		/*
-		for(var i=0; i<7; i++){
-			var dateID = swiperPage.find('td:nth-child(2)').attr('id').split('_');
-			var firstDate = Number(dateID[2])
-			if(firstDate+i<=lastDayThisMonth){
-				WeekArry[i].html(firstDate+i)	
-			}else{
-				WeekArry[i].html(firstDate+i-lastDayThisMonth)
-			}
-		}
-		*/
+
 		for(var i=2; i<=8; i++){
 			var dateID = swiperPage.find('td:nth-child('+i+')').attr('id').split('_');
 			var yy = dateID[0];
@@ -753,17 +741,6 @@ $(document).ready(function(){
 		$('#calendar').css('display','block');
 	};
 
-
-	/*
-	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
-		var where2 = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+"0W"+"_"+currentHour+'H'
-		//var where3 = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+"0W"+"_"+(currentHour+1)+'H'
-		if($('.currentTimeBox').length==""){
-			$(where2).parent('div').append("<div class='currentTimeBox'><div class='currentTimeIndicator'></div><div class='currentTimeLine'></div></div>")
-			//$(where3).parent('div').append("<div class='currentTimeBox'><div class='currentTimeIndicator'></div><div class='currentTimeLine'></div></div>")
-		}
-	}
-	*/
 
 	function addcurrentTimeIndicator_blackbox(){ //현재 시간에 밑줄 긋기
 		var where = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+'0W'+'_'+currentHour+'H .hour'

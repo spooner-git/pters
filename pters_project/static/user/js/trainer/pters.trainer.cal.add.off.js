@@ -98,7 +98,7 @@ $(document).ready(function(){
        		}
     	 }
 
-      $("#upbutton-check").click(function(){
+      $("#upbutton-check, .submitBtn").click(function(){
          if(select_all_check==true){
              document.getElementById('off-add-form').submit();
          }else{
