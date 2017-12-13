@@ -69,7 +69,7 @@ class ClassTb(models.Model):
         db_table = 'CLASS_TB'
 
     def __unicode__(self):
-        return self.member.__unicode__()+'_class'
+        return u"%s" % self.member.__unicode__()+'_class'
 
 
 class ClassRepeatScheduleTb(models.Model):

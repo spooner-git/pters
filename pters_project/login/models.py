@@ -30,7 +30,7 @@ class MemberTb(models.Model):
         db_table = 'MEMBER_TB'
 
     def __unicode__(self):
-        return self.name
+        return u"%s" % self.name
 
 
 class CommonCdTb(models.Model):
