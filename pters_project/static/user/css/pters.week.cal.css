@@ -9,6 +9,7 @@ body{
 
 table{
 	table-layout: fixed;
+	border-bottom:0.5px solid #dedede;
 }
 
 span{
@@ -151,7 +152,8 @@ span{
 
 .popup_inner span{
 	position: absolute;
-	left: 41.5%;
+	left: 50%;
+	transform: translateX(-50%);
 	top: 30%;
 	font-size: 14px;
 	font-weight: bold;
@@ -205,11 +207,12 @@ span{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 #float_inner2{ /*2017.10.2*/
 	background-color: #ffffff;
-
 }
 
 #float_inner2 a{ /*2017.10.2*/
@@ -222,6 +225,8 @@ span{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 
@@ -323,7 +328,7 @@ span{
 .hour{
 	text-align: center;
 	width: 9.72% !important;
-	/*border-bottom: 1px solid transparent;*/
+	border: 0.5px solid #f4f4f4;
 	font-size: 13px;
 }
 
@@ -334,7 +339,7 @@ span{
 #page-weekcal td{
 	position: relative;
 	width: 12.5%;
-	height: 14.5px;
+
 	color : #282828;
 	/*border-right:  1.5px solid #ffffff;*/
 	border-left:  1px solid #ffffff;
@@ -343,18 +348,9 @@ span{
 }
 
 
-.td00{
+.td00,.td30{
 	background: #ffffff;
-	border-top: 0px solid #c3c3c3;
-}
 
-.td30{
-	background: #ffffff;
-	border-bottom: 1px solid #c3c3c3;
-}
-
-tr{
-	height: 50%;
 }
 
 
@@ -368,10 +364,6 @@ tr{
 	height: 90%;
 	z-index: 3;
 }
-
-
-
-
 
 
 .classTime{
@@ -388,8 +380,8 @@ tr{
 }
 
 .classTime_re{
-	background: blue;
-	border: 0.5px solid blue;
+	background: #ff3b00a6;
+	border: 0.5px solid #ff3b00a6;
 }
 
 .classTime:active,.classTime:hover{
@@ -630,8 +622,6 @@ tr{
 }
 
 
-
-
 @media(min-width: 600px){
 	#calendar{
 		position: relative;
@@ -639,6 +629,10 @@ tr{
 		left: 0 !important;
 		transform: none;
 		padding-top: 0px;
+	}
+
+	table{
+		border-bottom:0.5px solid #f4f4f4;
 	}
 	
 	#page-weekcal{
@@ -671,16 +665,22 @@ tr{
 		overflow-y: hidden;
 	}
 
-	.td00{
-		background: #ffffff;
-		border-top: 1px solid #c3c3c3;
+	.slide-notice{
+		height: 600px;
+		padding:0;
 	}
 
-	.td30{
-		background: #ffffff;
-		border-bottom: 0.5px solid #c3c3c3;
+
+	.slide-notice img{
+		margin-top: 200px;
 	}
-	
+
+
+	.td00,.td30{
+		background: #ffffff;
+		
+	}
+
 	.weekToday-style{
 		height: 18px;
 		font-size: 14px;

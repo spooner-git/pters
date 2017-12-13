@@ -22,16 +22,17 @@ span.ui-datepicker-year{
 }
 
 span.ui-datepicker-month{
-	display: block;
+	display: inline;
 	font-size: 19.3px;
 	font-weight: bold;
+	color: #fe4e65;
 }
 
 #ui-datepicker-div{
 	left: 0px !important;
 	width: 100%;
 	z-index: 2000 !important;
-	max-width: 800px;
+	max-width: 452px;
 	left: 50% !important;
 	transform: translateX(-50%);
 }
@@ -61,7 +62,7 @@ span.ui-datepicker-month{
 }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active{
-	border:0 !important;
-	border-radius: 24px;
 	text-align: center;
+	height: auto;
+	background-color: beige;
 }

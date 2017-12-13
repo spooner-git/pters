@@ -33,29 +33,30 @@
   <!--팝업메뉴-->
     <div id="cal_popup">
       <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div>
-      <div id="popup_text1" class="popup_inner popup_inner_change"  onclick="location.href='{% url 'trainer:add_pt' %}'"><span>일정 변경</span></div>
-      <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 삭제</span></div>
+      <div id="popup_text1" class="popup_inner popup_inner_change"><span class="KRtext">일정 변경</span><span class="JPtext">日程変更</span><span class="ENtext">Change Schedule</span></div>
+      <div id="popup_text2" class="popup_inner popup_inner_delete"><span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span></div>
     </div>
     <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
   <!--팝업메뉴-->
 
   <!--삭제 확인 팝업메뉴-->
     <div id="cal_popup3">
-      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close3"></div><div id="popup_info3">정말 일정을 삭제하시겠습니까?</div>
-      <div id="popup_text3" class="popup_inner popup_inner_delete"><span style="left:48%;color:#282828;">예</span></div>
-      <div id="popup_text4" class="popup_inner popup_inner_delete"><span style="left:44.5%;">아니오</span></div>
+      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close3"></div>
+      <div id="popup_info3" class="KRtext">정말 일정을 삭제하시겠습니까?</div><div id="popup_info3" class="JPtext">日程を削除しますか</div><div id="popup_info3" class="ENtext">Are you sure to delete the schedule?</div>
+      <div id="popup_text3" class="popup_inner popup_inner_delete"><span style="color:#282828;" class="KRtext">예</span><span style="color:#282828;" class="JPtext">はい</span><span style="color:#282828;" class="ENtext">Yes</span></div>
+      <div id="popup_text4" class="popup_inner popup_inner_delete"><span class="KRtext">아니오</span><span class="JPtext">いいえ</span><span class="ENtext">No</span></div>
     </div>
     
-  <!--플로팅 버튼-->
+   <!--플로팅 버튼-->
   <div id="float_btn_wrap">
     <div id="float_btn">
       <img src={% static "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
     </div>
     <div id="float_inner1" class="float_inner">
-    <a>PT<br/>일정</a>
+    <a class="KRtext">PT<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
     </div>
     <div id="float_inner2" class="float_inner">
-    <a>OFF<br/>일정</a>
+    <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
     </div>
   </div>
   <div id="shade2">
@@ -102,19 +103,21 @@
     <div id="calendar" class="container wrap"> <!-- Calendar container-->
           <div class="swiper-container">
             <div class="swiper-wrapper"> 
+              <!--
               <div class="swiper-slide" id="slide_first">
                <div class="slide-notice"><img src="/static/user/res/stopmark.png" alt="Stop!"><span>일정 설정 및 확인은 최대 2주전까지 가능합니다.</span></div>
-              </div> <!--마지막 페이지 안내-->
-              <div class="swiper-slide" id="slide0"></div> <!--Index-1 2주전-->
-              <div class="swiper-slide" id="slide1"></div> <!--Index0 1주전-->
-              <div class="swiper-slide" id="slide2"></div> <!--Index1 이번주-->
-              <div class="swiper-slide" id="slide3"></div> <!--Index2 1주후-->
-              <div class="swiper-slide" id="slide4"></div> <!--Index3 2주후-->
-              <div class="swiper-slide" id="slide5"></div> <!--Index2 3주후-->
-              
+              </div>-->
+              <div class="swiper-slide" id="slide1"></div> <!--Index0 2주전-->
+              <div class="swiper-slide" id="slide2"></div> <!--Index1 1주전-->
+              <div class="swiper-slide" id="slide3"></div> <!--Index2 이번주-->
+              <div class="swiper-slide" id="slide4"></div> <!--Index3 1주후-->
+              <div class="swiper-slide" id="slide5"></div> <!--Index2 2주후-->
+              <!--
               <div class="swiper-slide" id="slide_last">
                <div class="slide-notice"><img src="/static/user/res/stopmark.png" alt="Stop!"><span>일정 설정 및 확인은 최대 2주후까지 가능합니다.</span></div>
-              </div> <!--마지막 페이지 안내-->
+              </div>
+            -->
+
             </div>  <!--Swiper-wrapper-->
           </div> <!--Swiper-container-->
   
@@ -140,14 +143,23 @@
         <input type="hidden" name="training_date" id="id_training_date">
         <input type="hidden" name="time_duration" id="id_time_duration">
         <input type="hidden" name="training_time" id="id_training_time">
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
     </form>
-
+    
+    <div class="ptaddbox" id="pcaddpopup">
+      <span class="KRtext">PT 일정 추가</span>
+      <span class="JPtext">PT 日程追加</span>
+      <span class="ENtext">Add PT Schedule</span>
+      <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+    </div>
 
     <div id="memberName" class="ptaddbox">
-      <div class="ptaddboxtext"> <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명</div>
+      <div class="ptaddboxtext"> <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
       <div id="membersSelected" class="dropdown">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown"><span style="color:#cccccc;">회원명 선택</span></button>
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+          <span class="KRtext" style="color:#cccccc;">회원명 선택</span>
+          <span class="JPtext" style="color:#cccccc;">選択</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span></button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
         <ul id="members" class="dropdown-menu pters_dropdown_custom">
           <!-- 회원명 DB연동 필요-->
@@ -162,14 +174,14 @@
 
 
     <div id="remainCount" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은 횟수</div>
+      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 남은 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Remain Counts</span></div>
       <!-- 남은 횟수 DB연동 필요 -->
-            <div id="countsSelected" class="dropdown" placeholder="자동으로 입력됩니다."></div>
+            <div id="countsSelected" class="dropdown" placeholder="ー"></div>
     </div>
 
 
     <div id="dateSelector" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 날짜</div>
+      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
       <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
     </div>
 
@@ -225,9 +237,13 @@
     </div>
 
     <div id="classStartTime" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> <span class="KRtext"> 시작 시간</span><span class="JPtext"> 開始時間</span><span class="ENtext"> Start Time</span></div>
       <div id="starttimesSelected" class="dropdown">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown"><span style="color:#cccccc;">선택</span></button>
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+          <span class="KRtext" style="color:#cccccc;">선택</span>
+          <span class="JPtext" style="color:#cccccc;">選択</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span></button>
+        </button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
         <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
        
@@ -236,9 +252,13 @@
     </div>
 
     <div id="classDuration" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Time</span></div>
       <div id="durationsSelected" class="dropdown">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown"><span style="color:#cccccc;">선택</span></button>
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+          <span class="KRtext" style="color:#cccccc;">선택</span>
+          <span class="JPtext" style="color:#cccccc;">選択</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span>
+        </button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
         <ul id="durations" class="dropdown-menu pters_dropdown_custom">
 
@@ -247,8 +267,7 @@
     </div> 
 
     <div class='popupBtn'>
-      <div class="submitBtn"><span>일정 등록</span></div>
-      <div class="cancelBtn"><span>취소</span></div>
+      <div class="submitBtn"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
     </div>
 
 </div>
@@ -268,11 +287,18 @@
         <input type="hidden" name="training_date" id="id_training_date_off">
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
     </form>
+    
+    <div class="ptaddbox" id="pcaddpopup">
+      <span class="KRtext">OFF 일정 추가</span>
+      <span class="JPtext">OFF 日程追加</span>
+      <span class="ENtext">Add OFF Schedule</span>
+      <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+    </div>
 
     <div id="dateSelector_off" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 날짜</div>
+      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
       <p class="datepicktext dropdown"><input type="text" id="datepicker_off" placeholder="-" readonly></p>  
     </div>
 
@@ -328,9 +354,13 @@
     </div>
 
     <div id="offStartTime" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> <span class="KRtext"> 시작 시간</span><span class="JPtext"> 開始時間</span><span class="ENtext"> Start Time</span></div>
       <div id="starttimesSelected_off" class="dropdown">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown"><span style="color:#cccccc;">선택</span></button>
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+          <span class="KRtext" style="color:#cccccc;">선택</span>
+          <span class="JPtext" style="color:#cccccc;">選択</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span>
+        </button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
         <ul id="starttimes_off" class="dropdown-menu pters_dropdown_custom">
 
@@ -339,12 +369,15 @@
     </div>
 
     <div id="offDuration" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Time</span></div>
       <div id="durationsSelected_off" class="dropdown">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown"><span style="color:#cccccc;">선택</span></button>
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+          <span class="KRtext" style="color:#cccccc;">선택</span>
+          <span class="JPtext" style="color:#cccccc;">選択</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span>
+        </button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
         <ul id="durations_off" class="dropdown-menu pters_dropdown_custom">
-
         </ul>
       </div>
     </div>
@@ -358,7 +391,9 @@
       
       <!--반복일정 박스-->
       <div class="repeatboxinner">
-        <span class="repeatstarttext">매주 월요일 오전 11시</span><span class="repeatfinishtext">반복종료 : PT 마감시</span>
+        <span class="repeatstarttext KRtext">매주 월요일 오전 11시</span><span class="repeatfinishtext KRtext">반복종료 : PT 마감시</span>
+        <span class="repeatstarttext JPtext">매주 월요일 오전 11시</span><span class="repeatfinishtext JPtext">반복종료 : PT 마감시</span>
+        <span class="repeatstarttext ENtext">매주 월요일 오전 11시</span><span class="repeatfinishtext ENtext">반복종료 : PT 마감시</span>
       </div>
       
       <!--반복일정 박스-->
@@ -366,10 +401,9 @@
         <span class="repeatstarttext">매주 수요일 오후 3시</span><span class="repeatfinishtext">반복종료 : 2017-12-31</span>
       </div>
     </div>
-
+    
     <div class='popupBtn'>
-      <div class="submitBtn"><span>일정 등록</span></div>
-      <div class="cancelBtn"><span>취소</span></div>
+      <div class="submitBtn"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
     </div>
 
   </div>
@@ -403,8 +437,8 @@
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.week.js" %}></script>
         <script>
             var myswiper = new Swiper('.swiper-container',{
-                initialSlide : 3,
-                speed : 300,
+                initialSlide : 2,
+                speed : 50,
                 preventClicks : true,
                 keyboardControl : true,
                 pagination : '.swiper-pagination'

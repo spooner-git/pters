@@ -158,6 +158,9 @@
             </div>
         {% endfor %}
     {% endif %}
+    <div class="ptaddbox" id="pcaddpopup">
+      <span>신규 회원 추가</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+    </div>
 
     <form action="{% url 'trainer:member_registration' %}" method="POST" class="member-form" id="member-add-form-new">
         <input type="hidden" name="next_page" value="{% url 'trainer:member_manage' %}">
@@ -322,9 +325,6 @@
         <div id="pcBtn" style="text-align: center;">
             <div class="submitBtn">
                 <span class="btnok">등록</span>
-            </div>
-            <div class="cancelBtn">
-                <span class="btncancel">취소</span>
             </div>
         </div>
     </form>
