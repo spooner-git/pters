@@ -639,6 +639,7 @@ $(document).ready(function(){
 		
 		toDay();
 		reserveAvailable();
+		todayFinderArrow();
 	}
 
 
@@ -662,6 +663,33 @@ $(document).ready(function(){
 				$('#weekNum_'+i+' span:nth-child(1)').removeClass('today').html('')
 				$('#weekNum_'+i+' span:nth-child(3)').removeClass('today-Number')
 			}
+		}
+	}
+
+	function todayFinderArrow(){
+		var currentMM = currentPageMonth;
+		var currentDD = currentDate;
+		if(currentMM.length<2){
+			var currentMM = '0'+currentMM
+		}
+		if(currentDD.length<2){
+			var currentDD = '0'+currentDD
+		}
+		var todayInfo = String(currentYear) + currentMM + currentDD
+		var viewdayInfomin = $('#weekNum_1').attr('data-date');
+		var viewdayInfomax = $('#weekNum_7').attr('data-date');
+
+		if(viewdayInfomax>=todayInfo && viewdayInfomin<=todayInfo){
+			$('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
+			$("#ymdText").addClass('todayindi').removeClass('nottodayindi')
+		}else if(todayInfo>viewdayInfomax && todayInfo>viewdayInfomin){
+			$('._pinkarrowafter').removeClass('setunVisible')
+			$('._pinkarrowbefore').addClass('setunVisible')
+			$("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+		}else if(todayInfo<viewdayInfomax && todayInfo<viewdayInfomin){
+			$('._pinkarrowafter').addClass('setunVisible')
+			$('._pinkarrowbefore').removeClass('setunVisible')
+			$("#ymdText").removeClass('todayindi').addClass('nottodayindi')
 		}
 	}
 

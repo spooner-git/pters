@@ -541,10 +541,54 @@ $(document).ready(function(){
 				break; 
 			}
 
-			$('#yearText').text(textYear+year+textMonth+month+textDate+date);
+			$('#yearText').text(textYear+year+textMonth+month+textDate+date).attr('data-ymd',textYear+"_"+textMonth+"_"+textDate);
 			$('#monthText').text(textDay);
 		}
+		todayIndicator();
+		todayFinderArrow();
 	};
+
+	function todayIndicator(){
+		var todayInfo = currentYear+"_"+currentPageMonth+"_"+currentDate
+		if($('#yearText').attr('data-ymd')==todayInfo){
+			$("#ymdText").addClass('todayindi').removeClass('nottodayindi')
+		}else{
+			$("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+		}
+	}
+
+	function todayFinderArrow(){
+		var currentMM = currentPageMonth;
+		var currentDD = currentDate;
+		if(currentMM.length<2){
+			var currentMM = '0'+currentMM
+		}
+		if(currentDD.length<2){
+			var currentDD = '0'+currentDD
+		}
+		var todayInfo = String(currentYear) + currentMM + currentDD
+		var pagedayInfo = $('#yearText').attr('data-ymd').split('_')
+		var pageYY = pagedayInfo[0];
+		var pageMM = pagedayInfo[1];
+		var pageDD = pagedayInfo[2];
+		if(pageMM.length<2){
+			var pageMM = '0'+pageMM
+		}
+		if(pageDD.length<2){
+			var pageDD = '0'+pageDD
+		}
+		var viewdayInfo = pageYY + pageMM + pageDD
+		console.log(viewdayInfo,todayInfo)
+		if(viewdayInfo>todayInfo){
+			$('._pinkarrowbefore').removeClass('setunVisible')
+			$('._pinkarrowafter').addClass('setunVisible')
+		}else if(viewdayInfo<todayInfo){
+			$('._pinkarrowafter').removeClass('setunVisible')
+			$('._pinkarrowbefore').addClass('setunVisible')
+		}else{
+			$('._pinkarrowafter, ._pinkarrowbefore').addClass('setunVisible')
+		}
+	}
 
 	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
 		var where = '#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+currentHour+'H'
