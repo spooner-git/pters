@@ -277,7 +277,8 @@ span{
 	width: 100%;
 	text-align: center;
 	position: absolute;
-	top: 48%;
+	/*top: 48%;*/
+	top: 42%; /*today 표식있을때*/
 }
 
 #yearText{
@@ -286,7 +287,16 @@ span{
 	width: 100%;
 	text-align: center;
 	position: absolute;
-	top: 13%;
+	/*top: 13%;*/
+	top:5%; /*today 표식있을때*/
+}
+
+.todayindi{
+	border-top:1.5px solid #fe4e65;
+}
+
+.nottodayindi{
+	border-top: 1.5px solid #121212;
 }
 
 #ymdText{
@@ -319,6 +329,16 @@ span{
 	z-index: 0;
 }
 
+.setunVisible{
+	visibility: hidden;
+}
+
+.arrowButton span{
+	font-size: 36px;
+	font-weight: 100;
+	line-height: 14px;
+}
+
 .arrowButtonPC{
 	display: none;
 }
@@ -332,15 +352,6 @@ span{
 	text-decoration: none;
 }
 
-/*
-.arrowButton a:nth-child(1){
-	margin-left: 7%;
-}
-
-.arrowButton a:nth-child(2){
-	margin-right: 7%;
-}
-*/
 
 .time-style{ /*week ìŠ¤íƒ€ì¼*/
 	background-color: #ffffff;

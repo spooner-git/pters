@@ -70,104 +70,6 @@ $(document).ready(function(){
 
 
 
-
-/*
-	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
-		if($(this).hasClass('available')){
-			if($(this).find('div').hasClass('dateMytime')){
-				$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
-				$('#shade2').css({'display':'block'});
-				console.log($(this).attr('schedule-id'));
-				var info = $(this).attr('data-date').split('_')
-				var info2 = $(this).find(".blackballoon").text().split(':')
-				var yy=info[0]
-				var mm=info[1]
-				var dd=info[2]
-				var dayobj = new Date(yy,mm-1,dd)
-				var dayraw = dayobj.getDay();
-				var dayarry = ['일','월','화','수','목','금','토']
-				var day = dayarry[dayraw];
-				var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-				var infoText2 = info2[0]+"시 취소 하시겠습니까?"
-				$('#popup_info').text(infoText)
-				$('#popup_info2').text(infoText2)
-				$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
-			}else{
-				$('#addpopup').fadeIn('fast').css({'z-index':'103'})
-				$('#shade2').css({'display':'block'});
-				var info3 = $(this).attr('data-date').split('_')
-				var yy=info3[0]
-				var mm=info3[1]
-				var dd=info3[2]
-				var dayobj = new Date(yy,mm-1,dd)
-				var dayraw = dayobj.getDay();
-				var dayarry = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
-				var day = dayarry[dayraw];
-				var infoText2 = yy+'년 '+ mm+'월 '+ dd+'일 ' + day
-				$('#popup_info4').text(infoText2);
-				console.log($('#popup_info4').text())
-				timeGraphSet("class","grey");  //시간 테이블 채우기
-		        timeGraphSet("off","grey")
-		        startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
-				$('#id_training_date').val(yy+'-'+mm+'-'+dd);
-			}
-		}else if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
-			$('#shade2').css({'display':'block'});
-			$('#ng_popup_text').html('<p>현재시간은 일정 예약이 불가한 시간입니다.</p><p style="color:#fe4e65;font-size=13px;">예약불가 시간대<br> '+notAvailableStartTime+'시 ~ '+notAvailableEndTime+'시</p>')
-			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
-			//$(this).fadeOut(5000)
-			})
-		}else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
-			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
-			$('#shade2').css({'display':'block'});
-			console.log($(this).attr('schedule-id'));
-			var info = $(this).attr('data-date').split('_')
-			var info2 = $(this).find(".blackballoon").text().split(':')
-			var yy=info[0]
-			var mm=info[1]
-			var dd=info[2]
-			var dayobj = new Date(yy,mm-1,dd)
-			var dayraw = dayobj.getDay();
-			var dayarry = ['일','월','화','수','목','금','토']
-			var day = dayarry[dayraw];
-			var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-			var infoText2 = info2[0]+"시 취소 하시겠습니까?"
-			$('#popup_info').text(infoText)
-			$('#popup_info2').text(infoText2)
-			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
-		}else{
-			$('#shade2').css({'display':'block'});
-			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>')
-			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
-			//$(this).fadeOut(2800)
-			})
-		}
-	})
-
-	$("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
-				//PT 일정 삭제시
-				$("#cal_popup").hide().css({'z-index':'-2'})
-				$("#cal_popup3").fadeIn('fast').css({'z-index':'103'});
-				$('#shade2').css({'display':'block'});
-				//var info2 = $(this).attr('data-date').split('_')
-				//var infoText2 = info2[0]+'년 '+info2[1]+'월 '+info2[2]+'일 일정 추가'
-				//$('#popup_info2').text(infoText2)
-	})
-
-	$('#popup_text3').click(function(){
-		document.getElementById('pt-delete-form').submit();
-	})
-*/
-
-/*
-	$('#popup_text2').click(function(){ //일정예약 팝업에서 일정예약 버튼을 눌렀을때 예약하는 팝업이 생성
-        $('#addpopup').fadeIn().css({'z-index':'103'})
-        $('#cal_popup2').hide()
-        timeGraphSet("class","grey");  //시간 테이블 채우기
-        timeGraphSet("off","grey")
-        startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
-      })
-*/
       var select_all_check = false;
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
@@ -184,15 +86,7 @@ $(document).ready(function(){
           check_dropdown_selected();
       })
 
-/*
-      $(document).on('click',"#durations li a",function(){
-          $("#durationsSelected button").addClass("dropdown_selected");
-          $("#durationsSelected .btn:first-child").text($(this).text());
-          $("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
-          $("#id_time_duration").val($(this).attr('data-dur'));
-          check_dropdown_selected();
-      }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
-*/
+
        function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화 
        	 var durSelect = $("#durationsSelected button");
        	 var startSelect = $("#starttimesSelected button")
@@ -496,8 +390,6 @@ $(document).ready(function(){
 			if(odd.length==1){
 				var odd='0'+oriDate
 			}
-
-			console.log(yy+mm+dd , oriYear+omm+odd)
 			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
 				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('balloon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
@@ -505,12 +397,10 @@ $(document).ready(function(){
 				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('blackballoon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
 			}
-			console.log(countResult[i])
 		};
 	}
 
 	function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
-		console.log(krHolidayList)
 		for(var i=0; i<krHolidayList.length; i++){
 			$("td[data-date="+krHolidayList[i]+"]").addClass('holiday');
 		};
@@ -523,7 +413,36 @@ $(document).ready(function(){
 		var textMonth = currentYMD.substr(9,2); //7
 		$('#yearText').text(textYear);
 		$('#monthText').text(textMonth+'월');
+		todayFinderArrow(textYear,textMonth);
 	};
+
+	function todayFinderArrow(Year,Month){
+		var currentYY = String(oriYear)
+		var pageYY = Year
+		var currentMM = oriMonth;
+		var pageMM = Month
+		if(currentMM.length<2){
+			var currentMM = '0'+currentMM
+		}
+		if(pageMM.length<2){
+			var pageMM = '0'+pageMM
+		}
+		var todayInfo = currentYY + currentMM
+		var pageInfo = pageYY + pageMM
+
+		if(todayInfo<pageInfo){
+			$('._pinkarrowafter').addClass('setunVisible')
+			$('._pinkarrowbefore').removeClass('setunVisible')
+			$("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+		}else if(todayInfo>pageInfo){
+			$('._pinkarrowafter').removeClass('setunVisible')
+			$('._pinkarrowbefore').addClass('setunVisible')
+			$("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+		}else{
+			$('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
+			$("#ymdText").addClass('todayindi').removeClass('nottodayindi')
+		}
+	}
 
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
 	function availableDateIndicator(not_AvailableStartTime,Endtime){ 
@@ -660,7 +579,6 @@ $(document).ready(function(){
 			}
 		}
 		dateplans.sort();
-		console.log(dateplans)
 		var htmltojoin = []
 		for(var i=0;i<dateplans.length;i++){
 			var splited = dateplans[i].split('_')
@@ -672,7 +590,6 @@ $(document).ready(function(){
 			var name = splited[4]+" 회원님"
 			htmltojoin.push('<p>'+stime+' ~ '+etime+'     :     '+name+'</p>')
 		}
-		console.log(htmltojoin.join(''))
 		$('#cal_popup_plancheck .popup_inner').html(htmltojoin.join(''))
 	}
 
@@ -722,7 +639,6 @@ $(document).ready(function(){
         }
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
-        console.log(offAddOkArray)
       }
 
     function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
@@ -852,11 +768,8 @@ $(document).ready(function(){
         var durTimeList = $('#durations')
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
-        console.log(index)
-        console.log(substr)
         if(substr>1){
           durTimeList.html('<li><a data-dur="1" class="pointerList">1시간</a></li>')
-          console.log(index)
         }else{
           durTimeList.html('')
           for(var j=index; j<=len; j++){
@@ -896,9 +809,7 @@ $(document).ready(function(){
             var startnum = Number(startnum)+12 
         }
         var durnum = datadur
-        console.log(durnum)
         var finnum = Number(startnum)+Number(durnum)
-        console.log(startnum, durnum,finnum)
         for(var i=startnum; i<finnum; i++){
           $('#'+i+'g').addClass('graphindicator')
         }

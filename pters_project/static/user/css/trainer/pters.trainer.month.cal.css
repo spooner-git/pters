@@ -1,0 +1,974 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+
+body{
+	font-family: 'Noto Sans KR';
+	padding-top: 50px;
+	width: 100%;
+}
+
+.swiper-container{
+	overflow-y: overlay;
+	height: 100%;
+}
+
+span,p{
+	cursor: pointer;
+}
+
+
+#shade{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	opacity: 0.7;
+	z-index: -1;
+}
+
+#float_btn{  /*2017.10.2*/
+	position: fixed;
+	width: 50px;
+	height: 50px;
+	bottom: 25px;
+	right: 25px;
+	border-radius: 50%;
+	z-index: 10;
+	cursor: pointer;
+}
+
+#float_btn img{ /*2017.10.2*/
+	width: 100%;
+	height: 100%;
+	
+}
+
+.rotate_btn{
+	-webkit-transform: rotate(47deg);
+	transform: rotate(47deg);
+}
+
+
+
+#float_inner1{ /*2017.10.2*/
+	background-color: #fe4e65;
+}
+
+#float_inner1 a{ /*2017.10.2*/
+	color: #ffffff;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
+	height: 70%;
+	font-weight: bold;
+}
+
+#float_inner2{ /*2017.10.2*/
+	background-color: #ffffff;
+
+}
+
+#float_inner2 a{ /*2017.10.2*/
+	color: #282828;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
+	height: 70%;
+	font-weight: bold;
+}
+
+
+.float_inner{ /*2017.10.2*/
+	position: fixed;
+	width: 50px;
+	height: 50px;
+	bottom: 25px;
+	right: 25px;
+	background-color: grey;
+	opacity: 0;
+	border-radius: 50%;
+	z-index: 9;	
+	font-size: 13px;
+	text-align: center; 
+}
+#date{
+	position: relative;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 35px;
+	padding-left: 35px;
+	height: auto;
+	z-index: 3;
+	background-color: #ffffff;
+	max-width: 1000px;
+	margin:0 auto;
+}
+
+.arrowButton{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+.arrowButtonPC{
+	display: none;
+}
+
+
+
+#ymdText{
+	position: fixed;
+	height: 50px;
+	z-index: 3;
+	width: 100%;
+}
+
+#ymdText img{
+	width: 100%;
+	position: relative;
+	z-index: -1;
+}
+
+
+#monthText{
+	color : #fe4e65;
+	font-size: 19.5px;
+	font-weight: 700;
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	top: 44%;
+}
+
+#yearText{
+	color : #ffffff;
+	font-size: 15px;
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	top: 10%;
+}
+
+.todayindi{
+	border-top:1.5px solid #fe4e65;
+}
+
+.nottodayindi{
+	border-top: 1.5px solid #121212;
+}
+
+.arrowButton{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+}
+
+.arrowButton a{
+	position: absolute;
+	top: 0%;
+	font-size: 35px;
+	font-weight: 600;
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.setunVisible{
+	visibility: hidden;
+}
+
+
+#gapbox{
+	width: 100%;
+	height: 0px;
+	position: relative;
+	padding-bottom: 50px;
+	overflow-y: hidden;
+	background-color: transparent;
+}
+
+
+
+.week-style{ /*week 스타일*/
+	background-color: transparent;
+	position: relative;
+	width: 100%;
+	border-bottom: 1px solid #cccccc;
+	font-size: 14.4px;
+	height: 70px;
+}
+
+
+.calendar-style{  /*week 스타일하위 */
+	width: 100%;
+	text-align: center;
+	height: 100%;
+}
+
+.calendar-day-style{  /*왈화수목금토일 스타일 */
+	font-size: 12px;
+	line-height: 31px;
+}
+
+
+.calendar_image{
+	/*width: 100%;*/
+	margin: auto;
+	margin-right: 8px;
+}
+
+.weekday_style{
+	font-weight: 600;
+	font-size: 1em;
+}
+
+
+#calendar{
+	position: fixed; /*2017.10.02*/
+	width: 100%;
+	height: 72.5%;
+	background-color: #f4f4f4;
+	padding-left: 20px;
+	padding-right:20px;
+	z-index: 3;
+}
+
+
+.cal_box{
+	background-color: black;
+	height: 0px;
+	width: 100%;
+	position: absolute;
+	top:80%;
+}
+
+#calendar td{
+	width: 14.3%;
+	/*color : #282828;*/
+}
+
+.dateNum{
+	z-index: 10;
+}
+
+.nextDates{
+	color : #282828;
+	opacity: 0.5;
+}
+
+.prevDates{
+	color : #282828;
+	opacity: 0.5;
+}
+
+.sunday{
+	color : #d21245 !important;
+}
+
+.saturday{
+	color : #115a8e !important;
+}
+
+.weekdays{
+	color: #282828 !important;
+}
+
+.dateDisabled{
+	display:block;
+	margin:auto;
+	width: 30px;
+	height: 30px;
+	background: #f4f4f4;
+	position: absolute;
+	top: 0;
+	bottom:0;
+	left: 0;
+	right: 0;
+	border-radius: 50%;
+	z-index: -1;
+}
+
+.dateMytime{
+	position: absolute;
+	display:block;
+	margin:0 auto;
+	width: 28px;
+	height: 28px;
+	/*background: #fddadf;*/
+	background: #f9b4be;
+	top: 21px;
+	bottom:0;
+	left: 0px;
+	right: 0;
+	border-radius: 50%;
+	z-index: -1;
+}
+
+.greydateMytime{
+	position: absolute;
+	display:block;
+	margin:0 auto;
+	width: 28px;
+	height: 28px;
+	background: #e4e4e4;
+	top: 21px;
+	bottom:0;
+	left: 0px;
+	right: 0;
+	border-radius: 50%;
+	z-index: -1;
+}
+
+
+
+.today{
+	position:absolute;
+	display: block;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	border-top: 3px solid #fe4e65;
+	width: 90%;
+	color: #fe4e65;
+	font-weight: bold;
+	font-size: 77%;
+	width: 100%;
+}
+
+.holiday{
+	color: #d21245 !important;
+}
+
+.balloon{
+	position: absolute;
+	background: #e4e4e4;
+	color: #333;
+	height: 16px;
+	width: 90%;
+	bottom: 1px;
+	border-radius: 1px;
+	font-size: 12px;
+	padding-top: 0.5px;
+	z-index: -2;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.balloon_trainer{
+	position: absolute;
+	background: #e4e4e4;
+	color: #333;
+	height: 16px;
+	width: 16px;
+	bottom: 1px;
+	border-radius: 1px;
+	font-size: 12px;
+	z-index: -2;
+	left: 50%;
+	transform: translateX(-50%);
+	border-radius: 50%;
+}
+
+
+.blackballoon{
+	position: absolute;
+	color: #ffffff;
+	background: #3b3d3d;
+	height: 16px;
+	-ms-height: 100%;
+	width: 90%;
+	bottom: 1px;
+	border-radius: 1px;
+	font-size: 12px;
+	font-weight: 300;
+	z-index: -2;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.blackballoon_trainer{
+	position: absolute;
+	color: #ffffff;
+	background: #3b3d3d;
+	height: 16px;
+	-ms-height: 100%;
+	width: 16px;
+	bottom: 1px;
+	border-radius: 1px;
+	font-size: 12px;
+	font-weight: 400;
+	padding-top: 0px;
+	z-index: -2;
+	left: 50%;
+	transform: translateX(-50%);
+	border-radius: 50%;
+}
+
+
+#cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
+	display: none;
+	position: fixed;
+	top: 35%;
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	z-index: -2;
+	text-align: center;
+	left:50%;
+	transform: translateX(-50%);
+	z-index: 150;
+}
+
+#cal_popup_plancheck .popup_inner:hover{
+	background : white;
+}
+
+._classTime img{
+	display: none;
+}
+
+
+/*팝업 css*/
+#ng_popup{
+	display: none;
+	position: fixed;
+	background: #ffffff;
+	top: 35%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80%;
+	max-width: 330px;
+	border: 1px solid #a2a2a2;
+	z-index: 103;
+	text-align: center;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+.paddingside15px{
+	padding-left:20px;
+	padding-right: 20px;
+}
+
+
+#cal_popup{
+	display: none;
+	position: fixed;
+	background: transparent;
+	border-color: transparent;
+	top: 35%;
+	left: 10%;
+	width: 80%;
+	/*
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	*/
+	z-index: -2;
+	text-align: center;
+}
+
+#cal_popup2{
+	display: none;
+	position: fixed;
+	background: transparent;
+	border-color: transparent;
+	top: 35%;
+	left: 10%;
+	width: 80%;
+	/*
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	*/
+	z-index: -2;
+	text-align: center;
+}
+
+#cal_popup3{
+	display: none;
+	position: fixed;
+	background: transparent;
+	border-color: transparent;
+	top: 35%;
+	left: 10%;
+	width: 80%;
+	/*
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	*/
+	z-index: -2;
+	text-align: center;
+}
+
+#addpopup{
+	position: fixed;
+	display: none;
+	left: 5%;
+	top: 30%;
+	width: 90%;
+	background: #ffffff;
+	z-index: 105;
+}
+
+#popup_info,#popup_info2,#popup_info3,#popup_info4{
+	background: #ffffff;
+	position: relative;
+	width: 100%;
+	text-align: center;
+	color: #3b3d3d;
+	font-size: 14px;
+	font-weight: bold;
+	height: 32px;
+}
+
+
+#popup_text2{
+	color: #000ecc;
+}
+
+
+#popup_img{
+	position: relative;
+	background: #ffffff;
+	height: 56px;
+	padding-top: 22.5px;
+	padding-bottom: 22.5px;
+}
+
+
+#img_cal{
+	position: absolute;
+	top: 41%;
+	left:41.5%;
+	width: 25px;
+	margin-right: 14.845px;
+	margin-left: 14.845px;
+}
+
+#btn_close, #btn_close2, #btn_close3, #btn_close4{
+	position: absolute;
+	top: 31%;
+	left: 85%;
+	padding: 10px;
+	width: 35px;
+	float: right;
+}
+
+.popup_inner{
+	background: #ffffff;
+	position: relative;
+	height: 50px;
+	border-top: 1px solid #a2a2a2;
+}
+
+.popup_inner:hover{
+	background: #a2a2a2;
+	-webkit-background:#a2a2a2;
+}
+
+
+.popup_inner span{
+	margin:0 auto;
+	line-height: 55px;
+	font-size: 14px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.popup_inner_change{
+	text-align: center;
+}
+
+.popup_inner_delete{
+	text-align: center;
+	color: #fe4e65;
+}
+
+#shade2{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	opacity: 0.7;
+	display: none;
+	z-index: 101;
+}
+
+.available{
+	background:  #ffebee;
+	z-index: -1;
+	/*opacity: 1;*/
+}
+
+.notavailable{
+	background: #dadada;
+	z-index: -1;
+}
+
+
+
+.admonth{
+	height: 50%;
+	opacity: 0.15;
+	margin-top: 18px;
+}
+
+
+
+
+@media(min-width:415px){
+	#cal_popup{
+		display: none;
+		position: fixed;
+		background: transparent;
+		border-color: transparent;
+		top: 35%;
+		left: 0;
+		width: 100%;
+		/*
+		background-color: #ffffff;
+		border: 1px solid #a2a2a2;
+		*/
+		z-index: -2;
+		text-align: center;
+	}
+
+	#cal_popup2{
+		display: none;
+		position: fixed;
+		background: transparent;
+		border-color: transparent;
+		top: 35%;
+		left: 0;
+		width: 100%;
+		/*
+		background-color: #ffffff;
+		border: 1px solid #a2a2a2;
+		*/
+		z-index: -2;
+		text-align: center;
+	}
+
+	#cal_popup3{
+		display: none;
+		position: fixed;
+		background: transparent;
+		border-color: transparent;
+		top: 35%;
+		left: 0;
+		width: 100%;
+		/*
+		background-color: #ffffff;
+		border: 1px solid #a2a2a2;
+		*/
+		z-index: -2;
+		text-align: center;
+	}
+
+	#addpopup{
+		position: fixed;
+		display: none;
+		left: 0;
+		top: 30%;
+		width: 100%;
+		background: transparent;
+		z-index: 105;
+	}
+
+	#dateSelector,#offStartTime,#offDuration,#submitBtn{
+		position: relative;
+		background: #ffffff;
+		margin : 0 auto;
+		width: 450px;
+	}
+
+	#timeGraph{
+		position: relative;
+		background: #f4f4f4;
+		margin : 0 auto;
+		width: 450px;
+	}
+
+	#popup_info,#popup_info2,#popup_info3,#popup_info4{
+		background: #ffffff;
+		position: relative;
+		margin : 0 auto;
+		width: 330px;
+		text-align: center;
+		color: #3b3d3d;
+		font-size: 14px;
+		font-weight: bold;
+	}
+
+	#popup_text2{
+		color: #000ecc;
+	}
+
+	#popup_img{
+		position: relative;
+		margin :0 auto;
+		background: #ffffff;
+		height: 70px;
+		padding-top: 22.5px;
+		padding-bottom: 22.5px;
+		width: 330px;
+	}
+
+
+	#img_cal{
+		position: absolute;
+		top: 30%;
+		left:41.5%;
+		width: 25px;
+		margin-right: 14.845px;
+		margin-left: 14.845px;
+	}
+
+	#btn_close, #btn_close2, #btn_close3, #btn_close4{
+		position: absolute;
+		top: 22%;
+		left: 85%;
+		padding: 10px;
+		width: 35px;
+		float: right;
+	}
+
+	#btn_close4{
+		left: 100%;
+	}
+
+	.popup_inner{
+		background: #ffffff;
+		margin: 0 auto;
+		position: relative;
+		height: 50px;
+		border-top: 1px solid #a2a2a2;
+		width: 330px;
+	}
+
+	.popup_inner:hover{
+	background: #a2a2a2;
+	-webkit-background:#a2a2a2;
+	}
+}
+
+/*미디어 쿼리*/
+
+@media(min-width: 600px){
+	#calendar{
+		position: relative;
+		background-color: 	#ffffff;
+	}
+
+	#calendar td:hover{
+		background : #eaeaea;
+		opacity: 0.2;
+	}
+	
+	#ymdText{
+		position: relative;
+		height: 100px;
+	}
+
+	#yearText{
+		font-size: 26px;
+		top: 15%;
+	}
+
+	#monthText{
+		font-size: 21.5px;
+		top: 60%;
+	}
+
+	#gapbox{
+		padding-bottom: 0px;
+	}
+
+	#countRemain{
+		margin-bottom: 0px;
+	}
+
+	#calendar td{
+		border-left:0.5px solid #cccccc;
+		border-right: 0.5px solid #cccccc;
+	}
+
+	.arrowButtonPC{
+		display: block;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+	}
+
+	.arrowButtonPC a:first-child{
+		height: 100%;
+		width: 25%;
+		float: left;
+		cursor: pointer;
+	}
+
+	.arrowButtonPC a:last-child{
+		height: 100%;
+		width: 25%;
+		float: right;
+		cursor: pointer;
+	}
+
+	.arrowButtonPC a:first-child:active{
+		background: #cccccc;
+	}
+	
+	.arrowButtonPC a:last-child:active{
+		background: #cccccc;
+	}
+
+	.arrowButtonPC img{
+		position: fixed;
+		top: 50%;
+	}
+	
+	.arrowButton{
+		display:none;
+	}
+
+	.prevDates,.nextDates{
+		opacity: 0.2;
+		background:grey;
+	}
+	
+	.greydateMytime,.dateMytime{
+		width: 	38px;
+		height: 38px;
+		top: 	31px;
+	}
+		
+	.admonth{
+		margin-top: 25px;
+	}
+
+	.balloon{
+		position: absolute;
+		background: #e4e4e4;
+		height: 21px;
+		width: 40px;
+		top: 43px;
+		border-radius: 2px;
+		font-size: 13.5px;
+		font-weight: 400;
+		padding-top: 1px;
+		z-index: -2;
+		left: 50%;
+		transform: translateX(-50%);
+		text-align: center;
+	}
+
+	.blackballoon{
+		position: absolute;
+		color: #ffffff;
+		background: #3b3d3d;
+		height: 21px;
+		width: 40px;
+		top: 43px;
+		border-radius: 2px;
+		font-size: 13.5px;
+		font-weight: 300;
+		padding-top: 1px;
+		z-index: -2;
+		left: 50%;
+		transform: translateX(-50%);
+		text-align: center;
+	}
+
+	.dateMytime{
+		display: none;
+
+	}
+
+	.greydateMytime{
+		display: none;
+
+	}
+
+	.calendar-day-style{  /*왈화수목금토일 스타일 */
+		font-size: 15px;
+	}
+
+	.arrowButton a{
+		position: absolute;
+		top: 78%;
+		font-size: 35px;
+		font-weight: 600;
+		color: #ffffff;
+		text-decoration: none;
+		width: 25px;
+		height: 25px;
+		text-align: center;
+	}
+
+	#yearText{
+		display: block;
+		margin-bottom: 5px;
+	}
+	#countRemain{
+		margin-bottom: 0px
+	}
+
+	#gapbox{
+		padding-bottom: 0px;
+	}
+
+	.week-style{ /*week 스타일*/
+		background-color: transparent;
+		position: relative;
+		width: 100%;
+		border-bottom: 1px solid #cccccc;
+		height: 100px;
+		min-height: 42px;
+		font-size: 16px;
+		font-weight: 400;	
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+
+	#date{
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.blackballoon_trainer,.balloon_trainer{
+		position: relative;
+		color :#282828;
+		background-color: transparent;
+		font-size: 15px;
+		font-weight: 500;
+		width:27px;
+		margin-top: 20px;
+		left:58%;
+	}
+
+	._classTime img{
+		display: inline;
+		margin-right: 4px;
+		margin-bottom: 3px;
+	}
+
+	.calendar-style{
+		text-align: right;
+	}
+
+	#calendar td{
+		vertical-align: unset;
+		padding-top: 3px;
+		padding-right: 10px;
+	}
+
+	.today{
+		color: transparent;
+	}
+}
