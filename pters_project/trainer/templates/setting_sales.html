@@ -4,7 +4,6 @@
 {% block local_css %}
         <link rel="stylesheet" href={% static "user/css/pters.trainer.sales.setting.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 {% endblock %}
 
 
@@ -48,20 +47,21 @@
    </tbody>
  </table>
 </div>
-
-
-
 {% endblock %}
-
-
 
 
 {% block local_js_footer %}
     <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+          var Options = { "stoptimeStart":21,     //강사가 설정한 예약불가 시간 (시작)
+                          "stoptimeEnd":8,        //강사가 설정한 예약불가 시간 (종료)
+                          "rsvDisableSet" : 'on', //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅 on/off
+                          "limit":4,              //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+                          "reserve":"disable",     //회원 일정 기능을 enable/disable
+          }
+        </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.setting.sales.js" %}></script>
         
 {% endblock %}
