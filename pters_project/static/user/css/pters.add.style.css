@@ -10,8 +10,9 @@ input{
 	text-align: center;
 }
 
-span{
-	cursor: pointer;
+img,a,div,span,p{
+ 	-webkit-user-select: none;
+   	user-select: none;
 }
 
 #inputError{
@@ -294,6 +295,7 @@ span{
 	color: #ffffff !important;
 	background:#fe4e65 !important;
 	border:0 !important;
+	cursor: pointer;
 }
 
 .popupBtn{
@@ -303,6 +305,10 @@ span{
 
 .submitBtn{
 	display:none;
+}
+
+#btn_close,.cancelBtn{
+	cursor: pointer;
 }
 
 /* 신규 회원 등록  */
