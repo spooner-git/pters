@@ -62,11 +62,21 @@ $(document).ready(function(){
 				var dayraw = dayobj.getDay();
 				var dayarry = ['일','월','화','수','목','금','토']
 				var day = dayarry[dayraw];
-				var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-				var infoText2 = info2[0]+"시 취소 하시겠습니까?"
-				$('#popup_info').text(infoText)
-				$('#popup_info2').text(infoText2)
-				$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+				console.log(currentHour)
+				if(yy+'_'+mm+'_'+dd == oriYear+'_'+oriMonth+'_'+oriDate && info2[0]<=currentHour+Options.cancellimit){
+					var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+					var infoText2 = "온라인 취소불가 일정 :"+info2[0]+"시 "+info2[1]+"분"
+					$('#popup_info').text(infoText)
+					$('#popup_info2').text(infoText2)
+					$('#popup_text1 span').addClass("limited")
+					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+				}else{
+					var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+					var infoText2 = info2[0]+"시 취소 하시겠습니까?"
+					$('#popup_info').text(infoText)
+					$('#popup_info2').text(infoText2)
+					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+				}
 			}else{
 				$('#addpopup').fadeIn('fast').css({'z-index':'103'})
 				$('#shade2').css({'display':'block'});
@@ -120,13 +130,13 @@ $(document).ready(function(){
 	})
 
 	$("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
-				//PT 일정 삭제시
-				$("#cal_popup").hide().css({'z-index':'-2'})
-				$("#cal_popup3").fadeIn('fast').css({'z-index':'103'});
-				$('#shade2').css({'display':'block'});
-				//var info2 = $(this).attr('data-date').split('_')
-				//var infoText2 = info2[0]+'년 '+info2[1]+'월 '+info2[2]+'일 일정 추가'
-				//$('#popup_info2').text(infoText2)
+		if($(this).find("span").hasClass('limited')){
+			alert("선택한 일정은 삭제가 불가합니다.\n \n시작 "+Options.cancellimit+'시간 이내에는 온라인 취소가 불가합니다.\n \n담당 강사에게 직접 문의해주세요')
+		}else{
+			$("#cal_popup").hide().css({'z-index':'-2'})
+			$("#cal_popup3").fadeIn('fast').css({'z-index':'103'});
+			$('#shade2').css({'display':'block'});
+		}
 	})
 
 	$('#popup_text3').click(function(){
@@ -168,10 +178,11 @@ $(document).ready(function(){
         }
     })
 
-	$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
+	$("#btn_close").click(function(){  //일정삭제 팝업 X버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup').css('display')=='block'){
 				$("#cal_popup").css({'display':'none','z-index':'-2'})
 				$('#shade2').css({'display':'none'});
+				$('#popup_text1 span').removeClass('limited')
 			}
 	})
 
@@ -191,7 +202,7 @@ $(document).ready(function(){
 			}
 	})
 
-	$('#popup_text4').click(function(){ //일정삭제 확인 팝업 X버튼 눌렀을때 팝업 닫기
+	$('#popup_text4').click(function(){ //일정삭제 확인 팝업 취소버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup3').css('display')=='block'){
 				$("#cal_popup3").css({'display':'none','z-index':'-2'})
 				$('#shade2').css({'display':'none'});
@@ -508,7 +519,7 @@ $(document).ready(function(){
 	}
 
 	function ad_month(selector){ // 월간 달력 하단에 광고
-		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">')	
+		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
 	}
 
 

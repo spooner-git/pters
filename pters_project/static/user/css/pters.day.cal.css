@@ -7,14 +7,16 @@ body{
 	background: black;
 }
 
+img,a,div,span,p{
+ 	-webkit-user-select: none;
+   	user-select: none;
+}
+
 table{
 	table-layout: fixed;
 	border-bottom : 0.5px solid #dedede;
 }
 
-span{
-	cursor: pointer;
-}
 
 #shade2{
 	position: fixed;
@@ -940,6 +942,26 @@ span{
 
 	.arrowButton{
 		display:none;
+	}
+
+	#rightarrowPC img:nth-child(2){
+		right: 14px;
+		margin-top: 5px;
+	}
+
+	#rightarrowPC img:nth-child(3){
+		right: 28px;
+		margin-top: 5px;
+	}
+
+	#leftarrowPC img:nth-child(2){
+		left: 14px;
+		margin-top: 5px;
+	}
+
+	#leftarrowPC img:nth-child(3){
+		left: 28px;
+		margin-top: 5px;
 	}
 
 	.morningtext{

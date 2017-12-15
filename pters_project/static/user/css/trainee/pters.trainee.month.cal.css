@@ -12,8 +12,9 @@ body{
 	height: 100%;
 }
 
-span,p{
-	cursor: pointer;
+img,a,div,span,p{
+ 	-webkit-user-select: none;
+   	user-select: none;
 }
 
 
@@ -581,6 +582,10 @@ span,p{
 	cursor: pointer;
 }
 
+.limited{
+	color: #cccccc;
+}
+
 .popup_inner_change{
 	text-align: center;
 }
@@ -967,6 +972,7 @@ span,p{
 		vertical-align: unset;
 		padding-top: 3px;
 		padding-right: 10px;
+		cursor: pointer;
 	}
 
 	.today{

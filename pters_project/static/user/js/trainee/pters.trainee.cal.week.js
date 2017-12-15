@@ -16,12 +16,13 @@ $(document).ready(function(){
 		var userCheckedHourArray = []
 		var checkedLength = $('.ptersCheckboxInner').length
 		for(var i=0; i<checkedLength; i++){
-			var checkedHour = $('.ptersCheckboxInner').eq(i).attr('data-time')	
-			userCheckedHourArray[i]=checkedHour
+			var checkedHour = $('.ptersCheckboxInner').eq(i).attr('data-time')
+			var checkedHourarry = $('.ptersCheckboxInner').eq(i).attr('data-time').split('_')
+			userCheckedHourArray[i]="  "+checkedHourarry[0]+'년 '+checkedHourarry[1]+'월 '+checkedHourarry[2]+'일 '+checkedHourarry[3]+':'+checkedHourarry[4]
 		}
-		alert('추가된 시간은 총 '+checkedLength+'건'+' Array = ['+userCheckedHourArray+'],') //디버깅용
+		alert('추가된 시간은 총 '+checkedLength+'건 : '+userCheckedHourArray) //디버깅용
 		if(checkedLength>0){
-             document.getElementById('pt-add-form').submit();
+            document.getElementById('pt-add-form').submit();
 		}
 	})
 
@@ -30,10 +31,10 @@ $(document).ready(function(){
 		var div_ptersCheckbox = $(this).find('div')
 		var div_ptersCheckboxInner = div_ptersCheckbox.find('div')
 		var date_info = $(this).attr('id')
-		if(!div_ptersCheckboxInner.hasClass('ptersCheckboxInner') && !$(this).hasClass('notAvail') && !$(this).hasClass('hour')){
+		if(!div_ptersCheckboxInner.hasClass('ptersCheckboxInner') && !$(this).hasClass('notAvail') && !$(this).hasClass('hour') &&!$(this).hasClass('myClass')){
 			duplicateCheck($(this).attr('id'))
 			div_ptersCheckbox.addClass('checked')
-			div_ptersCheckboxInner.addClass('ptersCheckboxInner').attr('data-time',$(this).parent('td').attr('id'))
+			div_ptersCheckboxInner.addClass('ptersCheckboxInner').attr('data-time',$(this).attr('id'))
 			var add_form = '#pt-add-form'
 			var date_form = date_info.split('_')
 			var yy=date_form[0]
@@ -52,6 +53,7 @@ $(document).ready(function(){
 		}else if(div_ptersCheckboxInner.hasClass('ptersCheckboxInner')){
 			div_ptersCheckboxInner.removeClass('ptersCheckboxInner')
 			div_ptersCheckbox.removeClass('checked')
+			dplicateCheckMyClass($(this).attr('id'))
 			var delete_input_form1 = '#id_training_date_'+date_info
 			var delete_input_form2 = '#id_time_duration_'+date_info
 			var delete_input_form3 = '#id_training_time_'+date_info
@@ -388,18 +390,51 @@ $(document).ready(function(){
 
 	function duplicateCheck(selector){ // 주간일정에서 이미 "내 일정"이 있는 날의 시간을 선택했을때 알림 출력(이미 선택한 날짜에 일정이 있다. 맞는지 확인하시오.) 
 		var alreadyExistCount = 0;
+		var alreadyExistList =[];
+		var alreadyExistMyclass = [];
+		var div_ptersCheckbox = $('#'+selector).find('div')
+		var div_ptersCheckboxInner = div_ptersCheckbox.find('div')
 		for(var i=5; i<24; i++){
 			var selectedId = selector.split('_')
 			var yy = selectedId[0];
 			var mm= selectedId[1];
 			var dd= selectedId[2];
 			var scanTdId = $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_00')
-			if(scanTdId.hasClass('myClass') || scanTdId.find('div').hasClass('checked')){
+			if(scanTdId.find('div').hasClass('checked')){
 				alreadyExistCount++
+				alreadyExistList.push('#'+yy+'_'+mm+'_'+dd+'_'+i+'_00')
+			}else if(scanTdId.hasClass('myClass')){
+				alreadyExistCount++
+				alreadyExistMyclass.push('#'+yy+'_'+mm+'_'+dd+'_'+i+'_00')
 			}
 		}
 		if(alreadyExistCount>0){
-			alert('선택한 날짜에 이미 일정이 ['+alreadyExistCount+'] 건 존재합니다.')
+			for(var i=0;i<alreadyExistList.length;i++){
+				var checkeddiv = $(alreadyExistList[i]+' div')
+				var checkboxinnerdiv = $(alreadyExistList[i]+' div div')
+				checkboxinnerdiv.removeClass('ptersCheckboxInner')
+				checkeddiv.removeClass('checked')
+				//alert('선택한 날짜에 이미 일정이 ['+alreadyExistCount+'] 건 존재합니다.')
+			}
+			for(var j=0;j<alreadyExistMyclass.length;j++){
+				var myclassdiv = $(alreadyExistMyclass[j])
+				myclassdiv.addClass('myClass_re')
+			}
+		}
+	}
+
+	function dplicateCheckMyClass(selector){
+		var div_ptersCheckbox = $('#'+selector).find('div')
+		var div_ptersCheckboxInner = div_ptersCheckbox.find('div')
+		for(var i=5; i<24; i++){
+			var selectedId = selector.split('_')
+			var yy = selectedId[0];
+			var mm= selectedId[1];
+			var dd= selectedId[2];
+			var scanTdId = $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_00')
+			if(scanTdId.hasClass('myClass_re')){
+				scanTdId.removeClass('myClass_re').addClass('myClass')
+			}
 		}
 	}
 
