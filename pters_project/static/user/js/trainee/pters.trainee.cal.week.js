@@ -111,6 +111,8 @@ $(document).ready(function(){
 	scrollToIndicator();
 	classTime(); //PT수업시간에 불가 checkbox 선택 불가표기
 	offTime(); //본인의 PT시간 이외 시간(다른사람 PT시간 & OFF시간)에 불가 checkbox 선택 불가표기
+	pastTime();
+	limitTime();
 // ****************************구동시 실행********************************************************************************
 // ############################구동시 실행################################################################################
 
@@ -270,7 +272,7 @@ $(document).ready(function(){
 	}
 
 
-	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 예약달력에 불가시간으로 표기
 		var classlen = classTimeArray.length;
 		$('#calendar').css('display','none');
 		for(var i=0; i<classlen; i++){
@@ -290,15 +292,14 @@ $(document).ready(function(){
 				var classStartArr = [classYear,classMonth,classDate,Number(classHour)+j,classMinute]
 				var classStart = classStartArr.join("_")
 				var tdClassStart = $("#"+classStart+" div");
-				tdClassStart.removeClass('ptersCheckbox')
-				tdClassStart.addClass('ptersNotAvail')
+				tdClassStart.removeClass('ptersCheckbox').addClass('ptersNotAvail');
 				tdClassStart.parent('td').addClass('myClass').text("내 일정")
 			}
 		};
 		$('#calendar').css('display','block');
 	};
 
-	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+	function offTime(){ //OFF정보를 DB로 부터 받아 해당 시간을 예약달력에 불가시간으로 표기
 		var offlen = offTimeArray.length;
 		$('#calendar').css('display','none');
 		for(var i=0; i<offlen; i++){
@@ -315,13 +316,35 @@ $(document).ready(function(){
 				var offStartArr = [offYear,offMonth,offDate,Number(offHour)+j,offMinute]
 				var offStart = offStartArr.join("_")
 				var tdOffStart = $("#"+offStart+" div");
-				tdOffStart.removeClass('ptersCheckbox')
-				tdOffStart.addClass('ptersNotAvail')
+				tdOffStart.removeClass('ptersCheckbox').addClass('ptersNotAvail')
 				tdOffStart.parent('td').addClass('notAvail')
 			}
 		};
 		$('#calendar').css('display','block');
 	};
+
+	function pastTime(){ //현재 이전 시간은 막기
+		var len = currentHour
+		for(var i=5; i<=len; i++){ //2017_12_15_5_00
+			var past = $('#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+i+'_00')
+			if(!past.hasClass('myClass')){
+				past.addClass('notAvail');
+				past.find('div').removeClass('ptersCheckbox').addClass('ptersNotAvail')
+			}else{
+
+			}
+		}
+	}
+
+	function limitTime(){ //현재시간부터 xx시간 이내 예약 불가
+		console.log(currentHour+1, Options.limit)
+
+		for(var i=currentHour+1;i<currentHour+1+Options.limit;i++){
+			var limit = $('#'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+i+'_00')
+			limit.addClass('notAvail');
+			limit.find('div').removeClass('ptersCheckbox').addClass('ptersNotAvail')
+		}
+	}
 
 
 	function addcurrentTimeIndicator(){ //현재 시간에 밑줄 긋기
