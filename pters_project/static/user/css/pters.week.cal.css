@@ -445,14 +445,14 @@ img,a,div,span,p{
 }
 
 .memberName{
-	position: absolute;
-	left: 3%;
+	position: relative;
 	margin-top: 0px;
 	font-size: 80%;
 	font-weight: 400;
 	letter-spacing: -0.3px;
 	color: #ffffff;
 	cursor: pointer;
+	line-height: 30px;
 }
 
 .memberTime{
@@ -462,7 +462,7 @@ img,a,div,span,p{
 	margin-top: 15px;
 	font-size: 10.5px;
 	letter-spacing: -0.3px;
-	color: #ffffff;
+	color: transparent;
 	cursor: pointer;
 }
 
@@ -504,7 +504,8 @@ img,a,div,span,p{
 }
 
 .reserveavailable{
-	background: #e9f5ff;
+	/*background: #e9f5ff;*/
+	background: #ffebee;
 }
 
 .currentTimeBox{

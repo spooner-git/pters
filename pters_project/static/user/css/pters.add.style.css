@@ -209,6 +209,7 @@ img,a,div,span,p{
 	height: 8px;
 	/*background: #cacaca;*/
 	background: #ffffff;
+	background: #282828;
 	border-left : 0.5px solid #f4f4f4;
 }
 
@@ -250,6 +251,7 @@ img,a,div,span,p{
 .greytimegraph{
 	/*background: #616161;*/
 	background: #cccccc;
+	background: #e3e3e3;
 }
 
 .pointerList{

@@ -198,7 +198,7 @@ $(document).ready(function(){
 				}
 			}
 			var td=tdArray.join("")
-			var hourtd='<td class="hour" id="'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+Week+"_"+i+'H'+'">'+i+'.00 ~ '+(i+1)+'.00'+'</td>'
+			var hourtd='<td class="hour" id="'+currentYear+'_'+currentPageMonth+'_'+currentDate+'_'+Week+"_"+i+'H'+'">'+i+':00 - '+(i+1)+':00'+'</td>'
 			var tdsum = hourtd + td
 			var trtdsum = '<tr>'+tdsum+'</tr>'
 			tableArray[i-5]=trtdsum

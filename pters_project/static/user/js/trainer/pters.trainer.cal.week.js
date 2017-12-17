@@ -158,12 +158,12 @@ $(document).ready(function(){
 			var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
 			switch(Options.language){
 				case "Korea" :
-				var member = " 회원님　";
+				var member = " 회원님의 ";
 				var yourplan = "시 일정";
 				var day = dayarryKR[dayraw];
 				break;
 				case "Japan" :
-				var member = "様の  ";
+				var member = "様の ";
 				var yourplan = "時日程";
 				var day = dayarryJP[dayraw];
 				break;
