@@ -208,7 +208,8 @@
                         <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 결제 요금
                     </label>
                     <div class="dropdown pters_input_custom">
-                        <input type="tel" class="dropdown form-control" id="lecturePrice_add" name="price" required="required" placeholder="숫자만 입력해주세요." maxlength="8">
+                        <input type="hidden" id="lecturePrice_add_value" name="price" value="0">
+                        <input type="tel" class="dropdown form-control" id="lecturePrice_add" required="required" placeholder="숫자만 입력해주세요." maxlength="8">
                         <span class="inputunit">원</span>
                     </div>
                     <div class="pricebutton">
