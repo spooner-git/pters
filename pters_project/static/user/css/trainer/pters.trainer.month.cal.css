@@ -221,7 +221,6 @@ img,a,div,span,p{
 .calendar_image{
 	/*width: 100%;*/
 	margin: auto;
-	margin-right: 8px;
 }
 
 .weekday_style{
@@ -302,7 +301,7 @@ img,a,div,span,p{
 	width: 28px;
 	height: 28px;
 	/*background: #fddadf;*/
-	background: #f9b4be;
+	background: #fddadf;
 	top: 21px;
 	bottom:0;
 	left: 0px;
@@ -364,11 +363,10 @@ img,a,div,span,p{
 
 .balloon_trainer{
 	position: absolute;
-	background: #e4e4e4;
-	color: #333;
+	color: #282828;
 	height: 16px;
-	width: 16px;
-	bottom: 1px;
+	width: 20px;
+	bottom: 5px;
 	border-radius: 1px;
 	font-size: 12px;
 	z-index: -2;
@@ -396,15 +394,16 @@ img,a,div,span,p{
 
 .blackballoon_trainer{
 	position: absolute;
-	color: #ffffff;
-	background: #3b3d3d;
+	color: #282828;
+	background: transparent;
 	height: 16px;
 	-ms-height: 100%;
-	width: 16px;
-	bottom: 1px;
+	width: 20px;
+	bottom: 5px;
 	border-radius: 1px;
 	font-size: 12px;
 	font-weight: 400;
+	font-size: 11px;
 	padding-top: 0px;
 	z-index: -2;
 	left: 50%;
@@ -431,7 +430,10 @@ img,a,div,span,p{
 }
 
 ._classTime img{
-	display: none;
+	/*display: none;*/
+	width: 10px;
+	margin-bottom: 2px;
+	margin-right: 1.5px;
 }
 
 
@@ -784,6 +786,10 @@ img,a,div,span,p{
 	#monthText{
 		font-size: 21.5px;
 		top: 60%;
+	}
+
+	.weekday_style{
+		margin-right: 8px;
 	}
 
 	#gapbox{

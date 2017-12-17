@@ -393,9 +393,11 @@ $(document).ready(function(){
 			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
 				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('balloon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
+				$("td[data-date="+dateResult[i]+"] div._classDate").addClass('greydateMytime')
 			}else{
 				$("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+dateResult[i]+"] div._classTime").addClass('blackballoon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
+				$("td[data-date="+dateResult[i]+"] div._classDate").addClass('dateMytime')
 			}
 		};
 	}

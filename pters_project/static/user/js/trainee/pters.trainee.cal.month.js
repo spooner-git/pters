@@ -72,7 +72,7 @@ $(document).ready(function(){
 					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 				}else{
 					var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-					var infoText2 = info2[0]+"시 취소 하시겠습니까?"
+					var infoText2 = info2[0]+"시 예약 취소 하시겠습니까?"
 					$('#popup_info').text(infoText)
 					$('#popup_info2').text(infoText2)
 					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
