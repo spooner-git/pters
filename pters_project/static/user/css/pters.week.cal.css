@@ -322,6 +322,10 @@ img,a,div,span,p{
 	display:none;
 }
 
+.arrowButton span{
+	font-weight: 600;
+}
+
 .arrowButton a{
 	position: absolute;
 	top: 0%;
