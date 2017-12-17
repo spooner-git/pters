@@ -171,6 +171,10 @@ img,a,div,span,p{
 	z-index: 0;
 }
 
+.arrowButton span{
+	font-weight: 600;
+}
+
 .arrowButton a{
 	position: absolute;
 	top: 0%;
