@@ -124,34 +124,41 @@ $(document).ready(function(){
         var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
         var priceInputValue = 1000000 + Number(priceInputValue);
         $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value').val(priceInputValue)
+
       })
 
       $('#price2').click(function(){
         var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
         var priceInputValue = 500000 + Number(priceInputValue);
         $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value').val(priceInputValue)
       })
 
       $('#price3').click(function(){
         var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
         var priceInputValue = 100000 + Number(priceInputValue);
         $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value').val(priceInputValue)
       })
 
       $('#price4').click(function(){
         var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
         var priceInputValue = 50000 + Number(priceInputValue);
         $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value').val(priceInputValue)
       })
 
       $('#price5').click(function(){
         var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
         var priceInputValue = 10000 + Number(priceInputValue);
         $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value').val(priceInputValue)
       })
 
       $('#price6').click(function(){
         $('#lecturePrice_add').val("")
+        $('#lecturePrice_add_value').val(0)
       })
 
       $('#price1_2').click(function(){

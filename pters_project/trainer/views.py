@@ -667,6 +667,12 @@ def member_registration(request):
     elif end_date == '':
         error = '종료 날짜를 입력해 주세요.'
 
+    print("email :: "+email)
+    print("name :: "+name)
+    print("phone :: "+phone)
+    print("counts :: "+counts)
+    print("price :: "+price)
+
     if error is None:
 
         password = email.split('@')[0] + phone[7:]
