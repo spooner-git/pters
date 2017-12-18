@@ -405,17 +405,17 @@ $(document).ready(function(){
 			var td2 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'30'+' class="daytd">'+'<div></div>'+'</td>'
 			if(i<12){
 				if(i==5){
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="morningtext">'+morning+'</span> 0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+'<span class="morningtext">'+morning+'</span> 0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
 				}else if(i<10 && i>5){
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+'0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
 				}else{
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
 				};
 			}else{
 				if(i==12){
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="morningtext">'+afternoon+'</span> '+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+'<span class="morningtext">'+afternoon+'</span> '+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
 				}else{
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
 				}
 							
 			}

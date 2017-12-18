@@ -268,7 +268,7 @@ img,a,div,span,p{
 #ymdText{
 	position: fixed;
 	height: 50px;
-	z-index: 3;
+	z-index: 4;
 	width: 100%;
 }
 
@@ -336,44 +336,61 @@ img,a,div,span,p{
 }
 
 .time-style{ /*week ìŠ¤íƒ€ì¼*/
-	background-color: transparent;
+	background-color: #ffffff;
 	position: relative;
 	width: 100%;
 	font-size: 14.4px;
 	height: 30px;
 }
 
+
 .hour{
 	text-align: center;
-	width: 9.72% !important;
-	border: 0.5px solid #f4f4f4;
+	width: 9.72%;
+	height: 30px;
+	background-color: #f4f4f4;
+	/*border: 0.5px solid #f4f4f4;*/
 	font-size: 13px;
+	letter-spacing: -0.3px;
+	color: #3b3d3d;
+}
+
+.slidegap{
+	width: 9.72%;
+	color: transparent;
+	background: #ffffff;
+	border: 0;
+}
+
+.timeindex{
+	position: absolute;
+	height: 100%;
+	width:9.72%;
+	z-index: 10;
+	color:white;
+	background-color: #f4f4f4;
+}
+
+.morningtext{
+	display:none;
 }
 
 ._morningday{
 	display:none;
 }
 
-#page-weekcal td{
-	position: relative;
-	width: 12.5%;
-
-	color : #282828;
-	/*border-right:  1.5px solid #ffffff;*/
-	border-left:  1px solid #ffffff;
-	padding-right: 1px;
-	padding-left: 1px;
+td{
+	border-left: 0.5px solid #ffffff;
 }
-
 
 .td00,.td30{
 	background: #ffffff;
-
+	position: relative;
+	height: 14px;
 }
 
-
 #calendar{
-	position: fixed;
+	position: relative;
 	width: 100%;
 	padding-top: 104px;
 	background-color: transparent;
@@ -381,7 +398,9 @@ img,a,div,span,p{
 	padding-left: 0;
 	height: 90%;
 	z-index: 3;
+	max-width: 1000px;
 }
+
 
 
 .classTime{
@@ -635,11 +654,6 @@ img,a,div,span,p{
 	background: #f4f4f4;
 }
 
-#page-weekcal{
-	display: block;
-	position: absolute;
-}
-
 
 @media(min-width: 600px){
 	#calendar{
@@ -654,10 +668,6 @@ img,a,div,span,p{
 		border-bottom:0.5px solid #f4f4f4;
 	}
 	
-	#page-weekcal{
-		position: relative !important;
-	}
-
 	.memberName{
 		position: absolute;
 		left: 3%;
@@ -706,8 +716,9 @@ img,a,div,span,p{
 		font-weight: 400;
 	}
 
-	.hour{
+	.hour,.slidegap{
 		font-weight: 500;
+		border-left:0.5px solid #cccccc;
 	}
 
 
@@ -804,6 +815,15 @@ img,a,div,span,p{
 @media(min-width: 800px){
 	._morningday{
 		display:inline;
+	}
+}
+
+@media(min-width:900px){
+	.morningtext{
+		display:inline;
+		position: absolute;
+		left: 7px;
+		font-weight: bold;
 	}
 }
 
