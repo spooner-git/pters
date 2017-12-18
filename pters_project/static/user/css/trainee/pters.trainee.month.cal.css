@@ -762,6 +762,14 @@ img,a,div,span,p{
 /*미디어 쿼리*/
 
 @media(min-width: 600px){
+	.pcwho:hover{
+		color: #fe4e65;
+	}
+
+	.centermenu_text:hover,.centermenu_text:active,.centermenu_text:focus{
+		color: #282828;
+	}
+
 	#calendar{
 		position: relative;
 		background-color: 	#ffffff;
@@ -806,7 +814,7 @@ img,a,div,span,p{
 
 	.arrowButtonPC{
 		display: block;
-		position: absolute;
+		position: fixed;
 		width: 100%;
 		height: 100%;
 		z-index: 0;

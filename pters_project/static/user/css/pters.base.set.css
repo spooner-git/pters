@@ -342,7 +342,7 @@ a:focus, a:hover{
     color: #7d7d7d;
     font-size: 12px;
     font-weight: 400;
-    width: 100%;
+    width: 512px;
     max-width: 1000px;
     margin:0 auto;
     height: 50px;
@@ -354,7 +354,7 @@ a:focus, a:hover{
 }
 
 .bottomfooter2{
-    width: 100%;
+    width: 512px;
     max-width: 1000px;
     margin:0 auto;
     color: #282828;
@@ -363,7 +363,6 @@ a:focus, a:hover{
 
 .bottomfooter2 p{
     margin-bottom:1px;
-    margin-left: 10px;
 }
 
 .footergap{

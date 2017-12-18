@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static "user/css/pters.trainee.pt.add.weekly.css" %}>
+        <link rel="stylesheet" href={% static "user/css/trainee/pters.trainee.pt.add.weekly.css" %}>
 {% endblock %}
 
 {% block content %}
@@ -29,7 +29,7 @@
         <a style="left: 6%;cursor: pointer;"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
         <a style="right: 6%;cursor: pointer;"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
       </div>
-      <img src={% static "user/res/bg.png" %} alt="bg-image">
+
       <div id="yearText">
       </div>
       <div id="countRemain" style="position: absolute;top: 2px;right: 2px;color: #ffffff;font-size: 13.5px;font-weight: 300;">예약가능횟수: <span id="countRemainData"> {{lecture_reg_count}}회</span></div>
