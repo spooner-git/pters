@@ -13,6 +13,11 @@ body{
     color:black;
 }
 
+a:focus, a:hover{
+    text-decoration: none;
+    color: grey;
+}
+
 
 .wrap{
     width: 100%;
@@ -334,7 +339,7 @@ body{
 }
 
 .bottomfooter1{
-    color: #ffffff;
+    color: #7d7d7d;
     font-size: 12px;
     font-weight: 400;
     width: 100%;
@@ -352,7 +357,7 @@ body{
     width: 100%;
     max-width: 1000px;
     margin:0 auto;
-    color: #a2a2a2;
+    color: #282828;
     font-size: 10px;
 }
 
@@ -365,6 +370,93 @@ body{
 
 }
 
+
+
+
+
+
+
+/*PC버전 상단네비바*/
+
+.centermenu{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    max-width: 1000px;
+    margin:0 auto;   
+}
+
+.centermenu_box{
+    position: fixed;
+    width: 520px;
+    top: 3px;
+    text-align: center;
+}
+
+.centermenu_div{
+    display: inline-block;
+    margin-left: 13px;
+    margin-right: 13px;
+}
+
+.centermenu_text{
+    line-height: 60px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #282828;
+}
+
+.centermenu_text:hover,.centermenu_text:focus{
+    color:#fe4e65;
+}
+
+.centermenu_logo{
+    display: none;
+    height: 24px;
+    margin-bottom: 6px;
+    margin-top: 18px;
+}
+
+.pclogout{
+    position: absolute;
+    right: -57px;
+    top: 20px;
+    font-size: 9.5px;
+    border:0.5px solid #fe4e65;
+    background: transparent;
+    padding: 4px;
+    color: #fe4e65;
+    cursor: pointer;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.pclogout:hover,.pclogout:active{
+    background: #fe4e65;
+    color: #ffffff;
+}
+
+.pcwho{
+    color:#282828;
+    font-size: 12.5px;
+    margin-right: 10px;
+    font-weight: 500;
+    line-height: 62px;
+}
+
+.pcwhere{
+    color: #282828;
+    font-size: 12.5px;
+    margin-right: 5px;
+    font-weight: 500;
+    line-height: 62px;
+}
+
+
+
+/*PC버전 상단,하단네비바*/
+
+
 /*미디어 쿼리*/
 @media(min-width:600px){
     #page-base{
@@ -375,8 +467,24 @@ body{
         display: block;
         background: #ffffff;
         border-top: 3px solid #fe4e65;
-        border-bottom: 0.5px solid #a2a2a2;
         height: 65px;
+    }
+
+    body{
+        padding-top: 65px !important;
+    }
+}
+
+
+/*미디어 쿼리*/
+
+@media(min-width:1024px){
+    #loginInfo{
+        display: inline-block;
+    }
+
+    .pcwhere, .pcwho{
+        display: inline-block;
     }
 
     .fixfooter{
@@ -384,88 +492,21 @@ body{
         position: relative;
         width: 100%;
         height: 132px;
-        background: #454b55;
+        background: #ffffff;
         z-index: 1;
-        opacity: 0.9;
     }
 
-    body{
-        padding-top: 65px !important;
-    }
-}
-/*미디어 쿼리*/
-
-@media(min-width:860px){
-    #loginInfo{
-        display: block;
-    }
-
-    .pcwhere, .pcwho{
+    .centermenu_logo{
         display: inline-block;
     }
 }
 
-
-
-/*PC버전 상단네비바*/
-
-.centermenu{
-    height: 100%;
-    width: 100%;
-    max-width: 1000px;
-    margin:0 auto;
-    
-}
-
-.centermenu_div{
-    display: inline-block;
-    margin-left: 1.3%;
-    margin-right: 1%;
-}
-
-.centermenu_text{
-    line-height: 60px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #282828;
-}
-
-.centermenu_logo{
-    height: 43px;
-    opacity: 0.8;
-    margin-bottom: 6px;
-    margin-left: -25px;
-}
-
 .pclogout{
-    font-size: 11px;
-    border:0.5px solid #a2a2a2;
-    border-radius: 10%;
-    background: #f4f4f4;
-    padding: 3px;
-    color: #505050;
-    cursor: pointer;
+    display: none;
 }
 
-.pclogout:hover,.pclogout:active{
-    background: #fe4e65;
-    color: #ffffff;
+@media(min-width: 1150px){
+    .pclogout{
+        display: inline-block;
+    }
 }
-
-.pcwho{
-    font-size: 12px;
-    margin-right: 10px;
-    font-weight: 500;
-}
-
-.pcwhere{
-    color: #115a8e;
-    font-size: 12px;
-    margin-right: 5px;
-}
-
-
-
-/*PC버전 상단,하단네비바*/
-
-
