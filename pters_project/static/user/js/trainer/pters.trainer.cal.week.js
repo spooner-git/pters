@@ -594,9 +594,9 @@ $(document).ready(function(){
 			//var td = td1_1+td1_2+td1_3+td1_4+td1_5+td1_6+td1_7+'</tr><tr>'+td2_1+td2_2+td2_3+td2_4+td2_5+td2_6+td2_7+'</tr></tbody></table></div>'
 			var td= td1_1+'</tr><tr>'+td2_1+'</tr></tbody></table></div>'
 			if(i<12){
-					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="_morningday">오전 </span>'+i+'<div></div></td>'+td
+					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+'<span class="_morningday">오전 </span>'+i+'<div></div></td>'+td
 			}else{
-					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="_morningday">오후 </span>'+i+'<div></div></td>'+td
+					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+'<span class="_morningday">오후 </span>'+i+'<div></div></td>'+td
 			};
 			var sum = textToAppend+textToAppend2
 
