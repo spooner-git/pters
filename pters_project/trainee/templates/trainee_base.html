@@ -41,11 +41,60 @@
             </div>
          </div><!-- /.container -->
      </nav><!-- /.navbar -->
+
+     <nav class="navbar navbar-fixed-top" id="pcver">
+            <div class="centermenu">
+                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
+                <div class="centermenu_box wrap">
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainee:mypage_trainee' %}" class="centermenu_text"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="#" class="centermenu_text"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a class="centermenu_text">{{user.first_name}} 회원님의 PT일정</a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="#" class="centermenu_text"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="#" class="centermenu_text"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="#" class="centermenu_text"></a>
+                    </div>
+                </div>
+                <div id="loginInfo" class="centermenu_div" style="float:right;cursor:pointer;"　
+                onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
+                    <span class="pcwhere"></span>
+                    <span class="pcwho">{{user.first_name}} 회원<span></span></span>
+                </div>
+                <span class="pclogout" onclick="location.href='{% url 'trainer:logout' %}'"></span>
+            </div>
+        </nav>
         
     {% endblock %}
     
     {% block content %}
     {% endblock %}
+
+    <footer class="fixfooter">
+            <div class="bottomfooter1">
+                <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            </div>
+            <div class="bottomfooter2">
+                <p>스푸너(SPOONER) 통신판매업 신고 : 제 2017-서울동작-0672호, 사업자등록번호 : 463-56-00284, 대표자 : OOO,XXX</p>
+                <p>Tel : xxxx-xxxx, Fax : xxxx-xxxx, 주소 : 서울특별시 동작구 신대방동 보라매로 50길 7가 캐릭터그린빌 오피스텔 x층 XXX호</p>
+                <p>이용 및 제휴문의 : skkim.ku@gmail.com</p>
+                <p>- </p>
+                <p>Copyright(C) SPOONER All rights reserved.</p>
+            </div>
+        </footer>
 
     
     {% block footer %}
@@ -92,6 +141,7 @@
               $('body').css('overflow-y','')
               $('#shade').css({'background-color':'transparent','z-index':'-1'});
              }; 
+
     </script>
      <script type="text/javascript" src={% static "user/js/pters.base.set.js" %}></script>
 
