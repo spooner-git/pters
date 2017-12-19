@@ -233,10 +233,11 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 1,
-                speed : 50,
+                speed : 80,
                 preventClicks : true,
                 keyboardControl : true,
-                pagination : '.swiper-pagination'
+                preventClicksPropagation : true,
+                threshold : 10,
             });
 
             $('.arrowButton a:nth-child(1)').click(function(){
@@ -247,12 +248,27 @@
               myswiper.slideNext(100)  
             })
 
+            var count = 0 
+            var count1 = 0
+
             $('.arrowButtonPC a:nth-child(1)').click(function(){
-              myswiper.slidePrev(100)  
+              if(count==0){
+                myswiper.slidePrev(100)
+                count++  
+                setTimeout(function(){count=0},200)
+              }else if(count>0){
+                console.log('wait!')
+              }
             })
 
             $('.arrowButtonPC a:nth-child(2)').click(function(){
-              myswiper.slideNext(100)  
+              if(count1==0){
+                myswiper.slideNext(100)  
+                count1++  
+                setTimeout(function(){count1=0},200)
+              }else if(count>0){
+                console.log('wait!')
+              }
             })
         </script>
 
