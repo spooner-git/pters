@@ -474,12 +474,6 @@ a:focus, a:hover{
     }
 }
 
-@media(max-height: 865px){
-    #pcver{
-        background:#282828 !important;
-    }
-}
-
 /*미디어 쿼리*/
 
 @media(min-width:1024px){
