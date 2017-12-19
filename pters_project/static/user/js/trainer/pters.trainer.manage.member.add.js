@@ -85,8 +85,9 @@ $(document).ready(function(){
         $(this).addClass('selectbox_checked')
         $('#btnCallManual').removeClass('selectbox_checked')
         $('p').removeClass("dropdown_selected")
-        $('#memberCount_add').parent('div').removeClass('dropdown_selected')
+        $('#memberCount_add_fast').parent('div').removeClass('dropdown_selected')
         $('#datepicker_add,#datepicker2_add,#memberCount_add,#lecturePrice_add_2').val("")
+        $('#fast_check').val('0')
         check_dropdown_selected();
       })
 
@@ -99,6 +100,7 @@ $(document).ready(function(){
         $('._count div.checked').removeClass('checked ptersCheckboxInner')
         $('p').removeClass("dropdown_selected")
         $('#datepicker_fast,#lecturePrice_add,#memberDue_add_2').val("")
+        $('#fast_check').val('1')
         check_dropdown_selected();
       })
 
@@ -107,7 +109,6 @@ $(document).ready(function(){
         var pterscheckbox = $(this).find('div')
         $(this).find('div:nth-child(1)').addClass('checked')
         pterscheckbox.find('div').addClass('ptersCheckboxInner')
-
         if($("#datepicker_fast").val()!=""){
           autoDateInput();
         }
@@ -118,6 +119,10 @@ $(document).ready(function(){
         var pterscheckbox = $(this).find('div')
         $(this).find('div:nth-child(1)').addClass('checked')
         pterscheckbox.find('div').addClass('ptersCheckboxInner')
+        $('#memberCount_add_fast').val(pterscheckbox.attr('data-count'))
+        $('#memberCount_add_fast').addClass("dropdown_selected")
+        check_dropdown_selected();
+
       })
 
       $('#price1').click(function(){
@@ -165,34 +170,40 @@ $(document).ready(function(){
         var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
         var priceInputValue = 1000000 + Number(priceInputValue);
         $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value_fast').val(priceInputValue)
       })
 
       $('#price2_2').click(function(){
         var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
         var priceInputValue = 500000 + Number(priceInputValue);
         $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value_fast').val(priceInputValue)
       })
 
       $('#price3_2').click(function(){
         var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
         var priceInputValue = 100000 + Number(priceInputValue);
         $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value_fast').val(priceInputValue)
       })
 
       $('#price4_2').click(function(){
         var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
         var priceInputValue = 50000 + Number(priceInputValue);
         $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value_fast').val(priceInputValue)
       })
 
       $('#price5_2').click(function(){
         var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
         var priceInputValue = 10000 + Number(priceInputValue);
         $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+        $('#lecturePrice_add_value_fast').val(priceInputValue)
       })
 
       $('#price6_2').click(function(){
         $('#lecturePrice_add_2').val("")
+        $('#lecturePrice_add_value_fast').val(0)
       })
 
       //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
@@ -205,13 +216,31 @@ $(document).ready(function(){
         var countInput = $("#memberCount_add").parent("div");
         var startInput = $("#datepicker_add").parent("p");
         var endInput = $("#datepicker2_add").parent("p");
-        if((emailInput).hasClass("dropdown_selected")==true && (nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true&&(startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
-            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-			select_all_check=true;
 
-        }else{
-        	$("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-            select_all_check=false;
+        var countInput_fast = $("#memberCount_add_fast");
+        var dateInput_fast = $("#datepicker_fast").parent("p");
+
+        var fast = $('#fast_check').val()
+
+        if(fast=='1'){
+            if((emailInput).hasClass("dropdown_selected")==true && (nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true&&(startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                select_all_check=true;
+
+            }else{
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                select_all_check=false;
+            }
+        }
+        else{
+            if((emailInput).hasClass("dropdown_selected")==true && (nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput_fast).hasClass("dropdown_selected")==true&&(dateInput_fast).hasClass("dropdown_selected")==true){
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                select_all_check=true;
+
+            }else{
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                select_all_check=false;
+            }
         }
      }
 
@@ -251,8 +280,10 @@ $(document).ready(function(){
             var finishDate = yy +"-"+ mm +"-"+ dd;
           }
           $('#memberDue_add_2').val(finishDate)
+          $('#memberDue_add_2_fast').val(finishDate)
           if(selectedD==99){
             $('#memberDue_add_2').val("소진시까지")
+            $('#memberDue_add_2_fast').val("9999-12-31")
           }
 
           if(selectedD==undefined){
