@@ -369,6 +369,7 @@ img,a,div,span,p{
 	z-index: 10;
 	color:white;
 	background-color: #f4f4f4;
+	padding-top: 53px;
 }
 
 .morningtext{
@@ -392,7 +393,7 @@ td{
 #calendar{
 	position: relative;
 	width: 100%;
-	padding-top: 104px;
+	padding-top: 50px;
 	background-color: transparent;
 	padding-right: 0;
 	padding-left: 0;
@@ -491,12 +492,10 @@ td{
 
 
 #week{
-	position: fixed;
+	position: relative;
 	z-index: 4;
 	background-color: transparent;
 	height: auto;
-	padding-top: 50px;
-
 }
 
 #weekText span{
@@ -666,6 +665,10 @@ td{
 
 	table{
 		border-bottom:0.5px solid #f4f4f4;
+	}
+
+	.timeindex{
+		padding-top: 60px;
 	}
 	
 	.memberName{

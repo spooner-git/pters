@@ -89,6 +89,7 @@
       </div>
     </div>
     
+    <!--
     <div id="week" class="time-style wrap">
       <table class="calendar-style">
         <tbody>
@@ -105,7 +106,7 @@
         </tbody>
       </table>
     </div>
-
+    -->
 
     <div id="calendar" class="container wrap"> <!-- Calendar container-->
           <div class="swiper-container">
@@ -458,19 +459,49 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 2,
-                speed : 50,
+                speed : 80,
                 preventClicks : true,
-                keyboardControl : true,
-                pagination : '.swiper-pagination'
+                keyboardControl : true, 
+                preventClicksPropagation : true,
+
             });
 
+
+
+            var count = 0 
+            var count1 = 0
+
             $('.arrowButtonPC a:nth-child(1)').click(function(){
-              myswiper.slidePrev(100)  
+              if(count==0){
+                myswiper.slidePrev(100)
+                count++  
+                setTimeout(function(){count=0},200)
+              }else if(count>0){
+                console.log('wait!')
+              }
             })
 
             $('.arrowButtonPC a:nth-child(2)').click(function(){
-              myswiper.slideNext(100)  
+              if(count1==0){
+                myswiper.slideNext(100)  
+                count1++  
+                setTimeout(function(){count1=0},200)
+              }else if(count>0){
+                console.log('wait!')
+              }
             })
+
+
+
+
+
+            $('#ymdText').click(function(){
+              $('#calendar').fadeOut('fast','linear',function(){
+                window.location.reload();
+              })
+              
+            })
+
         </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.add.off.js" %}></script>

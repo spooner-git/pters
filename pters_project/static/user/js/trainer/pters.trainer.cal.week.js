@@ -340,10 +340,7 @@ $(document).ready(function(){
 	calTable_Set(3,currentYear,currentPageMonth,currentDate,0); // 이번주
 	calTable_Set(4,currentYear,currentPageMonth,currentDate,7); // 이번주+1
 	calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
-
-	
-	
-	weekNum_Set()
+	dateText();
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray);
@@ -361,20 +358,22 @@ $(document).ready(function(){
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
 			slideControl.append();
-			weekNum_Set();	
+			dateText();
+			//weekNum_Set();	
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
 	myswiper.on('SlidePrevEnd',function(){
 			slideControl.prepend();
-			weekNum_Set();
+			dateText();
+			//weekNum_Set();
 	});
 
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {
 		'append' : function(){ //다음페이지로 넘겼을때
-			var last = Number($('.swiper-slide:last-child').attr('id').replace(/slide/gi,""))
 			var lastdateinfo = $('.swiper-slide:last-child').find('.td00').attr('id').split('_');
+			var last = Number($('.swiper-slide:last-child').attr('id').replace(/slide/gi,""))
 			var lastYY = Number(lastdateinfo[0]);
 			var lastMM = Number(lastdateinfo[1]);
 			var lastDD = Number(lastdateinfo[2]);
@@ -388,8 +387,8 @@ $(document).ready(function(){
 		},
 
 		'prepend' : function(){
-			var first = Number($('.swiper-slide:first-child').attr('id').replace(/slide/gi,""));
 			var firstdateinfo = $('.swiper-slide:first-child').find('.td00').attr('id').split('_');
+			var first = Number($('.swiper-slide:first-child').attr('id').replace(/slide/gi,""));
 			var firstYY = Number(firstdateinfo[0]);
 			var firstMM = Number(firstdateinfo[1]);
 			var firstDD = Number(firstdateinfo[2]);
@@ -406,7 +405,8 @@ $(document).ready(function(){
 	function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성 
 		//Week 선택자 2E, 1E, 0W, 1L, 2L
 		//주간달력 상단표시줄 (요일, 날짜, Today표식)
-
+		weekTable(Index)
+		
 		var W = Week
 		var slideIndex = $('#slide'+Index);
 		var currentDates = Number(Dates)+W;
@@ -599,27 +599,63 @@ $(document).ready(function(){
 					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+'<span class="_morningday">오후 </span>'+i+'<div></div></td>'+td
 			};
 			var sum = textToAppend+textToAppend2
-
 			slideIndex.append(sum);
 		};
+		weekNum_Set(Index)
 	}; //calTable_Set
 
+	function dateText(){
+		var yymm = {}
+		var yymmarry = []
+		for(var i=2; i<=8; i++){
+			var dataID = $('.swiper-slide-active div:nth-child(2)').find('.td00:nth-child('+i+')').attr('id').split('_');
+			var yy = dataID[0];
+			var mm = dataID[1];
+			yymm[yy+'_'+mm] = 'data' 
+		}
+		for(i in yymm){
+			yymmarry.push(i)
+		}
+
+		if(yymmarry.length>1){  // [2017_12, 2018_1] ,,  [2018_1, 2018_2]
+			var yymm1 = yymmarry[0].split('_')
+			var yymm2 = yymmarry[1].split('_')
+			var yy1 = yymm1[0]
+			var mm1 = yymm1[1]
+			var yy2 = yymm2[0]
+			var mm2 = yymm2[1]
+			if(yy1==yy2){
+				$('#yearText').text(yy1+'년');
+				$('#monthText').text(mm1+'/'+mm2+'월')
+			}else if(yy1!=yy2){
+				$('#yearText').text(yy1+'/'+yy2+'년');
+				$('#monthText').text(mm1+'/'+mm2+'월')
+			}
+		}else{
+			var yymm = yymmarry[0].split('_')
+			$('#yearText').text(yymm[0]+'년');
+			$('#monthText').text(yymm[1]+'월');
+		}
+	}
 
 	
-	function weekNum_Set(){
-		var index = Number(myswiper.activeIndex+1);
-		var Sunday_date = $('#sunDate')
-		var Monday_date = $('#monDate')
-		var Tuesday_date = $('#tueDate')
-		var Wednesday_date = $('#wedDate')
-		var Thursday_date = $('#thrDate')
-		var Friday_date = $('#friDate')
-		var Saturday_date = $('#satDate')
+	function weekNum_Set(Index){
+		//var index = Number(myswiper.activeIndex+1);
+		var Sunday_date = $('#slide'+Index+' #sunDate')
+		var Monday_date = $('#slide'+Index+' #monDate')
+		var Tuesday_date = $('#slide'+Index+' #tueDate')
+		var Wednesday_date = $('#slide'+Index+' #wedDate')
+		var Thursday_date = $('#slide'+Index+' #thrDate')
+		var Friday_date = $('#slide'+Index+' #friDate')
+		var Saturday_date = $('#slide'+Index+' #satDate')
 		var WeekArry = [Sunday_date,Monday_date,Tuesday_date,Wednesday_date,Thursday_date,Friday_date,Saturday_date]
 		var lastDayThisMonth = lastDay[currentMonth];
-		var swiperPage = $('.swiper-slide:nth-child('+index+') div:first-child') 
+		var swiperPage = $('#slide'+Index+' div:nth-child(2)') 
 
-		for(var i=2; i<=8; i++){
+		console.log('#slide'+Index)
+		console.log(swiperPage.attr('id'))
+
+		for(var i=2; i<=8; i++){			
 			var dateID = swiperPage.find('td:nth-child('+i+')').attr('id').split('_');
 			var yy = dateID[0];
 			var mm = dateID[1];
@@ -631,21 +667,33 @@ $(document).ready(function(){
 			if(dd.length<2){
 				var dd = '0'+dateID[2]
 			}
-			$('#weekNum_'+Number(i-1)).attr('data-date',yy+mm+dd)
+			$('#slide'+Index+' #weekNum_'+Number(i-1)).attr('data-date',yy+mm+dd)
 		}
 
-		$('#yearText').text(dateID[0]+'년');
-		$('#monthText').text(dateID[1]+'월');
-		
-		toDay();
-		reserveAvailable();
+		toDay(Index);
+		reserveAvailable(Index);
 		todayFinderArrow();
 	}
 
+	function weekTable(Index){
+		var slideIndex = $('#slide'+Index);
+		var div = '<div id="week" class="time-style wrap"><table class="calendar-style"><tbody><tr id="weekText">'
+		var tdgap = '<td class="slidegap" style="background:#f4f4f4;"><span></span><span></span></td>'
+		var tdSun = '<td id="weekNum_1"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #d21245;">일</span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span></td>'
+		var tdMon = '<td id="weekNum_2"><span class="weekToday-style"></span><span class="weekToday-style">월</span><span id="monDate" class="weekToday-style"></span></td>'
+		var tdTue = '<td id="weekNum_3"><span class="weekToday-style"></span><span class="weekToday-style">화</span><span id="tueDate" class="weekToday-style"></span></td>'
+		var tdWed = ' <td id="weekNum_4"><span class="weekToday-style"></span><span class="weekToday-style">수</span><span id="wedDate" class="weekToday-style"></span></td>'
+		var tdThr = '<td id="weekNum_5"><span class="weekToday-style"></span><span class="weekToday-style">목</span><span id="thrDate" class="weekToday-style"></span></td>'
+		var tdFri = '<td id="weekNum_6"><span class="weekToday-style"></span><span class="weekToday-style">금</span><span id="friDate" class="weekToday-style"></span></td>'
+		var tdSat = ' <td id="weekNum_7"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #115a8e;">토</span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span></td>'
+		var divfin = '</tr></tbody></table></div>'
+		var combine = div+tdgap+tdSun+tdMon+tdTue+tdWed+tdThr+tdFri+tdSat+divfin
+		slideIndex.append(combine)
+	}
 
-	function toDay(){
+	function toDay(Index){
 		for(i=1;i<=7;i++){
-		var scan = $('#weekNum_'+i).attr('data-date')
+		var scan = $('#slide'+Index+' #weekNum_'+i).attr('data-date')
 			var yy = String(currentYear)
 			var dd = currentDate
 			var mm = currentPageMonth
@@ -657,11 +705,11 @@ $(document).ready(function(){
 			}
 			console.log(yy+mm+dd)
 			if(scan == yy+mm+dd){
-				$('#weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY')
-				$('#weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
+				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY')
+				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
 			}else{
-				$('#weekNum_'+i+' span:nth-child(1)').removeClass('today').html('')
-				$('#weekNum_'+i+' span:nth-child(3)').removeClass('today-Number')
+				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(1)').removeClass('today').html('')
+				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(3)').removeClass('today-Number')
 			}
 		}
 	}
@@ -676,8 +724,9 @@ $(document).ready(function(){
 			var currentDD = '0'+currentDD
 		}
 		var todayInfo = String(currentYear) + currentMM + currentDD
-		var viewdayInfomin = $('#weekNum_1').attr('data-date');
-		var viewdayInfomax = $('#weekNum_7').attr('data-date');
+		console.log(todayInfo+'___________')
+		var viewdayInfomin = $('.swiper-slide-active'+' #weekNum_1').attr('data-date');
+		var viewdayInfomax = $('.swiper-slide-active'+' #weekNum_7').attr('data-date');
 
 		if(viewdayInfomax>=todayInfo && viewdayInfomin<=todayInfo){
 			$('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
@@ -694,7 +743,7 @@ $(document).ready(function(){
 	}
 
 
-	function reserveAvailable(){
+	function reserveAvailable(Index){
 		var yy = currentYear;
 		var mm = String(currentPageMonth);
 		var dd = String(currentDate);
@@ -707,15 +756,15 @@ $(document).ready(function(){
 		var ymdArry = [yy,mm,dd]
 		var yymmdd = ymdArry.join('')
 		for(i=1;i<=7;i++){
-		var scan = $('#weekNum_'+i).attr('data-date')
+		var scan = $('#slide'+Index+' #weekNum_'+i).attr('data-date')
 			if(yymmdd<=scan && scan<14+Number(yymmdd)){
-				$('#weekNum_'+i).addClass('reserveavailable')
+				$('#slide'+Index+' #weekNum_'+i).addClass('reserveavailable')
 				
 			}else if(scan.substr(4,2) > mm && scan.substr(6,2)<Number(dd)+14-lastDay[currentMonth]){
-				$('#weekNum_'+i).addClass('reserveavailable')
+				$('#slide'+Index+' #weekNum_'+i).addClass('reserveavailable')
 				
 			}else{
-				$('#weekNum_'+i).removeClass('reserveavailable')
+				$('#slide'+Index+' #weekNum_'+i).removeClass('reserveavailable')
 				
 			}
 		}
