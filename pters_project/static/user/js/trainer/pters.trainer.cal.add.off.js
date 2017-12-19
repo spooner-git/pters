@@ -79,7 +79,7 @@ $(document).ready(function(){
       })
 
       $(document).on('click','button',function(){
-         scrollToIndicator($(this))
+         //scrollToIndicator($(this))
       })
 
        function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
