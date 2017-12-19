@@ -4,6 +4,7 @@ $(document).ready(function(){
 	var offrepeatData = ['OFF_sun_5_20_20171224_20180301','OFF_sat_16_9_20171209_20180301']
 
 	$('#float_inner1').click(function(){
+		scrollToDom($('body'))
 	    $('#page-ptadd').fadeIn('fast');
 	    $('#shade3').fadeIn('fast');
 	    $('#shade2').hide();
@@ -16,6 +17,7 @@ $(document).ready(function(){
 	})
 
 	$('#float_inner2').click(function(){
+		scrollToDom($('body'))
 	    $('#page-offadd').fadeIn('fast');
 	    $('#shade3').fadeIn('fast');
 	    $('#shade2').hide();
@@ -28,6 +30,7 @@ $(document).ready(function(){
 	})
 
 	$('#upbutton-x').click(function(){
+		$('body').css('overflow-y','overlay')
 	    $('#shade3').fadeOut();
 	    $('#page-ptadd').fadeOut('fast','swing');
 	    $('#page-offadd').fadeOut('fast','swing');
@@ -355,7 +358,7 @@ $(document).ready(function(){
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray); //DB로 부터 받는 Off 데이터 가공
 	//addcurrentTimeIndicator(); //현재 시간에 밑줄 긋기 (구버전)
 	addcurrentTimeIndicator_blackbox(); //현재 시간 검은색 Background 표시
-	scrollToIndicator(); //현재 시간으로 스크롤 자동 이동
+	//scrollToIndicator(); //현재 시간으로 스크롤 자동 이동
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime(); //Off 시간에 회색 박스 표시
 
@@ -405,17 +408,17 @@ $(document).ready(function(){
 			var td2 = '<td'+' id='+Year+'_'+Month+'_'+Day+'_'+i+'_'+'30'+' class="daytd">'+'<div></div>'+'</td>'
 			if(i<12){
 				if(i==5){
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="morningtext">'+morning+'</span> 0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+'<span class="morningtext">'+morning+'</span> 0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
 				}else if(i<10 && i>5){
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+'0'+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
 				}else{
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
 				};
 			}else{
 				if(i==12){
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+'<span class="morningtext">'+afternoon+'</span> '+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+'<span class="morningtext">'+afternoon+'</span> '+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';		
 				}else{
-					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="hour" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
+					var textToAppend2 = '<table id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="calendar-style"><tbody><tr><td class="slidegap" rowspan="2">'+''+i+'.00'+'<div></div></td>'+td1+'</tr><tr>'+td2+'</tr></tbody></table></div>';	
 				}
 							
 			}
@@ -611,6 +614,11 @@ $(document).ready(function(){
 			$('#slide10').animate({scrollTop : offset.top-180},500)
 		}
 	}
+
+	function scrollToDom(dom){
+        var offset = dom.offset();
+        $('body, html').animate({scrollTop : offset.top-180},10)
+    }
 
 	function DBdataProcess(startarray,endarray,result,option){
 		//DB데이터 가공

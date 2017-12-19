@@ -214,6 +214,8 @@ img,a,div,span,p{
 	height: 50px;
 	z-index: 3;
 	width: 100%;
+	background-image: url("/static/user/res/bg.png");
+	background-size:100%;
 }
 
 #ymdText img{
@@ -292,15 +294,7 @@ img,a,div,span,p{
 	opacity: 0.4;
 }
 
-@media(min-width: 570px){
-	.hour{
-		text-align: center;
-		width: 29.445%;
-		border-bottom: 1px solid #f4f4f4;
-		font-size: 15px;
-		font-weight: bold;
-	}
-}
+
 
 td{ /*회원일정예약용으로 변경 */
 	position: relative;
@@ -549,78 +543,32 @@ tr{ /*회원일정예약용으로 변경 */
 
 
 /*미디어 쿼리*/
-@media(min-width:418px){
-	#cal_popup{
-		display: none;
-		position: fixed;
-		background: transparent;
-		border-color: transparent;
-		top: 35%;
-		left: 0;
-		width: 100%;
-		/*
-		background-color: #ffffff;
-		border: 1px solid #a2a2a2;
-		*/
-		z-index: -2;
+
+
+@media(min-width: 600px){
+	.hour{
 		text-align: center;
-	}
-
-
-
-	#popup_info{
-		background: #ffffff;
-		position: relative;
-		margin : 0 auto;
-		width: 330px;
-		text-align: center;
-		color: #3b3d3d;
-		font-size: 14px;
+		width: 29.445%;
+		border-bottom: 1px solid #f4f4f4;
+		font-size: 15px;
 		font-weight: bold;
 	}
-
-	#popup_img{
+	
+	#ymdText{
 		position: relative;
-		margin :0 auto;
-		background: #ffffff;
-		height: 70px;
-		padding-top: 22.5px;
-		padding-bottom: 22.5px;
-		width: 330px;
 	}
 
-
-	#img_cal{
-		position: absolute;
-		top: 30%;
-		left:41.5%;
-		width: 25px;
-		margin-right: 14.845px;
-		margin-left: 14.845px;
-	}
-
-	#btn_close{
-		position: absolute;
-		top: 22%;
-		left: 85%;
-		padding: 10px;
-		width: 35px;
-		float: right;
-	}
-
-	.popup_inner{
-		background: #ffffff;
-		margin: 0 auto;
+	#week{
 		position: relative;
-		height: 50px;
-		border-top: 1px solid #a2a2a2;
-		width: 330px;
+		padding-top: 0;
 	}
 
-	.popup_inner:hover{
-	background: #a2a2a2;
-	-webkit-background:#a2a2a2;
+	#calendar{
+		position: relative;
+		padding-top: 0;
 	}
+
+
 }
 
 /*미디어 쿼리*/

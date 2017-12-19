@@ -115,31 +115,32 @@
         
         <nav class="navbar navbar-fixed-top" id="pcver">
             <div class="centermenu">
-                <img src="/static/user/res/PTERS_logo_pure.jpg" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
+                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
+                <div class="centermenu_box wrap">
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:cal_week' %}" class="centermenu_text __weekplan"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:cal_month' %}" class="centermenu_text __monthplan"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:member_manage' %}" class="centermenu_text __membermanage"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:work_manage' %}" class="centermenu_text __workmanage"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
+                    </div>
                 </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:cal_week' %}" class="centermenu_text __weekplan"></a>
+                <div id="loginInfo" class="centermenu_div" style="float:right;">
+                    <span class="pcwhere"></span>
+                    <span class="pcwho">{{user.first_name}} <span></span></span>
                 </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:cal_month' %}" class="centermenu_text __monthplan"></a>
-                </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:member_manage' %}" class="centermenu_text __membermanage"></a>
-                </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:work_manage' %}" class="centermenu_text __workmanage"></a>
-                </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
-                </div>
-                <div class="centermenu_div"></div>
-                <div id="loginInfo" class="centermenu_div" style="float:right;margin-right: 0;">
-                    <span class="centermenu_text pcwhere"></span>
-                    <span class="centermenu_text pcwho">{{user.first_name}} <span></span></span>
-                    <span class="centermenu_text pclogout" onclick="location.href='{% url 'trainer:logout' %}'"></span>
-                </div>
+                <span class="pclogout" onclick="location.href='{% url 'trainer:logout' %}'"></span>
             </div>
         </nav>
         

@@ -13,8 +13,6 @@
 
 {% block content %}
         <div id="main_content" class="container" > <!--main_content-->
-          <img src={% static "user/res/main/bg-image.png" %} style="width:100%;" alt="" class="wrap">
-          <div id="windowTop" class="mainwindow"></div>
           <div class='center_box wrap'>
             <div class='center_box_text center_box_text_up' onclick="location.href='{% url 'trainer:cal_day' %}'">
               <div class='center_box_day'><p href="#"></p></div>
@@ -50,7 +48,6 @@
               </div>
             </div>
           </div>
-          <div id="windowBottom" class="mainwindow"></div>
         </div> <!--main_content-->
 
 
