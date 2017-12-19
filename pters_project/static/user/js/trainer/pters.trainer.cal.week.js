@@ -17,6 +17,7 @@ $(document).ready(function(){
 
 
 	$('#float_inner1').click(function(){
+		scrollToDom($('#calendar'))
 	    $('#page-ptadd').fadeIn('fast');
 	    $('#shade3').fadeIn('fast');
 	    $('#shade2').hide();
@@ -26,9 +27,11 @@ $(document).ready(function(){
 	    $('#page-base').fadeOut();
 	    $('#page-base-addstyle').fadeIn();
 	    $("#datepicker").datepicker('setDate',null)
+	    
 	})
 
 	$('#float_inner2').click(function(){
+		scrollToDom($('#calendar'))
 	    $('#page-offadd').fadeIn('fast');
 	    $('#shade3').fadeIn('fast');
 	    $('#shade2').hide();
@@ -38,6 +41,7 @@ $(document).ready(function(){
 	    $('#page-base').fadeOut();
 	    $('#page-base-addstyle').fadeIn();
 	    $("#datepicker_off").datepicker('setDate',null)
+	    
 	})
 
 	$('#upbutton-x').click(function(){
@@ -346,7 +350,6 @@ $(document).ready(function(){
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray);
 	addcurrentTimeIndicator_blackbox()
 	//addcurrentTimeIndicator();
-	//scrollToIndicator();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime();
 	//DBrepeatdata(repeatData,'class')
@@ -942,6 +945,11 @@ $(document).ready(function(){
 				}
 		}
 	}
+
+	function scrollToDom(dom){
+        var offset = dom.offset();
+        $('body, html').animate({scrollTop : offset.top-180},10)
+    }
 
 
 
