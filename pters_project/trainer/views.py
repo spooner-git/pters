@@ -704,21 +704,6 @@ def member_registration(request):
             else:
                 input_price = price
 
-    print('fast_check:'+fast_check)
-    print('email:'+email)
-    print('name:'+name)
-    print('phone:'+phone)
-    print('contents:'+contents)
-    print('counts:'+counts)
-    print('price:'+price)
-    print('start_date:'+start_date)
-    print('end_date:'+end_date)
-    print('next_page:'+next_page)
-    print('counts_fast:'+counts_fast)
-    print('price_fast:'+price_fast)
-    print('start_date_fast:'+start_date_fast)
-    print('end_date_fast:'+end_date_fast)
-
     if error is None:
 
         password = email.split('@')[0] + phone[7:]
