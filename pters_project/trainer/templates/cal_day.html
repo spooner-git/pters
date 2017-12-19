@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static "user/css/pters.day.cal.css" %}>
+        <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.day.cal.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
 {% endblock %}
@@ -102,15 +102,40 @@
             </div>
     </div>
     
+    
     <div id="calendar" class="container wrap"> <!-- Calendar container-->
           <div class="swiper-container">
-            <div class="swiper-wrapper"> 
-              <div class="swiper-slide" id="slide1"></div> <!--Index0-->
-              <div class="swiper-slide" id="slide2"></div> <!--Index1-->
-              <div class="swiper-slide" id="slide3"></div> <!--Index2-->
-              <div class="swiper-slide" id="slide4"></div> <!--Index2-->
-              <div class="swiper-slide" id="slide5"></div> <!--Index2-->
-            </div>  <!--Swiper-wrapper-->
+              <div class="timeindex">
+                  <table>
+                      <tr><td class="hour"><span class="morningtext">오전</span>5:00</td></tr>
+                      <tr><td class="hour">6:00</td></tr>
+                      <tr><td class="hour">7:00</td></tr>
+                      <tr><td class="hour">8:00</td></tr>
+                      <tr><td class="hour">9:00</td></tr>
+                      <tr><td class="hour">10:00</td></tr>
+                      <tr><td class="hour">11:00</td></tr>
+                      <tr><td class="hour"><span class="morningtext">오후</span>12:00</td></tr>
+                      <tr><td class="hour">13:00</td></tr>
+                      <tr><td class="hour">14:00</td></tr>
+                      <tr><td class="hour">15:00</td></tr>
+                      <tr><td class="hour">16:00</td></tr>
+                      <tr><td class="hour">17:00</td></tr>
+                      <tr><td class="hour">18:00</td></tr>
+                      <tr><td class="hour">19:00</td></tr>
+                      <tr><td class="hour">20:00</td></tr>
+                      <tr><td class="hour">21:00</td></tr>
+                      <tr><td class="hour">22:00</td></tr>
+                      <tr><td class="hour">23:00</td></tr>
+                      <tr><td class="hour">24:00</td></tr>
+                  </table>
+              </div>
+              <div class="swiper-wrapper" style="width:80%;"> 
+                  <div class="swiper-slide" id="slide1"></div> <!--Index0-->
+                  <div class="swiper-slide" id="slide2"></div> <!--Index1-->
+                  <div class="swiper-slide" id="slide3"></div> <!--Index2-->
+                  <div class="swiper-slide" id="slide4"></div> <!--Index2-->
+                  <div class="swiper-slide" id="slide5"></div> <!--Index2-->
+              </div>  <!--Swiper-wrapper-->
           </div> <!--Swiper-container-->
           <div id="cal_box" class="cal_box">
           </div>    
@@ -423,16 +448,42 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 2,
-                speed : 50,
+                speed : 80,
                 preventClicks : true,
-                keyboardControl : true
+                keyboardControl : true,
+                preventClicksPropagation : true,
+                threshold : 10,
             });
+            
+
+            var count = 0 
+            var count1 = 0
+
             $('.arrowButtonPC a:nth-child(1)').click(function(){
-              myswiper.slidePrev(100)  
+              if(count==0){
+                myswiper.slidePrev(100)
+                count++  
+                setTimeout(function(){count=0},200)
+              }else if(count>0){
+                console.log('wait!')
+              }
             })
 
             $('.arrowButtonPC a:nth-child(2)').click(function(){
-              myswiper.slideNext(100)  
+              if(count1==0){
+                myswiper.slideNext(100)  
+                count1++  
+                setTimeout(function(){count1=0},200)
+              }else if(count>0){
+                console.log('wait!')
+              }
+            })
+
+            $('#ymdText').click(function(){
+              $('#calendar').fadeOut('fast','linear',function(){
+                window.location.reload();
+              })
+              
             })
         </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>

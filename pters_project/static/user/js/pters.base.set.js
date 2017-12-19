@@ -34,6 +34,8 @@ $(document).ready(function(){
       $('.pcwhere').text("PTERSトレーニングセンター")
       $('.pclogout').text("ログアウト")
       $('#uptext span').text("様のスケジュール")
+
+      $('.__mypage').text("マイページ")
    }else if(Options.language == "English"){
       $('.__todayplan').text("Daily")
       $('.__weekplan').text("Weekly")
@@ -45,6 +47,8 @@ $(document).ready(function(){
       $('.pcwhere').text("PTERS Traning Center")
       $('.pclogout').text("Logout")
       $('#uptext span').text("'s schedule")
+
+      $('.__mypage').text("My page")
    }else if(Options.language == "Korea"){
       $('.__todayplan').text("오늘 일정")
       $('.__weekplan').text("주간 일정")
@@ -56,6 +60,8 @@ $(document).ready(function(){
       $('.pcwhere').text("PTERS 트레이닝센터")
       $('.pclogout').text("로그아웃")
       $('#uptext span').text("코치님 일정")
+
+      $('.__mypage').text("마이페이지")
    }
 });
 
