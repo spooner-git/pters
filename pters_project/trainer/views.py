@@ -639,6 +639,7 @@ class SalesSettingView(TemplateView):
 # 회원가입 api
 @csrf_exempt
 def member_registration(request):
+    fast_check = request.POST.get('fast_check')
     email = request.POST.get('email')
     name = request.POST.get('name')
     phone = request.POST.get('phone')
@@ -648,8 +649,18 @@ def member_registration(request):
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     next_page = request.POST.get('next_page')
+    counts_fast = request.POST.get('counts_fast')
+    price_fast = request.POST.get('price_fast')
+    start_date_fast = request.POST.get('start_date_fast')
+    end_date_fast = request.POST.get('end_date_fast')
 
     error = None
+    input_start_date = ''
+    input_end_date = ''
+    input_counts = 0
+    input_price = 0
+
+
     if MemberTb.objects.filter(name=name, phone=phone).exists():
         error = '이미 가입된 회원 입니다.'
     elif User.objects.filter(email=email).exists():
@@ -660,12 +671,38 @@ def member_registration(request):
         error = '이름을 입력해 주세요.'
     elif phone == '':
         error = '연락처를 입력해 주세요.'
-    elif counts == '':
-        error = '남은 횟수를 입력해 주세요.'
-    elif start_date == '':
-        error = '시작 날짜를 입력해 주세요.'
-    elif end_date == '':
-        error = '종료 날짜를 입력해 주세요.'
+
+    if fast_check == '0':
+        if counts_fast == '':
+            error = '남은 횟수를 입력해 주세요.'
+        elif start_date_fast == '':
+            error = '시작 날짜를 입력해 주세요.'
+        elif end_date_fast == '':
+            error = '종료 날짜를 입력해 주세요.'
+        else:
+            input_counts = counts_fast
+            input_start_date = start_date_fast
+            input_end_date = end_date_fast
+            if price_fast == '':
+                input_price = 0
+            else:
+                input_price = price_fast
+
+    elif fast_check == '1':
+        if counts == '':
+            error = '남은 횟수를 입력해 주세요.'
+        elif start_date == '':
+            error = '시작 날짜를 입력해 주세요.'
+        elif end_date == '':
+            error = '종료 날짜를 입력해 주세요.'
+        else:
+            input_counts = counts
+            input_start_date = start_date
+            input_end_date = end_date
+            if price == '':
+                input_price = 0
+            else:
+                input_price = price
 
     if error is None:
 
@@ -681,9 +718,9 @@ def member_registration(request):
                 member.save()
                 trainer_class = ClassTb.objects.get(member_id=request.user.id)
                 lecture = LectureTb(class_tb_id=trainer_class.class_id,member_id=member.member_id,
-                                    lecture_reg_count=counts, lecture_rem_count=counts,
-                                    lecture_avail_count=counts, price=price, option_cd='DC', state_cd='IP',
-                                    start_date=start_date,end_date=end_date, mod_dt=timezone.now(),
+                                    lecture_reg_count=input_counts, lecture_rem_count=input_counts,
+                                    lecture_avail_count=input_counts, price=input_price, option_cd='DC', state_cd='IP',
+                                    start_date=input_start_date,end_date=input_end_date, mod_dt=timezone.now(),
                                     reg_dt=timezone.now(), use=1)
                 lecture.save()
 
