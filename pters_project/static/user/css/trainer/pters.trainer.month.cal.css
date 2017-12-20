@@ -369,7 +369,7 @@ img,a,div,span,p{
 	position: absolute;
 	color: #282828;
 	height: 16px;
-	width: 24px;
+	width: 26px;
 	bottom: 5px;
 	border-radius: 1px;
 	font-size: 12px;
@@ -403,7 +403,7 @@ img,a,div,span,p{
 	height: 16px;
 	-ms-height: 100%;
 	width: 24px;
-	bottom: 5px;
+	bottom: 4px;
 	border-radius: 1px;
 	font-size: 12px;
 	font-weight: 400;
