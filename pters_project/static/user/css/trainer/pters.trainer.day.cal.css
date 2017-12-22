@@ -936,31 +936,49 @@ table{
 		z-index: 0;
 	}
 
-	.arrowButtonPC a:first-child{
+	#leftarrowPC{
 		height: 100%;
 		width: 25%;
 		float: left;
 		cursor: pointer;
+		color: #282828;
 	}
 
-	.arrowButtonPC a:last-child{
+	#rightarrowPC{
 		height: 100%;
 		width: 25%;
 		float: right;
 		cursor: pointer;
+		color: #282828;
 	}
 
-	.arrowButtonPC a:first-child:active{
+	#leftarrowPC:active,#rightarrowPC:last-child:active{
 		background: #cccccc;
+		color: #fe4e65;
 	}
-	
-	.arrowButtonPC a:last-child:active{
-		background: #cccccc;
+
+	#leftarrowPC:hover,#rightarrowPC:last-child:hover{
+		background: #e1e1e1;
+		color: #fe4e65;
 	}
 
 	.arrowButtonPC img{
 		position: fixed;
 		top: 50%;
+	}
+
+	#leftarrowPC span{
+		position: fixed;
+		top: 50.1%;
+		left: 1.5%;
+		font-weight: bold;
+	}
+
+	#rightarrowPC span{
+		position: fixed;
+		top: 50.6%;
+		right: 1.5%;
+		font-weight: bold;
 	}
 	
 
@@ -996,6 +1014,23 @@ table{
 		left: 21px;
 		font-weight: bold;
 	}
+}
+
+@media(max-width: 1130px) and (min-width: 600px){
+	.arrowButtonPC{
+		display: none;
+	}
+
+	.arrowButton{
+		display: block;
+	}
+	
+	.arrowButton a{
+		width: auto;
+		top: 47%;
+		height: 50px;
+	}
+
 }
 
 

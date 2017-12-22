@@ -46,6 +46,7 @@ $(document).ready(function(){
       $('._count div.checked').removeClass('checked ptersCheckboxInner')
       $('p,.pters_input_custom').removeClass("dropdown_selected")
       $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>"); 
+      $('.submitBtn').removeClass('submitBtnActivated')
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
@@ -260,7 +261,7 @@ $(document).ready(function(){
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'     
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-                var td = '<tr><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'    
+                var td = '<tr class="memberline"><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -292,7 +293,7 @@ $(document).ready(function(){
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-                var td = '<tr><td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'     
+                var td = '<tr class="memberline"><td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'     
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -324,7 +325,7 @@ $(document).ready(function(){
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'    
-                var td = '<tr><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
+                var td = '<tr class="memberline"><td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -375,7 +376,7 @@ $(document).ready(function(){
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
-                var td = '<tr><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
+                var td = '<tr class="memberline"><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -407,7 +408,7 @@ $(document).ready(function(){
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'  
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
-                var td = '<tr><td class="_tdnamee" data-name="'+array[0]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
+                var td = '<tr class="memberline"><td class="_tdnamee" data-name="'+array[0]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'      
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -439,7 +440,7 @@ $(document).ready(function(){
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
-                var td = '<tr><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'       
+                var td = '<tr class="memberline"><td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td><td class="_regcount">'+count+'</td><td>'+count+'</td><td>'+start+'</td><td>'+phoneimage+smsimage+'</td></tr>'       
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")

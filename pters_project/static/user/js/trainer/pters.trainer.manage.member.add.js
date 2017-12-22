@@ -225,20 +225,24 @@ $(document).ready(function(){
         if(fast=='1'){
             if((emailInput).hasClass("dropdown_selected")==true && (nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true&&(startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                $('.submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
 
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                $('.submitBtn').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
         }
         else{
             if((emailInput).hasClass("dropdown_selected")==true && (nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput_fast).hasClass("dropdown_selected")==true&&(dateInput_fast).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                $('.submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
 
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                $('.submitBtn').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
         }
@@ -306,7 +310,7 @@ $(document).ready(function(){
      };
 
 
-     $("#upbutton-check").click(function(){
+     $("#upbutton-check,.submitBtn").click(function(){
          if(select_all_check==true){
              document.getElementById('member-add-form-new').submit();
          }else{

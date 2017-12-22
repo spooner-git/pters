@@ -25,7 +25,7 @@ body{
 .center_box{
 	width: 66.67%;
 	height: 48.39%;
-	background-color: #fe4e65ba;
+	background-color: rgba(254, 78, 101, 0.72);
 	position: absolute;
 	top: 15.8%;
 	left: 16.67%;
@@ -141,7 +141,7 @@ body{
 }
 
 .fixfooter{
-	background: #28282882;
+	background: rgba(40, 40, 40, 0.50);
 }
 
 .bottomfooter1{
