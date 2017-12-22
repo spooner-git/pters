@@ -19,17 +19,17 @@ $(document).ready(function(){
  		var monthtext = "월 ";
  		var yeartext = "년 ";
  		var datetext = currentDay[currentDayinfo]
- 		var todayplantext = "오늘의 일정수"
+ 		var todayplantext = "오늘의 일정"
  	}else if(Options.language=="Japan"){
  		var monthtext = "月 "
  		var yeartext = "年 "
  		var datetext = currentDayJP[currentDayinfo]
- 		var todayplantext = "今日の日程数"
+ 		var todayplantext = "今日の日程"
  	}else if(Options.language=="English"){
  		var monthtext = ", "
  		var yeartext = " "
  		var datetext = currentDayEN[currentDayinfo]
- 		var todayplantext = "Today's Lecture count"
+ 		var todayplantext = "Today's Lecture"
  	}
 
 	$('.center_box_day p').text(currentDate+','+datetext); //일, 요일 표시

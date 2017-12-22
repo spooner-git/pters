@@ -98,7 +98,6 @@ img,a,div,span,p{
 	text-align: center; 
 }
 #date{
-	position: relative;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-right: 35px;
@@ -108,6 +107,9 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	max-width: 1000px;
 	margin:0 auto;
+
+	position: fixed;
+	top: 100px;
 }
 
 .arrowButton{
@@ -241,6 +243,8 @@ img,a,div,span,p{
 	padding-left: 20px;
 	padding-right:20px;
 	z-index: 3;
+
+	top: 150px;
 }
 
 
@@ -419,13 +423,14 @@ img,a,div,span,p{
 #cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
 	display: none;
 	position: fixed;
-	top: 35%;
+	width: 260px;
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	z-index: -2;
 	text-align: center;
+	top: 50%;
 	left:50%;
-	transform: translateX(-50%);
+	transform: translate(-50%,-50%);
 	z-index: 150;
 }
 
@@ -571,6 +576,8 @@ img,a,div,span,p{
 	position: relative;
 	height: 50px;
 	border-top: 1px solid #a2a2a2;
+
+	padding-bottom:10px; /*강사달력에서 일정 조회 팝업에서만 사용*/
 }
 
 .popup_inner:hover{
@@ -585,6 +592,12 @@ img,a,div,span,p{
 	font-size: 14px;
 	font-weight: bold;
 	cursor: pointer;
+}
+
+.popup_inner div{  /*일정조회 팝업 안쪽 정보 요소*/
+	display: inline-grid;
+	width: 50%;
+	margin-top: 5px;
 }
 
 .popup_inner_change{
@@ -626,150 +639,14 @@ img,a,div,span,p{
 }
 
 
-
-
-@media(min-width:415px){
-	#cal_popup{
-		display: none;
-		position: fixed;
-		background: transparent;
-		border-color: transparent;
-		top: 35%;
-		left: 0;
-		width: 100%;
-		/*
-		background-color: #ffffff;
-		border: 1px solid #a2a2a2;
-		*/
-		z-index: -2;
-		text-align: center;
-	}
-
-	#cal_popup2{
-		display: none;
-		position: fixed;
-		background: transparent;
-		border-color: transparent;
-		top: 35%;
-		left: 0;
-		width: 100%;
-		/*
-		background-color: #ffffff;
-		border: 1px solid #a2a2a2;
-		*/
-		z-index: -2;
-		text-align: center;
-	}
-
-	#cal_popup3{
-		display: none;
-		position: fixed;
-		background: transparent;
-		border-color: transparent;
-		top: 35%;
-		left: 0;
-		width: 100%;
-		/*
-		background-color: #ffffff;
-		border: 1px solid #a2a2a2;
-		*/
-		z-index: -2;
-		text-align: center;
-	}
-
-	#addpopup{
-		position: fixed;
-		display: none;
-		left: 0;
-		top: 30%;
-		width: 100%;
-		background: transparent;
-		z-index: 105;
-	}
-
-	#dateSelector,#offStartTime,#offDuration,#submitBtn{
-		position: relative;
-		background: #ffffff;
-		margin : 0 auto;
-		width: 450px;
-	}
-
-	#timeGraph{
-		position: relative;
-		background: #f4f4f4;
-		margin : 0 auto;
-		width: 450px;
-	}
-
-	#popup_info,#popup_info2,#popup_info3,#popup_info4{
-		background: #ffffff;
-		position: relative;
-		margin : 0 auto;
-		width: 330px;
-		text-align: center;
-		color: #3b3d3d;
-		font-size: 14px;
-		font-weight: bold;
-	}
-
-	#popup_text2{
-		color: #000ecc;
-	}
-
-	#popup_img{
-		position: relative;
-		margin :0 auto;
-		background: #ffffff;
-		height: 70px;
-		padding-top: 22.5px;
-		padding-bottom: 22.5px;
-		width: 330px;
-	}
-
-
-	#img_cal{
-		position: absolute;
-		top: 30%;
-		left:41.5%;
-		width: 25px;
-		margin-right: 14.845px;
-		margin-left: 14.845px;
-	}
-
-	#btn_close, #btn_close2, #btn_close3, #btn_close4{
-		position: absolute;
-		top: 22%;
-		left: 85%;
-		padding: 10px;
-		width: 35px;
-		float: right;
-	}
-
-	#btn_close4{
-		left: 100%;
-	}
-
-	.popup_inner{
-		background: #ffffff;
-		margin: 0 auto;
-		position: relative;
-		height: 50px;
-		border-top: 1px solid #a2a2a2;
-		width: 330px;
-	}
-
-	.popup_inner:hover{
-	background: #a2a2a2;
-	-webkit-background:#a2a2a2;
-	}
-}
-
 /*미디어 쿼리*/
 
 @media(min-width: 600px){
 	#calendar{
 		position: relative;
 		background-color: 	#ffffff;
+
+		top: 0;
 	}
 
 	#calendar td:hover{
@@ -817,32 +694,52 @@ img,a,div,span,p{
 		z-index: 0;
 	}
 
-	.arrowButtonPC a:first-child{
+	#leftarrowPC{
 		height: 100%;
 		width: 25%;
 		float: left;
 		cursor: pointer;
+		color: #282828;
 	}
 
-	.arrowButtonPC a:last-child{
+	#rightarrowPC{
 		height: 100%;
 		width: 25%;
 		float: right;
 		cursor: pointer;
+		color: #282828;
 	}
 
-	.arrowButtonPC a:first-child:active{
+	#leftarrowPC:active,#rightarrowPC:last-child:active{
 		background: #cccccc;
+		color: #fe4e65;
 	}
-	
-	.arrowButtonPC a:last-child:active{
-		background: #cccccc;
+
+	#leftarrowPC:hover,#rightarrowPC:last-child:hover{
+		background: #e1e1e1;
+		color: #fe4e65;
 	}
+
 
 	.arrowButtonPC img{
 		position: fixed;
 		top: 50%;
 	}
+
+	#leftarrowPC span{
+		position: fixed;
+		top: 50.1%;
+		left: 1.5%;
+		font-weight: bold;
+	}
+
+	#rightarrowPC span{
+		position: fixed;
+		top: 50.1%;
+		right: 1.5%;
+		font-weight: bold;
+	}
+
 	
 	.arrowButton{
 		display:none;
@@ -948,8 +845,10 @@ img,a,div,span,p{
 	}
 
 	#date{
+		position: relative;
 		padding-left: 20px;
 		padding-right: 20px;
+		top: 0;
 	}
 
 	.blackballoon_trainer,.balloon_trainer{
@@ -983,4 +882,30 @@ img,a,div,span,p{
 	.today{
 		color: transparent;
 	}
+
+	#cal_popup_plancheck{
+		width: 330px;
+	}
+
+	#cal_popup_plancheck div{
+		font-size: 15px;
+		margin-top: 10px;
+	}
+}
+
+@media(max-width: 1130px) and (min-width: 600px){
+	.arrowButtonPC{
+		display: none;
+	}
+
+	.arrowButton{
+		display: block;
+	}
+	
+	.arrowButton a{
+		width: auto;
+		top: 47%;
+		height: 50px;
+	}
+
 }

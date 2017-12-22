@@ -590,7 +590,7 @@ $(document).ready(function(){
 			}
 			var etime = splited[2]+"시"
 			var name = splited[4]+" 회원님"
-			htmltojoin.push('<p>'+stime+' ~ '+etime+'     :     '+name+'</p>')
+			htmltojoin.push('<div>'+stime+' ~ '+etime+'</div><div>'+name+'</div>')
 		}
 		$('#cal_popup_plancheck .popup_inner').html(htmltojoin.join(''))
 	}

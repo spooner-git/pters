@@ -11,7 +11,7 @@ body{
 	padding-top: 15px;
 	padding-bottom: 15px;
 	border-bottom: 0.5px solid #a2a2a2;
-	max-width: 1000px;
+	max-width: 500px;
 	margin:0 auto;
 }
 
@@ -56,13 +56,30 @@ body{
 @media(min-width: 600px){
 	#logout{
 		position: relative;
-		margin-top: 500px;
+		margin-top: 300px;
 		margin-bottom: 22px;
 	}
 
+	#logout:hover{
+		color: #fe4e65;
+	}
+
 	.settingMenu{
+		cursor:pointer;
 		border-left:0.5px solid #a2a2a2;
 		border-right: 0.5px solid #a2a2a2;
 	}
+
+	.settingMenu:hover{
+		background:#eaeaea;
+		color: #fe4e65;
+		font-weight: bold;
+	}
+	
+	#pushSetting{
+		margin-top: 200px;
+		border-top:0.5px solid #a2a2a2;
+	}
+
 
 }
