@@ -311,13 +311,56 @@ $(document).ready(function(){
 
 
      $("#upbutton-check,.submitBtn").click(function(){
+        var $form = $('#member-add-form-new');
          if(select_all_check==true){
-             document.getElementById('member-add-form-new').submit();
+            console.log('ajax')
+           
+                 //ajax 회원정보 입력된 데이터 송신
+                 $.ajax({
+                    url:'/trainer/member_registration/',
+                    type:'POST',
+                    data:$form.serialize(),
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                      closePopup()
+                      console.log('complete')
+                      },
+
+                    //통신성공시 처리
+                    success:function(){
+                      console.log('success')
+                      },
+
+                    //통신 실패시 처리
+                    error:function(){
+                      console.log("error")
+                    },
+                 })
+            
          }else{
             //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
+            console.log('submit ng')
          }
      })
+
+     function closePopup(){
+        $('#page_addmember').fadeOut('fast');
+        $('#shade3').fadeOut('fast');
+        $('#float_btn').fadeIn('fast');
+        $('#page-base').fadeIn();
+        $('#page-base-addstyle').fadeOut();
+
+        $('input,#memberDue_add_2').val("")
+        $('._due div.checked').removeClass('checked ptersCheckboxInner')
+        $('._count div.checked').removeClass('checked ptersCheckboxInner')
+        $('p,.pters_input_custom').removeClass("dropdown_selected")
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>"); 
+        $('.submitBtn').removeClass('submitBtnActivated')
+     };
+     
+
 
      //작은달력 설정
      $.datepicker.setDefaults({

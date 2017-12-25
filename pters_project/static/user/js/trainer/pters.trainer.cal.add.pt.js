@@ -104,13 +104,76 @@ $(document).ready(function(){
      }
 
      $("#upbutton-check, .submitBtn").click(function(){
+        var $form = $('#pt-add-form')
          if(select_all_check==true){
-             document.getElementById('pt-add-form').submit();
+             //document.getElementById('pt-add-form').submit();
+             //ajax 회원정보 입력된 데이터 송신
+                 $.ajax({
+                    url:'/trainer/add_pt_logic/',
+                    type:'POST',
+                    data:$form.serialize(),
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                      closeAddPopup()
+                      console.log('complete')
+                      },
+
+                    //통신성공시 처리
+                    success:function(){
+                      console.log('success')
+                      },
+
+                    //통신 실패시 처리
+                    error:function(){
+                      console.log("error")
+                    },
+                 })
+
          }else{
             //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
          }
      })
+
+     function closeAddPopup(){
+        $('body').css('overflow-y','overlay')
+        $('#shade3').fadeOut();
+        $('#page-ptadd').fadeOut('fast','swing');
+        $('#page-offadd').fadeOut('fast','swing');
+        $('#float_btn_wrap').fadeIn();
+        $('#float_btn').removeClass('rotate_btn');
+        $('#page-base').fadeIn();
+        $('#page-base-addstyle').fadeOut();
+
+        $("#membersSelected button").removeClass("dropdown_selected");
+        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
+        $("#membersSelected .btn:first-child").val("");
+        $("#countsSelected").text("")
+        $("#dateSelector p").removeClass("dropdown_selected");
+        $('#timeGraph').hide();
+        $("#starttimesSelected button").removeClass("dropdown_selected");
+        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected .btn:first-child").val("");
+        $("#durationsSelected button").removeClass("dropdown_selected");
+        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected .btn:first-child").val("");
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+        $("#starttimes").empty();
+        $("#durations").empty();
+
+        $("#dateSelector_off p").removeClass("dropdown_selected");
+        $('#timeGraph_off').hide();
+        $("#starttimesSelected_off button").removeClass("dropdown_selected");
+        $("#starttimesSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected_off .btn:first-child").val("");
+        $("#durationsSelected_off button").removeClass("dropdown_selected");
+        $("#durationsSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected_off .btn:first-child").val("");
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+        $("#starttimes_off").empty();
+        $("#durations_off").empty();
+     }
 
 
      //작은달력 설정

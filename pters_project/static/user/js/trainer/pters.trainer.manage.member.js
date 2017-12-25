@@ -116,8 +116,8 @@ $(document).ready(function(){
       $('#datepicker').attr('placeholder',DB[name].start)
       $('#datepicker2').attr('placeholder',DB[name].end)
       $('#memberInfoPopup').show().animate({'top':'0px'});
-      $('#shade').show()
-      $('body').scrollTop();
+      scrollToIndicator($('#page_managemember'));
+      $('#shade3').fadeIn('fast');
     })
 
     $(document).on('click','._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
@@ -129,16 +129,17 @@ $(document).ready(function(){
       $('#datepicker').attr('placeholder',DBe[name].start)
       $('#datepicker2').attr('placeholder',DBe[name].end)
       $('#memberInfoPopup').show().animate({'top':'0px'});
-      $('#shade').show()
-      $('body').scrollTop();
+      scrollToIndicator($('#page_managemember'));
+      $('html,body').scrollTop();
+      $('#shade3').fadeIn('fast');
     })
 
     $('#infoClose').click(function(){ //회원정보창에서 닫기 눌렀을때
       $('#memberInfoPopup').animate({'top':'-800px'}).hide('fast');
-      $('#shade').hide()
       $('#memberName').attr('readonly',true).val('')
       $('#memberPhone').attr('readonly',true).val('')
       $('#memberCount').attr('readonly',true).val('')
+      $('#shade3').fadeOut('fast');
     })
 
     $('#infoEdit').click(function(){ //회원정보창에서 수정 눌렀을때
