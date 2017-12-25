@@ -232,7 +232,7 @@ th{
 	display: none;
 	position: absolute;
 	background: #f4f4f4;
-	width: 90%;
+	width: 100%;
 	z-index: 1500;
 	max-width: 700px !important;
 	top: -800px;
