@@ -136,6 +136,22 @@ $(document).ready(function(){
          }
      })
 
+
+     function ajaxClassTime(){
+      console.log('ajax receiving')
+            $.ajax({
+              url:'/static/user/scheduleDB.html',
+              dataType : 'html',
+              success:function(data){
+                console.log(data)
+                DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
+                classTime();
+              }
+
+            })
+          
+     }
+
      function closeAddPopup(){
         $('body').css('overflow-y','overlay')
         $('#shade3').fadeOut();

@@ -1,0 +1,13 @@
+<script>
+var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
+var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
+var classTimeArray_member_name = [{% for member_name in daily_lecture_data_member %}'{{ member_name }}',{% endfor %}];
+var classArray_lecture_id = [{% for lecture_id in daily_lecture_data_id %}'{{ lecture_id }}',{% endfor %}];
+var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}];
+var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
+
+var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
+var offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %}];
+//var classTimeArray = [];
+//var offTimeArray = [];	
+</script>
