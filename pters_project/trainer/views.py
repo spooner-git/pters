@@ -153,7 +153,6 @@ class CalDayView(LoginRequiredMixin, TemplateView):
 
         return context
 
-
 class PtAddView(LoginRequiredMixin, TemplateView):
     template_name = 'pt_add.html'
 
