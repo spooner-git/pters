@@ -64,21 +64,49 @@ body{
 		color: #fe4e65;
 	}
 
+	#settingMenuBox{
+		text-align: center;
+		margin-top: 200px;
+	}
+
 	.settingMenu{
+		display: inline-table;
 		cursor:pointer;
-		border-left:0.5px solid #a2a2a2;
-		border-right: 0.5px solid #a2a2a2;
+		width: 180px;
+		height: 180px;
+		margin: 15px;
+		border:0;
+		border-top:3px solid #ffffff;
 	}
 
 	.settingMenu:hover{
-		background:#eaeaea;
+		
 		color: #fe4e65;
 		font-weight: bold;
+		border-top:3px solid #fe4e65;
+	}
+
+	.settingImg{
+		width: 50px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 20px;
+		margin-bottom: 32px;
+	}
+
+	#salesSetting .settingImg{
+		height: 50px;
+		width: 37.5px;
 	}
 	
-	#pushSetting{
-		margin-top: 200px;
-		border-top:0.5px solid #a2a2a2;
+	.settingText{
+		display: block;
+	}
+
+	.settingArrow{
+		width: 6px;
+		margin-top: -15px;
+		margin-right: 17.5px;
 	}
 
 
