@@ -474,43 +474,7 @@ $(document).ready(function(){
 	}
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
 
-	function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
-		//DB데이터 가공
-		var classTimeLength = startarray.length
-    	var startlength = startarray.length;
-    	var endlength = endarray.length;
-    	var resultarray = []
 
-    	for(i=0;i<classTimeLength; i++){
-    		var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
-    		var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
-    		var startSplitArray= start.split("_"); 
-    		var endSplitArray = end.split("_");
-    		//["2017", "10", "7", "6", "00", "오전"]
-   
-    		if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
-    			startSplitArray[3] = String(Number(startSplitArray[3])+12);
-    		}
-
-    		if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
-    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
-    		}
-
-    		var memberClassDur = endSplitArray[3] - startSplitArray[3]
-    	
-    		startSplitArray[5] = String(endSplitArray[3] - startSplitArray[3])
-    		if(option=="class"){
-    			startSplitArray.push(classTimeArray_member_name[i])	
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
-    		}else if(option=="off"){
-    			startSplitArray.push(classTimeArray_member_name[i])	
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);		
-    		}else if(option=="member"){
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);		
-    			result2.push(startSplitArray[3]+":"+startSplitArray[4]);
-    		}	
-  	    }
-	}
 
 	
 
@@ -522,11 +486,11 @@ $(document).ready(function(){
 		var datasum = []
 		for(var i=0; i<len; i++){ //객체화로 중복 제거
 			summaryArray[classDateArray[i]] = classDateArray[i]
-			datasum[i] = classDateArray[i]+"_"+classTimeArray_member_name[i]
+			datasum[i] = classDateArray[i]+"_ "+classTimeArray_member_name[i]
 		}
 		for(var i in summaryArray){ //중복 제거된 배열
 			if(i.length<10){
-				i = i+"_"
+				i = i+"_ "
 			}
 			summaryArrayResult.push(i)
 		}
@@ -554,11 +518,9 @@ $(document).ready(function(){
 	}
 
 
-
 	function ad_month(selector){ // 월간 달력 하단에 광고
 		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
 	}
-
 
 	function plancheck(dateinfo){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
 		var len = classNameArray.length;
