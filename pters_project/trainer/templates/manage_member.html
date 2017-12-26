@@ -22,16 +22,18 @@
   <!--플로팅 버튼-->
 
 <div id="page_managemember">
-
+    <div id="upperImg">
+        <span>회원 관리</span>
+    </div>
     <div id="selectBox" class="btn-group btn-group-justified">
       <div id="btnCallCurrent" href="#" class="btn btn-primary active">진행 중 회원</div>
       <div id="btnCallFinished" href="#" class="btn btn-primary">종료된 회원</div>
     </div> 
     <div id="alignBox">
       <div style="font-size:14px;position: relative;">
-        회원 정렬 기준 <span id="currentMemberNum" class="memberNum"></span><span id="finishMemberNum" class="memberNum"></span>
+        <span class="memberAlign">회원 정렬 기준</span><span id="currentMemberNum" class="memberNum"></span><span id="finishMemberNum" class="memberNum"></span>
       </div>
-      <div class="dropdown">
+      <div class="dropdown alignSelect">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택</button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
         <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
@@ -49,12 +51,16 @@
     <div id="currentMemberList" class="centeralign">
       <table id="currentMember" class="table table-bordered">
         <thead>
-          <tr>
-            <th>회원명</th>
+          <tr style="border-bottom:0;">
+            <th class="_countnum">순번</th>
+            <th class="_tdname">회원명</th>
+            <th class="_email">아이디(Email)</th>
             <th class="_regcount">등록 횟수</th>
-            <th>남은 횟수</th>
-            <th>시작 일자</th>
-            <th>연락처</th>
+            <th class="_remaincount">남은 횟수</th>
+            <th class="_startdate">시작일</th>
+            <th class="_finday">종료일</th>
+            <th class="_contact">연락처</th>
+            <th class="_manage">관리</th>
           </tr>
         </thead>
       </table>
@@ -63,12 +69,16 @@
     <div id="finishedMemberList" class="centeralign">
       <table id="finishedMember" class="table table-bordered">
         <thead>
-          <tr>
-            <th>회원명</th>
+          <tr style="border-bottom:0;">
+            <th class="_countnum">순번</th>
+            <th class="_tdname">회원명</th>
+            <th class="_email">아이디(Email)</th>
             <th class="_regcount">등록 횟수</th>
-            <th>남은 횟수</th>
-            <th>시작 일자</th>
-            <th>연락처</th>
+            <th class="_remaincount">남은 횟수</th>
+            <th class="_startdate">시작일</th>
+            <th class="_finday">종료일</th>
+            <th class="_contact">연락처</th>
+            <th class="_manage">관리</th>
           </tr>
         </thead>
       </table>

@@ -53,6 +53,10 @@ body{
 	margin-left: 10px;
 }
 
+#upperImg{
+	display: none;
+}
+
 @media(min-width: 600px){
 	#logout{
 		position: relative;
@@ -66,7 +70,7 @@ body{
 
 	#settingMenuBox{
 		text-align: center;
-		margin-top: 200px;
+		margin-top: 150px;
 	}
 
 	.settingMenu{
@@ -108,6 +112,23 @@ body{
 		margin-top: -15px;
 		margin-right: 17.5px;
 	}
+	
+	#upperImg{
+		display: block;
+		background-image:url(/static/user/res/bg.png);
+		background-size: 100%;
+		margin:0 auto;
+		height: 100px;
+		width: 100%;
+		margin-bottom: 20px;
+		text-align: center;
+	}
 
+	#upperImg span{
+		font-size: 20px;
+		color: #fe4e65;
+		font-weight: 500;
+		line-height: 100px;
+	}
 
 }

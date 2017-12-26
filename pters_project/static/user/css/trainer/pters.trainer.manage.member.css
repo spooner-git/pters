@@ -42,8 +42,7 @@ body{
 }
 
 .centeralign{
-	margin:0 auto;
-	max-width: 1000px;
+	max-width: 1000px !important;
 }
 
 
@@ -99,9 +98,6 @@ table{
 	table-layout: fixed;
 }
 
-thead{
-	background-color: #cccccc;
-}
 
 tbody{
 	background-color: #ffffff;
@@ -109,21 +105,21 @@ tbody{
 
 th{
 	text-align: center;
+	background:#eeeeee;
 }
 
-._regcount{
+._countnum,._email,._regcount,._finday,._manage{
 	display: none;
 }
 
-#finishedMember tr td:nth-child(1){
-	width: 27%;
+._countnum{
 	line-height: 19px;
 	vertical-align: middle !important;
 	padding-top: 8px;
 	padding-bottom: 8px;
 }
 
-#finishedMember tr td:nth-child(2){
+._tdname{
 	width: 23%;
 	line-height: 19px;
 	vertical-align: middle !important;
@@ -131,7 +127,14 @@ th{
 	padding-bottom: 8px;
 }
 
-#finishedMember tr td:nth-child(3){
+._email{
+	line-height: 19px;
+	vertical-align: middle !important;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+._regcount{
 	width: 25%;
 	line-height: 19px;
 	vertical-align: middle !important;
@@ -139,7 +142,7 @@ th{
 	padding-bottom: 8px;
 }
 
-#finishedMember tr td:nth-child(4){
+._remaincount{
 	width: 25%;
 	line-height: 19px;
 	vertical-align: middle !important;
@@ -147,24 +150,7 @@ th{
 	padding-bottom: 8px;
 }
 
-
-#currentMember tr td:nth-child(1){
-	width: 27%;
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-#currentMember tr td:nth-child(2){
-	width: 23%;
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-#currentMember tr td:nth-child(3){
+._startdate{
 	width: 25%;
 	line-height: 19px;
 	vertical-align: middle !important;
@@ -172,13 +158,26 @@ th{
 	padding-bottom: 8px;
 }
 
-#currentMember tr td:nth-child(4){
-	width: 25%;
+._finday{
 	line-height: 19px;
 	vertical-align: middle !important;
 	padding-top: 8px;
 	padding-bottom: 8px;
 }
+
+._contact{
+	width: 25%;
+}
+
+._manage{
+	line-height: 19px;
+	vertical-align: middle !important;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+
+
 
 .memberline:hover{
 	background:#eaeaea;
@@ -274,7 +273,6 @@ th{
 .phonenum{
 	display:none;
 	color: #282828;
-	font-size: 14px;
 }
 
 .phonenum:hover{
@@ -295,19 +293,11 @@ th{
 	display: none;
 }
 
+#upperImg{
+	display: none;
+}
+
 @media(min-width: 600px){
-
-	._tdname,._tdnamee{
-		font-size: 15px;
-	}
-
-	#currentMember tr td:nth-child(2),#currentMember tr td:nth-child(3),#finishedMember tr td:nth-child(2),#finishedMember tr td:nth-child(3){
-		font-size: 15px;
-	}
-
-	th{
-		font-size: 13.5px; 
-	}
 
 	._regcount{
 		display: table-cell;
@@ -321,10 +311,6 @@ th{
 	.phonesms{
 		display:none;
 	}
-
-	#currentMember tr td:nth-child(4),#finishedMember tr td:nth-child(4){
-		font-size: 14px;
-	}
 	
 	#shade3{
 		background-color: #282828;
@@ -334,5 +320,167 @@ th{
 	#pcBtn{
 		display:block;
 	}
+
+	#upperImg{
+		display: block;
+		background-image:url(/static/user/res/bg.png);
+		background-size: 100%;
+		margin:0 auto;
+		height: 100px;
+		width: 100%;
+		text-align: center;
+	}
+
+	#upperImg span{
+		font-size: 20px;
+		color: #fe4e65;
+		font-weight: 500;
+		line-height: 100px;
+	}
+}
+
+@media(min-width: 1000px){
+	
+	#page_managemember{
+		background:#ffffff;
+	}
+
+	
+	#currentMemberList, #finishedMemberList{
+		width: 1000px;
+	}
+
+	._countnum,._email,._finday,._manage{
+		display: table-cell;
+	}
+
+	._countnum{
+		width: 30px;
+	}
+
+	._tdname{
+		width: 85px;
+		font-size: 14px;
+	}
+	
+	._email{
+		width: 140px;
+	}
+
+	._regcount{
+		width: 45px;
+	}
+
+	._remaincount{
+		width: 45px;
+		line-height: 19px;
+		vertical-align: middle !important;
+	}
+
+	._startdate{
+		width: 50px;
+	}
+
+	._finday{
+		width: 50px;
+	}
+
+	._contact{
+		width: 100px;
+
+	}
+
+	._manage{
+		width: 50px;
+	}
+
+	table,td{
+		border:0 !important;
+	}
+
+	tr{
+		border-bottom:0.5px solid #cccccc;
+	}
+	
+	td{
+		font-size : 13px;
+	}
+
+	th{
+		border:0 !important;
+		font-size: 13.5px;
+		border-left:0.5px solid #ffffff !important;
+		border-right: 0.5px solid #ffffff !important;
+		font-weight: 500;
+	}
+
+	.nameimg{
+		display: none;
+	}
+	
+	.alignSelect{
+		position: absolute;
+		top: 0;
+		right: 0;
+		margin-top: 0 !important;
+		border:1px solid #eeeeee;
+		width: 140px !important;
+		height: 30px !important;
+	}
+
+	.alignSelect button{
+		font-size: 12px !important;
+		font-weight: 400 !important;
+		color: #cccccc;
+	}
+
+	.btn-default{
+		box-shadow: 0 0 0 0 !important;
+	}
+
+	#alignBox{
+		position: relative;
+		max-width: 1000px;
+		height: 30px;
+		margin-bottom: 5px;
+		padding-right: 150px;
+	}
+
+	.memberNum{
+		float:left;
+		line-height: 30px;
+	}
+
+	.memberAlign{
+		float: right;
+		line-height: 30px;
+	}
+
+	#selectBox{
+		border:1px solid #cccccc;
+		width: 350px;
+		height: 45px;
+	}
+
+	.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
+		border-color:#282828;
+		background:#282828;
+		color: #ffffff;
+	}
+
+	.btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover{
+		border-color:#282828;
+		background:#282828;
+		color: #ffffff;
+	}
+
+	.btn-primary{
+		color: #cccccc;
+	}
+	
+	#upperImg{
+		margin-bottom: 20px;
+	}
+
 }
 
