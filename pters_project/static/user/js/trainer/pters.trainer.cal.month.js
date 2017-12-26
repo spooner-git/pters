@@ -58,6 +58,8 @@ $(document).ready(function(){
 		var dayarry = ['일','월','화','수','목','금','토']
 		var day = dayarry[dayraw];
 		var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+		var countNum = $(this).find('._classTime').text()
+		$('#countNum').text(countNum)
 		$('.popup_ymdText').html(infoText)
 		plancheck(yy+'_'+mm+'_'+dd)
 	})
@@ -544,15 +546,27 @@ $(document).ready(function(){
 		}
 		dateplans.sort();
 		var htmltojoin = []
-		for(var i=0;i<dateplans.length;i++){
-			var splited = dateplans[i].split('_')
-			var stime = splited[0]+"시"
+		console.log(dateplans)
+		for(var i=1;i<=dateplans.length;i++){
+			var splited = dateplans[i-1].split('_')
+			var stime = splited[0]
 			if(stime.substr(0,1)=='0'){
-				var stime = stime.substr(1,1) + "시"
+				var stime = stime.substr(1,1)
 			}
-			var etime = splited[2]+"시"
+			var etime = splited[2]
 			var name = splited[4]+" 회원님"
-			htmltojoin.push('<div>'+stime+' ~ '+etime+'</div><div>'+name+'</div>')
+			var morningday = ""
+			if(stime<12 & dateplans[i-2]==undefined){
+				var morningday = "오전"
+			}else if(stime>=12 && dateplans[i-2]!=undefined){
+				var splitedprev = dateplans[i-2].split('_')
+				if(splitedprev[0]<12){
+					var morningday = "오후"	
+				}
+			}else if(stime>=12 && dateplans[i-2]==undefined){
+				var morningday = "오후"
+			}
+			htmltojoin.push('<div><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'</span></div>')
 		}
 		$('#cal_popup_plancheck .popup_inner').html(htmltojoin.join(''))
 	}

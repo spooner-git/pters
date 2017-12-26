@@ -423,7 +423,7 @@ img,a,div,span,p{
 #cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
 	display: none;
 	position: fixed;
-	width: 260px;
+	width: 300px;
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	z-index: -2;
@@ -432,6 +432,35 @@ img,a,div,span,p{
 	left:50%;
 	transform: translate(-50%,-50%);
 	z-index: 150;
+}
+
+.img_cal{
+	position: relative;
+	width: 25px;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#countNum{
+	position: absolute;
+	font-size: 9px;
+	background:#fe4e65;
+	color: #ffffff;
+	width: 13px;
+	line-height: 13px;
+	border-radius: 50%;
+	text-align: center;
+	font-weight: 500;
+	top: 6px;
+	left: 155px;
+}
+
+.popup_ymdText{
+	margin-top:9.5px;
+	margin-bottom: 3px;
+	font-size: 14px;
+	font-weight: bold;
 }
 
 #cal_popup_plancheck .popup_inner:hover{
@@ -552,7 +581,7 @@ img,a,div,span,p{
 	padding-bottom: 22.5px;
 }
 
-
+/*
 #img_cal{
 	position: absolute;
 	top: 41%;
@@ -561,10 +590,20 @@ img,a,div,span,p{
 	margin-right: 14.845px;
 	margin-left: 14.845px;
 }
+*/
 
 #btn_close, #btn_close2, #btn_close3, #btn_close4{
 	position: absolute;
 	top: 31%;
+	left: 85%;
+	padding: 10px;
+	width: 35px;
+	float: right;
+}
+
+#btn_close5{
+	position: absolute;
+	top: 10%;
 	left: 85%;
 	padding: 10px;
 	width: 35px;
@@ -577,7 +616,10 @@ img,a,div,span,p{
 	height: 50px;
 	border-top: 1px solid #a2a2a2;
 
-	padding-bottom:10px; /*강사달력에서 일정 조회 팝업에서만 사용*/
+	/*강사달력에서 일정 조회 팝업에서만 사용*/
+	max-height: 300px;
+	overflow-y: overlay;
+
 }
 
 .popup_inner:hover{
@@ -585,20 +627,37 @@ img,a,div,span,p{
 	-webkit-background:#a2a2a2;
 }
 
+.popup_inner div{
+	height: 45px;
+	vertical-align: middle;
+	border-bottom: 0.5px solid #a2a2a2;
+}
 
 .popup_inner span{
-	margin:0 auto;
-	line-height: 55px;
-	font-size: 14px;
-	font-weight: bold;
-	cursor: pointer;
+	line-height: 45px;
 }
 
-.popup_inner div{  /*일정조회 팝업 안쪽 정보 요소*/
+
+.planchecktime,.plancheckname{
 	display: inline-grid;
-	width: 50%;
-	margin-top: 5px;
+	width: 40%;
+	text-align: left;
 }
+
+.plancheckname{
+	font-weight: bold;
+}
+
+.plancheckmorningday{
+	display: inline-grid;
+	width: 20%;
+	font-weight: bold;
+}
+
+.plancheckname{
+
+}
+
 
 .popup_inner_change{
 	text-align: center;
@@ -884,13 +943,23 @@ img,a,div,span,p{
 	}
 
 	#cal_popup_plancheck{
-		width: 330px;
+		width: 400px;
 	}
 
 	#cal_popup_plancheck div{
 		font-size: 15px;
 		margin-top: 10px;
 	}
+
+	#countNum{
+		left: 205px;
+	}
+
+	.popup_inner{
+		max-height: 500px;
+	}
+
+
 }
 
 @media(max-width: 1130px) and (min-width: 600px){
