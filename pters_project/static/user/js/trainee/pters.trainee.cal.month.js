@@ -620,17 +620,19 @@ $(document).ready(function(){
           result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);    
           result2.push(startSplitArray[3]+":"+startSplitArray[4]);
         }else if(option=="graph"){
-          if(startSplitArray[2].length<2){
-            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-0"+startSplitArray[2]); //2017_10_07
-            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
-          }else{
-            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-"+startSplitArray[2]); //2017_10_17
-            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2
-          }
-          
+          var mm = startSplitArray[1]
+            var dd = startSplitArray[2]
+            if(mm.length<2){
+              var mm = '0'+startSplitArray[1]
+            }
+            if(dd.length<2){
+              var dd = '0'+startSplitArray[2]
+            }
+            result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
+            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2   
         }
-        }
-     }
+      }
+    }
 
     function timeGraphSet(option,CSStheme){ //가능 시간 그래프 채우기
         //1. option인자 : "class", "off"

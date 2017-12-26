@@ -202,7 +202,7 @@ $(document).ready(function(){
         console.log(offAddOkArray)
       }
 
-      function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
+    function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
     //DB데이터 가공
       var classTimeLength = startarray.length
       var startlength = startarray.length;
@@ -249,17 +249,20 @@ $(document).ready(function(){
           result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);    
           result2.push(startSplitArray[3]+":"+startSplitArray[4]);
         }else if(option=="graph"){
-          if(startSplitArray[2].length<2){
-            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-0"+startSplitArray[2]); //2017_10_7
+          var mm = startSplitArray[1]
+            var dd = startSplitArray[2]
+            if(mm.length<2){
+              var mm = '0'+startSplitArray[1]
+            }
+            if(dd.length<2){
+              var dd = '0'+startSplitArray[2]
+            }
+            result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
             result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
-          }else{
-            result.push(startSplitArray[0]+"-"+startSplitArray[1]+"-"+startSplitArray[2]); //2017_10_7
-            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2
-          }
           
         }
-        }
-     }
+      }
+    }
 
 
       function timeGraphSet(option,CSStheme){ //가능 시간 그래프 채우기
