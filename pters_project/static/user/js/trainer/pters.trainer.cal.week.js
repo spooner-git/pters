@@ -19,8 +19,6 @@ $(document).ready(function(){
 	$('#float_inner1').click(function(){
 		scrollToDom($('#calendar'))
 	    $('#page-ptadd').fadeIn('fast');
-	    $('#shade3').fadeIn('fast');
-	    $('#shade2').hide();
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
 	    $('#uptext2').text('PT 일정 등록')
@@ -28,13 +26,16 @@ $(document).ready(function(){
 	    $('#page-base-addstyle').fadeIn();
 	    $("#datepicker").datepicker('setDate',null)
 	    
+	    if($('body').width()<600){
+	    	$('#shade3').fadeIn('fast');
+		    $('#calendar').hide()
+	    }
+		    
 	})
 
 	$('#float_inner2').click(function(){
 		scrollToDom($('#calendar'))
 	    $('#page-offadd').fadeIn('fast');
-	    $('#shade3').fadeIn('fast');
-	    $('#shade2').hide();
 	    $('#uptext2').text('OFF 일정 등록')
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
@@ -42,10 +43,16 @@ $(document).ready(function(){
 	    $('#page-base-addstyle').fadeIn();
 	    $("#datepicker_off").datepicker('setDate',null)
 	    
+	    if($('body').width()<600){
+	    	$('#shade3').fadeIn('fast');
+		    $('#calendar').hide()
+	    }
 	})
 
 	$('#upbutton-x').click(function(){
+		$('#calendar').show()
 	    $('#shade3').fadeOut();
+	    $('#shade2').hide();
 	    $('#page-ptadd').fadeOut('fast','swing');
 	    $('#page-offadd').fadeOut('fast','swing');
 	    $('#float_btn_wrap').fadeIn();
@@ -86,7 +93,7 @@ $(document).ready(function(){
 
   //PC 스타일
   	$('.cancelBtn').click(function(){
-	    $('#shade3').fadeOut();
+	    $('#shade2').hide();
 	    $('#page-ptadd').fadeOut('fast','swing');
 	    $('#page-offadd').fadeOut('fast','swing');
 	    $('#float_btn_wrap').fadeIn();
