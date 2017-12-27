@@ -234,7 +234,7 @@ $(document).ready(function(){
 	//스케쥴 클릭시 팝업 End
 
 		//일정 변경 기능 추가 - hk.kim 171007
-	$("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
+	$("#popup_text1").click(function(){  //일정 변경 버튼 클릭
 			if(schedule_on_off==1){
 				//PT 일정 변경시
 				document.getElementById('pt-modify-form').submit();
@@ -261,9 +261,14 @@ $(document).ready(function(){
                     type:'POST',
                     data:$ptdelform.serialize(),
 
+                    beforeSend:function(){
+                      $('html').css("cursor","wait")
+                    },
+
                     //보내기후 팝업창 닫기
                     complete:function(){
-                     	 if($('#cal_popup3').css('display')=='block'){
+                    	$('html').css("cursor","auto")
+                     	if($('#cal_popup3').css('display')=='block'){
 							$("#cal_popup3").css({'display':'none','z-index':'-2'})
 							$('#shade2').css({'display':'none'});
 						}
@@ -272,11 +277,13 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(){
                       console.log('success')
+                      alert("complete:일정 삭제 완료")
                       },
 
                     //통신 실패시 처리
                     error:function(){
                       console.log("error")
+                      alert("error:서버 통신 실패")
                     },
                  })
 		}

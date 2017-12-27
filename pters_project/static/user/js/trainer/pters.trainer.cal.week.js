@@ -278,6 +278,7 @@ $(document).ready(function(){
 			$('#cal_popup3').fadeIn('fast').css({'z-index':'103'});
 		})
 
+		/*
 		$('#popup_text3').click(function(){  //일정 삭제 버튼 클릭
 			if(schedule_on_off==1){
 				//PT 일정 삭제시
@@ -285,6 +286,72 @@ $(document).ready(function(){
 			}
 			else{
 				document.getElementById('daily-off-delete-form').submit();
+			}
+		})
+		*/
+
+		$('#popup_text3').click(function(){
+			var $ptdelform = $('#daily-pt-delete-form');
+			var $offdelform = $('#daily-off-delete-form');
+			if(schedule_on_off==1){
+					//PT 일정 삭제시
+					//document.getElementById('daily-pt-delete-form').submit();
+					$.ajax({
+	                    url:'/trainer/daily_pt_delete/',
+	                    type:'POST',
+	                    data:$ptdelform.serialize(),
+
+	                    beforeSend:function(){
+	                      $('html').css("cursor","wait")
+	                    },
+
+	                    //보내기후 팝업창 닫기
+	                    complete:function(){
+	                    	$('html').css("cursor","auto")
+	                     	if($('#cal_popup3').css('display')=='block'){
+								$("#cal_popup3").css({'display':'none','z-index':'-2'})
+								$('#shade2').css({'display':'none'});
+							}
+	                      },
+
+	                    //통신성공시 처리
+	                    success:function(){
+	                      console.log('success')
+	                      alert("complete:일정 삭제 완료")
+	                      },
+
+	                    //통신 실패시 처리
+	                    error:function(){
+	                      console.log("error")
+	                      alert("error:서버 통신 실패")
+	                    },
+	                 })
+			}
+			else{
+					//document.getElementById('daily-off-delete-form').submit();
+					$.ajax({
+	                    url:'/trainer/daily_off_delete/',
+	                    type:'POST',
+	                    data:$offdelform.serialize(),
+
+	                    //보내기후 팝업창 닫기
+	                    complete:function(){
+	                      if($('#cal_popup3').css('display')=='block'){
+								$("#cal_popup3").css({'display':'none','z-index':'-2'})
+								$('#shade2').css({'display':'none'});
+							}
+	                      },
+
+	                    //통신성공시 처리
+	                    success:function(){
+	                      console.log('success')
+	                      },
+
+	                    //통신 실패시 처리
+	                    error:function(){
+	                      console.log("error")
+	                    },
+	                 })
 			}
 		})
 
