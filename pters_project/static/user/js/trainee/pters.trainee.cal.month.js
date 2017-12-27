@@ -62,7 +62,6 @@ $(document).ready(function(){
 				var dayraw = dayobj.getDay();
 				var dayarry = ['일','월','화','수','목','금','토']
 				var day = dayarry[dayraw];
-				console.log(currentHour)
 				if(yy+'_'+mm+'_'+dd == oriYear+'_'+oriMonth+'_'+oriDate && info2[0]<=currentHour+Options.cancellimit){
 					var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
 					var infoText2 = "온라인 취소불가 일정 :"+info2[0]+"시 "+info2[1]+"분"
@@ -70,12 +69,14 @@ $(document).ready(function(){
 					$('#popup_info2').text(infoText2)
 					$('#popup_text1 span').addClass("limited")
 					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+					console.log('if디버깅:',info2[0],currentHour,Options.cancellimit)
 				}else{
 					var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
 					var infoText2 = info2[0]+"시 예약 취소 하시겠습니까?"
 					$('#popup_info').text(infoText)
 					$('#popup_info2').text(infoText2)
 					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+					console.log('else디버깅:',info2[0],currentHour,Options.cancellimit)
 				}
 			}else{
 				$('#addpopup').fadeIn('fast').css({'z-index':'103'})
@@ -115,11 +116,22 @@ $(document).ready(function(){
 			var dayraw = dayobj.getDay();
 			var dayarry = ['일','월','화','수','목','금','토']
 			var day = dayarry[dayraw];
-			var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-			var infoText2 = info2[0]+"시 취소 하시겠습니까?"
-			$('#popup_info').text(infoText)
-			$('#popup_info2').text(infoText2)
-			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+			if(yy+'_'+mm+'_'+dd == oriYear+'_'+oriMonth+'_'+oriDate && info2[0]<=currentHour+Options.cancellimit){
+				var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+				var infoText2 = "온라인 취소불가 일정 :"+info2[0]+"시 "+info2[1]+"분"
+				$('#popup_info').text(infoText)
+				$('#popup_info2').text(infoText2)
+				$('#popup_text1 span').addClass("limited")
+				$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+				console.log('if디버깅:',info2[0],currentHour,Options.cancellimit)
+			}else{
+				var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+				var infoText2 = info2[0]+"시 예약 취소 하시겠습니까?"
+				$('#popup_info').text(infoText)
+				$('#popup_info2').text(infoText2)
+				$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+				console.log('else디버깅:',info2[0],currentHour,Options.cancellimit)
+			}
 		}else{
 			$('#shade2').css({'display':'block'});
 			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>')

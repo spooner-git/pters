@@ -354,7 +354,7 @@ $(document).ready(function(){
               $('#'+targetTime+'g').addClass(cssClass)
           }
         }
-        timeGraphLimitSet(Options.limit)
+        //timeGraphLimitSet(Options.limit)
       }
 
       function timeGraphLimitSet(limit){
