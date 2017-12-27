@@ -31,10 +31,15 @@ $(document).ready(function(){
       $('#page-base').fadeOut();
       $('#page-base-addstyle').fadeIn();
       scrollToIndicator($('#memberEmail_add'))
-
+      if($('body').width()<600){
+        $('#page_managemember').hide();
+      }
     })
 
     $('#upbutton-x,.cancelBtn').click(function(){
+      if($('body').width()<600){
+        $('#page_managemember').show();
+      }
       $('#page_addmember').fadeOut('fast');
       $('#shade3').fadeOut('fast');
       $('#float_btn').fadeIn('fast');

@@ -26,6 +26,12 @@ a:focus, a:hover{
     transform: translateX(-50%);
 }
 
+.wrapunlimit{
+    width: 100%;
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+
 .wraptrainer{
     width: 100%;
     max-width: 750px !important;
@@ -308,6 +314,7 @@ a:focus, a:hover{
 
 #loginInfo{
     display: block;
+    margin-right: 70px;
 }
 
 .pcwhere, .pcwho{
@@ -390,6 +397,7 @@ a:focus, a:hover{
     width: 520px;
     top: 3px;
     text-align: center;
+    margin-left: 100px;
 }
 
 .centermenu_div{
@@ -418,7 +426,7 @@ a:focus, a:hover{
 
 .pclogout{
     position: absolute;
-    right: -57px;
+    right: 0px;
     top: 20px;
     font-size: 9.5px;
     border:0.5px solid #fe4e65;
@@ -476,6 +484,9 @@ a:focus, a:hover{
     font-size: 12px;
 }
 
+.pclogout{
+    display: none;
+}
 
 /*PC버전 상단,하단네비바*/
 
@@ -510,12 +521,16 @@ a:focus, a:hover{
 }
 
 
-@media(min-width:1024px){
+@media(min-width:900px){
     #loginInfo{
         display: inline-block;
     }
 
     .pcwhere, .pcwho{
+        display: inline-block;
+    }
+
+    .pclogout{
         display: inline-block;
     }
 
@@ -529,15 +544,6 @@ a:focus, a:hover{
     }
 }
 
-.pclogout{
-    display: none;
-}
-
-@media(min-width: 1150px){
-    .pclogout{
-        display: inline-block;
-    }
-}
 
 @media(min-width:1200px){
     #float_AD{
