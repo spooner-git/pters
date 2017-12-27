@@ -141,6 +141,8 @@
 	margin-bottom: 10px;
 	padding-left:15px;
 	padding-right:15px;
+	max-width: 800px;
+	margin:0 auto;
 }
 
 #planBoardWrap{
@@ -149,6 +151,8 @@
 	margin-bottom: 10px;
 	padding-left:16px;
 	padding-right:16px;
+	max-width: 800px;
+	margin:0 auto;
 }
 
 #trainerInfoWrap{
@@ -157,6 +161,8 @@
 	margin-bottom: 10px;
 	padding-left:16px;
 	padding-right:16px;
+	max-width: 800px;
+	margin:0 auto;
 }
 
 .countBoard{
@@ -202,8 +208,12 @@
 	margin-left: 5px;
 }
 
-.planBoard{
-	margin-top: 5px;
+.planBoard:first-child{
+	margin-top: 10px;
+	margin-bottom:10px;
+}
+
+.planBoard:last-child{
 	margin-bottom:10px;
 }
 

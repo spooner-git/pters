@@ -361,7 +361,7 @@ $(document).ready(function(){
 			};
 		}else if(Month==1){ //1월
 			for(var j=31-firstDayCurrentPage+1; j<=31 ;j++){
-				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+(Year-1)+'_'+(Month+11)+'_'+j+'>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
 			};
 		}
 		
@@ -392,12 +392,20 @@ $(document).ready(function(){
 
 		if(howmanyWeek5<=7 && howmanyWeek6==0){
 			for (var i=1; i<=7-howmanyWeek5;i++){
-			$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+				if(Month<12){
+					$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+				}else if(Month==12){
+					$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+				}
 			};
 			ad_month($('#week6'+Year+Month+'child tbody tr')) //2017.11.08추가 달력이 5주일때, 비어있는 6주차에 광고 입력
 		}else if(howmanyWeek6<7 && howmanyWeek6>0){
 			for (var i=1; i<=7-howmanyWeek6;i++){
-			$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+				if(Month<12){
+					$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+				}else if(Month==12){
+					$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+				}
 			};
 		}
 		for(i=1;i<=6;i++){
@@ -473,22 +481,25 @@ $(document).ready(function(){
 	//Start : 17, End : 6 current: 14
 		if(currentHour<Endtime || currentHour>=not_AvailableStartTime){
 			for(i=currentDate;i<=currentDate+14;i++){
-				if(i>lastDay[oriMonth]){
-				 $('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('notavailable')
+				if(i>lastDay[oriMonth-1] && oriMonth<12){
+				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
+				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
+					$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
 				}else{
-				 $('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')
+				 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')
 				}
 			}
 		}else{
 			for(i=currentDate;i<=currentDate+14;i++){
-				if(i>lastDay[oriMonth]){
-				 $('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth])+']').addClass('available')
+				if(i>lastDay[oriMonth-1] && oriMonth<12){
+				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
+				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
+					$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
 				}else{
-				 $('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('available')
+				 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('available')	
 				}
 			}
-		}
-		
+		}	
 	}
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
 
