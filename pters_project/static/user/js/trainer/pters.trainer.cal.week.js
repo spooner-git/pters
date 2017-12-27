@@ -834,10 +834,13 @@ $(document).ready(function(){
 		var yymmdd = ymdArry.join('')
 		for(i=1;i<=7;i++){
 		var scan = $('#slide'+Index+' #weekNum_'+i).attr('data-date')
-			if(yymmdd<=scan && scan<14+Number(yymmdd)){
+			if(yymmdd<=scan && scan<=14+Number(yymmdd)){
 				$('#slide'+Index+' #weekNum_'+i).addClass('reserveavailable')
 				
-			}else if(scan.substr(4,2) > mm && scan.substr(6,2)<Number(dd)+14-lastDay[currentMonth]){
+			}else if(scan.substr(0,4)==yy+1 && scan.substr(4,2) == '01' &&scan.substr(6,2)<=Number(dd)+14-lastDay[currentMonth]){
+				$('#slide'+Index+' #weekNum_'+i).addClass('reserveavailable')
+			}
+			else if(scan.substr(4,2) > mm && scan.substr(6,2)<=Number(dd)+14-lastDay[currentMonth]){
 				$('#slide'+Index+' #weekNum_'+i).addClass('reserveavailable')
 				
 			}else{
