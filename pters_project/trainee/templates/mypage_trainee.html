@@ -10,48 +10,72 @@
 {% block content %}
 
 <div class="subjectbar">
-    <span>나의 월별 현황</span>
+    <span>나의 월별 현황</span><span style="float: right;color: #cccccc;font-size: 12px;margin-right: 16px;">여기를 터치해서 그래프 접기</span>
 </div>
 
-<div id="ymdText">
-    <!--<img src="/static/user/res/icon-calendar-week.png" alt="" class="iconimg">-->
-    <a id="leftArrow" style="left: 6%;cursor: pointer;"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 6px;"></a>
-    <span id="yy"></span>
-    <a id="rightArrow" style="right: 6%;cursor: pointer;"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 6px;"></a>
-</div>
-
-<div id="graph" class="pters_graph">
-  
-  <div class="graph_main">
-    <div class="graph_vertical">
-      <div class="verti">30</div>
-      <div class="verti">25</div>
-      <div class="verti">20</div>
-      <div class="verti">15</div>
-      <div class="verti">10</div>
-      <div class="verti">5</div>
-      <div class="verti"></div>
+<div id="mygraph">
+    <div id="ymdText">
+        <!--<img src="/static/user/res/icon-calendar-week.png" alt="" class="iconimg">-->
+        <a id="leftArrow" style="left: 6%;cursor: pointer;"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 6px;"></a>
+        <span id="yy"></span>
+        <a id="rightArrow" style="right: 6%;cursor: pointer;"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 6px;"></a>
     </div>
-  </div>  
-  <div class="graph_horizontal">
-    <table>
-      <tr>
-        <td>1월</td>
-        <td>2월</td>
-        <td>3월</td>
-        <td>4월</td>
-        <td>5월</td>
-        <td>6월</td>
-        <td>7월</td>
-        <td>8월</td>
-        <td>9월</td>
-        <td>10월</td>
-        <td>11월</td>
-        <td>12월</td>
-      </tr>
-    </table>
-  </div>
-</div> 
+
+    <div id="graph" class="pters_graph">
+      <div class="graph_main">
+        <div class="graph_vertical">
+          <div class="verti">30</div>
+          <div class="verti">25</div>
+          <div class="verti">20</div>
+          <div class="verti">15</div>
+          <div class="verti">10</div>
+          <div class="verti">5</div>
+          <div class="verti"></div>
+        </div>
+      </div>  
+      <div class="graph_horizontal">
+        <table>
+          <tr>
+            <td>1월</td>
+            <td>2월</td>
+            <td>3월</td>
+            <td>4월</td>
+            <td>5월</td>
+            <td>6월</td>
+            <td>7월</td>
+            <td>8월</td>
+            <td>9월</td>
+            <td>10월</td>
+            <td>11월</td>
+            <td>12월</td>
+          </tr>
+        </table>
+      </div>
+    </div> 
+</div>
+
+<div id="countBoardWrap">
+    <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">예약 가능 횟수</p><p><span>10</span>회</p></div>
+    <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">PT 완료 횟수</p><p><span>6</span>회</p></div>    
+</div>
+
+<div id="planBoardWrap">
+    <div class="planBoard"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 PT 일정</p><p>2017년 7월 23일 오후 1시-2시</p></div>
+    <div class="planBoard"><p><img src="/static/user/res/member/icon-repeat.png" alt="">PT 반복 일정</p><p>매주 수요일 오후 3시 <span>반복종료:2017.12.31</span></p></div> 
+</div>
+
+<div id="dateBoardWrap">
+    <div class="dateBoard"><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 시작일</p><p>2017년 7월 23일</p></div>
+    <div class="dateBoard"><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 종료일</p><p>2018년 1월 3일</p></div>    
+</div>
+
+<div id="trainerInfoTap">
+    <img src="/static/user/res/member/icon-user.png" alt=""><span>담당 트레이너 정보</span>
+</div>
+<div id="trainerInfoWrap">
+    <div class="trainerInfo"><span>박서준 트레이너</span><img src="/static/user/res/member/icon-call.png" alt=""><img src="/static/user/res/member/icon-message.png" alt=""></div>
+</div>
+
 
 
 {% endblock %}
@@ -91,6 +115,15 @@
 
             $('#uptext').text("마이페이지")
             $('#upbutton-alarm').html("")
+
+            $('.subjectbar').click(function(){
+                if($('#mygraph').css('display')=='none'){
+                    $('#mygraph').show('fast','swing')    
+                }else{
+                    $('#mygraph').hide('fast','swing')
+                }
+                
+            })
             
         </script>
 
