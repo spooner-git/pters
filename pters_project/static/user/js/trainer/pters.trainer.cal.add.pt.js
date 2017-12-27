@@ -108,15 +108,27 @@ $(document).ready(function(){
          if(select_all_check==true){
              //document.getElementById('pt-add-form').submit();
              //ajax 회원정보 입력된 데이터 송신
+
+                  
+
                  $.ajax({
                     url:'/trainer/add_pt_logic/',
                     type:'POST',
                     data:$form.serialize(),
 
+                    beforeSend:function(){
+                      $('html').css("cursor","wait")
+                      $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif')
+                    },
+
                     //보내기후 팝업창 닫기
                     complete:function(){
                       closeAddPopup()
-                      console.log('complete')
+                      $('#calendar').show()
+                      $('#shade2').hide();
+                      $('html').css("cursor","auto")
+                      $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                      alert('complete: PT 일정 정상 등록')
                       },
 
                     //통신성공시 처리
@@ -126,7 +138,7 @@ $(document).ready(function(){
 
                     //통신 실패시 처리
                     error:function(){
-                      console.log("error")
+                      alert("error : 서버와 통신 실패")
                     },
                  })
 
