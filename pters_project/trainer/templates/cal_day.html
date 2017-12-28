@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-
+  <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 <!-- 로딩 
 <img src="/static/user/res/loader.gif" alt="데이터 로딩중" style="width:100%;" class="loaders">
   -->
@@ -134,6 +134,7 @@
     </div>
 
 <div id="page-ptadd" class="wrap">
+  
     {% if messages %}
         {% for message in messages %}
             <div id="inputError">
@@ -271,7 +272,7 @@
     </div> 
 
     <div class='popupBtn'>
-      <div class="submitBtn"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
+      <div class="submitBtn" id="submitBtn_pt"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
     </div>
 
 </div>
@@ -279,6 +280,7 @@
 
 
 <div id="page-offadd" class="wrap">
+
         {% if messages %}
         {% for message in messages %}
             <div id="inputError">
@@ -407,7 +409,7 @@
     </div>
     
     <div class='popupBtn'>
-      <div class="submitBtn"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
+      <div class="submitBtn" id="submitBtn_off"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
     </div>
 
   </div>
