@@ -704,7 +704,8 @@ img,a,div,span,p{
 	#calendar{
 		position: relative;
 		background-color: 	#ffffff;
-
+		padding-left: 0;
+		padding-right: 0;
 		top: 0;
 	}
 

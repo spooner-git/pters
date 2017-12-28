@@ -538,7 +538,7 @@ a:focus, a:hover{
         display: block;
         position: relative;
         width: 100%;
-        height: 132px;
+        height: 150px;
         background: #ffffff;
         z-index: 1;
     }
