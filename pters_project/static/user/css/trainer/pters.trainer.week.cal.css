@@ -306,6 +306,10 @@ img,a,div,span,p{
 	background: #f4f4f4;
 }
 
+.weektable{
+	background:#ffffff;
+}
+
 
 
 .arrowButton{
@@ -358,6 +362,7 @@ img,a,div,span,p{
 
 .slidegap{
 	width: 9.72%;
+	height: 29px;
 	color: transparent;
 	background: #ffffff;
 	border: 0;
@@ -386,7 +391,7 @@ td{
 }
 
 .td00,.td30{
-	background: #ffffff;
+	background: transparent;
 	position: relative;
 	height: 14px;
 }
@@ -668,6 +673,7 @@ td{
 
 	table{
 		border-bottom:0.5px solid #f4f4f4;
+		-moz-border-bottom:2px solid #f4f4f4;
 	}
 
 	.timeindex{
@@ -712,7 +718,7 @@ td{
 
 
 	.td00,.td30{
-		background: #ffffff;
+		background: transparent;
 		
 	}
 
