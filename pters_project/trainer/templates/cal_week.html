@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+  <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
   <form action="/trainer/daily_pt_delete/" id="daily-pt-delete-form" method="post">
     <input type="hidden" name="schedule_id" id="id_schedule_id">
@@ -288,7 +289,7 @@
     </div> 
 
     <div class='popupBtn'>
-      <div class="submitBtn"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
+      <div class="submitBtn" id="submitBtn_pt"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
     </div>
 
 </div>
@@ -424,7 +425,7 @@
     </div>
     
     <div class='popupBtn'>
-      <div class="submitBtn"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
+      <div class="submitBtn" id="submitBtn_off"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
     </div>
 
   </div>

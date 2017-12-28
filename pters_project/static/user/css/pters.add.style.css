@@ -293,6 +293,16 @@ img,a,div,span,p{
 	color: #3d3b3b;
 }
 
+.ajaxloadingPC{
+	position: fixed;
+	display: none;
+	width: 62px;
+	top: 50%;
+	left: 50%;
+	transform:translate(-50%,-50%);
+	z-index: 202;
+}
+
 .submitBtnActivated{
 	color: #ffffff !important;
 	background:#fe4e65 !important;

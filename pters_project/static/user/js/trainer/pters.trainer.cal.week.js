@@ -290,70 +290,90 @@ $(document).ready(function(){
 		})
 		*/
 
-		$('#popup_text3').click(function(){
-			var $ptdelform = $('#daily-pt-delete-form');
-			var $offdelform = $('#daily-off-delete-form');
-			if(schedule_on_off==1){
-					//PT 일정 삭제시
-					//document.getElementById('daily-pt-delete-form').submit();
-					$.ajax({
-	                    url:'/trainer/daily_pt_delete/',
-	                    type:'POST',
-	                    data:$ptdelform.serialize(),
+	$('#popup_text3').click(function(){
+		var $ptdelform = $('#daily-pt-delete-form');
+		var $offdelform = $('#daily-off-delete-form');
+		if(schedule_on_off==1){
+				//PT 일정 삭제시
+				//document.getElementById('daily-pt-delete-form').submit();
+				$.ajax({
+                    url:'/trainer/daily_pt_delete/',
+                    type:'POST',
+                    data:$ptdelform.serialize(),
 
-	                    beforeSend:function(){
-	                      $('html').css("cursor","wait")
-	                    },
+                    beforeSend:function(){
+                     	deleteBeforeSend();
+                    },
 
-	                    //보내기후 팝업창 닫기
-	                    complete:function(){
-	                    	$('html').css("cursor","auto")
-	                     	if($('#cal_popup3').css('display')=='block'){
-								$("#cal_popup3").css({'display':'none','z-index':'-2'})
-								$('#shade2').css({'display':'none'});
-							}
-	                      },
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    	closeDeletePopup();
+                    	deleteCompleteSend();
+                      },
 
-	                    //통신성공시 처리
-	                    success:function(){
-	                      console.log('success')
-	                      alert("complete:일정 삭제 완료")
-	                      },
+                    //통신성공시 처리
+                    success:function(){
+                      console.log('success')
+                      },
 
-	                    //통신 실패시 처리
-	                    error:function(){
-	                      console.log("error")
-	                      alert("error:서버 통신 실패")
-	                    },
-	                 })
-			}
-			else{
-					//document.getElementById('daily-off-delete-form').submit();
-					$.ajax({
-	                    url:'/trainer/daily_off_delete/',
-	                    type:'POST',
-	                    data:$offdelform.serialize(),
+                    //통신 실패시 처리
+                    error:function(){
+                      console.log("error")
+                    },
+                 })
+		}
+		else{
+				//document.getElementById('daily-off-delete-form').submit();
+				$.ajax({
+                    url:'/trainer/daily_off_delete/',
+                    type:'POST',
+                    data:$offdelform.serialize(),
 
-	                    //보내기후 팝업창 닫기
-	                    complete:function(){
-	                      if($('#cal_popup3').css('display')=='block'){
-								$("#cal_popup3").css({'display':'none','z-index':'-2'})
-								$('#shade2').css({'display':'none'});
-							}
-	                      },
+                    beforeSend:function(){
+                    	deleteBeforeSend();
+                    },
 
-	                    //통신성공시 처리
-	                    success:function(){
-	                      console.log('success')
-	                      },
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    	closeDeletePopup();
+                      	deleteCompleteSend();
+                      },
 
-	                    //통신 실패시 처리
-	                    error:function(){
-	                      console.log("error")
-	                    },
-	                 })
-			}
-		})
+                    //통신성공시 처리
+                    success:function(){
+                      console.log('success')
+                      },
+
+                    //통신 실패시 처리
+                    error:function(){
+                      console.log("error")
+                    },
+                 })
+		}
+	})
+
+	function closeDeletePopup(){
+		if($('#cal_popup3').css('display')=='block'){
+			$("#cal_popup3").css({'display':'none','z-index':'-2'})
+			$('#shade2').css({'display':'none'});
+		}
+	}
+
+	function deleteBeforeSend(){
+		$('html').css("cursor","wait");
+        $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+        $('.ajaxloadingPC').show();
+        $('#shade2').css({'z-index':'200'});
+	}
+
+	function deleteCompleteSend(){
+		$('html').css("cursor","auto");
+        $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+        $('.ajaxloadingPC').hide();
+        $('#shade2').css({'z-index':'101'});
+        $('#shade2').hide();
+        alert('complete: 일정 삭제 성공')
+	}
 
 
 

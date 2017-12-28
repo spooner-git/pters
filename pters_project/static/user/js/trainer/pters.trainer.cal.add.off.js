@@ -98,32 +98,25 @@ $(document).ready(function(){
        		}
     	 }
 
-      $("#upbutton-check, .submitBtn").click(function(){
+      $("#upbutton-check, #submitBtn_off").click(function(){
         var $form = $('#off-add-form')
+        
          if(select_all_check==true){
              //document.getElementById('off-add-form').submit();
             //ajax 회원정보 입력된 데이터 송신
-
-                 
-                 
                  $.ajax({
                     url:'/trainer/add_off_logic/',
                     type:'POST',
                     data:$form.serialize(),
 
                     beforeSend:function(){
-                      $('html').css("cursor","wait")
-                      $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif')
+                      beforeSend_off();
                     },
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-                      closeAddPopup()
-                      $('#calendar').show()
-                      $('#shade2').hide();
-                      $('html').css("cursor","auto")
-                      $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                      alert('complete: OFF 일정 정상 등록')
+                      completeSend_off();
+                      closeAddPopup_off();
                       },
 
                     //통신성공시 처리
@@ -142,7 +135,24 @@ $(document).ready(function(){
          }
      })
 
-      function closeAddPopup(){
+      function beforeSend_off(){
+        $('html').css("cursor","wait");
+        $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+        $('.ajaxloadingPC').show();
+        $('#shade2').css({'z-index':'200'});
+     }
+
+     function completeSend_off(){
+        $('html').css("cursor","auto");
+        $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+        $('.ajaxloadingPC').hide();
+        $('#shade2').css({'z-index':'101'});
+        $('#shade2').hide();
+        $('#calendar').show();
+        alert('complete: OFF 일정 정상 등록')
+     }
+
+      function closeAddPopup_off(){
         $('body').css('overflow-y','overlay')
         $('#shade3').fadeOut();
         $('#page-ptadd').fadeOut('fast','swing');
@@ -151,6 +161,7 @@ $(document).ready(function(){
         $('#float_btn').removeClass('rotate_btn');
         $('#page-base').fadeIn();
         $('#page-base-addstyle').fadeOut();
+        $('.submitBtn').removeClass('submitBtnActivated');
 
         $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
