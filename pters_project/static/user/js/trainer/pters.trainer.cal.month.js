@@ -488,7 +488,6 @@ $(document).ready(function(){
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
 
 
-
 	
 
 	function DBdataProcessMonthTrainer(){
@@ -499,12 +498,14 @@ $(document).ready(function(){
 		var datasum = []
 		for(var i=0; i<len; i++){ //객체화로 중복 제거
 			summaryArray[classDateArray[i]] = classDateArray[i]
-			datasum[i] = classDateArray[i]+"_ "+classTimeArray_member_name[i]
+			datasum[i] = classDateArray[i]+"/"+classTimeArray_member_name[i]
 		}
 		for(var i in summaryArray){ //중복 제거된 배열
+			/*
 			if(i.length<10){
-				i = i+"_ "
+				i = i+"_"
 			}
+			*/
 			summaryArrayResult.push(i)
 		}
 
@@ -514,7 +515,8 @@ $(document).ready(function(){
 			var scan = summaryArrayResult[i]
 			countResult[i]=0
 			for(var j=0; j<len; j++){
-				if(scan == datasum[j].substr(0,10)){
+				var datesplit = datasum[j].split('/')
+				if(scan == datesplit[0]){
 					countResult[i] = countResult[i]+1
 				}
 			}
@@ -527,7 +529,6 @@ $(document).ready(function(){
 			var dd = splited[2];
 			dateResult[i] = yy+'_'+mm+'_'+dd
 		}
-		
 	}
 
 
