@@ -139,15 +139,15 @@ $(document).ready(function(){
         $('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
-        $('#shade2').css({'z-index':'200'});
+        $('#shade').css({'z-index':'200'});
      }
 
      function completeSend_off(){
         $('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade2').css({'z-index':'101'});
-        $('#shade2').hide();
+        $('#shade').css({'z-index':'103'});
+        $('#shade').hide();
         $('#calendar').show();
         alert('complete: OFF 일정 정상 등록')
      }
