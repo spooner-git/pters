@@ -420,10 +420,11 @@ table{
 	top: -1px;
 	left: 0px;
 	width: 100%;
-	background: #ffffff;
+	background: #fe4e65;
 	border: 0.5px solid #fe4e65;
 	z-index: 100;
 	cursor: pointer;
+	opacity: 0.9;
 }
 
 .classTime_re{
@@ -474,7 +475,7 @@ table{
 	font-size: 14px;
 	font-weight: bold;
 	letter-spacing: -0.3px;
-	color: #282828;
+	color: #ffffff;
 	cursor: pointer;
 }
 
@@ -485,7 +486,7 @@ table{
 	vertical-align: middle;
 	font-size: 12px;
 	letter-spacing: -0.3px;
-	color: #fe4e65;
+	color: #ffffff;
 	cursor: pointer;
 }
 
@@ -508,7 +509,7 @@ table{
 	font-size: 14px;
 	font-weight: bold;
 	letter-spacing: -0.3px;
-	color: #282828;
+	color: #ffffff;
 	cursor: pointer;
 }
 
@@ -519,7 +520,7 @@ table{
 	vertical-align: middle;
 	font-size: 12px;
 	letter-spacing: -0.3px;
-	color: #fe4e65;
+	color: #ffffff;
 	cursor: pointer;
 }
 
@@ -542,7 +543,7 @@ table{
 	font-size: 14px;
 	font-weight: bold;
 	letter-spacing: -0.3px;
-	color: #282828;
+	color: #ffffff;
 	cursor: pointer;
 }
 
@@ -553,7 +554,7 @@ table{
 	vertical-align: middle;
 	font-size: 12px;
 	letter-spacing: -0.3px;
-	color: #fe4e65;
+	color: #ffffff;
 	cursor: pointer;
 }
 

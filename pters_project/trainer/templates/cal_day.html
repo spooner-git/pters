@@ -441,11 +441,13 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 2,
-                speed : 80,
+                speed : 120,
                 preventClicks : true,
-                keyboardControl : true,
                 preventClicksPropagation : true,
-                threshold : 10,
+                keyboardControl : true,
+                threshold : 50,
+                resistance: 1,
+                
             });
             
 

@@ -507,7 +507,6 @@ $(document).ready(function(){
 		var slideIndex = $('#slide'+Index);
 		var currentDates = Number(Dates)+W;
 		var dateinfo = new Date();
-		console.log(currentDates)
 		var currentDay_ = dateinfo.getDay(Year,Month,currentDates)
 		var monthdata = currentMonth
 
@@ -522,8 +521,6 @@ $(document).ready(function(){
 			var textToAppend = '<div id="'+i+'H_'+Year+'_'+Month+'_'+currentDate+'_'+Week+'" class="time-style">'
 			var divToAppend = $(textToAppend)
 			var slidevalue = "test"
-
-			console.log('lastDay',lastDay[monthdata])
 
 			switch(currentDay_){
 				case 0 :
@@ -540,7 +537,6 @@ $(document).ready(function(){
 						td1[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 						td2[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}else if(currentDates+z<=0){
-						console.log("kita!",Month-1)
 						if(Month-1<1){
 							td1[z]='<td'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
 							td2[z]='<td'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
@@ -748,9 +744,6 @@ $(document).ready(function(){
 		var lastDayThisMonth = lastDay[currentMonth];
 		var swiperPage = $('#slide'+Index+' div:nth-child(2)') 
 
-		console.log('#slide'+Index)
-		console.log(swiperPage.attr('id'))
-
 		for(var i=2; i<=8; i++){			
 			var dateID = swiperPage.find('td:nth-child('+i+')').attr('id').split('_');
 			var yy = dateID[0];
@@ -799,7 +792,6 @@ $(document).ready(function(){
 			if(dd.length<2){
 				var dd = '0'+dateID[2]
 			}
-			console.log(yy+mm+dd)
 			if(scan == yy+mm+dd){
 				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY')
 				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
@@ -820,7 +812,6 @@ $(document).ready(function(){
 			var currentDD = '0'+currentDD
 		}
 		var todayInfo = String(currentYear) + currentMM + currentDD
-		console.log(todayInfo+'___________')
 		var viewdayInfomin = $('.swiper-slide-active'+' #weekNum_1').attr('data-date');
 		var viewdayInfomax = $('.swiper-slide-active'+' #weekNum_7').attr('data-date');
 
@@ -926,7 +917,6 @@ $(document).ready(function(){
 
 	function scrollToIndicator(){
 		var offset = $('.currentTimeBlackBox').offset();
-		console.log(offset)
 		if(currentHour>=5){
 			$('#slide2').animate({scrollTop : offset.top -180},500)
 		}
@@ -1024,8 +1014,6 @@ $(document).ready(function(){
 				if(idMonth.length<2){
 					var idMonth = '0'+idMonth
 				}
-
-				console.log(idYear,idMonth,idDay)
 
 				
 				if(idYear+idMonth+idDay>=start && idYear+idMonth+idDay<=end){
