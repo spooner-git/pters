@@ -396,8 +396,10 @@ $(document).ready(function(){
 	myswiper.on('SlidePrevEnd',function(){
 		dateText();
 		slideControl.prepend();
-		
 	});
+
+
+
 	
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {
@@ -662,7 +664,6 @@ $(document).ready(function(){
 			var pageDD = '0'+pageDD
 		}
 		var viewdayInfo = pageYY + pageMM + pageDD
-		console.log(viewdayInfo,todayInfo)
 		if(viewdayInfo>todayInfo){
 			$('._pinkarrowbefore').removeClass('setunVisible')
 			$('._pinkarrowafter').addClass('setunVisible')

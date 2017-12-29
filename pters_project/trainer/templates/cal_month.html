@@ -236,11 +236,12 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 1,
-                speed : 80,
+                speed : 120,
                 preventClicks : true,
                 keyboardControl : true,
                 preventClicksPropagation : true,
-                threshold : 10,
+                threshold : 50,
+                resistance: 1,
             });
 
             $('.arrowButton a:nth-child(1)').click(function(){
