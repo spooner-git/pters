@@ -28,7 +28,9 @@
     <body>
     {% block navbar %}
         <div id="shade"></div>
+
         <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
+            <div id="navshade"></div>
             <div class="container" style="max-width:1000px;">
                 <div class="navbar-header">
                     <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="openNav()">
@@ -44,7 +46,7 @@
                         <a href="{% url 'trainer:alarm' %}"><img src={% static "user/res/main/alarm-on.png" %} style="width:20px;"></a>
                     </button>
                     
-                    <div id="outer_Sidenav" class="outer_Sidenav sidenav">
+                    <div id="outer_Sidenav" class="outer_Sidenav">
                       
                         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     </div>
@@ -185,17 +187,17 @@
     <script type="text/javascript" src={% static "user/js/pters.base.set.js" %}></script>
     <script>
              function openNav(){
-               $("#outer_Sidenav").css({"width":"100%"});
+               $("#outer_Sidenav").show();
                $("#inner_Sidenav").css({'width':'250px'});
+               $('#float_btn_wrap, #float_btn').fadeOut()
                //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
-               $('#shade').show().css({'z-index':'150'});
              }
 
              function closeNav(){
-              $("#outer_Sidenav").css("width","0");
+              $("#outer_Sidenav").hide();
               $("#inner_Sidenav").css({'width':'0'});
+              $('#float_btn_wrap, #float_btn').fadeIn()
               //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
-              $('#shade').hide().css({'z-index':'-1'});
              }; 
 
              var Options = {

@@ -38,7 +38,7 @@ $(document).ready(function(){
 	$('#upbutton-x').click(function(){
 		$('#calendar').show()
 	    $('#shade3').fadeOut();
-	    $('#shade2').hide();
+	    $('#shade').hide();
 	    $('#page-ptadd').fadeOut('fast','swing');
 	    $('#page-offadd').fadeOut('fast','swing');
 	    $('#float_btn_wrap').fadeIn();
@@ -78,7 +78,7 @@ $(document).ready(function(){
 
   //PC 스타일
   	$('.cancelBtn').click(function(){
-	    $('#shade2').hide();
+	    $('#shade').hide();
 	    $('#page-ptadd').fadeOut('fast','swing');
 	    $('#page-offadd').fadeOut('fast','swing');
 	    $('#float_btn_wrap').fadeIn();
@@ -125,7 +125,7 @@ $(document).ready(function(){
 	//스케쥴 클릭시 팝업 Start
 		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
-			$('#shade2').css({'display':'block'});
+			$('#shade').css({'display':'block'});
 			console.log($(this).attr('class-time')); //현재 클릭한 요소의 class-time 요소 값 보기
 			                                         //형식예: 2017_10_7_6_00_2_원빈
 			console.log($(this).attr('schedule-id'));
@@ -170,7 +170,7 @@ $(document).ready(function(){
 	//Off 일정 클릭시 팝업 Start
 		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
-			$('#shade2').css({'display':'block'});
+			$('#shade').css({'display':'block'});
 			console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
 			                                         //형식예: 2017_10_7_6_00_2_원빈
 			console.log($(this).attr('off-schedule-id'));
@@ -213,21 +213,21 @@ $(document).ready(function(){
 	$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup').css('display')=='block'){
 				$("#cal_popup").css({'display':'none','z-index':'-2'})
-				$('#shade2').css({'display':'none'});
+				$('#shade').css({'display':'none'});
 			}
 	})
 
 	$('#btn_close3').click(function(){
 			if($('#cal_popup3').css('display')=='block'){
 					$("#cal_popup3").css({'display':'none','z-index':'-2'})
-					$('#shade2').css({'display':'none'});
+					$('#shade').css({'display':'none'});
 				}
 	})
 
 	$('#popup_text4').click(function(){
 			if($('#cal_popup3').css('display')=='block'){
 					$("#cal_popup3").css({'display':'none','z-index':'-2'})
-					$('#shade2').css({'display':'none'});
+					$('#shade').css({'display':'none'});
 				}
 	})
 
@@ -315,7 +315,7 @@ $(document).ready(function(){
 	function closeDeletePopup(){
 		if($('#cal_popup3').css('display')=='block'){
 			$("#cal_popup3").css({'display':'none','z-index':'-2'})
-			$('#shade2').css({'display':'none'});
+			$('#shade').css({'display':'none','z-index':'100'});
 		}
 	}
 
@@ -323,28 +323,27 @@ $(document).ready(function(){
 		$('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
-        $('#shade2').css({'z-index':'200'});
+        $('#shade').css({'display':'block','z-index':'200'});
 	}
 
 	function deleteCompleteSend(){
 		$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade2').css({'z-index':'101'});
-        $('#shade2').hide();
+        $('#shade').hide();
         alert('complete: 일정 삭제 성공')
 	}
 
 	//플로팅 버튼 Start
 	$('#float_btn').click(function(){
 		$("#float_btn").animate({opacity:'1'})
-		if($('#shade2').css('display')=='none'){
-			$('#shade2').css({'display':'block'});
+		if($('#shade').css('display')=='none'){
+			$('#shade').show();
 			$('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
 			$('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
 			$('#float_btn').addClass('rotate_btn');
 		}else{
-			$('#shade2').css({'display':'none'});
+			$('#shade').hide();
 			$('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 			$('#float_btn').removeClass('rotate_btn');
 		}
