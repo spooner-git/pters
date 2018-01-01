@@ -719,7 +719,10 @@ td{
 
 	.td00,.td30{
 		background: transparent;
-		
+	}
+
+	.td00:hover,.td30:hover{
+		background: #cccccc;
 	}
 
 	.weekToday-style{
