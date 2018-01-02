@@ -67,4 +67,3 @@ def date_check_func(training_dt, add_start_dt, add_end_dt, origin_start_dt, orig
             error = training_dt + '등록 시간이 겹칩니다.'
 
     return error
-
