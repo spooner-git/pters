@@ -356,7 +356,6 @@ $(document).ready(function(){
 	})
 
 	function ajaxClassTime(){
-      $('.classTime,.offTime').parent().html('<div></div>')
             $.ajax({
               url: '/trainer/cal_day_ajax',
               dataType : 'html',
@@ -383,10 +382,19 @@ $(document).ready(function(){
                 offScheduleIdArray = jsondata.offScheduleIdArray
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
+                $('.classTime,.offTime').parent().html('<div></div>')
                 classTime();
                 offTime();
-                console.log(classTimeArray)
-                console.log(offTimeArray)
+
+                /*팝업의 timegraph 업데이트*/
+                classDateData = []
+                classTimeData = []
+                offDateData=[]
+                offTimeData = []
+                offAddOkArray = [] //OFF 등록 시작 시간 리스트
+                durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
+                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
               },
 
               complete:function(){
@@ -488,7 +496,7 @@ $(document).ready(function(){
 	dateText();
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
-	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray);
+	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray,"off");
 	addcurrentTimeIndicator_blackbox()
 	//addcurrentTimeIndicator();
 	classTime(); //PT수업 시간에 핑크색 박스 표시
@@ -1009,52 +1017,67 @@ $(document).ready(function(){
 	}
 
 
-	function DBdataProcess(startarray,endarray,result,option){
-		//DB데이터 가공
-		var classTimeLength = startarray.length
-    	var startlength = startarray.length;
-    	var endlength = endarray.length;
-    	var resultarray = []
+	function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
+    //DB데이터 가공
+      var classTimeLength = startarray.length
+      var startlength = startarray.length;
+      var endlength = endarray.length;
+      var resultarray = []
 
-    	for(i=0;i<classTimeLength; i++){
-    		var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
-    		var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
-    		var startSplitArray= start.split("_"); 
-    		var endSplitArray = end.split("_");
-    		//["2017", "10", "7", "6", "00", "오전"]
+      for(i=0;i<classTimeLength; i++){
+        var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
+        var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
+        var startSplitArray= start.split("_"); 
+        var endSplitArray = end.split("_");
+        //["2017", "10", "7", "6", "00", "오전"]
    
-    		if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
-    			startSplitArray[3] = String(Number(startSplitArray[3])+12);
-    		}
+       if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
+          startSplitArray[3] = String(Number(startSplitArray[3])+12);
+        }
 
-    		if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
-    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
-    		}
+        if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
+          endSplitArray[3] = String(Number(endSplitArray[3])+12); 
+        }
 
-    		if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
-    			startSplitArray[3] = String(Number(startSplitArray[3])+12);	
-    		}
+        if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
+          startSplitArray[3] = String(Number(startSplitArray[3])+12); 
+        }
 
-    		if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
-    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
-    		}
-    		
-    		var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
-    		if(dura>0){
-    			startSplitArray[5] = String(dura)	
-    		}else{
-    			startSplitArray[5] = String(dura+24)
-    		}
+        if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
+          endSplitArray[3] = String(Number(endSplitArray[3])+12); 
+        }
+        
+        var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+        if(dura>0){
+          startSplitArray[5] = String(dura) 
+        }else{
+          startSplitArray[5] = String(dura+24)
+        }
 
-    		if(option=="class"){
-    			startSplitArray.push(classTimeArray_member_name[i])	
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
-    		}else{
-    			startSplitArray.push(classTimeArray_member_name[i])	
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);		
-    		}	
-  	    }
-	}
+
+        if(option=="class"){
+          startSplitArray.push(classTimeArray_member_name[i]) 
+          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
+        }else if(option=="off"){
+          startSplitArray.push(classTimeArray_member_name[i]) 
+          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);   
+        }else if(option=="member"){
+          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);    
+          result2.push(startSplitArray[3]+":"+startSplitArray[4]);
+        }else if(option=="graph"){
+            var mm = startSplitArray[1]
+            var dd = startSplitArray[2]
+            if(mm.length<2){
+              var mm = '0'+startSplitArray[1]
+            }
+            if(dd.length<2){
+              var dd = '0'+startSplitArray[2]
+            }
+            result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
+            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
+        }
+      }
+    }
 
 
 
@@ -1122,31 +1145,117 @@ $(document).ready(function(){
     }
 
 
+    function startTimeSet(){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21];
+        startTimeArraySet(); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
+        var offOkLen = offAddOkArray.length
+        var startTimeList = $('#starttimes,#starttimes_off');
+        var timeArray = [];
+        for(var i=0; i<offOkLen; i++){
+          var offHour = offAddOkArray[i];
+          if(offHour<12){
+            var offText = '오전 '
+            var offHours = offHour;
+          }else if(offHour==24){
+            var offText = '오전 '
+            var offHours = offHour-12
+          }else if(offHour==12){
+            var offText = '오후 '
+            var offHours = offHour
+          }else{
+            var offHours = offHour-12
+            var offText = '오후 '
+          }
+          if(offHour.length<2){
+            timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
+          }else{
+            timeArray[i] ='<li><a data-trainingtime="'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
+          }
+        }
+        timeArray[offOkLen]='<li><a data-trainingtime="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>'
+        var timeArraySum = timeArray.join('')
+        startTimeList.html(timeArraySum)
+      }
 
+      function startTimeArraySet(){ //offAddOkArray 채우기 : 시작시간 리스트 채우기
+        offAddOkArray = []
+        for(i=5;i<=24;i++){
+          if(!$('#'+i+'g').hasClass('pinktimegraph') == true && !$('#'+i+'g').hasClass('greytimegraph') == true){
+            offAddOkArray.push(i);
+          }
+        }
+      }
 
-/*
-	//ajax////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//연월 표기하는 상단 바를 눌렀을때 수업시간을 불러와서 표기한다.
-          $('#ymdText').click(function(){
-            $.ajax({
-              url:'/static/user/js/ajax/dblist.js',
-              dataType : 'script',
-              success:function(data){
-                var classTimeArray_start_date=[]
-                var classTimeArray_start_date = JSON.parse(data)
-                var jdata = JSON.parse(data)
-                for(i=0;i<jdata.length;i++){
-                  classTimeArray_start_date.push(jdata[i])
-                }
-                DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
-                classTime();
+      function durTimeSet(selectedTime){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
+        var len = offAddOkArray.length;
+        var durTimeList = $('#durations')
+        var index = offAddOkArray.indexOf(Number(selectedTime));
+        var substr = offAddOkArray[index+1]-offAddOkArray[index];
+       if(substr>1){
+
+          var fininfo = Number(selectedTime)+1
+          if(fininfo>12){
+             if(fininfo==25){
+               var fininfo = '오전 1'
+             }else if(fininfo==24){
+               var fininfo = '오전 12'
+             }else{
+               var fininfo = '오후'+(fininfo-12)  
+             }
+           }else if(fininfo==12){
+             var fininfo = '오후'+fininfo  
+           }else{
+             var fininfo = '오전'+fininfo
+           }
+          durTimeList.html('<li><a data-dur="1" class="pointerList">1시간'+' (~'+fininfo+'시)'+'</a></li>')
+        
+        }else{
+
+          durTimeList.html('')
+          for(var j=index; j<=len; j++){
+            
+            var fininfo = Number(selectedTime)+(j-index+1)
+            if(fininfo>12){
+              if(fininfo==25){
+                var fininfo = '오전 1'
+              }else if(fininfo==24){
+                var fininfo = '오전 12'
+              }else{
+                var fininfo = '오후'+(fininfo-12)  
               }
+            }else if(fininfo==12){
+              var fininfo = '오후'+fininfo  
+            }else{
+              var fininfo = '오전'+fininfo
+            }
 
-            })
-          })
+            if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>') 
+            }
+            else if(offAddOkArray[j-1]== null && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]>=2){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+              break;
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+              //break;
+            }
+            else if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+            else if(offAddOkArray[j-1]==null && offAddOkArray[j+1] == null){
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+            }
+          }
+        }
+         durTimeList.append('<li><a data-dur="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>')
+      }
 
-	//ajax////////////////////////////////////////////////////////////////////////////////////////////////////////          
-*/
 
 });//document(ready)
 

@@ -136,7 +136,7 @@ $(document).ready(function(){
      })
 
       function ajaxClassTime(){
-      $('.classTime,.offTime').parent().html('<div></div>')
+      
             $.ajax({
               url: '/trainer/cal_day_ajax',
               dataType : 'html',
@@ -163,6 +163,7 @@ $(document).ready(function(){
                 offScheduleIdArray = jsondata.offScheduleIdArray
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
+                $('.classTime,.offTime').parent().html('<div></div>')
                 classTime();
                 offTime();
 
@@ -417,8 +418,8 @@ $(document).ready(function(){
         timeArray[offOkLen]='<li><a data-trainingtime="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>'
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
-        console.log(offAddOkArray)
       }
+
 
     function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
     //DB데이터 가공

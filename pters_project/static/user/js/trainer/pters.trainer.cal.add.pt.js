@@ -140,7 +140,6 @@ $(document).ready(function(){
 
 
      function ajaxClassTime(){
-      $('.classTime,.offTime').parent().html('<div></div>')
             $.ajax({
               url: '/trainer/cal_day_ajax',
               dataType : 'html',
@@ -167,6 +166,7 @@ $(document).ready(function(){
                 offScheduleIdArray = jsondata.offScheduleIdArray
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
+                $('.classTime,.offTime').parent().html('<div></div>')
                 classTime();
                 offTime();
 
@@ -411,7 +411,7 @@ $(document).ready(function(){
       function startTimeSet(){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21];
         startTimeArraySet(); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
         var offOkLen = offAddOkArray.length
-        var startTimeList = $('#starttimes');
+        var startTimeList = $('#starttimes,#starttimes_off');
         var timeArray = [];
         for(var i=0; i<offOkLen; i++){
           var offHour = offAddOkArray[i];
@@ -438,6 +438,7 @@ $(document).ready(function(){
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
       }
+      
 
     function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
     //DB데이터 가공
