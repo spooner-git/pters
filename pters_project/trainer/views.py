@@ -885,6 +885,7 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
             error = date_check_func(training_date, start_date, end_date,
                                     month_class.start_dt, month_class.end_dt)
             if error is not None:
+                print(error)
                 break
 
     if error is None:
@@ -910,6 +911,7 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
                     break
 
             if error is not None:
+                print(error)
                 break
 
     if error is None:
@@ -1126,7 +1128,7 @@ def add_off_logic(request):
         error = '진행 시간을 선택해 주세요.'
     elif training_time == '':
         error = '시작 시간을 선택해 주세요.'
-    elif next_page =='':
+    elif next_page == '':
         error = '시작 시간을 선택해 주세요.'
 
     if error is None:
