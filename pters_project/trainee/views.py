@@ -318,6 +318,10 @@ def pt_delete_logic(request):
             error = '회원 PT 정보가 존재하지 않습니다'
 
     if error is None:
+        if start_date < timezone.now():
+            error = '이미 지난 일정입니다.'
+
+    if error is None:
         with transaction.atomic():
             lecture_schedule_data.mod_dt = timezone.now()
             lecture_schedule_data.use = 0
