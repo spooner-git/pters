@@ -296,7 +296,6 @@ $(document).ready(function(){
 		var $offdelform = $('#daily-off-delete-form');
 		if(schedule_on_off==1){
 				//PT 일정 삭제시
-				//document.getElementById('daily-pt-delete-form').submit();
 				$.ajax({
                     url:'/trainer/daily_pt_delete/',
                     type:'POST',
@@ -306,15 +305,17 @@ $(document).ready(function(){
                      	deleteBeforeSend();
                     },
 
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                    	closeDeletePopup();
-                    	deleteCompleteSend();
-                      },
-
                     //통신성공시 처리
                     success:function(){
+                      closeDeletePopup();
+                      deleteCompleteSend();
+                      ajaxClassTime()
                       console.log('success')
+                      },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    	
                       },
 
                     //통신 실패시 처리
@@ -324,7 +325,6 @@ $(document).ready(function(){
                  })
 		}
 		else{
-				//document.getElementById('daily-off-delete-form').submit();
 				$.ajax({
                     url:'/trainer/daily_off_delete/',
                     type:'POST',
@@ -334,15 +334,17 @@ $(document).ready(function(){
                     	deleteBeforeSend();
                     },
 
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                    	closeDeletePopup();
-                      	deleteCompleteSend();
-                      },
-
                     //통신성공시 처리
                     success:function(){
+                      closeDeletePopup();
+                      deleteCompleteSend();
+                      ajaxClassTime()
                       console.log('success')
+                      },
+
+                     //보내기후 팝업창 닫기
+                    complete:function(){
+                      
                       },
 
                     //통신 실패시 처리
@@ -352,6 +354,50 @@ $(document).ready(function(){
                  })
 		}
 	})
+
+	function ajaxClassTime(){
+      $('.classTime,.offTime').parent().html('<div></div>')
+            $.ajax({
+              url: '/trainer/cal_day_ajax',
+              dataType : 'html',
+
+              beforeSend:function(){
+              		deleteBeforeSend();
+              },
+
+              success:function(data){
+              	var jsondata = JSON.parse(data);
+                classTimeArray = [];
+                offTimeArray = [];
+                classTimeArray_member_name = [];
+                classArray_lecture_id = [];
+                scheduleIdArray = [];
+                offScheduleIdArray = [];
+                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+                classTimeArray_member_name = jsondata.classTimeArray_member_name
+                classArray_lecture_id = jsondata.classArray_lecture_id
+                scheduleIdArray = jsondata.scheduleIdArray
+                offScheduleIdArray = jsondata.offScheduleIdArray
+                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
+                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
+                classTime();
+                offTime();
+                console.log(classTimeArray)
+                console.log(offTimeArray)
+              },
+
+              complete:function(){
+              	deleteCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })    
+     }
 
 	function closeDeletePopup(){
 		if($('#cal_popup3').css('display')=='block'){
@@ -371,8 +417,7 @@ $(document).ready(function(){
 		$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade').hide();
-        alert('complete: 일정 삭제 성공')
+        $('#shade').css({'display':'none','z-index':'100'});
 	}
 
 
