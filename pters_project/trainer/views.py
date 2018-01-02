@@ -885,7 +885,6 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
             error = date_check_func(training_date, start_date, end_date,
                                     month_class.start_dt, month_class.end_dt)
             if error is not None:
-                print(error)
                 break
 
     if error is None:
@@ -911,7 +910,6 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
                     break
 
             if error is not None:
-                print(error)
                 break
 
     if error is None:
