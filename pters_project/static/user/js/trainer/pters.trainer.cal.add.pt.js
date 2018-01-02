@@ -123,11 +123,13 @@ $(document).ready(function(){
                     complete:function(){
                       completeSend();
                       closeAddPopup();
+
                       },
 
                     //통신성공시 처리
                     success:function(){
                       console.log('success')
+                        ajaxClassTime();
                       },
 
                     //통신 실패시 처리
@@ -146,16 +148,53 @@ $(document).ready(function(){
      function ajaxClassTime(){
       console.log('ajax receiving')
             $.ajax({
-              url:'/static/user/scheduleDB.html',
+              //url:'/static/user/scheduleDB.html',
+              url: '/trainer/cal_day_ajax',
               dataType : 'html',
               success:function(data){
-                console.log(data)
+                console.log(data);
                 DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
                 classTime();
               }
             })    
      }
 
+    function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+		var classlen = classTimeArray.length;
+		$('#calendar').css('display','none');
+		for(var i=0; i<classlen; i++){
+			var indexArray = classTimeArray[i]
+			var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
+			var classYear = datasplit[0]
+			var classMonth = datasplit[1]
+			var classDate = datasplit[2]
+			var classHour = datasplit[3]
+			var classMinute = datasplit[4]
+			var classDura = datasplit[5];
+			var memberName = datasplit[6];
+			var classEndHour = datasplit[7];
+			var classEndMinute = datasplit[8];
+			var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
+			var classStart = classStartArr.join("_")
+			//var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
+			var tdClassStart = $("#"+classStart+" div");
+			//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
+			if(Number(classHour)+Number(classDura)==25){	// 오전 1시에 일정이 차있을 경우 일정 박스가 Table 넘어가는 것 픽스
+				if(classDura<=3){
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+				}else{
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+				}
+			}else{
+				if(classDura<=3){
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+				}else{
+					tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+				}
+			}
+		};
+		$('#calendar').css('display','block');
+	};
 
      function beforeSend(){
         $('html').css("cursor","wait");
