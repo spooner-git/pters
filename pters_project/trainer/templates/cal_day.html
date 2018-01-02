@@ -5,6 +5,7 @@
         <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.day.cal.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <meta name="description" content="daycal">
 {% endblock %}
 
 {% block content %}
@@ -440,6 +441,13 @@
 
           var classTimeArray = [];
           var offTimeArray = [];
+
+          var classDateData = []
+          var classTimeData = []
+          var offDateData=[]
+          var offTimeData = []
+          var offAddOkArray = [] //OFF 등록 시작 시간 리스트
+          var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
         </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.day.js" %}></script>
         <script>

@@ -1,15 +1,18 @@
-//front-end에서 다뤄야하는 데이터
-<script>
-  	classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
-   	classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
-   	classTimeArray_member_name = [{% for member_name in daily_lecture_data_member %}'{{ member_name }}',{% endfor %}]';
-    classArray_lecture_id = [{% for lecture_id in daily_lecture_data_id %}'{{ lecture_id }}',{% endfor %}]';
-    offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}];
-    offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
-
-    scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
-    offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %}];
-
-    classTimeArray = [];
-    offTimeArray = [];
-</script>
+    {
+      "classTimeArray_start_date" : 
+      [{% for daily_data_start_date in daily_lecture_data_start_date %}"{{ daily_data_start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classTimeArray_end_date" : 
+      [{% for daily_data_end_date in daily_lecture_data_end_date %}"{{ daily_data_end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classTimeArray_member_name" : 
+      [{% for member_name in daily_lecture_data_member %}"{{ member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classArray_lecture_id" : 
+      [{% for lecture_id in daily_lecture_data_id %}"{{ lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offTimeArray_start_date" : 
+      [{% for daily_off_start_date in daily_off_data_start_date %}"{{ daily_off_start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offTimeArray_end_date" : 
+      [{% for daily_off_end_date in daily_off_data_end_date %}"{{ daily_off_end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "scheduleIdArray" : 
+      [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}"{{ daily_lecture_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offScheduleIdArray" : 
+      [{% for daily_class_schedule_id in class_schedule_data %}"{{ daily_class_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }
