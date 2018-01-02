@@ -152,6 +152,7 @@ $(document).ready(function(){
 	//
 
 	//스케쥴 클릭시 팝업 Start
+	
 		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 			$('#shade').css({'display':'block'});
@@ -194,7 +195,7 @@ $(document).ready(function(){
 			$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 			schedule_on_off = 1;
 		})
-
+	
 
 	//Off 일정 클릭시 팝업 Start
 		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
@@ -430,6 +431,8 @@ $(document).ready(function(){
 	var firstDayNextMonth = firstDayInfoNextMonth.getDay(); //다음달 1일의 요일
 	var currentPageMonth = currentMonth+1; //현재 달
 
+	var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
+
 // ############################구동시 실행################################################################################
 // ****************************구동시 실행********************************************************************************
 	calTable_Set(1,currentYear,currentPageMonth,currentDate,-14); // 이번주-2
@@ -498,16 +501,18 @@ $(document).ready(function(){
 		},
 	};
 
+
+
 	function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성 
 		//Week 선택자 2E, 1E, 0W, 1L, 2L
 		//주간달력 상단표시줄 (요일, 날짜, Today표식)
 		weekTable(Index)
-		
+
 		var W = Week
 		var slideIndex = $('#slide'+Index);
 		var currentDates = Number(Dates)+W;
-		var dateinfo = new Date();
-		var currentDay_ = dateinfo.getDay(Year,Month,currentDates)
+		var dateinfo = new Date(Year,Month-1,currentDates);
+		var currentDay_ = dateinfo.getDay()
 		var monthdata = currentMonth
 
 		if(append==0){
@@ -517,7 +522,7 @@ $(document).ready(function(){
 			var monthdata = monthforappend
 		}
 
-		for(var i=5; i<=24; i++){
+		for(var i=1; i<=24; i++){
 			var textToAppend = '<div id="'+i+'H_'+Year+'_'+Month+'_'+currentDate+'_'+Week+'" class="time-style">'
 			var divToAppend = $(textToAppend)
 			var slidevalue = "test"
@@ -527,27 +532,30 @@ $(document).ready(function(){
 				var td1 = []
 				var td2 = []
 				for(z=0; z<=6; z++){
-					if(currentDates+z>lastDay[monthdata] && Month+1>12){
+					if(currentDates+z>lastDay[monthdata] && Month+1>12){ //해가 넘어갈때
 						td1[z]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z<=0 && Month==1){
+						td1[z]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						//td2[z]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z>lastDay[monthdata]){
 						td1[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}else if(currentDates+z<=lastDay[monthdata] && currentDates+z>0){
 						td1[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}else if(currentDates+z<=0){
 						if(Month-1<1){
 							td1[z]='<td'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-							td2[z]='<td'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+							//td2[z]='<td'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 						}else{
 							td1[z]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-							td2[z]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+							//td2[z]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 						}
 					}
 				}
 				var td1_1 = td1.join('')
-				var td2_1 = td2.join('')
+				//var td2_1 = td2.join('')
 				break;
 
 				case 1 :
@@ -556,21 +564,24 @@ $(document).ready(function(){
 				for(z=-1; z<=5; z++){
 					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
 						td1[z+1]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+1]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+1]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z<=0 && Month==1){
+						td1[z+1]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						//td2[z+1]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+1]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+1]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}
 					else if(currentDates+z<=0){
 						td1[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+1]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
-				var td2_1 = td2.join('')
+				//var td2_1 = td2.join('')
 				break;
 
 				case 2 :
@@ -579,20 +590,23 @@ $(document).ready(function(){
 				for(z=-2; z<=4; z++){
 					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
 						td1[z+2]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+2]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+2]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z<=0 && Month==1){
+						td1[z+2]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						//td2[z+2]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+2]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+2]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}else if(currentDates+z<=0){
 						td1[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+2]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
-				var td2_1 = td2.join('')
+				//var td2_1 = td2.join('')
 				break;
 				
 				case 3 :
@@ -601,16 +615,19 @@ $(document).ready(function(){
 				for(z=-3; z<=3; z++){
 					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
 						td1[z+3]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+3]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+3]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z<=0 && Month==1){
+						td1[z+3]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						//td2[z+3]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+3]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+3]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}else if(currentDates+z<=0){
 						td1[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+3]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
@@ -623,20 +640,23 @@ $(document).ready(function(){
 				for(z=-4; z<=2; z++){
 					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
 						td1[z+4]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+4]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+4]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z<=0 && Month==1){
+						td1[z+4]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						//td2[z+4]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+4]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+4]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}else if(currentDates+z<=0){
 						td1[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+4]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
-				var td2_1 = td2.join('')
+				//var td2_1 = td2.join('')
 				break;
 				
 				case 5 :				
@@ -645,20 +665,23 @@ $(document).ready(function(){
 				for(z=-5; z<=1; z++){
 					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
 						td1[z+5]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+5]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+5]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z<=0 && Month==1){
+						td1[z+5]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						//td2[z+5]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+5]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+5]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}else if(currentDates+z<=0){
 						td1[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+5]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
-				var td2_1 = td2.join('')
+				//var td2_1 = td2.join('')
 				break;
 				
 				case 6 :				
@@ -667,24 +690,28 @@ $(document).ready(function(){
 				for(z=-6; z<=0; z++){
 					if(currentDates+z>lastDay[currentMonth] && Month+1>12){
 						td1[z+6]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+6]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+6]='<td'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+					}else if(currentDates+z<=0 && Month==1){
+						td1[z+6]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
+						//td2[z+6]='<td'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z>lastDay[currentMonth]){
 						td1[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
+						//td2[z+6]='<td'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';	
 					}else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
 						td1[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+6]='<td'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}else if(currentDates+z<=0){
 						td1[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00">'+'<div></div>'+'</td>';
-						td2[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
+						//td2[z+6]='<td'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</td>';
 					}
 				}
 				var td1_1 = td1.join('')
-				var td2_1 = td2.join('')
+				//var td2_1 = td2.join('')
 				break;
 			}
 			//var td = td1_1+td1_2+td1_3+td1_4+td1_5+td1_6+td1_7+'</tr><tr>'+td2_1+td2_2+td2_3+td2_4+td2_5+td2_6+td2_7+'</tr></tbody></table></div>'
-			var td= td1_1+'</tr><tr>'+td2_1+'</tr></tbody></table></div>'
+			//var td= td1_1+'</tr><tr>'+td2_1+'</tr></tbody></table></div>'
+			var td= td1_1+'</tr></tbody></table></div>'
 			if(i<12){
 					textToAppend2 = '<table id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="calendar-style weektable"><tbody><tr><td class="slidegap" rowspan="2">'+'<span class="_morningday">오전 </span>'+i+'<div></div></td>'+td
 			}else{
@@ -784,14 +811,17 @@ $(document).ready(function(){
 		for(i=1;i<=7;i++){
 		var scan = $('#slide'+Index+' #weekNum_'+i).attr('data-date')
 			var yy = String(currentYear)
-			var dd = currentDate
-			var mm = currentPageMonth
+			var dd = String(currentDate)
+			var mm = String(currentPageMonth)
+
+			console.log(dd.length,mm.length)
 			if(mm.length<2){
-				var mm = '0'+dateID[1]
+				var mm = '0'+mm
 			}
 			if(dd.length<2){
-				var dd = '0'+dateID[2]
+				var dd = '0'+dd
 			}
+			console.log(scan, yy+mm+dd)
 			if(scan == yy+mm+dd){
 				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY')
 				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
@@ -803,14 +833,15 @@ $(document).ready(function(){
 	}
 
 	function todayFinderArrow(){
-		var currentMM = currentPageMonth;
-		var currentDD = currentDate;
+		var currentMM = String(currentPageMonth);
+		var currentDD = String(currentDate);
 		if(currentMM.length<2){
 			var currentMM = '0'+currentMM
 		}
 		if(currentDD.length<2){
 			var currentDD = '0'+currentDD
 		}
+		console.log(currentMM, currentDD)
 		var todayInfo = String(currentYear) + currentMM + currentDD
 		var viewdayInfomin = $('.swiper-slide-active'+' #weekNum_1').attr('data-date');
 		var viewdayInfomax = $('.swiper-slide-active'+' #weekNum_7').attr('data-date');
@@ -861,6 +892,10 @@ $(document).ready(function(){
 	}
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+		var planheight = 30;
+			if($calendarWidth==1200){
+				var planheight = 45;
+		}
 		var classlen = classTimeArray.length;
 		$('#calendar').css('display','none');
 		for(var i=0; i<classlen; i++){
@@ -881,12 +916,17 @@ $(document).ready(function(){
 			//var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var tdClassStart = $("#"+classStart+" div");
 			//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
-			tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*30)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
+			
+			tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
 		};
 		$('#calendar').css('display','block');
 	};
 
 	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+		var planheight = 30;
+			if($calendarWidth==1200){
+				var planheight = 45;
+		}
 		var offlen = offTimeArray.length;
 		$('#calendar').css('display','none');
 		for(var i=0; i<offlen; i++){
@@ -903,7 +943,8 @@ $(document).ready(function(){
 			var offStart = offStartArr.join("_")
 			//var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var tdOffStart = $("#"+offStart+" div");
-			tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*30)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
+			
+			tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
 		};
 		$('#calendar').css('display','block');
 	};

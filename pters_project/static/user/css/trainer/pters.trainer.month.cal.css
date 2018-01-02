@@ -105,7 +105,7 @@ img,a,div,span,p{
 	height: auto;
 	z-index: 3;
 	background-color: #ffffff;
-	max-width: 1000px;
+	max-width: 1200px;
 	margin:0 auto;
 
 	position: fixed;
@@ -710,8 +710,8 @@ img,a,div,span,p{
 	}
 
 	#calendar td:hover{
-		background : #eaeaea;
-		opacity: 0.2;
+		background : #ffebee54;
+		opacity: 1;
 	}
 	
 	#ymdText{
@@ -730,7 +730,7 @@ img,a,div,span,p{
 	}
 
 	.weekday_style{
-		margin-right: 8px;
+		margin-right: 7px;
 	}
 
 	#gapbox{
@@ -896,9 +896,9 @@ img,a,div,span,p{
 		position: relative;
 		width: 100%;
 		border-bottom: 1px solid #cccccc;
-		height: 100px;
+		height: 120px;
 		min-height: 42px;
-		font-size: 16px;
+		font-size: 20px;
 		font-weight: 400;	
 		padding-left: 0px;
 		padding-right: 0px;
@@ -906,8 +906,8 @@ img,a,div,span,p{
 
 	#date{
 		position: relative;
-		padding-left: 20px;
-		padding-right: 20px;
+		padding-left: 0px;
+		padding-right: 0px;
 		top: 0;
 	}
 
