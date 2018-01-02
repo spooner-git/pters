@@ -5,14 +5,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db import IntegrityError
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
-from config.views import TraineeView, date_check_func
+from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
@@ -20,14 +20,14 @@ from trainer.models import ClassTb, ClassScheduleTb
 from django.utils import timezone
 
 
-class IndexView(TraineeView):
+class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     url = '/trainee/cal_month/'
 
     def get_redirect_url(self, *args, **kwargs):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
 
 
-class WeekAddView(LoginRequiredMixin, TemplateView):
+class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_week_trainee.html'
 
     def get_context_data(self, **kwargs):
@@ -119,11 +119,12 @@ class DayAddView(LoginRequiredMixin, TemplateView):
 
 
 # trainee용 Month View
-class CalMonthView(LoginRequiredMixin, TemplateView):
+class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_month_trainee.html'
 
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
+
         error = None
         trainer_class = None
         month_lecture_data = None

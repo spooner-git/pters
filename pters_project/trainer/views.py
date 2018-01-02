@@ -14,13 +14,13 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from config.views import TrainerView, date_check_func
+from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb ,HolidayTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
 
 
-class IndexView(LoginRequiredMixin, TemplateView):
+class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'main_trainer.html'
 
     def get_context_data(self, **kwargs):
@@ -65,7 +65,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CalDayView(LoginRequiredMixin, TemplateView):
+class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_day.html'
 
     def get_context_data(self, **kwargs):
@@ -153,7 +153,7 @@ class CalDayView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CalDayViewAjax(LoginRequiredMixin, TemplateView):
+class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_day_ajax.html'
 
     def get_context_data(self, **kwargs):
@@ -240,7 +240,7 @@ class CalDayViewAjax(LoginRequiredMixin, TemplateView):
         return context
 
 
-class PtAddView(LoginRequiredMixin, TemplateView):
+class PtAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'pt_add.html'
 
     def get_context_data(self, **kwargs):
@@ -299,7 +299,7 @@ class PtAddView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CalWeekView(LoginRequiredMixin, TemplateView):
+class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_week.html'
 
     def get_context_data(self, **kwargs):
@@ -398,7 +398,8 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
 
         return context
 
-class CalMonthView(LoginRequiredMixin, TemplateView):
+
+class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_month.html'
 
     def get_context_data(self, **kwargs):
@@ -502,8 +503,7 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         return context
 
 
-
-class OffAddView(LoginRequiredMixin, TemplateView):
+class OffAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'off_add.html'
 
     def get_context_data(self, **kwargs):
@@ -550,7 +550,7 @@ class OffAddView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class OffRepeatAddView(LoginRequiredMixin, TemplateView):
+class OffRepeatAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_add_off_repeat.html'
 
     def get_context_data(self, **kwargs):
@@ -558,8 +558,9 @@ class OffRepeatAddView(LoginRequiredMixin, TemplateView):
 
         return context
 
+
 #sk 추가 업무 관리
-class ManageWorkView(LoginRequiredMixin, TemplateView):
+class ManageWorkView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_work.html'
 
     def get_context_data(self, **kwargs):
@@ -588,7 +589,7 @@ class ManageWorkView(LoginRequiredMixin, TemplateView):
 #sk 추가 업무 관리
 
 
-class ManageMemberView(LoginRequiredMixin, TemplateView):
+class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member.html'
 
     def get_context_data(self, **kwargs):
@@ -616,7 +617,7 @@ class ManageMemberView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class AddMemberView(LoginRequiredMixin, TemplateView):
+class AddMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'member_add.html'
 
     def get_context_data(self, **kwargs):
@@ -625,7 +626,7 @@ class AddMemberView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class AlarmView(LoginRequiredMixin, TemplateView):
+class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'alarm.html'
 
     def get_context_data(self, **kwargs):
@@ -686,7 +687,7 @@ class LogInTrainerView(TemplateView):
         return context
 
 
-class TrainerSettingView(TemplateView):
+class TrainerSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting.html'
 
     def get_context_data(self, **kwargs):
@@ -695,7 +696,7 @@ class TrainerSettingView(TemplateView):
         return context
 
 
-class PushSettingView(TemplateView):
+class PushSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_push.html'
 
     def get_context_data(self, **kwargs):
@@ -704,7 +705,7 @@ class PushSettingView(TemplateView):
         return context
 
 
-class ReserveSettingView(TemplateView):
+class ReserveSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_reserve.html'
 
     def get_context_data(self, **kwargs):
@@ -713,7 +714,7 @@ class ReserveSettingView(TemplateView):
         return context
 
 
-class SalesSettingView(TemplateView):
+class SalesSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_sales.html'
 
     def get_context_data(self, **kwargs):
