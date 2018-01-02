@@ -255,7 +255,6 @@ $(document).ready(function(){
 		var $offdelform = $('#daily-off-delete-form');
 		if(schedule_on_off==1){
 				//PT 일정 삭제시
-				//document.getElementById('daily-pt-delete-form').submit();
 				$.ajax({
                     url:'/trainer/daily_pt_delete/',
                     type:'POST',
@@ -265,15 +264,17 @@ $(document).ready(function(){
                      	deleteBeforeSend();
                     },
 
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                    	closeDeletePopup();
-                    	deleteCompleteSend();
-                      },
-
                     //통신성공시 처리
                     success:function(){
+                      closeDeletePopup();
+                      deleteCompleteSend();
+                      ajaxClassTime()
                       console.log('success')
+                      },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    	
                       },
 
                     //통신 실패시 처리
@@ -283,7 +284,6 @@ $(document).ready(function(){
                  })
 		}
 		else{
-				//document.getElementById('daily-off-delete-form').submit();
 				$.ajax({
                     url:'/trainer/daily_off_delete/',
                     type:'POST',
@@ -293,15 +293,17 @@ $(document).ready(function(){
                     	deleteBeforeSend();
                     },
 
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                    	closeDeletePopup();
-                      	deleteCompleteSend();
-                      },
-
                     //통신성공시 처리
                     success:function(){
+                      closeDeletePopup();
+                      deleteCompleteSend();
+                      ajaxClassTime()
                       console.log('success')
+                      },
+
+                     //보내기후 팝업창 닫기
+                    complete:function(){
+                      
                       },
 
                     //통신 실패시 처리
@@ -311,6 +313,51 @@ $(document).ready(function(){
                  })
 		}
 	})
+
+	function ajaxClassTime(){
+      $('.classTime,.offTime').parent().html('<div></div>')
+            $.ajax({
+              url: '/trainer/cal_day_ajax',
+              dataType : 'html',
+
+              beforeSend:function(){
+              		deleteBeforeSend();
+              },
+
+              success:function(data){
+              	var jsondata = JSON.parse(data);
+                classTimeArray = [];
+                offTimeArray = [];
+                classTimeArray_member_name = [];
+                classArray_lecture_id = [];
+                scheduleIdArray = [];
+                offScheduleIdArray = [];
+                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+                classTimeArray_member_name = jsondata.classTimeArray_member_name
+                classArray_lecture_id = jsondata.classArray_lecture_id
+                scheduleIdArray = jsondata.scheduleIdArray
+                offScheduleIdArray = jsondata.offScheduleIdArray
+                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
+                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
+                classTime();
+                offTime();
+                console.log(classTimeArray)
+                console.log(offTimeArray)
+              },
+
+              complete:function(){
+              	deleteCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })    
+     }
+
 
 	function closeDeletePopup(){
 		if($('#cal_popup3').css('display')=='block'){
@@ -330,8 +377,8 @@ $(document).ready(function(){
 		$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade').hide();
-        alert('complete: 일정 삭제 성공')
+        $('#shade').css({'display':'none','z-index':'100'});
+        //alert('complete: 일정 삭제 성공')
 	}
 
 	//플로팅 버튼 Start
@@ -438,13 +485,12 @@ $(document).ready(function(){
 	
 	dateText(); //상단에 연월일요일 표시
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class"); //DB로 부터 받는 Class데이터 가공
-	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray); //DB로 부터 받는 Off 데이터 가공
+	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray,"off"); //DB로 부터 받는 Off 데이터 가공
 	//addcurrentTimeIndicator(); //현재 시간에 밑줄 긋기 (구버전)
 	addcurrentTimeIndicator_blackbox(); //현재 시간 검은색 Background 표시
 	//scrollToIndicator(); //현재 시간으로 스크롤 자동 이동
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime(); //Off 시간에 회색 박스 표시
-
 
 	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
 		switch(Options.language){
@@ -702,52 +748,67 @@ $(document).ready(function(){
         $('body, html').animate({scrollTop : offset.top-180},10)
     }
 
-	function DBdataProcess(startarray,endarray,result,option){
-		//DB데이터 가공
-		var classTimeLength = startarray.length
-    	var startlength = startarray.length;
-    	var endlength = endarray.length;
-    	var resultarray = []
+	function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
+    //DB데이터 가공
+      var classTimeLength = startarray.length
+      var startlength = startarray.length;
+      var endlength = endarray.length;
+      var resultarray = []
 
-    	for(i=0;i<classTimeLength; i++){
-    		var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
-    		var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
-    		var startSplitArray= start.split("_"); 
-    		var endSplitArray = end.split("_");
-    		//["2017", "10", "7", "6", "00", "오전"]
+      for(i=0;i<classTimeLength; i++){
+        var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
+        var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
+        var startSplitArray= start.split("_"); 
+        var endSplitArray = end.split("_");
+        //["2017", "10", "7", "6", "00", "오전"]
    
-    		if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
-    			startSplitArray[3] = String(Number(startSplitArray[3])+12);
-    		}
+       if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
+          startSplitArray[3] = String(Number(startSplitArray[3])+12);
+        }
 
-    		if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
-    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
-    		}
+        if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
+          endSplitArray[3] = String(Number(endSplitArray[3])+12); 
+        }
 
-    		if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
-    			startSplitArray[3] = String(Number(startSplitArray[3])+12);	
-    		}
+        if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
+          startSplitArray[3] = String(Number(startSplitArray[3])+12); 
+        }
 
-    		if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
-    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
-    		}
-    		
-    		var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
-    		if(dura>0){
-    			startSplitArray[5] = String(dura)	
-    		}else{
-    			startSplitArray[5] = String(dura+24)
-    		}
-    		
-    		if(option=="class"){
-    			startSplitArray.push(classTimeArray_member_name[i])	
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
-    		}else{
-    			startSplitArray.push(classTimeArray_member_name[i])	
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);		
-    		}	
-  	    }
-	}
+        if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
+          endSplitArray[3] = String(Number(endSplitArray[3])+12); 
+        }
+        
+        var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+        if(dura>0){
+          startSplitArray[5] = String(dura) 
+        }else{
+          startSplitArray[5] = String(dura+24)
+        }
+
+
+        if(option=="class"){
+          startSplitArray.push(classTimeArray_member_name[i]) 
+          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
+        }else if(option=="off"){
+          startSplitArray.push(classTimeArray_member_name[i]) 
+          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);   
+        }else if(option=="member"){
+          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);    
+          result2.push(startSplitArray[3]+":"+startSplitArray[4]);
+        }else if(option=="graph"){
+            var mm = startSplitArray[1]
+            var dd = startSplitArray[2]
+            if(mm.length<2){
+              var mm = '0'+startSplitArray[1]
+            }
+            if(dd.length<2){
+              var dd = '0'+startSplitArray[2]
+            }
+            result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
+            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
+        }
+      }
+    }
 
 	function DBrepeatdata(repeat,option){ // 김선겸_tue_16_1_fri_10_2_20171203_20180301  이름_요일_시작시간_진행시간_시작시간_진행시간_반복시작날짜_반복종료날짜
 		
