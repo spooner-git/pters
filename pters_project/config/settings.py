@@ -100,7 +100,7 @@ DATABASES = {
         'USER': 'bebep',
         'PASSWORD': 'bebep123',
         #'HOST': 'bebepdb.cadl82fap4pj.ap-northeast-2.rds.amazonaws.com',
-        'HOST': 'bebep-pters-app.clbffmtjnle9.ap-northeast-2.rds.amazonaws.com',
+        'HOST': 'pters-db.cbyipuqwoq7d.ap-northeast-2.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
