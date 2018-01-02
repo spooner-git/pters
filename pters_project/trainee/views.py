@@ -460,6 +460,8 @@ def pt_add_logic_func(training_date, time_duration, training_time, user_id, user
         for month_class in month_class_data:
             error = date_check_func(training_date, start_date, end_date,
                                     month_class.start_dt, month_class.end_dt)
+            if error is not None:
+                break
 
     if error is None:
         try:
@@ -481,6 +483,11 @@ def pt_add_logic_func(training_date, time_duration, training_time, user_id, user
             for month_lecture in lecture.lecture_schedule:
                 error = date_check_func(training_date, start_date, end_date,
                                         month_lecture.start_dt, month_lecture.end_dt)
+                if error is not None:
+                    break
+
+            if error is not None:
+                break
 
     if error is None:
         with transaction.atomic():
