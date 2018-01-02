@@ -14,7 +14,7 @@ img,a,div,span,p{
 
 table{
 	table-layout: fixed;
-	border-bottom : 0.5px solid #dedede;
+	
 }
 
 
@@ -359,6 +359,7 @@ table{
 	width: 100%;
 	font-size: 14.4px;
 	height: 35px;
+	border-bottom:0.5px solid #f4f4f4;
 }
 
 .hour{
@@ -395,7 +396,7 @@ table{
 .daytd{
 	position: relative;
 	width: 78.5%;
-	height: 15px;
+	height: 34px;
 	color : #282828;
 }
 
@@ -729,7 +730,7 @@ table{
 		margin:0 auto;
 		left: 0 !important;
 		transform: none;
-		padding-top: 0px;
+		padding-top: 100px;
 	}
 
 	.slide-notice{
@@ -749,7 +750,6 @@ table{
 	}
 
 	#ymdText{
-		position: relative;
 		height: 100px;
 	}
 
@@ -789,7 +789,7 @@ table{
 	}
 
 	table{
-		border-bottom: 0.5px solid #f4f4f4;
+		
 	}
 
 	.timeindex{
