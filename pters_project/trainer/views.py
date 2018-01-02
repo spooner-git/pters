@@ -884,6 +884,8 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
         for month_class in month_class_data:
             error = date_check_func(training_date, start_date, end_date,
                                     month_class.start_dt, month_class.end_dt)
+            if error is not None:
+                break
 
     if error is None:
         try:
@@ -904,6 +906,11 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
             for month_lecture in lecture.lecture_schedule:
                 error = date_check_func(training_date, start_date, end_date,
                                         month_lecture.start_dt, month_lecture.end_dt)
+                if error is not None:
+                    break
+
+            if error is not None:
+                break
 
     if error is None:
         with transaction.atomic():
@@ -1159,6 +1166,11 @@ def add_off_logic(request):
                 for month_lecture in lecture.lecture_schedule:
                     error = date_check_func(training_date, start_date, end_date,
                                             month_lecture.start_dt, month_lecture.end_dt)
+                    if error is not None:
+                        break
+
+                if error is not None:
+                    break
 
         if error is None:
             try:
@@ -1175,6 +1187,8 @@ def add_off_logic(request):
             for month_class in month_class_data:
                 error = date_check_func(training_date, start_date, end_date,
                                         month_class.start_dt, month_class.end_dt)
+                if error is not None:
+                    break
 
         if error is None:
             class_schedule_data = ClassScheduleTb(class_tb_id=trainer_class.class_id, start_dt=start_date, end_dt=end_date,
@@ -1520,6 +1534,8 @@ def modify_pt_logic(request):
         for month_class in month_class_data:
             error = date_check_func(training_date, start_date, end_date,
                                     month_class.start_dt, month_class.end_dt)
+            if error is not None:
+                break
 
     if error is None:
         try:
@@ -1540,6 +1556,11 @@ def modify_pt_logic(request):
             for month_lecture in lecture.lecture_schedule:
                 error = date_check_func(training_date, start_date, end_date,
                                         month_lecture.start_dt, month_lecture.end_dt)
+                if error is not None:
+                    break
+
+            if error is not None:
+                break
 
     if error is None:
         try:
@@ -1672,6 +1693,11 @@ def modify_off_logic(request):
             for month_lecture in lecture.lecture_schedule:
                 error = date_check_func(training_date, start_date, end_date,
                                         month_lecture.start_dt, month_lecture.end_dt)
+                if error is not None:
+                    break
+
+            if error is not None:
+                break
 
     if error is None:
         try:
@@ -1689,6 +1715,8 @@ def modify_off_logic(request):
         for month_class in month_class_data:
             error = date_check_func(training_date, start_date, end_date,
                                     month_class.start_dt, month_class.end_dt)
+            if error is not None:
+                break
 
     if error is None:
         try:
