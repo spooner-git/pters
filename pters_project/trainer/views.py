@@ -14,13 +14,13 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from config.views import TrainerView, date_check_func
+from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb ,HolidayTb
 from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
 
 
-class IndexView(LoginRequiredMixin, TemplateView):
+class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'main_trainer.html'
 
     def get_context_data(self, **kwargs):
@@ -65,7 +65,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CalDayView(LoginRequiredMixin, TemplateView):
+class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_day.html'
 
     def get_context_data(self, **kwargs):
@@ -153,7 +153,7 @@ class CalDayView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CalDayViewAjax(LoginRequiredMixin, TemplateView):
+class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_day_ajax.html'
 
     def get_context_data(self, **kwargs):
@@ -240,7 +240,7 @@ class CalDayViewAjax(LoginRequiredMixin, TemplateView):
         return context
 
 
-class PtAddView(LoginRequiredMixin, TemplateView):
+class PtAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'pt_add.html'
 
     def get_context_data(self, **kwargs):
@@ -299,7 +299,7 @@ class PtAddView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CalWeekView(LoginRequiredMixin, TemplateView):
+class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_week.html'
 
     def get_context_data(self, **kwargs):
@@ -398,7 +398,8 @@ class CalWeekView(LoginRequiredMixin, TemplateView):
 
         return context
 
-class CalMonthView(LoginRequiredMixin, TemplateView):
+
+class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_month.html'
 
     def get_context_data(self, **kwargs):
@@ -502,8 +503,7 @@ class CalMonthView(LoginRequiredMixin, TemplateView):
         return context
 
 
-
-class OffAddView(LoginRequiredMixin, TemplateView):
+class OffAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'off_add.html'
 
     def get_context_data(self, **kwargs):
@@ -550,7 +550,7 @@ class OffAddView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class OffRepeatAddView(LoginRequiredMixin, TemplateView):
+class OffRepeatAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_add_off_repeat.html'
 
     def get_context_data(self, **kwargs):
@@ -558,8 +558,9 @@ class OffRepeatAddView(LoginRequiredMixin, TemplateView):
 
         return context
 
+
 #sk 추가 업무 관리
-class ManageWorkView(LoginRequiredMixin, TemplateView):
+class ManageWorkView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_work.html'
 
     def get_context_data(self, **kwargs):
@@ -588,7 +589,7 @@ class ManageWorkView(LoginRequiredMixin, TemplateView):
 #sk 추가 업무 관리
 
 
-class ManageMemberView(LoginRequiredMixin, TemplateView):
+class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member.html'
 
     def get_context_data(self, **kwargs):
@@ -616,7 +617,7 @@ class ManageMemberView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class AddMemberView(LoginRequiredMixin, TemplateView):
+class AddMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'member_add.html'
 
     def get_context_data(self, **kwargs):
@@ -625,7 +626,7 @@ class AddMemberView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class AlarmView(LoginRequiredMixin, TemplateView):
+class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'alarm.html'
 
     def get_context_data(self, **kwargs):
@@ -686,7 +687,7 @@ class LogInTrainerView(TemplateView):
         return context
 
 
-class TrainerSettingView(TemplateView):
+class TrainerSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting.html'
 
     def get_context_data(self, **kwargs):
@@ -695,7 +696,7 @@ class TrainerSettingView(TemplateView):
         return context
 
 
-class PushSettingView(TemplateView):
+class PushSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_push.html'
 
     def get_context_data(self, **kwargs):
@@ -704,7 +705,7 @@ class PushSettingView(TemplateView):
         return context
 
 
-class ReserveSettingView(TemplateView):
+class ReserveSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_reserve.html'
 
     def get_context_data(self, **kwargs):
@@ -713,11 +714,151 @@ class ReserveSettingView(TemplateView):
         return context
 
 
-class SalesSettingView(TemplateView):
+class SalesSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_sales.html'
 
     def get_context_data(self, **kwargs):
         context = super(SalesSettingView, self).get_context_data(**kwargs)
+
+        return context
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PtModifyView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'cal_modify_pt.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PtModifyView, self).get_context_data(**kwargs)
+        error = None
+        trainer_class = None
+        trainee_lecture = None
+        trainee_info = None
+        context['member_name'] = None
+        context['lecture_avail_count'] = None
+        context['lecture_id'] = None
+        context['modify_dt'] = None
+
+        lecture_schedule_id = self.request.GET.get('schedule_id')
+        lecture_id = self.request.GET.get('lecture_id')
+        try:
+            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+
+        daily_off_data_start_date = []
+        daily_off_data_end_date = []
+        daily_lecture_data_start_date = []
+        daily_lecture_data_end_date = []
+        today_dt = timezone.now()
+        before_dt = today_dt - datetime.timedelta(days=1)
+        after_dt = today_dt + datetime.timedelta(days=14)
+
+        if error is None:
+            try:
+                trainee_lecture = LectureTb.objects.get(lecture_id=lecture_id)
+            except ObjectDoesNotExist:
+                error = 'lecture가 존재하지 않습니다.'
+
+        if error is None:
+            try:
+                trainee_info = MemberTb.objects.get(member_id=trainee_lecture.member_id)
+            except ObjectDoesNotExist:
+                error = 'member가 존재하지 않습니다.'
+
+        if error is None:
+
+            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
+                                                              en_dis_type='0', start_dt__gte=before_dt,
+                                                              start_dt__lte=after_dt, use='1')
+            for month_class in month_class_data:
+                daily_off_data_start_date.append(month_class.start_dt)
+                daily_off_data_end_date.append(month_class.end_dt)
+
+        if error is None:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            for lecture in month_lecture_data:
+                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+                                                                            en_dis_type='1',
+                                                                            start_dt__gte=before_dt,
+                                                                            start_dt__lte=after_dt,
+                                                                            use='1').exclude(
+                    lecture_schedule_id=lecture_schedule_id)
+                for month_lecture in lecture.lecture_schedule:
+                    daily_lecture_data_start_date.append(month_lecture.start_dt)
+                    daily_lecture_data_end_date.append(month_lecture.end_dt)
+
+        if error is None:
+            try:
+                modify_lecture_schedule = LectureScheduleTb.objects.get(lecture_schedule_id=lecture_schedule_id)
+            except ObjectDoesNotExist:
+                error = 'schedule이 없습니다.'
+
+        context['modify_schedule_id'] = lecture_schedule_id
+        context['modify_dt'] = modify_lecture_schedule.start_dt
+        context['member_name'] = trainee_info.name
+        context['lecture_avail_count'] = trainee_lecture.lecture_avail_count
+        context['lecture_id'] = trainee_lecture.lecture_id
+        context['daily_off_data_start_date'] = daily_off_data_start_date
+        context['daily_off_data_end_date'] = daily_off_data_end_date
+        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
+        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
+
+        return context
+
+@method_decorator(csrf_exempt, name='dispatch')
+class OffModifyView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'cal_modify_off.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OffModifyView, self).get_context_data(**kwargs)
+        class_schedule_id = self.request.GET.get('off_schedule_id')
+        error = None
+        trainer_class = None
+        try:
+            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+
+        daily_off_data_start_date = []
+        daily_off_data_end_date = []
+        daily_lecture_data_start_date = []
+        daily_lecture_data_end_date = []
+        today_dt = timezone.now()
+        before_dt = today_dt - datetime.timedelta(days=1)
+        after_dt = today_dt + datetime.timedelta(days=14)
+
+        if error is None:
+
+            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
+                                                              en_dis_type='0', start_dt__gte=before_dt,
+                                                              start_dt__lte=after_dt, use='1').exclude(
+                class_schedule_id=class_schedule_id)
+            for month_class in month_class_data:
+                daily_off_data_start_date.append(month_class.start_dt)
+                daily_off_data_end_date.append(month_class.end_dt)
+
+        if error is None:
+            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            for lecture in month_lecture_data:
+                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+                                                                            en_dis_type='1',
+                                                                            start_dt__gte=before_dt,
+                                                                            start_dt__lte=after_dt, use='1')
+                for month_lecture in lecture.lecture_schedule:
+                    daily_lecture_data_start_date.append(month_lecture.start_dt)
+                    daily_lecture_data_end_date.append(month_lecture.end_dt)
+
+        if error is None:
+            try:
+                modify_lecture_schedule = ClassScheduleTb.objects.get(class_schedule_id=class_schedule_id)
+            except ObjectDoesNotExist:
+                error = 'schedule이 없습니다.'
+
+        context['before_off_schedule_id'] = class_schedule_id
+        context['modify_dt'] = modify_lecture_schedule.start_dt
+        context['daily_off_data_start_date'] = daily_off_data_start_date
+        context['daily_off_data_end_date'] = daily_off_data_end_date
+        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
+        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
 
         return context
 
@@ -1335,146 +1476,6 @@ def alarm_delete_logic(request):
         messages.info(request, error)
         next_page = 'trainer:alarm'
         return redirect(next_page)
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class PtModifyView(LoginRequiredMixin, TemplateView):
-    template_name = 'cal_modify_pt.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(PtModifyView, self).get_context_data(**kwargs)
-        error = None
-        trainer_class = None
-        trainee_lecture = None
-        trainee_info = None
-        context['member_name'] = None
-        context['lecture_avail_count'] = None
-        context['lecture_id'] = None
-        context['modify_dt'] = None
-
-        lecture_schedule_id = self.request.GET.get('schedule_id')
-        lecture_id = self.request.GET.get('lecture_id')
-        try:
-            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
-
-        daily_off_data_start_date = []
-        daily_off_data_end_date = []
-        daily_lecture_data_start_date = []
-        daily_lecture_data_end_date = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=1)
-        after_dt = today_dt + datetime.timedelta(days=14)
-
-        if error is None:
-            try:
-                trainee_lecture = LectureTb.objects.get(lecture_id=lecture_id)
-            except ObjectDoesNotExist:
-                error = 'lecture가 존재하지 않습니다.'
-
-        if error is None:
-            try:
-                trainee_info = MemberTb.objects.get(member_id=trainee_lecture.member_id)
-            except ObjectDoesNotExist:
-                error = 'member가 존재하지 않습니다.'
-
-        if error is None:
-
-            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1')
-            for month_class in month_class_data:
-                daily_off_data_start_date.append(month_class.start_dt)
-                daily_off_data_end_date.append(month_class.end_dt)
-
-        if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-            for lecture in month_lecture_data:
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt,
-                                                                            use='1').exclude(
-                                                                            lecture_schedule_id=lecture_schedule_id)
-                for month_lecture in lecture.lecture_schedule:
-                    daily_lecture_data_start_date.append(month_lecture.start_dt)
-                    daily_lecture_data_end_date.append(month_lecture.end_dt)
-
-        if error is None:
-            try:
-                modify_lecture_schedule = LectureScheduleTb.objects.get(lecture_schedule_id=lecture_schedule_id)
-            except ObjectDoesNotExist:
-                error = 'schedule이 없습니다.'
-
-        context['modify_schedule_id'] = lecture_schedule_id
-        context['modify_dt'] = modify_lecture_schedule.start_dt
-        context['member_name'] = trainee_info.name
-        context['lecture_avail_count'] = trainee_lecture.lecture_avail_count
-        context['lecture_id'] = trainee_lecture.lecture_id
-        context['daily_off_data_start_date'] = daily_off_data_start_date
-        context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
-        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
-
-        return context
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class OffModifyView(LoginRequiredMixin, TemplateView):
-    template_name = 'cal_modify_off.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(OffModifyView, self).get_context_data(**kwargs)
-        class_schedule_id = self.request.GET.get('off_schedule_id')
-        error = None
-        trainer_class = None
-        try:
-            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
-
-        daily_off_data_start_date = []
-        daily_off_data_end_date = []
-        daily_lecture_data_start_date = []
-        daily_lecture_data_end_date = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=1)
-        after_dt = today_dt + datetime.timedelta(days=14)
-
-        if error is None:
-
-            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1').exclude(
-                                                                class_schedule_id=class_schedule_id)
-            for month_class in month_class_data:
-                daily_off_data_start_date.append(month_class.start_dt)
-                daily_off_data_end_date.append(month_class.end_dt)
-
-        if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-            for lecture in month_lecture_data:
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt, use='1')
-                for month_lecture in lecture.lecture_schedule:
-                    daily_lecture_data_start_date.append(month_lecture.start_dt)
-                    daily_lecture_data_end_date.append(month_lecture.end_dt)
-
-        if error is None:
-            try:
-                modify_lecture_schedule = ClassScheduleTb.objects.get(class_schedule_id=class_schedule_id)
-            except ObjectDoesNotExist:
-                error = 'schedule이 없습니다.'
-
-        context['before_off_schedule_id'] = class_schedule_id
-        context['modify_dt'] = modify_lecture_schedule.start_dt
-        context['daily_off_data_start_date'] = daily_off_data_start_date
-        context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
-        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
-
-        return context
 
 
 # pt 일정 수정
