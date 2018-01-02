@@ -109,7 +109,7 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class DayAddView(LoginRequiredMixin, TemplateView):
+class DayAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_add_pt.html'
 
     def get_context_data(self, **kwargs):
@@ -203,7 +203,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class MyPageView(LoginRequiredMixin, TemplateView):
+class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'mypage_trainee.html'
 
     def get_context_data(self, **kwargs):
