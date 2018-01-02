@@ -9,7 +9,6 @@ body{
 
 table{
 	table-layout: fixed;
-	border-bottom:0.5px solid #dedede;
 }
 
 img,a,div,span,p{
@@ -345,6 +344,7 @@ img,a,div,span,p{
 	position: relative;
 	width: 100%;
 	font-size: 14.4px;
+	border-bottom:0.5px solid #f4f4f4;
 	height: 30px;
 }
 
@@ -393,7 +393,7 @@ td{
 .td00,.td30{
 	background: transparent;
 	position: relative;
-	height: 14px;
+	height: 29px;
 }
 
 #calendar{
@@ -418,7 +418,7 @@ td{
 	background: #fe4e65;
 	opacity: 0.8;
 	border: 0.5px solid #fe4e65;
-	border-bottom: 0.5px solid #a2a2a2;
+	border-bottom: 0.5px solid #ffc6cd;
 	z-index: 100;
 	cursor: pointer;
 }
@@ -431,7 +431,7 @@ td{
 .classTime:active,.classTime:hover{
 	background: #fe4e65;
 	opacity: 1;
-	border:0.5px solid #fe4e65
+	border:0.5px solid #6d585b;
 	-webkit-background: #a2a2a2;
 }
 
@@ -453,6 +453,7 @@ td{
 
 .offTime:active,.offTime:hover{
 	background: #3b3d3d;
+	border:0.5px solid #fe4e65;
 	opacity: 1;
 	-webkit-background: #d6d5d5;
 }
@@ -661,6 +662,14 @@ td{
 	top: 50px;
 }
 
+#page-ptadd-pc{
+	display: none;
+	position: absolute;	
+	width: 300px;
+	z-index: 102;
+	background: #f4f4f4;
+}
+
 
 @media(min-width: 600px){
 	#calendar{
@@ -668,24 +677,31 @@ td{
 		margin:0 auto;
 		left: 0 !important;
 		transform: none;
-		padding-top: 0px;
+		padding-top: 100px;
 	}
 
 	table{
-		border-bottom:0.5px solid #f4f4f4;
-		-moz-border-bottom:2px solid #f4f4f4;
+		
 	}
 
 	.timeindex{
-		padding-top: 60px;
+		padding-top: 51px;
+	}
+
+	.classTime,.offTime{
+		width: 97%;
+		border-bottom:0.5px solid #ffffff;
+		border-radius: 5px;
 	}
 	
 	.memberName{
 		position: absolute;
-		left: 3%;
-		margin-top: 0px;
+		width:100%;
+		text-align: center;
+		left: 0%;
+		margin-top: 13px;
 		font-size: 100%;
-		font-weight: 400;
+		font-weight: bold;
 		letter-spacing: -0.3px;
 		color: #ffffff;
 		cursor: pointer;
@@ -693,13 +709,14 @@ td{
 
 	.memberTime{
 		position: absolute;
-		right: 6%;
+		left: 5px;
 		font-weight: 300;
-		margin-top: 5px;
+		margin-top: 2px;
 		font-size: 13px;
 		letter-spacing: -0.3px;
 		color: #ffffff;
 		cursor: pointer;
+		text-align: left;
 	}
 
 	.swiper-slide{
@@ -718,23 +735,34 @@ td{
 
 
 	.td00,.td30{
+		height: 44px;
 		background: transparent;
-		
+		border-left: 0.5px solid #eaeaea;
+	}
+
+	.td00:hover,.td30:hover{
+		background: #eaeaea;
+		cursor: pointer;
 	}
 
 	.weekToday-style{
 		height: 18px;
-		font-size: 14px;
+		font-size: 13px;
 		font-weight: 400;
 	}
 
+	.time-style{
+		height: 45px;
+	}
+
 	.hour,.slidegap{
+		height: 44.5px;
 		font-weight: 500;
 		border-left:0.5px solid #f4f4f4;
 	}
 
 
-	#page-ptadd, #page-offadd{
+	#page-ptadd, #page-offadd,#page-ptadd-pc{
 		top: 150px;
 		width: 500px;
 	}
@@ -804,7 +832,6 @@ td{
 
 	#ymdText{
 		height: 100px;
-		position: relative;
 	}
 
 	#week{
@@ -813,7 +840,7 @@ td{
 	}
 
 	#weekText span{
-		margin-bottom: 5px;
+		margin-bottom: 0px;
 	}
 
 	#yearText{
@@ -836,7 +863,7 @@ td{
 	}
 
 	td span:nth-child(3){
-		font-size: 17px;
+		font-size: 21px;
 		margin-bottom: 10px !important;
 	}
 

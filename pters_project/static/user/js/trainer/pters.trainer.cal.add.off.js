@@ -146,7 +146,7 @@ $(document).ready(function(){
         $('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade').css({'z-index':'103'});
+        $('#shade').css({'z-index':'100'});
         $('#shade').hide();
         $('#calendar').show();
         alert('complete: OFF 일정 정상 등록')
