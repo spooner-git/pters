@@ -29,6 +29,11 @@
     {% block navbar %}
         <div id="shade"></div>
 
+        <div id="commonPopup" style="position:absolute;display:none;width: 110px;height: 50px;background: transparent;z-index: 200;">
+            <div style="display:inline-block;width: 30px;height: 30px;border-radius: 50%;background: #fe4e65;color: #ffffff">추가</div>
+            <div style="display:inline-block;width: 30px;height: 30px;border-radius: 50%;background: #282828;color: #ffffff">변경</div>
+        </div>
+
         <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
             <div id="navshade"></div>
             <div class="container" style="max-width:1000px;">

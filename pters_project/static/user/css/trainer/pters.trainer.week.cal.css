@@ -9,7 +9,6 @@ body{
 
 table{
 	table-layout: fixed;
-	border-bottom:0.5px solid #dedede;
 }
 
 img,a,div,span,p{
@@ -345,6 +344,7 @@ img,a,div,span,p{
 	position: relative;
 	width: 100%;
 	font-size: 14.4px;
+	border-bottom:0.5px solid #f4f4f4;
 	height: 30px;
 }
 
@@ -393,7 +393,7 @@ td{
 .td00,.td30{
 	background: transparent;
 	position: relative;
-	height: 14px;
+	height: 29px;
 }
 
 #calendar{
@@ -662,6 +662,14 @@ td{
 	top: 50px;
 }
 
+#page-ptadd-pc{
+	display: none;
+	position: absolute;	
+	width: 300px;
+	z-index: 102;
+	background: #f4f4f4;
+}
+
 
 @media(min-width: 600px){
 	#calendar{
@@ -669,16 +677,15 @@ td{
 		margin:0 auto;
 		left: 0 !important;
 		transform: none;
-		padding-top: 0px;
+		padding-top: 100px;
 	}
 
 	table{
-		border-bottom:0.5px solid #f4f4f4;
-		-moz-border-bottom:2px solid #f4f4f4;
+		
 	}
 
 	.timeindex{
-		padding-top: 60px;
+		padding-top: 51px;
 	}
 
 	.classTime,.offTime{
@@ -728,17 +735,19 @@ td{
 
 
 	.td00,.td30{
+		height: 44px;
 		background: transparent;
 		border-left: 0.5px solid #eaeaea;
 	}
 
 	.td00:hover,.td30:hover{
-		/*background: #cccccc;*/
+		background: #eaeaea;
+		cursor: pointer;
 	}
 
 	.weekToday-style{
 		height: 18px;
-		font-size: 14px;
+		font-size: 13px;
 		font-weight: 400;
 	}
 
@@ -753,7 +762,7 @@ td{
 	}
 
 
-	#page-ptadd, #page-offadd{
+	#page-ptadd, #page-offadd,#page-ptadd-pc{
 		top: 150px;
 		width: 500px;
 	}
@@ -823,7 +832,6 @@ td{
 
 	#ymdText{
 		height: 100px;
-		position: relative;
 	}
 
 	#week{
@@ -855,7 +863,7 @@ td{
 	}
 
 	td span:nth-child(3){
-		font-size: 17px;
+		font-size: 21px;
 		margin-bottom: 10px !important;
 	}
 
