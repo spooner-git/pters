@@ -268,7 +268,7 @@ img,a,div,span,p{
 #ymdText{
 	position: fixed;
 	height: 50px;
-	z-index: 4;
+	z-index: 5;
 	width: 100%;
 }
 
@@ -375,7 +375,7 @@ img,a,div,span,p{
 	z-index: 10;
 	color:white;
 	background-color: #f4f4f4;
-	padding-top: 53px;
+	/*padding-top: 53px;*/
 }
 
 .morningtext{
@@ -399,7 +399,7 @@ td{
 #calendar{
 	position: relative;
 	width: 100%;
-	padding-top: 50px;
+	padding-top: 85px;
 	background-color: transparent;
 	padding-right: 0;
 	padding-left: 0;
@@ -499,10 +499,24 @@ td{
 
 
 #week{
-	position: relative;
+	position: fixed;
 	z-index: 4;
 	background-color: transparent;
 	height: auto;
+}
+
+.weekfixed{
+	border-bottom:0.5px solid #cccccc;
+	border-left:0.5px solid #cccccc;
+	border-right:0.5px solid #cccccc;
+	padding-top: 30px;
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+/* 주간달력 상단 내용; swiper 안에 있는 날짜표시라인은 잠시 숨겨두기 */
+.swiper-slide #week{
+	display: none;
 }
 
 #weekText span{
@@ -677,7 +691,7 @@ td{
 		margin:0 auto;
 		left: 0 !important;
 		transform: none;
-		padding-top: 100px;
+		padding-top: 132px;
 	}
 
 	table{
@@ -685,7 +699,7 @@ td{
 	}
 
 	.timeindex{
-		padding-top: 51px;
+		/*padding-top: 51px;*/
 	}
 
 	.classTime,.offTime{
@@ -835,8 +849,11 @@ td{
 	}
 
 	#week{
-		position: relative;
-		padding-top: 0px;
+		position: fixed;
+	}
+
+	.weekfixed{
+		padding-top: 80px;
 	}
 
 	#weekText span{

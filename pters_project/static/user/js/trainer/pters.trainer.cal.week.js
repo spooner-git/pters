@@ -501,6 +501,8 @@ $(document).ready(function(){
 	//DBrepeatdata(repeatData,'class')
 	//DBrepeatdata(offrepeatData,'off')
 
+	weekNum_Set_fixed()
+
 // ****************************구동시 실행********************************************************************************
 // ############################구동시 실행################################################################################
 
@@ -508,14 +510,14 @@ $(document).ready(function(){
 	myswiper.on('SlideNextEnd',function(){
 			slideControl.append();
 			dateText();
-			//weekNum_Set();	
+			weekNum_Set_fixed()
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
 	myswiper.on('SlidePrevEnd',function(){
 			slideControl.prepend();
 			dateText();
-			//weekNum_Set();
+			weekNum_Set_fixed()
 	});
 
 	//페이지 이동에 대한 액션 클래스
@@ -556,6 +558,7 @@ $(document).ready(function(){
 	function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성 
 		//Week 선택자 2E, 1E, 0W, 1L, 2L
 		//주간달력 상단표시줄 (요일, 날짜, Today표식)
+		
 		weekTable(Index)
 
 		var W = Week
@@ -823,6 +826,7 @@ $(document).ready(function(){
 
 		for(var i=2; i<=8; i++){			
 			var dateID = swiperPage.find('td:nth-child('+i+')').attr('id').split('_');
+			console.log(dateID)
 			var yy = dateID[0];
 			var mm = dateID[1];
 			var dd = dateID[2];
@@ -839,6 +843,32 @@ $(document).ready(function(){
 		toDay(Index);
 		reserveAvailable(Index);
 		todayFinderArrow();
+	}
+
+	function weekNum_Set_fixed(){
+		var index = Number(myswiper.activeIndex+1);
+		var sunday = $('.weekfixed #sunDate')
+		var monday = $('.weekfixed #monDate')
+		var tuesday = $('.weekfixed #tueDate')
+		var wednesday = $('.weekfixed #wedDate')
+		var thursday = $('.weekfixed #thrDate')
+		var friday = $('.weekfixed #friDate')
+		var saturday = $('.weekfixed #satDate')
+
+		var Sunday_date = $('.swiper-slide-active'+' #sunDate').text()
+		var Monday_date = $('.swiper-slide-active'+' #monDate').text()
+		var Tuesday_date = $('.swiper-slide-active'+' #tueDate').text()
+		var Wednesday_date = $('.swiper-slide-active'+' #wedDate').text()
+		var Thursday_date = $('.swiper-slide-active'+' #thrDate').text()
+		var Friday_date = $('.swiper-slide-active'+' #friDate').text()
+		var Saturday_date = $('.swiper-slide-active'+' #satDate').text()
+
+		var WeekArry = [sunday,monday,tuesday,wednesday,thursday,friday,saturday]
+		var WeekArryTarget = [Sunday_date,Monday_date,Tuesday_date,Wednesday_date,Thursday_date,Friday_date,Saturday_date]
+		console.log(WeekArryTarget)
+		for(i=0; i<7;i++){
+			WeekArry[i].html(WeekArryTarget[i])
+		}
 	}
 
 	function weekTable(Index){
