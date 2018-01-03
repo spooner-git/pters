@@ -500,26 +500,44 @@ $(document).ready(function(){
 	offTime();
 	//DBrepeatdata(repeatData,'class')
 	//DBrepeatdata(offrepeatData,'off')
-
 	weekNum_Set_fixed()
+	toDay();
+
 
 // ****************************구동시 실행********************************************************************************
 // ############################구동시 실행################################################################################
 
 	//다음페이지로 슬라이드 했을때 액션
-	myswiper.on('SlideNextEnd',function(){
+	myswiper.on('onSlideNextEnd',function(){
 			slideControl.append();
 			dateText();
 			weekNum_Set_fixed()
+			toDay();		
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
-	myswiper.on('SlidePrevEnd',function(){
+	myswiper.on('onSlidePrevEnd',function(){
 			slideControl.prepend();
 			dateText();
 			weekNum_Set_fixed()
+			toDay();			
 	});
 
+
+	myswiper.on('onSlideChangeStart',function(){
+		myswiper.params.onlyExternal = true;
+	})
+
+	myswiper.on('onSlideChangeEnd',function(){
+		myswiper.params.onlyExternal = false;
+	})
+
+	myswiper.on('onTouchEnd',function(){
+		myswiper.params.onlyExternal = false;
+	})
+
+
+	
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {
 		'append' : function(){ //다음페이지로 넘겼을때
@@ -826,7 +844,7 @@ $(document).ready(function(){
 
 		for(var i=2; i<=8; i++){			
 			var dateID = swiperPage.find('td:nth-child('+i+')').attr('id').split('_');
-			console.log(dateID)
+			//console.log(dateID)
 			var yy = dateID[0];
 			var mm = dateID[1];
 			var dd = dateID[2];
@@ -840,8 +858,8 @@ $(document).ready(function(){
 			$('#slide'+Index+' #weekNum_'+Number(i-1)).attr('data-date',yy+mm+dd)
 		}
 
-		toDay(Index);
-		reserveAvailable(Index);
+		//toDay();
+		//reserveAvailable();
 		todayFinderArrow();
 	}
 
@@ -855,6 +873,14 @@ $(document).ready(function(){
 		var friday = $('.weekfixed #friDate')
 		var saturday = $('.weekfixed #satDate')
 
+		var weekNum_1_fix = $('.weekfixed #weekNum_1')
+		var weekNum_2_fix = $('.weekfixed #weekNum_2')
+		var weekNum_3_fix = $('.weekfixed #weekNum_3')
+		var weekNum_4_fix = $('.weekfixed #weekNum_4')
+		var weekNum_5_fix = $('.weekfixed #weekNum_5')
+		var weekNum_6_fix = $('.weekfixed #weekNum_6')
+		var weekNum_7_fix = $('.weekfixed #weekNum_7')
+
 		var Sunday_date = $('.swiper-slide-active'+' #sunDate').text()
 		var Monday_date = $('.swiper-slide-active'+' #monDate').text()
 		var Tuesday_date = $('.swiper-slide-active'+' #tueDate').text()
@@ -863,11 +889,21 @@ $(document).ready(function(){
 		var Friday_date = $('.swiper-slide-active'+' #friDate').text()
 		var Saturday_date = $('.swiper-slide-active'+' #satDate').text()
 
+		var weekNum_1 = $('.swiper-slide-active'+' #weekNum_1').attr('data-date')
+		var weekNum_2 = $('.swiper-slide-active'+' #weekNum_2').attr('data-date')
+		var weekNum_3 = $('.swiper-slide-active'+' #weekNum_3').attr('data-date')
+		var weekNum_4 = $('.swiper-slide-active'+' #weekNum_4').attr('data-date')
+		var weekNum_5 = $('.swiper-slide-active'+' #weekNum_5').attr('data-date')
+		var weekNum_6 = $('.swiper-slide-active'+' #weekNum_6').attr('data-date')
+		var weekNum_7 = $('.swiper-slide-active'+' #weekNum_7').attr('data-date')
+
 		var WeekArry = [sunday,monday,tuesday,wednesday,thursday,friday,saturday]
 		var WeekArryTarget = [Sunday_date,Monday_date,Tuesday_date,Wednesday_date,Thursday_date,Friday_date,Saturday_date]
-		console.log(WeekArryTarget)
+		var WeekNumArray = [weekNum_1_fix,weekNum_2_fix,weekNum_3_fix,weekNum_4_fix,weekNum_5_fix,weekNum_6_fix,weekNum_7_fix]
+		var WeekNumArrayTarget = [weekNum_1,weekNum_2,weekNum_3,weekNum_4,weekNum_5,weekNum_6,weekNum_7]
 		for(i=0; i<7;i++){
 			WeekArry[i].html(WeekArryTarget[i])
+			WeekNumArray[i].attr('data-date',WeekNumArrayTarget[i])
 		}
 	}
 
@@ -886,7 +922,7 @@ $(document).ready(function(){
 		var combine = div+tdgap+tdSun+tdMon+tdTue+tdWed+tdThr+tdFri+tdSat+divfin
 		slideIndex.append(combine)
 	}
-
+/*
 	function toDay(Index){
 		for(i=1;i<=7;i++){
 		var scan = $('#slide'+Index+' #weekNum_'+i).attr('data-date')
@@ -909,7 +945,7 @@ $(document).ready(function(){
 			}
 		}
 	}
-
+*/
 	function todayFinderArrow(){
 		var currentMM = String(currentPageMonth);
 		var currentDD = String(currentDate);
@@ -937,7 +973,7 @@ $(document).ready(function(){
 		}
 	}
 
-
+/*
 	function reserveAvailable(Index){
 		var yy = currentYear;
 		var mm = String(currentPageMonth);
@@ -967,6 +1003,60 @@ $(document).ready(function(){
 			}
 		}
 	}
+*/		
+		function toDay(){
+			for(i=1;i<=7;i++){
+			var scan = $('.weekfixed'+' #weekNum_'+i).attr('data-date')
+				var yy = String(currentYear)
+				var dd = String(currentDate)
+				var mm = String(currentPageMonth)
+				
+				if(mm.length<2){
+					var mm = '0'+mm
+				}
+				if(dd.length<2){
+					var dd = '0'+dd
+				}
+				console.log(yy+mm+dd,scan)
+				if(scan == yy+mm+dd){
+					$('.weekfixed #weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY')
+					$('.weekfixed #weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
+				}else{
+					$('.weekfixed #weekNum_'+i+' span:nth-child(1)').removeClass('today').html('')
+					$('.weekfixed #weekNum_'+i+' span:nth-child(3)').removeClass('today-Number')
+				}
+			}
+		}
+
+		function reserveAvailable(){
+			var yy = currentYear;
+			var mm = String(currentPageMonth);
+			var dd = String(currentDate);
+			if(mm.length<2){
+				var mm = '0'+mm
+			}
+			if(dd.length<2){
+				var dd = '0'+dd
+			}
+			var ymdArry = [yy,mm,dd]
+			var yymmdd = ymdArry.join('')
+			for(i=1;i<=7;i++){
+			var scan = $('#slide'+Index+' #weekNum_'+i).attr('data-date')
+				if(yymmdd<=scan && scan<=14+Number(yymmdd)){
+					$('#slide'+Index+' #weekNum_'+i).addClass('reserveavailable')
+					
+				}else if(scan.substr(0,4)==yy+1 && scan.substr(4,2) == '01' &&scan.substr(6,2)<=Number(dd)+14-lastDay[currentMonth]){
+					$('#slide'+Index+' #weekNum_'+i).addClass('reserveavailable')
+				}
+				else if(scan.substr(4,2) > mm && scan.substr(6,2)<=Number(dd)+14-lastDay[currentMonth]){
+					$('#slide'+Index+' #weekNum_'+i).addClass('reserveavailable')
+					
+				}else{
+					$('#slide'+Index+' #weekNum_'+i).removeClass('reserveavailable')
+					
+				}
+			}
+		}
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var planheight = 30;
