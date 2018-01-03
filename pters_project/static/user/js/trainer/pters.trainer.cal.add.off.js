@@ -234,7 +234,7 @@ $(document).ready(function(){
         case "weekcal" :
           var planheight = 30;
           var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
-          if($calendarWidth==1200){
+          if($calendarWidth>=600){
             var planheight = 45;
           }
           var classlen = classTimeArray.length;
@@ -307,7 +307,7 @@ $(document).ready(function(){
       case "weekcal":
           var planheight = 30;
           var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
-          if($calendarWidth==1200){
+          if($calendarWidth>=600){
             var planheight = 45;
           }
           var offlen = offTimeArray.length;
