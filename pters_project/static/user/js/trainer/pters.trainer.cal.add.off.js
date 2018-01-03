@@ -115,13 +115,15 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(){
+                      $('#calendar').css('height','100%')
                       completeSend_off();
                       closeAddPopup_off();
+                      ajaxClassTime();
                     },
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-                      ajaxClassTime();
+                      
                     },
 
                     //통신 실패시 처리
@@ -345,18 +347,19 @@ $(document).ready(function(){
         $('.ajaxloadingPC').hide();
         $('#shade').css({'z-index':'100'});
         $('#shade').hide();
-        $('#calendar').show();
+        //$('#calendar').show();
+        
      }
 
       function closeAddPopup_off(){
         $('body').css('overflow-y','overlay')
-        $('#shade3').fadeOut();
-        $('#page-ptadd').fadeOut('fast','swing');
-        $('#page-offadd').fadeOut('fast','swing');
+        $('#shade3').hide();
+        $('#page-ptadd').hide('fast','swing');
+        $('#page-offadd').hide('fast','swing');
         $('#float_btn_wrap').fadeIn();
         $('#float_btn').removeClass('rotate_btn');
         $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
+        $('#page-base-addstyle').hide();
         $('.submitBtn').removeClass('submitBtnActivated');
 
         $("#membersSelected button").removeClass("dropdown_selected");

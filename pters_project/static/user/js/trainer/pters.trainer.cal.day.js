@@ -15,7 +15,8 @@ $(document).ready(function(){
 
 	    if($('body').width()<600){
 	    	$('#shade3').fadeIn('fast');
-		    $('#calendar').hide()
+		    //$('#calendar').hide()
+		    $('#calendar').css('height','0')
 	    }
 	})
 
@@ -31,7 +32,8 @@ $(document).ready(function(){
 
 	    if($('body').width()<600){
 	    	$('#shade3').fadeIn('fast');
-		    $('#calendar').hide()
+		    //$('#calendar').hide()
+		    $('#calendar').css('height','0')
 	    }
 	})
 
