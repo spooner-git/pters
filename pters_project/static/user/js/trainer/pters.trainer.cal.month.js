@@ -186,7 +186,7 @@ $(document).ready(function(){
 
 
 	//다음페이지로 슬라이드 했을때 액션
-	myswiper.on('SlideNextEnd',function(){
+	myswiper.on('onSlideNextEnd',function(){
 		++currentPageMonth;
 		if(currentPageMonth+1>12){
 			++currentYear
@@ -198,7 +198,7 @@ $(document).ready(function(){
 	})
 
 	//이전페이지로 슬라이드 했을때 액션
-	myswiper.on('SlidePrevEnd',function(){
+	myswiper.on('onSlidePrevEnd',function(){
 		--currentPageMonth;
 		if(currentPageMonth-1<1){
 			--currentYear
@@ -207,6 +207,14 @@ $(document).ready(function(){
 		}else{
 			slideControl.prepend();
 		};
+	})
+
+	myswiper.on('onSlideChangeStart',function(){
+		myswiper.params.onlyExternal = true;
+	})
+
+	myswiper.on('onSlideChangeEnd',function(){
+		myswiper.params.onlyExternal = false;
 	})
 	
 	//페이지 이동에 대한 액션 클래스
@@ -430,9 +438,9 @@ $(document).ready(function(){
 
 	function todayFinderArrow(Year,Month){
 		var currentYY = String(oriYear)
-		var pageYY = Year
-		var currentMM = oriMonth;
-		var pageMM = Month
+		var pageYY = String(Year)
+		var currentMM = String(oriMonth);
+		var pageMM = String(Month)
 		if(currentMM.length<2){
 			var currentMM = '0'+currentMM
 		}

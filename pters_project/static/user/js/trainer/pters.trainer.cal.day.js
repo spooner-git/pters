@@ -444,21 +444,26 @@ $(document).ready(function(){
 	var currentPageMonth = currentMonth+1; //현재 달
 
 	//다음페이지로 슬라이드 했을때 액션
-	myswiper.on('SlideNextEnd',function(){
+	myswiper.on('onSlideNextEnd',function(){
 		dateText();
 		slideControl.append();
 		
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
-	myswiper.on('SlidePrevEnd',function(){
+	myswiper.on('onSlidePrevEnd',function(){
 		dateText();
 		slideControl.prepend();
 	});
 
+	myswiper.on('onSlideChangeStart',function(){
+		myswiper.params.onlyExternal = true;
+	})
 
+	myswiper.on('onSlideChangeEnd',function(){
+		myswiper.params.onlyExternal = false;
+	})
 
-	
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {
 		'append' : function(){ //다음페이지로 넘겼을때
@@ -701,8 +706,8 @@ $(document).ready(function(){
 	}
 
 	function todayFinderArrow(){
-		var currentMM = currentPageMonth;
-		var currentDD = currentDate;
+		var currentMM = String(currentPageMonth);
+		var currentDD = String(currentDate);
 		if(currentMM.length<2){
 			var currentMM = '0'+currentMM
 		}
