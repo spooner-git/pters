@@ -100,7 +100,8 @@ $(document).ready(function(){
         }
      }
 
-     $("#upbutton-check, #submitBtn_pt").click(function(){
+     $("#upbutton-check, #submitBtn_pt").click(function(e){
+      e.preventDefault();
         var $form = $('#pt-add-form')
 
          if(select_all_check==true){
@@ -117,13 +118,14 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(){
+                      $('#calendar').css('height','100%')
                       closeAddPopup();
                       completeSend();
+                      ajaxClassTime();
                     },
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-                      ajaxClassTime();
                     },
 
                     //통신 실패시 처리
@@ -196,7 +198,7 @@ $(document).ready(function(){
       switch(location){
         case "daycal" :
           var classlen = classTimeArray.length;
-          $('#calendar').css('display','none');
+          //$('#calendar').css('display','none');
           for(var i=0; i<classlen; i++){
             var indexArray = classTimeArray[i]
             var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
@@ -228,7 +230,7 @@ $(document).ready(function(){
               }
             }
           };
-          $('#calendar').css('display','block');
+          //$('#calendar').css('display','block');
         break;
 
         case "weekcal" :
@@ -238,7 +240,7 @@ $(document).ready(function(){
             var planheight = 45;
           }
           var classlen = classTimeArray.length;
-          $('#calendar').css('display','none');
+          //$('#calendar').css('display','none');
           for(var i=0; i<classlen; i++){
           var indexArray = classTimeArray[i]
           var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
@@ -260,7 +262,7 @@ $(document).ready(function(){
           
           tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
            };
-          $('#calendar').css('display','block');
+          //$('#calendar').css('display','block');
           break;
       }
 	  };
@@ -270,7 +272,7 @@ $(document).ready(function(){
     switch(location){
       case "daycal":
           var offlen = offTimeArray.length;
-          $('#calendar').css('display','none');
+          //$('#calendar').css('display','none');
           for(var i=0; i<offlen; i++){
             var indexArray = offTimeArray[i]
             var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
@@ -301,7 +303,7 @@ $(document).ready(function(){
               } 
             }
           };
-          $('#calendar').css('display','block');
+          //$('#calendar').css('display','block');
       break;
       
       case "weekcal":
@@ -311,7 +313,7 @@ $(document).ready(function(){
             var planheight = 45;
           }
           var offlen = offTimeArray.length;
-          $('#calendar').css('display','none');
+          //$('#calendar').css('display','none');
           for(var i=0; i<offlen; i++){
             var indexArray = offTimeArray[i]
             var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
@@ -329,7 +331,7 @@ $(document).ready(function(){
             
             tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
           };
-          $('#calendar').css('display','block');
+          //$('#calendar').css('display','block');
       break;
     }
   };
@@ -347,20 +349,20 @@ $(document).ready(function(){
         $('.ajaxloadingPC').hide();
         $('#shade').css({'z-index':'100'});
         $('#shade').hide();
-        $('#calendar').show();
+        //$('#calendar').show();
         //alert('complete: 일정 정상 등록')
      }
 
 
      function closeAddPopup(){
         $('body').css('overflow-y','overlay');
-        $('#shade3').fadeOut();
-        $('#page-ptadd').fadeOut('fast','swing');
-        $('#page-offadd').fadeOut('fast','swing');
+        $('#shade3').hide();
+        $('#page-ptadd').hide('fast','swing');
+        $('#page-offadd').hide('fast','swing');
         $('#float_btn_wrap').fadeIn();
         $('#float_btn').removeClass('rotate_btn');
         $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
+        $('#page-base-addstyle').hide();
         $('.submitBtn').removeClass('submitBtnActivated');
 
         $("#membersSelected button").removeClass("dropdown_selected");

@@ -28,7 +28,8 @@ $(document).ready(function(){
 	    
 	    if($('body').width()<600){
 	    	$('#shade3').fadeIn('fast');
-		    $('#calendar').hide()
+		    //$('#calendar').fadeOut()
+		    $('#calendar').css('height','0')
 	    }
 		    
 	})
@@ -45,12 +46,14 @@ $(document).ready(function(){
 	    
 	    if($('body').width()<600){
 	    	$('#shade3').fadeIn('fast');
-		    $('#calendar').hide()
+		    //$('#calendar').fadeOut()
+		    $('#calendar').css('height','0')
 	    }
 	})
 
 	$('#upbutton-x').click(function(){
-		$('#calendar').show()
+		$('#calendar').css('height','90%')
+		//$('#calendar').show()
 	    $('#shade3').fadeOut();
 	    $('#shade').hide();
 	    $('#page-ptadd').fadeOut('fast','swing');
@@ -156,9 +159,6 @@ $(document).ready(function(){
 		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 			$('#shade').css({'display':'block'});
-			console.log($(this).attr('class-time')); //현재 클릭한 요소의 class-time 요소 값 보기
-			                                         //형식예: 2017_10_7_6_00_2_원빈
-			console.log($(this).attr('schedule-id'));
 			var info = $(this).attr('class-time').split('_')
 			var yy=info[0]
 			var mm=info[1]
@@ -201,9 +201,6 @@ $(document).ready(function(){
 		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 			$('#shade').css({'display':'block'});
-			console.log($(this).attr('off-time')); //현재 클릭한 요소의 class-time 요소 값 보기
-			                                         //형식예: 2017_10_7_6_00_2_원빈
-			console.log($(this).attr('off-schedule-id'));
 			var info = $(this).attr('off-time').split('_')
 			var yy=info[0]
 			var mm=info[1]
@@ -867,14 +864,12 @@ $(document).ready(function(){
 			var dd = String(currentDate)
 			var mm = String(currentPageMonth)
 
-			console.log(dd.length,mm.length)
 			if(mm.length<2){
 				var mm = '0'+mm
 			}
 			if(dd.length<2){
 				var dd = '0'+dd
 			}
-			console.log(scan, yy+mm+dd)
 			if(scan == yy+mm+dd){
 				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY')
 				$('#slide'+Index+' #weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
@@ -894,7 +889,6 @@ $(document).ready(function(){
 		if(currentDD.length<2){
 			var currentDD = '0'+currentDD
 		}
-		console.log(currentMM, currentDD)
 		var todayInfo = String(currentYear) + currentMM + currentDD
 		var viewdayInfomin = $('.swiper-slide-active'+' #weekNum_1').attr('data-date');
 		var viewdayInfomax = $('.swiper-slide-active'+' #weekNum_7').attr('data-date');
