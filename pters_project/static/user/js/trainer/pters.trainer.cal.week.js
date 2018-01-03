@@ -970,7 +970,7 @@ $(document).ready(function(){
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var planheight = 30;
-			if($calendarWidth==1200){
+			if($calendarWidth>=600){
 				var planheight = 45;
 		}
 		var classlen = classTimeArray.length;
@@ -1001,7 +1001,7 @@ $(document).ready(function(){
 
 	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var planheight = 30;
-			if($calendarWidth==1200){
+			if($calendarWidth>=600){
 				var planheight = 45;
 		}
 		var offlen = offTimeArray.length;
