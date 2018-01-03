@@ -399,7 +399,7 @@ td{
 #calendar{
 	position: relative;
 	width: 100%;
-	padding-top: 85px;
+	padding-top: 104px;
 	background-color: transparent;
 	padding-right: 0;
 	padding-left: 0;
@@ -519,7 +519,7 @@ td{
 	border-bottom:0.5px solid #cccccc;
 	border-left:0.5px solid #cccccc;
 	border-right:0.5px solid #cccccc;
-	padding-top: 30px;
+	padding-top: 50px;
 	padding-left: 1px;
 	padding-right: 1px;
 }
@@ -701,7 +701,7 @@ td{
 		margin:0 auto;
 		left: 0 !important;
 		transform: none;
-		padding-top: 132px;
+		padding-top: 151px;
 	}
 
 	table{
@@ -863,7 +863,7 @@ td{
 	}
 
 	.weekfixed{
-		padding-top: 80px;
+		padding-top: 100px;
 	}
 
 	#weekText span{
