@@ -3,36 +3,43 @@ $(document).ready(function(){
 	var repeatData = ['김선겸_tue_16_1_20171203_20180301','김선겸_fri_7_1_20171203_20180301','박신혜_mon_16_1_20171126_20180301']
 	var offrepeatData = ['OFF_sun_5_20_20171224_20180301','OFF_sat_16_9_20171209_20180301']
 
-	$('#float_inner1').click(function(){
+	$('#float_inner1').click(function(){ //PT추가버튼
 		scrollToDom($('body'))
-	    $('#page-ptadd').fadeIn('fast');
+		addTypeSelect = "ptadd"
+		$('#pcaddpopup').css('display','block')
+		$('#pcaddpopup_off').css('display','none')
+		$('#memberName,#remainCount,#pcaddpopup').css('display','block');
+	    $('#page-addplan').fadeIn('fast');
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
 	    $('#uptext2').text('PT 일정 등록')
 	    $('#page-base').fadeOut();
 	    $('#page-base-addstyle').fadeIn();
 	    $("#datepicker").datepicker('setDate',null)
-
+	    
 	    if($('body').width()<600){
 	    	$('#shade3').fadeIn('fast');
-		    //$('#calendar').hide()
+		    //$('#calendar').fadeOut()
 		    $('#calendar').css('height','0')
-	    }
+	    }  
 	})
 
-	$('#float_inner2').click(function(){
+	$('#float_inner2').click(function(){ //OFF추가버튼
 		scrollToDom($('body'))
-	    $('#page-offadd').fadeIn('fast');
+		addTypeSelect = "offadd"
+		$('#pcaddpopup_off').css('display','block')
+		$('#memberName,#remainCount,#pcaddpopup').css('display','none');
+	    $('#page-addplan').fadeIn('fast');
 	    $('#uptext2').text('OFF 일정 등록')
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
 	    $('#page-base').fadeOut();
 	    $('#page-base-addstyle').fadeIn();
-	    $("#datepicker_off").datepicker('setDate',null)
-
+	    $("#datepicker").datepicker('setDate',null)
+	    
 	    if($('body').width()<600){
 	    	$('#shade3').fadeIn('fast');
-		    //$('#calendar').hide()
+		    //$('#calendar').fadeOut()
 		    $('#calendar').css('height','0')
 	    }
 	})
@@ -41,8 +48,7 @@ $(document).ready(function(){
 		$('#calendar').show()
 	    $('#shade3').fadeOut();
 	    $('#shade').hide();
-	    $('#page-ptadd').fadeOut('fast','swing');
-	    $('#page-offadd').fadeOut('fast','swing');
+	    $('#page-addplan').fadeOut('fast','swing');
 	    $('#float_btn_wrap').fadeIn();
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
@@ -63,26 +69,14 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes").empty();
         $("#durations").empty();
-
-        $("#dateSelector_off p").removeClass("dropdown_selected");
-        $('#timeGraph_off').hide();
-        $("#starttimesSelected_off button").removeClass("dropdown_selected");
-        $("#starttimesSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#starttimesSelected_off .btn:first-child").val("");
-        $("#durationsSelected_off button").removeClass("dropdown_selected");
-        $("#durationsSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected_off .btn:first-child").val("");
-        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-  		$("#starttimes_off").empty();
-        $("#durations_off").empty();
+        $('.tdgraph').removeClass('graphindicator')
   	})
   //모바일 스타일
 
   //PC 스타일
   	$('.cancelBtn').click(function(){
 	    $('#shade').hide();
-	    $('#page-ptadd').fadeOut('fast','swing');
-	    $('#page-offadd').fadeOut('fast','swing');
+	    $('#page-addplan').fadeOut('fast','swing');
 	    $('#float_btn_wrap').fadeIn();
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
@@ -104,18 +98,6 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes").empty();
         $("#durations").empty();
-
-        $("#dateSelector_off p").removeClass("dropdown_selected");
-        $('#timeGraph_off').hide();
-        $("#starttimesSelected_off button").removeClass("dropdown_selected");
-        $("#starttimesSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#starttimesSelected_off .btn:first-child").val("");
-        $("#durationsSelected_off button").removeClass("dropdown_selected");
-        $("#durationsSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected_off .btn:first-child").val("");
-        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-  		$("#starttimes_off").empty();
-        $("#durations_off").empty();
         $('.tdgraph').removeClass('graphindicator')
   	})
   //PC 스타일

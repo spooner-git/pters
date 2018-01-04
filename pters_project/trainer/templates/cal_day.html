@@ -137,8 +137,10 @@
           </div>    
     </div>
 
-<div id="page-ptadd" class="wrap">
-  
+
+
+
+<div id="page-addplan" class="wrap">
     {% if messages %}
         {% for message in messages %}
             <div id="inputError">
@@ -154,11 +156,25 @@
         <input type="hidden" name="training_time" id="id_training_time">
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
     </form>
+
+    <form action="{% url 'trainer:add_off_logic' %}" id="off-add-form" method="post">
+        <input type="hidden" name="training_date" id="id_training_date_off">
+        <input type="hidden" name="time_duration" id="id_time_duration_off">
+        <input type="hidden" name="training_time" id="id_training_time_off">
+        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+    </form>
     
     <div class="ptaddbox" id="pcaddpopup">
       <span class="KRtext">PT 일정 추가</span>
       <span class="JPtext">PT 日程追加</span>
       <span class="ENtext">Add PT Schedule</span>
+      <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+    </div>
+
+    <div class="ptaddbox" id="pcaddpopup_off">
+      <span class="KRtext">OFF 일정 추가</span>
+      <span class="JPtext">OFF 日程追加</span>
+      <span class="ENtext">Add OFF Schedule</span>
       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
     </div>
 
@@ -180,7 +196,6 @@
         </ul>
       </div>
     </div>
-
 
     <div id="remainCount" class="ptaddbox">
       <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 남은 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Remain Counts</span></div>
@@ -275,6 +290,26 @@
       </div>
     </div> 
 
+    <div id="repeatSchedule" class="ptaddbox repeatbox" style="display:none;">
+        <div id="repeatScheduleText" class="ptaddboxtext repeattext">
+          <img src={% static "user/res/ptadd/icon-repeat-cal.png" %} class="icons">
+           <span onclick="location.href='{% url 'trainer:add_repeat_off' %}'">반복일정</span>
+           <img class="icons-next-button" src={% static "user/res/ptadd/btn-next-white.png" %}>
+         </div>
+        
+        <!--반복일정 박스-->
+        <div class="repeatboxinner">
+          <span class="repeatstarttext KRtext">매주 월요일 오전 11시</span><span class="repeatfinishtext KRtext">반복종료 : PT 마감시</span>
+          <span class="repeatstarttext JPtext">매주 월요일 오전 11시</span><span class="repeatfinishtext JPtext">반복종료 : PT 마감시</span>
+          <span class="repeatstarttext ENtext">매주 월요일 오전 11시</span><span class="repeatfinishtext ENtext">반복종료 : PT 마감시</span>
+        </div>
+        
+        <!--반복일정 박스-->
+        <div class="repeatboxinner">
+          <span class="repeatstarttext">매주 수요일 오후 3시</span><span class="repeatfinishtext">반복종료 : 2017-12-31</span>
+        </div>
+    </div>
+
     <div class='popupBtn'>
       <div class="submitBtn" id="submitBtn_pt"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
     </div>
@@ -282,37 +317,55 @@
 </div>
 
 
-
-<div id="page-offadd" class="wrap">
-
-        {% if messages %}
-        {% for message in messages %}
-            <div id="inputError">
-                    <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
-            </div>
-        {% endfor %}
-        {% endif %}
-
-    <form action="{% url 'trainer:add_off_logic' %}" id="off-add-form" method="post">
-        <input type="hidden" name="training_date" id="id_training_date_off">
-        <input type="hidden" name="time_duration" id="id_time_duration_off">
-        <input type="hidden" name="training_time" id="id_training_time_off">
+ <div id="page-addplan-pc">
+    <form action="{% url 'trainer:add_pt_logic' %}" id="pt-add-form" method="post">
+        <input type="hidden" name="lecture_id"    id="id_lecture_id">
+        <input type="hidden" name="member_name"   id="id_member_name">
+        <input type="hidden" name="training_date" id="id_training_date">
+        <input type="hidden" name="time_duration" id="id_time_duration">
+        <input type="hidden" name="training_time" id="id_training_time">
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
     </form>
     
     <div class="ptaddbox" id="pcaddpopup">
-      <span class="KRtext">OFF 일정 추가</span>
-      <span class="JPtext">OFF 日程追加</span>
-      <span class="ENtext">Add OFF Schedule</span>
+      <span class="KRtext">PT 일정 추가</span>
+      <span class="JPtext">PT 日程追加</span>
+      <span class="ENtext">Add PT Schedule</span>
       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
     </div>
 
-    <div id="dateSelector_off" class="ptaddbox">
+    <div id="dateSelector_PC" class="ptaddbox">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
-      <p class="datepicktext dropdown"><input type="text" id="datepicker_off" placeholder="-" readonly></p>  
+      <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
     </div>
 
-    <div id="timeGraph_off" class="ptaddbox" style="display: none;">
+    <div id="memberName" class="ptaddbox">
+      <div class="ptaddboxtext"> <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
+      <div id="membersSelected" class="dropdown">
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+          <span class="KRtext" style="color:#cccccc;">회원명 선택</span>
+          <span class="JPtext" style="color:#cccccc;">選択</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span></button>
+        <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
+        <ul id="members" class="dropdown-menu pters_dropdown_custom">
+          <!-- 회원명 DB연동 필요-->
+            {% for lecture in trainer_member %}
+            <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
+                {{ lecture.trainer_member.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+
+    <div id="remainCount" class="ptaddbox">
+      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 남은 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Remain Counts</span></div>
+      <!-- 남은 횟수 DB연동 필요 -->
+            <div id="countsSelected" class="dropdown" placeholder="ー"></div>
+    </div>
+
+    <div id="timeGraph" class="ptaddbox" style="display: none;">
       <table class="timegraphtext">
         <tbody>
           <tr>
@@ -338,85 +391,64 @@
             <td class="">24</td>
           </tr>
           <tr>
-            <td id="5g_off" class="tdgraph"></td>
-            <td id="6g_off" class="tdgraph"></td>
-            <td id="7g_off" class="tdgraph"></td>
-            <td id="8g_off" class="tdgraph"></td>
-            <td id="9g_off" class="tdgraph"></td>
-            <td id="10g_off" class="tdgraph"></td>
-            <td id="11g_off" class="tdgraph"></td>
-            <td id="12g_off" class="tdgraph"></td>
-            <td id="13g_off" class="tdgraph"></td>
-            <td id="14g_off" class="tdgraph"></td>
-            <td id="15g_off" class="tdgraph"></td>
-            <td id="16g_off" class="tdgraph"></td>
-            <td id="17g_off" class="tdgraph"></td>
-            <td id="18g_off" class="tdgraph"></td>
-            <td id="19g_off" class="tdgraph"></td>
-            <td id="20g_off" class="tdgraph"></td>
-            <td id="21g_off" class="tdgraph"></td>
-            <td id="22g_off" class="tdgraph"></td>
-            <td id="23g_off" class="tdgraph"></td>
-            <td id="24g_off" class="tdgraph"></td>
+            <td id="5g_PC" class="tdgraph"></td>
+            <td id="6g_PC" class="tdgraph"></td>
+            <td id="7g_PC" class="tdgraph"></td>
+            <td id="8g_PC" class="tdgraph"></td>
+            <td id="9g_PC" class="tdgraph"></td>
+            <td id="10g_PC" class="tdgraph"></td>
+            <td id="11g_PC" class="tdgraph"></td>
+            <td id="12g_PC" class="tdgraph"></td>
+            <td id="13g_PC" class="tdgraph"></td>
+            <td id="14g_PC" class="tdgraph"></td>
+            <td id="15g_PC" class="tdgraph"></td>
+            <td id="16g_PC" class="tdgraph"></td>
+            <td id="17g_PC" class="tdgraph"></td>
+            <td id="18g_PC" class="tdgraph"></td>
+            <td id="19g_PC" class="tdgraph"></td>
+            <td id="20g_PC" class="tdgraph"></td>
+            <td id="21g_PC" class="tdgraph"></td>
+            <td id="22g_PC" class="tdgraph"></td>
+            <td id="23g_PC" class="tdgraph"></td>
+            <td id="24g_PC" class="tdgraph"></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div id="offStartTime" class="ptaddbox">
+    <div id="classStartTime" class="ptaddbox">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> <span class="KRtext"> 시작 시간</span><span class="JPtext"> 開始時間</span><span class="ENtext"> Start Time</span></div>
-      <div id="starttimesSelected_off" class="dropdown">
+      <div id="starttimesSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">선택</span>
           <span class="JPtext" style="color:#cccccc;">選択</span>
-          <span class="ENtext" style="color:#cccccc;">Select</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span></button>
         </button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-        <ul id="starttimes_off" class="dropdown-menu pters_dropdown_custom">
-
-        </ul>
+        <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
+       
+       </ul>
       </div>
     </div>
 
-    <div id="offDuration" class="ptaddbox">
+    <div id="classDuration" class="ptaddbox">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Time</span></div>
-      <div id="durationsSelected_off" class="dropdown">
+      <div id="durationsSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">선택</span>
           <span class="JPtext" style="color:#cccccc;">選択</span>
           <span class="ENtext" style="color:#cccccc;">Select</span>
         </button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-        <ul id="durations_off" class="dropdown-menu pters_dropdown_custom">
+        <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+
         </ul>
       </div>
-    </div>
+    </div> 
 
-    <div id="repeatSchedule" class="ptaddbox repeatbox">
-      <div id="repeatScheduleText" class="ptaddboxtext repeattext">
-        <img src={% static "user/res/ptadd/icon-repeat-cal.png" %} class="icons">
-         <span onclick="location.href='{% url 'trainer:add_repeat_off' %}'">반복일정</span>
-         <img class="icons-next-button" src={% static "user/res/ptadd/btn-next-white.png" %}>
-       </div>
-      
-      <!--반복일정 박스-->
-      <div class="repeatboxinner">
-        <span class="repeatstarttext KRtext">매주 월요일 오전 11시</span><span class="repeatfinishtext KRtext">반복종료 : PT 마감시</span>
-        <span class="repeatstarttext JPtext">매주 월요일 오전 11시</span><span class="repeatfinishtext JPtext">반복종료 : PT 마감시</span>
-        <span class="repeatstarttext ENtext">매주 월요일 오전 11시</span><span class="repeatfinishtext ENtext">반복종료 : PT 마감시</span>
-      </div>
-      
-      <!--반복일정 박스-->
-      <div class="repeatboxinner">
-        <span class="repeatstarttext">매주 수요일 오후 3시</span><span class="repeatfinishtext">반복종료 : 2017-12-31</span>
-      </div>
-    </div>
-    
     <div class='popupBtn'>
-      <div class="submitBtn" id="submitBtn_off"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
+      <div class="submitBtn" id="submitBtn_pt"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
     </div>
-
-  </div>
 
 </div>
 
@@ -438,7 +470,6 @@
 
           var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
           var offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %}];
-
           var classTimeArray = [];
           var offTimeArray = [];
 
@@ -448,6 +479,8 @@
           var offTimeData = []
           var offAddOkArray = [] //OFF 등록 시작 시간 리스트
           var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+
+          var addTypeSelect = "" //팝업 종류 선택 (PT or OFF)
         </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.day.js" %}></script>
         <script>
@@ -494,5 +527,4 @@
             })
         </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>
-        <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.add.off.js" %}></script>
 {% endblock %}

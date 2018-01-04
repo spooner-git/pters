@@ -696,25 +696,6 @@ table{
 
 /*페이지 popup*/
 
-#page-ptadd{
-	display: none;
-	position: absolute;
-	width: 100%;
-	z-index: 102;
-	left: 0%;
-	background: #f4f4f4;
-	top: 50px;
-}
-
-#page-offadd{
-	display: none;
-	position: absolute;	
-	width: 100%;
-	z-index: 102;
-	left: 0%;
-	background: #f4f4f4;
-	top:50px;
-}
 
 #page-weekcal{
 	display: block;
@@ -916,11 +897,6 @@ table{
 		letter-spacing: -0.3px;
 		color: #ffffff;
 		cursor: pointer;
-	}
-
-	#page-ptadd, #page-offadd{
-		top: 150px;
-		width: 500px;
 	}
 
 	#shade3{
