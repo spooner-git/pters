@@ -666,34 +666,6 @@ td{
 
 /*페이지 popup*/
 
-#page-ptadd{
-	display: none;
-	position: absolute;
-	width: 100%;
-	z-index: 102;
-	left: 0%;
-	background: #f4f4f4;
-	top: 50px;
-}
-
-#page-offadd{
-	display: none;
-	position: absolute;	
-	width: 100%;
-	z-index: 102;
-	left: 0%;
-	background: #f4f4f4;
-	top: 50px;
-}
-
-#page-ptadd-pc{
-	display: none;
-	position: absolute;	
-	width: 300px;
-	z-index: 102;
-	background: #f4f4f4;
-}
-
 
 @media(min-width: 600px){
 	#calendar{
@@ -783,12 +755,6 @@ td{
 		height: 44.5px;
 		font-weight: 500;
 		border-left:0.5px solid #f4f4f4;
-	}
-
-
-	#page-ptadd, #page-offadd,#page-ptadd-pc{
-		top: 150px;
-		width: 500px;
 	}
 
 	#shade3{

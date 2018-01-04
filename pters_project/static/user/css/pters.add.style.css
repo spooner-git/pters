@@ -9,6 +9,20 @@ input{
 	text-align: center;
 }
 
+#page-addplan{
+	display: none;
+	position: absolute;
+	width: 100%;
+	z-index: 102;
+	left: 0%;
+	background: #f4f4f4;
+	top: 50px;
+}
+
+#page-addplan-pc{
+	display: none;
+}
+
 #inputError{
 	position: relative;
 	width: 100%;
@@ -37,6 +51,76 @@ input{
 	margin-bottom: 50px;
 }
 
+.toggleBtnWrap{
+	display: inline-block;
+	width: 30px;
+	height: 15px;
+	border: 1px solid #fe4e65;
+	background: #fe4e65;
+	color: white;
+	font-size: 8px;
+	border-radius: 10px;
+	margin-left: 15px;
+	margin-bottom: 3px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.toggleBtnWrap_off{
+	display: inline-block;
+	width: 30px;
+	height: 15px;
+	border: 1px solid #fe4e65;
+	background: #a2a2a2;
+	color: white;
+	font-size: 8px;
+	border-radius: 10px;
+	margin-left: 15px;
+	margin-bottom: 3px;
+	text-align: center;
+	cursor: pointer;
+}
+
+#datetext_mini{
+	width: 242px;
+	font-size: 15px;
+	font-weight: 500;
+	cursor:pointer;
+	background: #f4f4f4;
+}
+
+.pters_dropdown_custom_mini{
+	font-family: 'Noto Sans KR';
+	top: auto;
+	width: 120px;
+	height: 30px;
+	max-height: 200px; /*144*/
+	overflow-y: auto;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.dropdown_mini{
+	display: inline-block;
+	width: 120px;
+	height: 30px;
+	margin:0px;
+}
+
+.dropdownlist_mini{
+	width: 180px;
+	top:auto;
+	left: auto;
+	overflow-y:auto;
+}
+
+.dropdownlist_mini li{
+	text-align: center;
+	font-size: 13px;
+	padding-top:2px;
+	padding-bottom:2px;
+}
+
 .centeralign{
 	margin:0 auto;
 	max-width: 800px;
@@ -52,6 +136,7 @@ input{
 	margin-top: 10px;
 }
 
+
 .dropdown button{
 	font-size: 15px;
 	height: 100%;
@@ -63,7 +148,7 @@ input{
 	-webkit-box-shadow: 0 1px 0 0 #fe4e65 !important;
 }
 
-.dropdown-menu li{
+.pters_dropdown_custom li{
 	text-align: center;
 	font-size: 15px;
 	padding-top:10px;
@@ -116,12 +201,28 @@ input{
 	margin-top: 5%;
 }
 
+.ptaddbox_mini{
+	display: inline-grid;
+	width: 48%;
+	padding-right: 5%;
+	padding-left: 5%;
+	margin-top: 4px;
+}
+
 .ptaddbox_nomargin{  /*회원모드 팝업에서 사용*/
 	padding-right: 5%;
 	padding-left: 5%;
 }
 
 .ptaddboxtext{
+	font-size: 14px;
+	color: #3b3d3d;
+	font-weight: bold;
+	margin-bottom: 0;
+}
+
+.ptaddboxtext_mini{
+	display: inline-block;
 	font-size: 14px;
 	color: #3b3d3d;
 	font-weight: bold;
@@ -139,6 +240,10 @@ input{
 	display: none;
 }
 
+#pcaddpopup_off{
+	display: none;
+}
+
 
 #remainCount{
 	position: relative;
@@ -153,11 +258,22 @@ input{
 	border-top: 9px solid transparent;
 }
 
-/*
-#classDuration{
-	margin-bottom: 170px; 
+#remainCount_mini{
+	position: relative;
 }
-*/
+
+
+#remainCount_mini div:nth-child(2){
+	background-color: #eaeaea;
+	box-shadow: 0 1px 0 0 #a2a2a2;
+	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
+	text-align: center;
+	padding-top: 5px;
+}
+
+#classDuration_mini{
+	display: none;
+}
 
 
 .icons{
@@ -203,7 +319,7 @@ input{
 	height: 8px;
 	/*background: #cacaca;*/
 	background: #ffffff;
-	background: #282828;
+	/*background: #282828;*/
 	border-left : 0.5px solid #f4f4f4;
 }
 
@@ -239,13 +355,13 @@ input{
 }
 
 .pinktimegraph{
-	background: #fe4e65;
+	background: #f37787;
 }
 
 .greytimegraph{
-	/*background: #616161;*/
-	background: #cccccc;
-	background: #e3e3e3;
+	background: #616161;
+	/*background: #cccccc;
+	background: #e3e3e3;*/
 }
 
 .pointerList{
@@ -283,7 +399,7 @@ input{
 
 
 #submitBtn{
-	height: 55px;
+	height: 50px;
 	color: #3d3b3b;
 }
 
@@ -309,12 +425,30 @@ input{
 	margin-top: 20px;
 }
 
+.popupBtn_mini{
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	bottom: -23px;
+	right: -21px;
+	text-align: center;
+	margin-top: 20px;
+}
+
 .submitBtn{
 	display:none;
 }
 
-#btn_close,.cancelBtn{
+.submitBtn_mini{
+	display:none;
+}
+
+#btn_close,.cancelBtn,.cancelBtn_mini{
 	cursor: pointer;
+}
+
+.cancelBtn_mini{
+	margin-top:5px;
 }
 
 /* 신규 회원 등록  */
@@ -445,17 +579,32 @@ input{
 }
 
 @media(min-width: 600px){
-	#pcaddpopup{
-		display: block;
+	
+	#page-addplan{
+		top: 150px;
+		width: 500px;
+	}
+	
+	#page-addplan-pc{
+		position: absolute;	
+		width: 300px;
+		z-index: 3;
+		background: #f4f4f4;
+		width: 300px;
+		border:2px solid #282828;
+		padding-bottom: 15px;
+	}
+
+
+	#pcaddpopup,#pcaddpopup_off{
 		font-size: 16px;
 		font-weight: bold;
 		text-align: center;
 	}
 
-	#pcaddpopup img{
+	#pcaddpopup img,#pcaddpopup_off img{
 		float: right;
 	}
-
 
 	.submitBtn{
 		display:block;
@@ -464,6 +613,10 @@ input{
 		color: #f4f4f4;
 		border-top: 0.5px solid #cccccc;
 		border-bottom: 0.5px solid #cccccc;
+	}
+	
+	.popupBtn_mini .submitBtn{
+		border-radius: 50%;
 	}
 
 	.submitBtn:active{
