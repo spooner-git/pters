@@ -716,7 +716,7 @@ td{
 	}
 
 	.swiper-slide{
-		overflow-y: hidden;
+		overflow-y: auto;
 	}
 
 	.slide-notice{
