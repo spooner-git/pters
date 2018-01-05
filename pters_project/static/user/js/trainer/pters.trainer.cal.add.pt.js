@@ -40,7 +40,6 @@ $(document).ready(function(){
             })
 
       $(document).on('click','.td00',function(){
-            addTypeSelect = "ptadd";
             var toploc = $(this).offset().top;
             var leftloc = $(this).offset().left;
             var tdwidth = $(this).width();
