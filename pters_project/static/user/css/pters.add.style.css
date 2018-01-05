@@ -87,6 +87,7 @@ input{
 	font-weight: 500;
 	cursor:pointer;
 	background: #f4f4f4;
+	line-height: 27px;
 }
 
 .pters_dropdown_custom_mini{
@@ -207,6 +208,11 @@ input{
 	padding-right: 5%;
 	padding-left: 5%;
 	margin-top: 4px;
+}
+
+#pcaddpopup_mini{
+	margin-bottom: 4px;
+	border-bottom: 1px solid #282828;
 }
 
 .ptaddbox_nomargin{  /*회원모드 팝업에서 사용*/
@@ -593,6 +599,8 @@ input{
 		width: 300px;
 		border:2px solid #282828;
 		padding-bottom: 15px;
+		border-top-right-radius: 20px;
+		border-bottom-left-radius: 20px;
 	}
 
 

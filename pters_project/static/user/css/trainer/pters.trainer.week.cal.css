@@ -306,7 +306,7 @@ img,a,div,span,p{
 }
 
 .weektable{
-	background:#ffffff;
+	background:transparent;
 }
 
 
@@ -344,8 +344,8 @@ img,a,div,span,p{
 	position: relative;
 	width: 100%;
 	font-size: 14.4px;
-	border-bottom:0.5px solid #f4f4f4;
 	height: 30px;
+	border-bottom:0.5px solid #f4f4f4;
 }
 
 
@@ -686,7 +686,7 @@ td{
 
 	.classTime,.offTime{
 		width: 97%;
-		border-bottom:0.5px solid #ffffff;
+		/*border-bottom:0.5px solid #ffffff;*/
 		border-radius: 5px;
 	}
 	
@@ -748,7 +748,7 @@ td{
 	}
 
 	.time-style{
-		height: 45px;
+		height: 45.5px;
 	}
 
 	.hour,.slidegap{

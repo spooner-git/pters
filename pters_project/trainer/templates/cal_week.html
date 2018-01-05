@@ -514,11 +514,11 @@
                 preventClicks : true,
                 keyboardControl : true, 
                 preventClicksPropagation : true,
-                threshold : 40,
-                resistance: 0.85,
-                shortSwipes : false,
-                longSwipesRatio: 0.2,
-                longSwipesMs : 70,
+                threshold : 50,
+                resistance: 1,
+                //shortSwipes : false,
+                //longSwipesRatio: 0.2,
+                //longSwipesMs : 70,
             });
             
 
@@ -561,9 +561,11 @@
             $('#typeSelector_1').click(function(){
                 $(this).css('background','#fe4e65')
                 $('#typeSelector_2').css('background','#a2a2a2')
-                $('#classDuration_mini').hide('fast')
-                $('#memberName_mini').show('fast')
-                $('#remainCount_mini').show('fast')
+                $('#classDuration_mini').hide('fast',function(){
+                    $('#memberName_mini').show('fast')
+                    $('#remainCount_mini').show('fast')
+                })
+                
                 addTypeSelect = "ptadd"
                 console.log(addTypeSelect)
             })
@@ -572,8 +574,10 @@
                 $(this).css('background','#fe4e65')
                 $('#typeSelector_1').css('background','#a2a2a2')
                 $('#memberName_mini').hide('fast')
-                $('#remainCount_mini').hide('fast')
-                $('#classDuration_mini').show('fast')
+                $('#remainCount_mini').hide('fast',function(){
+                    $('#classDuration_mini').show('fast')
+                })
+                
                 addTypeSelect = "offadd"
                 console.log(addTypeSelect)
             })
