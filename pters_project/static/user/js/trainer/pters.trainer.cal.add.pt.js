@@ -40,13 +40,44 @@ $(document).ready(function(){
             })
 
       $(document).on('click','.td00',function(){
-            addTypeSelect = "ptadd"; //일단 pt만..............................2018-01-04...........................................OFF도 작업필요
+            addTypeSelect = "ptadd";
             var toploc = $(this).offset().top;
             var leftloc = $(this).offset().left;
+            var tdwidth = $(this).width();
+            var tdheight = $(this).height();
+            var minipopupwidth = 300;
+            var minipopupheight = 131;
+            var splitID = $(this).attr('id').split('_')
+            var weekID = $(this).attr('data-week')
+            
+            //minipopup 위치 보정
+            if(splitID[3]>=22){
+              if(splitID[3]==24 && weekID!=3){
+                var toploc = toploc - tdheight*2
+              }else if(weekID==3){
+                var toploc = toploc-minipopupheight
+              }else{
+                var toploc = toploc - tdheight*(24-splitID[3])  
+              }
+            }else{
+              if(weekID==3){
+                var toploc = toploc + tdheight
+              }else{
+                var toploc = toploc + 30
+              }
+            }
+
+            if(weekID>=4){
+              var leftloc = leftloc-300-tdwidth
+            }else if(weekID==3){
+              var leftloc = leftloc-tdwidth/2
+            }
+            //minipopup 위치 보정
+
             if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none')){
               $('.td00').css('background','transparent')
               $(this).css('background','beige')
-              $('#page-addplan-pc').fadeIn().css({'top':toploc-10,'left':leftloc+150})
+              $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
               var tdinfo = $(this).attr('id').split('_');
               var yy = tdinfo[0];
               var mm = tdinfo[1];
