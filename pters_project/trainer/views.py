@@ -98,7 +98,7 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #sk Test 추가 171117
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_rem_count__gte=1)
+                                                                 , lecture_avail_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -193,7 +193,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # sk Test 추가 171117
         if error is None:
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_rem_count__gte=1)
+                                                                 , lecture_avail_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -346,7 +346,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #sk Test 추가 171117
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_rem_count__gte=1)
+                                                                 , lecture_avail_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -452,7 +452,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #sk Test 추가 171117
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_rem_count__gte=1)
+                                                                 , lecture_avail_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
