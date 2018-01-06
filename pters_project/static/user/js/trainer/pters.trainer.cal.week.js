@@ -584,12 +584,26 @@ $(document).ready(function(){
 	});
 
 
+	//너무 빠르게 스와이프 하는 것을 방지
 	myswiper.on('onSlideChangeStart',function(){
 		myswiper.params.onlyExternal = true;
 	})
 
 	myswiper.on('onSlideChangeEnd',function(){
 		myswiper.params.onlyExternal = false;
+	})
+	//너무 빠르게 스와이프 하는 것을 방지
+
+	//아래로 스크롤중 스와이프 했을때, jquery.swipe에서 stopPropagation Error발생하여 스와이프 불가하는 현상 방지
+	//스크롤중 swipe 기능막고, 스크롤 종료감지하여 종료 20ms 이후에 swipe 기능 살려주는 함수 
+	$(window).scroll(function(){
+		myswiper.params.onlyExternal = true;
+		clearTimeout($.data(this,"scrollCheck"));
+		console.log('scrolling')
+		$.data(this,"scrollCheck",setTimeout(function(){
+			myswiper.params.onlyExternal = false;
+			console.log('stop')
+		},20))
 	})
 
 	myswiper.on('onTouchEnd',function(){

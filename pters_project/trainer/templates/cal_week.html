@@ -544,9 +544,12 @@
                 //longSwipesMs : 70,
             });
             
-
             var count = 0 
             var count1 = 0
+
+            $(window).scroll(function(event){
+               event.stopPropagation();
+            })
 
             $('.arrowButtonPC a:nth-child(1)').click(function(){
               if(count==0){
