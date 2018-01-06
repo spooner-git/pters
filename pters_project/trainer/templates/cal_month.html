@@ -252,6 +252,10 @@
               myswiper.slideNext(100)  
             })
 
+            $(window).scroll(function(event){
+               event.stopPropagation();
+            })
+
             var count = 0 
             var count1 = 0
 
