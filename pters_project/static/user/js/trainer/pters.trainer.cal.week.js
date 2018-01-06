@@ -164,6 +164,7 @@ $(document).ready(function(){
 			$('.td00').css('background','transparent')
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 			$('#shade').css({'display':'block'});
+			var schedule_finish_check = $(this).attr('data-schedule-check')
 			var info = $(this).attr('class-time').split('_')
 			var yy=info[0]
 			var mm=info[1]
@@ -196,8 +197,19 @@ $(document).ready(function(){
 			$('#popup_info2').text(infoText2);
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
-			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
+			$("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
+			$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
+			$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
 			$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
+			$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
+			if(schedule_finish_check=="0"){
+				$("#popup_text0").css("display","block")
+				$("#popup_text1").css("display","block")
+            }
+            else{
+				$("#popup_text0").css("display","none")
+				$("#popup_text1").css("display","none")
+			}
 			schedule_on_off = 1;
 		})
 	
@@ -239,6 +251,7 @@ $(document).ready(function(){
 			$('#popup_info2').text(infoText2);
 			$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 			$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+			$("#popup_text0").css("display","none")
 			schedule_on_off = 0;
 
 		})
@@ -264,6 +277,41 @@ $(document).ready(function(){
 			}
 		})
 
+//일정 완료 기능 추가 - hk.kim 180106
+	$("#popup_text0").click(function(){  //일정 변경 버튼 클릭
+		var $pt_finish_form = $('#pt-finish-form');
+			if(schedule_on_off==1){
+				//PT 일정 완료 처리시
+				$.ajax({
+                    url:'/trainer/daily_pt_finish/',
+                    type:'POST',
+                    data:$pt_finish_form.serialize(),
+
+
+                    beforeSend:function(){
+                    	deleteBeforeSend();
+                    },
+
+                    //통신성공시 처리
+                    success:function(){
+                      closeDeletePopup();
+                      deleteCompleteSend();
+                      ajaxClassTime()
+                      console.log('success')
+                      },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+
+                      },
+
+                    //통신 실패시 처리
+                    error:function(){
+                      console.log("error")
+                    },
+                 })
+			}
+	})
 
 		//스케쥴 클릭시 팝업 End
 		//일정 변경 기능 추가 - hk.kim 171007
@@ -375,6 +423,7 @@ $(document).ready(function(){
                 classArray_lecture_id = [];
                 scheduleIdArray = [];
                 offScheduleIdArray = [];
+                scheduleFinishArray = [];
                 var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
                 var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
                 var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
@@ -383,6 +432,7 @@ $(document).ready(function(){
                 classArray_lecture_id = jsondata.classArray_lecture_id
                 scheduleIdArray = jsondata.scheduleIdArray
                 offScheduleIdArray = jsondata.offScheduleIdArray
+                scheduleFinishArray = jsondata.scheduleFinishArray;
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
                 $('.classTime,.offTime').parent().html('<div></div>')
@@ -413,6 +463,10 @@ $(document).ready(function(){
 	function closeDeletePopup(){
 		if($('#cal_popup3').css('display')=='block'){
 			$("#cal_popup3").css({'display':'none','z-index':'-2'})
+			$('#shade').css({'display':'none','z-index':'100'});
+		}
+		if($('#cal_popup').css('display')=='block'){
+			$("#cal_popup").css({'display':'none','z-index':'-2'})
 			$('#shade').css({'display':'none','z-index':'100'});
 		}
 	}
@@ -1088,8 +1142,12 @@ $(document).ready(function(){
 			//var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var tdClassStart = $("#"+classStart+" div");
 			//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
-			
-			tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
+
+			if(scheduleFinishArray[i]=="0") {
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+            }else {
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).css('background-color','#282828').html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+            }
 		};
 		$('#calendar').css('display','block');
 	};

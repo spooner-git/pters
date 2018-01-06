@@ -90,6 +90,7 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_lecture_data_end_date = []
         daily_lecture_data_member = []
         daily_lecture_data_id = []
+        daily_schedule_finish = []
         today_dt = timezone.now()
         before_dt = today_dt - datetime.timedelta(days=14)
         after_dt = today_dt + datetime.timedelta(days=14)
@@ -97,7 +98,7 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #sk Test 추가 171117
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_avail_count__gte=1)
+                                                                 , lecture_rem_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -138,6 +139,10 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
                     daily_lecture_data_member.append(member_data.name)
                     daily_lecture_data_id.append(lecture.lecture_id)
+                    if month_lecture.state_cd == 'PE':
+                        daily_schedule_finish.append(1)
+                    else :
+                        daily_schedule_finish.append(0)
 
         # context['daily_lecture_data'] = daily_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
@@ -149,6 +154,8 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
         context['daily_lecture_data_member'] = daily_lecture_data_member
         context['daily_lecture_data_id'] = daily_lecture_data_id
+
+        context['daily_schedule_finish'] = daily_schedule_finish
 
         return context
 
@@ -178,6 +185,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_lecture_data_end_date = []
         daily_lecture_data_member = []
         daily_lecture_data_id = []
+        daily_schedule_finish = []
         today_dt = timezone.now()
         before_dt = today_dt - datetime.timedelta(days=14)
         after_dt = today_dt + datetime.timedelta(days=14)
@@ -185,7 +193,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # sk Test 추가 171117
         if error is None:
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_avail_count__gte=1)
+                                                                 , lecture_rem_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -226,6 +234,10 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
                     daily_lecture_data_member.append(member_data.name)
                     daily_lecture_data_id.append(lecture.lecture_id)
+                    if month_lecture.state_cd == 'PE':
+                        daily_schedule_finish.append(1)
+                    else :
+                        daily_schedule_finish.append(0)
 
         # context['daily_lecture_data'] = daily_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
@@ -236,6 +248,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
         context['daily_lecture_data_member'] = daily_lecture_data_member
         context['daily_lecture_data_id'] = daily_lecture_data_id
+        context['daily_schedule_finish'] = daily_schedule_finish
 
         return context
 
@@ -325,6 +338,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_lecture_data_end_date = []
         daily_lecture_data_member = []
         daily_lecture_data_id = []
+        daily_schedule_finish = []
         today_dt = timezone.now()
         before_dt = today_dt - datetime.timedelta(days=14)
         after_dt = today_dt + datetime.timedelta(days=14)
@@ -332,7 +346,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #sk Test 추가 171117
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_avail_count__gte=1)
+                                                                 , lecture_rem_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -383,6 +397,10 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
                     daily_lecture_data_member.append(member_data.name)
                     daily_lecture_data_id.append(lecture.lecture_id)
+                    if month_lecture.state_cd == 'PE':
+                        daily_schedule_finish.append(1)
+                    else :
+                        daily_schedule_finish.append(0)
 
         #context['daily_off_data'] = daily_off_data
         #context['daily_lecture_data'] = daily_data
@@ -395,6 +413,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
         context['daily_lecture_data_member'] = daily_lecture_data_member
         context['daily_lecture_data_id'] = daily_lecture_data_id
+        context['daily_schedule_finish'] = daily_schedule_finish
 
         return context
 
@@ -433,7 +452,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #sk Test 추가 171117
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_avail_count__gte=1)
+                                                                 , lecture_rem_count__gte=1)
 
             for lecture in context['trainer_member']:
                 try:
@@ -721,6 +740,7 @@ class SalesSettingView(AccessTestMixin, TemplateView):
         context = super(SalesSettingView, self).get_context_data(**kwargs)
 
         return context
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PtModifyView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -1203,7 +1223,13 @@ def daily_pt_delete(request):
                     lecture_schedule_data.mod_dt = timezone.now()
                     lecture_schedule_data.use = 0
                     member_lecture_avail_count = lecture_data.lecture_avail_count
+                    member_lecture_rem_count = lecture_data.lecture_rem_count
+
                     lecture_data.lecture_avail_count = member_lecture_avail_count+1
+
+                    if lecture_schedule_data.state_cd == 'PE':
+                        lecture_data.lecture_rem_count = member_lecture_rem_count+1
+
                     lecture_data.mod_dt = timezone.now()
                     lecture_schedule_data.save()
                     lecture_data.save()
@@ -1798,4 +1824,92 @@ def modify_off_logic(request):
     else:
         messages.info(request, error)
         #next_page = 'trainer:add_off'
+        return redirect(next_page)
+
+
+# pt 일정 수정
+@csrf_exempt
+def daily_pt_finish(request):
+    schedule_id = request.POST.get('schedule_id')
+    member_name = request.POST.get('member_name')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    if schedule_id == '':
+        error = '스케쥴을 선택하세요.'
+
+    if error is None:
+
+        lecture_schedule_data = None
+        try:
+            lecture_schedule_data = LectureScheduleTb.objects.get(lecture_schedule_id=schedule_id)
+        except ObjectDoesNotExist:
+            error = '강사 PT 정보가 존재하지 않습니다'
+            # logger.error(error)
+
+        if error is None:
+            start_date = lecture_schedule_data.start_dt
+            end_date = lecture_schedule_data.end_dt
+
+        lecture_data = None
+        try:
+            lecture_data = LectureTb.objects.get(lecture_id=lecture_schedule_data.lecture_tb_id)
+        except ObjectDoesNotExist:
+            error = '회원 PT 정보가 존재하지 않습니다'
+
+        if error is None:
+            if lecture_schedule_data.state_cd == 'PE':
+                error = '이미 확정된 스케쥴입니다.'
+
+        if error is None:
+            try:
+                with transaction.atomic():
+                    lecture_schedule_data.mod_dt = timezone.now()
+                    lecture_schedule_data.state_cd = 'PE'
+                    member_lecture_rem_count = lecture_data.lecture_rem_count
+                    lecture_data.lecture_rem_count = member_lecture_rem_count - 1
+                    lecture_data.mod_dt = timezone.now()
+                    lecture_schedule_data.save()
+                    lecture_data.save()
+
+            except ValueError as e:
+                error = '등록 값에 문제가 있습니다.'
+            except IntegrityError as e:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError as e:
+                error = '등록 값의 형태에 문제가 있습니다.'
+
+    if error is None:
+        week_info = ['일', '월', '화', '수', '목', '금', '토']
+
+        log_start_date = start_date.strftime('%Y') + '년 ' \
+                         + start_date.strftime('%m') + '월 ' \
+                         + start_date.strftime('%d') + '일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
+        if start_date.strftime('%p') == 'AM':
+            log_start_date = str(log_start_date) + '오전'
+        elif start_date.strftime('%p') == 'PM':
+            log_start_date = str(log_start_date) + '오후'
+        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
+
+        if end_date.strftime('%p') == 'AM':
+            log_end_date = '오전'
+        elif end_date.strftime('%p') == 'PM':
+            log_end_date = '오후'
+
+        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
+        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
+        # + start_date.strftime('%p %I:%M')\
+        # + '- '+end_date.strftime('%p %I:%M')
+        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' + member_name \
+                       + ' 회원님의</span> 일정을 <span class="status">완료</span>했습니다.@' \
+                       + log_start_date \
+                       + ' - ' + log_end_date
+        log_data = LogTb(external_id=request.user.id, log_type='LS03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+        return redirect(next_page)
+    else:
+        messages.info(request, error)
+        # next_page = 'trainer:cal_day'
         return redirect(next_page)

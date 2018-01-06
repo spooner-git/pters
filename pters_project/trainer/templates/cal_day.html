@@ -27,16 +27,24 @@
     <input type="hidden" name="schedule_id" id="id_schedule_id_modify">
     <input type="hidden" name="lecture_id"   id="id_lecture_id_modify">
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
-
   </form>
+
   <form action="{% url 'trainer:modify_off' %}" id="off-modify-form" method="get">
     <input type="hidden" name="off_schedule_id" id="id_off_schedule_id_modify">
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+  </form>
+
+  <form action="{% url 'trainer:daily_pt_finish' %}" id="pt-finish-form" method="get">
+    <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
+    <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
+    <input type="hidden" name="member_name"   id="id_member_name_finish">
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
   </form>
    
   <!--팝업메뉴-->
     <div id="cal_popup">
       <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div>
+      <div id="popup_text0" class="popup_inner popup_inner_finish"><span class="KRtext">일정 완료</span><span class="JPtext">日程완료</span><span class="ENtext">Finish Schedule</span></div>
       <div id="popup_text1" class="popup_inner popup_inner_change"><span class="KRtext">일정 변경</span><span class="JPtext">日程変更</span><span class="ENtext">Change Schedule</span></div>
       <div id="popup_text2" class="popup_inner popup_inner_delete"><span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span></div>
     </div>
@@ -470,6 +478,8 @@
 
           var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
           var offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %}];
+          var scheduleFinishArray =  [{% for daily_schedule_finish in daily_schedule_finish %}'{{ daily_schedule_finish }}', {% endfor %}];
+
           var classTimeArray = [];
           var offTimeArray = [];
 
