@@ -45,7 +45,7 @@ $(document).ready(function(){
 	})
 
 	$('#upbutton-x').click(function(){
-		$('#calendar').show()
+		$('#calendar').css('height','90%')
 	    $('#shade3').fadeOut();
 	    $('#shade').hide();
 	    $('#page-addplan').fadeOut('fast','swing');
