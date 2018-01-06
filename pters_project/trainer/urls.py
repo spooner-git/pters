@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
     url(r'^daily_pt_delete/$', views.daily_pt_delete, name='daily_pt_delete'),
     url(r'^daily_off_delete/$', views.daily_off_delete, name='daily_off_delete'),
+    url(r'^daily_pt_finish/$', views.daily_pt_finish, name='daily_pt_finish'),
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
