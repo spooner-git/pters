@@ -37,6 +37,19 @@ table{
 	z-index: 101;
 }
 
+#filterPopup_mini{
+	position:fixed;
+	display: none;
+	width:250px;
+	height: 100px;
+	background:#ffffff;
+	border:1px solid black;
+	top:50%;left: 15%;
+	transform: translateY(-50%);
+	z-index: 500;
+	text-align:  center;
+}
+
 .swiper-slide{
 	height: 100%;
 	overflow: auto;
