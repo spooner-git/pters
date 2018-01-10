@@ -23,6 +23,11 @@ input{
 	display: none;
 }
 
+#pcaddpopup,#pcaddpopup_off{
+	display: none;	
+}
+
+
 #inputError{
 	position: relative;
 	width: 100%;
