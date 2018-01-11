@@ -527,7 +527,7 @@
           var offAddOkArray = [] //OFF 등록 시작 시간 리스트
           var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
 
-          var addTypeSelect = "" //팝업 종류 선택 (PT or OFF)
+          var addTypeSelect = "ptadd" //팝업 종류 선택 (PT or OFF)
         </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.week.js" %}></script>
         <script>
@@ -584,31 +584,6 @@
             //sk 테스트중, 클릭 팝업
 
 
-            $('#typeSelector_1').click(function(){
-                $(this).css('background','#fe4e65')
-                $('#typeSelector_2').css('background','#a2a2a2')
-                $('#classDuration_mini').hide('fast',function(){
-                    $('#memberName_mini').show('fast')
-                    $('#remainCount_mini').show('fast')
-                })
-                
-                addTypeSelect = "ptadd"
-                console.log(addTypeSelect)
-            })
-
-            $('#typeSelector_2').click(function(){
-                $(this).css('background','#fe4e65')
-                $('#typeSelector_1').css('background','#a2a2a2')
-                $('#memberName_mini').hide('fast')
-                $('#remainCount_mini').hide('fast',function(){
-                    $('#classDuration_mini').show('fast')
-                })
-                
-                addTypeSelect = "offadd"
-                console.log(addTypeSelect)
-            })
-
-
             $('#commonPopup').click(function(){
               $(this).fadeOut('fast')
             })
@@ -643,6 +618,8 @@
                   offVisible = true;
                 }
             })
+
+            
 
 
         </script>

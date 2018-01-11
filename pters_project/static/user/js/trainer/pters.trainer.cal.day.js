@@ -520,6 +520,16 @@ $(document).ready(function(){
 		myswiper.params.onlyExternal = true;
 		clearTimeout($.data(this,"scrollCheck"));
 		console.log('scrolling')
+		
+		var ymdTextLoc = $('#pcver').offset().top;
+		if(ymdTextLoc>10){
+			$('body').css('padding-top','0')
+			$('#page-base').fadeOut('linear')
+		}else if(ymdTextLoc<10){
+			$('body').css('padding-top','50px')
+			$('#page-base').show('linear')
+		}
+		
 		$.data(this,"scrollCheck",setTimeout(function(){
 			myswiper.params.onlyExternal = false;
 			console.log('stop')
