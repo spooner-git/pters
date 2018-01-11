@@ -45,7 +45,7 @@
     <div id="cal_popup">
       <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div>
       <div id="popup_text0" class="popup_inner popup_inner_finish"><span class="KRtext">일정 완료</span><span class="JPtext">日程완료</span><span class="ENtext">Finish Schedule</span></div>
-      <div id="popup_text1" class="popup_inner popup_inner_change"><span class="KRtext">일정 변경</span><span class="JPtext">日程変更</span><span class="ENtext">Change Schedule</span></div>
+      <!--<div id="popup_text1" class="popup_inner popup_inner_change"><span class="KRtext">일정 변경</span><span class="JPtext">日程変更</span><span class="ENtext">Change Schedule</span></div>-->
       <div id="popup_text2" class="popup_inner popup_inner_delete"><span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span></div>
     </div>
     <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
@@ -194,19 +194,22 @@
           <span class="JPtext" style="color:#cccccc;">選択</span>
           <span class="ENtext" style="color:#cccccc;">Select</span></button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-        <ul id="members" class="dropdown-menu pters_dropdown_custom">
-          <!-- 회원명 DB연동 필요-->
+        <ul id="members_mobile" class="dropdown-menu pters_dropdown_custom">
+          <!-- 회원명 DB연동 필요
+          {#
             {% for lecture in trainer_member %}
             <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
                 {{ lecture.trainer_member.name }}</a>
             </li>
             {% endfor %}
+             #}
+           -->
         </ul>
       </div>
     </div>
 
     <div id="remainCount" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 남은 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Remain Counts</span></div>
+      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약가능 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Available Counts</span></div>
       <!-- 남은 횟수 DB연동 필요 -->
             <div id="countsSelected" class="dropdown" placeholder="ー"></div>
     </div>
@@ -355,20 +358,23 @@
           <span class="JPtext" style="color:#cccccc;">選択</span>
           <span class="ENtext" style="color:#cccccc;">Select</span></button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-        <ul id="members" class="dropdown-menu pters_dropdown_custom">
-          <!-- 회원명 DB연동 필요-->
-            {% for lecture in trainer_member %}
-            <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
-                {{ lecture.trainer_member.name }}</a>
+        <ul id="members_pc" class="dropdown-menu pters_dropdown_custom">
+          <!-- 회원명 DB연동 필요
+            {# {% for lecture in trainer_member %}
+            <li><a data-lecturecount=" {{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
+                 {{ lecture.trainer_member.name }} </a>
             </li>
+
             {% endfor %}
+            #}
+            -->
         </ul>
       </div>
     </div>
 
 
     <div id="remainCount" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 남은 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Remain Counts</span></div>
+      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약가능 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Available Counts</span></div>
       <!-- 남은 횟수 DB연동 필요 -->
             <div id="countsSelected" class="dropdown" placeholder="ー"></div>
     </div>
@@ -479,6 +485,10 @@
           var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
           var offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %}];
           var scheduleFinishArray =  [{% for daily_schedule_finish in daily_schedule_finish %}'{{ daily_schedule_finish }}', {% endfor %}];
+
+          var memberNameArray = [{% for lecture in trainer_member %}'{{ lecture.trainer_member.name }}',{% endfor %}];
+          var memberAvailCountArray = [{% for lecture in trainer_member %}'{{ lecture.lecture_avail_count }}',{% endfor %}];
+          var memberLectureIdArray = [{% for lecture in trainer_member %}'{{ lecture.lecture_id }}',{% endfor %}];
 
           var classTimeArray = [];
           var offTimeArray = [];
