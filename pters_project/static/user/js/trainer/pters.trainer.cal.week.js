@@ -599,10 +599,22 @@ $(document).ready(function(){
 
 	//아래로 스크롤중 스와이프 했을때, jquery.swipe에서 stopPropagation Error발생하여 스와이프 불가하는 현상 방지
 	//스크롤중 swipe 기능막고, 스크롤 종료감지하여 종료 20ms 이후에 swipe 기능 살려주는 함수 
+	
+
 	$(window).scroll(function(){
 		myswiper.params.onlyExternal = true;
 		clearTimeout($.data(this,"scrollCheck"));
 		console.log('scrolling')
+		
+		var ymdTextLoc = $('#pcver').offset().top;
+		if(ymdTextLoc>10){
+			$('body').css('padding-top','0')
+			$('#page-base').fadeOut('linear')
+		}else if(ymdTextLoc<10){
+			$('body').css('padding-top','50px')
+			$('#page-base').show('linear')
+		}
+		
 		$.data(this,"scrollCheck",setTimeout(function(){
 			myswiper.params.onlyExternal = false;
 			console.log('stop')
