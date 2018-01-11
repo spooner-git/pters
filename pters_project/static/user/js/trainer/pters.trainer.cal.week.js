@@ -626,8 +626,11 @@ $(document).ready(function(){
 			myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
 			myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>') //마지막 슬라이드에 새슬라이드 추가
 			calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기	
-			classTime();
-			offTime();
+			//classTime();
+			//offTime();
+			classTime_Active('next')
+			offTime_Active('next')
+			
 			//DBrepeatdata(repeatData,'class')
 			//DBrepeatdata(offrepeatData,'off')
 		},
@@ -641,8 +644,11 @@ $(document).ready(function(){
 			myswiper.removeSlide(4);
 			myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
 			calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);		
-			classTime();
-			offTime();
+			//classTime();
+			//offTime();
+			classTime_Active('prev')
+			offTime_Active('prev')
+			
 			//DBrepeatdata(repeatData,'class')
 			//DBrepeatdata(offrepeatData,'off')
 		},
@@ -1195,6 +1201,170 @@ $(document).ready(function(){
 		};
 		$('#calendar').css('display','block');
 	};
+
+
+	function classTime_Active(option){
+		var planheight = 30;
+		if($calendarWidth>=600){
+			var planheight = 46;
+		}
+
+		switch(option){
+			case 'next' :
+				var slideToCalc = $('.swiper-slide:last-child')
+				var lastpagedateinfo = slideToCalc.find('.td00').attr('id').split('_');
+				var addfunction = function(){
+					if(classDateAdd >= lastpagelastdate){	
+						var classStartArr = [classYear,datasplit[1],datasplit[2],classHour,classMinute]
+						var classStart = classStartArr.join("_")
+						var tdClassStart = $("#"+classStart+" div");
+
+						//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
+						if(scheduleFinishArray[i]=="0") {
+			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+			            }else {
+			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px','background-color':'#338c14','border-color':'#338c14'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+			            }
+					}
+				}
+			break;
+			case 'prev' :
+				var slideToCalc = $('.swiper-slide:first-child')
+				var lastpagedateinfo = slideToCalc.find('.td00:last-child').attr('id').split('_');
+				var addfunction = function(){
+					if(classDateAdd <= lastpagelastdate){	
+						var classStartArr = [classYear,datasplit[1],datasplit[2],classHour,classMinute]
+						var classStart = classStartArr.join("_")
+						var tdClassStart = $("#"+classStart+" div");
+
+						//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
+						if(scheduleFinishArray[i]=="0") {
+			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+			            }else {
+			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px','background-color':'#338c14','border-color':'#338c14'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+			            }
+					}
+				}
+			break;
+		}
+
+		var yy = lastpagedateinfo[0]
+		var mm = lastpagedateinfo[1]
+		var dd = lastpagedateinfo[2]
+		if(mm.length<2){
+			var mm = '0'+ lastpagedateinfo[1]
+		}
+		if(dd.length<2){
+			var dd = '0'+ lastpagedateinfo[2]
+		}
+		var lastpagelastdate = yy+mm+dd //마지막 페이지 마지막 날짜 정보 20170121
+
+		var classlen = classTimeArray.length;
+		var class_Next = []
+		for(var i=0; i<classlen; i++){
+			var indexArray = classTimeArray[i]
+			var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
+			var classYear = datasplit[0]
+			var classMonth = datasplit[1]
+			if(classMonth.length<2){
+				var classMonth = '0'+classMonth
+			}
+			var classDate = datasplit[2]
+			if(classDate.length<2){
+				var classDate = '0'+classDate
+			}
+			var classHour = datasplit[3]
+			var classMinute = datasplit[4]
+			var classDura = datasplit[5];
+			var memberName = datasplit[6];
+			if(memberName.length>3){
+				var memberName = memberName.substr(0,3) + ".."
+			}
+
+			var classDateAdd = classYear+classMonth+classDate
+			addfunction();
+		};
+
+
+	}
+
+
+
+
+	function offTime_Active(option){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+		var planheight = 30;
+			if($calendarWidth>=600){
+				var planheight = 46;
+		}
+
+		switch(option){
+			case 'next' :
+				var slideToCalc = $('.swiper-slide:last-child')
+				var lastpagedateinfo = slideToCalc.find('.td00').attr('id').split('_');
+				var addfunction = function(){
+					if(offDateAdd >= lastpagelastdate){	
+						var offStartArr = [offYear,datasplit[1],datasplit[2],offHour,offMinute]
+						var offStart = offStartArr.join("_")
+						var tdOffStart = $("#"+offStart+" div");
+
+						tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
+					}
+				}
+			break;
+			case 'prev' :
+				var slideToCalc = $('.swiper-slide:first-child')
+				var lastpagedateinfo = slideToCalc.find('.td00:last-child').attr('id').split('_');
+				var addfunction = function(){
+					if(offDateAdd <= lastpagelastdate){	
+						var offStartArr = [offYear,datasplit[1],datasplit[2],offHour,offMinute]
+						var offStart = offStartArr.join("_")
+						var tdClassStart = $("#"+offStart+" div");
+
+						tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
+					}
+				}
+			break;
+		}
+
+		var yy = lastpagedateinfo[0]
+		var mm = lastpagedateinfo[1]
+		var dd = lastpagedateinfo[2]
+		if(mm.length<2){
+			var mm = '0'+ lastpagedateinfo[1]
+		}
+		if(dd.length<2){
+			var dd = '0'+ lastpagedateinfo[2]
+		}
+		var lastpagelastdate = yy+mm+dd //마지막 페이지 마지막 날짜 정보 20170121
+		console.log(lastpagelastdate)
+
+		var offlen = offTimeArray.length;
+		for(var i=0; i<offlen; i++){
+			var indexArray = offTimeArray[i]
+			var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
+			var offYear = datasplit[0]
+			var offMonth = datasplit[1]
+			if(offMonth.length<2){
+				var offMonth = '0'+datasplit[1]
+			}
+			var offDate = datasplit[2]
+			if(offDate.length<2){
+				var offDate = '0'+datasplit[2]
+			}
+			var offHour = datasplit[3]
+			var offMinute = datasplit[4]
+			var offDura = datasplit[5];
+			var memberName = datasplit[6];
+			var offStartArr = [offYear,datasplit[1],datasplit[2],offHour,offMinute]
+			var offStart = offStartArr.join("_")
+			var tdOffStart = $("#"+offStart+" div");
+
+			var offDateAdd = offYear+offMonth+offDate
+			addfunction()
+			};
+	};
+
+
 
 
 	function addcurrentTimeIndicator_blackbox(){ //현재 시간에 밑줄 긋기
