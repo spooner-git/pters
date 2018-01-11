@@ -107,6 +107,30 @@ $(document).ready(function(){
           $(document).off('click','.td00')
       }
 
+      $('#typeSelector_1').click(function(){
+          $(this).css('background','#fe4e65')
+          $('#typeSelector_2').css('background','#a2a2a2')
+          $('#classDuration_mini').hide('fast',function(){
+              $('#memberName_mini').show('fast')
+              $('#remainCount_mini').show('fast')
+          })  
+          addTypeSelect = "ptadd"
+          check_dropdown_selected();
+          console.log(addTypeSelect)
+      })
+
+      $('#typeSelector_2').click(function(){
+          $(this).css('background','#fe4e65')
+          $('#typeSelector_1').css('background','#a2a2a2')
+          $('#memberName_mini').hide('fast')
+          $('#remainCount_mini').hide('fast',function(){
+              $('#classDuration_mini').show('fast')
+          })  
+          addTypeSelect = "offadd"
+          check_dropdown_selected();
+          console.log(addTypeSelect)
+      })
+
       $(document).on('click',"#durations_mini li a",function(){
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected");
           $("#durationsSelected .btn:first-child").text($(this).text());
@@ -326,6 +350,7 @@ $(document).ready(function(){
                 select_all_check=true;
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                $('#submitBtn_mini').css('background','#ffffff');
                 $('.submitBtn').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
