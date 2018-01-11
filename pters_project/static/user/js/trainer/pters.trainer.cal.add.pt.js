@@ -126,7 +126,18 @@ $(document).ready(function(){
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
 
-      $("#members li a").click(function(){
+      $("#members_pc li a").click(function(){
+          //$('.tdgraph').removeClass('graphindicator')
+          $("#membersSelected button").addClass("dropdown_selected");
+      		$("#membersSelected .btn:first-child").text($(this).text());
+      		$("#membersSelected .btn:first-child").val($(this).text());
+      		$("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
+      		$("#id_lecture_id").val($(this).attr('data-lectureid'));
+          $("#id_member_name").val($(this).text());
+          check_dropdown_selected();
+  		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
+
+      $("#members_mobile li a").click(function(){
           //$('.tdgraph').removeClass('graphindicator')
           $("#membersSelected button").addClass("dropdown_selected");
       		$("#membersSelected .btn:first-child").text($(this).text());
@@ -242,6 +253,9 @@ $(document).ready(function(){
                 scheduleIdArray = [];
                 offScheduleIdArray = [];
                 scheduleFinishArray = [];
+                memberLectureIdArray = [];
+                memberNameArray = [];
+                memberAvailCountArray = [];
                 var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
                 var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
                 var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
@@ -251,11 +265,15 @@ $(document).ready(function(){
                 scheduleIdArray = jsondata.scheduleIdArray
                 offScheduleIdArray = jsondata.offScheduleIdArray
                 scheduleFinishArray = jsondata.scheduleFinishArray;
+                memberLectureIdArray = jsondata.memberLectureIdArray;
+                memberNameArray = jsondata.memberNameArray;
+                memberAvailCountArray = jsondata.memberAvailCountArray;
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
                 $('.classTime,.offTime').parent().html('<div></div>')
                 classTime();
                 offTime();
+                addPtMemberListSet();
 
                 /*팝업의 timegraph 업데이트*/
                 classDateData = []
@@ -883,5 +901,24 @@ $(document).ready(function(){
           showMonthAfterYear: true,
           yearSuffix: '년'
       });
+
+		//회원 정보 ajax 연동을 위해 구현 - hk.kim 180110
+      function addPtMemberListSet(){
+        var memberPcList = $('#members_pc');
+        var memberMobileList = $('#members_mobile');
+        var memberSize = memberLectureIdArray.length;
+        //memberPcList.empty();
+        //memberMobileList.empty();
+        for(var i=0; i<memberSize; i++){
+
+            var addMemberListElement_mobile = $('#member_mobile'+memberLectureIdArray[i]);
+            var addMemberListElement_pc = $('#member_pc'+memberLectureIdArray[i]);
+            addMemberListElement_mobile.attr('data-lecturecount',memberAvailCountArray[i]).attr('data-lectureid',memberLectureIdArray[i]);
+            addMemberListElement_pc.attr('data-lecturecount',memberAvailCountArray[i]).attr('data-lectureid',memberLectureIdArray[i]);
+			//memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
+			//memberMobileList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
+        }
+	  }
+
 
 });

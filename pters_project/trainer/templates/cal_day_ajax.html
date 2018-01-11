@@ -16,5 +16,12 @@
       "offScheduleIdArray" : 
       [{% for daily_class_schedule_id in class_schedule_data %}"{{ daily_class_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleFinishArray":
-      [{% for daily_schedule_finish in daily_schedule_finish %}"{{ daily_schedule_finish }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+      [{% for daily_schedule_finish in daily_schedule_finish %}"{{ daily_schedule_finish }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "memberNameArray":
+      [{% for lecture in trainer_member %}"{{ lecture.trainer_member.name  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberAvailCountArray":
+      [{% for lecture in trainer_member %}"{{ lecture.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberLectureIdArray":
+      [{% for lecture in trainer_member %}"{{ lecture.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
     }

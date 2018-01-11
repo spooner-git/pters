@@ -374,6 +374,10 @@
           var emailArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.user.email }}',{% endif %}{% endfor %}]
           var endArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
 
+          //처리 필요 - hk.kim 180110
+          var regCountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_reg_count }}',{% endif %}{% endfor %}]
+          var availCountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_avail_count }}',{% endif %}{% endfor %}]
+
           var finishnameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
           var finishphoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
           var finishcountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_rem_count }}',{% endif %}{% endfor %}]
@@ -381,7 +385,10 @@
           var finishmodifyDateArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.mod_dt }}',{% endif %}{% endfor %}]
           var finishemailArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.user.email }}',{% endif %}{% endfor %}]
           var finishendArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
-         
+
+          //처리 필요 - hk.kim 180110
+          var finishRegCountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_reg_count }}',{% endif %}{% endfor %}]
+          var finishAvailCountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_avail_count }}',{% endif %}{% endfor %}]
 
           var DB = {};
           var DBe = {};

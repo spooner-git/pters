@@ -368,6 +368,9 @@ $(document).ready(function(){
                 scheduleIdArray = [];
                 offScheduleIdArray = [];
                 scheduleFinishArray = [];
+                memberLectureIdArray = [];
+                memberNameArray = [];
+                memberAvailCountArray = [];
                 var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date;
                 var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date;
                 var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date;
@@ -377,11 +380,15 @@ $(document).ready(function(){
                 scheduleIdArray = jsondata.scheduleIdArray;
                 offScheduleIdArray = jsondata.offScheduleIdArray;
                 scheduleFinishArray = jsondata.scheduleFinishArray;
+                memberLectureIdArray = jsondata.memberLectureIdArray;
+                memberNameArray = jsondata.memberNameArray;
+                memberAvailCountArray = jsondata.memberAvailCountArray;
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
                  $('.classTime,.offTime').parent().html('<div></div>');
                 classTime();
                 offTime();
+                addPtMemberListSet();
                 
                 /*팝업의 timegraph 업데이트*/
                 classDateData = [];
@@ -433,6 +440,7 @@ $(document).ready(function(){
 
 	//플로팅 버튼 Start
 	$('#float_btn').click(function(){
+		//addPtMemberListSet();
 		$("#float_btn").animate({opacity:'1'})
 		if($('#shade').css('display')=='none'){
 			$('#shade').show();
@@ -561,6 +569,7 @@ $(document).ready(function(){
 	//scrollToIndicator(); //현재 시간으로 스크롤 자동 이동
 	classTime(); //PT수업 시간에 핑크색 박스 표시
 	offTime(); //Off 시간에 회색 박스 표시
+	addPtMemberListSet();
 
 	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
 		switch(Options.language){
@@ -1065,6 +1074,28 @@ $(document).ready(function(){
          durTimeList.append('<li><a data-dur="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>')
       }
 
+		//회원 정보 ajax 연동을 위해 구현 - hk.kim 180110
+      function addPtMemberListSet(){
+        var memberMobileList = $('#members_mobile');
+        var memberPcList = $('#members_pc');
+        var memberSize = memberLectureIdArray.length;
+        var member_array_mobile = [];
+        var member_array_pc = [];
+        memberMobileList.empty();
+        memberPcList.empty();
+        for(var i=0; i<memberSize; i++){
+        	//member_array[i] = '<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+			member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+        	member_array_pc[i] = '<li><a id="member_pc_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+        	//memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
+			//memberMobileList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
+
+        }
+        var member_arraySum_mobile = member_array_mobile.join('');
+		var member_arraySum_pc = member_array_pc.join('');
+        memberMobileList.html(member_arraySum_mobile);
+        memberPcList.html(member_arraySum_pc);
+	  }
 
 });//document(ready)
 
