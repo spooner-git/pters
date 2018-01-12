@@ -53,26 +53,35 @@ $(document).ready(function(){
       	}
       })
 
-      $('#memberBirth_add').keyup(function(){
+      $('#memberBirthYear').keyup(function(){
         var input = $(this).val()
         if(input.length==4 && input>=1900 && input<=2200){
           $(this).addClass("dropdown_selected")
+          birthdayInput()
         }else{
           $(this).removeClass("dropdown_selected")
         }
       })
 
       $('#memberBirthMonth li a').click(function(){ //생년월일 "월" 선택했을때 핑크선 + "일" 드롭다운 채워주기
+         $(this).parents('ul').siblings('button').text($(this).text());
+         $(this).parents('ul').siblings('button').val($(this).attr('value'));
          $('#memberBirthMonthSelected').addClass("dropdown_selected")
          var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31]
-         var length = lastDay[Number($(this).attr('data-month'))-1]
+         var length = lastDay[Number($(this).attr('value'))-1]
          var datesList = []
-         console.log($(this).attr('data-month'),length)
          for(i=0; i<=length-1; i++){
-            datesList[i] = '<li><a>'+(i+1)+' 일</a></li>'
+            datesList[i] = '<li><a value="'+(i+1)+'">'+(i+1)+' 일</a></li>'
          }
          var dates = datesList.join("")
          $('#memberBirthDate').html(dates)
+         birthdayInput()
+      })
+
+      $(document).on('click','#memberBirthDate li a',function(){
+         $(this).parents('ul').siblings('button').text($(this).text());
+         $(this).parents('ul').siblings('button').val($(this).attr('value'));
+         birthdayInput()
       })
 
       $(document).on('click','#memberBirthDate li a',function(){
@@ -82,6 +91,7 @@ $(document).ready(function(){
       $('#memberSex .selectboxopt').click(function(){
         $(this).addClass('selectbox_checked')
         $(this).siblings().removeClass('selectbox_checked')
+        $('#form_sex').attr('value',$(this).attr('value'))
       })
 
 
@@ -108,6 +118,13 @@ $(document).ready(function(){
       		check_dropdown_selected();
       	}
       })
+
+      function birthdayInput(){
+        var yy = $('#memberBirthYear').val()
+        var mm = $('#memberBirthMonth').siblings('button').val()
+        var dd = $('#memberBirthDate').siblings('button').val()
+        $('#form_birth').val(yy+'_'+mm+'_'+dd)
+      }
 
 
       //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
