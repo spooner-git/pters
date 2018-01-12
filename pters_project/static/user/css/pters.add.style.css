@@ -9,6 +9,10 @@ input{
 	text-align: center;
 }
 
+ul a{
+	cursor: pointer;
+}
+
 #page-addplan{
 	display: none;
 	position: absolute;
