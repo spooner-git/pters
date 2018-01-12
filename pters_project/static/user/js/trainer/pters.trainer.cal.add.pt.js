@@ -150,7 +150,7 @@ $(document).ready(function(){
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
 
-      $("#members_pc li a").click(function(){
+      $(document).on('click',"#members_pc li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
           $("#membersSelected button").addClass("dropdown_selected");
       		$("#membersSelected .btn:first-child").text($(this).text());
@@ -161,7 +161,7 @@ $(document).ready(function(){
           check_dropdown_selected();
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
-      $("#members_mobile li a").click(function(){
+      $(document).on('click',"#members_mobile li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
           $("#membersSelected button").addClass("dropdown_selected");
       		$("#membersSelected .btn:first-child").text($(this).text());
@@ -331,7 +331,7 @@ $(document).ready(function(){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 $('.submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
-            }else if($('#page-addplan-pc').css('display','block') && (memberSelect).hasClass("dropdown_selected")==true){
+            }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect).hasClass("dropdown_selected")==true){
                 $('#submitBtn_mini').css('background','#fe4e65');
                 select_all_check=true;
             }else{
@@ -345,7 +345,7 @@ $(document).ready(function(){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 $('.submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
-            }else if($('#page-addplan-pc').css('display','block') && durSelect_mini.hasClass("dropdown_selected")==true){
+            }else if($('#page-addplan-pc').css('display')=='block' && durSelect_mini.hasClass("dropdown_selected")==true){
                 $('#submitBtn_mini').css('background','#fe4e65');
                 select_all_check=true;
             }else{
