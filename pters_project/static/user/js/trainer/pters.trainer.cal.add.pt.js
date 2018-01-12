@@ -936,8 +936,8 @@ $(document).ready(function(){
         //memberMobileList.empty();
         for(var i=0; i<memberSize; i++){
 
-            var addMemberListElement_mobile = $('#member_mobile'+memberLectureIdArray[i]);
-            var addMemberListElement_pc = $('#member_pc'+memberLectureIdArray[i]);
+            var addMemberListElement_mobile = $('#member_mobile_'+memberLectureIdArray[i]);
+            var addMemberListElement_pc = $('#member_pc_'+memberLectureIdArray[i]);
             addMemberListElement_mobile.attr('data-lecturecount',memberAvailCountArray[i]).attr('data-lectureid',memberLectureIdArray[i]);
             addMemberListElement_pc.attr('data-lecturecount',memberAvailCountArray[i]).attr('data-lectureid',memberLectureIdArray[i]);
 			//memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
