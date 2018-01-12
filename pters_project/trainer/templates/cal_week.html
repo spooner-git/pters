@@ -206,13 +206,15 @@
           <span class="JPtext" style="color:#cccccc;">選択</span>
           <span class="ENtext" style="color:#cccccc;">Select</span></button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-        <ul id="members" class="dropdown-menu pters_dropdown_custom">
-          <!-- 회원명 DB연동 필요-->
-            {% for lecture in trainer_member %}
+        <ul id="members_mobile" class="dropdown-menu pters_dropdown_custom">
+          <!-- 회원명 DB연동 필요
+            {# {% for lecture in trainer_member %}
             <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
                 {{ lecture.trainer_member.name }}</a>
             </li>
             {% endfor %}
+             #}
+            -->
         </ul>
       </div>
     </div>
@@ -369,13 +371,15 @@
           <span class="KRtext" style="color:#cccccc;">회원명 선택</span>
           <span class="JPtext" style="color:#cccccc;">選択</span>
           <span class="ENtext" style="color:#cccccc;">Select</span></button>
-        <ul id="members" class="dropdown-menu dropdownlist_mini">
-          <!-- 회원명 DB연동 필요-->
-            {% for lecture in trainer_member %}
+        <ul id="members_pc" class="dropdown-menu dropdownlist_mini">
+          <!-- 회원명 DB연동 필요
+            {# {% for lecture in trainer_member %}
             <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
                 {{ lecture.trainer_member.name }}</a>
             </li>
             {% endfor %}
+            #}
+            -->
         </ul>
       </div>
     </div>
@@ -524,6 +528,11 @@
           var classTimeData = []
           var offDateData=[]
           var offTimeData = []
+
+          var memberNameArray = [{% for lecture in trainer_member %}'{{ lecture.trainer_member.name }}',{% endfor %}];
+          var memberAvailCountArray = [{% for lecture in trainer_member %}'{{ lecture.lecture_avail_count }}',{% endfor %}];
+          var memberLectureIdArray = [{% for lecture in trainer_member %}'{{ lecture.lecture_id }}',{% endfor %}];
+
           var offAddOkArray = [] //OFF 등록 시작 시간 리스트
           var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
 
