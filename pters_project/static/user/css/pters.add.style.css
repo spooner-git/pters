@@ -144,7 +144,7 @@ input{
 
 
 .dropdown button{
-	font-size: 15px;
+	font-size: 14px;
 	height: 100%;
 }
 
@@ -171,8 +171,10 @@ input{
 
 .btn-default{
 	border: 0px;
+	/*
 	box-shadow: 0 1px 0 0 #a2a2a2;
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
+	*/
 	border-radius: 0px;
 	-webkit-border-radius: 0px;
 }
@@ -492,7 +494,7 @@ input{
 }
 
 .selectbox_checked{
-	border-bottom: 1.5px solid #fe4e65;
+	border-bottom: 1.5px solid #fe4e65 !important;
 	color: #fe4e65;
 	font-weight: bold;
 	background: #ffffff;
@@ -557,6 +559,41 @@ input{
 	background: #f4f4f4;
 	width: 16.67%;
 }
+
+#memberSex{
+	width: 70px;
+	height: 40px;
+	margin-top:10px;
+}
+
+#memberMale,#memberFemale{
+	background: #ffffff;
+	border-bottom:0.5px solid #cccccc;
+}
+
+#memberBirth{
+	box-shadow: 0 0 0 0;
+}
+
+#memberBirth_add{
+	display: inline-block;
+	width: 30%;
+	box-shadow: 0 1px 0 0 #a2a2a2;
+
+}
+
+#memberBirthMonthSelected,#memberBirthDateSelected{
+	display: inline-block;
+	width:20%;
+	margin-top: 0;
+	vertical-align: top;
+	box-shadow: 0 1px 0 0 #a2a2a2;
+}
+
+#memberBirthMonthSelected button,#memberBirthDateSelected button{
+	margin:0;
+}
+
 
 .inputunit{
 	position: absolute;
