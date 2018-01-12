@@ -3,11 +3,12 @@ $(document).ready(function(){
    	  		$(this).addClass("active").siblings().removeClass("active");
 		});
 
-      $(".dropdown-menu li a").click(function(){
-      		$(".dropdown .btn:first-child").text($(this).text());
-      		$(".dropdown .btn:first-child").val($(this).text());
-
-  		 });
+      $(document).on('click',".dropdown-menu li a",function(){
+      		//$(".dropdown .btn:first-child").text($(this).text());
+      		//$(".dropdown .btn:first-child").val($(this).text());
+  		    $(this).parents('ul').siblings('button').text($(this).text());
+          $(this).parents('ul').siblings('button').val($(this).text());
+       });
 
       var ts;
 		$("body").bind("touchstart",function(e){
@@ -47,9 +48,11 @@ $(document).ready(function(){
       $('#page-base-addstyle').fadeOut();
 
       $('input,#memberDue_add_2').val("")
+
       $('._due div.checked').removeClass('checked ptersCheckboxInner')
       $('._count div.checked').removeClass('checked ptersCheckboxInner')
-      $('p,.pters_input_custom').removeClass("dropdown_selected")
+      $('p,input,div,.pters_input_custom').removeClass("dropdown_selected")
+      $('#memberSex div').removeClass('selectbox_checked')
       $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>"); 
       $('.submitBtn').removeClass('submitBtnActivated')
     })

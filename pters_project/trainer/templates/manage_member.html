@@ -97,7 +97,7 @@
                         <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail(아이디)
                     </label>
                     <div class="dropdown pters_input_custom">
-                        <input type="email" class="dropdown form-control" id="memberEmail" name="email" placeholder="이메일의 @앞부분은 아이디로 사용됩니다." readonly>
+                        <input type="email" class="dropdown form-control" id="memberEmail" name="email" placeholder="이메일은 회원님의 아이디로 사용됩니다." readonly>
                     </div>
                 </div>
                 <div class="ptaddbox form-group">
@@ -191,6 +191,43 @@
                     <input type="text" class="dropdown form-control" id="memberName_add" name="name" placeholder="회원분의 성함을 입력해주세요." maxlength="10">
                 </div>
             </div>
+
+            <div class="ptaddbox form-group">
+                <label for="memberBirthSex" class="ptaddboxtext">
+                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 부가정보
+                </label>
+                <div id="memberBirth" class="dropdown pters_input_custom">
+                    <input type="text" class="dropdown form-control" id="memberBirth_add" name="birthyear" placeholder="4자리 연도입력" maxlength="4">
+                    <div id="memberBirthMonthSelected" class="dropdown">
+                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthmonth"></button>
+                        <ul id="memberBirthMonth" class="dropdown-menu dropdownlist">
+                            <li><a data-month="1">1월</a></li>
+                            <li><a data-month="2">2월</a></li>
+                            <li><a data-month="3">3월</a></li>
+                            <li><a data-month="4">4월</a></li>
+                            <li><a data-month="5">5월</a></li>
+                            <li><a data-month="6">6월</a></li>
+                            <li><a data-month="7">7월</a></li>
+                            <li><a data-month="8">8월</a></li>
+                            <li><a data-month="9">9월</a></li>
+                            <li><a data-month="10">10월</a></li>
+                            <li><a data-month="11">11월</a></li>
+                            <li><a data-month="12">12월</a></li>
+                        </ul>
+                    </div>
+                    <div id="memberBirthDateSelected" class="dropdown">
+                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthdate"></button>
+                        <ul id="memberBirthDate" class="dropdown-menu dropdownlist">
+                            
+                        </ul>
+                    </div>
+                </div>
+                <div id="memberSex">
+                    <div id="memberMale" class="selectboxopt selectboxopt_left">남</div>
+                    <div id="memberFemale" class="selectboxopt selectboxopt_right">여</div>
+                </div>
+            </div>
+
             <div class="ptaddbox form-group">
                 <label for="memberPhone" class="ptaddboxtext">
                     <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처

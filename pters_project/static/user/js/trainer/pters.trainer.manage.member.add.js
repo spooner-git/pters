@@ -53,6 +53,38 @@ $(document).ready(function(){
       	}
       })
 
+      $('#memberBirth_add').keyup(function(){
+        var input = $(this).val()
+        if(input.length==4 && input>=1900 && input<=2200){
+          $(this).addClass("dropdown_selected")
+        }else{
+          $(this).removeClass("dropdown_selected")
+        }
+      })
+
+      $('#memberBirthMonth li a').click(function(){ //생년월일 "월" 선택했을때 핑크선 + "일" 드롭다운 채워주기
+         $('#memberBirthMonthSelected').addClass("dropdown_selected")
+         var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31]
+         var length = lastDay[Number($(this).attr('data-month'))-1]
+         var datesList = []
+         console.log($(this).attr('data-month'),length)
+         for(i=0; i<=length-1; i++){
+            datesList[i] = '<li><a>'+(i+1)+' 일</a></li>'
+         }
+         var dates = datesList.join("")
+         $('#memberBirthDate').html(dates)
+      })
+
+      $(document).on('click','#memberBirthDate li a',function(){
+        $('#memberBirthDateSelected').addClass("dropdown_selected")
+      })
+
+      $('#memberSex .selectboxopt').click(function(){
+        $(this).addClass('selectbox_checked')
+        $(this).siblings().removeClass('selectbox_checked')
+      })
+
+
       $("#memberPhone_add").keyup(function(){  //전화번호 입력시 하단에 핑크선
       	if($(this).val().length>8){
           limit_char(this);
