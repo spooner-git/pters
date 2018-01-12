@@ -3,12 +3,15 @@ $(document).ready(function(){
    	  		$(this).addClass("active").siblings().removeClass("active");
 		});
 
+/*
       $(document).on('click',".dropdown-menu li a",function(){
       		//$(".dropdown .btn:first-child").text($(this).text());
       		//$(".dropdown .btn:first-child").val($(this).text());
   		    $(this).parents('ul').siblings('button').text($(this).text());
           $(this).parents('ul').siblings('button').val($(this).text());
+          console.log($(this).val(), $(this).attr('value'))
        });
+*/
 
       var ts;
 		$("body").bind("touchstart",function(e){

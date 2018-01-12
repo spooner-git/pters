@@ -174,6 +174,9 @@
     <form action="{% url 'trainer:member_registration' %}" method="POST" class="member-form" id="member-add-form-new">
         <input type="hidden" name="next_page" value="{% url 'trainer:member_manage' %}">
         <input type="hidden" name="fast_check" id="fast_check" value="0">
+        <input type="hidden" name="sex" id="form_sex" value="">
+        <input type="hidden" name="birthday" id="form_birth" value="">
+
         <div>
             <div class="ptaddbox form-group">
                 <label for="memberEmail" class="ptaddboxtext">
@@ -197,22 +200,22 @@
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 부가정보
                 </label>
                 <div id="memberBirth" class="dropdown pters_input_custom">
-                    <input type="text" class="dropdown form-control" id="memberBirth_add" name="birthyear" placeholder="4자리 연도입력" maxlength="4">
+                    <input type="text" class="dropdown form-control" id="memberBirthYear" name="birthyear" placeholder="4자리 연도입력" maxlength="4">
                     <div id="memberBirthMonthSelected" class="dropdown">
                         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthmonth"></button>
                         <ul id="memberBirthMonth" class="dropdown-menu dropdownlist">
-                            <li><a data-month="1">1월</a></li>
-                            <li><a data-month="2">2월</a></li>
-                            <li><a data-month="3">3월</a></li>
-                            <li><a data-month="4">4월</a></li>
-                            <li><a data-month="5">5월</a></li>
-                            <li><a data-month="6">6월</a></li>
-                            <li><a data-month="7">7월</a></li>
-                            <li><a data-month="8">8월</a></li>
-                            <li><a data-month="9">9월</a></li>
-                            <li><a data-month="10">10월</a></li>
-                            <li><a data-month="11">11월</a></li>
-                            <li><a data-month="12">12월</a></li>
+                            <li><a value="1">1월</a></li>
+                            <li><a value="2">2월</a></li>
+                            <li><a value="3">3월</a></li>
+                            <li><a value="4">4월</a></li>
+                            <li><a value="5">5월</a></li>
+                            <li><a value="6">6월</a></li>
+                            <li><a value="7">7월</a></li>
+                            <li><a value="8">8월</a></li>
+                            <li><a value="9">9월</a></li>
+                            <li><a value="10">10월</a></li>
+                            <li><a value="11">11월</a></li>
+                            <li><a value="12">12월</a></li>
                         </ul>
                     </div>
                     <div id="memberBirthDateSelected" class="dropdown">
@@ -223,8 +226,8 @@
                     </div>
                 </div>
                 <div id="memberSex">
-                    <div id="memberMale" class="selectboxopt selectboxopt_left">남</div>
-                    <div id="memberFemale" class="selectboxopt selectboxopt_right">여</div>
+                    <div id="memberMale" class="selectboxopt selectboxopt_left" value="male">남</div>
+                    <div id="memberFemale" class="selectboxopt selectboxopt_right" value="female">여</div>
                 </div>
             </div>
 
