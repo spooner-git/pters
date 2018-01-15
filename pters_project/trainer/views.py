@@ -900,6 +900,8 @@ def member_registration(request):
     price_fast = request.POST.get('price_fast')
     start_date_fast = request.POST.get('start_date_fast')
     end_date_fast = request.POST.get('end_date_fast')
+    sex = request.POST.get('sex')
+    birthday_dt = request.POST.get('birthday')
 
     error = None
     input_start_date = ''
@@ -907,8 +909,24 @@ def member_registration(request):
     input_counts = 0
     input_price = 0
 
+    print(fast_check)
+    print(email)
+    print(name)
+    print(phone)
+    print(contents)
+    print(counts)
+    print(price)
+    print(start_date)
+    print(end_date)
+    print(next_page)
+    print(counts_fast)
+    print(price_fast)
+    print(start_date_fast)
+    print(end_date_fast)
+    print(sex)
+    print(birthday_dt)
 
-    if MemberTb.objects.filter(name=name, phone=phone).exists():
+    if MemberTb.objects.filter(phone=phone).exists():
         error = '이미 가입된 회원 입니다.'
     elif User.objects.filter(email=email).exists():
         error = '이미 가입된 회원 입니다.'
@@ -934,7 +952,7 @@ def member_registration(request):
                 input_price = 0
             else:
                 input_price = price_fast
-
+        print('fast_check=0이다.')
     elif fast_check == '1':
         if counts == '':
             error = '남은 횟수를 입력해 주세요.'
@@ -950,6 +968,7 @@ def member_registration(request):
                 input_price = 0
             else:
                 input_price = price
+        print('fast_check=1이다.')
 
     if error is None:
 
@@ -960,8 +979,8 @@ def member_registration(request):
                 user = User.objects.create_user(username=email, email=email, first_name=name, password=password)
                 group = Group.objects.get(name='trainee')
                 user.groups.add(group)
-                member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents,
-                                  mod_dt=timezone.now(),reg_dt=timezone.now(), user_id=user.id)
+                member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                                  birthday_dt=birthday_dt, mod_dt=timezone.now(),reg_dt=timezone.now(), user_id=user.id)
                 member.save()
                 trainer_class = ClassTb.objects.get(member_id=request.user.id)
                 lecture = LectureTb(class_tb_id=trainer_class.class_id,member_id=member.member_id,
