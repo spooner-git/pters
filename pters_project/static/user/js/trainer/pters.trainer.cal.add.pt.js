@@ -970,20 +970,27 @@ $(document).ready(function(){
 
 		//회원 정보 ajax 연동을 위해 구현 - hk.kim 180110
       function addPtMemberListSet(){
-        var memberPcList = $('#members_pc');
         var memberMobileList = $('#members_mobile');
+        var memberPcList = $('#members_pc');
         var memberSize = memberLectureIdArray.length;
-        //memberPcList.empty();
-        //memberMobileList.empty();
+        var member_array_mobile = [];
+        var member_array_pc = [];
+        memberMobileList.empty();
+        memberPcList.empty();
         for(var i=0; i<memberSize; i++){
-
-            var addMemberListElement_mobile = $('#member_mobile_'+memberLectureIdArray[i]);
-            var addMemberListElement_pc = $('#member_pc_'+memberLectureIdArray[i]);
-            addMemberListElement_mobile.attr('data-lecturecount',memberAvailCountArray[i]).attr('data-lectureid',memberLectureIdArray[i]);
-            addMemberListElement_pc.attr('data-lecturecount',memberAvailCountArray[i]).attr('data-lectureid',memberLectureIdArray[i]);
-			//memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
+        	//member_array[i] = '<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+			member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+        	member_array_pc[i] = '<li><a id="member_pc_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+        	//memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
 			//memberMobileList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
+
         }
+        var member_arraySum_mobile = member_array_mobile.join('');
+		var member_arraySum_pc = member_array_pc.join('');
+        memberMobileList.html(member_arraySum_mobile);
+        memberPcList.html(member_arraySum_pc);
+
+
 	  }
 
 
