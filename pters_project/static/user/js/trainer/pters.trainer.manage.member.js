@@ -161,9 +161,47 @@ $(document).ready(function(){
 //#####################회원정보 팝업 //#####################
 
 
+//#####################회원정보 팝업 //#####################
+  $('th').click(function(){
+      var LOCTOP = $(this).offset().top
+      var LOCLEFT = $(this).offset().left
+      
+      if($('#currentMemberList').width()>=600){
+          $('.instructPopup').fadeIn().css({'top':LOCTOP+40,'left':LOCLEFT})
+      }
+      
+      if($(this).hasClass('_countnum')){
+        $('.instructPopup').text('회원 순번')
+      }else if($(this).hasClass('_tdname')){
+        $('.instructPopup').text('등록한 회원님의 성함을 표시합니다.')
+      }else if($(this).hasClass('_email')){
+        $('.instructPopup').text('회원님의 ID를 표시합니다.')
+      }else if($(this).hasClass('_regcount')){
+        $('.instructPopup').text('등록횟수는 회원님께서 계약시 등록하신 횟수를 의미합니다.')
+      }else if($(this).hasClass('_remaincount')){
+        $('.instructPopup').text('남은횟수는 회원님의 등록횟수에서 현재까지 진행완료된 강의 횟수를 뺀 값을 의미합니다.')
+      }else if($(this).hasClass('_startdate')){
+        $('.instructPopup').text('회원님께서 등록하신 날짜')
+      }else if($(this).hasClass('_finday')){
+        $('.instructPopup').text('남은 횟수와 관계없이 회원님의 모든 횟수가 소멸되는 계약 종료날짜를 의미합니다.')
+      }else if($(this).hasClass('_contact')){
+        $('.instructPopup').text('회원님 연락처')
+      }else if($(this).hasClass('_manage')){
+        $('.instructPopup').text('회원 관리페이지에서는 회원님의 정보를 등록/수정/삭제가 가능합니다. 삭제시 복구가 불가능하오니 다시 한번 확인해주세요')
+      }
+  })
+
+  $('.instructPopup').click(function(){
+      $(this).fadeOut()
+  })
+//#####################회원정보 팝업 //#####################
+
+
+
 //#####################페이지 들어오면 초기 DB 프로세싱 시작//#####################
       //날짜형식을 yyyymmdd 로 맞추기
       var countList = []
+      var regcountList = [] //20180115
       var nameList = []
       var dateList = []
       var len = startArray.length; 
@@ -202,13 +240,25 @@ $(document).ready(function(){
         }else if(len2==4){
           var countFix = countOri
         }
-        countList[i]=countFix+'_'+nameArray[i]+'_'+phoneArray[i]+'_'+date+'_'+enddate+'/'+emailArray[i]
-        nameList[i]=nameArray[i]+'_'+phoneArray[i]+'_'+countOri+'_'+date+'_'+enddate+'/'+emailArray[i]
-        dateList[i]=date+'_'+nameArray[i]+'_'+phoneArray[i]+'_'+countOri+'_'+enddate+'/'+emailArray[i]
+        var regcountOri = regCountArray[i]
+        var len3 = regcountOri.length
+        if(len3==1){
+          var regcountFix = '000'+regcountOri
+        }else if(len3==2){
+          var regcountFix = '00'+regcountOri
+        }else if(len3==3){
+          var regcountFix = '0'+regcountOri
+        }else if(len3==4){
+          var regcountFix = regcountOri
+        }
+        countList[i]=countFix+'_'+regcountFix+'_'+nameArray[i]+'_'+phoneArray[i]+'_'+date+'_'+enddate+'/'+emailArray[i]
+        nameList[i]=nameArray[i]+'_'+phoneArray[i]+'_'+countOri+'_'+regcountOri+'_'+date+'_'+enddate+'/'+emailArray[i]
+        dateList[i]=date+'_'+nameArray[i]+'_'+phoneArray[i]+'_'+countOri+'_'+regcountOri+'_'+enddate+'/'+emailArray[i]
       }
 
       //날짜형식을 yyyymmdd 로 맞추기
       var finishcountList = []
+      var finishregcountList = [] //20180115
       var finishnameList = []
       var finishdateList = []
       var len = finishstartArray.length; 
@@ -236,9 +286,9 @@ $(document).ready(function(){
         }
       //날짜형식을 yyyymmdd 로 맞추기
         var countOri = finishcountArray[i]
-        finishcountList[i]=countFix+'_'+finishnameArray[i]+'_'+finishphoneArray[i]+'_'+date+'_'+enddate+'/'+finishemailArray[i]
-        finishnameList[i]=finishnameArray[i]+'_'+finishphoneArray[i]+'_'+countOri+'_'+date+'_'+enddate+'/'+finishemailArray[i]
-        finishdateList[i]=date+'_'+finishnameArray[i]+'_'+finishphoneArray[i]+'_'+countOri+'_'+enddate+'/'+finishemailArray[i]
+        finishcountList[i]=finishcountArray[i]+'_'+finishnameArray[i]+'_'+finishphoneArray[i]+'_'+date+'_'+enddate+'/'+finishemailArray[i]
+        finishnameList[i]=finishnameArray[i]+'_'+finishphoneArray[i]+'_'+finishcountArray[i]+'_'+date+'_'+enddate+'/'+finishemailArray[i]
+        finishdateList[i]=date+'_'+finishnameArray[i]+'_'+finishphoneArray[i]+'_'+finishcountArray[i]+'_'+enddate+'/'+finishemailArray[i]
       }
       console.log(finishcountList)
 //#####################페이지 들어오면 초기 DB 프로세싱 시작//#####################
@@ -272,13 +322,14 @@ $(document).ready(function(){
                 var array = countLists[i].split('_');
                 var arrayforemail = countLists[i].split('/')
                 var email = arrayforemail[1];
-                var name = array[1];
+                var name = array[2];
                 var count = array[0];
-                var starts = array[3];
+                var regcount = array[1]
+                var starts = array[4];
                 var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
-                var ends = array[4];
+                var ends = array[5];
                 var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
-                var phoneToEdit = array[2].replace(/-| |/gi,"");
+                var phoneToEdit = array[3].replace(/-| |/gi,"");
                 if(phoneToEdit.substr(0,2)=="02"){
                     var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4)
                 }else{
@@ -291,25 +342,33 @@ $(document).ready(function(){
                 }else if(count.substr(0,1)=="0"){
                   var count = count.substr(1,3)
                 }
+                if(regcount.substr(0,3)=="000"){
+                  var regcount = regcount.substr(3,1)
+                }else if(regcount.substr(0,2)=="00"){
+                  var regcount = regcount.substr(2,2)
+                }else if(regcount.substr(0,1)=="0"){
+                  var regcount = regcount.substr(1,3)
+                }
 
                 if(name.length>5){
-                  var name = array[1].substr(0,5)+'..'
+                  var name = array[2].substr(0,5)+'..'
                 }
                 var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'     
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
                 
-                var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
+                var nametd = '<td class="_tdname" data-name="'+array[2]+'">'+name+nameimage+'</td>'
                 var emailtd = '<td class="_email">'+email+'</td>'
-                var regcounttd = '<td class="_regcount">'+count+'</td>'
+                var regcounttd = '<td class="_regcount">'+regcount+'</td>'
                 var remaincounttd = '<td class="_remaincount">'+count+'</td>'
                 var startdatetd = '<td class="_startdate">'+start+'</td>'
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
                 var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var scrolltd = '<td class="forscroll"></td>'
 
-                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>'    
+                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'    
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -327,9 +386,10 @@ $(document).ready(function(){
                 var email = arrayforemail[1];
                 var name = array[0];
                 var count = array[2];
-                var starts = array[3];
+                var regcount = array[3]
+                var starts = array[4];
                 var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
-                var ends = array[4];
+                var ends = array[5];
                 var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
                 var phoneToEdit = array[1].replace(/-| |/gi,"");
                 if(phoneToEdit.substr(0,2)=="02"){
@@ -348,14 +408,15 @@ $(document).ready(function(){
 
                 var nametd = '<td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td>'
                 var emailtd = '<td class="_email">'+email+'</td>'
-                var regcounttd = '<td class="_regcount">'+count+'</td>'
+                var regcounttd = '<td class="_regcount">'+regcount+'</td>'
                 var remaincounttd = '<td class="_remaincount">'+count+'</td>'
                 var startdatetd = '<td class="_startdate">'+start+'</td>'
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
                 var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var scrolltd = '<td class="forscroll"></td>'
 
-                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>'   
+                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'   
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -373,9 +434,10 @@ $(document).ready(function(){
                 var email = arrayforemail[1];
                 var name = array[1];
                 var count = array[3];
+                var regcount = array[4];
                 var starts = array[0];
                 var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
-                var ends = array[4];
+                var ends = array[5];
                 var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
                 var phoneToEdit = array[2].replace(/-| |/gi,"");
                 if(phoneToEdit.substr(0,2)=="02"){
@@ -394,14 +456,15 @@ $(document).ready(function(){
                 
                 var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
                 var emailtd = '<td class="_email">'+email+'</td>'
-                var regcounttd = '<td class="_regcount">'+count+'</td>'
+                var regcounttd = '<td class="_regcount">'+regcount+'</td>'
                 var remaincounttd = '<td class="_remaincount">'+count+'</td>'
                 var startdatetd = '<td class="_startdate">'+start+'</td>'
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
                 var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var scrolltd = '<td class="forscroll"></td>'
 
-                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>'     
+                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'     
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -465,8 +528,9 @@ $(document).ready(function(){
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
                 var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var scrolltd = '<td class="forscroll"></td>'
 
-                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>'     
+                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'     
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -511,8 +575,9 @@ $(document).ready(function(){
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
                 var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var scrolltd = '<td class="forscroll"></td>'
 
-                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>'         
+                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'         
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
@@ -557,8 +622,9 @@ $(document).ready(function(){
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
                 var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var scrolltd = '<td class="forscroll"></td>'
 
-                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>'       
+                var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'       
                 arrayResult[i] = td
             }
             var resultToAppend = arrayResult.join("")
