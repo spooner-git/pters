@@ -441,16 +441,8 @@ td{
 }
 
 .classTime_checked{
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	background: #e3ffd9;
-	opacity: 0.8;
-	border: 0.5px solid #96ff71;
-	border-bottom: 0.5px solid #96ff71;
-	z-index: 100;
-	cursor: pointer;
+	background: #e3ffd9 !important;
+	border-color:#96ff71 !important;
 }
 
 .classTime_re{ /*반복 일정*/
