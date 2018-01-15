@@ -440,6 +440,19 @@ td{
 	cursor: pointer;
 }
 
+.classTime_checked{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	background: #e3ffd9;
+	opacity: 0.8;
+	border: 0.5px solid #96ff71;
+	border-bottom: 0.5px solid #96ff71;
+	z-index: 100;
+	cursor: pointer;
+}
+
 .classTime_re{ /*반복 일정*/
 	background: #ff3b00a6;
 	border: 0.5px solid #ff3b00a6;
@@ -457,9 +470,9 @@ td{
 	top: 0px;
 	left: 0px;
 	width: 100%;
-	background: #3b3d3d;
+	background: #d8d8d8;
 	opacity: 0.8;
-	border: 0.5px solid #3b3d3d;
+	border: 0.5px solid #a9a9a9;
 	z-index: 100;
 	cursor: pointer;
 }
@@ -469,10 +482,9 @@ td{
 }
 
 .offTime:active,.offTime:hover{
-	background: #3b3d3d;
-	border:0.5px solid #fe4e65;
+	background: #a2a2a2;
 	opacity: 1;
-	-webkit-background: #d6d5d5;
+	-webkit-background: #a2a2a2;
 }
 
 
@@ -498,7 +510,7 @@ td{
 	font-size: 80%;
 	font-weight: 400;
 	letter-spacing: -0.3px;
-	color: #ffffff;
+	color: black;
 	cursor: pointer;
 	line-height: 30px;
 }
@@ -691,10 +703,15 @@ td{
 		/*padding-top: 51px;*/
 	}
 
-	.classTime,.offTime{
+	.classTime{
+		background : #ffe8eb;
+		border-color:#ffa8b3;
+	}
+
+	.classTime,.offTime,.classTime_checked{
 		width: 97%;
 		/*border-bottom:0.5px solid #ffffff;*/
-		border-radius: 3px;
+		border-radius: 0px;
 	}
 	
 	.memberName{
@@ -702,11 +719,11 @@ td{
 		width:100%;
 		text-align: center;
 		left: 0%;
-		margin-top: 13px;
+		margin-top: 0px;
 		font-size: 100%;
 		font-weight: bold;
 		letter-spacing: -0.3px;
-		color: #ffffff;
+		color: black;
 		cursor: pointer;
 		}
 
@@ -714,10 +731,10 @@ td{
 		position: absolute;
 		left: 5px;
 		font-weight: 300;
-		margin-top: 2px;
+		margin-top: 6px;
 		font-size: 13px;
 		letter-spacing: -0.3px;
-		color: #ffffff;
+		color: black;
 		cursor: pointer;
 		text-align: left;
 	}

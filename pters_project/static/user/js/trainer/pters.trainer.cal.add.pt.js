@@ -33,11 +33,11 @@ $(document).ready(function(){
 
       /*   PC버전 미니 팝업        */
       $(document).on('click','.classTime, .offTime',function(){ //일정을 클릭했을때 팝업 표시
-              $('#page-addplan-pc').fadeOut()
+              //$('#page-addplan-pc').fadeOut()
               var toploc = $(this).offset().top;
               var leftloc = $(this).offset().left;
               //$('#commonPopup').fadeIn('fast').css({'top':toploc-10,'left':leftloc+150})
-            })
+      })
 
       $(document).on('click','.td00',function(){
             var toploc = $(this).offset().top;
@@ -48,9 +48,9 @@ $(document).ready(function(){
             var minipopupheight = 131;
             var splitID = $(this).attr('id').split('_')
             var weekID = $(this).attr('data-week')
-            
             //minipopup 위치 보정
-            if(splitID[3]>=22){
+            if(splitID[3]>=20){
+              $('.dropdown_mini').addClass('dropup')
               if(splitID[3]==24 && weekID!=3){
                 var toploc = toploc - tdheight*2
               }else if(weekID==3){
@@ -59,6 +59,7 @@ $(document).ready(function(){
                 var toploc = toploc - tdheight*(24-splitID[3])  
               }
             }else{
+              $('.dropdown_mini').removeClass('dropup')
               if(weekID==3){
                 var toploc = toploc + tdheight
               }else{
@@ -75,7 +76,8 @@ $(document).ready(function(){
 
             if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none')){
               $('.td00').css('background','transparent')
-              $(this).css('background','beige')
+              closeMiniPopupByChange()
+              $(this).addClass('blankSelected')
               $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
               var tdinfo = $(this).attr('id').split('_');
               var yy = tdinfo[0];
@@ -108,6 +110,7 @@ $(document).ready(function(){
       }
 
       $('#typeSelector_1').click(function(){
+        $('.blankSelected_addview').removeClass('blankSelected blankSelected_addview')
           $(this).css('background','#fe4e65')
           $('#typeSelector_2').css('background','#a2a2a2')
           $('#classDuration_mini').hide('fast',function(){
@@ -116,7 +119,7 @@ $(document).ready(function(){
           })  
           addTypeSelect = "ptadd"
           check_dropdown_selected();
-          console.log(addTypeSelect)
+          planAddView($("#id_time_duration").val())
       })
 
       $('#typeSelector_2').click(function(){
@@ -128,20 +131,53 @@ $(document).ready(function(){
           })  
           addTypeSelect = "offadd"
           check_dropdown_selected();
-          console.log(addTypeSelect)
+          planAddView($("#id_time_duration_off").val())
       })
 
       $(document).on('click',"#durations_mini li a",function(){
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected");
-          $("#durationsSelected .btn:first-child").text($(this).text());
-          $("#durationsSelected .btn:first-child").val($(this).attr('data-dur'));
-          if(addTypeSelect == "ptadd"){
+          $("#durationsSelected .btn:first-child").text($(this).text()).val($(this).attr('data-dur'));
+          if(addTypeSelect == "ptadd"){ //Form 셋팅
             $("#id_time_duration").val($(this).attr('data-dur'));
+            planAddView($(this).attr('data-dur'));
           }else if(addTypeSelect == "offadd"){
             $("#id_time_duration_off").val($(this).attr('data-dur'));
+            planAddView($(this).attr('data-dur'));
           }
           check_dropdown_selected();
       });
+
+      function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
+         console.log(duration)
+          var selectedDuration = Number(duration)
+          var selectedTime = $('.blankSelected').attr('id').split('_')
+          var yy = Number(selectedTime[0])
+          var mm = Number(selectedTime[1])
+          var dd = Number(selectedTime[2])
+          var hh = Number(selectedTime[3])
+          var mi = "00"
+          $('.blankSelected_addview').removeClass('blankSelected blankSelected_addview')
+          for(i=hh+1; i<hh+selectedDuration; i++){
+            $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).addClass('blankSelected blankSelected_addview')
+          }
+      }
+
+      function closeMiniPopupByChange(){
+        $("#id_time_duration_off").val("")
+        $('#page-addplan-pc').fadeOut();
+        $('.td00').removeClass('blankSelected blankSelected_addview')
+        $('.submitBtn').removeClass('submitBtnActivated')
+        $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
+        $('#submitBtn_mini').css('background','#ffffff')
+
+        $("#membersSelected button").removeClass("dropdown_selected");
+        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
+        $("#membersSelected .btn:first-child").val("");
+        $("#countsSelected,.countsSelected").text("")
+        $(".dropdown_mini button").removeClass("dropdown_selected");
+        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected .btn:first-child").val("");
+      }
 
 
       /*   PC버전 미니 팝업        */
@@ -381,36 +417,36 @@ $(document).ready(function(){
               var tdClassStart = $("#"+classStart+" div");
               //schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
               if(Number(classHour)+Number(classDura)==25){	// 오전 1시에 일정이 차있을 경우 일정 박스가 Table 넘어가는 것 픽스
-				if(classDura<=3){
-					if(scheduleFinishArray[i]=="0") {
-                        tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-schedule-check', scheduleFinishArray[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * 35) + 'px'}).html('<span class="memberName' + classDura + '">' + memberName + ' </span>' + '<span class="memberTime' + classDura + '">' + classHour + ':' + classMinute + ' ~ ' + classEndHour + ':' + classEndMinute + '</span>');
+          				if(classDura<=3){
+          					if(scheduleFinishArray[i]=="0") {
+                      tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-schedule-check', scheduleFinishArray[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * 35) + 'px'}).html('<span class="memberName' + classDura + '">' + memberName + ' </span>' + '<span class="memberTime' + classDura + '">' + classHour + ':' + classMinute + ' ~ ' + classEndHour + ':' + classEndMinute + '</span>');
                     }else{
-						tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-schedule-check', scheduleFinishArray[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('class').css({'height': Number(classDura * 35) + 'px'}).css('background-color','#282828').html('<span class="memberName' + classDura + '">' + memberName + ' </span>' + '<span class="memberTime' + classDura + '">' + classHour + ':' + classMinute + ' ~ ' + classEndHour + ':' + classEndMinute + '</span>');
-					}
-				}else{
-					if(scheduleFinishArray[i]=="0") {
-						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
-					}else{
-						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).css('background-color','#282828').html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
-					}
-				}
-			}else{
-				if(classDura<=3){
-					if(scheduleFinishArray[i]=="0") {
-						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
-					}else{
-						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).css('background-color','#282828').html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
-					}
-				}else{
-					if(scheduleFinishArray[i]=="0") {
-						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
-					}else{
-						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).css('background-color','#282828').html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
-					}
+          						tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-schedule-check', scheduleFinishArray[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * 35) + 'px'}).css('background-color','#282828').html('<span class="memberName' + classDura + '">' + memberName + ' </span>' + '<span class="memberTime' + classDura + '">' + classHour + ':' + classMinute + ' ~ ' + classEndHour + ':' + classEndMinute + '</span>');
+          					}
+          				}else{
+          					if(scheduleFinishArray[i]=="0") {
+          						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+          					}else{
+          						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35)+'px'}).css('background-color','#282828').html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+          					}
+          				}
+          			}else{
+          				if(classDura<=3){
+          					if(scheduleFinishArray[i]=="0") {
+          						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+          					}else{
+          						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).css('background-color','#282828').html('<span class="memberName'+classDura+'">'+memberName+' </span>'+'<span class="memberTime'+classDura+'">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+          					}
+          				}else{
+          					if(scheduleFinishArray[i]=="0") {
+          						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+          					}else{
+          						tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*35.5)+'px'}).css('background-color','#282828').html('<span class="memberName3">'+memberName+' </span>'+'<span class="memberTime3">'+classHour+':'+classMinute+' ~ '+classEndHour+':'+classEndMinute+'</span>');
+          					}
 
-				}
-			}
-            };
+          				}
+          			}
+             };
             //$('#calendar').css('display','block');
           break;
 
@@ -418,31 +454,36 @@ $(document).ready(function(){
             var planheight = 30;
             var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
             if($calendarWidth>=600){
-              var planheight = 45;
+              var planheight = 46;
             }
             var classlen = classTimeArray.length;
             //$('#calendar').css('display','none');
             for(var i=0; i<classlen; i++){
-            var indexArray = classTimeArray[i]
-            var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
-            var classYear = datasplit[0]
-            var classMonth = datasplit[1]
-            var classDate = datasplit[2]
-            var classHour = datasplit[3]
-            var classMinute = datasplit[4]
-            var classDura = datasplit[5];
-            var memberName = datasplit[6];
-            if(memberName.length>3){
-              var memberName = memberName.substr(0,3) + ".."
-            }
-            var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
-            var classStart = classStartArr.join("_")
-            //var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
-            var tdClassStart = $("#"+classStart+" div");
-            //schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
-            
-            tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
-             };
+              var indexArray = classTimeArray[i]
+              var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
+              var classYear = datasplit[0]
+              var classMonth = datasplit[1]
+              var classDate = datasplit[2]
+              var classHour = datasplit[3]
+              var classMinute = datasplit[4]
+              var classDura = datasplit[5];
+              var memberName = datasplit[6];
+              if(memberName.length>3){
+                var memberName = memberName.substr(0,3) + ".."
+              }
+              var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
+              var classStart = classStartArr.join("_")
+              //var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
+              var tdClassStart = $("#"+classStart+" div");
+              //schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
+              
+              //tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
+              if(scheduleFinishArray[i]=="0") {
+                 tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+              }else {
+                 tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+              }
+            };
             //$('#calendar').css('display','block');
             break;
         }
@@ -491,7 +532,7 @@ $(document).ready(function(){
               var planheight = 30;
               var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
               if($calendarWidth>=600){
-                var planheight = 45;
+                var planheight = 46;
               }
               var offlen = offTimeArray.length;
               //$('#calendar').css('display','none');

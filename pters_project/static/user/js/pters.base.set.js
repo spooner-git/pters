@@ -25,7 +25,7 @@ $(document).ready(function(){
 
    if(Options.language == "Japan"){
       $('.__todayplan').text("今日の日程")
-      $('.__weekplan').text("週間日程")
+      $('.__weekplan').text("日程表")
       $('.__monthplan').text("カレンダー")
       $('.__membermanage').text("会員管理")
       $('.__workmanage').text("業務管理")
@@ -38,7 +38,7 @@ $(document).ready(function(){
       $('.__mypage').text("マイページ")
    }else if(Options.language == "English"){
       $('.__todayplan').text("Daily")
-      $('.__weekplan').text("Weekly")
+      $('.__weekplan').text("Schedule")
       $('.__monthplan').text("Calendar")
       $('.__membermanage').text("Members")
       $('.__workmanage').text("Work")
@@ -51,8 +51,8 @@ $(document).ready(function(){
       $('.__mypage').text("My page")
    }else if(Options.language == "Korea"){
       $('.__todayplan').text("오늘 일정")
-      $('.__weekplan').text("주간 일정")
-      $('.__monthplan').text("월간 달력")
+      $('.__weekplan').text("일정표")
+      $('.__monthplan').text("달력")
       $('.__membermanage').text("회원 관리")
       $('.__workmanage').text("업무 통계")
       $('.__setting').text("서비스 설정")
