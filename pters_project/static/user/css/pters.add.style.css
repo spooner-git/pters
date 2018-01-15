@@ -117,11 +117,17 @@ ul a{
 	margin:0px;
 }
 
+.dropup{
+	height: 30px;
+	margin:0px;
+}
+
 .dropdownlist_mini{
 	width: 180px;
 	top:auto;
 	left: auto;
 	overflow-y:auto;
+	max-height: 200px;
 }
 
 .dropdownlist_mini li{
@@ -630,6 +636,10 @@ ul a{
 	color: #ffffff;
 }
 
+.blankSelected{
+	background:repeating-linear-gradient(135deg, #fb9ceb, #fb9ceb 1px, white 3px, white 6px) !important;
+}
+
 @media(min-width: 600px){
 	
 	#page-addplan{
@@ -645,8 +655,10 @@ ul a{
 		width: 300px;
 		border:2px solid #282828;
 		padding-bottom: 15px;
+		/*
 		border-top-right-radius: 20px;
 		border-bottom-left-radius: 20px;
+		*/
 	}
 
 

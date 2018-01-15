@@ -98,6 +98,10 @@ table{
 	table-layout: fixed;
 }
 
+#tableThead{
+	width: 91.6%;
+	margin:0 auto;
+}
 
 tbody{
 	background-color: #ffffff;
@@ -188,6 +192,7 @@ th{
 
 #currentMemberList,#finishedMemberList{
 	width: 91.6%;
+
 }
 
 
@@ -297,6 +302,10 @@ th{
 	display: none;
 }
 
+.instructPopup{
+	display: none;
+}
+
 @media(min-width: 600px){
 
 	._regcount{
@@ -337,9 +346,29 @@ th{
 		font-weight: 500;
 		line-height: 100px;
 	}
+	
+	.instructPopup{
+		position: absolute;
+		width: 200px;
+		height: 80px;
+		border:1px solid #282828;
+		background: #d7f3ff;
+	}
+
 }
 
 @media(min-width: 1000px){
+
+	#tableThead{
+		width: 1000px;
+		
+	}
+
+	.forscroll{
+		width: 10px;
+		padding:0 !important;
+		background: #ffffff;
+	}
 	
 	#page_managemember{
 		background:#ffffff;
@@ -348,6 +377,8 @@ th{
 	
 	#currentMemberList, #finishedMemberList{
 		width: 1000px;
+		height: 600px;
+		overflow-y: overlay;
 	}
 
 	._countnum,._email,._finday,._manage{
