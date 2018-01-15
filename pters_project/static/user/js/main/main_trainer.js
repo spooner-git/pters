@@ -36,6 +36,15 @@ $(document).ready(function(){
 	$('.center_box_monthyear p').text(currentMonth+1+monthtext+currentYear+yeartext); //월, 연도 표시
 	$('.center_box_plan p').text(todayplantext)
 
+	$(window).scroll(function(){
+		var navLoc = $('#pcver').offset().top;
+		console.log(navLoc)
+		if(navLoc > 1){
+			$('#pcver').css({'background':'#101010'})
+		}else{
+			$('#pcver').css({'background':'transparent'})
+		}
+	})
 
 });
 
