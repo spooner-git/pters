@@ -909,23 +909,6 @@ def member_registration(request):
     input_counts = 0
     input_price = 0
 
-    print(fast_check)
-    print(email)
-    print(name)
-    print(phone)
-    print(contents)
-    print(counts)
-    print(price)
-    print(start_date)
-    print(end_date)
-    print(next_page)
-    print(counts_fast)
-    print(price_fast)
-    print(start_date_fast)
-    print(end_date_fast)
-    print(sex)
-    print(birthday_dt)
-
     if MemberTb.objects.filter(phone=phone).exists():
         error = '이미 가입된 회원 입니다.'
     elif User.objects.filter(email=email).exists():
@@ -1093,13 +1076,18 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
                 break
 
     if error is None:
+        lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
+        if lecture_date_update.lecture_avail_count == 0:
+            error = '예약 가능한 횟수가 없습니다'
+
+    if error is None:
         with transaction.atomic():
             lecture_schedule_data = LectureScheduleTb(lecture_tb_id=lecture_id, start_dt=start_date,
                                                         end_dt=end_date,
                                                         state_cd='NP', en_dis_type='1',
                                                         reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
             lecture_schedule_data.save()
-            lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
+            #lecture_date_update = LectureTb.objects.get(lecture_id=int(lecture_id))
             member_lecture_avail_count = lecture_date_update.lecture_avail_count
             lecture_date_update.lecture_avail_count = member_lecture_avail_count - 1
             lecture_date_update.mod_dt = timezone.now()
