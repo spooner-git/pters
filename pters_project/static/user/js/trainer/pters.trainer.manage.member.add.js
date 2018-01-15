@@ -123,7 +123,7 @@ $(document).ready(function(){
         var yy = $('#memberBirthYear').val()
         var mm = $('#memberBirthMonth').siblings('button').val()
         var dd = $('#memberBirthDate').siblings('button').val()
-        $('#form_birth').val(yy+'_'+mm+'_'+dd)
+        $('#form_birth').val(yy+'-'+mm+'-'+dd)
       }
 
 

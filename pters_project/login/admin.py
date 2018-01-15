@@ -69,7 +69,7 @@ class LogTbAdmin(admin.ModelAdmin):
 
 @admin.register(MemberTb)
 class MemberTbAdmin(admin.ModelAdmin):
-    list_display = ('user','get_user_group','name', 'phone', 'age', 'sex',
+    list_display = ('user','get_user_group','name', 'phone', 'age', 'sex','birthday_dt',
                     'address', 'job', 'contents', 'reg_dt', 'mod_dt', 'use')
 
     def get_user_group(self, obj):
@@ -95,5 +95,5 @@ class ShopEmployeeTbAdmin(admin.ModelAdmin):
 
 @admin.register(HolidayTb)
 class HolidayTbAdmin(admin.ModelAdmin):
-    list_display = ('holiday_id', 'holiday_dt', 'use')
+    list_display = ('holiday_id', 'holiday_dt','holiday_name', 'use')
 

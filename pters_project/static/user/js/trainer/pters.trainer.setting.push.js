@@ -15,9 +15,9 @@ $(document).ready(function(){
 
       $('#switch2').click(function(){
       	if($(this).find('.switchball').hasClass('switchoff')){
-      		$(this).find('.switchball').removeClass('switchoff').addClass('switchon')
-      		$(this).find('.switchback').addClass('switchon-back')
-      		$('#noRegMemberAlarm').show(110,"swing")
+      		$(this).find('.switchball').removeClass('switchoff').addClass('switchon');
+      		$(this).find('.switchback').addClass('switchon-back');
+      		$('#noRegMemberAlarm').show(110,"swing");
 
       	}else{
       		$(this).find('.switchball').removeClass('switchon').addClass('switchoff')
