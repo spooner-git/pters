@@ -176,20 +176,23 @@
         <input type="hidden" name="birthday" id="form_birth" value="">
 
         <div>
-            <div class="ptaddbox form-group">
-                <label for="memberEmail" class="ptaddboxtext">
-                    <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail(아이디)
-                </label>
-                <div class="dropdown pters_input_custom">
-                    <input type="email" class="dropdown form-control" id="memberEmail_add" name="email" placeholder="이메일의 @앞부분은 아이디로 사용됩니다.">
-                </div>
-            </div>
+            
             <div class="ptaddbox form-group">
                 <label for="memberName" class="ptaddboxtext">
-                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명
+                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span>
                 </label>
                 <div class="dropdown pters_input_custom">
                     <input type="text" class="dropdown form-control" id="memberName_add" name="name" placeholder="회원분의 성함을 입력해주세요." maxlength="10">
+                </div>
+            </div>
+
+            <div class="ptaddbox form-group">
+                <label for="memberPhone" class="ptaddboxtext">
+                    <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처 <span style="color: #fe4e65;">*</span>
+                    <p class="icons_description"> 회원님의 초기 접속 ID로 사용됩니다. <br>초기 비밀번호는 전화번호 마지막 네자리이며, 접속하여 ID와 비밀번호 변경이 가능합니다.</p>
+                </label>
+                <div class="dropdown pters_input_custom">
+                    <input type="tel" class="dropdown form-control" id="memberPhone_add" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
                 </div>
             </div>
 
@@ -230,16 +233,16 @@
             </div>
 
             <div class="ptaddbox form-group">
-                <label for="memberPhone" class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처
+                <label for="memberEmail" class="ptaddboxtext">
+                    <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="tel" class="dropdown form-control" id="memberPhone_add" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
+                    <input type="email" class="dropdown form-control" id="memberEmail_add" name="email" placeholder="이메일 입력">
                 </div>
             </div>
 
             <label for="" class="ptaddboxtext" style="padding-right: 5%;padding-left: 5%;">
-                    <img class="icons" src={% static "user/res/ptadd/icon-bell.png" %}> PT등록정보
+                    <img class="icons" src={% static "user/res/ptadd/icon-bell.png" %}> PT등록정보 <span style="color: #fe4e65;">*</span>
             </label>
             <div id="selectBox2" class="selectbox">
                 <div id="btnCallSimple" href="#" class="selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>

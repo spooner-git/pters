@@ -1037,7 +1037,7 @@ $(document).ready(function(){
 
 	function weekTable(Index){
 		var slideIndex = $('#slide'+Index);
-		var div = '<div id="week" class="time-style wrap"><table class="calendar-style"><tbody><tr id="weekText">'
+		var div = '<div id="week" class="time-style"><table class="calendar-style"><tbody><tr id="weekText">'
 		var tdgap = '<td class="slidegap" style="background:#f4f4f4;"><span></span><span></span></td>'
 		var tdSun = '<td id="weekNum_1"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #d21245;">일</span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span></td>'
 		var tdMon = '<td id="weekNum_2"><span class="weekToday-style"></span><span class="weekToday-style">월</span><span id="monDate" class="weekToday-style"></span></td>'
@@ -1133,12 +1133,16 @@ $(document).ready(function(){
 	}
 */		
 		function toDay(){
-			for(i=1;i<=7;i++){
-			var scan = $('.weekfixed'+' #weekNum_'+i).attr('data-date')
-				var yy = String(currentYear)
-				var dd = String(currentDate)
-				var mm = String(currentPageMonth)
-				
+			var yy = String(currentYear)
+			var dd = String(currentDate)
+			var mm = String(currentPageMonth)
+			for(var i=1;i<=24;i++){
+				$("#"+yy+'_'+mm+'_'+dd+'_'+i+'_00').addClass('todaywide')
+				console.log("#"+yy+'_'+mm+'_'+dd+'_'+i+'_00')
+			}
+
+			for(var i=1;i<=7;i++){
+				var scan = $('.weekfixed'+' #weekNum_'+i).attr('data-date')
 				if(mm.length<2){
 					var mm = '0'+mm
 				}
@@ -1146,9 +1150,11 @@ $(document).ready(function(){
 					var dd = '0'+dd
 				}
 				if(scan == yy+mm+dd){
+					$('.weekfixed #weekNum_'+i).addClass('todaywide')
 					$('.weekfixed #weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY')
 					$('.weekfixed #weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
 				}else{
+					$('.weekfixed #weekNum_'+i).removeClass('todaywide')
 					$('.weekfixed #weekNum_'+i+' span:nth-child(1)').removeClass('today').html('')
 					$('.weekfixed #weekNum_'+i+' span:nth-child(3)').removeClass('today-Number')
 				}

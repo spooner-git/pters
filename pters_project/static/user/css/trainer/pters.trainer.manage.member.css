@@ -350,9 +350,14 @@ th{
 	.instructPopup{
 		position: absolute;
 		width: 200px;
-		height: 80px;
+		height: auto;
+		min-height: 40px;
 		border:1px solid #282828;
 		background: #d7f3ff;
+	}
+
+	#page_addmember{
+		top: 75px;
 	}
 
 }

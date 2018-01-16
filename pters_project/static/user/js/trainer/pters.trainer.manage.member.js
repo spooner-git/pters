@@ -51,6 +51,8 @@ $(document).ready(function(){
       $('#page-base-addstyle').fadeOut();
 
       $('input,#memberDue_add_2').val("")
+      $('#memberBirthMonthSelected button').val("").text("")
+      $('#memberBirthDateSelected button').val("").text("")
 
       $('._due div.checked').removeClass('checked ptersCheckboxInner')
       $('._count div.checked').removeClass('checked ptersCheckboxInner')
@@ -161,8 +163,8 @@ $(document).ready(function(){
 //#####################회원정보 팝업 //#####################
 
 
-//#####################회원정보 팝업 //#####################
-  $('th').click(function(){
+//#####################회원정보 도움말 팝업 //#####################
+  $('th').mouseenter(function(){
       var LOCTOP = $(this).offset().top
       var LOCLEFT = $(this).offset().left
       
@@ -191,10 +193,17 @@ $(document).ready(function(){
       }
   })
 
+  /*
   $('.instructPopup').click(function(){
       $(this).fadeOut()
   })
-//#####################회원정보 팝업 //#####################
+  */
+  
+  $('#alignBox,.centeralign').mouseenter(function(){
+    $('.instructPopup').fadeOut()
+  })
+  
+//#####################회원정보 도움말 팝업 //#####################
 
 
 
