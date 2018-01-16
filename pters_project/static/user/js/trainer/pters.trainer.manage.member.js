@@ -34,7 +34,7 @@ $(document).ready(function(){
       $('#uptext2').text('신규 회원 등록')
       $('#page-base').fadeOut();
       $('#page-base-addstyle').fadeIn();
-      scrollToIndicator($('#memberEmail_add'))
+      scrollToIndicator($('#page_addmember'))
       if($('body').width()<600){
         $('#page_managemember').hide();
       }
@@ -128,7 +128,7 @@ $(document).ready(function(){
       $('#memberEmail').attr('placeholder',DB[name].email)
       $('#datepicker').attr('placeholder',DB[name].start)
       $('#datepicker2').attr('placeholder',DB[name].end)
-      $('#memberInfoPopup').show().animate({'top':'0px'});
+      $('#memberInfoPopup').show().animate({'top':'50px'});
       scrollToIndicator($('#page_managemember'));
       $('#shade3').fadeIn('fast');
     })
@@ -141,7 +141,7 @@ $(document).ready(function(){
       $('#memberEmail').attr('placeholder',DBe[name].email)
       $('#datepicker').attr('placeholder',DBe[name].start)
       $('#datepicker2').attr('placeholder',DBe[name].end)
-      $('#memberInfoPopup').show().animate({'top':'0px'});
+      $('#memberInfoPopup').show().animate({'top':'50px'});
       scrollToIndicator($('#page_managemember'));
       $('html,body').scrollTop();
       $('#shade3').fadeIn('fast');
@@ -366,7 +366,10 @@ $(document).ready(function(){
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'     
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-                
+                var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
+                var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
+                var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'
+
                 var nametd = '<td class="_tdname" data-name="'+array[2]+'">'+name+nameimage+'</td>'
                 var emailtd = '<td class="_email">'+email+'</td>'
                 var regcounttd = '<td class="_regcount">'+regcount+'</td>'
@@ -374,7 +377,7 @@ $(document).ready(function(){
                 var startdatetd = '<td class="_startdate">'+start+'</td>'
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
-                var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdeleteimage+'</td>'
                 var scrolltd = '<td class="forscroll"></td>'
 
                 var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'    
@@ -414,6 +417,9 @@ $(document).ready(function(){
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
                 var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
+                var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
+                var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
+                var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'
 
                 var nametd = '<td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td>'
                 var emailtd = '<td class="_email">'+email+'</td>'
@@ -422,7 +428,7 @@ $(document).ready(function(){
                 var startdatetd = '<td class="_startdate">'+start+'</td>'
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
-                var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdeleteimage+'</td>'
                 var scrolltd = '<td class="forscroll"></td>'
 
                 var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'   
@@ -461,7 +467,10 @@ $(document).ready(function(){
                 var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
-                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'    
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
+                var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
+                var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
+                var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'    
                 
                 var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
                 var emailtd = '<td class="_email">'+email+'</td>'
@@ -470,7 +479,7 @@ $(document).ready(function(){
                 var startdatetd = '<td class="_startdate">'+start+'</td>'
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
-                var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdeleteimage+'</td>'
                 var scrolltd = '<td class="forscroll"></td>'
 
                 var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'     
@@ -527,7 +536,10 @@ $(document).ready(function(){
                 var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
-                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
+                var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
+                var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
+                var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'
                 
                 var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
                 var emailtd = '<td class="_email">'+email+'</td>'
@@ -536,7 +548,7 @@ $(document).ready(function(){
                 var startdatetd = '<td class="_startdate">'+start+'</td>'
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
-                var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdeleteimage+'</td>'
                 var scrolltd = '<td class="forscroll"></td>'
 
                 var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'     
@@ -574,7 +586,10 @@ $(document).ready(function(){
                 var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'  
-                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
+                var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
+                var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
+                var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'    
                 
                 var nametd = '<td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td>'
                 var emailtd = '<td class="_email">'+email+'</td>'
@@ -583,7 +598,7 @@ $(document).ready(function(){
                 var startdatetd = '<td class="_startdate">'+start+'</td>'
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
-                var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdeleteimage+'</td>'
                 var scrolltd = '<td class="forscroll"></td>'
 
                 var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'         
@@ -621,7 +636,10 @@ $(document).ready(function(){
                 var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>'
                 var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
                 var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
-                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'      
+                var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">' 
+                var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
+                var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
+                var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'    
 
                 var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
                 var emailtd = '<td class="_email">'+email+'</td>'
@@ -630,7 +648,7 @@ $(document).ready(function(){
                 var startdatetd = '<td class="_startdate">'+start+'</td>'
                 var enddatetd = '<td class="_finday">'+end+'</td>'
                 var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
-                var pctd = '<td class="_manage">'+'pcmanage'+'</td>'
+                var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdeleteimage+'</td>'
                 var scrolltd = '<td class="forscroll"></td>'
 
                 var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'       

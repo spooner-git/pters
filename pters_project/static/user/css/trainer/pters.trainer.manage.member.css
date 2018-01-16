@@ -42,7 +42,7 @@ body{
 }
 
 .centeralign{
-	max-width: 1000px !important;
+	max-width: 1200px !important;
 }
 
 
@@ -237,7 +237,7 @@ th{
 	position: absolute;
 	background: #f4f4f4;
 	width: 100%;
-	z-index: 1500;
+	z-index: 105;
 	max-width: 700px !important;
 	top: -800px;
 	left: 5%;
@@ -292,6 +292,13 @@ th{
 	width: 6px;
 	float: right;
 	margin-top: 4px;
+}
+
+.pcmanageicon{
+	height: 15px;
+	margin-left: 3px;
+	margin-right: 3px;
+	cursor: pointer;
 }
 
 #pcBtn{
@@ -365,7 +372,7 @@ th{
 @media(min-width: 1000px){
 
 	#tableThead{
-		width: 1000px;
+		width: 1200px;
 		
 	}
 
@@ -381,7 +388,7 @@ th{
 
 	
 	#currentMemberList, #finishedMemberList{
-		width: 1000px;
+		width: 1200px;
 		height: 600px;
 		overflow-y: overlay;
 	}
@@ -476,7 +483,7 @@ th{
 
 	#alignBox{
 		position: relative;
-		max-width: 1000px;
+		max-width: 1200px;
 		height: 30px;
 		margin-bottom: 5px;
 		padding-right: 150px;

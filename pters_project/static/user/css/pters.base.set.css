@@ -349,12 +349,12 @@ a:focus, a:hover{
 
 #page-base{
     display: block;
-    z-index: 102;
+    z-index: 110;
 }
 
 #page-base-addstyle{
     display: none;
-    z-index: 102;
+    z-index: 110;
 }
 
 #pcver{
