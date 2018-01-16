@@ -406,6 +406,7 @@
          <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.manage.member.js" %}></script>
          <script>
           $('#uptext').text("회원 관리")
+          $('footer').hide()
            
           var nameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
           var phoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
