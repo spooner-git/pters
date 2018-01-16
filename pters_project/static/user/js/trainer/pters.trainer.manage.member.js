@@ -11,7 +11,10 @@ $(document).ready(function(){
           $(this).parents('ul').siblings('button').val($(this).text());
           console.log($(this).val(), $(this).attr('value'))
        });
-*/
+*/  
+    $('.alignSelect li a').click(function(){
+        $('.alignSelect button').text($(this).text())
+    })
 
       var ts;
 		$("body").bind("touchstart",function(e){
@@ -25,6 +28,21 @@ $(document).ready(function(){
 				$("#float_btn").fadeIn()
 			}
 		})
+
+    $('button').on('click',function(){
+        $('html, body').css('overflow-y','hidden')
+    })
+
+    
+
+    $('li').click(function(){
+        if($('.dropdown').hasClass('open')){
+          $('html, body').css('overflow-y','auto')
+        }else{
+          $('html, body').css('overflow-y','hidden')
+        }
+    })
+ 
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
     $('#float_btn').click(function(){
