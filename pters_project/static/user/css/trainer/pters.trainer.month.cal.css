@@ -599,6 +599,7 @@ img,a,div,span,p{
 	padding: 10px;
 	width: 35px;
 	float: right;
+	cursor: pointer;
 }
 
 #btn_close5{
@@ -608,6 +609,7 @@ img,a,div,span,p{
 	padding: 10px;
 	width: 35px;
 	float: right;
+	cursor: pointer;
 }
 
 .popup_inner{
