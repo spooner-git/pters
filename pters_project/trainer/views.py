@@ -955,11 +955,12 @@ def member_registration(request):
 
     if error is None:
 
-        password = email.split('@')[0] + phone[7:]
+       #password = email.split('@')[0] + phone[7:]
+        password = phone[7:]
 
         try:
             with transaction.atomic():
-                user = User.objects.create_user(username=email, email=email, first_name=name, password=password)
+                user = User.objects.create_user(username=phone, email=email, first_name=name, password=password)
                 group = Group.objects.get(name='trainee')
                 user.groups.add(group)
                 member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
