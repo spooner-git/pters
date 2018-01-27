@@ -434,22 +434,23 @@ td{
 	top: 0px;
 	left: 0px;
 	width: 100%;
-	background: #fe4e65;
+	background: #fbf3bd;
 	opacity: 0.8;
-	border: 0.5px solid #fe4e65;
+	/*border: 0.5px solid #fe4e65;
 	border-bottom: 0.5px solid #fe4e65;
+	*/
 	z-index: 100;
 	cursor: pointer;
 }
 
 .classTime_checked{
-	background: #e3ffd9 !important;
-	border-color:#96ff71 !important;
+	background: #8c8763 !important;
+	/*border-color:#96ff71 !important;*/
 }
 
 .classTime_re{ /*반복 일정*/
-	background: #ff3b00a6;
-	border: 0.5px solid #ff3b00a6;
+	background: #e3ffd9;
+	/*border: 0.5px solid #ff3b00a6;*/
 }
 
 .classTime:active,.classTime:hover{
@@ -464,9 +465,9 @@ td{
 	top: 0px;
 	left: 0px;
 	width: 100%;
-	background: #d8d8d8;
+	background: #e2e2e2;
 	opacity: 0.8;
-	border: 0.5px solid #a9a9a9;
+	/*border: 0.5px solid #a9a9a9;*/
 	z-index: 100;
 	cursor: pointer;
 }
@@ -697,8 +698,8 @@ td{
 	}
 
 	.classTime{
-		background : #ffe8eb;
-		border-color:#ffa8b3;
+		background : #fbf3bd;
+		/*border-color:#ffa8b3;*/
 	}
 
 	.classTime,.offTime,.classTime_checked{
