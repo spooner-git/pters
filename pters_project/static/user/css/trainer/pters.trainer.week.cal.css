@@ -364,7 +364,7 @@ img,a,div,span,p{
 	width: 100%;
 	font-size: 14.4px;
 	height: 30px;
-	border-bottom:1px solid #f4f4f4;
+	border-bottom:1px solid #cccccc;
 }
 
 
@@ -405,9 +405,6 @@ img,a,div,span,p{
 	display:none;
 }
 
-td{
-	border-left: 0.5px solid #ffffff;
-}
 
 .td00,.td30{
 	background: transparent;
@@ -432,10 +429,10 @@ td{
 .classTime{
 	position: absolute;
 	top: 0px;
-	left: 0px;
+	left: 2px;
 	width: 100%;
 	background: #fbf3bd;
-	opacity: 0.8;
+	opacity: 0.9;
 	/*border: 0.5px solid #fe4e65;
 	border-bottom: 0.5px solid #fe4e65;
 	*/
@@ -463,10 +460,10 @@ td{
 .offTime{
 	position: absolute;
 	top: 0px;
-	left: 0px;
+	left: 2px;
 	width: 100%;
 	background: #e2e2e2;
-	opacity: 0.8;
+	opacity: 0.9;
 	/*border: 0.5px solid #a9a9a9;*/
 	z-index: 100;
 	cursor: pointer;
@@ -510,6 +507,10 @@ td{
 	line-height: 30px;
 }
 
+.hourType{
+	display: none;
+}
+
 .memberTime{
 	position: absolute;
 	right: 6%;
@@ -531,11 +532,11 @@ td{
 
 .weekfixed{
 	border-bottom:0.5px solid #cccccc;
-	border-left:0.5px solid #cccccc;
-	border-right:0.5px solid #cccccc;
+	border-left:1px solid #cccccc;
+	border-right:1px solid #cccccc;
 	padding-top: 50px;
-	padding-left: 1px;
-	padding-right: 1px;
+	padding-left: 0px;
+	padding-right: 0px;
 }
 
 /* 주간달력 상단 내용; swiper 안에 있는 날짜표시라인은 잠시 숨겨두기 */
@@ -695,10 +696,12 @@ td{
 
 	.timeindex{
 		/*padding-top: 51px;*/
+		margin-top: -1px;
 	}
 
 	.classTime{
 		background : #fbf3bd;
+		top: 2px;
 		/*border-color:#ffa8b3;*/
 	}
 
@@ -711,11 +714,11 @@ td{
 	.memberName{
 		position: absolute;
 		width:100%;
-		text-align: center;
+		padding-right: 5px;
+		text-align: right;
 		left: 0%;
-		margin-top: 16px;
-		font-size: 100%;
-		font-weight: bold;
+		margin-top: 6px;
+		font-size: 21px;
 		letter-spacing: -0.3px;
 		color: black;
 		cursor: pointer;
@@ -731,6 +734,12 @@ td{
 		color: black;
 		cursor: pointer;
 		text-align: left;
+	}
+
+	.hourType{
+		display: block;
+		margin:0;
+		margin-bottom: -3px;
 	}
 
 	.swiper-slide{
@@ -751,7 +760,6 @@ td{
 	.td00,.td30{
 		height: 44px;
 		background: transparent;
-		border-left: 0.5px solid #eaeaea;
 	}
 
 	.td00:hover,.td30:hover{
@@ -772,7 +780,8 @@ td{
 	.hour,.slidegap{
 		height: 46px;
 		font-weight: 500;
-		border-left:0.5px solid #f4f4f4;
+		/*border-left:0.5px solid #f4f4f4;*/
+		border-top:1px solid #cccccc;
 	}
 
 	#shade3{
@@ -870,9 +879,9 @@ td{
 	}
 
 	.todaywide{
-		width: 190px !important;
-		border-left: 2px solid #fe4e65;
-		border-right: 2px solid #fe4e65;
+		width: 230px !important;
+		border-left: 1px solid #fe4e65;
+		border-right: 1px solid #fe4e65;
 	}
 
 	td span:nth-child(1){

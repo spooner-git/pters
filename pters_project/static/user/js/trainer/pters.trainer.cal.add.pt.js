@@ -39,7 +39,7 @@ $(document).ready(function(){
               //$('#commonPopup').fadeIn('fast').css({'top':toploc-10,'left':leftloc+150})
       })
 
-      $(document).on('click','.td00',function(){
+      $(document).on('click','.td00',function(){ //주간달력 미니 팝업
             var toploc = $(this).offset().top;
             var leftloc = $(this).offset().left;
             var tdwidth = $(this).width();
@@ -77,7 +77,7 @@ $(document).ready(function(){
             if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none')){
               $('.td00').css('background','transparent')
               closeMiniPopupByChange()
-              $(this).addClass('blankSelected')
+              $(this).find('div').addClass('blankSelected')
               $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
               var tdinfo = $(this).attr('id').split('_');
               var yy = tdinfo[0];
@@ -111,8 +111,8 @@ $(document).ready(function(){
 
       $('#typeSelector_1').click(function(){
         $('.blankSelected_addview').removeClass('blankSelected blankSelected_addview')
-          $(this).css('background','#fe4e65')
-          $('#typeSelector_2').css('background','#a2a2a2')
+          $(this).css({'background':'#fe4e65','color':'#ffffff','border-color':'#fe4e65'})
+          $('#typeSelector_2').css({'background':'#ffffff','color':'#cccccc','border-color':'#cccccc'})
           $('#classDuration_mini').hide('fast',function(){
               $('#memberName_mini').show('fast')
               $('#remainCount_mini').show('fast')
@@ -123,8 +123,8 @@ $(document).ready(function(){
       })
 
       $('#typeSelector_2').click(function(){
-          $(this).css('background','#fe4e65')
-          $('#typeSelector_1').css('background','#a2a2a2')
+          $(this).css({'background':'#fe4e65','color':'#ffffff','border-color':'#fe4e65'})
+          $('#typeSelector_1').css({'background':'#ffffff','color':'#cccccc','border-color':'#cccccc'})
           $('#memberName_mini').hide('fast')
           $('#remainCount_mini').hide('fast',function(){
               $('#classDuration_mini').show('fast')
@@ -150,7 +150,7 @@ $(document).ready(function(){
       function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
          console.log(duration)
           var selectedDuration = Number(duration)
-          var selectedTime = $('.blankSelected').attr('id').split('_')
+          var selectedTime = $('.blankSelected').parent('.td00').attr('id').split('_')
           var yy = Number(selectedTime[0])
           var mm = Number(selectedTime[1])
           var dd = Number(selectedTime[2])
@@ -158,22 +158,23 @@ $(document).ready(function(){
           var mi = "00"
           $('.blankSelected_addview').removeClass('blankSelected blankSelected_addview')
           for(i=hh+1; i<hh+selectedDuration; i++){
-            $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).addClass('blankSelected blankSelected_addview')
+            $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass('blankSelected blankSelected_addview')
           }
       }
 
       function closeMiniPopupByChange(){
         $("#id_time_duration_off").val("")
         $('#page-addplan-pc').fadeOut();
-        $('.td00').removeClass('blankSelected blankSelected_addview')
+        $('.td00').find('div').removeClass('blankSelected blankSelected_addview')
         $('.submitBtn').removeClass('submitBtnActivated')
         $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
-        $('#submitBtn_mini').css('background','#ffffff')
+        $('#submitBtn_mini').css('background','#282828')
 
         $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
         $("#membersSelected .btn:first-child").val("");
         $("#countsSelected,.countsSelected").text("")
+        $('#remainCount_mini_text').hide()
         $(".dropdown_mini button").removeClass("dropdown_selected");
         $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
         $("#durationsSelected .btn:first-child").val("");
@@ -192,6 +193,7 @@ $(document).ready(function(){
       		$("#membersSelected .btn:first-child").text($(this).text());
       		$("#membersSelected .btn:first-child").val($(this).text());
       		$("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
+          $('#remainCount_mini_text').show()
       		$("#id_lecture_id").val($(this).attr('data-lectureid'));
           $("#id_member_name").val($(this).text());
           check_dropdown_selected();
@@ -373,7 +375,7 @@ $(document).ready(function(){
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                 $('.submitBtn').removeClass('submitBtnActivated')
-                $('#submitBtn_mini').css('background','#ffffff');
+                $('#submitBtn_mini').css('background','#282828');
                 select_all_check=false;
             }
         }else if(addTypeSelect == "offadd"){
@@ -386,7 +388,7 @@ $(document).ready(function(){
                 select_all_check=true;
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#submitBtn_mini').css('background','#ffffff');
+                $('#submitBtn_mini').css('background','#282828');
                 $('.submitBtn').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
@@ -454,7 +456,7 @@ $(document).ready(function(){
             var planheight = 30;
             var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
             if($calendarWidth>=600){
-              var planheight = 46;
+              var planheight = 42;
             }
             var classlen = classTimeArray.length;
             //$('#calendar').css('display','none');
@@ -465,6 +467,12 @@ $(document).ready(function(){
               var classMonth = datasplit[1]
               var classDate = datasplit[2]
               var classHour = datasplit[3]
+              var hourType = ""
+              if(classHour < 12){
+                var hourType = "오전"
+              }else{
+                var hourType = "오후"
+              }
               var classMinute = datasplit[4]
               var classDura = datasplit[5];
               var memberName = datasplit[6];
@@ -479,9 +487,9 @@ $(document).ready(function(){
               
               //tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
               if(scheduleFinishArray[i]=="0") {
-                 tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+                 tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
               }else {
-                 tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+                 tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' +classHour + ':' + classMinute + '</span>');
               }
             };
             //$('#calendar').css('display','block');
@@ -502,6 +510,12 @@ $(document).ready(function(){
                 var offMonth = datasplit[1]
                 var offDate = datasplit[2]
                 var offHour = datasplit[3]
+                var hourType = ""
+                if(classHour < 12){
+                  var hourType = "오전"
+                }else{
+                  var hourType = "오후"
+                }
                 var offMinute = datasplit[4]
                 var offDura = datasplit[5];
                 var memberName = datasplit[6];
@@ -551,7 +565,7 @@ $(document).ready(function(){
                 //var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
                 var tdOffStart = $("#"+offStart+" div");
                 
-                tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
+                tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
               };
               //$('#calendar').css('display','block');
           break;
@@ -590,6 +604,7 @@ $(document).ready(function(){
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
         $("#membersSelected .btn:first-child").val("");
         $("#countsSelected,.countsSelected").text("")
+        $('#remainCount_mini_text').hide()
         $("#dateSelector p").removeClass("dropdown_selected");
         $('#timeGraph').hide();
         $("#starttimesSelected button").removeClass("dropdown_selected");
@@ -619,12 +634,13 @@ $(document).ready(function(){
         $('#page-addplan-pc').fadeOut();
         $('.submitBtn').removeClass('submitBtnActivated')
         $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
-        $('#submitBtn_mini').css('background','#ffffff')
+        $('#submitBtn_mini').css('background','#282828')
 
         $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
         $("#membersSelected .btn:first-child").val("");
         $("#countsSelected,.countsSelected").text("")
+        $('#remainCount_mini_text').hide()
         $("#dateSelector p").removeClass("dropdown_selected");
         $('#timeGraph').hide();
         $("#starttimesSelected button").removeClass("dropdown_selected");

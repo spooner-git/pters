@@ -126,10 +126,10 @@ $(document).ready(function(){
    function closeMiniPopup(){
    		$("#id_time_duration_off").val("")
 	    $('#page-addplan-pc').fadeOut();
-	    $('.td00').removeClass('blankSelected blankSelected_addview')
+	    $('.td00').find('div').removeClass('blankSelected blankSelected_addview')
 	    $('.submitBtn').removeClass('submitBtnActivated')
 	    $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
-	    $('#submitBtn_mini').css('background','#ffffff')
+	    $('#submitBtn_mini').css('background','#282828')
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
@@ -1194,7 +1194,8 @@ $(document).ready(function(){
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var planheight = 30;
 			if($calendarWidth>=600){
-				var planheight = 46;
+				//var planheight = 46;
+				var planheight = 42;
 		}
 		var classlen = classTimeArray.length;
 		$('#calendar').css('display','none');
@@ -1205,6 +1206,12 @@ $(document).ready(function(){
 			var classMonth = datasplit[1]
 			var classDate = datasplit[2]
 			var classHour = datasplit[3]
+			var hourType = ""
+			if(classHour < 12){
+				var hourType = "오전"
+			}else{
+				var hourType = "오후"
+			}
 			var classMinute = datasplit[4]
 			var classDura = datasplit[5];
 			var memberName = datasplit[6];
@@ -1218,9 +1225,9 @@ $(document).ready(function(){
 			//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
 
 			if(scheduleFinishArray[i]=="0") {
-                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
             }else {
-                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
             }
 		};
 		$('#calendar').css('display','block');
@@ -1240,6 +1247,12 @@ $(document).ready(function(){
 			var offMonth = datasplit[1]
 			var offDate = datasplit[2]
 			var offHour = datasplit[3]
+			var hourType = ""
+			if(offHour < 12){
+				var hourType = "오전"
+			}else{
+				var hourType = "오후"
+			}
 			var offMinute = datasplit[4]
 			var offDura = datasplit[5];
 			var memberName = datasplit[6];
@@ -1248,7 +1261,7 @@ $(document).ready(function(){
 			//var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var tdOffStart = $("#"+offStart+" div");
 			
-			tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
+			tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
 		};
 		$('#calendar').css('display','block');
 	};
@@ -1257,7 +1270,7 @@ $(document).ready(function(){
 	function classTime_Active(option){
 		var planheight = 30;
 		if($calendarWidth>=600){
-			var planheight = 46;
+			var planheight = 42;
 		}
 
 		switch(option){
@@ -1272,9 +1285,9 @@ $(document).ready(function(){
 
 						//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
 						if(scheduleFinishArray[i]=="0") {
-			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
 			            }else {
-			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
 			            }
 					}
 				}
@@ -1290,9 +1303,9 @@ $(document).ready(function(){
 
 						//schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
 						if(scheduleFinishArray[i]=="0") {
-			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
 			            }else {
-			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + classHour + ':' + classMinute + '</span>');
+			                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' +classHour + ':' + classMinute + '</span>');
 			            	
 			            }
 					}
@@ -1326,6 +1339,11 @@ $(document).ready(function(){
 				var classDate = '0'+classDate
 			}
 			var classHour = datasplit[3]
+			if(classHour < 12){
+				var hourType = "오전"
+			}else{
+				var hourType = "오후"
+			}
 			var classMinute = datasplit[4]
 			var classDura = datasplit[5];
 			var memberName = datasplit[6];
@@ -1359,7 +1377,7 @@ $(document).ready(function(){
 						var offStart = offStartArr.join("_")
 						var tdOffStart = $("#"+offStart+" div");
 
-						tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
+						tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
 					}
 				}
 			break;
@@ -1372,7 +1390,7 @@ $(document).ready(function(){
 						var offStart = offStartArr.join("_")
 						var tdClassStart = $("#"+offStart+" div");
 
-						tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+offHour+':'+offMinute+'</span>');
+						tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' +offHour+':'+offMinute+'</span>');
 					}
 				}
 			break;
@@ -1404,6 +1422,11 @@ $(document).ready(function(){
 				var offDate = '0'+datasplit[2]
 			}
 			var offHour = datasplit[3]
+			if(offHour < 12){
+				var hourType = "오전"
+			}else{
+				var hourType = "오후"
+			}
 			var offMinute = datasplit[4]
 			var offDura = datasplit[5];
 			var memberName = datasplit[6];
