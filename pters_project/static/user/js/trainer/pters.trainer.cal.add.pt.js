@@ -511,11 +511,6 @@ $(document).ready(function(){
                 var offDate = datasplit[2]
                 var offHour = datasplit[3]
                 var hourType = ""
-                if(classHour < 12){
-                  var hourType = "오전"
-                }else{
-                  var hourType = "오후"
-                }
                 var offMinute = datasplit[4]
                 var offDura = datasplit[5];
                 var memberName = datasplit[6];
@@ -557,6 +552,11 @@ $(document).ready(function(){
                 var offMonth = datasplit[1]
                 var offDate = datasplit[2]
                 var offHour = datasplit[3]
+                if(classHour < 12){
+                  var hourType = "오전"
+                }else{
+                  var hourType = "오후"
+                }
                 var offMinute = datasplit[4]
                 var offDura = datasplit[5];
                 var memberName = datasplit[6];
