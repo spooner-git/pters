@@ -552,7 +552,7 @@ $(document).ready(function(){
                 var offMonth = datasplit[1]
                 var offDate = datasplit[2]
                 var offHour = datasplit[3]
-                if(classHour < 12){
+                if(offHour < 12){
                   var hourType = "오전"
                 }else{
                   var hourType = "오후"
