@@ -29,6 +29,11 @@ img,a,div,span,p{
 	*/
 }
 
+.swiper-wrapper{
+	will-change: transform;
+}
+
+
 .swiper-container{
 	width: 100%;
 	height: 100%;
@@ -451,10 +456,12 @@ img,a,div,span,p{
 }
 
 .classTime:active,.classTime:hover{
+	/*
 	background: #fe4e65;
 	opacity: 1;
 	border:0.5px solid #6d585b;
 	-webkit-background: #a2a2a2;
+	*/
 }
 
 .offTime{
@@ -474,9 +481,11 @@ img,a,div,span,p{
 }
 
 .offTime:active,.offTime:hover{
+	/*
 	background: #a2a2a2;
 	opacity: 1;
 	-webkit-background: #a2a2a2;
+	*/
 }
 
 
@@ -528,6 +537,7 @@ img,a,div,span,p{
 	z-index: 4;
 	background-color: transparent;
 	height: auto;
+	max-width: 1200px;
 }
 
 .weekfixed{
@@ -550,7 +560,7 @@ img,a,div,span,p{
 
 .weekToday-style{
 	height: 18px;
-	font-size: 14.1px;
+	font-size: 13px;
 }
 
 .today-Number{
@@ -853,6 +863,8 @@ img,a,div,span,p{
 
 	#week{
 		position: fixed;
+		left: 50%;
+		transform:translateX(-50%);
 	}
 
 	.weekfixed{
@@ -889,7 +901,7 @@ img,a,div,span,p{
 	}
 
 	td span:nth-child(3){
-		font-size: 21px;
+		font-size: 17px;
 		margin-bottom: 10px !important;
 	}
 

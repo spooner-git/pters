@@ -77,7 +77,7 @@
         <a id="rightarrowPC" style="right: 10%"><span>다음 주</span><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 12px;right: 0;"></a>
     </div>
 
-    <div id="ymdText" class="wrapunlimit" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
+    <div id="ymdText" class="" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
       <div class='arrowButton'>
               <a href="" style="left: 4%">
                 <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
@@ -96,18 +96,18 @@
       </div>
     </div>
     
-    <div id="week" class="time-style wrap weekfixed">
+    <div id="week" class="time-style weekfixed">
       <table class="calendar-style">
         <tbody>
           <tr id="weekText">
             <td class="slidegap" style="background:#f4f4f4;"><span></span><span></span></td>
-            <td id="weekNum_1"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #d21245;">일</span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span></td>
-            <td id="weekNum_2"><span class="weekToday-style"></span><span class="weekToday-style">월</span><span id="monDate" class="weekToday-style"></span></td>
-            <td id="weekNum_3"><span class="weekToday-style"></span><span class="weekToday-style">화</span><span id="tueDate" class="weekToday-style"></span></td>
-            <td id="weekNum_4"><span class="weekToday-style"></span><span class="weekToday-style">수</span><span id="wedDate" class="weekToday-style"></span></td>
-            <td id="weekNum_5"><span class="weekToday-style"></span><span class="weekToday-style">목</span><span id="thrDate" class="weekToday-style"></span></td>
-            <td id="weekNum_6"><span class="weekToday-style"></span><span class="weekToday-style">금</span><span id="friDate" class="weekToday-style"></span></td>
-            <td id="weekNum_7"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #115a8e;">토</span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span></td>
+            <td id="weekNum_1"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #d21245;">일요일</span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span></td>
+            <td id="weekNum_2"><span class="weekToday-style"></span><span class="weekToday-style">월요일</span><span id="monDate" class="weekToday-style"></span></td>
+            <td id="weekNum_3"><span class="weekToday-style"></span><span class="weekToday-style">화요일</span><span id="tueDate" class="weekToday-style"></span></td>
+            <td id="weekNum_4"><span class="weekToday-style"></span><span class="weekToday-style">수요일</span><span id="wedDate" class="weekToday-style"></span></td>
+            <td id="weekNum_5"><span class="weekToday-style"></span><span class="weekToday-style">목요일</span><span id="thrDate" class="weekToday-style"></span></td>
+            <td id="weekNum_6"><span class="weekToday-style"></span><span class="weekToday-style">금요일</span><span id="friDate" class="weekToday-style"></span></td>
+            <td id="weekNum_7"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #115a8e;">토요일</span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span></td>
           </tr>
         </tbody>
       </table>
@@ -543,12 +543,13 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 2,
-                speed : 120,
+                speed : 100,
                 preventClicks : true,
                 keyboardControl : true, 
                 preventClicksPropagation : true,
-                threshold : 50,
+                threshold : 60,
                 resistance: 1,
+                followFinger : false,
                 //shortSwipes : false,
                 //longSwipesRatio: 0.2,
                 //longSwipesMs : 70,

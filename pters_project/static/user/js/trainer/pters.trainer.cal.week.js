@@ -614,7 +614,9 @@ $(document).ready(function(){
 	})
 
 	myswiper.on('onSlideChangeEnd',function(){
-		myswiper.params.onlyExternal = false;
+		setTimeout(function(){
+			myswiper.params.onlyExternal = false;
+		}, 50)
 	})
 	//너무 빠르게 스와이프 하는 것을 방지
 
@@ -628,31 +630,36 @@ $(document).ready(function(){
 		console.log('scrolling')
 		
 		var ymdTextLoc = $('#pcver').offset().top;
-		if(ymdTextLoc>10){
+		if(ymdTextLoc>30){
 			if($(window).width()>600){
 				$('#ymdText').hide()
-				$('#week').css('padding-top','0')
-				$('#calendar').css('padding-top','51px')
+				$('#week').css({'transform':'translate(-50% ,-100px)'})
+				//$('#calendar').css({'transform':'translateY(51px)'})
 			}else{
-				$('body').css('padding-top','0')
-				$('#page-base').fadeOut('linear')	
+				//$('body').css('padding-top','0')
+				//$('#page-base').fadeOut('linear')	
+				$('#ymdText').css({'transform':'translateY(-50px)','z-index':'110'})
+				$('#week').css('transform','translateY(-50px)')
 			}	
-		}else if(ymdTextLoc<10){
+		}else if(ymdTextLoc<30){
 			if($(window).width()>600){
 				$('#ymdText').show()
-				$('#week').css('padding-top','100px')
-				$('#calendar').css('padding-top','151px')
+				$('#week').css({'transform':'translate(-50%, 0px)'})
+				//$('#calendar').css({'transform':'translateY(151px)'})
 			}else{
-				$('body').css('padding-top','50px')
-				$('#page-base').show('linear')
+				//$('body').css('padding-top','50px')
+				//$('#page-base').show('linear')
+				$('#ymdText').css({'transform':'translateY(0px)','z-index':'5'})
+				$('#week').css('transform','translateY(0px)')
 			}
 		}
 		
 		$.data(this,"scrollCheck",setTimeout(function(){
 			myswiper.params.onlyExternal = false;
 			console.log('stop')
-		},20))
+		},200))
 	})
+
 
 	myswiper.on('onTouchEnd',function(){
 		myswiper.params.onlyExternal = false;
@@ -1030,7 +1037,7 @@ $(document).ready(function(){
 		var WeekNumArray = [weekNum_1_fix,weekNum_2_fix,weekNum_3_fix,weekNum_4_fix,weekNum_5_fix,weekNum_6_fix,weekNum_7_fix]
 		var WeekNumArrayTarget = [weekNum_1,weekNum_2,weekNum_3,weekNum_4,weekNum_5,weekNum_6,weekNum_7]
 		for(i=0; i<7;i++){
-			WeekArry[i].html(WeekArryTarget[i])
+			WeekArry[i].html(WeekArryTarget[i]+'일')
 			WeekNumArray[i].attr('data-date',WeekNumArrayTarget[i])
 		}
 	}
@@ -1039,13 +1046,13 @@ $(document).ready(function(){
 		var slideIndex = $('#slide'+Index);
 		var div = '<div id="week" class="time-style"><table class="calendar-style"><tbody><tr id="weekText">'
 		var tdgap = '<td class="slidegap" style="background:#f4f4f4;"><span></span><span></span></td>'
-		var tdSun = '<td id="weekNum_1"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #d21245;">일</span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span></td>'
-		var tdMon = '<td id="weekNum_2"><span class="weekToday-style"></span><span class="weekToday-style">월</span><span id="monDate" class="weekToday-style"></span></td>'
-		var tdTue = '<td id="weekNum_3"><span class="weekToday-style"></span><span class="weekToday-style">화</span><span id="tueDate" class="weekToday-style"></span></td>'
-		var tdWed = ' <td id="weekNum_4"><span class="weekToday-style"></span><span class="weekToday-style">수</span><span id="wedDate" class="weekToday-style"></span></td>'
-		var tdThr = '<td id="weekNum_5"><span class="weekToday-style"></span><span class="weekToday-style">목</span><span id="thrDate" class="weekToday-style"></span></td>'
-		var tdFri = '<td id="weekNum_6"><span class="weekToday-style"></span><span class="weekToday-style">금</span><span id="friDate" class="weekToday-style"></span></td>'
-		var tdSat = ' <td id="weekNum_7"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #115a8e;">토</span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span></td>'
+		var tdSun = '<td id="weekNum_1"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #d21245;">일요일</span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span></td>'
+		var tdMon = '<td id="weekNum_2"><span class="weekToday-style"></span><span class="weekToday-style">월요일</span><span id="monDate" class="weekToday-style"></span></td>'
+		var tdTue = '<td id="weekNum_3"><span class="weekToday-style"></span><span class="weekToday-style">화요일</span><span id="tueDate" class="weekToday-style"></span></td>'
+		var tdWed = ' <td id="weekNum_4"><span class="weekToday-style"></span><span class="weekToday-style">수요일</span><span id="wedDate" class="weekToday-style"></span></td>'
+		var tdThr = '<td id="weekNum_5"><span class="weekToday-style"></span><span class="weekToday-style">목요일</span><span id="thrDate" class="weekToday-style"></span></td>'
+		var tdFri = '<td id="weekNum_6"><span class="weekToday-style"></span><span class="weekToday-style">금요일</span><span id="friDate" class="weekToday-style"></span></td>'
+		var tdSat = ' <td id="weekNum_7"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #115a8e;">토요일</span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span></td>'
 		var divfin = '</tr></tbody></table></div>'
 		var combine = div+tdgap+tdSun+tdMon+tdTue+tdWed+tdThr+tdFri+tdSat+divfin
 		slideIndex.append(combine)
