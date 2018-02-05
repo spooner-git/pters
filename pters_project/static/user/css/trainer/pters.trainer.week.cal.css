@@ -64,6 +64,7 @@ body{
 
 .weekNum{
 	display: table-cell;
+	background:#f7f7f7;
 	position: relative;
 	text-align: center;
 	width: 12.5%;
@@ -727,11 +728,10 @@ img,a,div,span,p{
 	.memberName{
 		position: absolute;
 		width:100%;
-
 		text-align: center;
 		left: 0%;
 		margin-top: 6px;
-		font-size: 21px;
+		font-size: 18px;
 		letter-spacing: -0.3px;
 		color: black;
 		cursor: pointer;
@@ -899,6 +899,12 @@ img,a,div,span,p{
 @media(min-width: 800px){
 	._morningday{
 		display:inline;
+	}
+}
+
+@media(min-width: 850px){
+	.memberName{
+		font-size: 21px;
 	}
 }
 
