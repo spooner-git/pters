@@ -763,6 +763,9 @@ $(document).ready(function(){
         for(var i=0;i<Arraylength;i++){
           var splitTimeArray = TimeDataArray[i].split("_")
           var targetTime = splitTimeArray[0]
+          if(targetTime == 24){
+            var targetTime = 0
+          }
           var durTime = splitTimeArray[2]
           if(DateDataArray[i] == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
               for(var j=0; j<durTime; j++){
@@ -897,7 +900,7 @@ $(document).ready(function(){
         var hh = date.getHours();
         var today = yy+'-'+mm+'-'+dd
         if(selecteddate==today){
-          for(var i=5;i<=24;i++){
+          for(var i=0;i<=23;i++){
             var time = $('#'+i+'g')
             if(i<=hh+limit){
               time.addClass('greytimegraph')
