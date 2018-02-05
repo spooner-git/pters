@@ -442,7 +442,7 @@ img,a,div,span,p{
 }
 
 .timeindex_time{
-
+	color: #888888;
 }
 
 ._morningday{
@@ -478,21 +478,20 @@ img,a,div,span,p{
 
 .classTime_checked{
 	background: #8c8763 !important;
-	/*border-color:#96ff71 !important;*/
+
+}
+
+.classTime_checked:hover{
+	background: #635e3b !important;
 }
 
 .classTime_re{ /*반복 일정*/
 	background: #e3ffd9;
-	/*border: 0.5px solid #ff3b00a6;*/
+
 }
 
 .classTime:active,.classTime:hover{
-	/*
-	background: #fe4e65;
-	opacity: 1;
-	border:0.5px solid #6d585b;
-	-webkit-background: #a2a2a2;
-	*/
+	background: #ffe466;
 }
 
 .offTime{
@@ -688,8 +687,8 @@ img,a,div,span,p{
 	}
 
 	.popup_inner:hover{
-	background: #a2a2a2;
-	-webkit-background:#a2a2a2;
+		background: #a2a2a2;
+		-webkit-background:#a2a2a2;
 	}
 }
 
@@ -714,12 +713,8 @@ img,a,div,span,p{
 	.timeindex_time{
 		float: right;
 		margin-right: 10px;
-		color: #888888;
 		font-size: 18px;
 	}
-
-
-
 
 	.classTime{
 		top: 2px;
@@ -727,8 +722,6 @@ img,a,div,span,p{
 
 	.classTime,.offTime,.classTime_checked{
 		width: 97%;
-		/*border-bottom:0.5px solid #ffffff;*/
-		border-radius: 0px;
 	}
 	
 	.memberName{
@@ -756,13 +749,9 @@ img,a,div,span,p{
 
 	.td00,.td30{
 		height: 44px;
-		background: transparent;
-	}
-
-	.td00:hover,.td30:hover{
-		background: #eaeaea;
 		cursor: pointer;
 	}
+
 
 	.weekToday-style{
 		height: 18px;
@@ -803,14 +792,6 @@ img,a,div,span,p{
 		float: right;
 		cursor: pointer;
 		color: #282828;
-	}
-
-	#leftarrowPC:active,#rightarrowPC:last-child:active{
-		color: #fe4e65;
-	}
-
-	#leftarrowPC:hover,#rightarrowPC:last-child:hover{
-		color: #fe4e65;
 	}
 
 	.arrowButtonPC img{
