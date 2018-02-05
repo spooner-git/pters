@@ -20,6 +20,20 @@
             </div>
         {% endfor %}
     {% endif %}
+
+<form action="{% url 'trainer:daily_pt_delete' %}" id="daily-pt-delete-form" method="post">
+    <input type="hidden" name="repeat_freq" id="id_repeat_freq">
+    <input type="hidden" name="repeat_startdate" id="id_repeat_startdate">
+    <input type="hidden" name="repeat_enddate" id="id_repeat_enddate">
+    <input type="hidden" name="repeat_day" id="id_repeat_day">
+    <input type="hidden" name="repeat_starttime" id="id_repeat_starttime">
+    <input type="hidden" name="repeat_dur" id="id_repeat_dur">
+</form>
+
+
+
+
+
 <div id="offRepeatSummary">
   <span id="summaryText">일정요약</span>
   <div class="summaryInnerBox">
@@ -67,29 +81,16 @@
 
 <div id="daySelect" class="ptaddbox">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %} style="width:14px;"> 요일별 일정</div>
-    <div class="btn-group" style="width:100%;">
-      <button type="button" class="btn dateSelectBtn" id="sun">일</button>
-      <button type="button" class="btn dateSelectBtn" id="mon">월</button>
-      <button type="button" class="btn dateSelectBtn" id="tue">화</button>
-      <button type="button" class="btn dateSelectBtn" id="wed">수</button>
-      <button type="button" class="btn dateSelectBtn" id="thr">목</button>
-      <button type="button" class="btn dateSelectBtn" id="fri">금</button>
-      <button type="button" class="btn dateSelectBtn" id="sat">토</button>
+    <div class="dateButtonGroup" style="width:100%;">
+        <div class="dateButton" data-date="sun">일</div>
+        <div class="dateButton" data-date="mon">월</div>
+        <div class="dateButton" data-date="tue">화</div>
+        <div class="dateButton" data-date="wed">수</div>
+        <div class="dateButton" data-date="ths">목</div>
+        <div class="dateButton" data-date="fri">금</div>
+        <div class="dateButton" data-date="sat">토</div>
     </div>
   </div>
-
-
-<div id="classDuration" class="ptaddbox">
-  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
-  <div id="durationsSelected" class="dropdown">
-    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-    <ul id="durations" class="dropdown-menu pters_dropdown_custom">
-      <!-- 회원명 DB연동 필요-->
-      <li><a data-dur="1">1시간</a></li>
-      <li><a data-dur="2">2시간</a></li>
-    </ul>
-  </div>
-</div>
 
 
 <div id="classStartTime" class="ptaddbox">
@@ -98,6 +99,11 @@
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
+      <li><a data-trainingtime="00:00:00.000000">오전 0시</a></li>
+      <li><a data-trainingtime="01:00:00.000000">오전 1시</a></li>
+      <li><a data-trainingtime="02:00:00.000000">오전 2시</a></li>
+      <li><a data-trainingtime="03:00:00.000000">오전 3시</a></li>
+      <li><a data-trainingtime="04:00:00.000000">오전 4시</a></li>
       <li><a data-trainingtime="05:00:00.000000">오전 5시</a></li>
       <li><a data-trainingtime="06:00:00.000000">오전 6시</a></li>
       <li><a data-trainingtime="07:00:00.000000">오전 7시</a></li>
@@ -115,6 +121,21 @@
       <li><a data-trainingtime="19:00:00.000000">오후 7시</a></li>
       <li><a data-trainingtime="20:00:00.000000">오후 8시</a></li>
       <li><a data-trainingtime="21:00:00.000000">오후 9시</a></li>
+      <li><a data-trainingtime="22:00:00.000000">오후 10시</a></li>
+      <li><a data-trainingtime="23:00:00.000000">오후 11시</a></li>
+    </ul>
+  </div>
+</div>
+
+
+<div id="classDuration" class="ptaddbox">
+  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+  <div id="durationsSelected" class="dropdown">
+    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+    <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+      <!-- 회원명 DB연동 필요-->
+      <li><a data-dur="1">1시간</a></li>
+      <li><a data-dur="2">2시간</a></li>
     </ul>
   </div>
 </div>

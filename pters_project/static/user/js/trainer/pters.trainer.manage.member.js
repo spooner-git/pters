@@ -30,7 +30,7 @@ $(document).ready(function(){
 		})
 
     $('button').on('click',function(){
-        $('html, body').css('overflow-y','hidden')
+       // $('html, body').css('overflow-y','hidden')
     })
 
     

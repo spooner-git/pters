@@ -38,23 +38,41 @@ $(document).ready(function(){
 
       $("#repeats li a").click(function(){
           $("#repeattypeSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-repeat'));
-          $("#id_time_duration").val($(this).attr('data-dur'));
+          $("#id_repeat_freq").val($(this).attr('data-repeat'));
           check_dropdown_selected();
       }); //반복 빈도 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
+      $("#starttimes li a").click(function(){
+          $("#starttimesSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).text());
+          $("#id_repeat_starttime").val($(this).attr('data-trainingtime'));
+          check_dropdown_selected();
+      }); //시작시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
+
       $("#durations li a").click(function(){
           $("#durationsSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
-          $("#id_time_duration").val($(this).attr('data-dur'));
+          $("#id_repeat_dur").val($(this).attr('data-dur'));
           check_dropdown_selected();
   		}); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
-      $("#starttimes li a").click(function(){
-      		$("#starttimesSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).text());
-          $("#id_training_time").val($(this).attr('data-trainingtime'));
-          check_dropdown_selected();
-  		}); //시작시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
-      
+      var selectedDayGroup = []
+      $('.dateButton').click(function(){
+          var selectedDay = $(this).attr('data-date')
+          if(!$(this).hasClass('dateButton_selected')){
+            $(this).addClass('dateButton_selected')
+            selectedDayGroup.push(selectedDay)
+          }else{
+            $(this).removeClass('dateButton_selected')
+            index = selectedDayGroup.indexOf(selectedDay)
+            if(index != -1){
+              selectedDayGroup.splice(index,1) 
+            }
+          }
+          console.log(selectedDayGroup.join("/"))
+          $('#id_repeat_day').val(selectedDayGroup.join("/"))
+      })
+
+
       $("#datepicker").change(function(){
           if($("#datepicker").val() != '') {
               $("#dateSelector p").addClass("dropdown_selected");

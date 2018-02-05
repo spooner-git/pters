@@ -582,6 +582,7 @@ $(document).ready(function(){
 	reserveAvailable()
 	toDay();
 	addcurrentTimeIndicator_blackbox()
+	todayFinderArrow();	
 
 
 
@@ -595,7 +596,8 @@ $(document).ready(function(){
 			weekNum_Set_fixed()
 			toDay();
 			addcurrentTimeIndicator_blackbox()	
-			reserveAvailable()	
+			reserveAvailable()
+			todayFinderArrow();	
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
@@ -605,7 +607,8 @@ $(document).ready(function(){
 			weekNum_Set_fixed()
 			toDay();
 			addcurrentTimeIndicator_blackbox()
-			reserveAvailable()			
+			reserveAvailable()
+			todayFinderArrow();			
 	});
 
 
@@ -967,7 +970,7 @@ $(document).ready(function(){
 
 	
 	function weekNum_Set(Index){
-		//var index = Number(myswiper.activeIndex+1);
+		var index = Number(myswiper.activeIndex+1);
 		var Sunday_date = $('#slide'+Index+' #sunDate')
 		var Monday_date = $('#slide'+Index+' #monDate')
 		var Tuesday_date = $('#slide'+Index+' #tueDate')
@@ -997,7 +1000,6 @@ $(document).ready(function(){
 
 		//toDay();
 		//reserveAvailable();
-		todayFinderArrow();
 	}
 
 	function weekNum_Set_fixed(){
@@ -1048,7 +1050,6 @@ $(document).ready(function(){
 		for(var i=0; i<7;i++){
 			WeekArry[i].html(WeekArryTarget[i]+'일')
 			WeekNum[i].attr('data-date', currentPageDateInfo[i])
-
 		}
 	}
 
@@ -1062,8 +1063,10 @@ $(document).ready(function(){
 			var currentDD = '0'+currentDD
 		}
 		var todayInfo = String(currentYear) + currentMM + currentDD
-		var viewdayInfomin = $('.swiper-slide-active'+' #weekNum_1').attr('data-date');
-		var viewdayInfomax = $('.swiper-slide-active'+' #weekNum_7').attr('data-date');
+		var viewdayInfomin = $('#weekNum_1').attr('data-date');
+		var viewdayInfomax = $('#weekNum_7').attr('data-date');
+
+		console.log(todayInfo,viewdayInfomin,viewdayInfomax)
 
 		if(viewdayInfomax>=todayInfo && viewdayInfomin<=todayInfo){
 			$('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
