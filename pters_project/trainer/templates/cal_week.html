@@ -96,53 +96,45 @@
       </div>
     </div>
     
-    <div id="week" class="time-style weekfixed">
-      <table class="calendar-style">
-        <tbody>
-          <tr id="weekText">
-            <td class="slidegap" style="background:#f4f4f4;"><span></span><span></span></td>
-            <td id="weekNum_1"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #d21245;">일요일</span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span></td>
-            <td id="weekNum_2"><span class="weekToday-style"></span><span class="weekToday-style">월요일</span><span id="monDate" class="weekToday-style"></span></td>
-            <td id="weekNum_3"><span class="weekToday-style"></span><span class="weekToday-style">화요일</span><span id="tueDate" class="weekToday-style"></span></td>
-            <td id="weekNum_4"><span class="weekToday-style"></span><span class="weekToday-style">수요일</span><span id="wedDate" class="weekToday-style"></span></td>
-            <td id="weekNum_5"><span class="weekToday-style"></span><span class="weekToday-style">목요일</span><span id="thrDate" class="weekToday-style"></span></td>
-            <td id="weekNum_6"><span class="weekToday-style"></span><span class="weekToday-style">금요일</span><span id="friDate" class="weekToday-style"></span></td>
-            <td id="weekNum_7"><span class="weekToday-style"></span><span class="weekToday-style" style="color: #115a8e;">토요일</span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span></td>
-          </tr>
-        </tbody>
-      </table>
+    <div id="week" class="time-row">
+            <div class="slidegap" style="background:#f4f4f4;"><span></span><span></span></div>
+            <div id="weekNum_1" class="weekNum"><span class="weekToday-style"></span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span><span class="weekToday-style" style="color: #d21245;">일요일</span></div>
+            <div id="weekNum_2" class="weekNum"><span class="weekToday-style"></span><span id="monDate" class="weekToday-style"></span><span class="weekToday-style">월요일</span></div>
+            <div id="weekNum_3" class="weekNum"><span class="weekToday-style"></span><span id="tueDate" class="weekToday-style"></span><span class="weekToday-style">화요일</span></div>
+            <div id="weekNum_4" class="weekNum"><span class="weekToday-style"></span><span id="wedDate" class="weekToday-style"></span><span class="weekToday-style">수요일</span></div>
+            <div id="weekNum_5" class="weekNum"><span class="weekToday-style"></span><span id="thrDate" class="weekToday-style"></span><span class="weekToday-style">목요일</span></div>
+            <div id="weekNum_6" class="weekNum"><span class="weekToday-style"></span><span id="friDate" class="weekToday-style"></span><span class="weekToday-style">금요일</span></div>
+            <div id="weekNum_7" class="weekNum"><span class="weekToday-style"></span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span><span class="weekToday-style" style="color: #115a8e;">토요일</span></div>
     </div>
     
 
     <div id="calendar" class="container"> <!-- Calendar container-->
           <div class="swiper-container">
-            <div class="timeindex">
-                  <table>
-                      <tr><td class="hour" id="hour1"><span class="morningtext">오전</span>1:00</td></tr>
-                      <tr><td class="hour" id="hour2">2:00</td></tr>
-                      <tr><td class="hour" id="hour3">3:00</td></tr>
-                      <tr><td class="hour" id="hour4">4:00</td></tr>
-                      <tr><td class="hour" id="hour5">5:00</td></tr>
-                      <tr><td class="hour" id="hour6">6:00</td></tr>
-                      <tr><td class="hour" id="hour7">7:00</td></tr>
-                      <tr><td class="hour" id="hour8">8:00</td></tr>
-                      <tr><td class="hour" id="hour9">9:00</td></tr>
-                      <tr><td class="hour" id="hour10">10:00</td></tr>
-                      <tr><td class="hour" id="hour11">11:00</td></tr>
-                      <tr><td class="hour" id="hour12"><span class="morningtext">오후</span>12:00</td></tr>
-                      <tr><td class="hour" id="hour13">13:00</td></tr>
-                      <tr><td class="hour" id="hour14">14:00</td></tr>
-                      <tr><td class="hour" id="hour15">15:00</td></tr>
-                      <tr><td class="hour" id="hour16">16:00</td></tr>
-                      <tr><td class="hour" id="hour17">17:00</td></tr>
-                      <tr><td class="hour" id="hour18">18:00</td></tr>
-                      <tr><td class="hour" id="hour19">19:00</td></tr>
-                      <tr><td class="hour" id="hour20">20:00</td></tr>
-                      <tr><td class="hour" id="hour21">21:00</td></tr>
-                      <tr><td class="hour" id="hour22">22:00</td></tr>
-                      <tr><td class="hour" id="hour23">23:00</td></tr>
-                      <tr><td class="hour" id="hour0">24:00</td></tr>
-                  </table>
+              <div class="timeindex">
+                  <div class="hour" id="hour0"><span class="morningtext">오전</span><span class="timeindex_time">00:00</span></div>
+                  <div class="hour" id="hour1"><span class="timeindex_time">01:00</span></div>
+                  <div class="hour" id="hour2"><span class="timeindex_time">02:00</span></div>
+                  <div class="hour" id="hour3"><span class="timeindex_time">03:00</span></div>
+                  <div class="hour" id="hour4"><span class="timeindex_time">04:00</span></div>
+                  <div class="hour" id="hour5"><span class="timeindex_time">05:00</span></div>
+                  <div class="hour" id="hour6"><span class="timeindex_time">06:00</span></div>
+                  <div class="hour" id="hour7"><span class="timeindex_time">07:00</span></div>
+                  <div class="hour" id="hour8"><span class="timeindex_time">08:00</span></div>
+                  <div class="hour" id="hour9"><span class="timeindex_time">09:00</span></div>
+                  <div class="hour" id="hour10"><span class="timeindex_time">10:00</span></div>
+                  <div class="hour" id="hour11"><span class="timeindex_time">11:00</span></div>
+                  <div class="hour" id="hour12"><span class="morningtext">오후</span><span class="timeindex_time">12:00</span></div>
+                  <div class="hour" id="hour13"><span class="timeindex_time">13:00</span></div>
+                  <div class="hour" id="hour14"><span class="timeindex_time">14:00</span></div>
+                  <div class="hour" id="hour15"><span class="timeindex_time">15:00</span></div>
+                  <div class="hour" id="hour16"><span class="timeindex_time">16:00</span></div>
+                  <div class="hour" id="hour17"><span class="timeindex_time">17:00</span></div>
+                  <div class="hour" id="hour18"><span class="timeindex_time">18:00</span></div>
+                  <div class="hour" id="hour19"><span class="timeindex_time">19:00</span></div>
+                  <div class="hour" id="hour20"><span class="timeindex_time">20:00</span></div>
+                  <div class="hour" id="hour21"><span class="timeindex_time">21:00</span></div>
+                  <div class="hour" id="hour22"><span class="timeindex_time">22:00</span></div>
+                  <div class="hour" id="hour23"><span class="timeindex_time">23:00</span></div>
               </div>
             <div class="swiper-wrapper"> 
               <div class="swiper-slide" id="slide1"></div> <!--Index0 2주전-->
@@ -235,6 +227,7 @@
       <table class="timegraphtext">
         <tbody>
           <tr>
+            <td class="">0</td>
             <td class="">1</td>
             <td class="">2</td>
             <td class="">3</td>
@@ -258,9 +251,9 @@
             <td class="">21</td>
             <td class="">22</td>
             <td class="">23</td>
-            <td class="">24</td>
           </tr>
           <tr>
+            <td id="0g" class="tdgraph"></td>
             <td id="1g" class="tdgraph"></td>
             <td id="2g" class="tdgraph"></td>
             <td id="3g" class="tdgraph"></td>
@@ -284,7 +277,6 @@
             <td id="21g" class="tdgraph"></td>
             <td id="22g" class="tdgraph"></td>
             <td id="23g" class="tdgraph"></td>
-            <td id="24g" class="tdgraph"></td>
           </tr>
         </tbody>
       </table>
@@ -547,9 +539,9 @@
                 preventClicks : true,
                 keyboardControl : true, 
                 preventClicksPropagation : true,
-                threshold : 60,
+                //threshold : 50,
                 resistance: 1,
-                followFinger : false,
+                //followFinger : false,
                 //shortSwipes : false,
                 //longSwipesRatio: 0.2,
                 //longSwipesMs : 70,

@@ -468,7 +468,10 @@ $(document).ready(function(){
               var classDate = datasplit[2]
               var classHour = datasplit[3]
               var hourType = ""
-              if(classHour < 12){
+              if(classHour == 24){
+                var hourType = "오전"
+                var classHour = 0
+              }else if(classHour < 12){
                 var hourType = "오전"
               }else{
                 var hourType = "오후"
@@ -541,7 +544,7 @@ $(document).ready(function(){
               var planheight = 30;
               var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
               if($calendarWidth>=600){
-                var planheight = 46;
+                var planheight = 45;
               }
               var offlen = offTimeArray.length;
               //$('#calendar').css('display','none');
@@ -552,7 +555,10 @@ $(document).ready(function(){
                 var offMonth = datasplit[1]
                 var offDate = datasplit[2]
                 var offHour = datasplit[3]
-                if(offHour < 12){
+                if(offHour==24){
+                  var hourType = "오전"
+                  var offHour = 0
+                }else if(offHour < 12){
                   var hourType = "오전"
                 }else{
                   var hourType = "오후"
@@ -667,7 +673,7 @@ $(document).ready(function(){
           break;
         }
         offAddOkArray = []
-        for(i=1;i<=24;i++){
+        for(i=0;i<=23;i++){
           if(!$('#'+i+'g'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g'+option).hasClass('greytimegraph') == true){
             offAddOkArray.push(i);
           }
@@ -782,14 +788,13 @@ $(document).ready(function(){
           var durTimeList = $('#durations_mini')
           break;
         }
-
+        console.log('selectedTime : ',selectedTime)
         var len = offAddOkArray.length;
-        //var durTimeList = durTimeId;
-        console.log(durTimeList)
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
+        console.log(offAddOkArray)
+        console.log('index:',index,'__substr: ',substr)
        if(substr>1){
-
           var fininfo = Number(selectedTime)+1
           if(fininfo>12){
              if(fininfo==25){
