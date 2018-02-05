@@ -170,7 +170,7 @@ $(document).ready(function(){
 	
 		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 			$('#page-addplan-pc').hide()
-			$('.td00').css('background','transparent')
+			//$('.td00').css('background','transparent')
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 			$('#shade').css({'display':'block'});
 			var schedule_finish_check = $(this).attr('data-schedule-check')
@@ -226,7 +226,7 @@ $(document).ready(function(){
 	//Off 일정 클릭시 팝업 Start
 		$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 			$('#page-addplan-pc').hide()
-			$('.td00').css('background','transparent')
+			//$('.td00').css('background','transparent')
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 			$('#shade').css({'display':'block'});
 			var info = $(this).attr('off-time').split('_')

@@ -668,7 +668,8 @@ ul a{
 	width: 97%;
 	height: 90%;
 	border:2px solid #fe4e65;
-	margin: auto;
+	margin-left: 2px;
+	margin-top: 2px;
 }
 
 @media(min-width: 600px){
