@@ -679,6 +679,7 @@ ul a{
 	}
 	
 	#page-addplan{
+		position: fixed;
 		top: 150px;
 		width: 500px;
 	}

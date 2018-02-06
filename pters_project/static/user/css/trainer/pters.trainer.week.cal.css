@@ -56,7 +56,7 @@ body{
 #week{
 	position: fixed;
 	z-index: 4;
-	background-color: #f4f4f4;
+	background-color: #ffffff;
 	height: 105px;
 	padding-top: 50px;
 	max-width: 1200px;
@@ -349,6 +349,10 @@ img,a,div,span,p{
 	width: 100%;
 }
 
+#ymdText-pc{
+	display: none;
+}
+
 .todayindi{
 	border-top:1.5px solid #fe4e65;
 }
@@ -397,10 +401,6 @@ img,a,div,span,p{
 
 .setunVisible{
 	visibility: hidden;
-}
-
-.arrowButtonPC{
-	display:none;
 }
 
 .arrowButton span{
@@ -578,8 +578,6 @@ img,a,div,span,p{
 }
 
 
-
-
 .reserveavailable{
 	/*background: #e9f5ff;*/
 	background: #ffebee;
@@ -594,6 +592,10 @@ img,a,div,span,p{
 	height: 100%;
 	top: 0;
 
+}
+
+#float_btn_wrap{
+		display: block;
 }
 
 
@@ -695,7 +697,43 @@ img,a,div,span,p{
 	#calendar{
 		position: relative;
 		margin:0 auto;
-		padding-top: 170px;
+		padding-top: 220px;
+	}
+
+	#ymdText-pc{
+		display: block;
+		position: fixed;
+		padding-top: 100px;
+		width:100%;
+		height: 50px;
+		text-align: center;
+		z-index: 5;
+		vertical-align: middle;
+	}
+
+	#ymdText-pc div{
+		line-height: 50px;
+	}
+
+	#ymdText-pc img{
+		width: 20px;
+		margin-bottom: 5px;
+		cursor: pointer;
+	}
+
+	.ymdText-pc-month{
+		font-size: 17px;
+		font-weight: 500;
+	}
+
+	.ymdText-pc-date{
+		display: inline;
+		font-size: 20px;
+		font-weight: 500;
+	}
+
+	.ymdText-pc-add{
+		display: none;
 	}
 
 	.hour{
@@ -765,50 +803,6 @@ img,a,div,span,p{
 		opacity: 0.8;
 	}
 
-	.arrowButtonPC{
-		display: block;
-		position: fixed;
-		width: 100%;
-		height: 100%;
-		z-index: 0;
-	}
-
-	#leftarrowPC{
-		height: 100%;
-		width: 25%;
-		float: left;
-		cursor: pointer;
-		color: #282828;
-	}
-
-	#rightarrowPC{
-		height: 100%;
-		width: 25%;
-		float: right;
-		cursor: pointer;
-		color: #282828;
-	}
-
-	.arrowButtonPC img{
-		position: fixed;
-		top: 50%;
-	}
-
-	#leftarrowPC span{
-		position: fixed;
-		top: 50.1%;
-		left: 1.5%;
-		font-weight: bold;
-	}
-
-	#rightarrowPC span{
-		position: fixed;
-		top: 50.1%;
-		right: 1.5%;
-		font-weight: bold;
-	}
-
-
 	.arrowButton{
 		display:none;
 	}
@@ -820,7 +814,7 @@ img,a,div,span,p{
 	#week{
 		position: fixed;
 		left: 50%;
-		padding-top: 100px;
+		padding-top: 150px;
 		transform:translateX(-50%);
 		padding-right: 20px;
 	}
@@ -889,6 +883,45 @@ img,a,div,span,p{
 		padding-right: 5px;
 		text-align: right;
 	}
+
+	.ymdText-pc-add{
+		display: inline;
+		line-height: 50px;
+		position: absolute;
+		right: 0;
+		margin-right: 20px;
+	}
+
+	.ymdText-pc-add-off{
+		display: inline;
+		margin-right: 5px;
+		padding:5px 8px 5px 8px;
+		font-size: 14px;
+		border:1px solid #282828;
+		cursor: pointer;
+	}
+		.ymdText-pc-add-off:hover{
+			background-color: #282828;
+			color: #fe4e65;
+		}
+
+	.ymdText-pc-add-pt{
+		display: inline;
+		margin-left: 5px;
+		padding:5px 13px 5px 13px;
+		color: #fe4e65;
+		font-size: 14px;
+		border:1px solid #fe4e65;
+		cursor: pointer;
+	}
+		.ymdText-pc-add-pt:hover{
+			background-color: #fe4e65;
+			color: #ffffff;
+		}
+
+	#float_btn_wrap{
+		display: none;
+	}
 }
 
 @media(min-width: 800px){
@@ -915,10 +948,6 @@ img,a,div,span,p{
 }
 
 @media(max-width: 1130px) and (min-width: 600px){
-	.arrowButtonPC{
-		display: none;
-	}
-
 	.arrowButton{
 		display: block;
 	}
