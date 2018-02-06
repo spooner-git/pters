@@ -91,12 +91,6 @@ body{
 /***************************레이아웃 변경 검토*********************************/
 
 
-html,body{
-	overflow-y: hidden !important;	
-	height: 100%;
-	margin: 0;
-}
-
 
 #calendar{
 	height: 100% !important;
@@ -501,6 +495,7 @@ img,a,div,span,p{
 	left: 2px;
 	width: 100%;
 	background: #e2e2e2;
+	opacity: 0.9;
 	z-index: 100;
 	cursor: pointer;
 }

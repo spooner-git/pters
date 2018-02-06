@@ -76,12 +76,12 @@ $(document).ready(function(){
       $("#datepicker").change(function(){
           if($("#datepicker").val() != '') {
               $("#dateSelector p").addClass("dropdown_selected");
-              $("#id_training_date").val($("#datepicker").val());
+              $("#id_repeat_startdate").val($("#datepicker").val());
               check_dropdown_selected();
           }
           else{
               $("#dateSelector p").removeClass("dropdown_selected");
-              $("#id_training_date").val('');
+              $("#id_repeat_startdate").val('');
               check_dropdown_selected();
           }
       })
@@ -89,12 +89,12 @@ $(document).ready(function(){
       $("#datepicker2").change(function(){
           if($("#datepicker2").val() != '') {
               $("#dateSelector2 p").addClass("dropdown_selected");
-              $("#id_training_date").val($("#datepicker2").val());
+              $("#id_repeat_enddate").val($("#datepicker2").val());
               check_dropdown_selected();
           }
           else{
               $("#dateSelector2 p").removeClass("dropdown_selected");
-              $("#id_training_date").val('');
+              $("#id_repeat_enddate").val('');
               check_dropdown_selected();
           }
       })

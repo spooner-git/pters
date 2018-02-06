@@ -21,6 +21,9 @@ $(document).ready(function(){
 		addTypeSelect = "ptadd"
 		$('#memberName,#remainCount').css('display','block');
 	    $('#page-addplan').fadeIn('fast');
+	    if($('body').width()<600){
+	        $('#calendar').hide();
+	    }
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
 	    $('#uptext2').text('PT 일정 등록')
@@ -43,6 +46,9 @@ $(document).ready(function(){
 		addTypeSelect = "offadd"
 		$('#memberName,#remainCount').css('display','none');
 	    $('#page-addplan').fadeIn('fast');
+	    if($('body').width()<600){
+	        $('#calendar').hide();
+	    }
 	    $('#uptext2').text('OFF 일정 등록')
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
@@ -66,6 +72,9 @@ $(document).ready(function(){
 	    $('#shade3').fadeOut();
 	    $('#shade').hide();
 	    $('#page-addplan').fadeOut('fast','swing');
+	    if($('body').width()<600){
+	        $('#calendar').show();
+	    }
 	    $('#float_btn_wrap').fadeIn();
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
@@ -94,6 +103,9 @@ $(document).ready(function(){
   	$('.cancelBtn').click(function(){
 	    $('#shade').hide();
 	    $('#page-addplan').fadeOut('fast','swing');
+	    if($('body').width()<600){
+	        $('#calendar').show();
+	    }
 	    $('#float_btn_wrap').fadeIn();
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
