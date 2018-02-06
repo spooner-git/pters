@@ -100,7 +100,7 @@ body{
 }
 
 .swiper-container{
-	overflow-y: overlay;
+	overflow-y: hidden;
 	height: 100%;
 }
 
