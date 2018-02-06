@@ -16,7 +16,7 @@ $(document).ready(function(){
 	var offrepeatData = ['OFF_sun_5_20_20171224_20180301','OFF_sat_16_9_20171209_20180301']
 
 	
-	$('#float_inner1').click(function(){ //PT추가버튼
+	$('#float_inner1, .ymdText-pc-add-pt').click(function(){ //PT추가버튼
 		scrollToDom($('#calendar'))
 		addTypeSelect = "ptadd"
 		$('#memberName,#remainCount').css('display','block');
@@ -41,7 +41,7 @@ $(document).ready(function(){
 	    }   
 	})
 
-	$('#float_inner2').click(function(){ //OFF추가버튼
+	$('#float_inner2, .ymdText-pc-add-off').click(function(){ //OFF추가버튼
 		scrollToDom($('#calendar'))
 		addTypeSelect = "offadd"
 		$('#memberName,#remainCount').css('display','none');
@@ -580,7 +580,6 @@ $(document).ready(function(){
 	calTable_Set(3,currentYear,currentPageMonth,currentDate,0); // 이번주
 	calTable_Set(4,currentYear,currentPageMonth,currentDate,7); // 이번주+1
 	calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
-	dateText();
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray,"off");
@@ -591,6 +590,7 @@ $(document).ready(function(){
 	//DBrepeatdata(repeatData,'class')
 	//DBrepeatdata(offrepeatData,'off')
 	weekNum_Set_fixed()
+	dateText();
 	reserveAvailable()
 	toDay();
 	addcurrentTimeIndicator_blackbox()
@@ -604,10 +604,11 @@ $(document).ready(function(){
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlideNextEnd',function(){
 			slideControl.append();
-			dateText();
+			
 			weekNum_Set_fixed()
 			toDay();
 			addcurrentTimeIndicator_blackbox()	
+			dateText();
 			reserveAvailable()
 			todayFinderArrow();	
 	});
@@ -615,10 +616,11 @@ $(document).ready(function(){
 	//이전페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlidePrevEnd',function(){
 			slideControl.prepend();
-			dateText();
+			
 			weekNum_Set_fixed()
 			toDay();
 			addcurrentTimeIndicator_blackbox()
+			dateText();
 			reserveAvailable()
 			todayFinderArrow();			
 	});
@@ -959,6 +961,7 @@ $(document).ready(function(){
 			yymmarry.push(i)
 		}
 
+		//연도, 월 셋팅
 		if(yymmarry.length>1){  // [2017_12, 2018_1] ,,  [2018_1, 2018_2]
 			var yymm1 = yymmarry[0].split('_')
 			var yymm2 = yymmarry[1].split('_')
@@ -969,6 +972,8 @@ $(document).ready(function(){
 			if(yy1==yy2){
 				$('#yearText').text(yy1+'년');
 				$('#monthText').text(mm1+'/'+mm2+'월')
+				$('#ymdText-pc-month-start').text(mm1+'월')
+				$('#ymdText-pc-month-end').text(mm2+'월')
 			}else if(yy1!=yy2){
 				$('#yearText').text(yy1+'/'+yy2+'년');
 				$('#monthText').text(mm1+'/'+mm2+'월')
@@ -977,7 +982,22 @@ $(document).ready(function(){
 			var yymm = yymmarry[0].split('_')
 			$('#yearText').text(yymm[0]+'년');
 			$('#monthText').text(yymm[1]+'월');
+			$('#ymdText-pc-month-start').text(yymm[1]+'월')
+			$('#ymdText-pc-month-end').text('')
 		}
+
+		//일자 셋팅
+		var dd_weekstart = $('#weekNum_1').attr('data-date').substr(6,2)
+		var dd_weekend = $('#weekNum_7').attr('data-date').substr(6,2)
+		if(dd_weekstart.substr(0,1)=='0'){
+			var dd_weekstart = dd_weekstart.substr(1,1)
+		}
+		if(dd_weekend.substr(0,1)=='0'){
+			var dd_weekend = dd_weekend.substr(1,1)
+		}
+		$('#ymdText-pc-date-start').text(dd_weekstart+'일')
+		$('#ymdText-pc-date-end').text(dd_weekend+'일')
+
 	}
 
 	

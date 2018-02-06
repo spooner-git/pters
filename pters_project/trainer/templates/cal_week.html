@@ -9,53 +9,53 @@
 {% endblock %}
 
 {% block content %}
-  <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
+<img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
-  <form action="/trainer/daily_pt_delete/" id="daily-pt-delete-form" method="post">
-    <input type="hidden" name="schedule_id" id="id_schedule_id">
-    <input type="hidden" name="member_name"   id="id_member_name">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
-  </form>
-  <form action="/trainer/daily_off_delete/" id="daily-off-delete-form" method="post">
-    <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
-  </form>
+<form action="/trainer/daily_pt_delete/" id="daily-pt-delete-form" method="post">
+  <input type="hidden" name="schedule_id" id="id_schedule_id">
+  <input type="hidden" name="member_name"   id="id_member_name">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
+</form>
+<form action="/trainer/daily_off_delete/" id="daily-off-delete-form" method="post">
+  <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
+</form>
 
-  <form action="{% url 'trainer:modify_pt' %}" id="pt-modify-form" method="get">
-    <input type="hidden" name="schedule_id" id="id_schedule_id_modify">
-    <input type="hidden" name="lecture_id"   id="id_lecture_id_modify">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
-  </form>
-  <form action="{% url 'trainer:modify_off' %}" id="off-modify-form" method="get">
-    <input type="hidden" name="off_schedule_id" id="id_off_schedule_id_modify">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
-  </form>
-  <form action="{% url 'trainer:daily_pt_finish' %}" id="pt-finish-form" method="get">
-    <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
-    <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
-    <input type="hidden" name="member_name"   id="id_member_name_finish">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
-  </form>
-  <!--팝업메뉴-->
-    <div id="cal_popup">
-      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div>
-      <div id="popup_text0" class="popup_inner popup_inner_finish"><span class="KRtext">일정 완료</span><span class="JPtext">日程완료</span><span class="ENtext">Finish Schedule</span></div>
-      <!-- <div id="popup_text1" class="popup_inner popup_inner_change"><span class="KRtext">일정 변경</span><span class="JPtext">日程変更</span><span class="ENtext">Change Schedule</span></div>-->
-      <div id="popup_text2" class="popup_inner popup_inner_delete"><span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span></div>
-    </div>
-    <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
-  <!--팝업메뉴-->
+<form action="{% url 'trainer:modify_pt' %}" id="pt-modify-form" method="get">
+  <input type="hidden" name="schedule_id" id="id_schedule_id_modify">
+  <input type="hidden" name="lecture_id"   id="id_lecture_id_modify">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
+</form>
+<form action="{% url 'trainer:modify_off' %}" id="off-modify-form" method="get">
+  <input type="hidden" name="off_schedule_id" id="id_off_schedule_id_modify">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:cal_week' %}'>
+</form>
+<form action="{% url 'trainer:daily_pt_finish' %}" id="pt-finish-form" method="get">
+  <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
+  <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
+  <input type="hidden" name="member_name"   id="id_member_name_finish">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+</form>
+<!--팝업메뉴-->
+<div id="cal_popup">
+  <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div>
+  <div id="popup_text0" class="popup_inner popup_inner_finish"><span class="KRtext">일정 완료</span><span class="JPtext">日程완료</span><span class="ENtext">Finish Schedule</span></div>
+  <!-- <div id="popup_text1" class="popup_inner popup_inner_change"><span class="KRtext">일정 변경</span><span class="JPtext">日程変更</span><span class="ENtext">Change Schedule</span></div>-->
+  <div id="popup_text2" class="popup_inner popup_inner_delete"><span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span></div>
+</div>
+  <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
+<!--팝업메뉴-->
 
-  <!--삭제 확인 팝업메뉴-->
-    <div id="cal_popup3">
-      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close3"></div>
-      <div id="popup_info3" class="KRtext">정말 일정을 삭제하시겠습니까?</div><div id="popup_info3" class="JPtext">日程を削除しますか</div><div id="popup_info3" class="ENtext">Are you sure to delete the schedule?</div>
-      <div id="popup_text3" class="popup_inner popup_inner_delete"><span style="color:#282828;" class="KRtext">예</span><span style="color:#282828;" class="JPtext">はい</span><span style="color:#282828;" class="ENtext">Yes</span></div>
-      <div id="popup_text4" class="popup_inner popup_inner_delete"><span class="KRtext">아니오</span><span class="JPtext">いいえ</span><span class="ENtext">No</span></div>
-    </div>
+<!--삭제 확인 팝업메뉴-->
+<div id="cal_popup3">
+  <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close3"></div>
+  <div id="popup_info3" class="KRtext">정말 일정을 삭제하시겠습니까?</div><div id="popup_info3" class="JPtext">日程を削除しますか</div><div id="popup_info3" class="ENtext">Are you sure to delete the schedule?</div>
+  <div id="popup_text3" class="popup_inner popup_inner_delete"><span style="color:#282828;" class="KRtext">예</span><span style="color:#282828;" class="JPtext">はい</span><span style="color:#282828;" class="ENtext">Yes</span></div>
+  <div id="popup_text4" class="popup_inner popup_inner_delete"><span class="KRtext">아니오</span><span class="JPtext">いいえ</span><span class="ENtext">No</span></div>
+</div>
     
    <!--플로팅 버튼-->
-  <div id="float_btn_wrap">
+<div id="float_btn_wrap">
     <div id="float_btn">
       <img src={% static "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
     </div>
@@ -65,90 +65,107 @@
     <div id="float_inner2" class="float_inner">
     <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
     </div>
-  </div>
+</div>
 
-  <div id="shade3">
-  </div>
-  <!--플로팅 버튼-->
+<div id="shade3">
+</div>
+<!--플로팅 버튼-->
 
-  <!--PC버전 Arrow-->
-    <div class="arrowButtonPC">
-        <a id="leftarrowPC" style="left: 10%"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 12px;left: 0;"><span>이전 주</span></a>
-        <a id="rightarrowPC" style="right: 10%"><span>다음 주</span><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 12px;right: 0;"></a>
+<div id="ymdText" class="" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
+    <div class='arrowButton'>
+            <a href="" style="left: 4%">
+              <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
+              <img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;">
+              <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible">Today</span>
+            </a>
+            <a href="" style="right: 4%">
+              <img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;">
+              <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
+              <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible">Today</span>
+            </a>
+          </div>
+    <div id="yearText">
+    </div>
+    <div id="monthText">
+    </div>
+</div>
+
+
+<div id="ymdText-pc" class="wrap">
+    <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
+    <div class="ymdText-pc-date">
+      <span id="ymdText-pc-month-start" class="ymdText-pc-month">1월</span>
+      <span id="ymdText-pc-date-start" class="ymdText-pc-date">17일</span>
+    </div>
+    <span style="font-size: 20px;">- </span>
+    <div class="ymdText-pc-date">
+      <span id="ymdText-pc-month-end" class="ymdText-pc-month"></span>
+      <span id="ymdText-pc-date-end" class="ymdText-pc-date">23일</span>
+    </div>
+    <img src="/static/user/res/icon-cal-btn.png"  id="ymdText-pc-next-btn" style="-webkit-transform:rotate(180deg)">
+
+    <div class="ymdText-pc-add">
+      <div class="ymdText-pc-add-off">+ OFF 일정추가</div>
+      <div class="ymdText-pc-add-pt">+ PT 일정추가</div>
     </div>
 
-    <div id="ymdText" class="" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
-      <div class='arrowButton'>
-              <a href="" style="left: 4%">
-                <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
-                <img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;">
-                <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible">Today</span>
-              </a>
-              <a href="" style="right: 4%">
-                <img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;">
-                <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
-                <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible">Today</span>
-              </a>
-            </div>
-      <div id="yearText">
-      </div>
-      <div id="monthText">
-      </div>
-    </div>
+</div>
+
+
     
-    <div id="week" class="time-row">
-            <div class="slidegap" style="background:#f4f4f4;"><span></span><span></span></div>
-            <div id="weekNum_1" class="weekNum"><span class="weekToday-style"></span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span><span class="weekToday-style" style="color: #d21245;">일요일</span></div>
-            <div id="weekNum_2" class="weekNum"><span class="weekToday-style"></span><span id="monDate" class="weekToday-style"></span><span class="weekToday-style">월요일</span></div>
-            <div id="weekNum_3" class="weekNum"><span class="weekToday-style"></span><span id="tueDate" class="weekToday-style"></span><span class="weekToday-style">화요일</span></div>
-            <div id="weekNum_4" class="weekNum"><span class="weekToday-style"></span><span id="wedDate" class="weekToday-style"></span><span class="weekToday-style">수요일</span></div>
-            <div id="weekNum_5" class="weekNum"><span class="weekToday-style"></span><span id="thrDate" class="weekToday-style"></span><span class="weekToday-style">목요일</span></div>
-            <div id="weekNum_6" class="weekNum"><span class="weekToday-style"></span><span id="friDate" class="weekToday-style"></span><span class="weekToday-style">금요일</span></div>
-            <div id="weekNum_7" class="weekNum"><span class="weekToday-style"></span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span><span class="weekToday-style" style="color: #115a8e;">토요일</span></div>
-    </div>
+<div id="week" class="time-row">
+        <div class="slidegap" style="background:#f4f4f4;"><span></span><span></span></div>
+        <div id="weekNum_1" class="weekNum"><span class="weekToday-style"></span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span><span class="weekToday-style" style="color: #d21245;">일요일</span></div>
+        <div id="weekNum_2" class="weekNum"><span class="weekToday-style"></span><span id="monDate" class="weekToday-style"></span><span class="weekToday-style">월요일</span></div>
+        <div id="weekNum_3" class="weekNum"><span class="weekToday-style"></span><span id="tueDate" class="weekToday-style"></span><span class="weekToday-style">화요일</span></div>
+        <div id="weekNum_4" class="weekNum"><span class="weekToday-style"></span><span id="wedDate" class="weekToday-style"></span><span class="weekToday-style">수요일</span></div>
+        <div id="weekNum_5" class="weekNum"><span class="weekToday-style"></span><span id="thrDate" class="weekToday-style"></span><span class="weekToday-style">목요일</span></div>
+        <div id="weekNum_6" class="weekNum"><span class="weekToday-style"></span><span id="friDate" class="weekToday-style"></span><span class="weekToday-style">금요일</span></div>
+        <div id="weekNum_7" class="weekNum"><span class="weekToday-style"></span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span><span class="weekToday-style" style="color: #115a8e;">토요일</span></div>
+</div>
     
 
-    <div id="calendar" class="container"> <!-- Calendar container-->
-          <div class="swiper-container">
-              <div class="timeindex">
-                  <div class="hour" id="hour0"><span class="morningtext">오전</span><span class="timeindex_time">00:00</span></div>
-                  <div class="hour" id="hour1"><span class="timeindex_time">01:00</span></div>
-                  <div class="hour" id="hour2"><span class="timeindex_time">02:00</span></div>
-                  <div class="hour" id="hour3"><span class="timeindex_time">03:00</span></div>
-                  <div class="hour" id="hour4"><span class="timeindex_time">04:00</span></div>
-                  <div class="hour" id="hour5"><span class="timeindex_time">05:00</span></div>
-                  <div class="hour" id="hour6"><span class="timeindex_time">06:00</span></div>
-                  <div class="hour" id="hour7"><span class="timeindex_time">07:00</span></div>
-                  <div class="hour" id="hour8"><span class="timeindex_time">08:00</span></div>
-                  <div class="hour" id="hour9"><span class="timeindex_time">09:00</span></div>
-                  <div class="hour" id="hour10"><span class="timeindex_time">10:00</span></div>
-                  <div class="hour" id="hour11"><span class="timeindex_time">11:00</span></div>
-                  <div class="hour" id="hour12"><span class="morningtext">오후</span><span class="timeindex_time">12:00</span></div>
-                  <div class="hour" id="hour13"><span class="timeindex_time">13:00</span></div>
-                  <div class="hour" id="hour14"><span class="timeindex_time">14:00</span></div>
-                  <div class="hour" id="hour15"><span class="timeindex_time">15:00</span></div>
-                  <div class="hour" id="hour16"><span class="timeindex_time">16:00</span></div>
-                  <div class="hour" id="hour17"><span class="timeindex_time">17:00</span></div>
-                  <div class="hour" id="hour18"><span class="timeindex_time">18:00</span></div>
-                  <div class="hour" id="hour19"><span class="timeindex_time">19:00</span></div>
-                  <div class="hour" id="hour20"><span class="timeindex_time">20:00</span></div>
-                  <div class="hour" id="hour21"><span class="timeindex_time">21:00</span></div>
-                  <div class="hour" id="hour22"><span class="timeindex_time">22:00</span></div>
-                  <div class="hour" id="hour23"><span class="timeindex_time">23:00</span></div>
-              </div>
-            <div class="swiper-wrapper"> 
-              <div class="swiper-slide" id="slide1"></div> <!--Index0 2주전-->
-              <div class="swiper-slide" id="slide2"></div> <!--Index1 1주전-->
-              <div class="swiper-slide" id="slide3"></div> <!--Index2 이번주-->
-              <div class="swiper-slide" id="slide4"></div> <!--Index3 1주후-->
-              <div class="swiper-slide" id="slide5"></div> <!--Index2 2주후-->
-            </div>  <!--Swiper-wrapper-->
-          </div> <!--Swiper-container-->
-  
+<div id="calendar" class="container"> <!-- Calendar container-->
+      <div class="swiper-container">
+          <div class="timeindex">
+              <div class="hour" id="hour0"><span class="morningtext">오전</span><span class="timeindex_time">00:00</span></div>
+              <div class="hour" id="hour1"><span class="timeindex_time">01:00</span></div>
+              <div class="hour" id="hour2"><span class="timeindex_time">02:00</span></div>
+              <div class="hour" id="hour3"><span class="timeindex_time">03:00</span></div>
+              <div class="hour" id="hour4"><span class="timeindex_time">04:00</span></div>
+              <div class="hour" id="hour5"><span class="timeindex_time">05:00</span></div>
+              <div class="hour" id="hour6"><span class="timeindex_time">06:00</span></div>
+              <div class="hour" id="hour7"><span class="timeindex_time">07:00</span></div>
+              <div class="hour" id="hour8"><span class="timeindex_time">08:00</span></div>
+              <div class="hour" id="hour9"><span class="timeindex_time">09:00</span></div>
+              <div class="hour" id="hour10"><span class="timeindex_time">10:00</span></div>
+              <div class="hour" id="hour11"><span class="timeindex_time">11:00</span></div>
+              <div class="hour" id="hour12"><span class="morningtext">오후</span><span class="timeindex_time">12:00</span></div>
+              <div class="hour" id="hour13"><span class="timeindex_time">13:00</span></div>
+              <div class="hour" id="hour14"><span class="timeindex_time">14:00</span></div>
+              <div class="hour" id="hour15"><span class="timeindex_time">15:00</span></div>
+              <div class="hour" id="hour16"><span class="timeindex_time">16:00</span></div>
+              <div class="hour" id="hour17"><span class="timeindex_time">17:00</span></div>
+              <div class="hour" id="hour18"><span class="timeindex_time">18:00</span></div>
+              <div class="hour" id="hour19"><span class="timeindex_time">19:00</span></div>
+              <div class="hour" id="hour20"><span class="timeindex_time">20:00</span></div>
+              <div class="hour" id="hour21"><span class="timeindex_time">21:00</span></div>
+              <div class="hour" id="hour22"><span class="timeindex_time">22:00</span></div>
+              <div class="hour" id="hour23"><span class="timeindex_time">23:00</span></div>
+          </div>
+          <div class="swiper-wrapper"> 
+            <div class="swiper-slide" id="slide1"></div> <!--Index0 2주전-->
+            <div class="swiper-slide" id="slide2"></div> <!--Index1 1주전-->
+            <div class="swiper-slide" id="slide3"></div> <!--Index2 이번주-->
+            <div class="swiper-slide" id="slide4"></div> <!--Index3 1주후-->
+            <div class="swiper-slide" id="slide5"></div> <!--Index2 2주후-->
+          </div>  <!--Swiper-wrapper-->
+      </div> <!--Swiper-container-->
+
 <!--Swiper-->    
-          <!-- <div class="swiper-pagination"></div> -->
-          <div id="cal_box" class="cal_box"></div>    
-    </div>
+      <!-- <div class="swiper-pagination"></div> -->
+      <div id="cal_box" class="cal_box"></div>    
+</div>
 
 
 
@@ -283,22 +300,31 @@
     </div>
 
     <div id="classStartTime" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> <span class="KRtext"> 시작 시간</span><span class="JPtext"> 開始時間</span><span class="ENtext"> Start Time</span></div>
+      <div class="ptaddboxtext">
+        <img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 
+        <span class="KRtext"> 시작 시간</span>
+        <span class="JPtext"> 開始時間</span>
+        <span class="ENtext"> Start Time</span>
+      </div>
       <div id="starttimesSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">선택</span>
           <span class="JPtext" style="color:#cccccc;">選択</span>
-          <span class="ENtext" style="color:#cccccc;">Select</span></button>
+          <span class="ENtext" style="color:#cccccc;">Select</span>
         </button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
         <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
-       
-       </ul>
+        </ul>
       </div>
     </div>
 
     <div id="classDuration" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Time</span></div>
+      <div class="ptaddboxtext">
+        <img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 
+        <span class="KRtext"> 진행 시간</span>
+        <span class="JPtext"> 進行時間</span>
+        <span class="ENtext"> Class Time</span>
+      </div>
       <div id="durationsSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -307,7 +333,6 @@
         </button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
         <ul id="durations" class="dropdown-menu pters_dropdown_custom">
-
         </ul>
       </div>
     </div> 
@@ -335,7 +360,6 @@
     <div class='popupBtn'>
       <div class="submitBtn" id="submitBtn_pt"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
     </div>
-
 </div>
 
 
@@ -344,8 +368,7 @@
 
 
 
-  <div id="page-addplan-pc">
-    
+<div id="page-addplan-pc">  
     <div class=" ptaddbox_mini" id="pcaddpopup_mini" style="display: block;width:100%;text-align: left;">
       <span class="datepicktext dropdown_mini" id="datetext_mini"></span>  
       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn_mini">
@@ -444,16 +467,19 @@
     </div>
 
     <div id="classStartTime_mini" class="ptaddbox_mini" style="display: none;">
-      <div class="ptaddboxtext_mini"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> <span class="KRtext"> 시작 시간</span><span class="JPtext"> 開始時間</span><span class="ENtext"> Start Time</span></div>
+      <div class="ptaddboxtext_mini"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 
+        <span class="KRtext"> 시작 시간</span>
+        <span class="JPtext"> 開始時間</span>
+        <span class="ENtext"> Start Time</span>
+      </div>
       <div id="starttimesSelected" class="dropdown_mini">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom_mini" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">선택</span>
           <span class="JPtext" style="color:#cccccc;">選択</span>
-          <span class="ENtext" style="color:#cccccc;">Select</span></button>
+          <span class="ENtext" style="color:#cccccc;">Select</span>
         </button>
         <ul id="starttimes_mini" class="dropdown-menu dropdownlist_mini">
-       
-       </ul>
+        </ul>
       </div>
     </div>
 
@@ -472,10 +498,14 @@
     </div> 
 
     <div class='popupBtn_mini'>
-      <div class="submitBtn" id="submitBtn_mini"><span class="KRtext">등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
+      <div class="submitBtn" id="submitBtn_mini">
+        <span class="KRtext">등록</span>
+        <span class="JPtext">登録</span>
+        <span class="ENtext">OK</span>
+      </div>
     </div>
-
 </div>
+
 
 <div id="filterPopup_mini" class="dropdown">
       <div id="offFilter" style="width:45%; height: 50%;display: inline-grid;background: #eaeaea;">OFF타임 필터링</div>
@@ -554,7 +584,7 @@
                event.stopPropagation();
             })
 
-            $('.arrowButtonPC a:nth-child(1)').click(function(){
+            $('#ymdText-pc-prev-btn').click(function(){
               if(count==0){
                 myswiper.slidePrev(100)
                 count++  
@@ -564,7 +594,7 @@
               }
             })
 
-            $('.arrowButtonPC a:nth-child(2)').click(function(){
+            $('#ymdText-pc-next-btn').click(function(){
               if(count1==0){
                 myswiper.slideNext(100)  
                 count1++  
