@@ -5,6 +5,7 @@ body{
 	font-family: 'Noto Sans KR';
 	padding-top: 50px;
 	width: 100%;
+	background: #ffffff;
 }
 
 .swiper-container{
@@ -128,7 +129,7 @@ img,a,div,span,p{
 #ymdText{
 	position: fixed;
 	height: 50px;
-	z-index: 3;
+	z-index: 4;
 	width: 100%;
 }
 
@@ -381,6 +382,7 @@ img,a,div,span,p{
 	left: 50%;
 	transform: translateX(-50%);
 	border-radius: 50%;
+	opacity: 0.5;
 }
 
 
@@ -708,6 +710,7 @@ img,a,div,span,p{
 		background-color: 	#ffffff;
 		padding-left: 0;
 		padding-right: 0;
+		margin-top: 192px;
 		top: 0;
 	}
 
@@ -717,7 +720,6 @@ img,a,div,span,p{
 	}
 	
 	#ymdText{
-		position: relative;
 		height: 100px;
 	}
 
@@ -731,8 +733,47 @@ img,a,div,span,p{
 		top: 60%;
 	}
 
+	#ymdText-pc{
+		display: block;
+		position: fixed;
+		margin-top: 100px;
+		width:100%;
+		height: 50px;
+		text-align: center;
+		z-index: 5;
+		vertical-align: middle;
+		background-color: #ffffff;
+	}
+
+	#ymdText-pc div{
+		line-height: 50px;
+	}
+
+	#ymdText-pc img{
+		width: 20px;
+		margin-bottom: 5px;
+		cursor: pointer;
+	}
+
+	.ymdText-pc-year{
+		font-size: 17px;
+		font-weight: 500;
+	}
+
+	.ymdText-pc-date{
+		display: inline;
+		font-size: 20px;
+		font-weight: 500;
+	}
+
+	.ymdText-pc-add{
+		display: none;
+	}
+
+
+
 	.weekday_style{
-		margin-right: 7px;
+		margin-right: 0px;
 	}
 
 	#gapbox{
@@ -809,7 +850,6 @@ img,a,div,span,p{
 
 	.prevDates,.nextDates{
 		opacity: 0.2;
-		background:grey;
 	}
 	
 	.greydateMytime,.dateMytime{
@@ -900,17 +940,30 @@ img,a,div,span,p{
 		border-bottom: 1px solid #cccccc;
 		height: 120px;
 		min-height: 42px;
-		font-size: 20px;
+		font-size: 18px;
 		font-weight: 400;	
 		padding-left: 0px;
 		padding-right: 0px;
 	}
 
 	#date{
-		position: relative;
-		padding-left: 0px;
-		padding-right: 0px;
+		position: fixed;
+		padding: 0;
 		top: 0;
+		height: 42px;
+		background-color: #f7f7f7;
+		margin-top: 215px;
+		z-index: 5;
+	}
+
+	#date td{
+		width: 14.3%;
+		text-align: center;
+		border: 1px solid #cccccc;
+	}
+
+	.weekdays{
+		color: #888888 !important;
 	}
 
 	.blackballoon_trainer,.balloon_trainer{
@@ -926,7 +979,8 @@ img,a,div,span,p{
 
 	._classTime img{
 		display: inline;
-		margin-right: 4px;
+		width: 15px;
+		margin-right: 6px;
 		margin-bottom: 3px;
 	}
 
@@ -943,6 +997,7 @@ img,a,div,span,p{
 
 	.today{
 		color: transparent;
+		border-width: 5px;
 	}
 
 	#cal_popup_plancheck{
@@ -960,7 +1015,46 @@ img,a,div,span,p{
 	.popup_inner{
 		max-height: 500px;
 	}
+}
 
+@media(min-width: 730px){
+
+	/*
+	.ymdText-pc-add{
+		display: inline;
+		line-height: 50px;
+		position: absolute;
+		right: 0;
+		margin-right: 20px;
+	}
+	*/
+
+	.ymdText-pc-add-off{
+		display: inline;
+		margin-right: 5px;
+		padding:5px 8px 5px 8px;
+		font-size: 14px;
+		border:1px solid #282828;
+		cursor: pointer;
+	}
+		.ymdText-pc-add-off:hover{
+			background-color: #282828;
+			color: #fe4e65;
+		}
+
+	.ymdText-pc-add-pt{
+		display: inline;
+		margin-left: 5px;
+		padding:5px 13px 5px 13px;
+		color: #fe4e65;
+		font-size: 14px;
+		border:1px solid #fe4e65;
+		cursor: pointer;
+	}
+		.ymdText-pc-add-pt:hover{
+			background-color: #fe4e65;
+			color: #ffffff;
+		}
 
 }
 

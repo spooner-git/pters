@@ -239,7 +239,22 @@ ul a{
 .ptaddbox_mini{
 	display: inline;
 	padding-left: 5%;
-	margin-top: 4px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+#addmemo_mini{
+	display: block;
+}
+
+#memo_mini{
+	width: 70%;
+	height: 23px;
+	margin-left: 12px;
+}
+
+#memo_mini::placeholder{
+	color: #cccccc;
 }
 
 #pcaddpopup_mini{
@@ -477,7 +492,7 @@ ul a{
 	bottom: -23px;
 	right: -21px;
 	text-align: center;
-	margin-top: 20px;
+	margin-top: 10px;
 	border-top: 1px solid #cccccc;
 }
 

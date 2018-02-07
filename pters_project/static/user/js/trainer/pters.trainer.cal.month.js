@@ -181,7 +181,7 @@ $(document).ready(function(){
 
 
 	monthText(); //상단에 연, 월 표시
-	availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
+	//availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 	krHoliday(); //대한민국 공휴일
 
 
@@ -244,7 +244,7 @@ $(document).ready(function(){
 			classDatesTrainer();
 			monthText();
 			krHoliday();
-			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
+			//availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 			myswiper.update(); //슬라이드 업데이트
 
 		},
@@ -260,7 +260,7 @@ $(document).ready(function(){
 			classDatesTrainer();
 			monthText();
 			krHoliday();
-			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
+			//availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 			myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
@@ -445,8 +445,8 @@ $(document).ready(function(){
 		//currentYMD 형식  ex : week120177
 		var textYear = currentYMD.substr(5,4); //2017
 		var textMonth = currentYMD.substr(9,2); //7
-		$('#yearText').text(textYear);
-		$('#monthText').text(textMonth+'월');
+		$('#yearText, #ymdText-pc-year').text(textYear);
+		$('#monthText, #ymdText-pc-month').text(textMonth+'월');
 		todayFinderArrow(textYear,textMonth);
 	};
 

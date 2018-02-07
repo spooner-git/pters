@@ -38,7 +38,10 @@ $(document).ready(function(){
 	    }else{
 	    	$('#pcaddpopup').show()
 			$('#pcaddpopup_off').hide()
-	    }   
+	    }
+	    if($(this).hasClass('ymdText-pc-add-pt')){
+	    	$('#shade').fadeIn('fast')
+	    }
 	})
 
 	$('#float_inner2, .ymdText-pc-add-off').click(function(){ //OFF추가버튼
@@ -64,11 +67,14 @@ $(document).ready(function(){
 	    	$('#pcaddpopup').hide()
 	    	$('#pcaddpopup_off').show()
 	    }
+
+	    if($(this).hasClass('ymdText-pc-add-off')){
+	    	$('#shade').fadeIn('fast')
+	    }
 	})
 
 	$('#upbutton-x').click(function(){
 		$('#calendar').css('height','90%')
-		//$('#calendar').show()
 	    $('#shade3').fadeOut();
 	    $('#shade').hide();
 	    $('#page-addplan').fadeOut('fast','swing');
@@ -142,6 +148,7 @@ $(document).ready(function(){
 	    $('.submitBtn').removeClass('submitBtnActivated')
 	    $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
 	    $('#submitBtn_mini').css('background','#282828')
+	    $('#memo_mini').val("")
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");

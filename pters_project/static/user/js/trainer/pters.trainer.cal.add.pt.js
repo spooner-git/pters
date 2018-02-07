@@ -114,7 +114,7 @@ $(document).ready(function(){
           $(this).css({'background':'#fe4e65','color':'#ffffff','border-color':'#fe4e65'})
           $('#typeSelector_2').css({'background':'#ffffff','color':'#cccccc','border-color':'#cccccc'})
           $('#classDuration_mini').hide('fast',function(){
-              $('#memberName_mini').show('fast')
+              $('#memberName_mini').css('display','inline')
               $('#remainCount_mini').show('fast')
           })  
           addTypeSelect = "ptadd"
@@ -147,6 +147,10 @@ $(document).ready(function(){
           check_dropdown_selected();
       });
 
+      $('#memo_mini').keyup(function(){
+        $('#id_memo_mini, #id_memo_mini_off').val($(this).val())
+      })
+
       function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
          console.log(duration)
           var selectedDuration = Number(duration)
@@ -169,6 +173,7 @@ $(document).ready(function(){
         $('.submitBtn').removeClass('submitBtnActivated')
         $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
         $('#submitBtn_mini').css('background','#282828')
+        $('#memo_mini').val("")
 
         $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
@@ -346,6 +351,8 @@ $(document).ready(function(){
                 durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+
+                $('.blankSelected_addview').removeClass('blankSelected')
               },
 
               complete:function(){

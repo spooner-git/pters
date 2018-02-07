@@ -67,6 +67,7 @@
     </div>
 </div>
 
+<!--shade3는 #f4f4f4 색을 가진 배경(모바일에서 팝업시 뒷배경)-->
 <div id="shade3">
 </div>
 <!--플로팅 버튼-->
@@ -184,6 +185,7 @@
         <input type="hidden" name="time_duration" id="id_time_duration">
         <input type="hidden" name="training_time" id="id_training_time">
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+        <input type="hidden" name="add_memo" id="id_memo_mini">
     </form>
 
     <form action="{% url 'trainer:add_off_logic' %}" id="off-add-form" method="post">
@@ -191,6 +193,7 @@
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+        <input type="hidden" name="add_memo" id="id_memo_mini_off">
     </form>
     
     <div class="ptaddbox" id="pcaddpopup">
@@ -399,7 +402,6 @@
       </div>
     </div>
 
-
     <div id="remainCount_mini" class="ptaddbox_mini">
       <div class="ptaddboxtext_mini"></div>
       <!-- 남은 횟수 DB연동 필요 -->
@@ -497,6 +499,16 @@
       </div>
     </div> 
 
+    <div id="addmemo_mini" class="ptaddbox_mini">
+        <div class="ptaddboxtext_mini"> 
+          <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 
+          <span class="KRtext"> 메모</span>
+          <span class="JPtext"> メモ―</span>
+          <span class="ENtext"> Memo</span>
+        </div>
+        <input type="text" name="memo_mini" maxlength="15" value="" placeholder="15자 이내" id="memo_mini">
+    </div>
+
     <div class='popupBtn_mini'>
       <div class="submitBtn" id="submitBtn_mini">
         <span class="KRtext">등록</span>
@@ -565,11 +577,11 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 2,
-                speed : 100,
+                speed : 120,
                 preventClicks : true,
                 keyboardControl : true, 
                 preventClicksPropagation : true,
-                //threshold : 50,
+                threshold : 50,
                 resistance: 1,
                 //followFinger : false,
                 //shortSwipes : false,
