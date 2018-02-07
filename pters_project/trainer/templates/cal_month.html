@@ -148,12 +148,6 @@
         <div id="submitBtn" class="popup_inner popup_inner_delete" name=submit><span>일정 예약</span></div>
     </div>
 
-  <!--PC버전 Arrow-->
-    <div class="arrowButtonPC">
-        <a id="leftarrowPC" style="left: 10%"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 12px;left: 0;"><span>이전 달</span></a>
-        <a id="rightarrowPC" style="right: 10%"><span>다음 달</span><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 12px;right: 0;"></a>
-    </div>
-
   <!-- 월간 달력 -->
     <div id="ymdText" class="wrapunlimit" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
       <div class='arrowButton'>
@@ -174,10 +168,22 @@
       </div>
     </div>
 
-    <div id="gapbox">  
+
+    <div id="ymdText-pc" class="wrap">
+        <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
+        <div class="ymdText-pc-date">
+          <span id="ymdText-pc-year" class="ymdText-pc-year">1월</span>
+          <span id="ymdText-pc-month" class="ymdText-pc-month">17일</span>
+        </div>
+        <img src="/static/user/res/icon-cal-btn.png"  id="ymdText-pc-next-btn" style="-webkit-transform:rotate(180deg)">
+
+        <div class="ymdText-pc-add">
+          <div class="ymdText-pc-add-off">+ OFF 일정추가</div>
+          <div class="ymdText-pc-add-pt">+ PT 일정추가</div>
+        </div>
     </div>
 
-    <div id="date" class="week-style"> <!--월화수목금토일-->
+    <div id="date" class="week-style wrap"> <!--월화수목금토일-->
             <table class="calendar-style calendar-day-style">
                 <tr>
                     <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
@@ -203,9 +209,6 @@
         <!-- <div class="swiper-pagination"></div> -->
         <div id="cal_box" class="cal_box"></div>
     </div>
-
-
-
 
 
 
@@ -244,13 +247,6 @@
                 resistance: 1,
             });
 
-            $('.arrowButton a:nth-child(1)').click(function(){
-              myswiper.slidePrev(100)  
-            })
-
-            $('.arrowButton a:nth-child(2)').click(function(){
-              myswiper.slideNext(100)  
-            })
 
             $(window).scroll(function(event){
                event.stopPropagation();
@@ -259,7 +255,7 @@
             var count = 0 
             var count1 = 0
 
-            $('.arrowButtonPC a:nth-child(1)').click(function(){
+            $('#ymdText-pc-prev-btn').click(function(){
               if(count==0){
                 myswiper.slidePrev(100)
                 count++  
@@ -269,7 +265,7 @@
               }
             })
 
-            $('.arrowButtonPC a:nth-child(2)').click(function(){
+            $('#ymdText-pc-next-btn').click(function(){
               if(count1==0){
                 myswiper.slideNext(100)  
                 count1++  
@@ -278,6 +274,8 @@
                 console.log('wait!')
               }
             })
+
+            $('footer').css('display','none')
         </script>
 
 {% endblock %}
