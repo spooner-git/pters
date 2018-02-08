@@ -259,7 +259,7 @@ $(document).ready(function(){
 
 
      function check_dropdown_selected(){ //모든 입력란을 채웠을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-        var emailInput = $("#memberEmail_add").parent("div");
+        //var emailInput = $("#memberEmail_add").parent("div");
         var nameInput = $("#memberName_add").parent("div");
         var phoneInput = $("#memberPhone_add").parent("div");
         var countInput = $("#memberCount_add").parent("div");
@@ -272,7 +272,8 @@ $(document).ready(function(){
         var fast = $('#fast_check').val()
 
         if(fast=='1'){
-            if((emailInput).hasClass("dropdown_selected")==true && (nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true&&(startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
+            //(emailInput).hasClass("dropdown_selected")==true &&
+            if((nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true&&(startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 $('.submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
@@ -284,7 +285,8 @@ $(document).ready(function(){
             }
         }
         else{
-            if((emailInput).hasClass("dropdown_selected")==true && (nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput_fast).hasClass("dropdown_selected")==true&&(dateInput_fast).hasClass("dropdown_selected")==true){
+            //(emailInput).hasClass("dropdown_selected")==true &&
+            if((nameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput_fast).hasClass("dropdown_selected")==true&&(dateInput_fast).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 $('.submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
@@ -384,11 +386,12 @@ $(document).ready(function(){
                         }
                         $('html').css("cursor","auto")
                         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                      alert('complete: 회원 정상 등록')
+                      //alert('complete: 회원 정상 등록')
                       },
 
                     //통신성공시 처리
                     success:function(){
+                        ajaxMemberData();
                       console.log('success')
                       },
 
@@ -404,6 +407,95 @@ $(document).ready(function(){
             console.log('submit ng')
          }
      })
+
+
+	function ajaxMemberData(){
+
+            $.ajax({
+              url: '/trainer/member_manage_ajax',
+              dataType : 'html',
+
+              beforeSend:function(){
+              		beforeSend();
+              },
+
+              success:function(data){
+              	var jsondata = JSON.parse(data);
+              	nameArray =[];
+              	phoneArray = [];
+              	countArray = [];
+              	startArray = [];
+              	modifyDateArray = [];
+              	emailArray = [];
+              	endArray = [];
+              	regCountArray = [];
+              	availCountArray = [];
+
+              	finishnameArray =[];
+              	finishphoneArray = [];
+              	finishcountArray = [];
+              	finishstartArray = [];
+              	finishmodifyDateArray = [];
+              	finishemailArray = [];
+              	finishendArray = [];
+
+                  //처리 필요 - hk.kim 180110
+                finishRegCountArray = [];
+                finishAvailCountArray = [];
+
+                nameArray =jsondata.nameArray;
+              	phoneArray = jsondata.phoneArray;
+              	countArray = jsondata.countArray;
+              	startArray = jsondata.startArray;
+              	modifyDateArray = jsondata.modifyDateArray;
+              	emailArray = jsondata.emailArray;
+              	endArray = jsondata.endArray;
+              	regCountArray = jsondata.regCountArray;
+              	availCountArray = jsondata.availCountArray;
+
+              	finishnameArray =jsondata.finishnameArray;
+              	finishphoneArray = jsondata.finishphoneArray;
+              	finishcountArray = jsondata.finishcountArray;
+              	finishstartArray = jsondata.finishstartArray;
+              	finishmodifyDateArray = jsondata.finishmodifyDateArray;
+              	finishemailArray = jsondata.finishemailArray;
+              	finishendArray = jsondata.finishendArray;
+
+                  //처리 필요 - hk.kim 180110
+                finishRegCountArray = jsondata.finishRegCountArray;
+                finishAvailCountArray = jsondata.finishAvailCountArray;
+
+
+              },
+
+              complete:function(){
+              	completeSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })
+     }
+
+
+
+      function beforeSend(){
+        $('html').css("cursor","wait");
+        $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+        $('.ajaxloadingPC').show();
+        $('#shade').css({'z-index':'200'});
+      }
+
+      function completeSend(){
+        $('html').css("cursor","auto");
+        $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+        $('.ajaxloadingPC').hide();
+        $('#shade').css({'z-index':'100'});
+        $('#shade').hide();
+        //$('#calendar').show();
+        //alert('complete: 일정 정상 등록')
+      }
 
      function closePopup(){
         $('#page_addmember').fadeOut('fast');

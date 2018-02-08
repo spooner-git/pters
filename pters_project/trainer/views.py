@@ -636,6 +636,34 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'manage_member_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageMemberViewAjax, self).get_context_data(**kwargs)
+        error = None
+        trainer_class = None
+        try:
+            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = '강사 PT 정보가 존재하지 않습니다'
+            # logger.error(error)
+
+        context['trainer_member'] = None
+
+        if error is None :
+            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+
+            for lecture in context['trainer_member']:
+                try:
+                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
+                except ObjectDoesNotExist:
+                    error = '회원 PT 정보가 존재하지 않습니다'
+                    # logger.error(error)
+
+        return context
+
+
 class AddMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'member_add.html'
 
@@ -911,14 +939,16 @@ def member_registration(request):
 
     if MemberTb.objects.filter(phone=phone).exists():
         error = '이미 가입된 회원 입니다.'
-    elif User.objects.filter(email=email).exists():
-        error = '이미 가입된 회원 입니다.'
-    elif email == '':
-        error = 'e-mail 정보를 입력해 주세요.'
+    #elif User.objects.filter(email=email).exists():
+    #    error = '이미 가입된 회원 입니다.'
+    #elif email == '':
+    #    error = 'e-mail 정보를 입력해 주세요.'
     elif name == '':
         error = '이름을 입력해 주세요.'
     elif phone == '':
         error = '연락처를 입력해 주세요.'
+    elif birthday_dt == '':
+        birthday_dt = '1900-01-01'
 
     if fast_check == '0':
         if counts_fast == '':
@@ -935,7 +965,6 @@ def member_registration(request):
                 input_price = 0
             else:
                 input_price = price_fast
-        print('fast_check=0이다.')
     elif fast_check == '1':
         if counts == '':
             error = '남은 횟수를 입력해 주세요.'
@@ -951,7 +980,7 @@ def member_registration(request):
                 input_price = 0
             else:
                 input_price = price
-        print('fast_check=1이다.')
+
 
     if error is None:
 
