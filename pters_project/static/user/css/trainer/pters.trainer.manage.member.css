@@ -112,7 +112,7 @@ th{
 	background:#eeeeee;
 }
 
-._countnum,._email,._regcount,._finday,._manage{
+._countnum,._email,._finday,._manage{
 	display: none;
 }
 
@@ -271,8 +271,8 @@ th{
 .phonesms{
 	display: inline;
 	width: 23px;
-	margin-left: 5px;
-	margin-right: 5px;
+	margin-left: 2px;
+	margin-right: 2px;
 }
 
 .phonenum{
@@ -311,6 +311,10 @@ th{
 
 .instructPopup{
 	display: none;
+}
+
+.forscroll{
+	width: 0;
 }
 
 @media(min-width: 600px){

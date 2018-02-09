@@ -12,6 +12,8 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 $(document).ready(function(){
 
 
+
+
 	var repeatData = ['김선겸_tue_16_1_20171203_20180301','김선겸_fri_7_1_20171203_20180301','박신혜_mon_16_1_20171126_20180301']
 	var offrepeatData = ['OFF_sun_5_20_20171224_20180301','OFF_sat_16_9_20171209_20180301']
 
@@ -634,14 +636,15 @@ $(document).ready(function(){
 
 
 	//너무 빠르게 스와이프 하는 것을 방지
-	myswiper.on('onSlideChangeStart',function(){
+	myswiper.on('onTransitionStart',function(){
 		myswiper.params.onlyExternal = true;
 	})
 
-	myswiper.on('onSlideChangeEnd',function(){
+	myswiper.on('onTransitionEnd',function(){
 		setTimeout(function(){
 			myswiper.params.onlyExternal = false;
 		}, 200)
+		
 	})
 	//너무 빠르게 스와이프 하는 것을 방지
 
