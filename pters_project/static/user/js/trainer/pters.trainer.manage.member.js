@@ -59,25 +59,38 @@ $(document).ready(function(){
     })
 
     $('#upbutton-x,.cancelBtn').click(function(){
-      if($('body').width()<600){
+      if($('#memberInfoPopup').css('display')=='block'){
+        $('#page-base').fadeIn();
+        $('#page-base-addstyle').fadeOut();
+        $('#memberInfoPopup').fadeOut('fast')
+        $('#memberName').attr('readonly',true)
+        $('#memberPhone').attr('readonly',true)
+        $('#memberCount').attr('readonly',true)
+        $('#memberSex div').removeClass('selectbox_checked')
+        $('.dropdown_selected').removeClass("dropdown_selected")
+        $('.confirmPopup').fadeOut()
+        $('#shade').fadeOut()
+      }else{
+        if($('body').width()<600){
         $('#page_managemember').show();
+        }
+        $('#page_addmember').fadeOut('fast');
+        $('#shade3').fadeOut('fast');
+        $('#float_btn').fadeIn('fast');
+        $('#page-base').fadeIn();
+        $('#page-base-addstyle').fadeOut();
+
+        $('#page_addmember input,#memberDue_add_2').val("")
+        $('#memberBirthMonthSelected button').val("").text("")
+        $('#memberBirthDateSelected button').val("").text("")
+
+        $('._due div.checked').removeClass('checked ptersCheckboxInner')
+        $('._count div.checked').removeClass('checked ptersCheckboxInner')
+        $('p,#page_addmember input,div,.pters_input_custom').removeClass("dropdown_selected")
+        $('#memberSex div').removeClass('selectbox_checked')
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>"); 
+        $('.submitBtn').removeClass('submitBtnActivated')
       }
-      $('#page_addmember').fadeOut('fast');
-      $('#shade3').fadeOut('fast');
-      $('#float_btn').fadeIn('fast');
-      $('#page-base').fadeIn();
-      $('#page-base-addstyle').fadeOut();
-
-      $('input,#memberDue_add_2').val("")
-      $('#memberBirthMonthSelected button').val("").text("")
-      $('#memberBirthDateSelected button').val("").text("")
-
-      $('._due div.checked').removeClass('checked ptersCheckboxInner')
-      $('._count div.checked').removeClass('checked ptersCheckboxInner')
-      $('p,input,div,.pters_input_custom').removeClass("dropdown_selected")
-      $('#memberSex div').removeClass('selectbox_checked')
-      $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>"); 
-      $('.submitBtn').removeClass('submitBtnActivated')
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
@@ -139,43 +152,71 @@ $(document).ready(function(){
 
 //#####################회원정보 팝업 //#####################
 
-    $(document).on('click','._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+    $(document).on('click','td._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+      $('#uptext2').text('회원 정보')
+      $('#page-base').fadeOut();
+      $('#page-base-addstyle').fadeIn();
       var name = $(this).attr('data-name')
       console.log(name)
-      $('#memberName').attr('placeholder',name)
-      $('#memberPhone').attr('placeholder',DB[name].phone)
-      $('#memberCount').attr('placeholder',DB[name].count)
-      $('#memberEmail').attr('placeholder',DB[name].email)
-      $('#datepicker').attr('placeholder',DB[name].start)
-      $('#datepicker2').attr('placeholder',DB[name].end)
-      $('#memberInfoPopup').show().animate({'top':'50px'});
+      $('#memberName').attr('value',name)
+      $('#memberPhone').attr('value',DB[name].phone).text(DB[name].phone)
+      $('#memberCount').attr('value',DB[name].count)
+      $('#memberEmail').attr('value',DB[name].email)
+      $('#datepicker').attr('value',DB[name].start)
+      $('#datepicker2').attr('value',DB[name].end)
+      $('#memberInfoPopup').fadeIn();
       scrollToIndicator($('#page_managemember'));
-      $('#shade3').fadeIn('fast');
     })
 
-    $(document).on('click','._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+    $(document).on('click','td._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+      $('#uptext2').text('회원 정보')
+      $('#page-base').fadeOut();
+      $('#page-base-addstyle').fadeIn();
       var name = $(this).attr('data-name')
-      $('#memberName').attr('placeholder',name)
-      $('#memberPhone').attr('placeholder',DBe[name].phone)
-      $('#memberCount').attr('placeholder',DBe[name].count)
-      $('#memberEmail').attr('placeholder',DBe[name].email)
-      $('#datepicker').attr('placeholder',DBe[name].start)
-      $('#datepicker2').attr('placeholder',DBe[name].end)
-      $('#memberInfoPopup').show().animate({'top':'50px'});
+      $('#memberName').attr('value',name)
+      $('#memberPhone').attr('value',DBe[name].phone)
+      $('#memberCount').attr('value',DBe[name].count)
+      $('#memberEmail').attr('value',DBe[name].email)
+      $('#datepicker').attr('value',DBe[name].start)
+      $('#datepicker2').attr('value',DBe[name].end)
+      $('#memberInfoPopup').fadeIn()
       scrollToIndicator($('#page_managemember'));
       $('html,body').scrollTop();
-      $('#shade3').fadeIn('fast');
     })
 
-    $('#infoClose').click(function(){ //회원정보창에서 닫기 눌렀을때
-      $('#memberInfoPopup').animate({'top':'-800px'}).hide('fast');
-      $('#memberName').attr('readonly',true).val('')
-      $('#memberPhone').attr('readonly',true).val('')
-      $('#memberCount').attr('readonly',true).val('')
-      $('#shade3').fadeOut('fast');
+    $("#datepicker_info").datepicker({
+        minDate : 0,
+        onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+          $("#dateSelector p").addClass("dropdown_selected");
+          check_dropdown_selected();
+        }
+    });
+
+    $("#datepicker2_info").datepicker({
+        minDate : 0,
+        onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+          $("#dateSelector2 p").addClass("dropdown_selected");
+          check_dropdown_selected();
+        }
+    });
+
+    $('#infoMemberDelete').click(function(){
+      $('.confirmPopup').fadeIn()
+      $('#shade').fadeIn()
     })
 
-    $('#infoEdit').click(function(){ //회원정보창에서 수정 눌렀을때
+    $('.confirmYes').click(function(){
+      $('.confirmPopup').fadeOut()
+      $('#shade').fadeOut()
+    })
+
+    $('.confirmNo').click(function(){
+      $('.confirmPopup').fadeOut()
+      $('#shade').fadeOut()
+    })
+
+
+    $('#infoMemberEdit').click(function(){ //회원정보창에서 수정 눌렀을때
       $('#memberName').attr('readonly',false)
       $('#memberPhone').attr('readonly',false)
       $('#memberCount').attr('readonly',false)
