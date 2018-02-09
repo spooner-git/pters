@@ -402,7 +402,7 @@ $(document).ready(function(){
                  })
             
          }else{
-            //$('#inputError').fadeIn('slow')
+            $('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
             console.log('submit ng')
          }

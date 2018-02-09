@@ -24,13 +24,14 @@
 </div>
   <!--플로팅 버튼-->
 
-    {% if messages %}
-        {% for message in messages %}
-            <div id="inputError">
-                    <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
-            </div>
-        {% endfor %}
-    {% endif %}
+{% if messages %}
+    {% for message in messages %}
+        <div id="inputError">
+                <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div id="page_managemember">
     <div id="upperImg">
         <span>회원 관리</span>
@@ -402,7 +403,9 @@
     <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
+         <!--
          <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.manage.member.add.js" %}></script>
+     -->
          <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.manage.member.js" %}></script>
          <script>
           $('#uptext').text("회원 관리")
@@ -434,17 +437,9 @@
 
           var DB = {};
           var DBe = {};
-          var DBlength = nameArray.length;
-          for(var i=0; i<DBlength;i++){
-            DB[nameArray[i]] = {'email':emailArray[i],'count':countArray[i],'phone':phoneArray[i],'start':startArray[i],'end':endArray[i]};
-          }
-          var DBendlength = finishnameArray.length;
-          for(var j=0; j<DBendlength;j++){
-            DBe[finishnameArray[j]] = {'email':finishemailArray[j],'count':finishcountArray[j],'phone':finishphoneArray[j],'start':finishstartArray[j],'end':finishendArray[j]}; 
-          }
 
-          $('#currentMemberNum').text("진행중 회원수 : "+DBlength)
-          $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
+
+          
 
          </script>
 

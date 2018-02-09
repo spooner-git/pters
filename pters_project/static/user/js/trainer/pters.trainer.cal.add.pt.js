@@ -278,7 +278,7 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(){
-                      $('#calendar').css('height','100%')
+                      $('#calendar').show().css('height','100%')
                       closeAddPopup();
                       closeAddPopup_mini()
                       completeSend();
