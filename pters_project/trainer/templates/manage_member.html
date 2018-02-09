@@ -24,6 +24,13 @@
 </div>
   <!--플로팅 버튼-->
 
+    {% if messages %}
+        {% for message in messages %}
+            <div id="inputError">
+                    <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
+            </div>
+        {% endfor %}
+    {% endif %}
 <div id="page_managemember">
     <div id="upperImg">
         <span>회원 관리</span>
@@ -157,14 +164,7 @@
 </div>
 
 <div id="page_addmember" class="wrap"> 
-    
-    {% if messages %}
-        {% for message in messages %}
-            <div id="inputError">
-                    <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
-            </div>
-        {% endfor %}
-    {% endif %}
+
     <div class="ptaddbox" id="pcaddpopup">
       <span>신규 회원 추가</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
     </div>
