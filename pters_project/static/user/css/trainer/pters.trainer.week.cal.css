@@ -27,7 +27,7 @@ body{
 
 .slidegap{
 	display: table-cell;
-	width: 9%;
+	width: 9.1%;
 	height: 29px;
 	color: transparent;
 	border: 0;
@@ -84,6 +84,10 @@ body{
 	color: #fe4e65;
 	font-weight: 500;
 	font-size: 78%;
+}
+
+#timeIndicatorBar{
+	display: none;
 }
 
 
@@ -751,6 +755,15 @@ img,a,div,span,p{
 		font-size: 16px;
 	}
 
+	#timeIndicatorBar{
+		display: block;
+		position: absolute;
+		width: 99%;
+		height: 1px;
+		border-top: 1px solid #282828;
+		z-index: 2;
+	}
+
 	.classTime{
 		top: 2px;
 	}
@@ -849,7 +862,7 @@ img,a,div,span,p{
 	}
 
 	.todaywide{
-		width: 230px !important;
+		width: 17% !important;
 		border-left: 1px solid #fe4e65;
 		border-right: 1px solid #fe4e65;
 	}
