@@ -1452,10 +1452,11 @@ $(document).ready(function(){
 			$('#hour'+currentHour).addClass('currentTimeBlackBox');
 			var indicator_Location = $('#hour'+currentHour).position().top
 			var minute_adjust = 45*(currentMinute/60)
-
 			$('#timeIndicatorBar').css('top',indicator_Location+minute_adjust)
+			$('#timeIndicatorBar').fadeIn('fast')
 		}else{
 			$('.hour').removeClass('currentTimeBlackBox');
+			$('#timeIndicatorBar').fadeOut('fast')
 		}
 	}
 
