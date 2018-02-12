@@ -204,6 +204,12 @@ ul a{
 	vertical-align: middle;
 }
 
+.dropdownlist_mini div{
+	text-align: center;
+	height: 24px;
+	line-height: 24px;
+	vertical-align: middle;
+}
 
 .dropdown ul{
 	padding-top: 0px;
