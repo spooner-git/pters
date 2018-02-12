@@ -139,8 +139,12 @@ img,a,div,span,p{
 	z-index: -1;
 }
 
+#hidetoggle{
+	display: none;
+}
 
 #monthText{
+	display: block;
 	color : #fe4e65;
 	font-size: 19.5px;
 	font-weight: 700;
@@ -151,12 +155,21 @@ img,a,div,span,p{
 }
 
 #yearText{
+	display: block;
 	color : #ffffff;
 	font-size: 15px;
 	width: 100%;
 	text-align: center;
 	position: absolute;
 	top: 10%;
+}
+
+#menuName{
+	display: none;
+}
+
+#menuDescription{
+	display: none;
 }
 
 .todayindi{
@@ -718,19 +731,59 @@ img,a,div,span,p{
 		background : #ffebee54;
 		opacity: 1;
 	}
+
+	#hidetoggle{
+		display: block;
+		position: fixed;
+		text-align: right;
+		padding-top: 75px;
+		color: #f4f4f4;
+		font-size: 12px;
+		font-weight: 300;
+		z-index: 10;
+		cursor: pointer;
+	}
+		#hidetoggle img{
+			width: 7px;
+			margin-bottom: 2px;
+			margin-right: 8px;
+			margin-left: 10px;
+		}
 	
 	#ymdText{
 		height: 100px;
 	}
 
 	#yearText{
+		display: none;
 		font-size: 26px;
 		top: 15%;
 	}
 
 	#monthText{
+		display: none;
 		font-size: 21.5px;
 		top: 60%;
+	}
+
+	#menuName{
+		display: block;
+		color : #fe4e65;
+		font-size: 24px;
+		top: 15%;
+		width: 100%;
+		text-align: center;
+		position: absolute;
+	}
+
+	#menuDescription{
+		display: block;
+		color : #ffffff;
+		font-size: 15px;
+		top: 60%;
+		width: 100%;
+		text-align: center;
+		position: absolute;
 	}
 
 	#ymdText-pc{
@@ -921,10 +974,6 @@ img,a,div,span,p{
 		text-align: center;
 	}
 
-	#yearText{
-		display: block;
-		margin-bottom: 5px;
-	}
 	#countRemain{
 		margin-bottom: 0px
 	}

@@ -12,8 +12,6 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 $(document).ready(function(){
 
 
-
-
 	var repeatData = ['김선겸_tue_16_1_20171203_20180301','김선겸_fri_7_1_20171203_20180301','박신혜_mon_16_1_20171126_20180301']
 	var offrepeatData = ['OFF_sun_5_20_20171224_20180301','OFF_sat_16_9_20171209_20180301']
 
@@ -1187,7 +1185,7 @@ $(document).ready(function(){
 		var planheight = 30;
 			if($calendarWidth>=600){
 				//var planheight = 46;
-				var planheight = 42;
+				var planheight = 43;
 		}
 		var classlen = classTimeArray.length;
 		$('#calendar').css('display','none');
@@ -1231,7 +1229,7 @@ $(document).ready(function(){
 	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var planheight = 30;
 			if($calendarWidth>=600){
-				var planheight = 45;
+				var planheight = 46;
 		}
 		var offlen = offTimeArray.length;
 		console.log(offTimeArray)
@@ -1269,7 +1267,7 @@ $(document).ready(function(){
 	function classTime_Active(option){
 		var planheight = 30;
 		if($calendarWidth>=600){
-			var planheight = 42;
+			var planheight = 43;
 		}
 
 		switch(option){
@@ -1367,7 +1365,7 @@ $(document).ready(function(){
 	function offTime_Active(option){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var planheight = 30;
 			if($calendarWidth>=600){
-				var planheight = 45;
+				var planheight = 46;
 		}
 
 		switch(option){
