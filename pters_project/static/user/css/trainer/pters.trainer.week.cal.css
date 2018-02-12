@@ -59,7 +59,7 @@ body{
 	background-color: #ffffff;
 	height: 105px;
 	padding-top: 50px;
-	max-width: 1200px;
+	max-width: 1080px;
 }
 
 .weekNum{
@@ -329,6 +329,7 @@ img,a,div,span,p{
 }
 
 #monthText{
+	display: block;
 	color : #fe4e65;
 	font-size: 19.5px;
 	font-weight: 700;
@@ -339,12 +340,21 @@ img,a,div,span,p{
 }
 
 #yearText{
+	display: block;
 	color : #ffffff;
 	font-size: 15px;
 	width: 100%;
 	text-align: center;
 	position: absolute;
 	top: 10%;
+}
+
+#menuName{
+	display: none;
+}
+
+#menuDescription{
+	display: none;
 }
 
 #ymdText{
@@ -372,6 +382,10 @@ img,a,div,span,p{
 	z-index: -1;
 }
 
+#hidetoggle{
+	display: none;
+}
+
 #gapbox{
 	width: 100%;
 	height: 0px;
@@ -380,8 +394,6 @@ img,a,div,span,p{
 	overflow-y: hidden;
 	background-color: #ffffff;
 }
-
-
 
 
 .calendar-style{  /*week ìŠ¤íƒ€ì¼í•˜ìœ„ */
@@ -461,7 +473,7 @@ img,a,div,span,p{
 	padding-left: 0;
 	height: 90%;
 	z-index: 3;
-	max-width: 1200px;
+	max-width: 1080px;
 }
 
 
@@ -469,7 +481,6 @@ img,a,div,span,p{
 .classTime{
 	position: absolute;
 	top: 0px;
-	left: 2px;
 	width: 100%;
 	background: #fbf3bd;
 	z-index: 100;
@@ -497,7 +508,6 @@ img,a,div,span,p{
 .offTime{
 	position: absolute;
 	top: 0px;
-	left: 2px;
 	width: 100%;
 	background: #e2e2e2;
 	opacity: 0.9;
@@ -703,7 +713,26 @@ img,a,div,span,p{
 		position: relative;
 		margin:0 auto;
 		padding-top: 220px;
+		margin-bottom: 60px;
 	}
+
+	#hidetoggle{
+		display: block;
+		position: fixed;
+		text-align: right;
+		padding-top: 75px;
+		color: #f4f4f4;
+		font-size: 12px;
+		font-weight: 300;
+		z-index: 10;
+		cursor: pointer;
+	}
+		#hidetoggle img{
+			width: 7px;
+			margin-bottom: 2px;
+			margin-right: 8px;
+			margin-left: 10px;
+		}
 
 	#ymdText-pc{
 		display: block;
@@ -741,8 +770,12 @@ img,a,div,span,p{
 		display: none;
 	}
 
+	.time-row{
+		height: 46px;
+	}
+
 	.hour{
-		height: 45px;
+		height: 46px;
 	}
 
 	.weekNum{
@@ -758,7 +791,7 @@ img,a,div,span,p{
 	#timeIndicatorBar{
 		display: block;
 		position: absolute;
-		width: 99%;
+		width: 100%;
 		height: 1px;
 		border-top: 1px solid #282828;
 		z-index: 2;
@@ -766,6 +799,11 @@ img,a,div,span,p{
 
 	.classTime{
 		top: 2px;
+		left: 3px;
+	}
+
+	.offTime{
+		left: 3px;
 	}
 
 	.classTime,.offTime,.classTime_checked{
@@ -830,11 +868,6 @@ img,a,div,span,p{
 		left: 50%;
 		padding-top: 150px;
 		transform:translateX(-50%);
-		padding-right: 20px;
-	}
-
-	.swiper-slide{
-		padding-right: 20px;
 	}
 
 
@@ -847,13 +880,35 @@ img,a,div,span,p{
 	}
 
 	#yearText{
+		display: none;
 		font-size: 26px;
 		top: 15%;
 	}
 
 	#monthText{
-		font-size:21.5px;
+		display: none;
+		font-size: 21.5px;
 		top: 60%;
+	}
+
+	#menuName{
+		display: block;
+		color : #fe4e65;
+		font-size: 24px;
+		top: 15%;
+		width: 100%;
+		text-align: center;
+		position: absolute;
+	}
+
+	#menuDescription{
+		display: block;
+		color : #ffffff;
+		font-size: 15px;
+		top: 60%;
+		width: 100%;
+		text-align: center;
+		position: absolute;
 	}
 
 	.today{
@@ -903,7 +958,6 @@ img,a,div,span,p{
 		line-height: 50px;
 		position: absolute;
 		right: 0;
-		margin-right: 20px;
 	}
 
 	.ymdText-pc-add-off{

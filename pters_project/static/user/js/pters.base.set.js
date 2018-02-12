@@ -51,8 +51,8 @@ $(document).ready(function(){
       $('.__mypage').text("My page")
    }else if(Options.language == "Korea"){
       $('.__todayplan').text("오늘 일정")
-      $('.__weekplan').text("일정표")
-      $('.__monthplan').text("달력")
+      $('.__weekplan').text("주간 일정")
+      $('.__monthplan').text("월간 일정")
       $('.__membermanage').text("회원 관리")
       $('.__workmanage').text("업무 통계")
       $('.__setting').text("서비스 설정")

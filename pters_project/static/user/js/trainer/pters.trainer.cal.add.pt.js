@@ -463,7 +463,7 @@ $(document).ready(function(){
             var planheight = 30;
             var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
             if($calendarWidth>=600){
-              var planheight = 42;
+              var planheight = 43;
             }
             var classlen = classTimeArray.length;
             //$('#calendar').css('display','none');
@@ -551,7 +551,7 @@ $(document).ready(function(){
               var planheight = 30;
               var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
               if($calendarWidth>=600){
-                var planheight = 45;
+                var planheight = 46;
               }
               var offlen = offTimeArray.length;
               //$('#calendar').css('display','none');
@@ -723,7 +723,7 @@ $(document).ready(function(){
             timeArray[i] ='<li><a data-trainingtime="'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
           }
         }
-        timeArray[offOkLen]='<li><a data-trainingtime="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>'
+        timeArray[offOkLen]='<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>'
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
       }
@@ -866,7 +866,7 @@ $(document).ready(function(){
             }
           }
         }
-         durTimeList.append('<li><a data-dur="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>')
+         durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>')
       }
 
       function addGraphIndicator(datadur){
