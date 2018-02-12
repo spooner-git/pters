@@ -480,30 +480,6 @@ a:focus, a:hover{
 }
 
 
-#float_AD{
-    display: none;
-    position: fixed;
-    top: 22%;
-    right: 0%;
-    width: 115px;
-    height: 100px;
-    background-color: #ffffff;
-    border:0.5px solid #fe4e65;
-    text-align: center;
-    cursor: pointer;
-}
-
-#float_AD p{
-    color: #fe4e65;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-#float_AD span{
-    color: #282828;
-    font-size: 12px;
-}
-
 .pclogout{
     display: none;
 }
