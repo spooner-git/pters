@@ -17,40 +17,56 @@
 {% endblock %}
 
 {% block content %}
-    <body class="loginbody" style="background-color: black;">
+    <body>
         
-
-    <div id="imageBox">
-        <!--<img src={% static "user/res/login/pterslogin.png" %} id="loginimg">
---></div>
-    <div class="logintext">
-        <div><span id="pterstext">PTERS</span> <span id="logintext">로그인</span></div>
-    </div>
-    <div class="container loginbox">
+    
+    <div class="loginbox">
+        <div class="logintext">
+            <div><span id="pterstext">PTERS</span> <span id="logintext">로그인</span></div>
+        </div>
+        <div id="loginboxbg">
+            
+        </div>
         <div>
-            <div class="">
-                <div>
-                    <form action="/trainer/login/" id="login-form" method="post">
-                        <div id="idinput">
-                            <img src={% static "user/res/login/icon-user.png" %} id="idimg">
-                            <input type="text" class="loginboxstyle form-control" name="username" placeholder="아이디" autofocus>
-                        </div>
-                        <div id="pwinput" style="margin-top:5%;">
-                            <img src={% static "user/res/login/icon-lock.png" %} id="pwimg">
-                            <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
-                        </div>
-                        <div class="checkbox" style="margin-top:15px;margin-left:15px;">
-                            <label><input type="checkbox" value="login">다음부터 자동 로그인</label>
-                        </div>
-                        <div>
-                            <button type="submit" class="form-control btn btn-primary">로그인</button>
-                        </div>
-                        <input type="hidden" name="next_page" value = '{% url 'home' %}'>
-                    </form>
+            <form action="/trainer/login/" id="login-form" method="post">
+                <div id="idinput">
+                    <img src={% static "user/res/login/icon-user.png" %} id="idimg">
+                    <input type="text" class="loginboxstyle form-control" name="username" placeholder="아이디" autofocus>
                 </div>
-           </div>
+                <div id="pwinput" style="margin-top:5%;">
+                    <img src={% static "user/res/login/icon-lock.png" %} id="pwimg">
+                    <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
+                </div>
+                <div class="checkbox" style="margin-top:15px;margin-left:27px;">
+                    <label><input type="checkbox" value="login">다음부터 자동 로그인</label>
+                </div>
+                <div>
+                    <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
+                </div>
+                <div class="innerbox">
+                    <div id="registerButton">회원 가입</div><div id="findIDPW">ID/PW 찾기</div>
+                </div>
+                <input type="hidden" name="next_page" value = '{% url 'home' %}'>
+            </form>
         </div>
     </div>
+
+    <footer class="fixfooter">
+            <div class="bottomfooter1">
+                <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            </div>
+            <div class="bottomfooter2">
+                <p>스푸너(SPOONER) 통신판매업 신고 : 제 2017-서울동작-0672호, 사업자등록번호 : 463-56-00284, 대표자 : OOO,XXX</p>
+                <p>Tel : xxxx-xxxx, Fax : xxxx-xxxx, 주소 : 서울특별시 동작구 신대방동 보라매로 5가길 7 캐릭터그린빌 오피스텔 x층 XXX호</p>
+                <p>이용 및 제휴문의 : skkim@spooner.co.kr</p>
+                <p>- </p>
+                <p>Copyright(C) SPOONER All rights reserved.</p>
+            </div>
+        </footer>
 {% endblock %}
 
 {% block local_js_footer %}

@@ -397,18 +397,13 @@ a:focus, a:hover{
 }
 
 
-
-
-
-
-
 /*PC버전 상단네비바*/
 
 .centermenu{
     position: relative;
     height: 100%;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1080px;
     margin:0 auto;   
 }
 
