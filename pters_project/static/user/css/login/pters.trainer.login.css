@@ -1,10 +1,13 @@
 body{
-	background-image: url(/static/user/res/login/pterslogin.png);
+	padding-top: 0px;
+	overflow-y: hidden;
+	background-image: url("/static/user/res/main/bg-image.png");
 	background-repeat: no-repeat;
-	background-position: center;
-	background-size: contain;
+	background-position-x:center;
+	background-position-y:center;
+	background-size:100%;
+	background-color: black !important;
 }
-
 
 #loginimg{
 	position: fixed;
@@ -17,6 +20,18 @@ body{
 	margin-right: 2%;
 }
 
+#loginboxbg{
+		display: block;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background-color: #282828;
+		opacity: 0.6;
+		z-index: -1;
+	}
+
 #pterstext{
 	color: #fe4e65;
 }
@@ -27,19 +42,57 @@ body{
 
 .loginbox{
 	position: absolute;
-	top: 45%;
-	width: 100% !important;
+	width: 100%;
+	max-width: 500px;
+	height: 270px;
+	padding: 23px 0px 20px 0px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
 }
 
-.loginbox div{
+#login-form div{
 	width: 300px;
 	margin: 0 auto;
 	padding-left: 0;
+	text-align: center;
 }
+
+#login-form button{
+	margin-top: 20px !important;
+}
+
+
+.innerbox{
+	width: 100%;
+	height: 28px;
+}
+	#registerButton{
+		display: inline-block;
+		color: #ffffff;
+		border: 1px solid #ffffff;
+		width: 45% !important;
+		margin-top: 10px !important;
+		margin-right: 29px !important;
+		cursor: pointer;
+		height: 100%;
+		padding-top: 3px;
+	}
+	#findIDPW{
+		display: inline-block;
+		color: #ffffff;
+		border: 1px solid #ffffff;
+		width: 45% !important;
+		margin-top: 10px !important;
+		cursor: pointer;
+		height: 100%;
+		padding-top: 3px;
+	}
+
 
 .logintext{
 	position: absolute;
-	top: 25%;
+	top: -30px;
 	width: 100%;
 }
 
@@ -59,8 +112,16 @@ body{
 	border-radius: 0px !important;
 	width: 90% !important;
 	display: inline !important;
+	color: #ffffff !important;
+	font-size: 18px !important;
+	font-weight: bold;
 }
 
+#loginButton{
+	color:#ffffff;
+	font-size: 18px !important;
+	font-weight: bold;
+}
 
 
 /*Bootstrap 상속 수정*/
@@ -95,8 +156,82 @@ body{
 	margin-top: 50px !important;
 }
 
-.form-control{
-	color: #ffffff !important;
-	font-size: 15px !important;
+.fixfooter{
+	display: none;
 }
 
+
+
+@media(min-width: 600px){
+	body{
+		background-image: url("/static/user/res/main/bg-image-pc-login.png");
+		background-size: auto;
+	}
+
+	.logintext{
+		top: -45px;
+	}
+
+	#pterstext{
+		font-size: 28px;
+	}
+
+	#logintext{
+		font-size: 22px;
+	}
+
+	#loginboxbg{
+		display: block;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background-color: #ffffff;
+		opacity: 0.15;
+		z-index: -1;
+	}
+
+	.loginboxstyle{
+		color: black !important;
+	}
+
+	.fixfooter{
+		position: absolute;
+	    display: block;
+	    background: rgba(40, 40, 40, 0.50);
+	    width: 100%;
+	    left: 50%;
+	    transform: translateX(-50%);
+	    bottom: 0;
+	}
+
+	.bottomfooter1{
+	    color: #7d7d7d;
+	    color:#ffffff;
+	    font-size: 12px;
+	    font-weight: 400;
+	    width: 535px;
+	    max-width: 1000px;
+	    margin:0 auto;
+	    height: 50px;
+	}
+
+	.bottomfooter1 span{
+	    line-height: 50px;
+	    margin-left: 0px;
+	}
+
+	.bottomfooter2{
+	    width: 535px;
+	    max-width: 1000px;
+	    margin:0 auto;
+	    color: #282828;
+	    color: #ffffff;
+	    font-size: 10px;
+	}
+
+	.bottomfooter2 p{
+	    margin-bottom:1px;
+	}
+}
