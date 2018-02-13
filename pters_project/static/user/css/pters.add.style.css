@@ -55,6 +55,11 @@ ul a{
 	margin-bottom: 50px;
 }
 
+#memberBirthMonth, #memberBirthDate{
+	max-height: 230px;
+	overflow-y: auto;
+}
+
 .toggleBtnWrap{
 	display: inline-block;
 	width: 40px;

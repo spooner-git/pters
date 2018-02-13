@@ -261,6 +261,7 @@ th{
 }
 
 #float_btn{  /*2017.10.2*/
+	display: block;
 	position: fixed;
 	width: 50px;
 	height: 50px;
@@ -366,6 +367,10 @@ th{
 	width: 0;
 }
 
+.ymdText-pc-add{
+	display: none;
+}
+
 @media(min-width: 600px){
 
 	._regcount{
@@ -418,6 +423,31 @@ th{
 
 	#page_addmember,#memberInfoPopup{
 		top: 75px;
+	}
+
+	.ymdText-pc-add{
+		display: inline;
+		line-height: 33px;
+		position: relative;
+		margin-left: 10px;
+	}
+
+	.ymdText-pc-add-member{
+		display: inline;
+		margin-left: 5px;
+		padding:3px 13px 3px 13px;
+		color: #fe4e65;
+		font-size: 14px;
+		border:1px solid #cccccc;
+		cursor: pointer;
+	}
+		.ymdText-pc-add-member:hover{
+			background-color: #fe4e65;
+			color: #ffffff;
+		}
+
+	#float_btn{
+		display: none !important;
 	}
 
 }
