@@ -42,7 +42,6 @@ $(document).ready(function(){
           $('html, body').css('overflow-y','hidden')
         }
     })
- 
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
     $('#float_btn').click(function(){
@@ -56,6 +55,15 @@ $(document).ready(function(){
       if($('body').width()<600){
         $('#page_managemember').hide();
       }
+    })
+
+    $('.ymdText-pc-add').click(function(){
+      $('#page_addmember').fadeIn('fast')
+      $('#shade3').fadeIn('fast');
+      $('#uptext2').text('신규 회원 등록')
+      $('#page-base').fadeOut();
+      $('#page-base-addstyle').fadeIn();
+      scrollToIndicator($('#page_addmember'))
     })
 
     $('#upbutton-x,.cancelBtn').click(function(){
@@ -83,8 +91,8 @@ $(document).ready(function(){
         $('#page-base-addstyle').fadeOut();
 
         $('#page_addmember input,#memberDue_add_2').val("")
-        $('#memberBirthMonthSelected button').val("").text("")
-        $('#memberBirthDateSelected button').val("").text("")
+        $('#memberBirthMonthSelected button').val("").html('<span style="color:#cccccc">월</span>')
+        $('#memberBirthDateSelected button').val("").html('<span style="color:#cccccc">일</span>')
 
         $('._due div.checked').removeClass('checked ptersCheckboxInner')
         $('._count div.checked').removeClass('checked ptersCheckboxInner')

@@ -60,6 +60,9 @@
       <div style="font-size:14px;position: relative;">
         <span class="memberAlign">회원 정렬 기준</span><span id="currentMemberNum" class="memberNum"></span><span id="finishMemberNum" class="memberNum"></span>
       </div>
+      <div class="ymdText-pc-add">
+          <div class="ymdText-pc-add-member">회원 추가</div>
+       </div>
       <div class="dropdown alignSelect">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택</button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
@@ -258,12 +261,12 @@
 
             <div class="ptaddbox form-group">
                 <label for="memberBirthSex" class="ptaddboxtext">
-                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 부가정보
+                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 부가정보 (생년월일/성별)
                 </label>
                 <div id="memberBirth" class="dropdown pters_input_custom">
                     <input type="text" class="dropdown form-control" id="memberBirthYear" name="birthyear" placeholder="4자리 연도입력" maxlength="4">
                     <div id="memberBirthMonthSelected" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthmonth"></button>
+                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthmonth"><span style="color:#cccccc">월</span></button>
                         <ul id="memberBirthMonth" class="dropdown-menu dropdownlist">
                             <li><a value="1">1월</a></li>
                             <li><a value="2">2월</a></li>
@@ -280,7 +283,7 @@
                         </ul>
                     </div>
                     <div id="memberBirthDateSelected" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthdate"></button>
+                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthdate"><span style="color:#cccccc">일</span></button>
                         <ul id="memberBirthDate" class="dropdown-menu dropdownlist">
                             
                         </ul>
