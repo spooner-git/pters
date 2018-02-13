@@ -1,0 +1,122 @@
+body{
+	margin: 0;
+	background-color: #282828;
+}
+
+.registerbox{
+	background-color: #ffffff;
+	border: 5px solid #fe4e65;
+	max-width: 800px;
+	padding: 30px;
+	margin: 0 auto;
+	margin-bottom: 50px;
+	margin-top: 50px;
+}
+	.registerbox_label{
+		font-weight: bold;
+		font-size: 21px;
+		margin-top: 0;
+		margin-bottom: 40px;
+	}
+		.registerbox_label span{
+			color: #fe4e65;
+		}
+	
+	.outerbox{
+		margin-top: 15px;
+	}
+		.outerbox input{
+			line-height: 21px;
+			width: 170px;
+		}
+
+	.selector_button{
+		background-color: #ffffff;
+		border: 1px solid rgb(238, 238, 238);
+		line-height: 23px;
+	}
+		.selector_button_checked{
+			background-color: #fe4e65;
+			color: #ffffff;
+		}
+
+	.pw_confirm{
+		display: none;
+		font-size: 12px;
+	}
+
+	.register_button{
+		margin-left: 5px;
+		line-height: 21px;
+	}
+
+	.login_dropdown{
+		height: 27px;
+	}
+
+	.registerbox_smalllabel{
+		margin:0 auto;
+		width: 100%;
+		margin-top: 25px;
+		margin-bottom: 5px;
+	}
+
+	.contractread{
+		width: 100%;
+		margin: 0 auto;
+		height: 200px;
+		font-size: 11px;
+		border: 1px solid #282828;
+		overflow-y: scroll;
+	}
+		.contractread_check{
+			font-size: 13px;
+		}
+
+.buttongroup{
+	text-align: center;
+	margin-top: 30px;
+}
+
+
+
+.fixfooter{
+	display: none;
+}
+
+@media(min-width: 600px){
+	.fixfooter{
+		position: relative;
+	    display: block;
+	    background: rgba(40, 40, 40, 0.50);
+	    width: 100%;
+	    left: 50%;
+	    transform: translateX(-50%);
+	    bottom: 0;
+	}
+		.bottomfooter1{
+		    color: #7d7d7d;
+		    color:#ffffff;
+		    font-size: 12px;
+		    font-weight: 400;
+		    width: 535px;
+		    max-width: 1000px;
+		    margin:0 auto;
+		    height: 50px;
+		}
+			.bottomfooter1 span{
+			    line-height: 50px;
+			    margin-left: 0px;
+			}
+		.bottomfooter2{
+		    width: 535px;
+		    max-width: 1000px;
+		    margin:0 auto;
+		    color: #282828;
+		    color: #ffffff;
+		    font-size: 10px;
+		}
+			.bottomfooter2 p{
+			    margin-bottom:1px;
+			}
+}
