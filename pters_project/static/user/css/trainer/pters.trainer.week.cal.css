@@ -57,8 +57,8 @@ body{
 	position: fixed;
 	z-index: 4;
 	background-color: #ffffff;
-	height: 105px;
-	padding-top: 50px;
+	height: 60px;
+	top: 100px;
 	max-width: 1080px;
 }
 
@@ -94,14 +94,21 @@ body{
 
 /***************************레이아웃 변경 검토*********************************/
 
-
-
 #calendar{
+	position: relative;
+	width: 100%;
+	top: 110px;
+	background-color: transparent;
+	padding-right: 0;
+	padding-left: 0;
+	height: 90%;
+	z-index: 3;
+	max-width: 1080px;
 	height: 100% !important;
-	background-color: #f4f4f4;
 	overflow-y: hidden;
 	-webkit-overflow-scrolling:touch;
 }
+
 
 .swiper-container{
 	overflow-y: hidden;
@@ -464,17 +471,7 @@ img,a,div,span,p{
 
 
 
-#calendar{
-	position: relative;
-	width: 100%;
-	padding-top: 104px;
-	background-color: transparent;
-	padding-right: 0;
-	padding-left: 0;
-	height: 90%;
-	z-index: 3;
-	max-width: 1080px;
-}
+
 
 
 
@@ -712,7 +709,7 @@ img,a,div,span,p{
 	#calendar{
 		position: relative;
 		margin:0 auto;
-		padding-top: 220px;
+		padding-top: 110px;
 		margin-bottom: 60px;
 	}
 
@@ -867,7 +864,7 @@ img,a,div,span,p{
 	#week{
 		position: fixed;
 		left: 50%;
-		padding-top: 150px;
+		padding-top: 115px;
 		transform:translateX(-50%);
 	}
 

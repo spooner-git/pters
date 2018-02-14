@@ -253,11 +253,10 @@ img,a,div,span,p{
 	position: fixed; /*2017.10.02*/
 	width: 100%;
 	height: 72.5%;
-	background-color: #f4f4f4;
+	background-color: #ffffff;
 	padding-left: 20px;
 	padding-right:20px;
 	z-index: 3;
-
 	top: 150px;
 }
 

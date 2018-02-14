@@ -3,15 +3,6 @@ $(document).ready(function(){
    	  		$(this).addClass("active").siblings().removeClass("active");
 		});
 
-/*
-      $(document).on('click',".dropdown-menu li a",function(){
-      		//$(".dropdown .btn:first-child").text($(this).text());
-      		//$(".dropdown .btn:first-child").val($(this).text());
-  		    $(this).parents('ul').siblings('button').text($(this).text());
-          $(this).parents('ul').siblings('button').val($(this).text());
-          console.log($(this).val(), $(this).attr('value'))
-       });
-*/  
     $('.alignSelect li a').click(function(){
         $('.alignSelect button').text($(this).text())
     })
@@ -68,6 +59,9 @@ $(document).ready(function(){
 
     $('#upbutton-x,.cancelBtn').click(function(){
       if($('#memberInfoPopup').css('display')=='block'){ //회원정보팝업 띄웠을때 x눌렀을 경우
+        if($('body').width()<600){
+          $('#page_managemember').show();
+        }
         $('#page-base').fadeIn('fast');
         $('#page-base-addstyle').fadeOut('fast');
         $('#memberInfoPopup').fadeOut('fast')
@@ -167,16 +161,18 @@ $(document).ready(function(){
       $('#page-base').fadeOut('fast');
       $('#page-base-addstyle').fadeIn('fast');
       var name = $(this).attr('data-name');
-      console.log(name);
-      $('#memberName_info').attr('value',name);
-      $('#memberPhone_info').attr('value',DB[name].phone).text(DB[name].phone);
-      $('#memberCount_info').attr('value',DB[name].count);
-      $('#memberEmail_info').attr('value',DB[name].email);
-      $('#datepicker_info').attr('value',DB[name].start);
-      $('#datepicker2_info').attr('value',DB[name].end);
+      $('#memberName_info').val(name)
+      $('#memberPhone_info').val(DB[name].phone);
+      $('#memberCount_info').val(DB[name].count);
+      $('#memberEmail_info').val(DB[name].email);
+      $('#datepicker_info').val(DB[name].start);
+      $('#datepicker2_info').val(DB[name].end);
       $('#memberInfoPopup').fadeIn('fast');
       $('#shade3').fadeIn('fast');
       scrollToIndicator($('#page_managemember'));
+      if($('body').width()<600){
+        $('#page_managemember').hide();
+      }
     });
 
     $(document).on('click','td._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
@@ -184,16 +180,19 @@ $(document).ready(function(){
       $('#page-base').fadeOut('fast');
       $('#page-base-addstyle').fadeIn('fast');
       var name = $(this).attr('data-name');
-      $('#memberName').attr('value',name);
-      $('#memberPhone').attr('value',DBe[name].phone);
-      $('#memberCount').attr('value',DBe[name].count);
-      $('#memberEmail').attr('value',DBe[name].email);
-      $('#datepicker').attr('value',DBe[name].start);
-      $('#datepicker2').attr('value',DBe[name].end);
+      $('#memberName').val(name);
+      $('#memberPhone').val(DBe[name].phone);
+      $('#memberCount').val(DBe[name].count);
+      $('#memberEmail').val(DBe[name].email);
+      $('#datepicker').val(DBe[name].start);
+      $('#datepicker2').val(DBe[name].end);
       $('#memberInfoPopup').fadeIn('fast');
       $('#shade3').fadeIn('fast');
       scrollToIndicator($('#page_managemember'));
       $('html,body').scrollTop();
+      if($('body').width()<600){
+        $('#page_managemember').hide();
+      }
     });
 
     $("#datepicker_info").datepicker({

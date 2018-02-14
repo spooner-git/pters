@@ -609,16 +609,16 @@
               if($(this).attr('data-type') == '0'){
                 $(this).css({'padding-top':'10px','color':'#282828'}).attr('data-type','1')
                 $(this).find('img').css('-webkit-transform','rotate(-90deg)')
-                $('#ymdText-pc').css('padding-top','30px')
-                $('#week').css('padding-top','80px')
-                $('#calendar').css('padding-top','150px')
+                $('#ymdText-pc').css({'padding-top':'30px','background':'#ffffff'})
+                $('#week').css({'padding-top':'40px'})
+                $('#calendar').css('padding-top','35px')
                 $('#ymdText').css('display','none')
               }else{
                 $(this).css({'padding-top':'75px','color':'#f4f4f4'}).attr('data-type','0')
                 $(this).find('img').css('-webkit-transform','rotate(90deg)')
-                $('#ymdText-pc').css('padding-top','100px')
-                $('#week').css('padding-top','150px')
-                $('#calendar').css('padding-top','220px')
+                $('#ymdText-pc').css({'padding-top':'100px','background':'transparent'})
+                $('#week').css({'padding-top':'115px'})
+                $('#calendar').css('padding-top','110px')
                 $('#ymdText').css('display','block')
               }
             })
