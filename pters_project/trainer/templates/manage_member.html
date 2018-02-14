@@ -18,6 +18,7 @@
     
 </div>
 
+
 <div class="confirmPopup">
   <div class="KRtext confirmText">정말 회원을 삭제하시겠습니까?</div>
   <div class="JPtext confirmText">日程を削除しますか</div>
@@ -34,8 +35,7 @@
   </div>
 </div>
 
-<div id="shade">
-</div>
+
 <div id="shade3">
 </div>
   <!--플로팅 버튼-->
@@ -109,8 +109,9 @@
       </table>
     </div> 
 
+</div>
 
-    <div id="memberInfoPopup" class="infopopup wrap">
+<div id="memberInfoPopup" class="infopopup wrap">
 
       <div class="ptaddbox" id="pcaddpopup">
         <span>회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
@@ -127,7 +128,7 @@
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="text" class="dropdown form-control" id="memberName_info" name="name" placeholder="회원분의 성함을 입력해주세요." readonly>
+                    <input type="text" class="dropdown form-control" id="memberName_info" name="name" readonly>
                 </div>
             </div>
 
@@ -136,7 +137,7 @@
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 부가정보
                 </label>
                 <div id="memberBirth_info" class="dropdown pters_input_custom">
-                    <input type="text" class="dropdown form-control" id="memberBirthYear_info" name="birthyear" placeholder="4자리 연도입력" maxlength="4" readonly>
+                    <input type="text" class="dropdown form-control" id="memberBirthYear_info" name="birthyear" maxlength="4" readonly>
                     <div id="memberBirthMonthSelected_info" class="dropdown">
                         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthmonth"></button>
                         <ul id="memberBirthMonth_info" class="dropdown-menu dropdownlist">
@@ -172,7 +173,7 @@
                     <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="tel" class="dropdown form-control" id="memberPhone_info" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." readonly>
+                    <input type="tel" class="dropdown form-control" id="memberPhone_info" name="phone" required="required" readonly>
                 </div>
             </div>
 
@@ -181,7 +182,7 @@
                     <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" placeholder="등록 횟수를 입력해주세요" readonly>
+                    <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
                 </div>
             </div>
 
@@ -190,7 +191,7 @@
                     <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail(아이디)
                 </label>
                 <div class="dropdown pters_input_custom">
-                    <input type="email" class="dropdown form-control" id="memberEmail_info" name="email" placeholder="이메일은 회원님의 아이디로 사용됩니다." readonly>
+                    <input type="email" class="dropdown form-control" id="memberEmail_info" name="email" readonly>
                 </div>
             </div>
 
@@ -219,12 +220,6 @@
             </div>
         </form>
     </div>
-</div>
-
-
-
-
-
 
 <div id="page_addmember" class="wrap"> 
 
