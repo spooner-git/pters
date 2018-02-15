@@ -22,28 +22,28 @@
               <div class='center_box_plan'>
                 <p></p>
               </div>
-              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_day' %}" class="center_box_num">{{ today_schedule_val }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
+              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_day' %}" class="center_box_num">{{ today_schedule_num }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
             </div>
           </div>
           <div class="lower_box wrap" onclick="location.href='{% url 'trainer:member_manage' %}'">
             <div class="lower_box_child" style="left:4.17%;">
               <div class="lower_box_child_inner">
               <div class="KRtext">총 회원</div><div class="JPtext">総会員</div><div class="ENtext">Total Member</div>
-              <a href="" id='total_member' class='lower_box_num'>{{trainer_member_count}}</a>
+              <a href="" id='total_member' class='lower_box_num'>{{total_member_num}}</a>
               <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
               </div>
             </div>
             <div class="lower_box_child" style="left:35%;">
               <div class="lower_box_child_inner">
-              <div class="KRtext">일정 변경</div><div class="JPtext">日程変更</div><div class="ENtext">--</div>
-              <a href="" id='request_num' class='lower_box_num'>{{ today_schedule_mod_val }}</a>
+              <div class="KRtext">신규 회원</div><div class="JPtext">日程変更</div><div class="ENtext">--</div>
+              <a href="" id='request_num' class='lower_box_num'>{{ new_member_num }}</a>
               <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
               </div>
             </div>
             <div class="lower_box_child" style="left:65.83%;">
               <div class="lower_box_child_inner">
               <div class="KRtext">종료 임박</div><div class="JPtext">終了切迫</div><div class="ENtext">Need re-contract</div>
-              <a href="" id='finish_member' class='lower_box_num'>{{ trainer_end_member_count }}</a>
+              <a href="" id='finish_member' class='lower_box_num'>{{ to_be_end_member_num }}</a>
               <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
               </div>
             </div>

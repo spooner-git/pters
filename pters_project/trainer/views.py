@@ -34,42 +34,52 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+
         error = None
         trainer_class = None
+
+        today = datetime.date.today()
+        one_day_after = today + datetime.timedelta(days=1)
+        fourteen_days_ago = today - datetime.timedelta(days=14)
+
+        today_schedule_num = 0
+        new_member_num = 0
+
+        context['total_member_num'] = 0
+        context['to_be_end_member_num'] = 0
+        context['today_schedule_num'] = 0
+        context['new_member_num'] = 0
+
         try:
             trainer_class = ClassTb.objects.get(member=self.request.user.id)
         except ObjectDoesNotExist:
             error = '강사 PT 정보가 존재하지 않습니다'
 
-        context['trainer_member_count'] = 0
-
         if error is None :
-            context['trainer_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
+            #남은 횟수 1개 이상인 경우 - 180215 hk.kim
+            context['total_member_num'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
                                                                        lecture_rem_count__gte=1).count()
-            context['trainer_end_member_count'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
+            #남은 횟수 1개 이상 3개 미만인 경우 - 180215 hk.kim
+            context['to_be_end_member_num'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
                                                                            lecture_rem_count__gte=1,
                                                                            lecture_rem_count__lte=3).count()
 
-        today_time = datetime.datetime.now()
-        today_start_time = today_time.strftime('%Y-%m-%d 00:00:00.000000')
-        today_end_time = today_time.strftime('%Y-%m-%d 23:59:59.999999')
-        sum_val = 0
-        sum_mod_val = 0
         if error is None:
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
 
             for lecture in month_lecture_data:
-                sum_val = sum_val+LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                   start_dt__gte=today_start_time,
-                                                                   start_dt__lte=today_end_time,
+                today_schedule_num += LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+                                                                   start_dt__gte=today,
+                                                                   start_dt__lt=one_day_after,
                                                                    en_dis_type='1',use='1').count()
-                sum_mod_val = sum_mod_val+LogTb.objects.filter(external_id=lecture.member_id,
-                                                               reg_dt__gte=today_start_time,
-                                                               reg_dt__lte=today_end_time,
-                                                               log_type='LS03').count()
+                if lecture.start_date >= fourteen_days_ago:
+                    new_member_num += 1
 
-        context['today_schedule_val'] = sum_val
-        context['today_schedule_mod_val'] = sum_mod_val
+        context['today_schedule_num'] = today_schedule_num
+        context['new_member_num'] = new_member_num
+
+        if error is not None:
+            messages.info(self.request, error)
 
         return context
 
@@ -100,9 +110,10 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_lecture_data_member = []
         daily_lecture_data_id = []
         daily_schedule_finish = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=14)
-        after_dt = today_dt + datetime.timedelta(days=14)
+
+        today = datetime.date.today()
+        fourteen_days_ago = today - datetime.timedelta(days=14)
+        fifteen_days_after = today + datetime.timedelta(days=15)
 
         #sk Test 추가 171117
         if error is None :
@@ -120,8 +131,8 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1')
+                                                              en_dis_type='0', start_dt__gte=fourteen_days_ago,
+                                                              start_dt__lt=fifteen_days_after, use='1')
             for month_class in month_class_data:
                 class_schedule_data.append(month_class.class_schedule_id)
                 daily_off_data_start_date.append(month_class.start_dt)
@@ -132,17 +143,9 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for lecture in month_lecture_data:
                 member_data = MemberTb.objects.get(member_id=lecture.member_id)
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt, use='1')
+                                                                            en_dis_type='1', start_dt__gte=fourteen_days_ago,
+                                                                            start_dt__lt=fifteen_days_after, use='1')
                 for month_lecture in lecture.lecture_schedule:
-                    #month_lecture.data = month_lecture.start_dt.timetuple()
-                    #result = month_lecture.end_dt-month_lecture.start_dt
-                    #result_hour = int(result.seconds/60/60)
-                    #daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
-                    #                  + '_' + str(result_hour) + '_' + member_data.name)
-                    #daily_data.append(str(month_lecture.data.tm_year)+'_'+str(month_lecture.data.tm_mon)+'_'
-                    #                  +str(month_lecture.data.tm_mday)+'_'+str(month_lecture.data.tm_hour)+'_'
-                    #                  +str(format(month_lecture.data.tm_min,'02d'))+'_'+str(result_hour)+'_'+member_data.name)
                     lecture_schedule_data.append(month_lecture.lecture_schedule_id)
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
@@ -195,9 +198,10 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_lecture_data_member = []
         daily_lecture_data_id = []
         daily_schedule_finish = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=14)
-        after_dt = today_dt + datetime.timedelta(days=14)
+
+        today = datetime.date.today()
+        fourteen_days_ago = today - datetime.timedelta(days=14)
+        fifteen_days_after = today + datetime.timedelta(days=15)
 
         # sk Test 추가 171117
         if error is None:
@@ -215,8 +219,8 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1')
+                                                              en_dis_type='0', start_dt__gte=fourteen_days_ago,
+                                                              start_dt__lt=fifteen_days_after, use='1')
             for month_class in month_class_data:
                 class_schedule_data.append(month_class.class_schedule_id)
                 daily_off_data_start_date.append(month_class.start_dt)
@@ -227,8 +231,8 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for lecture in month_lecture_data:
                 member_data = MemberTb.objects.get(member_id=lecture.member_id)
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt, use='1')
+                                                                            en_dis_type='1', start_dt__gte=fourteen_days_ago,
+                                                                            start_dt__lt=fifteen_days_after, use='1')
                 for month_lecture in lecture.lecture_schedule:
                     # month_lecture.data = month_lecture.start_dt.timetuple()
                     # result = month_lecture.end_dt-month_lecture.start_dt
@@ -279,9 +283,10 @@ class PtAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_off_data_end_date = []
         daily_lecture_data_start_date = []
         daily_lecture_data_end_date = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=1)
-        after_dt = today_dt + datetime.timedelta(days=14)
+
+        today = datetime.date.today()
+        one_day_ago = today - datetime.timedelta(days=1)
+        fifteen_days_after = today + datetime.timedelta(days=15)
 
         if error is None :
             context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
@@ -297,8 +302,8 @@ class PtAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1')
+                                                              en_dis_type='0', start_dt__gte=one_day_ago,
+                                                              start_dt__lt=fifteen_days_after, use='1')
             for month_class in month_class_data:
                 daily_off_data_start_date.append(month_class.start_dt)
                 daily_off_data_end_date.append(month_class.end_dt)
@@ -307,8 +312,8 @@ class PtAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
             for lecture in month_lecture_data:
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt, use='1')
+                                                                            en_dis_type='1', start_dt__gte=one_day_ago,
+                                                                            start_dt__lt=fifteen_days_after, use='1')
                 for month_lecture in lecture.lecture_schedule:
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
@@ -348,9 +353,9 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_lecture_data_member = []
         daily_lecture_data_id = []
         daily_schedule_finish = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=14)
-        after_dt = today_dt + datetime.timedelta(days=14)
+        today = datetime.date.today()
+        fourteen_days_ago = today - datetime.timedelta(days=14)
+        fifteen_days_after = today + datetime.timedelta(days=15)
 
         #sk Test 추가 171117
         if error is None :
@@ -369,17 +374,9 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1')
+                                                              en_dis_type='0', start_dt__gte=fourteen_days_ago,
+                                                              start_dt__lt=fifteen_days_after, use='1')
             for month_class in month_class_data:
-                #month_class.data = month_class.start_dt.timetuple()
-                #result = month_class.end_dt - month_class.start_dt
-                #result_hour = int(result.seconds / 60 / 60)
-                # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
-                #                  + '_' + str(result_hour) + '_' + member_data.name)
-                #daily_off_data.append(str(month_class.data.tm_year) + '_' + str(month_class.data.tm_mon) + '_'
-                #                      + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
-                #                      + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
                 class_schedule_data.append(month_class.class_schedule_id)
                 daily_off_data_start_date.append(month_class.start_dt)
                 daily_off_data_end_date.append(month_class.end_dt)
@@ -389,18 +386,9 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for lecture in month_lecture_data:
                 member_data = MemberTb.objects.get(member_id=lecture.member_id)
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt, use='1')
+                                                                            en_dis_type='1', start_dt__gte=fourteen_days_ago,
+                                                                            start_dt__lt=fifteen_days_after, use='1')
                 for month_lecture in lecture.lecture_schedule:
-                    #month_lecture.data = month_lecture.start_dt.timetuple()
-                    #result = month_lecture.end_dt - month_lecture.start_dt
-                    #result_hour = int(result.seconds / 60 / 60)
-                    # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
-                    #                  + '_' + str(result_hour) + '_' + member_data.name)
-                    #daily_data.append(str(month_lecture.data.tm_year) + '_' + str(month_lecture.data.tm_mon) + '_'
-                    #                  + str(month_lecture.data.tm_mday) + '_' + str(month_lecture.data.tm_hour) + '_'
-                    #                  + str(format(month_lecture.data.tm_min, '02d')) + '_' + str(result_hour) + '_'
-                    #                  + member_data.name)
                     lecture_schedule_data.append(month_lecture.lecture_schedule_id)
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
@@ -454,9 +442,9 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_lecture_data_member = []
         daily_lecture_data_id = []
         holiday = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=14)
-        after_dt = today_dt + datetime.timedelta(days=14)
+        today = datetime.date.today()
+        fourteen_days_ago = today - datetime.timedelta(days=14)
+        fifteen_days_after = today + datetime.timedelta(days=15)
 
         #sk Test 추가 171117
         if error is None :
@@ -475,17 +463,9 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1')
+                                                              en_dis_type='0', start_dt__gte=fourteen_days_ago,
+                                                              start_dt__lt=fifteen_days_after, use='1')
             for month_class in month_class_data:
-                #month_class.data = month_class.start_dt.timetuple()
-                #result = month_class.end_dt - month_class.start_dt
-                #result_hour = int(result.seconds / 60 / 60)
-                # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
-                #                  + '_' + str(result_hour) + '_' + member_data.name)
-                #daily_off_data.append(str(month_class.data.tm_year) + '_' + str(month_class.data.tm_mon) + '_'
-                #                      + str(month_class.data.tm_mday) + '_' + str(month_class.data.tm_hour) + '_'
-                #                      + str(format(month_class.data.tm_min, '02d')) + '_' + str(result_hour) + '_OFF')
                 class_schedule_data.append(month_class.class_schedule_id)
                 daily_off_data_start_date.append(month_class.start_dt)
                 daily_off_data_end_date.append(month_class.end_dt)
@@ -495,27 +475,15 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for lecture in month_lecture_data:
                 member_data = MemberTb.objects.get(member_id=lecture.member_id)
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt, use='1')
+                                                                            en_dis_type='1', start_dt__gte=fourteen_days_ago,
+                                                                            start_dt__lt=fifteen_days_after, use='1')
                 for month_lecture in lecture.lecture_schedule:
-                    #month_lecture.data = month_lecture.start_dt.timetuple()
-                    #result = month_lecture.end_dt - month_lecture.start_dt
-                    #result_hour = int(result.seconds / 60 / 60)
-                    # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
-                    #                  + '_' + str(result_hour) + '_' + member_data.name)
-                    #daily_data.append(str(month_lecture.data.tm_year) + '_' + str(month_lecture.data.tm_mon) + '_'
-                    #                  + str(month_lecture.data.tm_mday) + '_' + str(month_lecture.data.tm_hour) + '_'
-                    #                  + str(format(month_lecture.data.tm_min, '02d')) + '_' + str(result_hour) + '_'
-                    #                  + member_data.name)
                     lecture_schedule_data.append(month_lecture.lecture_schedule_id)
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
                     daily_lecture_data_member.append(member_data.name)
                     daily_lecture_data_id.append(lecture.lecture_id)
 
-        #context['daily_off_data'] = daily_off_data
-        #context['daily_lecture_data'] = daily_data
-#        holiday = HolidayTb.objects.filter(holiday_dt__gte=before_dt, holiday_dt__lte=after_dt, use='1')
         holiday = HolidayTb.objects.filter(use='1')
         context['daily_lecture_schedule_id'] = lecture_schedule_data
         context['class_schedule_data'] = class_schedule_data
@@ -547,15 +515,15 @@ class OffAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_off_data_end_date = []
         daily_lecture_data_start_date = []
         daily_lecture_data_end_date = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=1)
-        after_dt = today_dt + datetime.timedelta(days=14)
+        today = datetime.date.today()
+        one_day_ago = today - datetime.timedelta(days=1)
+        fifteen_days_after = today + datetime.timedelta(days=15)
 
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1')
+                                                              en_dis_type='0', start_dt__gte=one_day_ago,
+                                                              start_dt__lt=fifteen_days_after, use='1')
             for month_class in month_class_data:
                 daily_off_data_start_date.append(month_class.start_dt)
                 daily_off_data_end_date.append(month_class.end_dt)
@@ -564,8 +532,8 @@ class OffAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
             for lecture in month_lecture_data:
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt, use='1')
+                                                                            en_dis_type='1', start_dt__gte=one_day_ago,
+                                                                            start_dt__lt=fifteen_days_after, use='1')
                 for month_lecture in lecture.lecture_schedule:
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
@@ -805,9 +773,9 @@ class PtModifyView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_off_data_end_date = []
         daily_lecture_data_start_date = []
         daily_lecture_data_end_date = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=1)
-        after_dt = today_dt + datetime.timedelta(days=14)
+        today = datetime.date.today()
+        one_day_ago = today - datetime.timedelta(days=1)
+        fifteen_days_after = today + datetime.timedelta(days=15)
 
         if error is None:
             try:
@@ -824,8 +792,8 @@ class PtModifyView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1')
+                                                              en_dis_type='0', start_dt__gte=one_day_ago,
+                                                              start_dt__lt=fifteen_days_after, use='1')
             for month_class in month_class_data:
                 daily_off_data_start_date.append(month_class.start_dt)
                 daily_off_data_end_date.append(month_class.end_dt)
@@ -835,8 +803,8 @@ class PtModifyView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for lecture in month_lecture_data:
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
                                                                             en_dis_type='1',
-                                                                            start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt,
+                                                                            start_dt__gte=one_day_ago,
+                                                                            start_dt__lt=fifteen_days_after,
                                                                             use='1').exclude(
                     lecture_schedule_id=lecture_schedule_id)
                 for month_lecture in lecture.lecture_schedule:
@@ -879,15 +847,15 @@ class OffModifyView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         daily_off_data_end_date = []
         daily_lecture_data_start_date = []
         daily_lecture_data_end_date = []
-        today_dt = timezone.now()
-        before_dt = today_dt - datetime.timedelta(days=1)
-        after_dt = today_dt + datetime.timedelta(days=14)
+        today = datetime.date.today()
+        one_day_ago = today - datetime.timedelta(days=1)
+        fifteen_days_after = today + datetime.timedelta(days=15)
 
         if error is None:
 
             month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=before_dt,
-                                                              start_dt__lte=after_dt, use='1').exclude(
+                                                              en_dis_type='0', start_dt__gte=one_day_ago,
+                                                              start_dt__lt=fifteen_days_after, use='1').exclude(
                 class_schedule_id=class_schedule_id)
             for month_class in month_class_data:
                 daily_off_data_start_date.append(month_class.start_dt)
@@ -898,8 +866,8 @@ class OffModifyView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for lecture in month_lecture_data:
                 lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
                                                                             en_dis_type='1',
-                                                                            start_dt__gte=before_dt,
-                                                                            start_dt__lte=after_dt, use='1')
+                                                                            start_dt__gte=one_day_ago,
+                                                                            start_dt__lt=fifteen_days_after, use='1')
                 for month_lecture in lecture.lecture_schedule:
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
