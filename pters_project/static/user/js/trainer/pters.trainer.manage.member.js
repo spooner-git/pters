@@ -3,15 +3,6 @@ $(document).ready(function(){
    	  		$(this).addClass("active").siblings().removeClass("active");
 		});
 
-/*
-      $(document).on('click',".dropdown-menu li a",function(){
-      		//$(".dropdown .btn:first-child").text($(this).text());
-      		//$(".dropdown .btn:first-child").val($(this).text());
-  		    $(this).parents('ul').siblings('button').text($(this).text());
-          $(this).parents('ul').siblings('button').val($(this).text());
-          console.log($(this).val(), $(this).attr('value'))
-       });
-*/  
     $('.alignSelect li a').click(function(){
         $('.alignSelect button').text($(this).text())
     })
@@ -42,7 +33,6 @@ $(document).ready(function(){
           $('html, body').css('overflow-y','hidden')
         }
     })
- 
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
     $('#float_btn').click(function(){
@@ -58,18 +48,32 @@ $(document).ready(function(){
       }
     })
 
+    $('.ymdText-pc-add').click(function(){
+      $('#page_addmember').fadeIn('fast')
+      $('#shade3').fadeIn('fast');
+      $('#uptext2').text('신규 회원 등록')
+      $('#page-base').fadeOut();
+      $('#page-base-addstyle').fadeIn();
+      scrollToIndicator($('#page_addmember'))
+    })
+
     $('#upbutton-x,.cancelBtn').click(function(){
-      if($('#memberInfoPopup').css('display')=='block'){
-        $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
+      if($('#memberInfoPopup').css('display')=='block'){ //회원정보팝업 띄웠을때 x눌렀을 경우
+        if($('body').width()<600){
+          $('#page_managemember').show();
+        }
+        $('#page-base').fadeIn('fast');
+        $('#page-base-addstyle').fadeOut('fast');
         $('#memberInfoPopup').fadeOut('fast')
-        $('#memberName').attr('readonly',true)
-        $('#memberPhone').attr('readonly',true)
-        $('#memberCount').attr('readonly',true)
+        $('#memberName_info').attr('readonly',true)
+        $('#memberBirthYear_info').attr('readonly',true)
+        $('#memberPhone_info').attr('readonly',true)
+        $('#memberCount_info').attr('readonly',true)
         $('#memberSex div').removeClass('selectbox_checked')
         $('.dropdown_selected').removeClass("dropdown_selected")
-        $('.confirmPopup').fadeOut()
-        $('#shade').fadeOut()
+        $('.confirmPopup').fadeOut('fast')
+        $('#shade').fadeOut('fast')
+        $('#shade3').fadeOut('fast');
       }else{
         if($('body').width()<600){
         $('#page_managemember').show();
@@ -81,8 +85,8 @@ $(document).ready(function(){
         $('#page-base-addstyle').fadeOut();
 
         $('#page_addmember input,#memberDue_add_2').val("")
-        $('#memberBirthMonthSelected button').val("").text("")
-        $('#memberBirthDateSelected button').val("").text("")
+        $('#memberBirthMonthSelected button').val("").html('<span style="color:#cccccc">월</span>')
+        $('#memberBirthDateSelected button').val("").html('<span style="color:#cccccc">일</span>')
 
         $('._due div.checked').removeClass('checked ptersCheckboxInner')
         $('._count div.checked').removeClass('checked ptersCheckboxInner')
@@ -96,93 +100,100 @@ $(document).ready(function(){
 
 		$("#btnCallCurrent").click(function(){
 			var currentMemberList = $("#currentMemberList");
-      var currentMemberNum = $('#currentMemberNum')
+      var currentMemberNum = $('#currentMemberNum');
 			var finishedMemberList = $("#finishedMemberList");
-      var finishedMemberNum = $('#finishMemberNum')
+      var finishedMemberNum = $('#finishMemberNum');
 			if(currentMemberList.css("display")=="none"){
 				finishedMemberList.css("display","none");
-        finishedMemberNum.css("display","none")
+        finishedMemberNum.css("display","none");
 				currentMemberList.css("display","block");
         currentMemberNum.css("display","block");
 			}
-		})
+		});
 
 		$("#btnCallFinished").click(function(){
 			var currentMemberList = $("#currentMemberList");
-      var currentMemberNum = $('#currentMemberNum')
+      var currentMemberNum = $('#currentMemberNum');
       var finishedMemberList = $("#finishedMemberList");
-      var finishedMemberNum = $('#finishMemberNum')
+      var finishedMemberNum = $('#finishMemberNum');
 			if(finishedMemberList.css("display")=="none"){
 				finishedMemberList.css("display","block");
         finishedMemberNum.css("display","block");
 				currentMemberList.css("display","none");
         currentMemberNum.css("display","none");
 			}
-		})
+		});
 
 
 		$('#name').click(function(){
-        currentMemberListSet('name')
-        finishMemberListSet('name')
-        $('.alignSelect button').attr('data-align','name')
-		})
+        currentMemberListSet('name');
+        finishMemberListSet('name');
+        $('.alignSelect button').attr('data-align','name');
+		});
 
 		$('#countH').click(function(){
-        currentMemberListSet('count','yes')
-        $('.alignSelect button').attr('data-align','countH')
-		})
+        currentMemberListSet('count','yes');
+        $('.alignSelect button').attr('data-align','countH');
+		});
 
     $('#countL').click(function(){
-        currentMemberListSet('count')
-        $('.alignSelect button').attr('data-align','countL')
-    })
+        currentMemberListSet('count');
+        $('.alignSelect button').attr('data-align','countL');
+    });
 
 		$('#startR').click(function(){
-        currentMemberListSet('date','yes')
-        finishMemberListSet('date','yes')
-        $('.alignSelect button').attr('data-align','startR')
-		})
+        currentMemberListSet('date','yes');
+        finishMemberListSet('date','yes');
+        $('.alignSelect button').attr('data-align','startR');
+		});
 
     $('#startP').click(function(){
-        currentMemberListSet('date')
-        finishMemberListSet('date')
-        $('.alignSelect button').attr('data-align','startP')
-    })
+        currentMemberListSet('date');
+        finishMemberListSet('date');
+        $('.alignSelect button').attr('data-align','startP');
+    });
 
 
 //#####################회원정보 팝업 //#####################
 
     $(document).on('click','td._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
-      $('#uptext2').text('회원 정보')
-      $('#page-base').fadeOut();
-      $('#page-base-addstyle').fadeIn();
-      var name = $(this).attr('data-name')
-      console.log(name)
-      $('#memberName').attr('value',name)
-      $('#memberPhone').attr('value',DB[name].phone).text(DB[name].phone)
-      $('#memberCount').attr('value',DB[name].count)
-      $('#memberEmail').attr('value',DB[name].email)
-      $('#datepicker').attr('value',DB[name].start)
-      $('#datepicker2').attr('value',DB[name].end)
-      $('#memberInfoPopup').fadeIn();
+      $('#uptext2').text('회원 정보');
+      $('#page-base').fadeOut('fast');
+      $('#page-base-addstyle').fadeIn('fast');
+      var name = $(this).attr('data-name');
+      $('#memberName_info').val(name)
+      $('#memberPhone_info').val(DB[name].phone);
+      $('#memberCount_info').val(DB[name].count);
+      $('#memberEmail_info').val(DB[name].email);
+      $('#datepicker_info').val(DB[name].start);
+      $('#datepicker2_info').val(DB[name].end);
+      $('#memberInfoPopup').fadeIn('fast');
+      $('#shade3').fadeIn('fast');
       scrollToIndicator($('#page_managemember'));
-    })
+      if($('body').width()<600){
+        $('#page_managemember').hide();
+      }
+    });
 
     $(document).on('click','td._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
       $('#uptext2').text('회원 정보')
-      $('#page-base').fadeOut();
-      $('#page-base-addstyle').fadeIn();
-      var name = $(this).attr('data-name')
-      $('#memberName').attr('value',name)
-      $('#memberPhone').attr('value',DBe[name].phone)
-      $('#memberCount').attr('value',DBe[name].count)
-      $('#memberEmail').attr('value',DBe[name].email)
-      $('#datepicker').attr('value',DBe[name].start)
-      $('#datepicker2').attr('value',DBe[name].end)
-      $('#memberInfoPopup').fadeIn()
+      $('#page-base').fadeOut('fast');
+      $('#page-base-addstyle').fadeIn('fast');
+      var name = $(this).attr('data-name');
+      $('#memberName').val(name);
+      $('#memberPhone').val(DBe[name].phone);
+      $('#memberCount').val(DBe[name].count);
+      $('#memberEmail').val(DBe[name].email);
+      $('#datepicker').val(DBe[name].start);
+      $('#datepicker2').val(DBe[name].end);
+      $('#memberInfoPopup').fadeIn('fast');
+      $('#shade3').fadeIn('fast');
       scrollToIndicator($('#page_managemember'));
       $('html,body').scrollTop();
-    })
+      if($('body').width()<600){
+        $('#page_managemember').hide();
+      }
+    });
 
     $("#datepicker_info").datepicker({
         minDate : 0,
@@ -201,26 +212,27 @@ $(document).ready(function(){
     });
 
     $('#infoMemberDelete').click(function(){
-      $('.confirmPopup').fadeIn()
-      $('#shade').fadeIn()
-    })
+      $('.confirmPopup').fadeIn('fast');
+      $('#shade').fadeIn('fast');
+    });
 
     $('.confirmYes').click(function(){
-      $('.confirmPopup').fadeOut()
-      $('#shade').fadeOut()
-    })
+      $('.confirmPopup').fadeOut('fast');
+      $('#shade').fadeOut('fast');
+    });
 
     $('.confirmNo').click(function(){
-      $('.confirmPopup').fadeOut()
-      $('#shade').fadeOut()
-    })
+      $('.confirmPopup').fadeOut('fast');
+      $('#shade').fadeOut('fast');
+    });
 
 
     $('#infoMemberEdit').click(function(){ //회원정보창에서 수정 눌렀을때
-      $('#memberName').attr('readonly',false)
-      $('#memberPhone').attr('readonly',false)
-      $('#memberCount').attr('readonly',false)
-    })
+      $('#memberName_info').attr('readonly',false);
+      $('#memberBirthYear_info').attr('readonly',false);
+      $('#memberPhone_info').attr('readonly',false);
+      $('#memberCount_info').attr('readonly',false);
+    });
 //#####################회원정보 팝업 //#####################
 
 
@@ -231,7 +243,7 @@ $(document).ready(function(){
       
       if($('#currentMemberList').width()>=600){
           $('.instructPopup').fadeIn().css({'top':LOCTOP+40,'left':LOCLEFT})
-      }
+      };
       
       if($(this).hasClass('_countnum')){
         $('.instructPopup').text('회원 순번')
@@ -251,23 +263,23 @@ $(document).ready(function(){
         $('.instructPopup').text('회원님 연락처')
       }else if($(this).hasClass('_manage')){
         $('.instructPopup').text('회원 관리페이지에서는 회원님의 정보를 등록/수정/삭제가 가능합니다. 삭제시 복구가 불가능하오니 다시 한번 확인해주세요')
-      }
-  })
+      };
+  });
 
  
   $('#alignBox,.centeralign').mouseenter(function(){
-    $('.instructPopup').fadeOut()
-  })
+    $('.instructPopup').fadeOut();
+  });
   
 //#####################회원정보 도움말 팝업 //#####################
 
 
 
 //#####################페이지 들어오면 초기 시작 함수//#####################
-DataFormattingDict()
-DataFormatting()
-currentMemberListSet('name')
-finishMemberListSet('name')
+DataFormattingDict();
+DataFormatting();
+currentMemberListSet('name');
+finishMemberListSet('name');
 //#####################페이지 들어오면 초기 시작 함수//#####################
 function DataFormatting(){
     countList = []
@@ -816,6 +828,7 @@ $('#memberBirthMonth li a').click(function(){ //생년월일 "월" 선택했을�
       datesList[i] = '<li><a value="'+(i+1)+'">'+(i+1)+' 일</a></li>'
    }
    var dates = datesList.join("")
+   console.log(dates)
    $('#memberBirthDate').html(dates)
    birthdayInput()
 })

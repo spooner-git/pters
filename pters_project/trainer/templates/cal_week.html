@@ -89,8 +89,15 @@
     </div>
     <div id="monthText">
     </div>
+    <div id="menuName">주간 일정
+    </div>
+    <div id="menuDescription">일정을 확인하고 등록 할 수 있습니다.
+    </div>
 </div>
 
+<div id="hidetoggle" class="wrap" data-type = '0'>
+  <img src="/static/user/res/daycal_arrow_pink.png" style="-webkit-transform:rotate(90deg)"><span>일정 넓게 보기</span>
+</div>
 
 <div id="ymdText-pc" class="wrap">
     <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
@@ -128,6 +135,7 @@
 
 <div id="calendar" class="container"> <!-- Calendar container-->
       <div class="swiper-container">
+        <div id="timeIndicatorBar"></div>
           <div class="timeindex">
               <div class="hour" id="hour0"><span class="morningtext">오전</span><span class="timeindex_time">00:00</span></div>
               <div class="hour" id="hour1"><span class="timeindex_time">01:00</span></div>
@@ -596,6 +604,26 @@
                event.stopPropagation();
             })
 
+
+            $('#hidetoggle').click(function(){
+              if($(this).attr('data-type') == '0'){
+                $(this).css({'padding-top':'10px','color':'#282828'}).attr('data-type','1')
+                $(this).find('img').css('-webkit-transform','rotate(-90deg)')
+                $('#ymdText-pc').css({'padding-top':'30px','background':'#ffffff'})
+                $('#week').css({'padding-top':'40px'})
+                $('#calendar').css('padding-top','35px')
+                $('#ymdText').css('display','none')
+              }else{
+                $(this).css({'padding-top':'75px','color':'#f4f4f4'}).attr('data-type','0')
+                $(this).find('img').css('-webkit-transform','rotate(90deg)')
+                $('#ymdText-pc').css({'padding-top':'100px','background':'transparent'})
+                $('#week').css({'padding-top':'115px'})
+                $('#calendar').css('padding-top','110px')
+                $('#ymdText').css('display','block')
+              }
+            })
+
+
             $('#ymdText-pc-prev-btn').click(function(){
               if(count==0){
                 myswiper.slidePrev(100)
@@ -627,8 +655,6 @@
 
 
             //sk 테스트중, 클릭 팝업
-
-
             $('#commonPopup').click(function(){
               $(this).fadeOut('fast')
             })

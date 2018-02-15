@@ -12,8 +12,6 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 $(document).ready(function(){
 
 
-
-
 	var repeatData = ['김선겸_tue_16_1_20171203_20180301','김선겸_fri_7_1_20171203_20180301','박신혜_mon_16_1_20171126_20180301']
 	var offrepeatData = ['OFF_sun_5_20_20171224_20180301','OFF_sat_16_9_20171209_20180301']
 
@@ -565,6 +563,7 @@ $(document).ready(function(){
     var currentDate = date.getDate(); //오늘 날짜
 	var currentDay = date.getDay() // 0,1,2,3,4,5,6,7
 	var currentHour = date.getHours();
+	var currentMinute = date.getMinutes();
 
 	var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
 	if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
@@ -1124,33 +1123,33 @@ $(document).ready(function(){
 		}
 	}
 
-		function toDay(){
-			var yy = String(currentYear)
-			var dd = String(currentDate)
-			var mm = String(currentPageMonth)
-			for(var i=0;i<=23;i++){
-				$("#"+yy+'_'+mm+'_'+dd+'_'+i+'_00').addClass('todaywide')
-			}
+	function toDay(){
+		var yy = String(currentYear)
+		var dd = String(currentDate)
+		var mm = String(currentPageMonth)
+		for(var i=0;i<=23;i++){
+			$("#"+yy+'_'+mm+'_'+dd+'_'+i+'_00').addClass('todaywide')
+		}
 
-			for(var i=1;i<=7;i++){
-				var scan = $('#weekNum_'+i).attr('data-date')
-				if(mm.length<2){
-					var mm = '0'+mm
-				}
-				if(dd.length<2){
-					var dd = '0'+dd
-				}
-				if(scan == yy+mm+dd){
-					$('#weekNum_'+i).addClass('todaywide')
-					$('#weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY')
-					$('#weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
-				}else{
-					$('#weekNum_'+i).removeClass('todaywide')
-					$('#weekNum_'+i+' span:nth-child(1)').removeClass('today').html('')
-					$('#weekNum_'+i+' span:nth-child(3)').removeClass('today-Number')
-				}
+		for(var i=1;i<=7;i++){
+			var scan = $('#weekNum_'+i).attr('data-date')
+			if(mm.length<2){
+				var mm = '0'+mm
+			}
+			if(dd.length<2){
+				var dd = '0'+dd
+			}
+			if(scan == yy+mm+dd){
+				$('#weekNum_'+i).addClass('todaywide')
+				$('#weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY')
+				$('#weekNum_'+i+' span:nth-child(3)').addClass('today-Number')
+			}else{
+				$('#weekNum_'+i).removeClass('todaywide')
+				$('#weekNum_'+i+' span:nth-child(1)').removeClass('today').html('')
+				$('#weekNum_'+i+' span:nth-child(3)').removeClass('today-Number')
 			}
 		}
+	}
 
 	function reserveAvailable(){
 		var yy = currentYear;
@@ -1186,7 +1185,7 @@ $(document).ready(function(){
 		var planheight = 30;
 			if($calendarWidth>=600){
 				//var planheight = 46;
-				var planheight = 42;
+				var planheight = 43;
 		}
 		var classlen = classTimeArray.length;
 		$('#calendar').css('display','none');
@@ -1230,7 +1229,7 @@ $(document).ready(function(){
 	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var planheight = 30;
 			if($calendarWidth>=600){
-				var planheight = 45;
+				var planheight = 46;
 		}
 		var offlen = offTimeArray.length;
 		console.log(offTimeArray)
@@ -1268,7 +1267,7 @@ $(document).ready(function(){
 	function classTime_Active(option){
 		var planheight = 30;
 		if($calendarWidth>=600){
-			var planheight = 42;
+			var planheight = 43;
 		}
 
 		switch(option){
@@ -1366,7 +1365,7 @@ $(document).ready(function(){
 	function offTime_Active(option){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
 		var planheight = 30;
 			if($calendarWidth>=600){
-				var planheight = 45;
+				var planheight = 46;
 		}
 
 		switch(option){
@@ -1447,11 +1446,15 @@ $(document).ready(function(){
 
 
 	function addcurrentTimeIndicator_blackbox(){ //현재 시간에 밑줄 긋기
-		console.log($('.today').length,'#hour'+currentHour)
 		if($('.today').length){
 			$('#hour'+currentHour).addClass('currentTimeBlackBox');
+			var indicator_Location = $('#hour'+currentHour).position().top
+			var minute_adjust = 45*(currentMinute/60)
+			$('#timeIndicatorBar').css('top',indicator_Location+minute_adjust)
+			$('#timeIndicatorBar').fadeIn('fast')
 		}else{
 			$('.hour').removeClass('currentTimeBlackBox');
+			$('#timeIndicatorBar').fadeOut('fast')
 		}
 	}
 

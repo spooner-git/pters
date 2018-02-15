@@ -19,6 +19,9 @@ from trainer import views
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^login/$', views.login_trainer, name='login'),
+    
+    url(r'^register_login/$', views.RegisterView.as_view(), name='register_login'),
+
     url(r'^logout/$', views.logout_trainer, name='logout'),
     url(r'^login_page/$', views.login_trainer_view, name='login_page'),
     url(r'^add_pt/$', views.PtAddView.as_view(), name='add_pt'),
