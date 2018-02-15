@@ -228,7 +228,7 @@
     </div>
 
     <form action="{% url 'trainer:member_registration' %}" method="POST" class="member-form" id="member-add-form-new">
-        <input type="hidden" name="next_page" value="{% url 'trainer:member_manage' %}">
+        <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
         <input type="hidden" name="fast_check" id="fast_check" value="0">
         <input type="hidden" name="sex" id="form_sex" value="">
         <input type="hidden" name="birthday" id="form_birth" value="">
@@ -474,6 +474,8 @@
           //처리 필요 - hk.kim 180110
           var regCountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_reg_count }}',{% endif %}{% endfor %}]
           var availCountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_avail_count }}',{% endif %}{% endfor %}]
+          var birthdayArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.birthday }}',{% endif %}{% endfor %}]
+          var sexArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.sex }}',{% endif %}{% endfor %}]
 
           var finishnameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
           var finishphoneArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.phone }}',{% endif %}{% endfor %}]
@@ -482,6 +484,8 @@
           var finishmodifyDateArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.mod_dt }}',{% endif %}{% endfor %}]
           var finishemailArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.user.email }}',{% endif %}{% endfor %}]
           var finishendArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
+          var finishbirthdayArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.birthday }}',{% endif %}{% endfor %}]
+          var finishsexArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.sex }}',{% endif %}{% endfor %}]
 
           //처리 필요 - hk.kim 180110
           var finishRegCountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_reg_count }}',{% endif %}{% endfor %}]

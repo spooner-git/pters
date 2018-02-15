@@ -1117,13 +1117,14 @@ $("#upbutton-check,.submitBtn").click(function(){
     var $form = $('#member-add-form-new');
      if(select_all_check==true){
         console.log('ajax')
-       
+
              //ajax 회원정보 입력된 데이터 송신
-             
+
              $.ajax({
                 url:'/trainer/member_registration/',
                 type:'POST',
                 data:$form.serialize(),
+                dataType : 'html',
 
                 beforeSend:function(){
                   $('html').css("cursor","wait")
@@ -1142,9 +1143,67 @@ $("#upbutton-check,.submitBtn").click(function(){
                   },
 
                 //통신성공시 처리
-                success:function(){
-                    ajaxMemberData();
-                  console.log('success')
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    nameArray =[];
+                    phoneArray = [];
+                    countArray = [];
+                    startArray = [];
+                    modifyDateArray = [];
+                    emailArray = [];
+                    endArray = [];
+                    regCountArray = [];
+                    availCountArray = [];
+                    birthdayArray = [];
+                    sexArray = [];
+
+                    finishnameArray =[];
+                    finishphoneArray = [];
+                    finishcountArray = [];
+                    finishstartArray = [];
+                    finishmodifyDateArray = [];
+                    finishemailArray = [];
+                    finishendArray = [];
+
+                    finishRegCountArray = [];
+                    finishAvailCountArray = [];
+                    finishbirthdayArray = [];
+                    finishsexArray = [];
+
+                    nameArray =jsondata.nameArray;
+                    phoneArray = jsondata.phoneArray;
+                    countArray = jsondata.countArray;
+                    startArray = jsondata.startArray;
+                    modifyDateArray = jsondata.modifyDateArray;
+                    emailArray = jsondata.emailArray;
+                    endArray = jsondata.endArray;
+                    regCountArray = jsondata.regCountArray;
+                    availCountArray = jsondata.availCountArray;
+
+                    finishnameArray = jsondata.finishnameArray;
+                    finishphoneArray = jsondata.finishphoneArray;
+                    finishcountArray = jsondata.finishcountArray;
+                    finishstartArray = jsondata.finishstartArray;
+                    finishmodifyDateArray = jsondata.finishmodifyDateArray;
+                    finishemailArray = jsondata.finishemailArray;
+                    finishendArray = jsondata.finishendArray;
+
+                    finishRegCountArray = jsondata.finishRegCountArray;
+                    finishAvailCountArray = jsondata.finishAvailCountArray;
+
+                      //처리 필요 - hk.kim 180110
+                    birthdayArray = jsondata.birthdayArray;
+                    finishbirthdayArray = jsondata.finishbirthdayArray;
+                    sexArray = jsondata.sexArray;
+                    finishsexArray = jsondata.finishsexArray;
+                    messagesArray = jsondata.messagesArray;
+
+                    DataFormattingDict();
+                    DataFormatting();
+                    currentMemberListSet('name');
+                    finishMemberListSet('name');
+                    //ajaxMemberData();
+                    console.log('success');
                   },
 
                 //통신 실패시 처리
@@ -1152,7 +1211,7 @@ $("#upbutton-check,.submitBtn").click(function(){
                   alert("error: 이미 등록된 회원인지 확인")
                 },
              })
-        
+
      }else{
         $('#inputError').fadeIn('slow')
         //입력값 확인 메시지 출력 가능

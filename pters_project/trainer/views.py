@@ -95,12 +95,11 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
             error = '강사 PT 정보가 존재하지 않습니다'
-            # logger.error(error)
 
         context['trainer_member'] = None #sk Test 추가 171117
 
         #daily_off_data = []
-        # daily_data = []
+        #daily_data = []
         class_schedule_data = []
         lecture_schedule_data = []
         daily_off_data_start_date = []
@@ -213,7 +212,6 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
                 except ObjectDoesNotExist:
                     error = '회원 PT 정보가 존재하지 않습니다'
-                    # logger.error(error)
         # sk Test 추가 171117
 
         if error is None:
@@ -234,14 +232,6 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                                                                             en_dis_type='1', start_dt__gte=fourteen_days_ago,
                                                                             start_dt__lt=fifteen_days_after, use='1')
                 for month_lecture in lecture.lecture_schedule:
-                    # month_lecture.data = month_lecture.start_dt.timetuple()
-                    # result = month_lecture.end_dt-month_lecture.start_dt
-                    # result_hour = int(result.seconds/60/60)
-                    # daily_data.append(month_lecture.start_dt.strftime('%Y_%-m_%-d_%-H_%M')
-                    #                  + '_' + str(result_hour) + '_' + member_data.name)
-                    # daily_data.append(str(month_lecture.data.tm_year)+'_'+str(month_lecture.data.tm_mon)+'_'
-                    #                  +str(month_lecture.data.tm_mday)+'_'+str(month_lecture.data.tm_hour)+'_'
-                    #                  +str(format(month_lecture.data.tm_min,'02d'))+'_'+str(result_hour)+'_'+member_data.name)
                     lecture_schedule_data.append(month_lecture.lecture_schedule_id)
                     daily_lecture_data_start_date.append(month_lecture.start_dt)
                     daily_lecture_data_end_date.append(month_lecture.end_dt)
@@ -596,7 +586,6 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
             error = '강사 PT 정보가 존재하지 않습니다'
-            # logger.error(error)
 
         context['trainer_member'] = None
 
@@ -608,7 +597,8 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
                 except ObjectDoesNotExist:
                     error = '회원 PT 정보가 존재하지 않습니다'
-                    # logger.error(error)
+        #if context[messages] is not None:
+        #    print(self.requset.messages)
 
         return context
 
@@ -624,7 +614,6 @@ class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
         except ObjectDoesNotExist:
             error = '강사 PT 정보가 존재하지 않습니다'
-            # logger.error(error)
 
         context['trainer_member'] = None
 
@@ -636,8 +625,9 @@ class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
                 except ObjectDoesNotExist:
                     error = '회원 PT 정보가 존재하지 않습니다'
-                    # logger.error(error)
-
+        #if context[messages] is not None:
+        #    print(self.requset.messages)
+        #    messages.info(self.request, self.request.messages)
         return context
 
 
@@ -900,21 +890,22 @@ def member_registration(request):
     price = request.POST.get('price')
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
-    next_page = request.POST.get('next_page')
     counts_fast = request.POST.get('counts_fast')
     price_fast = request.POST.get('price_fast')
     start_date_fast = request.POST.get('start_date_fast')
     end_date_fast = request.POST.get('end_date_fast')
     sex = request.POST.get('sex')
     birthday_dt = request.POST.get('birthday')
+    next_page = request.POST.get('next_page')
 
     error = None
     input_start_date = ''
     input_end_date = ''
     input_counts = 0
     input_price = 0
+    now = timezone.now()
 
-    if MemberTb.objects.filter(phone=phone).exists():
+    if User.objects.filter(username=phone).exists():
         error = '이미 가입된 회원 입니다.'
     #elif User.objects.filter(email=email).exists():
     #    error = '이미 가입된 회원 입니다.'
@@ -924,48 +915,57 @@ def member_registration(request):
         error = '이름을 입력해 주세요.'
     elif phone == '':
         error = '연락처를 입력해 주세요.'
-    elif birthday_dt == '':
+    elif len(phone) != 11 and len(phone) != 10:
+        error = '연락처를 확인해 주세요.'
+    elif not phone.isdigit():
+        error = '연락처를 확인해 주세요.'
+
+    if birthday_dt == '':
         birthday_dt = '1900-01-01'
 
-    if fast_check == '0':
-        if counts_fast == '':
-            error = '남은 횟수를 입력해 주세요.'
-        elif start_date_fast == '':
-            error = '시작 날짜를 입력해 주세요.'
-        elif end_date_fast == '':
-            error = '종료 날짜를 입력해 주세요.'
-        else:
-            input_counts = counts_fast
-            input_start_date = start_date_fast
-            input_end_date = end_date_fast
-            if price_fast == '':
-                input_price = 0
+    if error is None:
+        if fast_check == '0':
+            if counts_fast == '':
+                error = '남은 횟수를 입력해 주세요.'
+            elif start_date_fast == '':
+                error = '시작 날짜를 입력해 주세요.'
             else:
-                input_price = price_fast
-    elif fast_check == '1':
-        if counts == '':
-            error = '남은 횟수를 입력해 주세요.'
-        elif start_date == '':
-            error = '시작 날짜를 입력해 주세요.'
-        elif end_date == '':
-            error = '종료 날짜를 입력해 주세요.'
-        else:
-            input_counts = counts
-            input_start_date = start_date
-            input_end_date = end_date
-            if price == '':
-                input_price = 0
-            else:
-                input_price = price
+                input_counts = counts_fast
+                input_start_date = start_date_fast
+                if price_fast == '':
+                    input_price = 0
+                else:
+                    input_price = price_fast
+                if end_date_fast == '':
+                    input_end_date = '9999-12-31'
+                else:
+                    input_end_date = end_date_fast
 
+        elif fast_check == '1':
+            if counts == '':
+                error = '남은 횟수를 입력해 주세요.'
+            elif start_date == '':
+                error = '시작 날짜를 입력해 주세요.'
+            else:
+                input_counts = counts
+                input_start_date = start_date
+                if price == '':
+                    input_price = 0
+                else:
+                    input_price = price
+                if end_date == '':
+                    input_end_date = '9999-12-31'
+                else:
+                    input_end_date = end_date
 
     if error is None:
+        if len(phone) == 11:
+            password = phone[7:]
+        elif len(phone) == 10:
+            password = phone[6:]
 
-       #password = email.split('@')[0] + phone[7:]
-        password = phone[7:]
-
-        try:
-            with transaction.atomic():
+        with transaction.atomic():
+            try:
                 user = User.objects.create_user(username=phone, email=email, first_name=name, password=password)
                 group = Group.objects.get(name='trainee')
                 user.groups.add(group)
@@ -976,16 +976,16 @@ def member_registration(request):
                 lecture = LectureTb(class_tb_id=trainer_class.class_id,member_id=member.member_id,
                                     lecture_reg_count=input_counts, lecture_rem_count=input_counts,
                                     lecture_avail_count=input_counts, price=input_price, option_cd='DC', state_cd='IP',
-                                    start_date=input_start_date,end_date=input_end_date, mod_dt=timezone.now(),
-                                    reg_dt=timezone.now(), use=1)
+                                    start_date=input_start_date,end_date=input_end_date, mod_dt=now,
+                                    reg_dt=now, use=1)
                 lecture.save()
 
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.'
+            except ValueError as e:
+                error = '이미 가입된 회원입니다.'
+            except IntegrityError as e:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError as e:
+                error = '등록 값의 형태가 문제 있습니다.'
 
     if error is None:
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 '\
@@ -995,7 +995,7 @@ def member_registration(request):
         return redirect(next_page)
     else:
         messages.info(request, error)
-        #next_page = 'trainer:member_add'
+
         return redirect(next_page)
 
 
@@ -1119,9 +1119,6 @@ def add_pt_logic(request, next_page='trainer:cal_day'):
             log_end_date = '오후'
 
         log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
-        # + start_date.strftime('%p %I:%M')\
-        # + '- '+end_date.strftime('%p %I:%M')
         log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
                        + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
                        + log_start_date\
@@ -1274,9 +1271,6 @@ def daily_pt_delete(request):
             log_end_date = '오후'
 
         log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
-        # + start_date.strftime('%p %I:%M')\
-        # + '- '+end_date.strftime('%p %I:%M')
         log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
                        + ' 회원님의</span> 일정을 <span class="status">삭제</span>했습니다.@'\
                        + log_start_date\
@@ -1395,9 +1389,6 @@ def add_off_logic(request):
             log_end_date = '오후'
 
         log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
-        # + start_date.strftime('%p %I:%M')\
-        # + '- '+end_date.strftime('%p %I:%M')
         log_contents = '<span>'+request.user.first_name + ' 강사님께서 '\
                        + ' OFF </span> 일정을 <span class="status">등록</span>했습니다.@'\
                        + log_start_date\
@@ -1470,9 +1461,6 @@ def daily_off_delete(request):
             log_end_date = '오후'
 
         log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
-        # + start_date.strftime('%p %I:%M')\
-        # + '- '+end_date.strftime('%p %I:%M')
         log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' \
                        + ' OFF </span> 일정을 <span class="status">삭제</span>했습니다.@'\
                        + log_start_date\
@@ -1545,10 +1533,8 @@ def modify_pt_logic(request):
             start_date = datetime.datetime.strptime(training_date+' '+training_time,'%Y-%m-%d %H:%M:%S.%f')
             end_date = start_date + datetime.timedelta(hours=int(time_duration))
         except ValueError as e:
-            # logger.error(e)
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
-            # logger.error(e)
             error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
             error = '등록 값의 형태에 문제가 있습니다.'
@@ -1558,7 +1544,6 @@ def modify_pt_logic(request):
             trainer_class = ClassTb.objects.get(member_id=request.user.id, use=1)
         except ObjectDoesNotExist:
             error = 'class가 존재하지 않습니다'
-            # logger.error(error)
 
     if error is None:
         try:
@@ -1683,7 +1668,6 @@ def modify_pt_logic(request):
         return redirect(next_page)
     else:
         messages.info(request, error)
-        #next_page = 'trainer:add_pt'
         return redirect(next_page)
 
 
@@ -1715,7 +1699,6 @@ def modify_off_logic(request):
             trainer_class = ClassTb.objects.get(member_id=request.user.id)
         except ObjectDoesNotExist:
             error = 'class가 존재하지 않습니다'
-            # logger.error(error)
 
     if error is None:
         try:
@@ -1837,7 +1820,6 @@ def modify_off_logic(request):
         return redirect(next_page)
     else:
         messages.info(request, error)
-        #next_page = 'trainer:add_off'
         return redirect(next_page)
 
 
@@ -1859,7 +1841,6 @@ def daily_pt_finish(request):
             lecture_schedule_data = LectureScheduleTb.objects.get(lecture_schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '강사 PT 정보가 존재하지 않습니다'
-            # logger.error(error)
 
         if error is None:
             start_date = lecture_schedule_data.start_dt
@@ -1912,9 +1893,6 @@ def daily_pt_finish(request):
             log_end_date = '오후'
 
         log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        # + start_date.strftime('%Y년 %m월 %d일')+start_date.strftime('%w')\
-        # + start_date.strftime('%p %I:%M')\
-        # + '- '+end_date.strftime('%p %I:%M')
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' + member_name \
                        + ' 회원님의</span> 일정을 <span class="status">완료</span>했습니다.@' \
                        + log_start_date \
@@ -1925,5 +1903,4 @@ def daily_pt_finish(request):
         return redirect(next_page)
     else:
         messages.info(request, error)
-        # next_page = 'trainer:cal_day'
         return redirect(next_page)

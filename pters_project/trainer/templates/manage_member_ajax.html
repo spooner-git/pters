@@ -18,6 +18,10 @@
     [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}"{{ lecture.lecture_reg_count }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
     "availCountArray" :
     [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}"{{ lecture.lecture_avail_count }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
+    "birthdayArray" :
+    [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}"{{ lecture.trainer_member.birthday_dt }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
+    "sexArray" :
+    [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}"{{ lecture.trainer_member.sex }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
 
     "finishnameArray" :
     [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}"{{ lecture.trainer_member.name }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
@@ -33,9 +37,16 @@
     [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'"{{ lecture.trainer_member.user.email }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
     "finishendArray" :
     [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}"{{ lecture.end_date }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
+    "finishbirthdayArray" :
+    [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}"{{ lecture.trainer_member.birthday_dt }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
+    "finishsexArray" :
+    [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}"{{ lecture.trainer_member.sex }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
 
     "finishRegCountArray" :
     [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}"{{ lecture.lecture_reg_count }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
     "finishAvailCountArray" :
-    [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}"{{ lecture.lecture_avail_count }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}]
+    [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}"{{ lecture.lecture_avail_count }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
+
+    "messagesArray" :
+    [{% for message in messages %}"{{ message }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
 }
