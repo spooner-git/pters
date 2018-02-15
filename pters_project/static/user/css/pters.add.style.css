@@ -55,6 +55,11 @@ ul a{
 	margin-bottom: 50px;
 }
 
+#memberBirthMonth, #memberBirthDate{
+	max-height: 230px;
+	overflow-y: auto;
+}
+
 .toggleBtnWrap{
 	display: inline-block;
 	width: 40px;
@@ -181,6 +186,13 @@ ul a{
 	-webkit-box-shadow: 0 1px 0 0 #fe4e65 !important;
 }
 
+.dropdownlist_unselectable{
+   -moz-user-select: -moz-none;
+   -webkit-user-select: none;
+   -o-user-select: none;
+   user-select: none;
+}
+
 .pters_dropdown_custom li{
 	text-align: center;
 	font-size: 15px;
@@ -190,6 +202,19 @@ ul a{
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
 }
 
+.pters_dropdown_custom div{
+	text-align: center;
+	height: 35px;
+	line-height: 35px;
+	vertical-align: middle;
+}
+
+.dropdownlist_mini div{
+	text-align: center;
+	height: 24px;
+	line-height: 24px;
+	vertical-align: middle;
+}
 
 .dropdown ul{
 	padding-top: 0px;
@@ -208,6 +233,7 @@ ul a{
 
 .pters_input_custom{
 	border: 0px;
+	margin-top: 0px;
 	box-shadow: 0 1px 0 0 #a2a2a2;
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
 	border-radius: 0px;
@@ -583,7 +609,7 @@ ul a{
 	background: #fe4e65;
 	border-radius: 50%;
 	left: 3px;
-	top: -1px;
+	top: 3px;
 }
 
 .checked{
@@ -599,10 +625,6 @@ ul a{
 	height: 35px;
 }
 
-.ptaddbox div{
-	margin-top: 4px;
-}
-
 .ptaddbox table{
 	width: 100%;
 }
@@ -612,29 +634,29 @@ ul a{
 	width: 16.67%;
 }
 
-#memberSex{
+#memberSex, #memberSex_info{
 	width: 70px;
 	height: 40px;
 	margin-top:10px;
 }
 
-#memberMale,#memberFemale{
+#memberMale,#memberFemale, #memberMale_info, #memberFemale_info{
 	background: #ffffff;
 	border-bottom:0.5px solid #cccccc;
 }
 
-#memberBirth{
+#memberBirth,#memberBirth_info{
 	box-shadow: 0 0 0 0;
 }
 
-#memberBirthYear{
+#memberBirthYear, #memberBirthYear_info{
 	display: inline-block;
-	width: 30%;
+	width: 55%;
 	box-shadow: 0 1px 0 0 #a2a2a2;
 
 }
 
-#memberBirthMonthSelected,#memberBirthDateSelected{
+#memberBirthMonthSelected,#memberBirthDateSelected, #memberBirthMonthSelected_info,#memberBirthDateSelected_info{
 	display: inline-block;
 	width:20%;
 	margin-top: 0;
@@ -642,7 +664,7 @@ ul a{
 	box-shadow: 0 1px 0 0 #a2a2a2;
 }
 
-#memberBirthMonthSelected button,#memberBirthDateSelected button{
+#memberBirthMonthSelected button,#memberBirthDateSelected button, #memberBirthMonthSelected_info button,#memberBirthDateSelected_info button{
 	margin:0;
 }
 
@@ -665,6 +687,7 @@ ul a{
 
 .pricebuttonchild{
 	display: inline-block;
+	margin-top: 8px;
 	line-height: 22px;
 	width: 17%;
 	border: 0.5px solid #cccccc;
@@ -680,10 +703,11 @@ ul a{
 
 .blankSelected{
 	position: absolute;
+	top: 0;
 	width: 97%;
 	height: 90%;
 	border:2px solid #fe4e65;
-	margin-left: 2px;
+	margin-left: 3px;
 	margin-top: 2px;
 }
 

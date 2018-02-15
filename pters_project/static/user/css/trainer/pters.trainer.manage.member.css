@@ -6,6 +6,10 @@ body{
 	font-family: 'Noto Sans KR';
 }
 
+#shade{
+	z-index: 106;
+}
+
 #shade3{
 	position: fixed;
 	width: 100%;
@@ -20,15 +24,13 @@ body{
 	position: fixed;
 	background: transparent;
 	border-color: transparent;
-	top: 35%;
-	left: 10%;
 	width: 80%;
-	/*
-	background-color: #ffffff;
-	border: 1px solid #a2a2a2;
-	*/
+	max-width: 300px;
 	z-index: 110;
 	text-align: center;
+	top: 50%;
+	left: 50%;
+	transform:translate(-50%,-50%);
 }
 
 .confirmText{
@@ -261,6 +263,7 @@ th{
 }
 
 #float_btn{  /*2017.10.2*/
+	display: block;
 	position: fixed;
 	width: 50px;
 	height: 50px;
@@ -286,7 +289,7 @@ th{
 	position: absolute;
 	background: #f4f4f4;
 	width: 100%;
-	z-index: 99;
+	z-index: 105;
 	max-width: 700px !important;
 	top: 50px;
 	left: 5%;
@@ -319,9 +322,9 @@ th{
 
 .phonesms{
 	display: inline;
-	width: 23px;
-	margin-left: 2px;
-	margin-right: 2px;
+	width: 16px;
+	margin-left: 5px;
+	margin-right: 5px;
 }
 
 .phonenum{
@@ -364,6 +367,10 @@ th{
 
 .forscroll{
 	width: 0;
+}
+
+.ymdText-pc-add{
+	display: none;
 }
 
 @media(min-width: 600px){
@@ -416,8 +423,33 @@ th{
 		background: #d7f3ff;
 	}
 
-	#page_addmember{
+	#page_addmember,#memberInfoPopup{
 		top: 75px;
+	}
+
+	.ymdText-pc-add{
+		display: inline;
+		line-height: 33px;
+		position: relative;
+		margin-left: 10px;
+	}
+
+	.ymdText-pc-add-member{
+		display: inline;
+		margin-left: 5px;
+		padding:3px 13px 3px 13px;
+		color: #fe4e65;
+		font-size: 14px;
+		border:1px solid #cccccc;
+		cursor: pointer;
+	}
+		.ymdText-pc-add-member:hover{
+			background-color: #fe4e65;
+			color: #ffffff;
+		}
+
+	#float_btn{
+		display: none !important;
 	}
 
 }

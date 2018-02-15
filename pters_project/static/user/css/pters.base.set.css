@@ -18,7 +18,7 @@ a:focus, a:hover{
 
 .wrap{
     width: 100%;
-    max-width: 1200px !important;
+    max-width: 1080px !important;
     left: 50% !important;
     transform: translateX(-50%);
 }
@@ -397,18 +397,13 @@ a:focus, a:hover{
 }
 
 
-
-
-
-
-
 /*PC버전 상단네비바*/
 
 .centermenu{
     position: relative;
     height: 100%;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1080px;
     margin:0 auto;   
 }
 
@@ -479,30 +474,6 @@ a:focus, a:hover{
     line-height: 62px;
 }
 
-
-#float_AD{
-    display: none;
-    position: fixed;
-    top: 22%;
-    right: 0%;
-    width: 115px;
-    height: 100px;
-    background-color: #ffffff;
-    border:0.5px solid #fe4e65;
-    text-align: center;
-    cursor: pointer;
-}
-
-#float_AD p{
-    color: #fe4e65;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-#float_AD span{
-    color: #282828;
-    font-size: 12px;
-}
 
 .pclogout{
     display: none;

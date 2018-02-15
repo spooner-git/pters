@@ -20,6 +20,15 @@ from trainee.models import LectureTb, LectureScheduleTb
 from trainer.models import ClassTb, ClassScheduleTb
 
 
+class RegisterView(TemplateView):
+    template_name = 'login_register_trainer.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RegisterView, self).get_context_data(**kwargs)
+
+        return context
+
+
 class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'main_trainer.html'
 
