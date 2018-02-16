@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import transaction
 from django.shortcuts import render, redirect
@@ -920,9 +920,6 @@ def member_registration(request):
     elif not phone.isdigit():
         error = '연락처를 확인해 주세요.'
 
-    if birthday_dt == '':
-        birthday_dt = '1900-01-01'
-
     if error is None:
         if fast_check == '0':
             if counts_fast == '':
@@ -969,8 +966,12 @@ def member_registration(request):
                 user = User.objects.create_user(username=phone, email=email, first_name=name, password=password)
                 group = Group.objects.get(name='trainee')
                 user.groups.add(group)
-                member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
-                                  birthday_dt=birthday_dt, mod_dt=timezone.now(),reg_dt=timezone.now(), user_id=user.id)
+                if birthday_dt == '':
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
+                else:
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                                      birthday_dt=birthday_dt, mod_dt=timezone.now(),reg_dt=timezone.now(), user_id=user.id)
                 member.save()
                 trainer_class = ClassTb.objects.get(member_id=request.user.id)
                 lecture = LectureTb(class_tb_id=trainer_class.class_id,member_id=member.member_id,
@@ -986,6 +987,8 @@ def member_registration(request):
                 error = '등록 값에 문제가 있습니다.'
             except TypeError as e:
                 error = '등록 값의 형태가 문제 있습니다.'
+            except ValidationError as e:
+                error = '등록 값의 형태가 문제 있습니다'
 
     if error is None:
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 '\
