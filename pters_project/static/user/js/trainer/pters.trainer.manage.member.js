@@ -418,6 +418,9 @@ function currentMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
           var ends = array[5];
           var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
+          if(end == "9999.12.31"){
+            var end = "소진시까지"
+          }
           var phoneToEdit = array[3].replace(/-| |/gi,"");
           if(phoneToEdit.substr(0,2)=="02"){
               var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4)
@@ -483,6 +486,9 @@ function currentMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
           var ends = array[5];
           var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
+          if(end == "9999.12.31"){
+            var end = "소진시까지"
+          }
           var phoneToEdit = array[1].replace(/-| |/gi,"");
           if(phoneToEdit.substr(0,2)=="02"){
               var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4)
@@ -534,6 +540,9 @@ function currentMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
           var ends = array[5];
           var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
+          if(end == "9999.12.31"){
+            var end = "소진시까지"
+          }
           var phoneToEdit = array[2].replace(/-| |/gi,"");
           if(phoneToEdit.substr(0,2)=="02"){
               var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4)
@@ -603,6 +612,9 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
           var ends = array[4];
           var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
+          if(end == "9999.12.31"){
+            var end = "소진시까지"
+          }
           var phoneToEdit = array[2].replace(/-| |/gi,"");
           if(phoneToEdit.substr(0,2)=="02"){
               var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4)
@@ -653,6 +665,9 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
           var ends = array[4];
           var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
+          if(end == "9999.12.31"){
+            var end = "소진시까지"
+          }
           var phoneToEdit = array[1].replace(/-| |/gi,"");
           if(phoneToEdit.substr(0,2)=="02"){
               var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4)
@@ -703,6 +718,9 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
           var ends = array[4];
           var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
+          if(end == "9999.12.31"){
+            var end = "소진시까지"
+          }
           var phoneToEdit = array[2].replace(/-| |/gi,"");
           if(phoneToEdit.substr(0,2)=="02"){
               var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4)
