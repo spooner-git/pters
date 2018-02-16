@@ -474,7 +474,7 @@
           //처리 필요 - hk.kim 180110
           var regCountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_reg_count }}',{% endif %}{% endfor %}]
           var availCountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_avail_count }}',{% endif %}{% endfor %}]
-          var birthdayArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.birthday }}',{% endif %}{% endfor %}]
+          var birthdayArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.birthday_dt }}',{% endif %}{% endfor %}]
           var sexArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.sex }}',{% endif %}{% endfor %}]
 
           var finishnameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
@@ -484,7 +484,7 @@
           var finishmodifyDateArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.mod_dt }}',{% endif %}{% endfor %}]
           var finishemailArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.user.email }}',{% endif %}{% endfor %}]
           var finishendArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
-          var finishbirthdayArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.birthday }}',{% endif %}{% endfor %}]
+          var finishbirthdayArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.birthday_dt }}',{% endif %}{% endfor %}]
           var finishsexArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.sex }}',{% endif %}{% endfor %}]
 
           //처리 필요 - hk.kim 180110
