@@ -48,7 +48,7 @@ $(document).ready(function(){
 
 	$(document).on('click','td',function(){
 		$('#cal_popup_plancheck').fadeIn('fast');
-		$('#shade2').css({'display':'block'});
+		$('#shade').css({'display':'block'});
 		var info = $(this).attr('data-date').split('_')
 		var yy=info[0]
 		var mm=info[1]
@@ -66,7 +66,7 @@ $(document).ready(function(){
 
 	$('#cal_popup_plancheck').click(function(){
 		$(this).fadeOut('fast');
-		$('#shade2').css({'display':'none'});
+		$('#shade').css({'display':'none'});
 	})
 
 
@@ -569,6 +569,8 @@ $(document).ready(function(){
 			var stime1 = splited[3]
 			if(stime1.length<2){
 				var stime1 = '0'+stime1
+			}else if(stime1 == '24'){
+				var stime1 = '00'
 			}
 			var stime = stime1+'_'+splited[4]
 			var etime = splited[7]+'_'+splited[8]
@@ -590,7 +592,9 @@ $(document).ready(function(){
 			var etime = splited[2]
 			var name = splited[4]+" 회원님"
 			var morningday = ""
-			if(stime<12 & dateplans[i-2]==undefined){
+			if(stime==0 & dateplans[i-2]==undefined){
+				var morningday = "오전"
+			}else if(stime<12 & dateplans[i-2]==undefined){
 				var morningday = "오전"
 			}else if(stime>=12 && dateplans[i-2]!=undefined){
 				var splitedprev = dateplans[i-2].split('_')
