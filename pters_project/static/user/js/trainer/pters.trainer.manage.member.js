@@ -1,6 +1,6 @@
 $(document).ready(function(){
-      $(".btn-group > .btn").click(function(){
-   	  		$(this).addClass("active").siblings().removeClass("active");
+    $(".btn-group > .btn").click(function(){
+   	 		$(this).addClass("active").siblings().removeClass("active");
 		});
 
     $('.alignSelect li a').click(function(){
@@ -167,6 +167,15 @@ $(document).ready(function(){
       $('#memberEmail_info').val(DB[name].email);
       $('#datepicker_info').val(DB[name].start);
       $('#datepicker2_info').val(DB[name].end);
+      $('#memberBirthYear_info').val(DB[name].birth.split(' ')[0])
+      $('#memberBirthMonthSelected_info button').val(DB[name].birth.split(' ')[1]).text(DB[name].birth.split(' ')[1])
+      $('#memberBirthDateSelected_info button').val(DB[name].birth.split(' ')[2]).text(DB[name].birth.split(' ')[2])
+      $('.selectbox_checked').removeClass('selectbox_checked')
+      if(DB[name].sex == "M"){
+        $('#memberMale_info').addClass('selectbox_checked')
+      }else if(DB[name].sex == "W"){
+        $('#memberFemale_info').addClass('selectbox_checked')
+      }
       $('#memberInfoPopup').fadeIn('fast');
       $('#shade3').fadeIn('fast');
       scrollToIndicator($('#page_managemember'));
@@ -186,6 +195,15 @@ $(document).ready(function(){
       $('#memberEmail').val(DBe[name].email);
       $('#datepicker').val(DBe[name].start);
       $('#datepicker2').val(DBe[name].end);
+      $('#memberBirthYear_info').val(DBe[name].birth.split(' ')[0])
+      $('#memberBirthMonthSelected_info button').val(DBe[name].birth.split(' ')[1]).text(DB[name].birth.split(' ')[1])
+      $('#memberBirthDateSelected_info button').val(DBe[name].birth.split(' ')[2]).text(DB[name].birth.split(' ')[2])
+      $('.selectbox_checked').removeClass('selectbox_checked')
+      if(DBe[name].sex == "M"){
+        $('#memberMale_info').addClass('selectbox_checked')
+      }else if(DBe[name].sex == "W"){
+        $('#memberFemale_info').addClass('selectbox_checked')
+      }
       $('#memberInfoPopup').fadeIn('fast');
       $('#shade3').fadeIn('fast');
       scrollToIndicator($('#page_managemember'));
@@ -377,11 +395,11 @@ function DataFormatting(){
 function DataFormattingDict(){
     var DBlength = nameArray.length;
     for(var i=0; i<DBlength;i++){
-      DB[nameArray[i]] = {'email':emailArray[i],'count':countArray[i],'phone':phoneArray[i],'start':startArray[i],'end':endArray[i]};
+      DB[nameArray[i]] = {'email':emailArray[i],'count':countArray[i],'phone':phoneArray[i],'start':startArray[i],'end':endArray[i], 'birth':birthdayArray[i], 'sex':sexArray[i]};
     }
     var DBendlength = finishnameArray.length;
     for(var j=0; j<DBendlength;j++){
-      DBe[finishnameArray[j]] = {'email':finishemailArray[j],'count':finishcountArray[j],'phone':finishphoneArray[j],'start':finishstartArray[j],'end':finishendArray[j]}; 
+      DBe[finishnameArray[j]] = {'email':finishemailArray[j],'count':finishcountArray[j],'phone':finishphoneArray[j],'start':finishstartArray[j],'end':finishendArray[j], 'birth':finishbirthdayArray[j], 'sex':finishsexArray[j] }; 
     }
     $('#currentMemberNum').text("진행중 회원수 : "+DBlength)
     $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
