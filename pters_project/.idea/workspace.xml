@@ -18,11 +18,21 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/trainer/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="828">
-              <caret line="995" column="9" lean-forward="true" selection-start-line="995" selection-start-column="9" selection-end-line="995" selection-end-column="9" />
+            <state relative-caret-position="363">
+              <caret line="974" column="29" lean-forward="true" selection-start-line="974" selection-start-column="29" selection-end-line="974" selection-end-column="29" />
               <folding>
                 <element signature="e#26#41#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login_register_trainer.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/trainer/login_register_trainer.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -42,11 +52,21 @@
       <file leaf-file-name="manage_member.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/trainer/templates/manage_member.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="46" column="14" lean-forward="true" selection-start-line="46" selection-start-column="14" selection-end-line="48" selection-end-column="11" />
+            <state relative-caret-position="586">
+              <caret line="485" column="62" lean-forward="true" selection-start-line="485" selection-start-column="62" selection-end-line="485" selection-end-column="62" />
               <folding>
-                <marker date="1518703661777" expanded="true" signature="23521:23528" ph="..." />
+                <marker date="1518770209910" expanded="true" signature="23521:23528" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pters.trainer.manage.work.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/user/js/trainer/pters.trainer.manage.work.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -54,17 +74,17 @@
       <file leaf-file-name="pters.trainer.manage.member.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/user/js/trainer/pters.trainer.manage.member.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-77">
-              <caret line="1235" column="30" lean-forward="true" selection-start-line="1235" selection-start-column="30" selection-end-line="1235" selection-end-column="30" />
+            <state relative-caret-position="403">
+              <caret line="1194" column="51" lean-forward="false" selection-start-line="1194" selection-start-column="51" selection-end-line="1194" selection-end-column="51" />
               <folding>
-                <marker date="1518703938185" expanded="true" signature="2897:2910" ph="..." />
-                <marker date="1518703938185" expanded="true" signature="2995:3008" ph="..." />
-                <marker date="1518703938185" expanded="true" signature="3418:3429" ph="..." />
-                <marker date="1518703938185" expanded="true" signature="43427:43438" ph="..." />
-                <marker date="1518703938185" expanded="true" signature="43651:43662" ph="..." />
-                <marker date="1518703938185" expanded="true" signature="44182:44193" ph="..." />
-                <marker date="1518703938185" expanded="true" signature="44406:44417" ph="..." />
-                <marker date="1518703938185" expanded="true" signature="53869:53880" ph="..." />
+                <marker date="1518705265722" expanded="true" signature="2897:2910" ph="..." />
+                <marker date="1518705265722" expanded="true" signature="2995:3008" ph="..." />
+                <marker date="1518705265722" expanded="true" signature="3418:3429" ph="..." />
+                <marker date="1518705265722" expanded="true" signature="43427:43438" ph="..." />
+                <marker date="1518705265722" expanded="true" signature="43651:43662" ph="..." />
+                <marker date="1518705265722" expanded="true" signature="44182:44193" ph="..." />
+                <marker date="1518705265722" expanded="true" signature="44406:44417" ph="..." />
+                <marker date="1518705265722" expanded="true" signature="53869:53880" ph="..." />
               </folding>
             </state>
           </provider>
@@ -73,28 +93,8 @@
       <file leaf-file-name="manage_member_ajax.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/trainer/templates/manage_member_ajax.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
-              <caret line="41" column="19" lean-forward="false" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trainer/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="490">
-              <caret line="82" column="82" lean-forward="true" selection-start-line="82" selection-start-column="82" selection-end-line="82" selection-end-column="82" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trainee/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="15" column="38" lean-forward="false" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
+            <state relative-caret-position="315">
+              <caret line="21" column="116" lean-forward="false" selection-start-line="21" selection-start-column="82" selection-end-line="21" selection-end-column="116" />
               <folding />
             </state>
           </provider>
@@ -114,7 +114,7 @@
         <entry file="file://$PROJECT_DIR$/login/models.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
-              <caret line="20" column="15" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="15" />
+              <caret line="20" column="38" lean-forward="false" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -134,11 +134,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>email</find>
-      <find>회원명</find>
-      <find>fast</find>
-      <find>error</find>
-      <find>members_pc</find>
       <find>alert</find>
       <find>{%</find>
       <find>member_manage_ajax</find>
@@ -158,12 +153,17 @@
       <find>created</find>
       <find>ajax</find>
       <find>messagesArray</find>
-      <find>member_manage</find>
       <find>ajaxMemberData</find>
       <find>finishbirthdayArray</find>
-      <find>birthdayArray</find>
       <find>messages</find>
+      <find>member_manage</find>
+      <find>member_regi</find>
       <find>finishsexArray</find>
+      <find>birthdayArray</find>
+      <find>next_page</find>
+      <find>birthday_dt</find>
+      <find>lecture.trainer_member.birthday_dt</find>
+      <find>member</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -173,10 +173,10 @@
         <option value="$PROJECT_DIR$/static/user/js/trainer/pters.trainer.manage.member.add.js" />
         <option value="$PROJECT_DIR$/trainer/templates/main_trainer.html" />
         <option value="$PROJECT_DIR$/login/admin.py" />
-        <option value="$PROJECT_DIR$/trainer/views.py" />
         <option value="$PROJECT_DIR$/trainer/templates/manage_member_ajax.html" />
-        <option value="$PROJECT_DIR$/trainer/templates/manage_member.html" />
         <option value="$PROJECT_DIR$/static/user/js/trainer/pters.trainer.manage.member.js" />
+        <option value="$PROJECT_DIR$/trainer/templates/manage_member.html" />
+        <option value="$PROJECT_DIR$/trainer/views.py" />
       </list>
     </option>
   </component>
@@ -734,13 +734,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/trainer/templates/manage_member_ajax.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="34" column="42" lean-forward="false" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/trainer/templates/cal_day_ajax.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -779,14 +772,14 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1518703938185" expanded="true" signature="2897:2910" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="2995:3008" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="3418:3429" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="43427:43438" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="43651:43662" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="44182:44193" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="44406:44417" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="53869:53880" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="2897:2910" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="2995:3008" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="3418:3429" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="43427:43438" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="43651:43662" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="44182:44193" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="44406:44417" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="53869:53880" ph="..." />
           </folding>
         </state>
       </provider>
@@ -837,7 +830,7 @@
         <state relative-caret-position="6360">
           <caret line="424" column="66" lean-forward="false" selection-start-line="424" selection-start-column="52" selection-end-line="424" selection-end-column="66" />
           <folding>
-            <marker date="1518703661777" expanded="true" signature="23521:23528" ph="..." />
+            <marker date="1518770209910" expanded="true" signature="23521:23528" ph="..." />
           </folding>
         </state>
       </provider>
@@ -882,7 +875,7 @@
         <state relative-caret-position="6360">
           <caret line="424" column="66" lean-forward="false" selection-start-line="424" selection-start-column="52" selection-end-line="424" selection-end-column="66" />
           <folding>
-            <marker date="1518703661777" expanded="true" signature="23521:23528" ph="..." />
+            <marker date="1518770209910" expanded="true" signature="23521:23528" ph="..." />
           </folding>
         </state>
       </provider>
@@ -910,7 +903,7 @@
         <state relative-caret-position="6360">
           <caret line="424" column="66" lean-forward="false" selection-start-line="424" selection-start-column="52" selection-end-line="424" selection-end-column="66" />
           <folding>
-            <marker date="1518703661777" expanded="true" signature="23521:23528" ph="..." />
+            <marker date="1518770209910" expanded="true" signature="23521:23528" ph="..." />
           </folding>
         </state>
       </provider>
@@ -989,14 +982,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
           <caret line="33" column="28" lean-forward="false" selection-start-line="33" selection-start-column="28" selection-end-line="33" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trainer/login_register_trainer.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1119,14 +1104,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/login/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="20" column="15" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/trainee/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1137,30 +1114,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/trainer/templates/manage_member.html">
+    <entry file="file://$PROJECT_DIR$/trainer/login_register_trainer.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="46" column="14" lean-forward="true" selection-start-line="46" selection-start-column="14" selection-end-line="48" selection-end-column="11" />
-          <folding>
-            <marker date="1518703661777" expanded="true" signature="23521:23528" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/user/js/trainer/pters.trainer.manage.member.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-77">
-          <caret line="1235" column="30" lean-forward="true" selection-start-line="1235" selection-start-column="30" selection-end-line="1235" selection-end-column="30" />
-          <folding>
-            <marker date="1518703938185" expanded="true" signature="2897:2910" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="2995:3008" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="3418:3429" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="43427:43438" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="43651:43662" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="44182:44193" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="44406:44417" ph="..." />
-            <marker date="1518703938185" expanded="true" signature="53869:53880" ph="..." />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1172,18 +1130,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/static/user/js/trainer/pters.trainer.manage.work.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/user/js/trainer/pters.trainer.manage.member.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="1194" column="51" lean-forward="false" selection-start-line="1194" selection-start-column="51" selection-end-line="1194" selection-end-column="51" />
+          <folding>
+            <marker date="1518705265722" expanded="true" signature="2897:2910" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="2995:3008" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="3418:3429" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="43427:43438" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="43651:43662" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="44182:44193" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="44406:44417" ph="..." />
+            <marker date="1518705265722" expanded="true" signature="53869:53880" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/trainer/templates/manage_member_ajax.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="41" column="19" lean-forward="false" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="19" />
+        <state relative-caret-position="315">
+          <caret line="21" column="116" lean-forward="false" selection-start-line="21" selection-start-column="82" selection-end-line="21" selection-end-column="116" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trainer/templates/manage_member.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="586">
+          <caret line="485" column="62" lean-forward="true" selection-start-line="485" selection-start-column="62" selection-end-line="485" selection-end-column="62" />
+          <folding>
+            <marker date="1518770209910" expanded="true" signature="23521:23528" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="20" column="38" lean-forward="false" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trainer/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="828">
-          <caret line="995" column="9" lean-forward="true" selection-start-line="995" selection-start-column="9" selection-end-line="995" selection-end-column="9" />
+        <state relative-caret-position="363">
+          <caret line="974" column="29" lean-forward="true" selection-start-line="974" selection-start-column="29" selection-end-line="974" selection-end-column="29" />
           <folding>
             <element signature="e#26#41#0" expanded="true" />
           </folding>
