@@ -36,43 +36,40 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
 
         error = None
-        trainer_class = None
-
+        class_datum = None
         today = datetime.date.today()
         one_day_after = today + datetime.timedelta(days=1)
         fourteen_days_ago = today - datetime.timedelta(days=14)
-
         today_schedule_num = 0
         new_member_num = 0
-
         context['total_member_num'] = 0
         context['to_be_end_member_num'] = 0
         context['today_schedule_num'] = 0
         context['new_member_num'] = 0
 
         try:
-            trainer_class = ClassTb.objects.get(member=self.request.user.id)
+            class_datum = ClassTb.objects.get(member=self.request.user.id)
         except ObjectDoesNotExist:
             error = '강사 PT 정보가 존재하지 않습니다'
 
         if error is None :
             #남은 횟수 1개 이상인 경우 - 180215 hk.kim
-            context['total_member_num'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
+            context['total_member_num'] = LectureTb.objects.filter(class_tb_id=class_datum.class_id,
                                                                        lecture_rem_count__gte=1).count()
             #남은 횟수 1개 이상 3개 미만인 경우 - 180215 hk.kim
-            context['to_be_end_member_num'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id,
+            context['to_be_end_member_num'] = LectureTb.objects.filter(class_tb_id=class_datum.class_id,
                                                                            lecture_rem_count__gte=1,
                                                                            lecture_rem_count__lte=3).count()
 
         if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            lecture_data = LectureTb.objects.filter(class_tb_id=class_datum.class_id)
 
-            for lecture in month_lecture_data:
-                today_schedule_num += LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
+            for lecture_datum in lecture_data:
+                today_schedule_num += LectureScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
                                                                    start_dt__gte=today,
                                                                    start_dt__lt=one_day_after,
                                                                    en_dis_type='1',use='1').count()
-                if lecture.start_date >= fourteen_days_ago:
+                if lecture_datum.start_date >= fourteen_days_ago:
                     new_member_num += 1
 
         context['today_schedule_num'] = today_schedule_num
@@ -89,85 +86,7 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalDayView, self).get_context_data(**kwargs)
-        error = None
-        trainer_class = None
-        try:
-            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
-
-        context['trainer_member'] = None #sk Test 추가 171117
-
-        #daily_off_data = []
-        #daily_data = []
-        class_schedule_data = []
-        lecture_schedule_data = []
-        daily_off_data_start_date = []
-        daily_off_data_end_date = []
-        daily_lecture_data_start_date = []
-        daily_lecture_data_end_date = []
-        daily_lecture_data_member = []
-        daily_lecture_data_id = []
-        daily_schedule_finish = []
-
-        today = datetime.date.today()
-        fourteen_days_ago = today - datetime.timedelta(days=14)
-        fifteen_days_after = today + datetime.timedelta(days=15)
-
-        #sk Test 추가 171117
-        if error is None :
-            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_avail_count__gte=1)
-
-            for lecture in context['trainer_member']:
-                try:
-                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
-                except ObjectDoesNotExist:
-                    error = '회원 PT 정보가 존재하지 않습니다'
-                    # logger.error(error)
-        #sk Test 추가 171117
-
-        if error is None:
-
-            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=fourteen_days_ago,
-                                                              start_dt__lt=fifteen_days_after, use='1')
-            for month_class in month_class_data:
-                class_schedule_data.append(month_class.class_schedule_id)
-                daily_off_data_start_date.append(month_class.start_dt)
-                daily_off_data_end_date.append(month_class.end_dt)
-
-        if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-            for lecture in month_lecture_data:
-                member_data = MemberTb.objects.get(member_id=lecture.member_id)
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=fourteen_days_ago,
-                                                                            start_dt__lt=fifteen_days_after, use='1')
-                for month_lecture in lecture.lecture_schedule:
-                    lecture_schedule_data.append(month_lecture.lecture_schedule_id)
-                    daily_lecture_data_start_date.append(month_lecture.start_dt)
-                    daily_lecture_data_end_date.append(month_lecture.end_dt)
-                    daily_lecture_data_member.append(member_data.name)
-                    daily_lecture_data_id.append(lecture.lecture_id)
-                    if month_lecture.state_cd == 'PE':
-                        daily_schedule_finish.append(1)
-                    else :
-                        daily_schedule_finish.append(0)
-
-        # context['daily_lecture_data'] = daily_data
-        context['daily_lecture_schedule_id'] = lecture_schedule_data
-        context['class_schedule_data'] = class_schedule_data
-
-        context['daily_off_data_start_date'] = daily_off_data_start_date
-        context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
-        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
-        context['daily_lecture_data_member'] = daily_lecture_data_member
-        context['daily_lecture_data_id'] = daily_lecture_data_id
-
-        context['daily_schedule_finish'] = daily_schedule_finish
-
+        context = get_trainer_schedule_data(context, self.request.user.id)
         return context
 
 
@@ -176,142 +95,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalDayViewAjax, self).get_context_data(**kwargs)
-        error = None
-        trainer_class = None
-        try:
-            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
-            # logger.error(error)
-
-        context['trainer_member'] = None  # sk Test 추가 171117
-
-        # daily_off_data = []
-        # daily_data = []
-        class_schedule_data = []
-        lecture_schedule_data = []
-        daily_off_data_start_date = []
-        daily_off_data_end_date = []
-        daily_lecture_data_start_date = []
-        daily_lecture_data_end_date = []
-        daily_lecture_data_member = []
-        daily_lecture_data_id = []
-        daily_schedule_finish = []
-
-        today = datetime.date.today()
-        fourteen_days_ago = today - datetime.timedelta(days=14)
-        fifteen_days_after = today + datetime.timedelta(days=15)
-
-        # sk Test 추가 171117
-        if error is None:
-            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_avail_count__gte=1)
-
-            for lecture in context['trainer_member']:
-                try:
-                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
-                except ObjectDoesNotExist:
-                    error = '회원 PT 정보가 존재하지 않습니다'
-        # sk Test 추가 171117
-
-        if error is None:
-
-            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=fourteen_days_ago,
-                                                              start_dt__lt=fifteen_days_after, use='1')
-            for month_class in month_class_data:
-                class_schedule_data.append(month_class.class_schedule_id)
-                daily_off_data_start_date.append(month_class.start_dt)
-                daily_off_data_end_date.append(month_class.end_dt)
-
-        if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-            for lecture in month_lecture_data:
-                member_data = MemberTb.objects.get(member_id=lecture.member_id)
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=fourteen_days_ago,
-                                                                            start_dt__lt=fifteen_days_after, use='1')
-                for month_lecture in lecture.lecture_schedule:
-                    lecture_schedule_data.append(month_lecture.lecture_schedule_id)
-                    daily_lecture_data_start_date.append(month_lecture.start_dt)
-                    daily_lecture_data_end_date.append(month_lecture.end_dt)
-                    daily_lecture_data_member.append(member_data.name)
-                    daily_lecture_data_id.append(lecture.lecture_id)
-                    if month_lecture.state_cd == 'PE':
-                        daily_schedule_finish.append(1)
-                    else :
-                        daily_schedule_finish.append(0)
-
-        # context['daily_lecture_data'] = daily_data
-        context['daily_lecture_schedule_id'] = lecture_schedule_data
-        context['class_schedule_data'] = class_schedule_data
-        context['daily_off_data_start_date'] = daily_off_data_start_date
-        context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
-        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
-        context['daily_lecture_data_member'] = daily_lecture_data_member
-        context['daily_lecture_data_id'] = daily_lecture_data_id
-        context['daily_schedule_finish'] = daily_schedule_finish
-
-        return context
-
-
-class PtAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'pt_add.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(PtAddView, self).get_context_data(**kwargs)
-        error = None
-        trainer_class = None
-        try:
-            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
-
-        context['trainer_member'] = None
-        daily_off_data_start_date = []
-        daily_off_data_end_date = []
-        daily_lecture_data_start_date = []
-        daily_lecture_data_end_date = []
-
-        today = datetime.date.today()
-        one_day_ago = today - datetime.timedelta(days=1)
-        fifteen_days_after = today + datetime.timedelta(days=15)
-
-        if error is None :
-            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_avail_count__gte=1)
-
-            for lecture in context['trainer_member']:
-                try:
-                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
-                except ObjectDoesNotExist:
-                    error = '회원 PT 정보가 존재하지 않습니다'
-                    # logger.error(error)
-
-        if error is None:
-
-            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=one_day_ago,
-                                                              start_dt__lt=fifteen_days_after, use='1')
-            for month_class in month_class_data:
-                daily_off_data_start_date.append(month_class.start_dt)
-                daily_off_data_end_date.append(month_class.end_dt)
-
-        if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-            for lecture in month_lecture_data:
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=one_day_ago,
-                                                                            start_dt__lt=fifteen_days_after, use='1')
-                for month_lecture in lecture.lecture_schedule:
-                    daily_lecture_data_start_date.append(month_lecture.start_dt)
-                    daily_lecture_data_end_date.append(month_lecture.end_dt)
-
-        context['daily_off_data_start_date'] = daily_off_data_start_date
-        context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
-        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
+        context = get_trainer_schedule_data(context, self.request.user.id)
 
         return context
 
@@ -321,86 +105,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalWeekView, self).get_context_data(**kwargs)
-        error = None
-        trainer_class = None
-        try:
-            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
-            # logger.error(error)
-
-        context['trainer_member'] = None #sk Test 추가 171117
-
-        #daily_off_data = []
-        #daily_data = []
-        class_schedule_data = []
-        lecture_schedule_data = []
-
-        daily_off_data_start_date = []
-        daily_off_data_end_date = []
-        daily_lecture_data_start_date = []
-        daily_lecture_data_end_date = []
-        daily_lecture_data_member = []
-        daily_lecture_data_id = []
-        daily_schedule_finish = []
-        today = datetime.date.today()
-        fourteen_days_ago = today - datetime.timedelta(days=14)
-        fifteen_days_after = today + datetime.timedelta(days=15)
-
-        #sk Test 추가 171117
-        if error is None :
-            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_avail_count__gte=1)
-
-            for lecture in context['trainer_member']:
-                try:
-                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
-                except ObjectDoesNotExist:
-                    error = '회원 PT 정보가 존재하지 않습니다'
-                    # logger.error(error)
-
-        #sk Test 추가 171117
-
-        if error is None:
-
-            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=fourteen_days_ago,
-                                                              start_dt__lt=fifteen_days_after, use='1')
-            for month_class in month_class_data:
-                class_schedule_data.append(month_class.class_schedule_id)
-                daily_off_data_start_date.append(month_class.start_dt)
-                daily_off_data_end_date.append(month_class.end_dt)
-
-        if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-            for lecture in month_lecture_data:
-                member_data = MemberTb.objects.get(member_id=lecture.member_id)
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=fourteen_days_ago,
-                                                                            start_dt__lt=fifteen_days_after, use='1')
-                for month_lecture in lecture.lecture_schedule:
-                    lecture_schedule_data.append(month_lecture.lecture_schedule_id)
-                    daily_lecture_data_start_date.append(month_lecture.start_dt)
-                    daily_lecture_data_end_date.append(month_lecture.end_dt)
-                    daily_lecture_data_member.append(member_data.name)
-                    daily_lecture_data_id.append(lecture.lecture_id)
-                    if month_lecture.state_cd == 'PE':
-                        daily_schedule_finish.append(1)
-                    else :
-                        daily_schedule_finish.append(0)
-
-        #context['daily_off_data'] = daily_off_data
-        #context['daily_lecture_data'] = daily_data
-        context['daily_lecture_schedule_id'] = lecture_schedule_data
-        context['class_schedule_data'] = class_schedule_data
-
-        context['daily_off_data_start_date'] = daily_off_data_start_date
-        context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
-        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
-        context['daily_lecture_data_member'] = daily_lecture_data_member
-        context['daily_lecture_data_id'] = daily_lecture_data_id
-        context['daily_schedule_finish'] = daily_schedule_finish
+        context = get_trainer_schedule_data(context, self.request.user.id)
 
         return context
 
@@ -410,130 +115,99 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
-        error = None
-        trainer_class = None
-        try:
-            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
-            # logger.error(error)
-
-        context['trainer_member'] = None #sk Test 추가 171117
-
-        #daily_off_data = []
-        #daily_data = []
-        class_schedule_data = []
-        lecture_schedule_data = []
-
-        daily_off_data_start_date = []
-        daily_off_data_end_date = []
-        daily_lecture_data_start_date = []
-        daily_lecture_data_end_date = []
-        daily_lecture_data_member = []
-        daily_lecture_data_id = []
-        holiday = []
-        today = datetime.date.today()
-        fourteen_days_ago = today - datetime.timedelta(days=14)
-        fifteen_days_after = today + datetime.timedelta(days=15)
-
-        #sk Test 추가 171117
-        if error is None :
-            context['trainer_member'] = LectureTb.objects.filter(class_tb_id=trainer_class.class_id
-                                                                 , lecture_avail_count__gte=1)
-
-            for lecture in context['trainer_member']:
-                try:
-                    lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
-                except ObjectDoesNotExist:
-                    error = '회원 PT 정보가 존재하지 않습니다'
-                    # logger.error(error)
-
-        #sk Test 추가 171117
-
-        if error is None:
-
-            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=fourteen_days_ago,
-                                                              start_dt__lt=fifteen_days_after, use='1')
-            for month_class in month_class_data:
-                class_schedule_data.append(month_class.class_schedule_id)
-                daily_off_data_start_date.append(month_class.start_dt)
-                daily_off_data_end_date.append(month_class.end_dt)
-
-        if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-            for lecture in month_lecture_data:
-                member_data = MemberTb.objects.get(member_id=lecture.member_id)
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=fourteen_days_ago,
-                                                                            start_dt__lt=fifteen_days_after, use='1')
-                for month_lecture in lecture.lecture_schedule:
-                    lecture_schedule_data.append(month_lecture.lecture_schedule_id)
-                    daily_lecture_data_start_date.append(month_lecture.start_dt)
-                    daily_lecture_data_end_date.append(month_lecture.end_dt)
-                    daily_lecture_data_member.append(member_data.name)
-                    daily_lecture_data_id.append(lecture.lecture_id)
+        context = get_trainer_schedule_data(context, self.request.user.id)
 
         holiday = HolidayTb.objects.filter(use='1')
-        context['daily_lecture_schedule_id'] = lecture_schedule_data
-        context['class_schedule_data'] = class_schedule_data
-
-        context['daily_off_data_start_date'] = daily_off_data_start_date
-        context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
-        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
-        context['daily_lecture_data_member'] = daily_lecture_data_member
-        context['daily_lecture_data_id'] = daily_lecture_data_id
         context['holiday'] = holiday
 
         return context
 
 
-class OffAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'off_add.html'
+def get_trainer_schedule_data(context, trainer_id):
 
-    def get_context_data(self, **kwargs):
-        context = super(OffAddView, self).get_context_data(**kwargs)
-        error = None
-        trainer_class = None
-        try:
-            trainer_class = ClassTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
+    error = None
+    class_datum = None
+    context['lecture_info'] = None
+    off_schedule_id = []
+    off_schedule_start_datetime = []
+    off_schedule_end_datetime = []
+    pt_schedule_id = []
+    pt_schedule_lecture_id = []
+    pt_schedule_start_datetime = []
+    pt_schedule_end_datetime = []
+    pt_schedule_member_name = []
+    pt_schedule_finish_check = []
 
-        daily_off_data_start_date = []
-        daily_off_data_end_date = []
-        daily_lecture_data_start_date = []
-        daily_lecture_data_end_date = []
-        today = datetime.date.today()
-        one_day_ago = today - datetime.timedelta(days=1)
-        fifteen_days_after = today + datetime.timedelta(days=15)
+    today = datetime.date.today()
+    fourteen_days_ago = today - datetime.timedelta(days=14)
+    fifteen_days_after = today + datetime.timedelta(days=15)
 
-        if error is None:
+    # 강사 정보 가져오기
+    try:
+        class_datum = ClassTb.objects.get(member_id=trainer_id)
+    except ObjectDoesNotExist:
+        error = '강사 PT 정보가 존재하지 않습니다'
 
-            month_class_data = ClassScheduleTb.objects.filter(class_tb_id=trainer_class.class_id,
-                                                              en_dis_type='0', start_dt__gte=one_day_ago,
-                                                              start_dt__lt=fifteen_days_after, use='1')
-            for month_class in month_class_data:
-                daily_off_data_start_date.append(month_class.start_dt)
-                daily_off_data_end_date.append(month_class.end_dt)
+    # 강좌에 해당하는 회원 정보 가져오기, 예약가능 횟수 1개 이상인 회원
+    if error is None:
+        # 강좌에 해당하는 수강정보 가져오기
+        context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_datum.class_id,
+                                                           lecture_avail_count__gte=1)
+        for lecture in context['lecture_info']:
+            # 수강정보에 해당하는 회원정보 가져오기
+            try:
+                lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id)
+            except ObjectDoesNotExist:
+                error = '회원 PT 정보가 존재하지 않습니다'
 
-        if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
-            for lecture in month_lecture_data:
-                lecture.lecture_schedule = LectureScheduleTb.objects.filter(lecture_tb=lecture.lecture_id,
-                                                                            en_dis_type='1', start_dt__gte=one_day_ago,
-                                                                            start_dt__lt=fifteen_days_after, use='1')
-                for month_lecture in lecture.lecture_schedule:
-                    daily_lecture_data_start_date.append(month_lecture.start_dt)
-                    daily_lecture_data_end_date.append(month_lecture.end_dt)
+    # OFF 일정 조회
+    if error is None:
+        off_schedule_data = ClassScheduleTb.objects.filter(class_tb_id=class_datum.class_id,
+                                                           en_dis_type='0', start_dt__gte=fourteen_days_ago,
+                                                           start_dt__lt=fifteen_days_after, use='1')
+        for off_schedule_datum in off_schedule_data:
+            off_schedule_id.append(off_schedule_datum.class_schedule_id)
+            off_schedule_start_datetime.append(off_schedule_datum.start_dt)
+            off_schedule_end_datetime.append(off_schedule_datum.end_dt)
 
-        context['daily_off_data_start_date'] = daily_off_data_start_date
-        context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
-        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
+    # PT 일정 조회
+    if error is None:
+        # 강사에 해당하는 강좌 정보 불러오기
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_datum.class_id)
+        for lecture_datum in lecture_data:
+            # 강좌별로 연결되어있는 회원 리스트 불러오기
+            member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
+            # 강좌별로 연결된 PT 스케쥴 가져오기
+            lecture_datum.pt_schedule_data = LectureScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
+                                                                              en_dis_type='1',
+                                                                              start_dt__gte=fourteen_days_ago,
+                                                                              start_dt__lt=fifteen_days_after, use='1')
+            # PT 스케쥴 정보 셋팅
+            for pt_schedule_datum in lecture_datum.pt_schedule_data:
+                # lecture schedule id 셋팅
+                pt_schedule_id.append(pt_schedule_datum.lecture_schedule_id)
+                # lecture schedule 에 해당하는 lecture id 셋팅
+                pt_schedule_lecture_id.append(lecture_datum.lecture_id)
+                pt_schedule_member_name.append(member_data.name)
+                pt_schedule_start_datetime.append(pt_schedule_datum.start_dt)
+                pt_schedule_end_datetime.append(pt_schedule_datum.end_dt)
+                # 끝난 스케쥴인지 확인
+                if pt_schedule_datum.state_cd == 'PE':
+                    pt_schedule_finish_check.append(1)
+                else:
+                    pt_schedule_finish_check.append(0)
 
-        return context
+    context['off_schedule_id'] = off_schedule_id
+    context['off_schedule_start_datetime'] = off_schedule_start_datetime
+    context['off_schedule_end_datetime'] = off_schedule_end_datetime
+    context['pt_schedule_id'] = pt_schedule_id
+    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
+    context['pt_schedule_member_name'] = pt_schedule_member_name
+    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
+    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
+    context['pt_schedule_finish_check'] = pt_schedule_finish_check
+
+    return context
 
 
 class OffRepeatAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -597,8 +271,6 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
                 except ObjectDoesNotExist:
                     error = '회원 PT 정보가 존재하지 않습니다'
-        #if context[messages] is not None:
-        #    print(self.requset.messages)
 
         return context
 
@@ -625,17 +297,6 @@ class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     lecture.trainer_member = MemberTb.objects.get(member_id=lecture.member_id)
                 except ObjectDoesNotExist:
                     error = '회원 PT 정보가 존재하지 않습니다'
-        #if context[messages] is not None:
-        #    print(self.requset.messages)
-        #    messages.info(self.request, self.request.messages)
-        return context
-
-
-class AddMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'member_add.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(AddMemberView, self).get_context_data(**kwargs)
 
         return context
 

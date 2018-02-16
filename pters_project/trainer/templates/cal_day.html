@@ -475,20 +475,28 @@
         <!-- Placed at the end of the document so the pages load faster -->
         <script>
           //front-end에서 다뤄야하는 데이터
-        	var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
-        	var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
-        	var classTimeArray_member_name = [{% for member_name in daily_lecture_data_member %}'{{ member_name }}',{% endfor %}];
-          var classArray_lecture_id = [{% for lecture_id in daily_lecture_data_id %}'{{ lecture_id }}',{% endfor %}];
-          var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}];
-          var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
 
-          var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
-          var offScheduleIdArray = [{% for daily_class_schedule_id in class_schedule_data %}'{{ daily_class_schedule_id }}', {% endfor %}];
-          var scheduleFinishArray =  [{% for daily_schedule_finish in daily_schedule_finish %}'{{ daily_schedule_finish }}', {% endfor %}];
+          //PT 일정 등록시 필요한 정보
+          var memberNameArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.name }}',{% endfor %}];
+          var memberAvailCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}];
+          var memberLectureIdArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_id }}',{% endfor %}];
 
-          var memberNameArray = [{% for lecture in trainer_member %}'{{ lecture.trainer_member.name }}',{% endfor %}];
-          var memberAvailCountArray = [{% for lecture in trainer_member %}'{{ lecture.lecture_avail_count }}',{% endfor %}];
-          var memberLectureIdArray = [{% for lecture in trainer_member %}'{{ lecture.lecture_id }}',{% endfor %}];
+          //OFF 일정 관련 정보
+          var offScheduleIdArray = [{% for off_schedule_id_info in off_schedule_id %}'{{ off_schedule_id_info }}', {% endfor %}];
+          var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}',{% endfor %}];
+          var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}',{% endfor %}];
+
+          //PT 일정 관련 정보
+          //pt schedule id
+          var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}',{% endfor %}];
+          //pt schedule 에 해당하는 lecture id
+          var classArray_lecture_id = [{% for pt_schedule_lecture_id_info in pt_schedule_lecture_id %}'{{ pt_schedule_lecture_id_info }}',{% endfor %}];
+          //pt schedule 에 해당하는 회원명
+          var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}',{% endfor %}];
+          var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}',{% endfor %}];
+          var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}',{% endfor %}];
+          //pt schedule이 끝났는지 확인
+          var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}', {% endfor %}];
 
           var classTimeArray = [];
           var offTimeArray = [];
