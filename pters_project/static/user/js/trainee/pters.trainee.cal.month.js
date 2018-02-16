@@ -468,8 +468,8 @@ $(document).ready(function(){
 		//currentYMD 형식  ex : week120177
 		var textYear = currentYMD.substr(5,4); //2017
 		var textMonth = currentYMD.substr(9,2); //7
-		$('#yearText').text(textYear);
-		$('#monthText').text(textMonth+'월');
+		$('#yearText, #ymdText-pc-year').text(textYear);
+		$('#monthText, #ymdText-pc-month').text(textMonth+'월');
 	};
 
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
