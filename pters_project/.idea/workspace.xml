@@ -18,8 +18,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/trainer/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="277" column="65" lean-forward="false" selection-start-line="277" selection-start-column="65" selection-end-line="277" selection-end-column="65" />
+            <state relative-caret-position="570">
+              <caret line="111" column="0" lean-forward="true" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
               <folding>
                 <element signature="e#26#41#0" expanded="true" />
               </folding>
@@ -79,7 +79,7 @@
         <entry file="file://$PROJECT_DIR$/trainer/templates/cal_day.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="260">
-              <caret line="478" column="5" lean-forward="true" selection-start-line="478" selection-start-column="5" selection-end-line="499" selection-end-column="0" />
+              <caret line="478" column="5" lean-forward="false" selection-start-line="478" selection-start-column="5" selection-end-line="499" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -89,7 +89,7 @@
         <entry file="file://$PROJECT_DIR$/trainer/templates/cal_week.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="284">
-              <caret line="556" column="0" lean-forward="true" selection-start-line="556" selection-start-column="0" selection-end-line="578" selection-end-column="0" />
+              <caret line="556" column="0" lean-forward="false" selection-start-line="556" selection-start-column="0" selection-end-line="578" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -99,7 +99,7 @@
         <entry file="file://$PROJECT_DIR$/trainer/templates/cal_month.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-332">
-              <caret line="241" column="26" lean-forward="true" selection-start-line="241" selection-start-column="26" selection-end-line="241" selection-end-column="26" />
+              <caret line="241" column="26" lean-forward="false" selection-start-line="241" selection-start-column="26" selection-end-line="241" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -109,7 +109,7 @@
         <entry file="file://$PROJECT_DIR$/trainer/templates/cal_day_ajax.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="405">
-              <caret line="27" column="0" lean-forward="true" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+              <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -119,7 +119,7 @@
         <entry file="file://$PROJECT_DIR$/trainer/urls.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="555">
-              <caret line="38" column="47" lean-forward="true" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
+              <caret line="38" column="47" lean-forward="false" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -741,14 +741,14 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1518705265722" expanded="true" signature="2897:2910" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="2995:3008" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="3418:3429" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="43427:43438" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="43651:43662" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="44182:44193" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="44406:44417" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="53869:53880" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="2897:2910" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="2995:3008" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="3418:3429" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="43889:43900" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="44113:44124" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="44644:44655" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="44868:44879" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="54331:54342" ph="..." />
           </folding>
         </state>
       </provider>
@@ -799,7 +799,7 @@
         <state relative-caret-position="6360">
           <caret line="424" column="66" lean-forward="false" selection-start-line="424" selection-start-column="52" selection-end-line="424" selection-end-column="66" />
           <folding>
-            <marker date="1518772409853" expanded="true" signature="23521:23528" ph="..." />
+            <marker date="1518780243813" expanded="true" signature="23521:23528" ph="..." />
           </folding>
         </state>
       </provider>
@@ -844,7 +844,7 @@
         <state relative-caret-position="6360">
           <caret line="424" column="66" lean-forward="false" selection-start-line="424" selection-start-column="52" selection-end-line="424" selection-end-column="66" />
           <folding>
-            <marker date="1518772409853" expanded="true" signature="23521:23528" ph="..." />
+            <marker date="1518780243813" expanded="true" signature="23521:23528" ph="..." />
           </folding>
         </state>
       </provider>
@@ -872,7 +872,7 @@
         <state relative-caret-position="6360">
           <caret line="424" column="66" lean-forward="false" selection-start-line="424" selection-start-column="52" selection-end-line="424" selection-end-column="66" />
           <folding>
-            <marker date="1518772409853" expanded="true" signature="23521:23528" ph="..." />
+            <marker date="1518780243813" expanded="true" signature="23521:23528" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1040,14 +1040,14 @@
         <state relative-caret-position="403">
           <caret line="1194" column="51" lean-forward="false" selection-start-line="1194" selection-start-column="51" selection-end-line="1194" selection-end-column="51" />
           <folding>
-            <marker date="1518705265722" expanded="true" signature="2897:2910" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="2995:3008" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="3418:3429" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="43427:43438" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="43651:43662" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="44182:44193" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="44406:44417" ph="..." />
-            <marker date="1518705265722" expanded="true" signature="53869:53880" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="2897:2910" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="2995:3008" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="3418:3429" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="43889:43900" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="44113:44124" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="44644:44655" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="44868:44879" ph="..." />
+            <marker date="1518780243810" expanded="true" signature="54331:54342" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1073,7 +1073,7 @@
         <state relative-caret-position="616">
           <caret line="487" column="50" lean-forward="false" selection-start-line="487" selection-start-column="50" selection-end-line="487" selection-end-column="50" />
           <folding>
-            <marker date="1518772409853" expanded="true" signature="23521:23528" ph="..." />
+            <marker date="1518780243813" expanded="true" signature="23521:23528" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1121,7 +1121,7 @@
     <entry file="file://$PROJECT_DIR$/trainer/templates/cal_day.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
-          <caret line="478" column="5" lean-forward="true" selection-start-line="478" selection-start-column="5" selection-end-line="499" selection-end-column="0" />
+          <caret line="478" column="5" lean-forward="false" selection-start-line="478" selection-start-column="5" selection-end-line="499" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1129,7 +1129,7 @@
     <entry file="file://$PROJECT_DIR$/trainer/templates/cal_week.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="284">
-          <caret line="556" column="0" lean-forward="true" selection-start-line="556" selection-start-column="0" selection-end-line="578" selection-end-column="0" />
+          <caret line="556" column="0" lean-forward="false" selection-start-line="556" selection-start-column="0" selection-end-line="578" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1137,7 +1137,7 @@
     <entry file="file://$PROJECT_DIR$/trainer/templates/cal_month.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-332">
-          <caret line="241" column="26" lean-forward="true" selection-start-line="241" selection-start-column="26" selection-end-line="241" selection-end-column="26" />
+          <caret line="241" column="26" lean-forward="false" selection-start-line="241" selection-start-column="26" selection-end-line="241" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -1145,7 +1145,7 @@
     <entry file="file://$PROJECT_DIR$/trainer/templates/cal_day_ajax.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
-          <caret line="27" column="0" lean-forward="true" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1177,15 +1177,15 @@
     <entry file="file://$PROJECT_DIR$/trainer/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="555">
-          <caret line="38" column="47" lean-forward="true" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
+          <caret line="38" column="47" lean-forward="false" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/trainer/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="277" column="65" lean-forward="false" selection-start-line="277" selection-start-column="65" selection-end-line="277" selection-end-column="65" />
+        <state relative-caret-position="570">
+          <caret line="111" column="0" lean-forward="true" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
           <folding>
             <element signature="e#26#41#0" expanded="true" />
           </folding>
