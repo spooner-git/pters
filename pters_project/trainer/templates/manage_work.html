@@ -94,14 +94,14 @@
            
 
 
-          var nameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
-          var countArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_rem_count }}',{% endif %}{% endfor %}]
-          var startArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
+          var nameArray =[{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.member_info.name }}',{% endif %}{% endfor %}]
+          var countArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_rem_count }}',{% endif %}{% endfor %}]
+          var startArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
 
 
-          var finishnameArray =[{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.trainer_member.name }}',{% endif %}{% endfor %}]
-          var finishcountArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_rem_count }}',{% endif %}{% endfor %}]
-          var finishstartArray = [{% for lecture in trainer_member %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
+          var finishnameArray =[{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.member_info.name }}',{% endif %}{% endfor %}]
+          var finishcountArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_rem_count }}',{% endif %}{% endfor %}]
+          var finishstartArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
 
           var len = nameArray.length;
           var name_countArray=[]
