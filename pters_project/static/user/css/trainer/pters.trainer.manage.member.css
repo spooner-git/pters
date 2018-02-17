@@ -373,6 +373,10 @@ th{
 	display: none;
 }
 
+.input_disabled_color{
+	background:#eee !important;
+}
+
 @media(min-width: 600px){
 
 	._regcount{

@@ -111,6 +111,8 @@
 
 </div>
 
+
+
 <div id="memberInfoPopup" class="infopopup wrap">
 
       <div class="ptaddbox" id="pcaddpopup">
@@ -139,7 +141,7 @@
                 <div id="memberBirth_info" class="dropdown pters_input_custom">
                     <input type="text" class="dropdown form-control" id="memberBirthYear_info" name="birthyear" maxlength="4" readonly>
                     <div id="memberBirthMonthSelected_info" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthmonth"></button>
+                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom input_disabled_color" type="button" data-toggle="dropdown" name="birthmonth" disabled></button>
                         <ul id="memberBirthMonth_info" class="dropdown-menu dropdownlist">
                             <li><a value="1">1월</a></li>
                             <li><a value="2">2월</a></li>
@@ -156,7 +158,7 @@
                         </ul>
                     </div>
                     <div id="memberBirthDateSelected_info" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthdate"></button>
+                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom input_disabled_color" type="button" data-toggle="dropdown" name="birthdate" disabled></button>
                         <ul id="memberBirthDate_info" class="dropdown-menu dropdownlist">
                             
                         </ul>
@@ -198,11 +200,11 @@
 
             <div id="dateSelector_info" class="ptaddbox">
                 <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
-                <p class="datepicktext dropdown"><input type="text" id="datepicker_info" name="start_date" readonly></p>
+                <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
             </div>
             <div id="dateSelector2_info"  class="ptaddbox">
                 <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
-                <p class="datepicktext dropdown"><input type="text" id="datepicker2_info" name="end_date" readonly></p>
+                <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
             </div>
 
             <div class="ptaddbox form-group">
@@ -220,6 +222,8 @@
             </div>
         </form>
     </div>
+
+
 
 <div id="page_addmember" class="wrap"> 
 
