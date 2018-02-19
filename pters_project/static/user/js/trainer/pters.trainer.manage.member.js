@@ -1192,6 +1192,11 @@ $("#upbutton-check,.submitBtn").click(function(){
                     finishsexArray = jsondata.finishsexArray;
                     messageArray = jsondata.messageArray;
 
+                    if(messageArray.length>0){
+                      alert('등록 에러 : '+messageArray)
+                    }
+
+
                     DataFormattingDict();
                     DataFormatting();
                     currentMemberListSet('name');
