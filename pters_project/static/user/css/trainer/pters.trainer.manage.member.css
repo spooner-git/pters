@@ -555,15 +555,12 @@ th{
 		top: 0;
 		right: 0;
 		margin-top: 0 !important;
+		margin-right: 20px;
 		border:1px solid #eeeeee;
-		width: 140px !important;
+		width: 160px !important;
 		height: 30px !important;
-	}
-
-	.alignSelect button{
-		font-size: 12px !important;
-		font-weight: 400 !important;
-		color: #cccccc;
+		font-size: 13px;
+		color: #afafaf;
 	}
 
 	.btn-default{
@@ -575,7 +572,7 @@ th{
 		max-width: 1200px;
 		height: 30px;
 		margin-bottom: 5px;
-		padding-right: 150px;
+		padding-right: 190px;
 	}
 
 	.memberNum{
