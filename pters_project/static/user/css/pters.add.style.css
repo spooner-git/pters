@@ -779,4 +779,9 @@ ul a{
 		font-weight: bold;
 	}
 
+	.btnok{
+		line-height: 50px !important;
+		font-size: 15px !important;
+	}
+
 }
