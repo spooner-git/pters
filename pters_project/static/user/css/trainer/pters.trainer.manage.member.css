@@ -94,7 +94,20 @@ body{
 	margin-right: auto;
 }
 
+.alignSelect{
+	width: 100%;
+	height: 35px;
+	margin-top: 10px;
+	background: #ffffff;
+	border:1px solid #a2a2a2;
+	border-radius: 0;
+	-webkit-appearance:none;
+	text-align-last:center;
+	-webkit-text-align: center;
+}
+
 #alignBox{
+	position: relative;
 	margin-top: 15.5px;
 	margin-bottom: 16.5px;
 	margin-right: auto;
@@ -104,7 +117,7 @@ body{
 }
 
 .centeralign{
-	max-width: 1200px !important;
+	max-width: 1080px !important;
 }
 
 
@@ -461,7 +474,7 @@ th{
 @media(min-width: 1000px){
 
 	#tableThead{
-		width: 1200px;
+		width: 1080px;
 		
 	}
 
@@ -477,7 +490,7 @@ th{
 
 	
 	#currentMemberList, #finishedMemberList{
-		width: 1200px;
+		width: 1080px;
 		height: 600px;
 		overflow-y: overlay;
 	}
@@ -561,6 +574,8 @@ th{
 		height: 30px !important;
 		font-size: 13px;
 		color: #afafaf;
+		padding-left: 29px;
+		text-align-last: unset;
 	}
 
 	.btn-default{
@@ -569,7 +584,7 @@ th{
 
 	#alignBox{
 		position: relative;
-		max-width: 1200px;
+		max-width: 1080px;
 		height: 30px;
 		margin-bottom: 5px;
 		padding-right: 190px;

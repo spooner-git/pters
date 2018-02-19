@@ -468,9 +468,9 @@ ul a{
 
 .icondown{
 	position: absolute;
-	width: 11px;
-	right: 5%;
-	top: 44%;
+	right: 20px;
+	bottom: 13px;
+	width: 13px;
 }
 
 .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
@@ -736,6 +736,12 @@ ul a{
 		border-top-right-radius: 20px;
 		border-bottom-left-radius: 20px;
 		*/
+	}
+
+	.icondown{
+		right: 25px;
+		bottom: 12px;
+		width: 10px;
 	}
 
 
