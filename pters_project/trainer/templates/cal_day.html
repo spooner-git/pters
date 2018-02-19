@@ -13,13 +13,15 @@
 <!-- 로딩 
 <img src="/static/user/res/loader.gif" alt="데이터 로딩중" style="width:100%;" class="loaders">
   -->
-  <form action="{% url 'trainer:daily_pt_delete' %}" id="daily-pt-delete-form" method="post">
+  <form action="{% url 'trainer:delete_schedule' %}" id="daily-pt-delete-form" method="post">
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="member_name"   id="id_member_name_delete">
+    <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
-  <form action="{% url 'trainer:daily_off_delete' %}" id="daily-off-delete-form" method="post">
+  <form action="{% url 'trainer:delete_schedule' %}" id="daily-off-delete-form" method="post">
     <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
+    <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
 
@@ -34,7 +36,7 @@
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
   </form>
 
-  <form action="{% url 'trainer:daily_pt_finish' %}" id="pt-finish-form" method="get">
+  <form action="{% url 'trainer:finish_schedule' %}" id="pt-finish-form" method="get">
     <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
     <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
     <input type="hidden" name="member_name"   id="id_member_name_finish">
@@ -156,19 +158,21 @@
             </div>
         {% endfor %}
     {% endif %}
-    <form action="{% url 'trainer:add_pt_logic' %}" id="pt-add-form" method="post">
+    <form action="{% url 'trainer:add_schedule' %}" id="pt-add-form" method="post">
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
         <input type="hidden" name="training_date" id="id_training_date">
         <input type="hidden" name="time_duration" id="id_time_duration">
         <input type="hidden" name="training_time" id="id_training_time">
+        <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
     </form>
 
-    <form action="{% url 'trainer:add_off_logic' %}" id="off-add-form" method="post">
+    <form action="{% url 'trainer:add_schedule' %}" id="off-add-form" method="post">
         <input type="hidden" name="training_date" id="id_training_date_off">
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
+        <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
     </form>
     
@@ -329,12 +333,13 @@
 
 
  <div id="page-addplan-pc">
-    <form action="{% url 'trainer:add_pt_logic' %}" id="pt-add-form" method="post">
+    <form action="{% url 'trainer:add_schedule' %}" id="pt-add-form" method="post">
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
         <input type="hidden" name="training_date" id="id_training_date">
         <input type="hidden" name="time_duration" id="id_time_duration">
         <input type="hidden" name="training_time" id="id_training_time">
+        <input type="hidden" name="schedule_check" id="en_dis_type" value ='1'>
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
     </form>
     
