@@ -21,7 +21,7 @@
         {% endfor %}
     {% endif %}
 
-<form action="{% url 'trainer:daily_pt_delete' %}" id="daily-pt-delete-form" method="post">
+<form action="{% url 'trainer:delete_schedule' %}" id="daily-pt-delete-form" method="post">
     <input type="hidden" name="repeat_freq" id="id_repeat_freq">
     <input type="hidden" name="repeat_startdate" id="id_repeat_startdate">
     <input type="hidden" name="repeat_enddate" id="id_repeat_enddate">

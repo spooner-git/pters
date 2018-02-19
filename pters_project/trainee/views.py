@@ -261,7 +261,7 @@ def pt_delete_logic(request):
         try:
             schedule_datum = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
-            error = '스케쥴 정보가 정보가 존재하지 않습니다'
+            error = '스케쥴 정보가 정보가 존재하지 않습니다.'
 
     if error is None:
         start_date = schedule_datum.start_dt
@@ -277,7 +277,11 @@ def pt_delete_logic(request):
         try:
             lecture_info = LectureTb.objects.get(lecture_id=schedule_datum.lecture_tb_id)
         except ObjectDoesNotExist:
-            error = '회원 PT 정보가 존재하지 않습니다'
+            error = '회원 PT 정보가 존재하지 않습니다.'
+
+    if error is None:
+        if lecture_info.member_id != request.user.id:
+            error = '회원 정보가 일치하지 않습니다.'
 
     if error is None:
         with transaction.atomic():
@@ -404,6 +408,10 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             lecture_info = LectureTb.objects.get(member_id=user_id)
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
+
+    if error is None:
+        if lecture_info.member_id != user_id:
+            error = '회원 정보가 일치하지 않습니다.'
 
     if error is None:
         try:

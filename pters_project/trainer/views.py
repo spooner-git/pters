@@ -37,7 +37,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
 
         error = None
-        class_datum = None
+        class_info = None
         today = datetime.date.today()
         one_day_after = today + datetime.timedelta(days=1)
         fourteen_days_ago = today - datetime.timedelta(days=14)
@@ -49,24 +49,24 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['new_member_num'] = 0
 
         try:
-            class_datum = ClassTb.objects.get(member=self.request.user.id)
+            class_info = ClassTb.objects.get(member=self.request.user.id)
         except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
+            error = '강사 정보가 존재하지 않습니다'
 
         if error is None :
             #남은 횟수 1개 이상인 경우 - 180215 hk.kim
-            context['total_member_num'] = LectureTb.objects.filter(class_tb_id=class_datum.class_id,
-                                                                       lecture_rem_count__gte=1).count()
+            context['total_member_num'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                   lecture_rem_count__gte=1).count()
             #남은 횟수 1개 이상 3개 미만인 경우 - 180215 hk.kim
-            context['to_be_end_member_num'] = LectureTb.objects.filter(class_tb_id=class_datum.class_id,
-                                                                           lecture_rem_count__gte=1,
-                                                                           lecture_rem_count__lte=3).count()
+            context['to_be_end_member_num'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                       lecture_rem_count__gte=1,
+                                                                       lecture_rem_count__lte=3).count()
 
         if error is None:
-            today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_datum.class_id,
+            today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                            start_dt__gte=today, start_dt__lt=one_day_after,
                                                            en_dis_type='1').count()
-            new_member_num = LectureTb.objects.filter(class_tb_id=class_datum.class_id,
+            new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                       start_date__gte=fourteen_days_ago, use='1').count()
 
         context['today_schedule_num'] = today_schedule_num
@@ -120,10 +120,19 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+class OffRepeatAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'cal_add_off_repeat.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OffRepeatAddView, self).get_context_data(**kwargs)
+
+        return context
+
+
 def get_trainer_schedule_data(context, trainer_id):
 
     error = None
-    class_datum = None
+    class_info = None
     context['lecture_info'] = None
     off_schedule_id = []
     off_schedule_start_datetime = []
@@ -141,25 +150,25 @@ def get_trainer_schedule_data(context, trainer_id):
 
     # 강사 정보 가져오기
     try:
-        class_datum = ClassTb.objects.get(member_id=trainer_id)
+        class_info = ClassTb.objects.get(member_id=trainer_id)
     except ObjectDoesNotExist:
-        error = '강사 PT 정보가 존재하지 않습니다'
+        error = '강사 정보가 존재하지 않습니다'
 
     # 강좌에 해당하는 수강/회원 정보 가져오기, 예약가능 횟수 1개 이상인 회원
     if error is None:
         # 강좌에 해당하는 수강정보 가져오기
-        context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_datum.class_id,
+        context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                            lecture_avail_count__gte=1)
         for lecture in context['lecture_info']:
             # 수강정보에 해당하는 회원정보 가져오기
             try:
                 lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id)
             except ObjectDoesNotExist:
-                error = '회원 PT 정보가 존재하지 않습니다'
+                error = '회원 정보가 존재하지 않습니다'
 
     # OFF 일정 조회
     if error is None:
-        off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_datum.class_id,
+        off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                       en_dis_type='0', start_dt__gte=fourteen_days_ago,
                                                       start_dt__lt=fifteen_days_after)
         for off_schedule_datum in off_schedule_data:
@@ -170,7 +179,7 @@ def get_trainer_schedule_data(context, trainer_id):
     # PT 일정 조회
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_datum.class_id)
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
         for lecture_datum in lecture_data:
             # 강좌별로 연결되어있는 회원 리스트 불러오기
             member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
@@ -207,34 +216,35 @@ def get_trainer_schedule_data(context, trainer_id):
     return context
 
 
-# pt 일정 추가
+# 일정 추가
 @csrf_exempt
-def add_pt_logic(request):
+def add_schedule_logic(request):
     lecture_id = request.POST.get('lecture_id')
     member_name = request.POST.get('member_name')
-    pt_schedule_date = request.POST.get('training_date')
-    pt_schedule_time = request.POST.get('training_time')
-    pt_schedule_time_duration = request.POST.get('time_duration')
+    schedule_date = request.POST.get('training_date')
+    schedule_time = request.POST.get('training_time')
+    schedule_time_duration = request.POST.get('time_duration')
+    en_dis_type = request.POST.get('en_dis_type')
     next_page = request.POST.get('next_page')
 
     error = None
     class_info = None
+    if en_dis_type == '1':
+        if lecture_id == '':
+            error = '회원을 선택해 주세요.'
 
-    if lecture_id == '':
-        error = '회원을 선택해 주세요.'
-    elif pt_schedule_date == '':
+    if schedule_date == '':
         error = '날짜를 선택해 주세요.'
-    elif pt_schedule_time == '':
+    elif schedule_time == '':
         error = '시작 시간을 선택해 주세요.'
-    elif pt_schedule_time_duration == '':
+    elif schedule_time_duration == '':
         error = '진행 시간을 선택해 주세요.'
 
     if error is None:
         #날짜 값 셋팅
         try:
-            pt_schedule_start_datetime = datetime.datetime.strptime(pt_schedule_date+' '+pt_schedule_time, '%Y-%m-%d %H:%M:%S.%f')
-            pt_schedule_end_datetime = pt_schedule_start_datetime + datetime.timedelta(hours=int(pt_schedule_time_duration))
-
+            schedule_start_datetime = datetime.datetime.strptime(schedule_date+' '+schedule_time, '%Y-%m-%d %H:%M:%S.%f')
+            schedule_end_datetime = schedule_start_datetime + datetime.timedelta(hours=int(schedule_time_duration))
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
@@ -247,60 +257,68 @@ def add_pt_logic(request):
         try:
             class_info = ClassTb.objects.get(member_id=request.user.id)
         except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
+            error = '강사 정보가 존재하지 않습니다'
 
-    if error is None:
-        try:
-            member_lecture_info = LectureTb.objects.get(lecture_id=int(lecture_id))
-        except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
-
-    if error is None:
-        if member_lecture_info.lecture_avail_count == 0:
-            error = '예약 가능한 횟수가 없습니다'
+    if en_dis_type == '1':
+        if error is None:
+            try:
+                member_lecture_info = LectureTb.objects.get(lecture_id=int(lecture_id))
+            except ObjectDoesNotExist:
+                error = '회원 PT 정보가 존재하지 않습니다'
+        if error is None:
+            if member_lecture_info.lecture_avail_count == 0:
+                error = '예약 가능한 횟수가 없습니다'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id)
         for schedule_datum in schedule_data:
-            error = date_check_func(pt_schedule_date, pt_schedule_start_datetime, pt_schedule_end_datetime,
+            error = date_check_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
                                     schedule_datum.start_dt, schedule_datum.end_dt)
             if error is not None:
                 break
 
     if error is None:
         with transaction.atomic():
-            lecture_schedule_data = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
-                                               start_dt=pt_schedule_start_datetime,end_dt=pt_schedule_end_datetime,
-                                               state_cd='NP', en_dis_type='1',
-                                               reg_dt=timezone.now(), mod_dt=timezone.now())
-            lecture_schedule_data.save()
-            member_lecture_info.lecture_avail_count -= 1
-            member_lecture_info.mod_dt = timezone.now()
-            member_lecture_info.save()
+            add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
+                                           start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
+                                           state_cd='NP', en_dis_type=en_dis_type,
+                                           reg_dt=timezone.now(), mod_dt=timezone.now())
+            add_schedule_info.save()
+            if en_dis_type == '1':
+                member_lecture_info.lecture_avail_count -= 1
+                member_lecture_info.mod_dt = timezone.now()
+                member_lecture_info.save()
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = pt_schedule_start_datetime.strftime('%Y')+'년 ' \
-                         + pt_schedule_start_datetime.strftime('%m')+'월 ' \
-                         + pt_schedule_start_datetime.strftime('%d')+'일 ' \
-                         + week_info[int(pt_schedule_start_datetime.strftime('%w'))] + '요일 '
-        if pt_schedule_start_datetime.strftime('%p') == 'AM':
+        log_start_date = schedule_start_datetime.strftime('%Y')+'년 ' \
+                         + schedule_start_datetime.strftime('%m')+'월 ' \
+                         + schedule_start_datetime.strftime('%d')+'일 ' \
+                         + week_info[int(schedule_start_datetime.strftime('%w'))] + '요일 '
+        if schedule_start_datetime.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
-        elif pt_schedule_start_datetime.strftime('%p') == 'PM':
+        elif schedule_start_datetime.strftime('%p') == 'PM':
             log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + pt_schedule_start_datetime.strftime(' %I:%M')
+        log_start_date = str(log_start_date) + schedule_start_datetime.strftime(' %I:%M')
 
-        if pt_schedule_end_datetime.strftime('%p') == 'AM':
+        if schedule_end_datetime.strftime('%p') == 'AM':
             log_end_date = '오전'
-        elif pt_schedule_end_datetime.strftime('%p') == 'PM':
+        elif schedule_end_datetime.strftime('%p') == 'PM':
             log_end_date = '오후'
 
-        log_end_date = str(log_end_date) + pt_schedule_end_datetime.strftime(' %I:%M')
-        log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
-                       + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
-                       + log_start_date\
-                       + ' - '+log_end_date
+        log_end_date = str(log_end_date) + schedule_end_datetime.strftime(' %I:%M')
+        if en_dis_type == '1':
+            log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
+                           + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
+                           + log_start_date\
+                           + ' - '+log_end_date
+        else:
+            log_contents = '<span>'+request.user.first_name + ' 강사님께서 '\
+                           + ' OFF </span> 일정을 <span class="status">등록</span>했습니다.@'\
+                           + log_start_date\
+                           + ' - '+log_end_date
+
         log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
@@ -310,30 +328,66 @@ def add_pt_logic(request):
         return redirect(next_page)
 
 
-# Off 일정 추가
+# 일정 삭제
 @csrf_exempt
-def add_off_logic(request):
-    pt_schedule_date = request.POST.get('training_date')
-    pt_schedule_time = request.POST.get('training_time')
-    pt_schedule_time_duration = request.POST.get('time_duration')
+def delete_schedule_logic(request):
+    pt_schedule_id = request.POST.get('schedule_id')
+    off_schedule_id = request.POST.get('off_schedule_id')
+    member_name = request.POST.get('member_name')
+    en_dis_type = request.POST.get('en_dis_type')
     next_page = request.POST.get('next_page')
 
     error = None
-    class_datum = None
+    lecture_info = None
+    schedule_info = None
 
-    if pt_schedule_date == '':
-        error = '날짜를 선택해 주세요.'
-    elif pt_schedule_time == '':
-        error = '시작 시간을 선택해 주세요.'
-    elif pt_schedule_time_duration == '':
-        error = '진행 시간을 선택해 주세요.'
-    elif next_page == '':
-        error = '시작 시간을 선택해 주세요.'
+    if en_dis_type == '1':
+        schedule_id = pt_schedule_id
+    else:
+        schedule_id = off_schedule_id
+
+    if schedule_id == '':
+        error = '스케쥴을 선택하세요.'
 
     if error is None:
         try:
-            pt_schedule_start_datetime = datetime.datetime.strptime(pt_schedule_date+' '+pt_schedule_time,'%Y-%m-%d %H:%M:%S.%f')
-            pt_schedule_end_datetime = pt_schedule_start_datetime + datetime.timedelta(hours=int(pt_schedule_time_duration))
+            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+        except ObjectDoesNotExist:
+            error = '스케쥴 정보가 존재하지 않습니다'
+
+    if error is None:
+        start_date = schedule_info.start_dt
+        end_date = schedule_info.end_dt
+
+    if en_dis_type == '1':
+        if error is None:
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use='1')
+            except ObjectDoesNotExist:
+                error = '회원 PT 정보가 존재하지 않습니다'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
+                                                   class_tb_id=schedule_info.class_tb_id,
+                                                   lecture_tb_id=schedule_info.lecture_tb_id,
+                                                   start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                                   state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
+                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+
+                if en_dis_type == '1':
+                    lecture_info.lecture_avail_count += 1
+                    #진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
+                    if schedule_info.state_cd == 'PE':
+                        lecture_info.lecture_rem_count += 1
+
+                    lecture_info.mod_dt = timezone.now()
+                    lecture_info.save()
+
+                delete_schedule.save()
+                schedule_info.delete()
+
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
@@ -342,50 +396,35 @@ def add_off_logic(request):
             error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
-        try:
-            class_datum = ClassTb.objects.get(member_id=request.user.id)
-        except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
-
-    if error is None:
-        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_datum.class_id)
-        for schedule_datum in schedule_data:
-            error = date_check_func(pt_schedule_date, pt_schedule_start_datetime, pt_schedule_end_datetime,
-                                    schedule_datum.start_dt, schedule_datum.end_dt)
-            if error is not None:
-                break
-
-    if error is None:
-        off_schedule = ScheduleTb(class_tb_id=class_datum.class_id,
-                                  start_dt=pt_schedule_start_datetime, end_dt=pt_schedule_end_datetime,
-                                  state_cd='NP', en_dis_type='0',
-                                  reg_dt=timezone.now(), mod_dt=timezone.now())
-        off_schedule.save()
-
-    if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = pt_schedule_start_datetime.strftime('%Y')+'년 ' \
-                         + pt_schedule_start_datetime.strftime('%m')+'월 ' \
-                         + pt_schedule_start_datetime.strftime('%d')+'일 ' \
-                         + week_info[int(pt_schedule_start_datetime.strftime('%w'))] + '요일 '
-        if pt_schedule_start_datetime.strftime('%p') == 'AM':
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
+        if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
-        elif pt_schedule_start_datetime.strftime('%p') == 'PM':
+        elif start_date.strftime('%p') == 'PM':
             log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + pt_schedule_start_datetime.strftime(' %I:%M')
+        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
 
-        if pt_schedule_end_datetime.strftime('%p') == 'AM':
+        if end_date.strftime('%p') == 'AM':
             log_end_date = '오전'
-        elif pt_schedule_end_datetime.strftime('%p') == 'PM':
+        elif end_date.strftime('%p') == 'PM':
             log_end_date = '오후'
 
-        log_end_date = str(log_end_date) + pt_schedule_end_datetime.strftime(' %I:%M')
-        log_contents = '<span>'+request.user.first_name + ' 강사님께서 '\
-                       + ' OFF </span> 일정을 <span class="status">등록</span>했습니다.@'\
-                       + log_start_date\
-                       + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
+        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
+        if en_dis_type == '1':
+            log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
+                           + ' 회원님의</span> 일정을 <span class="status">삭제</span>했습니다.@'\
+                           + log_start_date\
+                           + ' - '+log_end_date
+        else:
+            log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                           + ' OFF </span> 일정을 <span class="status">삭제</span>했습니다.@' \
+                           + log_start_date \
+                           + ' - ' + log_end_date
+        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
         return redirect(next_page)
@@ -394,55 +433,47 @@ def add_off_logic(request):
         return redirect(next_page)
 
 
-# pt 일정 삭제
+# 일정 완료
 @csrf_exempt
-def daily_pt_delete(request):
-    pt_schedule_id = request.POST.get('schedule_id')
+def finish_schedule_logic(request):
+    schedule_id = request.POST.get('schedule_id')
     member_name = request.POST.get('member_name')
     next_page = request.POST.get('next_page')
 
     error = None
+    schedule_info = None
     lecture_info = None
-    schedule_datum = None
 
-    if pt_schedule_id == '':
+    if schedule_id == '':
         error = '스케쥴을 선택하세요.'
 
     if error is None:
 
         try:
-            schedule_datum = ScheduleTb.objects.get(schedule_id=pt_schedule_id)
+            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
-            error = 'PT 스케쥴 정보가 존재하지 않습니다'
+            error = '스케쥴 정보가 존재하지 않습니다'
 
     if error is None:
-        start_date = schedule_datum.start_dt
-        end_date = schedule_datum.end_dt
+        start_date = schedule_info.start_dt
+        end_date = schedule_info.end_dt
+        if schedule_info.state_cd == 'PE':
+            error = '이미 확정된 스케쥴입니다.'
 
+    if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=schedule_datum.lecture_tb_id, use='1')
+            lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id)
         except ObjectDoesNotExist:
             error = '회원 PT 정보가 존재하지 않습니다'
 
     if error is None:
         try:
             with transaction.atomic():
-                delete_schedule = DeleteScheduleTb(schedule_id=schedule_datum.schedule_id,
-                                                   class_tb_id=schedule_datum.class_tb_id,
-                                                   lecture_tb_id=schedule_datum.lecture_tb_id,
-                                                   start_dt=schedule_datum.start_dt, end_dt=schedule_datum.end_dt,
-                                                   state_cd=schedule_datum.state_cd, en_dis_type=schedule_datum.en_dis_type,
-                                                   reg_dt=schedule_datum.reg_dt, mod_dt=timezone.now(),use=0)
-
-                lecture_info.lecture_avail_count += 1
-                #진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
-                if schedule_datum.state_cd == 'PE':
-                    lecture_info.lecture_rem_count += 1
-
-                delete_schedule.save()
-                schedule_datum.delete()
-
+                schedule_info.mod_dt = timezone.now()
+                schedule_info.state_cd = 'PE'
+                lecture_info.lecture_rem_count -= 1
                 lecture_info.mod_dt = timezone.now()
+                schedule_info.save()
                 lecture_info.save()
 
         except ValueError as e:
@@ -455,9 +486,9 @@ def daily_pt_delete(request):
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = start_date.strftime('%Y')+'년 ' \
-                         + start_date.strftime('%m')+'월 ' \
-                         + start_date.strftime('%d')+'일 ' \
+        log_start_date = start_date.strftime('%Y') + '년 ' \
+                         + start_date.strftime('%m') + '월 ' \
+                         + start_date.strftime('%d') + '일 ' \
                          + week_info[int(start_date.strftime('%w'))] + '요일 '
         if start_date.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
@@ -471,11 +502,11 @@ def daily_pt_delete(request):
             log_end_date = '오후'
 
         log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
-                       + ' 회원님의</span> 일정을 <span class="status">삭제</span>했습니다.@'\
-                       + log_start_date\
-                       + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
+        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' + member_name \
+                       + ' 회원님의</span> 일정을 <span class="status">완료</span>했습니다.@' \
+                       + log_start_date \
+                       + ' - ' + log_end_date
+        log_data = LogTb(external_id=request.user.id, log_type='LS03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
         return redirect(next_page)
@@ -484,43 +515,36 @@ def daily_pt_delete(request):
         return redirect(next_page)
 
 
-# OFF 일정 삭제
+
+# 반복 일정 추가
 @csrf_exempt
-def daily_off_delete(request):
-    off_schedule_id = request.POST.get('off_schedule_id')
+def add_repeat_schedule_logic(request):
+    lecture_id = request.POST.get('lecture_id')
+    member_name = request.POST.get('member_name')
+    schedule_date = request.POST.get('training_date')
+    schedule_time = request.POST.get('training_time')
+    schedule_time_duration = request.POST.get('time_duration')
+    en_dis_type = request.POST.get('en_dis_type')
     next_page = request.POST.get('next_page')
 
     error = None
-    schedule_datum = None
+    class_info = None
+    if en_dis_type == '1':
+        if lecture_id == '':
+            error = '회원을 선택해 주세요.'
 
-    if off_schedule_id == '':
-        error = '스케쥴을 선택하세요.'
+    if schedule_date == '':
+        error = '날짜를 선택해 주세요.'
+    elif schedule_time == '':
+        error = '시작 시간을 선택해 주세요.'
+    elif schedule_time_duration == '':
+        error = '진행 시간을 선택해 주세요.'
 
     if error is None:
+        #날짜 값 셋팅
         try:
-            schedule_datum = ScheduleTb.objects.get(schedule_id=off_schedule_id)
-        except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
-
-    if error is None:
-        start_date = schedule_datum.start_dt
-        end_date = schedule_datum.end_dt
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                delete_schedule = DeleteScheduleTb(schedule_id=schedule_datum.schedule_id,
-                                                   class_tb_id=schedule_datum.class_tb_id,
-                                                   lecture_tb_id=schedule_datum.lecture_tb_id,
-                                                   start_dt=schedule_datum.start_dt, end_dt=schedule_datum.end_dt,
-                                                   state_cd=schedule_datum.state_cd,
-                                                   en_dis_type=schedule_datum.en_dis_type,
-                                                   reg_dt=schedule_datum.reg_dt, mod_dt=timezone.now(), use=0)
-
-                delete_schedule.save()
-                schedule_datum.delete()
-
-
+            schedule_start_datetime = datetime.datetime.strptime(schedule_date+' '+schedule_time, '%Y-%m-%d %H:%M:%S.%f')
+            schedule_end_datetime = schedule_start_datetime + datetime.timedelta(hours=int(schedule_time_duration))
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
@@ -529,45 +553,79 @@ def daily_off_delete(request):
             error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
+        # 강사 정보 가져오기
+        try:
+            class_info = ClassTb.objects.get(member_id=request.user.id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다'
+
+    if en_dis_type == '1':
+        if error is None:
+            try:
+                member_lecture_info = LectureTb.objects.get(lecture_id=int(lecture_id))
+            except ObjectDoesNotExist:
+                error = '회원 PT 정보가 존재하지 않습니다'
+        if error is None:
+            if member_lecture_info.lecture_avail_count == 0:
+                error = '예약 가능한 횟수가 없습니다'
+
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id)
+        for schedule_datum in schedule_data:
+            error = date_check_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
+                                    schedule_datum.start_dt, schedule_datum.end_dt)
+            if error is not None:
+                break
+
+    if error is None:
+        with transaction.atomic():
+            add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
+                                           start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
+                                           state_cd='NP', en_dis_type=en_dis_type,
+                                           reg_dt=timezone.now(), mod_dt=timezone.now())
+            add_schedule_info.save()
+            if en_dis_type == '1':
+                member_lecture_info.lecture_avail_count -= 1
+                member_lecture_info.mod_dt = timezone.now()
+                member_lecture_info.save()
+
+    if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = start_date.strftime('%Y')+'년 ' \
-                         + start_date.strftime('%m')+'월 ' \
-                         + start_date.strftime('%d')+'일 ' \
-                         + week_info[int(start_date.strftime('%w'))] + '요일 '
-        if start_date.strftime('%p') == 'AM':
+        log_start_date = schedule_start_datetime.strftime('%Y')+'년 ' \
+                         + schedule_start_datetime.strftime('%m')+'월 ' \
+                         + schedule_start_datetime.strftime('%d')+'일 ' \
+                         + week_info[int(schedule_start_datetime.strftime('%w'))] + '요일 '
+        if schedule_start_datetime.strftime('%p') == 'AM':
             log_start_date = str(log_start_date) + '오전'
-        elif start_date.strftime('%p') == 'PM':
+        elif schedule_start_datetime.strftime('%p') == 'PM':
             log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
+        log_start_date = str(log_start_date) + schedule_start_datetime.strftime(' %I:%M')
 
-        if end_date.strftime('%p') == 'AM':
+        if schedule_end_datetime.strftime('%p') == 'AM':
             log_end_date = '오전'
-        elif end_date.strftime('%p') == 'PM':
+        elif schedule_end_datetime.strftime('%p') == 'PM':
             log_end_date = '오후'
 
-        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' \
-                       + ' OFF </span> 일정을 <span class="status">삭제</span>했습니다.@'\
-                       + log_start_date\
-                       + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
+        log_end_date = str(log_end_date) + schedule_end_datetime.strftime(' %I:%M')
+        if en_dis_type == '1':
+            log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
+                           + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
+                           + log_start_date\
+                           + ' - '+log_end_date
+        else:
+            log_contents = '<span>'+request.user.first_name + ' 강사님께서 '\
+                           + ' OFF </span> 일정을 <span class="status">등록</span>했습니다.@'\
+                           + log_start_date\
+                           + ' - '+log_end_date
+
+        log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
         return redirect(next_page)
     else:
         messages.info(request, error)
-        next_page = 'trainer:cal_day'
         return redirect(next_page)
-
-
-class OffRepeatAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'cal_add_off_repeat.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(OffRepeatAddView, self).get_context_data(**kwargs)
-
-        return context
 
 
 class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -602,26 +660,26 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 def get_member_data(context, trainer_id):
 
     error = None
-    class_datum = None
+    class_info = None
     context['lecture_info'] = None
 
     # 강사 정보 가져오기
     try:
-        class_datum = ClassTb.objects.get(member_id=trainer_id)
+        class_info = ClassTb.objects.get(member_id=trainer_id)
     except ObjectDoesNotExist:
-        error = '강사 PT 정보가 존재하지 않습니다'
+        error = '강사 정보가 존재하지 않습니다'
 
     # 강좌에 해당하는 수강/회원 정보 가져오기
     if error is None:
         # 강좌에 해당하는 수강정보 가져오기
-        context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_datum.class_id)
+        context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id)
 
         for lecture in context['lecture_info']:
             # 수강정보에 해당하는 회원정보 가져오기
             try:
                 lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id)
             except ObjectDoesNotExist:
-                error = '회원 PT 정보가 존재하지 않습니다'
+                error = '회원 정보가 존재하지 않습니다'
 
     return context
 
@@ -631,49 +689,53 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AlarmView, self).get_context_data(**kwargs)
-        log_data = LogTb.objects.filter(external_id=self.request.user.id, use=1).order_by('-reg_dt')
-        trainer_class = None
+        class_info = None
         error = None
+
         try:
-            trainer_class = ClassTb.objects.get(member=self.request.user.id)
+            class_info = ClassTb.objects.get(member=self.request.user.id)
         except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
+            error = '강사 정보가 존재하지 않습니다'
 
         if error is None:
-            month_lecture_data = LectureTb.objects.filter(class_tb_id=trainer_class.class_id)
+            log_data = LogTb.objects.filter(external_id=self.request.user.id, use=1).order_by('-reg_dt')
 
-            for lecture in month_lecture_data:
-                log_data |= LogTb.objects.filter(external_id=lecture.member_id, use=1).order_by('-reg_dt')
+        if error is None:
+            lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
 
-        log_data.order_by('-reg_dt')
+            for lecture_info in lecture_data:
+                log_data |= LogTb.objects.filter(external_id=lecture_info.member_id, use=1).order_by('-reg_dt')
 
-        for log_data_detail in log_data:
-            log_data_detail.id = log_data_detail.log_id
-            log_data_detail.reg_date = log_data_detail.reg_dt
-            temp_data = log_data_detail.contents.split('@')
-            if len(temp_data) == 2:
-                log_data_detail.log_type = 1
-                log_data_detail.log_contents = temp_data[0]
-                log_data_detail.log_after_date = temp_data[1]
-            elif len(temp_data) == 3:
-                log_data_detail.log_type = 2
-                log_data_detail.log_contents = temp_data[0]
-                log_data_detail.log_before_date = temp_data[1]
-                log_data_detail.log_after_date = temp_data[2]
-            else:
-                log_data_detail.log_type = 0
-                log_data_detail.log_contents = log_data_detail.contents
+            log_data.order_by('-reg_dt')
 
-            if log_data_detail.read == 0:
-                log_data_detail.log_read = 0
-                log_data_detail.read = 1
-                log_data_detail.save()
-            elif log_data_detail.read == 1:
-                log_data_detail.log_read = 1
-            else:
-                log_data_detail.log_read = 2
+        if error is None:
+            for log_info in log_data:
+                log_info.id = log_info.log_id
+                log_info.reg_date = log_info.reg_dt
+                temp_data = log_info.contents.split('@')
+                if len(temp_data) == 2:
+                    log_info.log_type = 1
+                    log_info.log_contents = temp_data[0]
+                    log_info.log_after_date = temp_data[1]
+                elif len(temp_data) == 3:
+                    log_info.log_type = 2
+                    log_info.log_contents = temp_data[0]
+                    log_info.log_before_date = temp_data[1]
+                    log_info.log_after_date = temp_data[2]
+                else:
+                    log_info.log_type = 0
+                    log_info.log_contents = log_info.contents
 
-        context['log_data'] = log_data
+                if log_info.read == 0:
+                    log_info.log_read = 0
+                    log_info.read = 1
+                    log_info.save()
+                elif log_info.read == 1:
+                    log_info.log_read = 1
+                else:
+                    log_info.log_read = 2
+
+            context['log_data'] = log_data
 
         return context
 
@@ -858,10 +920,9 @@ def login_trainer(request):
     error = None
 
     try:
-        user_data = User.objects.get(username=username)
+        User.objects.get(username=username)
     except ObjectDoesNotExist:
         error = '아이디가 존재하지 않습니다.'
-        # logger.error(error)
 
     if not error:
         user = authenticate(username=username, password=password)
@@ -887,26 +948,8 @@ def login_trainer(request):
 @csrf_exempt
 def logout_trainer(request):
     #logout 끝나면 login page로 이동
-    next = 'trainer:trainer_login'
     logout(request)
-
-    return redirect(next)
-
-
-# 로그인 페이지 아직 구현 x
-@csrf_exempt
-def login_trainer_view(request):
-    if request.user.is_authenticated():
-        return redirect('home')
-
-    next = request.GET.get('next', 'trainer:login')
-    fail = request.GET.get('fail', 'registration_page')
-
-    return render(request, 'login_web.html',
-                  {
-                      'next': next,
-                      'fail': fail
-                  })
+    return redirect('trainer:trainer_login')
 
 
 # log 삭제
@@ -924,19 +967,27 @@ def alarm_delete_logic(request):
 
         for i in range(0, int(log_size)):
             try:
-                log_data = LogTb.objects.get(log_id=delete_log_id[i])
+                log_info = LogTb.objects.get(log_id=delete_log_id[i])
             except ObjectDoesNotExist:
-                error = 'class가 존재하지 않습니다'
+                error = 'log가 존재하지 않습니다'
             if error is None:
-                log_data.use = 0
-                log_data.mod_dt = timezone.now()
-                log_data.save()
+                log_info.use = 0
+                log_info.mod_dt = timezone.now()
+                log_info.save()
 
         return redirect(next_page)
     else:
         messages.info(request, error)
-        next_page = 'trainer:alarm'
         return redirect(next_page)
+
+
+
+
+
+
+
+
+
 
 
 # pt 일정 수정
@@ -1237,88 +1288,6 @@ def modify_off_logic(request):
                        + ' - '+modify_log_end_date\
                        + '@'+log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS03', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
-        log_data.save()
-        return redirect(next_page)
-    else:
-        messages.info(request, error)
-        return redirect(next_page)
-
-
-# pt 일정 수정
-@csrf_exempt
-def daily_pt_finish(request):
-    schedule_id = request.POST.get('schedule_id')
-    member_name = request.POST.get('member_name')
-    next_page = request.POST.get('next_page')
-
-    error = None
-    schedule_data = None
-    lecture_info = None
-
-    if schedule_id == '':
-        error = '스케쥴을 선택하세요.'
-
-    if error is None:
-
-        try:
-            schedule_data = ScheduleTb.objects.get(schedule_id=schedule_id)
-        except ObjectDoesNotExist:
-            error = '강사 PT 정보가 존재하지 않습니다'
-
-    if error is None:
-        start_date = schedule_data.start_dt
-        end_date = schedule_data.end_dt
-        if schedule_data.state_cd == 'PE':
-            error = '이미 확정된 스케쥴입니다.'
-
-    if error is None:
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=schedule_data.lecture_tb_id)
-        except ObjectDoesNotExist:
-            error = '회원 PT 정보가 존재하지 않습니다'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                schedule_data.mod_dt = timezone.now()
-                schedule_data.state_cd = 'PE'
-                lecture_info.lecture_rem_count -= 1
-                lecture_info.mod_dt = timezone.now()
-                schedule_data.save()
-                lecture_info.save()
-
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
-
-    if error is None:
-        week_info = ['일', '월', '화', '수', '목', '금', '토']
-
-        log_start_date = start_date.strftime('%Y') + '년 ' \
-                         + start_date.strftime('%m') + '월 ' \
-                         + start_date.strftime('%d') + '일 ' \
-                         + week_info[int(start_date.strftime('%w'))] + '요일 '
-        if start_date.strftime('%p') == 'AM':
-            log_start_date = str(log_start_date) + '오전'
-        elif start_date.strftime('%p') == 'PM':
-            log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
-
-        if end_date.strftime('%p') == 'AM':
-            log_end_date = '오전'
-        elif end_date.strftime('%p') == 'PM':
-            log_end_date = '오후'
-
-        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' + member_name \
-                       + ' 회원님의</span> 일정을 <span class="status">완료</span>했습니다.@' \
-                       + log_start_date \
-                       + ' - ' + log_end_date
         log_data = LogTb(external_id=request.user.id, log_type='LS03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()

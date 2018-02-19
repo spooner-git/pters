@@ -258,11 +258,10 @@ $(document).ready(function(){
        e.preventDefault();
        if(addTypeSelect=="ptadd"){
           var $form = $('#pt-add-form')
-          var serverURL = '/trainer/add_pt_logic/'
        }else if(addTypeSelect=="offadd"){
           var $form = $('#off-add-form')
-          var serverURL = '/trainer/add_off_logic/'
        }
+          var serverURL = '/trainer/add_schedule/'
         
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
