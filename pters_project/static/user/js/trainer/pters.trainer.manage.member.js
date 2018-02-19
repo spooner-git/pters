@@ -1161,6 +1161,7 @@ $("#upbutton-check,.submitBtn").click(function(){
                     finishAvailCountArray = [];
                     finishbirthdayArray = [];
                     finishsexArray = [];
+                    messageArray = [];
 
                     nameArray =jsondata.nameArray;
                     phoneArray = jsondata.phoneArray;
@@ -1188,9 +1189,7 @@ $("#upbutton-check,.submitBtn").click(function(){
                     finishbirthdayArray = jsondata.finishbirthdayArray;
                     sexArray = jsondata.sexArray;
                     finishsexArray = jsondata.finishsexArray;
-                    messagesArray = jsondata.messagesArray;
-                    alert(messagesArray, messagesArray.length)
-                    console.log(messagesArray)
+                    messageArray = jsondata.messageArray;
 
                     DataFormattingDict();
                     DataFormatting();

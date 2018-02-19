@@ -42,17 +42,17 @@ class AccessTestMixin(UserPassesTestMixin):
         return test_result
 
 
-def date_check_func(training_dt, add_start_dt, add_end_dt, origin_start_dt, origin_end_dt):
+def date_check_func(pt_schedule_date, add_start_dt, add_end_dt, origin_start_dt, origin_end_dt):
     error = None
 
     if origin_start_dt >= add_start_dt:
         if origin_start_dt < add_end_dt:
-            error = training_dt + '등록 시간이 겹칩니다.'
+            error = pt_schedule_date + '등록 시간이 겹칩니다.'
     if origin_end_dt > add_start_dt:
         if origin_end_dt < add_end_dt:
-            error = training_dt + '등록 시간이 겹칩니다.'
+            error = pt_schedule_date + '등록 시간이 겹칩니다.'
     if origin_start_dt <= add_start_dt:
         if origin_end_dt >= add_end_dt:
-            error = training_dt + '등록 시간이 겹칩니다.'
+            error = pt_schedule_date + '등록 시간이 겹칩니다.'
 
     return error
