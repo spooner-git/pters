@@ -2,6 +2,7 @@
 */
 body{
 	/*font-family: 'Noto Sans KR';*/
+	position: relative;
 	padding-top: 50px;
 	width: 100%;
 	background: #ffffff;
@@ -164,12 +165,10 @@ img,a,div,span,p{
 	background: transparent;
 	border-color: transparent;
 	top: 35%;
-	left: 10%;
-	width: 80%;
-	/*
-	background-color: #ffffff;
-	border: 1px solid #a2a2a2;
-	*/
+	width: 	100%;
+	max-width: 	330px;
+	left: 50%;
+	transform:translateX(-50%);
 	z-index: -2;
 	text-align: center;
 }
@@ -180,17 +179,15 @@ img,a,div,span,p{
 	background: transparent;
 	border-color: transparent;
 	top: 35%;
-	left: 10%;
-	width: 80%;
-	/*
-	background-color: #ffffff;
-	border: 1px solid #a2a2a2;
-	*/
+	width: 	100%;
+	max-width: 	330px;
+	left: 50%;
+	transform:translateX(-50%);
 	z-index: -2;
 	text-align: center;
 }
 
-#popup_info,#popup_info2,#popup_info3{
+.popup_info_text{
 	background: #ffffff;
 	position: relative;
 	width: 100%;
@@ -610,39 +607,39 @@ img,a,div,span,p{
 		display: block;
 }
 
+#canvasWrap{
+	position: relative;
+	width: 100%;
+	height: 0px;
+}
+#canvasWrap span{
+	position: absolute;
+	display: none;
+	width: 100%;
+	left:50%;
+	top:10px;
+	transform: translateX(-50%);
+	color: #e6e6e6;
+	z-index: 1500;
+}
+
+#canvas{
+	display: none;
+	position: relative;
+	background:#ffffff;
+	z-index: 1400;
+	border: 3px solid #282828;
+}
+
 
 /*미디어 쿼리*/
 @media(min-width:418px){
 	#cal_popup{
-		display: none;
-		position: fixed;
-		background: transparent;
-		border-color: transparent;
-		top: 35%;
-		left: 0;
-		width: 100%;
-		/*
-		background-color: #ffffff;
-		border: 1px solid #a2a2a2;
-		*/
-		z-index: -2;
-		text-align: center;
+		
 	}
 
 	#cal_popup3{
-		display: none;
-		position: fixed;
-		background: transparent;
-		border-color: transparent;
-		top: 35%;
-		left: 0%;
-		width: 100%;
-		/*
-		background-color: #ffffff;
-		border: 1px solid #a2a2a2;
-		*/
-		z-index: -2;
-		text-align: center;
+
 	}
 
 
@@ -794,6 +791,7 @@ img,a,div,span,p{
 		height: 1px;
 		border-top: 1px solid #282828;
 		z-index: 2;
+		opacity: 0.4;
 	}
 
 	.classTime{
@@ -802,7 +800,7 @@ img,a,div,span,p{
 	}
 
 	.offTime{
-		left: 3px;
+		left: 2px;
 	}
 
 	.classTime,.offTime,.classTime_checked{
