@@ -188,6 +188,12 @@ $(document).ready(function(){
 	//스케쥴 클릭시 팝업 Start
 	
 		$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
+			
+			$('#popup_text0').css({'color':'#333','background':'#ffffff'}).val('')
+            $('#canvas').hide().css({'border-color':'#282828'})
+			$('#canvasWrap').css({'height':'0px'})
+			$('#canvasWrap span').hide();
+
 			$('#page-addplan-pc').hide()
 			//$('.td00').css('background','transparent')
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
@@ -289,6 +295,7 @@ $(document).ready(function(){
 			if($('#cal_popup').css('display')=='block'){
 				$("#cal_popup").css({'display':'none','z-index':'-2'})
 				$('#shade').css({'display':'none'});
+				$('body').css('overflow','')
 			}
 		})
 
@@ -296,6 +303,7 @@ $(document).ready(function(){
 			if($('#cal_popup3').css('display')=='block'){
 				$("#cal_popup3").css({'display':'none','z-index':'-2'})
 				$('#shade').css({'display':'none'});
+				$('body').css('overflow','')
 			}
 		})
 
@@ -303,12 +311,20 @@ $(document).ready(function(){
 			if($('#cal_popup3').css('display')=='block'){
 				$("#cal_popup3").css({'display':'none','z-index':'-2'})
 				$('#shade').css({'display':'none'});
+				$('body').css('overflow','')
 			}
 		})
 
 //일정 완료 기능 추가 - hk.kim 180106
 	$("#popup_text0").click(function(){  //일정 변경 버튼 클릭
-		var $pt_finish_form = $('#pt-finish-form');
+
+		if($(this).val()!="filled"){
+			$('#canvas').show()
+			$('#canvasWrap').animate({'height':'200px'},200)
+			$('#canvasWrap span').show();
+			$('#cal_popup').animate({'top':'15%'},200)
+		}else if($(this).val()=="filled"){
+			var $pt_finish_form = $('#pt-finish-form');
 			if(schedule_on_off==1){
 				//PT 일정 완료 처리시
 				$.ajax({
@@ -326,20 +342,23 @@ $(document).ready(function(){
                       closeDeletePopup();
                       deleteCompleteSend();
                       ajaxClassTime();
-                      console.log('success')
                       },
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-
+             			$('#popup_text0').css({'color':'#333','background':'#ffffff'}).val('')
+                    	$('#canvas').hide().css({'border-color':'#282828'})
+                    	$('#canvasWrap span').hide();
+						$('#canvasWrap').css({'height':'0px'})
+						$('body').css('overflow','')
                       },
 
                     //통신 실패시 처리
                     error:function(){
-                      console.log("error")
                     },
                  })
 			}
+		}
 	})
 
 		//스케쥴 클릭시 팝업 End
@@ -374,6 +393,7 @@ $(document).ready(function(){
 	$('#popup_text3').click(function(){
 		var $ptdelform = $('#daily-pt-delete-form');
 		var $offdelform = $('#daily-off-delete-form');
+		$('body').css('overflow','')
 		if(schedule_on_off==1){
 				//PT 일정 삭제시
 				$.ajax({
