@@ -1013,19 +1013,85 @@ $(document).ready(function(){
         memberPcList.empty();
         for(var i=0; i<memberSize; i++){
         	//member_array[i] = '<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
-			member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+			    member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
         	member_array_pc[i] = '<li><a id="member_pc_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
         	//memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
 			//memberMobileList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
 
         }
         var member_arraySum_mobile = member_array_mobile.join('');
-		var member_arraySum_pc = member_array_pc.join('');
+		    var member_arraySum_pc = member_array_pc.join('');
         memberMobileList.html(member_arraySum_mobile);
         memberPcList.html(member_arraySum_pc);
-
-
 	  }
+
+    //완료 캔버스
+      var pos = {
+        drawable : false,
+        x: -1,
+        y: -1
+      };
+      var offset = $('#canvas').offset();
+      console.log('offset:', offset)
+      var canvas, ctx;
+      var canvas = document.getElementById('canvas')
+      var ctx = canvas.getContext("2d");
+      canvas.addEventListener("mousedown",listener)
+      canvas.addEventListener("mousemove",listener)
+      canvas.addEventListener("mouseup",listener)
+      canvas.addEventListener("mouseout",listener)
+      $("canvas").attr("width", 330).attr("height", 300);
+
+      function listener(event){
+        switch(event.type){
+          case "mousedown":
+              initDraw(event);
+              break;
+
+          case "mousemove":
+              if(pos.drawable){
+                draw(event);
+              }
+              break;
+
+          case "mouseout":
+          case "mouseup":
+              finishDraw();
+              break;
+        }
+      }
+
+      function initDraw(event){
+        ctx.beginPath();
+        pos.drawable = true;
+        var coors = getPosition(event);
+        pos.x = coors.X;
+        pos.y = coors.Y;
+        ctx.moveTo(pos.x, pos.y);
+      }
+
+      function draw(event){
+        var coors = getPosition(event);
+        ctx.lineTo(coors.X, coors.Y);
+        pos.x = coors.X;
+        pos.y = coors.Y;
+        ctx.stroke();
+      }
+
+      function finishDraw(){
+        pos.drawable = false;
+        pos.x = -1;
+        pos.y = -1;
+      }
+
+      function getPosition(event){
+        console.log('offset',offset)
+        console.log(event.pageX, event.pageY)
+        var x = event.pageX - offset.left;
+        var y = event.pageY - offset.top;
+        return {X:x, Y:y}
+      }
+
 
 
 });
