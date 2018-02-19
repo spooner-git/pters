@@ -16,11 +16,11 @@
   <form action="{% url 'trainer:daily_pt_delete' %}" id="daily-pt-delete-form" method="post">
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="member_name"   id="id_member_name_delete">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
   <form action="{% url 'trainer:daily_off_delete' %}" id="daily-off-delete-form" method="post">
     <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
 
   <form action="{% url 'trainer:modify_pt' %}" id="pt-modify-form" method="get">
@@ -38,7 +38,7 @@
     <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
     <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
     <input type="hidden" name="member_name"   id="id_member_name_finish">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
    
   <!--팝업메뉴-->
@@ -162,14 +162,14 @@
         <input type="hidden" name="training_date" id="id_training_date">
         <input type="hidden" name="time_duration" id="id_time_duration">
         <input type="hidden" name="training_time" id="id_training_time">
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
     </form>
 
     <form action="{% url 'trainer:add_off_logic' %}" id="off-add-form" method="post">
         <input type="hidden" name="training_date" id="id_training_date_off">
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
     </form>
     
     <div class="ptaddbox" id="pcaddpopup">
@@ -497,6 +497,8 @@
           var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}',{% endfor %}];
           //pt schedule이 끝났는지 확인
           var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}', {% endfor %}];
+
+          var messageArray = [{% for message in messages %}'{{ message }}',{% endfor %}]
 
           var classTimeArray = [];
           var offTimeArray = [];

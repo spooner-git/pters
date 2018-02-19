@@ -491,6 +491,8 @@
           var finishRegCountArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_reg_count }}',{% endif %}{% endfor %}]
           var finishAvailCountArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_avail_count }}',{% endif %}{% endfor %}]
 
+          var messageArray = [{% for message in messages %}'{{ message }}',{% endfor %}]
+
           var DB = {};
           var DBe = {};
 

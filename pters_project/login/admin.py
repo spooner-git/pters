@@ -50,7 +50,7 @@ class CompanyTbAdmin(admin.ModelAdmin):
 
 @admin.register(LectureScheduleTb)
 class LectureScheduleTbAdmin(admin.ModelAdmin):
-    list_display = ('lecture_schedule_id', 'lecture_tb', 'start_dt','end_dt',
+    list_display = ('lecture_schedule_id', 'lecture_tb','class_tb', 'start_dt','end_dt',
                     'state_cd', 'sign_data_url', 'en_dis_type', 'reg_dt', 'mod_dt', 'use')
 
 
