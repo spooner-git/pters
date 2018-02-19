@@ -1137,6 +1137,7 @@ $("#upbutton-check,.submitBtn").click(function(){
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
+                    console.log(data);
                     nameArray =[];
                     phoneArray = [];
                     countArray = [];
