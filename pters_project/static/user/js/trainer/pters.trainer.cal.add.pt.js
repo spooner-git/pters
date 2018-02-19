@@ -1,5 +1,12 @@
 $(document).ready(function(){
 
+      //유저가 터치인지 마우스 사용인지 알아낸다
+      var touch_or_mouse = ""
+           window.addEventListener('touchstart',function(){
+          touch_or_mouse = "touch"
+      })
+      //유저가 터치인지 마우스 사용인지 알아낸다
+
       var Options = {
                         "limit": 1, // 현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
                     }
@@ -8,6 +15,7 @@ $(document).ready(function(){
       DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
 
        var select_all_check = false;
+       var offset_for_canvas;
 
       $("#datepicker").datepicker({
             minDate : 0,
@@ -1012,19 +1020,118 @@ $(document).ready(function(){
         memberPcList.empty();
         for(var i=0; i<memberSize; i++){
         	//member_array[i] = '<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
-			member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+			    member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
         	member_array_pc[i] = '<li><a id="member_pc_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
         	//memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
 			//memberMobileList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
 
         }
         var member_arraySum_mobile = member_array_mobile.join('');
-		var member_arraySum_pc = member_array_pc.join('');
+		    var member_arraySum_pc = member_array_pc.join('');
         memberMobileList.html(member_arraySum_mobile);
         memberPcList.html(member_arraySum_pc);
-
-
 	  }
 
+  //일정완료 사인용 캔버스
+      
+
+      var pos = {
+        drawable : false,
+        x: -1,
+        y: -1
+      };
+      $('#popup_text0').click(function(){
+        setTimeout(function(){offset_for_canvas = $('#canvas').offset();},250)
+        $('html,body').css({'overflow':'hidden','height':'100%'})
+      })
+
+      var canvas, ctx;
+      var canvas = document.getElementById('canvas')
+      var ctx = canvas.getContext("2d");
+
+        canvas.addEventListener("mousedown",listener)
+        canvas.addEventListener("mousemove",listener)
+        canvas.addEventListener("mouseup",listener)
+        canvas.addEventListener("mouseout",listener)
+        canvas.addEventListener("touchstart",listener)
+        canvas.addEventListener("touchmove",listener)
+        canvas.addEventListener("touchend",listener)
+        canvas.addEventListener("touchcancel",listener)
+      
+      $("canvas").attr("width", 324).attr("height", 200);
+      $(document).on('click','div.classTime',function(){
+        ctx.clearRect(0,0,324,300);
+        $('#cal_popup').css({'top':'35%'});
+      })
+
+      function listener(event){
+        switch(event.type){
+          case "touchstart":
+              initDraw(event);
+              $('#canvas').css({'border-color':'#fe4e65'})
+              $('#popup_text0').css({'color':'#ffffff','background':'#fe4e65'}).val('filled')
+              break;
+
+          case "touchmove":
+              if(pos.drawable){
+                draw(event);
+              }
+              break;
+          case "touchend":
+          case "touchcancel":
+              finishDraw();
+              break;
+
+          case "mousedown":
+              initDraw(event);
+              $('#canvas').css({'border-color':'#fe4e65'})
+              $('#popup_text0').css({'color':'#ffffff','background':'#fe4e65'}).val('filled')
+              break;
+          case "mousemove":
+              if(pos.drawable){
+                draw(event);
+              }
+              break;
+          case "mouseup":
+          case "mouseout":
+              finishDraw();
+              break;
+
+        }
+      }
+
+      function initDraw(event){
+        ctx.beginPath();
+        pos.drawable = true;
+        var coors = getPosition(event);
+        pos.x = coors.X;
+        pos.y = coors.Y;
+        ctx.moveTo(pos.x, pos.y);
+      }
+
+      function draw(event){
+        var coors = getPosition(event);
+        ctx.lineTo(coors.X, coors.Y);
+        pos.x = coors.X;
+        pos.y = coors.Y;
+        ctx.stroke();
+      }
+
+      function finishDraw(){
+        pos.drawable = false;
+        pos.x = -1;
+        pos.y = -1;
+      }
+
+      function getPosition(event){
+        if(touch_or_mouse=="touch"){
+          var x = event.touches[0].pageX - offset_for_canvas.left;
+          var y = event.touches[0].pageY - offset_for_canvas.top;  
+        }else{
+          var x = event.pageX - offset_for_canvas.left;
+          var y = event.pageY - offset_for_canvas.top;
+        }
+        return {X:x, Y:y}
+      }
 
 });
