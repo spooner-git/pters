@@ -62,20 +62,16 @@
       </div>
       <div class="ymdText-pc-add">
           <div class="ymdText-pc-add-member">회원 추가</div>
-       </div>
-      <div class="dropdown alignSelect">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" id="menu1" data-toggle="dropdown">기준 선택</button>
-        <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-        <ul class="dropdown-menu pters_dropdown_custom" role="menu" aria-labelledby="menu1">
-          <!-- 회원명 DB연동 필요-->
-          <li role="presentation" id="countH"><a href="#" role="menuitem" tabindex="-1">남은 횟수 많은 순</a></li>
-          <li role="presentation" id="countL"><a href="#" role="menuitem" tabindex="-1">남은 횟수 적은 순</a></li>
-          <li role="presentation" id="startP"><a href="#" role="menuitem" tabindex="-1">시작 일자 과거 순</a></li>
-          <li role="presentation" id="startR"><a href="#" role="menuitem" tabindex="-1">시작 일자 최근 순</a></li>
-          <li role="presentation" id="recent"><a href="#" role="menuitem" tabindex="-1">수정 일자 최근 순</a></li>
-          <li role="presentation" id="name"><a href="#" role="menuitem" tabindex="-1">회원명 가나다 순</a></li>
-        </ul>
       </div>
+
+      <select class="alignSelect">기준 선택
+        <option id="name">회원명 가나다 순</option>
+        <option id="countH">남은 횟수 많은 순</option>
+        <option id="countL">남은 횟수 적은 순</option>
+        <option id="startP">시작 일자 과거 순</option>
+        <option id="startR">시작 일자 최근 순</option>
+        <option id="recent">수정 일자 최근 순</option>
+      </select> 
     </div>
 
     
@@ -108,8 +104,9 @@
     
       </table>
     </div> 
-
 </div>
+
+
 
 <div id="memberInfoPopup" class="infopopup wrap">
 
@@ -139,7 +136,7 @@
                 <div id="memberBirth_info" class="dropdown pters_input_custom">
                     <input type="text" class="dropdown form-control" id="memberBirthYear_info" name="birthyear" maxlength="4" readonly>
                     <div id="memberBirthMonthSelected_info" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthmonth"></button>
+                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom input_disabled_color" type="button" data-toggle="dropdown" name="birthmonth" disabled></button>
                         <ul id="memberBirthMonth_info" class="dropdown-menu dropdownlist">
                             <li><a value="1">1월</a></li>
                             <li><a value="2">2월</a></li>
@@ -156,7 +153,7 @@
                         </ul>
                     </div>
                     <div id="memberBirthDateSelected_info" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthdate"></button>
+                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom input_disabled_color" type="button" data-toggle="dropdown" name="birthdate" disabled></button>
                         <ul id="memberBirthDate_info" class="dropdown-menu dropdownlist">
                             
                         </ul>
@@ -198,11 +195,11 @@
 
             <div id="dateSelector_info" class="ptaddbox">
                 <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
-                <p class="datepicktext dropdown"><input type="text" id="datepicker_info" name="start_date" readonly></p>
+                <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
             </div>
             <div id="dateSelector2_info"  class="ptaddbox">
                 <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
-                <p class="datepicktext dropdown"><input type="text" id="datepicker2_info" name="end_date" readonly></p>
+                <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
             </div>
 
             <div class="ptaddbox form-group">
@@ -220,6 +217,8 @@
             </div>
         </form>
     </div>
+
+
 
 <div id="page_addmember" class="wrap"> 
 
