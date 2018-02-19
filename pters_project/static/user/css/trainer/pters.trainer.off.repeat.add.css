@@ -2,12 +2,19 @@ body{
 	padding-top: 50px;
 }
 
-
 #offRepeatSummary{
 	position: relative;
 	background: #282828;
 	padding-top: 16px;
 	padding-bottom: 16px;
+	max-width: 500px;
+}
+
+#offRepeatSummary,#repeatSetting, #dateSelector, #dateSelector2, #daySelect, #classStartTime, #classDuration, #submitBtnWrap{
+	max-width: 500px;
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #summaryText{
@@ -22,7 +29,7 @@ body{
 	margin-top: 1px;
 	position: relative;
 	background:#ffffff; 
-	width: 77%;
+	width: 82%;
 	height: 40px;
 	margin-left: auto;
 }
@@ -75,6 +82,7 @@ body{
 	height: 40px;
 	background-color: #ffffff;
 	color: #cccccc;
+	margin-top: 10px;
 }
 
 .dateButton{
@@ -106,4 +114,8 @@ body{
 
 .submitBtnActivated{
 	background: #fe4e65 !important;
+}
+
+@media(min-width:600px){
+
 }
