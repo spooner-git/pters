@@ -24,6 +24,7 @@
       "classTimeArray_end_date" : 
       [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}"{{ pt_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleFinishArray":
-      [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}"{{ pt_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
-
+      [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}"{{ pt_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "messageArray" :
+      [{% for message in messages %}"{{ message }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
     }
