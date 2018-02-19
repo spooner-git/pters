@@ -47,6 +47,6 @@
     "finishAvailCountArray" :
     [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}"{{ lecture.lecture_avail_count }}"{%if forloop.last == False%},{% endif %} {% endif %}{% endfor %}],
 
-    "messagesArray" :
+    "messageArray" :
     [{% for message in messages %}"{{ message }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
 }
