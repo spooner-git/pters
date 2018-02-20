@@ -167,6 +167,7 @@ $(document).ready(function(){
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
 	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
 
+	/*
 	$('#ymdText').click(function(){
 		var memberName = $(".memberName");
 		var memberTime = $(".memberTime");
@@ -178,7 +179,7 @@ $(document).ready(function(){
 			memberTime.css('display','block')
 		};
 	});
-	//
+	*/
 
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
@@ -561,19 +562,19 @@ $(document).ready(function(){
 	//플로팅 버튼 End
 
 	//플로팅 버튼 스크롤시 숨기기 Start
-		var ts;
-			$("body").bind("touchstart",function(e){
-			ts = e.originalEvent.touches[0].clientY;
-				});
-			
-			$("body").bind("touchend",function(e){
-				var te = e.originalEvent.changedTouches[0].clientY;
-				if(ts>te+5){
-					$("#float_btn").animate({opacity:'0'})
-				}else if(ts<te-5){
-					$("#float_btn").animate({opacity:'1'})
-				}
-			});
+	var ts;
+	$("body").bind("touchstart",function(e){
+	ts = e.originalEvent.touches[0].clientY;
+		});
+	
+	$("body").bind("touchend",function(e){
+		var te = e.originalEvent.changedTouches[0].clientY;
+		if(ts>te+5){
+			$("#float_btn").animate({opacity:'0'})
+		}else if(ts<te-5){
+			$("#float_btn").animate({opacity:'1'})
+		}
+	});
 	//플로팅 버튼 스크롤시 숨기기 End
 	
 
@@ -653,6 +654,7 @@ $(document).ready(function(){
 
 	
 	//너무 빠르게 스와이프 하는 것을 방지
+	/*
 	myswiper.on('onTransitionStart',function(){
 		myswiper.params.onlyExternal = true;
 	})
@@ -663,6 +665,7 @@ $(document).ready(function(){
 		}, 400)
 		
 	})
+	*/
 
 	
 	//너무 빠르게 스와이프 하는 것을 방지
