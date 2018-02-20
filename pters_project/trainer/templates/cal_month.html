@@ -11,7 +11,7 @@
   <form action="{% url 'trainer:delete_schedule' %}" id="pt-delete-form" method="post">
     <input type="hidden" name="schedule_id" id="id_schedule_id">
   <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
-    <input type="hidden" name="next_page" value = '{% url 'trainee:cal_day_ajax' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
     <form action="{% url 'trainer:add_schedule' %}" id="pt-add-form" method="post">
     <input type="hidden" name="training_date" id="id_training_date">

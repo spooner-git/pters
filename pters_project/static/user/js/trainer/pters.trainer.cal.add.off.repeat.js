@@ -44,7 +44,7 @@ $(document).ready(function(){
 
       $("#starttimes li a").click(function(){
           $("#starttimesSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).text());
-          $("#id_repeat_starttime").val($(this).attr('data-trainingtime'));
+          $("#id_repeat_start_time").val($(this).attr('data-trainingtime'));
           check_dropdown_selected();
       }); //시작시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
@@ -76,12 +76,12 @@ $(document).ready(function(){
       $("#datepicker").change(function(){
           if($("#datepicker").val() != '') {
               $("#dateSelector p").addClass("dropdown_selected");
-              $("#id_repeat_startdate").val($("#datepicker").val());
+              $("#id_repeat_start_date").val($("#datepicker").val());
               check_dropdown_selected();
           }
           else{
               $("#dateSelector p").removeClass("dropdown_selected");
-              $("#id_repeat_startdate").val('');
+              $("#id_repeat_start_date").val('');
               check_dropdown_selected();
           }
       })
@@ -89,12 +89,12 @@ $(document).ready(function(){
       $("#datepicker2").change(function(){
           if($("#datepicker2").val() != '') {
               $("#dateSelector2 p").addClass("dropdown_selected");
-              $("#id_repeat_enddate").val($("#datepicker2").val());
+              $("#id_repeat_end_date").val($("#datepicker2").val());
               check_dropdown_selected();
           }
           else{
               $("#dateSelector2 p").removeClass("dropdown_selected");
-              $("#id_repeat_enddate").val('');
+              $("#id_repeat_end_date").val('');
               check_dropdown_selected();
           }
       })
@@ -114,9 +114,9 @@ $(document).ready(function(){
        		}
     	 }
 
-    $("#upbutton-alarm").click(function(){
+    $("#submitBtn").click(function(){
          if(select_all_check==true){
-             document.getElementById('off-add-form').submit();
+             document.getElementById('add-repeat-schedule-form').submit();
          }else{
             //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
