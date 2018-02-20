@@ -295,7 +295,7 @@ $(document).ready(function(){
 			if($('#cal_popup').css('display')=='block'){
 				$("#cal_popup").css({'display':'none','z-index':'-2'})
 				$('#shade').css({'display':'none'});
-				$('body').css('overflow','')
+				$('body').css('overflow-y','overlay');
 			}
 		})
 
@@ -303,7 +303,7 @@ $(document).ready(function(){
 			if($('#cal_popup3').css('display')=='block'){
 				$("#cal_popup3").css({'display':'none','z-index':'-2'})
 				$('#shade').css({'display':'none'});
-				$('body').css('overflow','')
+				$('body').css('overflow-y','overlay');
 			}
 		})
 
@@ -311,7 +311,7 @@ $(document).ready(function(){
 			if($('#cal_popup3').css('display')=='block'){
 				$("#cal_popup3").css({'display':'none','z-index':'-2'})
 				$('#shade').css({'display':'none'});
-				$('body').css('overflow','')
+				$('body').css('overflow-y','overlay');
 			}
 		})
 
@@ -350,7 +350,7 @@ $(document).ready(function(){
                     	$('#canvas').hide().css({'border-color':'#282828'})
                     	$('#canvasWrap span').hide();
 						$('#canvasWrap').css({'height':'0px'})
-						$('body').css('overflow','')
+						$('body').css('overflow-y','overlay');
                       },
 
                     //통신 실패시 처리
@@ -393,7 +393,7 @@ $(document).ready(function(){
 	$('#popup_text3').click(function(){
 		var $ptdelform = $('#daily-pt-delete-form');
 		var $offdelform = $('#daily-off-delete-form');
-		$('body').css('overflow','')
+		$('body').css('overflow-y','overlay');
 		if(schedule_on_off==1){
 				//PT 일정 삭제시
 				$.ajax({
@@ -635,7 +635,6 @@ $(document).ready(function(){
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlideNextEnd',function(){
 			slideControl.append();
-			
 			weekNum_Set_fixed()
 			toDay();
 			addcurrentTimeIndicator_blackbox()	
@@ -647,7 +646,6 @@ $(document).ready(function(){
 	//이전페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlidePrevEnd',function(){
 			slideControl.prepend();
-			
 			weekNum_Set_fixed()
 			toDay();
 			addcurrentTimeIndicator_blackbox()
@@ -656,73 +654,30 @@ $(document).ready(function(){
 			todayFinderArrow();			
 	});
 
-
+	
 	//너무 빠르게 스와이프 하는 것을 방지
 	myswiper.on('onTransitionStart',function(){
 		myswiper.params.onlyExternal = true;
 	})
 
 	myswiper.on('onTransitionEnd',function(){
+		
 		setTimeout(function(){
 			myswiper.params.onlyExternal = false;
-		}, 200)
+		}, 400)
 		
 	})
+
+	
 	//너무 빠르게 스와이프 하는 것을 방지
 
 	//아래로 스크롤중 스와이프 했을때, jquery.swipe에서 stopPropagation Error발생하여 스와이프 불가하는 현상 방지
 	//스크롤중 swipe 기능막고, 스크롤 종료감지하여 종료 20ms 이후에 swipe 기능 살려주는 함수 
 	
 
-/*
-	$(window).scroll(function(){
-		myswiper.params.onlyExternal = true;
-		clearTimeout($.data(this,"scrollCheck"));
-		console.log('scrolling')
-		
-		var ymdTextLoc = $('#pcver').offset().top;
-		if(ymdTextLoc>30){
-			if($(window).width()>600){
-				$('#ymdText').hide()
-				$('#week').css({'transform':'translate(-50% ,-100px)'})
-				//$('#calendar').css({'transform':'translateY(51px)'})
-			}else{
-				//$('body').css('padding-top','0')
-				//$('#page-base').fadeOut('linear')	
-				$('#ymdText').css({'transform':'translateY(-50px)','z-index':'110'})
-				$('#week').css('transform','translateY(-50px)')
-			}	
-		}else if(ymdTextLoc<30){
-			if($(window).width()>600){
-				$('#ymdText').show()
-				$('#week').css({'transform':'translate(-50%, 0px)'})
-				//$('#calendar').css({'transform':'translateY(151px)'})
-			}else{
-				//$('body').css('padding-top','50px')
-				//$('#page-base').show('linear')
-				$('#ymdText').css({'transform':'translateY(0px)','z-index':'5'})
-				$('#week').css('transform','translateY(0px)')
-			}
-		}
-		
-		$.data(this,"scrollCheck",setTimeout(function(){
-			myswiper.params.onlyExternal = false;
-			console.log('stop')
-		},200))
-	})
-*/
-
-
 	$('.swiper-container').on('scroll touchmove mousewheel',function(event){
 		event.stopPropagation();
 	});
-
-
-	myswiper.on('onTouchEnd',function(){
-		myswiper.params.onlyExternal = false;
-	})
-
-
 	
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {
@@ -752,7 +707,9 @@ $(document).ready(function(){
 			var firstDD = Number(firstdateinfo[2]);
 			myswiper.removeSlide(4);
 			myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
-			calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);		
+			calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);
+
+					
 			//classTime();
 			//offTime();
 			classTime_Active('prev')
@@ -788,7 +745,6 @@ $(document).ready(function(){
 		for(var i=0; i<=23; i++){
 			var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="time-row">'
 			var divToAppend = $(textToAppend)
-			var slidevalue = "test"
 
 			switch(currentDay_){
 				case 0 :
