@@ -153,7 +153,7 @@
 </div>
     
 
-<div id="calendar" class="container"> <!-- Calendar container-->
+<div id="calendar" class="container">
       <div class="swiper-container">
         <div id="timeIndicatorBar"></div>
           <div class="timeindex">
@@ -183,16 +183,13 @@
               <div class="hour" id="hour23"><span class="timeindex_time">23:00</span></div>
           </div>
           <div class="swiper-wrapper"> 
-            <div class="swiper-slide" id="slide1"></div> <!--Index0 2주전-->
-            <div class="swiper-slide" id="slide2"></div> <!--Index1 1주전-->
-            <div class="swiper-slide" id="slide3"></div> <!--Index2 이번주-->
-            <div class="swiper-slide" id="slide4"></div> <!--Index3 1주후-->
-            <div class="swiper-slide" id="slide5"></div> <!--Index2 2주후-->
-          </div>  <!--Swiper-wrapper-->
-      </div> <!--Swiper-container-->
-
-<!--Swiper-->    
-      <!-- <div class="swiper-pagination"></div> -->
+            <div class="swiper-slide" id="slide1"></div> 
+            <div class="swiper-slide" id="slide2"></div> 
+            <div class="swiper-slide" id="slide3"></div> 
+            <div class="swiper-slide" id="slide4"></div> 
+            <div class="swiper-slide" id="slide5"></div>
+          </div> 
+      </div> 
       <div id="cal_box" class="cal_box"></div>    
 </div>
 
@@ -618,25 +615,14 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 2,
-                speed : 120,
+                speed : 150,
                 preventClicks : true,
                 keyboardControl : true, 
                 preventClicksPropagation : true,
-                threshold : 50,
+                threshold : 40,
                 resistance: 1,
-                //followFinger : false,
-                //shortSwipes : false,
-                //longSwipesRatio: 0.2,
-                //longSwipesMs : 70,
             });
             
-            var count = 0 
-            var count1 = 0
-
-            $(window).scroll(function(event){
-               event.stopPropagation();
-            })
-
 
             $('#hidetoggle').click(function(){
               if($(this).attr('data-type') == '0'){
@@ -656,7 +642,8 @@
               }
             })
 
-
+            var count = 0 
+            var count1 = 0
             $('#ymdText-pc-prev-btn').click(function(){
               if(count==0){
                 myswiper.slidePrev(100)

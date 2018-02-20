@@ -107,7 +107,6 @@ body{
 	max-width: 1080px;
 	height: 100% !important;
 	overflow-y: hidden;
-	-webkit-overflow-scrolling:touch;
 }
 
 
