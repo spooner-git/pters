@@ -94,17 +94,17 @@
 
 <div id="ymdText" class="" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
     <div class='arrowButton'>
-            <a href="" style="left: 4%">
+            <a id="leftArrowButton" style="left: 4%">
               <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
               <img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;">
               <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible">Today</span>
             </a>
-            <a href="" style="right: 4%">
+            <a id="rightArrowButton" style="right: 4%">
               <img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;">
               <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
               <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible">Today</span>
             </a>
-          </div>
+    </div>
     <div id="yearText">
     </div>
     <div id="monthText">
@@ -120,6 +120,10 @@
 </div>
 
 <div id="ymdText-pc" class="wrap">
+    <div class="ymdText-pc-refresh">
+      <div class="ymdText-pc-add-refresh">새로고침</div>
+    </div>
+
     <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
     <div class="ymdText-pc-date">
       <span id="ymdText-pc-month-start" class="ymdText-pc-month">1월</span>
@@ -153,7 +157,7 @@
 </div>
     
 
-<div id="calendar" class="container"> <!-- Calendar container-->
+<div id="calendar" class="container">
       <div class="swiper-container">
         <div id="timeIndicatorBar"></div>
           <div class="timeindex">
@@ -183,16 +187,13 @@
               <div class="hour" id="hour23"><span class="timeindex_time">23:00</span></div>
           </div>
           <div class="swiper-wrapper"> 
-            <div class="swiper-slide" id="slide1"></div> <!--Index0 2주전-->
-            <div class="swiper-slide" id="slide2"></div> <!--Index1 1주전-->
-            <div class="swiper-slide" id="slide3"></div> <!--Index2 이번주-->
-            <div class="swiper-slide" id="slide4"></div> <!--Index3 1주후-->
-            <div class="swiper-slide" id="slide5"></div> <!--Index2 2주후-->
-          </div>  <!--Swiper-wrapper-->
-      </div> <!--Swiper-container-->
-
-<!--Swiper-->    
-      <!-- <div class="swiper-pagination"></div> -->
+            <div class="swiper-slide" id="slide1"></div> 
+            <div class="swiper-slide" id="slide2"></div> 
+            <div class="swiper-slide" id="slide3"></div> 
+            <div class="swiper-slide" id="slide4"></div> 
+            <div class="swiper-slide" id="slide5"></div>
+          </div> 
+      </div> 
       <div id="cal_box" class="cal_box"></div>    
 </div>
 
@@ -618,33 +619,23 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 2,
-                speed : 120,
+                //speed : 150,
                 preventClicks : true,
                 keyboardControl : true, 
                 preventClicksPropagation : true,
-                threshold : 50,
+                threshold : 40,
                 resistance: 1,
-                //followFinger : false,
-                //shortSwipes : false,
-                //longSwipesRatio: 0.2,
-                //longSwipesMs : 70,
+                onlyExternal: true,
             });
             
-            var count = 0 
-            var count1 = 0
-
-            $(window).scroll(function(event){
-               event.stopPropagation();
-            })
-
 
             $('#hidetoggle').click(function(){
               if($(this).attr('data-type') == '0'){
                 $(this).css({'padding-top':'10px','color':'#282828'}).attr('data-type','1')
                 $(this).find('img').css('-webkit-transform','rotate(-90deg)')
-                $('#ymdText-pc').css({'padding-top':'30px','background':'#ffffff'})
-                $('#week').css({'padding-top':'40px'})
-                $('#calendar').css('padding-top','35px')
+                $('#ymdText-pc').css({'padding-top':'17px','background':'#ffffff'})
+                $('#week').css({'padding-top':'24px'})
+                $('#calendar').css('padding-top','19px')
                 $('#ymdText').css('display','none')
               }else{
                 $(this).css({'padding-top':'75px','color':'#f4f4f4'}).attr('data-type','0')
@@ -656,33 +647,66 @@
               }
             })
 
-
-            $('#ymdText-pc-prev-btn').click(function(){
+            var count = 0 
+            var count1 = 0
+            $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(){
               if(count==0){
-                myswiper.slidePrev(100)
+                myswiper.slidePrev(300)
                 count++  
-                setTimeout(function(){count=0},200)
+                setTimeout(function(){count=0},400)
               }else if(count>0){
                 console.log('wait!')
               }
             })
 
-            $('#ymdText-pc-next-btn').click(function(){
+            $('#ymdText-pc-next-btn, #rightArrowButton').click(function(){
               if(count1==0){
-                myswiper.slideNext(100)  
+                myswiper.slideNext(300)  
                 count1++  
-                setTimeout(function(){count1=0},200)
+                setTimeout(function(){count1=0},400)
               }else if(count>0){
                 console.log('wait!')
               }
             })
 
+            /*
+            var originX;
+            $('#calendar').on("touchstart",function(e){
+                originX = e.originalEvent.touches[0].screenX
+            })
 
+            $('#calendar').on("touchend",function(e){
+                var movedX = e.originalEvent.changedTouches[0].screenX;
+                var deltaX = originX - movedX
+                if(deltaX>100){
+                    if(count1==0){
+                      myswiper.slideNext(600)
+                      count1++  
+                      setTimeout(function(){count1=0},700)
+                    }else if(count>0){
+                      console.log('wait!')
+                    }
+                }else if(deltaX<-100){
+                    if(count==0){
+                      myswiper.slidePrev(600)
+                      count++  
+                      setTimeout(function(){count=0},700)
+                    }else if(count>0){
+                      console.log('wait!')
+                    }
+                }
+            })
+            */
+
+
+
+            /*
             $('#ymdText').click(function(){
               $('#calendar').fadeOut('fast','linear',function(){
                 window.location.reload();
               })
             })
+            */
 
             $('footer').css('display','none')
 

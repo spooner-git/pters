@@ -1042,7 +1042,7 @@ $(document).ready(function(){
       };
       $('#popup_text0').click(function(){
         setTimeout(function(){offset_for_canvas = $('#canvas').offset();},250)
-        $('html,body').css({'overflow':'hidden','height':'100%'})
+        $('body').css({'overflow-y':'hidden'})
       })
 
       var canvas, ctx;
