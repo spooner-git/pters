@@ -228,7 +228,6 @@ def add_schedule_logic(request):
     next_page = request.POST.get('next_page')
 
     error = None
-    class_info = None
     if en_dis_type == '1':
         if lecture_id == '':
             error = '회원을 선택해 주세요.'
@@ -253,75 +252,11 @@ def add_schedule_logic(request):
             error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(member_id=request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
-
-    if en_dis_type == '1':
-        if error is None:
-            try:
-                member_lecture_info = LectureTb.objects.get(lecture_id=int(lecture_id))
-            except ObjectDoesNotExist:
-                error = '회원 PT 정보가 존재하지 않습니다'
-        if error is None:
-            if member_lecture_info.lecture_avail_count == 0:
-                error = '예약 가능한 횟수가 없습니다'
+        error = add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
+                                        request.user.id, request.user.first_name, lecture_id,
+                                        en_dis_type, member_name)
 
     if error is None:
-        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id)
-        for schedule_datum in schedule_data:
-            error = date_check_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
-                                    schedule_datum.start_dt, schedule_datum.end_dt)
-            if error is not None:
-                break
-
-    if error is None:
-        with transaction.atomic():
-            add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
-                                           start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                           state_cd='NP', en_dis_type=en_dis_type,
-                                           reg_dt=timezone.now(), mod_dt=timezone.now())
-            add_schedule_info.save()
-            if en_dis_type == '1':
-                member_lecture_info.lecture_avail_count -= 1
-                member_lecture_info.mod_dt = timezone.now()
-                member_lecture_info.save()
-
-    if error is None:
-        week_info = ['일', '월', '화', '수', '목', '금', '토']
-
-        log_start_date = schedule_start_datetime.strftime('%Y')+'년 ' \
-                         + schedule_start_datetime.strftime('%m')+'월 ' \
-                         + schedule_start_datetime.strftime('%d')+'일 ' \
-                         + week_info[int(schedule_start_datetime.strftime('%w'))] + '요일 '
-        if schedule_start_datetime.strftime('%p') == 'AM':
-            log_start_date = str(log_start_date) + '오전'
-        elif schedule_start_datetime.strftime('%p') == 'PM':
-            log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + schedule_start_datetime.strftime(' %I:%M')
-
-        if schedule_end_datetime.strftime('%p') == 'AM':
-            log_end_date = '오전'
-        elif schedule_end_datetime.strftime('%p') == 'PM':
-            log_end_date = '오후'
-
-        log_end_date = str(log_end_date) + schedule_end_datetime.strftime(' %I:%M')
-        if en_dis_type == '1':
-            log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
-                           + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
-                           + log_start_date\
-                           + ' - '+log_end_date
-        else:
-            log_contents = '<span>'+request.user.first_name + ' 강사님께서 '\
-                           + ' OFF </span> 일정을 <span class="status">등록</span>했습니다.@'\
-                           + log_start_date\
-                           + ' - '+log_end_date
-
-        log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
-        log_data.save()
         return redirect(next_page)
     else:
         messages.info(request, error)
@@ -515,47 +450,16 @@ def finish_schedule_logic(request):
         return redirect(next_page)
 
 
-
-# 반복 일정 추가
-@csrf_exempt
-def add_repeat_schedule_logic(request):
-    lecture_id = request.POST.get('lecture_id')
-    member_name = request.POST.get('member_name')
-    schedule_date = request.POST.get('training_date')
-    schedule_time = request.POST.get('training_time')
-    schedule_time_duration = request.POST.get('time_duration')
-    en_dis_type = request.POST.get('en_dis_type')
-    next_page = request.POST.get('next_page')
+def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
+                            user_id, user_name, lecture_id, en_dis_type, member_name):
 
     error = None
     class_info = None
-    if en_dis_type == '1':
-        if lecture_id == '':
-            error = '회원을 선택해 주세요.'
-
-    if schedule_date == '':
-        error = '날짜를 선택해 주세요.'
-    elif schedule_time == '':
-        error = '시작 시간을 선택해 주세요.'
-    elif schedule_time_duration == '':
-        error = '진행 시간을 선택해 주세요.'
-
-    if error is None:
-        #날짜 값 셋팅
-        try:
-            schedule_start_datetime = datetime.datetime.strptime(schedule_date+' '+schedule_time, '%Y-%m-%d %H:%M:%S.%f')
-            schedule_end_datetime = schedule_start_datetime + datetime.timedelta(hours=int(schedule_time_duration))
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
         # 강사 정보 가져오기
         try:
-            class_info = ClassTb.objects.get(member_id=request.user.id)
+            class_info = ClassTb.objects.get(member_id=user_id)
         except ObjectDoesNotExist:
             error = '강사 정보가 존재하지 않습니다'
 
@@ -609,19 +513,44 @@ def add_repeat_schedule_logic(request):
 
         log_end_date = str(log_end_date) + schedule_end_datetime.strftime(' %I:%M')
         if en_dis_type == '1':
-            log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
+            log_contents = '<span>'+user_name + ' 강사님께서 ' + member_name \
                            + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
                            + log_start_date\
                            + ' - '+log_end_date
         else:
-            log_contents = '<span>'+request.user.first_name + ' 강사님께서 '\
+            log_contents = '<span>'+user_name + ' 강사님께서 '\
                            + ' OFF </span> 일정을 <span class="status">등록</span>했습니다.@'\
                            + log_start_date\
                            + ' - '+log_end_date
 
-        log_data = LogTb(external_id=request.user.id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
+        log_data = LogTb(external_id=user_id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
+    else:
+        return error
+
+
+# 반복 일정 추가
+@csrf_exempt
+def add_repeat_schedule_logic(request):
+
+    #lecture_id = request.POST.get('repeat_freq')
+    #member_name = request.POST.get('repeat_start_date')
+    repeat_freq = request.POST.get('repeat_freq')
+    repeat_start_date = request.POST.get('repeat_start_date')
+    repeat_end_date = request.POST.get('repeat_end_date')
+    repeat_day = request.POST.get('repeat_day')
+    repeat_start_time = request.POST.get('repeat_start_time')
+    repeat_dur = request.POST.get('repeat_dur')
+    en_dis_type = request.POST.get('en_dis_type')
+    next_page = request.POST.get('next_page')
+
+    error = None
+
+    #schedule add logic add
+
+    if error is None:
+
         return redirect(next_page)
     else:
         messages.info(request, error)
