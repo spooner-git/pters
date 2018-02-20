@@ -712,7 +712,7 @@ img,a,div,span,p{
 	#hidetoggle{
 		display: block;
 		position: fixed;
-		text-align: right;
+		text-align: left;
 		padding-top: 75px;
 		color: #f4f4f4;
 		font-size: 12px;
@@ -762,6 +762,10 @@ img,a,div,span,p{
 	}
 
 	.ymdText-pc-add{
+		display: none;
+	}
+
+	.ymdText-pc-refresh{
 		display: none;
 	}
 
@@ -947,6 +951,26 @@ img,a,div,span,p{
 		padding-right: 5px;
 		text-align: right;
 	}
+
+	.ymdText-pc-refresh{
+		display: inline;
+		line-height: 50px;
+		position: absolute;
+		left: 0;
+	}
+
+	.ymdText-pc-add-refresh{
+		display: inline;
+		margin-right: 5px;
+		padding:5px 8px 5px 8px;
+		font-size: 14px;
+		border:1px solid #282828;
+		cursor: pointer;
+	}
+		.ymdText-pc-add-refresh:hover{
+			background-color: #282828;
+			color: #fe4e65;
+		}
 
 	.ymdText-pc-add{
 		display: inline;

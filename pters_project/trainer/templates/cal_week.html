@@ -120,6 +120,10 @@
 </div>
 
 <div id="ymdText-pc" class="wrap">
+    <div class="ymdText-pc-refresh">
+      <div class="ymdText-pc-add-refresh">새로고침</div>
+    </div>
+
     <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
     <div class="ymdText-pc-date">
       <span id="ymdText-pc-month-start" class="ymdText-pc-month">1월</span>
@@ -628,9 +632,9 @@
               if($(this).attr('data-type') == '0'){
                 $(this).css({'padding-top':'10px','color':'#282828'}).attr('data-type','1')
                 $(this).find('img').css('-webkit-transform','rotate(-90deg)')
-                $('#ymdText-pc').css({'padding-top':'30px','background':'#ffffff'})
-                $('#week').css({'padding-top':'40px'})
-                $('#calendar').css('padding-top','35px')
+                $('#ymdText-pc').css({'padding-top':'17px','background':'#ffffff'})
+                $('#week').css({'padding-top':'24px'})
+                $('#calendar').css('padding-top','19px')
                 $('#ymdText').css('display','none')
               }else{
                 $(this).css({'padding-top':'75px','color':'#f4f4f4'}).attr('data-type','0')
