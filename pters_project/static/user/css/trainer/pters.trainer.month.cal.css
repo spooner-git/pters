@@ -725,7 +725,7 @@ img,a,div,span,p{
 	#hidetoggle{
 		display: block;
 		position: fixed;
-		text-align: right;
+		text-align: left;
 		padding-top: 75px;
 		color: #f4f4f4;
 		font-size: 12px;
