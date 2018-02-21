@@ -1245,6 +1245,7 @@ $("#upbutton-check,.submitBtn").click(function(){
              })
 
      }else{
+        scrollToIndicator($('#page_addmember'))
         $('#inputError').fadeIn()
         setTimeout(function(){$('#inputError').fadeOut()},10000)
         $('#errorMsg p').text('모든 필수 정보를 입력해주세요')
