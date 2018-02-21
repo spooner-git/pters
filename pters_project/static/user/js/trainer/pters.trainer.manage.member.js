@@ -47,6 +47,7 @@ $(document).ready(function(){
         $('#page_managemember').hide();
       }
 
+      $('#inputError').css('display','none')
       $('#fast_check').val('0')
       $('#form_birth').val('')
       $('#memberBirthDate, #memberBirthDate_info').html('')
@@ -60,6 +61,7 @@ $(document).ready(function(){
       $('#page-base-addstyle').fadeIn();
       scrollToIndicator($('#page_addmember'))
 
+      $('#inputError').css('display','none')
       $('#fast_check').val('0')
       $('#form_birth').val('')
       $('#memberBirthDate, #memberBirthDate_info').html('')
@@ -143,6 +145,7 @@ $(document).ready(function(){
         $('#page_managemember').hide();
       }
 
+      $('#inputError').css('display','none')
       $('#fast_check').val('0')
       $('#form_birth').val('')
       $('#memberBirthDate, #memberBirthDate_info').html('')
@@ -176,6 +179,7 @@ $(document).ready(function(){
         $('#page_managemember').hide();
       }
 
+      $('#inputError').css('display','none')
       $('#fast_check').val('0')
       $('#form_birth').val('')
       $('#memberBirthDate, #memberBirthDate_info').html('')
@@ -754,8 +758,8 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
 
 function scrollToIndicator(dom){
   var offset = dom.offset();
-  console.log(offset)
     $('body, html').animate({scrollTop : offset.top-180},0)
+    //$('body, html').animate({scrollTop : offset.top},0)
 }
 
 
@@ -764,8 +768,6 @@ function scrollToIndicator(dom){
 
 
 var select_all_check = false;
-$('#inputError').fadeIn('slow')
-
 
 $("#datepicker_add").datepicker({
   minDate : 0,
@@ -1152,14 +1154,8 @@ $("#upbutton-check,.submitBtn").click(function(){
 
                 //보내기후 팝업창 닫기
                 complete:function(){
-                  closePopup()
-                   if($('body').width()<600){
-                      $('#page_managemember').show();
-                    }
-                    $('html').css("cursor","auto")
-                    $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                  //alert('complete: 회원 정상 등록')
-                  },
+                  
+                },
 
                 //통신성공시 처리
                 success:function(data){
@@ -1220,17 +1216,27 @@ $("#upbutton-check,.submitBtn").click(function(){
                     messageArray = jsondata.messageArray;
 
                     if(messageArray.length>0){
-                      alert('등록 에러 : '+messageArray)
+                      $('html').css("cursor","auto")
+                      $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                      scrollToIndicator($('#page_addmember'))
+                      $('#inputError').fadeIn()
+                      setTimeout(function(){$('#inputError').fadeOut()},10000)
+                      $('#errorMsg p').text(messageArray)
+                    }else{
+                      closePopup()
+                      if($('body').width()<600){
+                        $('#page_managemember').show();
+                      }
+                      $('html').css("cursor","auto")
+                      $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                      DataFormattingDict();
+                      DataFormatting();
+                      currentMemberListSet('name');
+                      finishMemberListSet('name');
+                      console.log('success');
                     }
-
-
-                    DataFormattingDict();
-                    DataFormatting();
-                    currentMemberListSet('name');
-                    finishMemberListSet('name');
-                    //ajaxMemberData();
-                    console.log('success');
-                  },
+                },
 
                 //통신 실패시 처리
                 error:function(){
@@ -1239,9 +1245,10 @@ $("#upbutton-check,.submitBtn").click(function(){
              })
 
      }else{
-        $('#inputError').fadeIn('slow')
+        $('#inputError').fadeIn()
+        setTimeout(function(){$('#inputError').fadeOut()},10000)
+        $('#errorMsg p').text('모든 필수 정보를 입력해주세요')
         //입력값 확인 메시지 출력 가능
-        console.log('submit ng')
      }
 })
 
