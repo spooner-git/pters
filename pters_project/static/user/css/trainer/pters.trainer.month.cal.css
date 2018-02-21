@@ -164,11 +164,11 @@ img,a,div,span,p{
 }
 
 .todayindi{
-	border-top:1.5px solid #fe4e65;
+	border-top:1px solid #fe4e65;
 }
 
 .nottodayindi{
-	border-top: 1.5px solid #121212;
+	border-top: 1px solid #121212;
 }
 
 
@@ -632,7 +632,7 @@ img,a,div,span,p{
 .popup_inner div{
 	height: 45px;
 	vertical-align: middle;
-	border-bottom: 0.5px solid #a2a2a2;
+	border-bottom: 1px solid #a2a2a2;
 }
 
 .popup_inner span{
@@ -800,10 +800,11 @@ img,a,div,span,p{
 		font-weight: 500;
 	}
 
-	.ymdText-pc-date{
-		display: inline;
+	.ymdText-pc-fulldate{
+		display: inline-block;
 		font-size: 20px;
 		font-weight: 500;
+		width: 140px;
 	}
 
 	.ymdText-pc-add{
