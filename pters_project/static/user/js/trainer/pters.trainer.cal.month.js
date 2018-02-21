@@ -209,6 +209,7 @@ $(document).ready(function(){
 		};
 	})
 
+	/*
 	//너무 빠르게 스와이프 하는 것을 방지
 	myswiper.on('onSlideChangeStart',function(){
 		myswiper.params.onlyExternal = true;
@@ -217,6 +218,7 @@ $(document).ready(function(){
 	myswiper.on('onSlideChangeEnd',function(){
 		myswiper.params.onlyExternal = false;
 	})
+	
 	//너무 빠르게 스와이프 하는 것을 방지
 
 	//아래로 스크롤중 스와이프 했을때, jquery.swipe에서 stopPropagation Error발생하여 스와이프 불가하는 현상 방지
@@ -230,6 +232,7 @@ $(document).ready(function(){
 			console.log('stop')
 		},20))
 	})
+	*/
 	
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {

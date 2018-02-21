@@ -46,6 +46,10 @@ $(document).ready(function(){
       if($('body').width()<600){
         $('#page_managemember').hide();
       }
+
+      $('#fast_check').val('0')
+      $('#form_birth').val('')
+      $('#memberBirthDate, #memberBirthDate_info').html('')
     })
 
     $('.ymdText-pc-add').click(function(){
@@ -55,6 +59,10 @@ $(document).ready(function(){
       $('#page-base').fadeOut();
       $('#page-base-addstyle').fadeIn();
       scrollToIndicator($('#page_addmember'))
+
+      $('#fast_check').val('0')
+      $('#form_birth').val('')
+      $('#memberBirthDate, #memberBirthDate_info').html('')
     })
 
     $('#upbutton-x,.cancelBtn').click(function(){
@@ -134,6 +142,10 @@ $(document).ready(function(){
       if($('body').width()<600){
         $('#page_managemember').hide();
       }
+
+      $('#fast_check').val('0')
+      $('#form_birth').val('')
+      $('#memberBirthDate, #memberBirthDate_info').html('')
     });
 
     $(document).on('click','td._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
@@ -163,6 +175,10 @@ $(document).ready(function(){
       if($('body').width()<600){
         $('#page_managemember').hide();
       }
+
+      $('#fast_check').val('0')
+      $('#form_birth').val('')
+      $('#memberBirthDate, #memberBirthDate_info').html('')
     });
 
     $("#datepicker_info").datepicker({
@@ -198,6 +214,7 @@ $(document).ready(function(){
 
 
     $('#infoMemberEdit').click(function(){ //회원정보창에서 수정 눌렀을때
+      $('#fast_check').val('2')
       $('#memberName_info').attr('readonly',false);
       $('#memberBirthYear_info').attr('readonly',false);
       $('#memberBirthMonthSelected_info button').attr('disabled',false).removeClass('input_disabled_color');
@@ -800,7 +817,7 @@ $("#memberName_add").keyup(function(){  //이름 입력시 하단에 핑크선
   }
 })
 
-$('#memberBirthYear').keyup(function(){
+$('#memberBirthYear, #memberBirthYear_info').keyup(function(){
   var input = $(this).val()
   if(input.length==4 && input>=1900 && input<=2200){
     $(this).addClass("dropdown_selected")
@@ -810,10 +827,10 @@ $('#memberBirthYear').keyup(function(){
   }
 })
 
-$('#memberBirthMonth li a').click(function(){ //생년월일 "월" 선택했을때 핑크선 + "일" 드롭다운 채워주기
+$('#memberBirthMonth li a, #memberBirthMonth_info li a').click(function(){ //생년월일 "월" 선택했을때 핑크선 + "일" 드롭다운 채워주기
    $(this).parents('ul').siblings('button').text($(this).text());
    $(this).parents('ul').siblings('button').val($(this).attr('value'));
-   $('#memberBirthMonthSelected').addClass("dropdown_selected")
+   $(this).parents('div.dropdown').addClass("dropdown_selected")
    var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31]
    var length = lastDay[Number($(this).attr('value'))-1]
    var datesList = []
@@ -821,20 +838,17 @@ $('#memberBirthMonth li a').click(function(){ //생년월일 "월" 선택했을�
       datesList[i] = '<li><a value="'+(i+1)+'">'+(i+1)+' 일</a></li>'
    }
    var dates = datesList.join("")
-   console.log(dates)
-   $('#memberBirthDate').html(dates)
+   $('#memberBirthDate, #memberBirthDate_info').html(dates)
    birthdayInput()
 })
 
-$(document).on('click','#memberBirthDate li a',function(){
+$(document).on('click','#memberBirthDate li a, #memberBirthDate_info li a',function(){
    $(this).parents('ul').siblings('button').text($(this).text());
    $(this).parents('ul').siblings('button').val($(this).attr('value'));
+   $(this).parents('div.dropdown').addClass("dropdown_selected")
    birthdayInput()
 })
 
-$(document).on('click','#memberBirthDate li a',function(){
-  $('#memberBirthDateSelected').addClass("dropdown_selected")
-})
 
 $('#memberSex .selectboxopt').click(function(){
   $(this).addClass('selectbox_checked')
@@ -869,8 +883,21 @@ $("#memberCount_add").keyup(function(){  //남은횟수 입력시 하단에 핑�
 
 function birthdayInput(){
   var yy = $('#memberBirthYear').val()
+  var yy_info = $('#memberBirthYear_info').val()
+  if(yy.length==0 && yy_info>0){
+    var yy = $('#memberBirthYear_info').val()
+  }
   var mm = $('#memberBirthMonth').siblings('button').val()
+  var mm_info = $('#memberBirthMonth_info').siblings('button').val()
+  console.log(mm,mm_info,mm.length)
+  if(mm.length==0 && mm_info>0){
+    var mm = $('#memberBirthMonth_info').siblings('button').val()
+  }
   var dd = $('#memberBirthDate').siblings('button').val()
+  var dd_info = $('#memberBirthDate_info').siblings('button').val()
+  if(dd.length==0 && dd_info>0){
+    var dd = $('#memberBirthDate_info').siblings('button').val()
+  }
   $('#form_birth').val(yy+'-'+mm+'-'+dd)
 }
 

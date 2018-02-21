@@ -106,6 +106,10 @@ body{
 	-webkit-text-align: center;
 }
 
+select:focus > option:checked { 
+    color: #fe4e65 !important;
+}
+
 #alignBox{
 	position: relative;
 	margin-top: 15.5px;
