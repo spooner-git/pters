@@ -11,6 +11,8 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+	setInterval(function(){ajaxClassTime()},60000)
+
 	$('#float_inner1, .ymdText-pc-add-pt').click(function(){ //PT추가버튼
 		scrollToDom($('#calendar'))
 		addTypeSelect = "ptadd"
@@ -464,7 +466,6 @@ $(document).ready(function(){
 
               success:function(data){
               	var jsondata = JSON.parse(data);
-              	console.log(data);
                 classTimeArray = [];
                 offTimeArray = [];
                 classTimeArray_member_name = [];
@@ -1085,8 +1086,6 @@ $(document).ready(function(){
 		var viewdayInfomin = $('#weekNum_1').attr('data-date');
 		var viewdayInfomax = $('#weekNum_7').attr('data-date');
 
-		console.log(todayInfo,viewdayInfomin,viewdayInfomax)
-
 		if(viewdayInfomax>=todayInfo && viewdayInfomin<=todayInfo){
 			$('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
 			$("#ymdText").addClass('todayindi').removeClass('nottodayindi')
@@ -1145,15 +1144,11 @@ $(document).ready(function(){
 		var scan = $('#weekNum_'+i).attr('data-date')
 			if(yymmdd<=scan && scan<=14+Number(yymmdd)){
 				$('#weekNum_'+i).addClass('reserveavailable')
-				console.log('1')
 			}else if(scan.substr(0,4)==yy+1 && scan.substr(4,2) == '01' &&scan.substr(6,2)<=Number(dd)+14-lastDay[currentMonth]){
 				$('#weekNum_'+i).addClass('reserveavailable')
-				console.log('2')
 			}
 			else if(scan.substr(4,2)== Number(mm)+1 && scan.substr(6,2)<=Number(dd)+14-lastDay[currentMonth]){
-				$('#weekNum_'+i).addClass('reserveavailable')
-				console.log('3')
-				
+				$('#weekNum_'+i).addClass('reserveavailable')	
 			}else{
 				$('#weekNum_'+i).removeClass('reserveavailable')
 				
@@ -1212,7 +1207,6 @@ $(document).ready(function(){
 				var planheight = 46;
 		}
 		var offlen = offTimeArray.length;
-		console.log(offTimeArray)
 		$('#calendar').css('display','none');
 		for(var i=0; i<offlen; i++){
 			var indexArray = offTimeArray[i]
@@ -1385,7 +1379,6 @@ $(document).ready(function(){
 			var dd = '0'+ lastpagedateinfo[2]
 		}
 		var lastpagelastdate = yy+mm+dd //마지막 페이지 마지막 날짜 정보 20170121
-		console.log(lastpagelastdate)
 
 		var offlen = offTimeArray.length;
 		for(var i=0; i<offlen; i++){
