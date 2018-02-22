@@ -1417,14 +1417,16 @@ $(document).ready(function(){
 
 	function fake_show(){
 		//var faketarget = selector.parent('div').siblings('.fake_for_blankpage')
-		console.log('classtime length: ',$('.swiper-slide-active').find('.classTime').length)
-		console.log('offtime length: ',$('.swiper-slide-active').find('.offTime').length)
 		if($('.swiper-slide-active').find('.classTime').length == 1 && $('.swiper-slide-active').find('.offTime').length == 0){
 			$('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
 		}else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 1){
 			$('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
 		}
 	}
+
+	$(document).on('click','.fake_for_blankpage',function(){
+		$(this).fadeOut('fast')
+	})
 
 	function addcurrentTimeIndicator_blackbox(){ //현재 시간에 밑줄 긋기
 		if($('.today').length){

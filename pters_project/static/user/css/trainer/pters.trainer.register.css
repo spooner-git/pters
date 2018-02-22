@@ -11,8 +11,6 @@ body{
 	max-width: 800px;
 	padding: 30px;
 	margin: 0 auto;
-	margin-bottom: 50px;
-	margin-top: 50px;
 }
 	.registerbox_label{
 		font-weight: bold;
@@ -87,6 +85,10 @@ body{
 }
 
 @media(min-width: 600px){
+	.registerbox{
+		margin-top: 50px;
+		margin-bottom: 50px;
+	}
 	.fixfooter{
 		position: relative;
 	    display: block;

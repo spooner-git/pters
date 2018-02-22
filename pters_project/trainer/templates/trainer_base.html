@@ -117,6 +117,22 @@
                 </div>
             </div><!-- /.container -->
         </nav><!-- /.navbar -->
+
+        <nav class="navbar navbar-fixed-top navbar-default" id="page-base-modifystyle">
+            <div class="container">
+                <div class="navbar-header">
+                    <button id="upbutton-x-modify" class="navbar-toggle" aria-controls="navbar">
+                        <img src={% static "user/res/ptadd/btn-x.png" %} style="width:90%;">
+                    </button>
+                    {% block nav_center_img2 %}
+                        <a id="uptext3" class="uptext">회원 정보</a>
+                    {% endblock %}
+                    <button id="upbutton-modify" class="navbar-toggle" aria-controls="navbar" data-type = "view">
+                        <img src={% static "user/res/member/icon-edit.png" %} style="width:100%;">
+                    </button>
+                </div>
+            </div><!-- /.container -->
+        </nav><!-- /.navbar -->
         
         <nav class="navbar navbar-fixed-top" id="pcver">
             <div class="centermenu">

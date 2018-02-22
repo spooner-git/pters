@@ -6,6 +6,10 @@ body{
 	font-family: 'Noto Sans KR';
 }
 
+button:focus{
+	outline: 0;
+}
+
 #shade{
 	z-index: 106;
 }
@@ -41,8 +45,7 @@ body{
 	color: #3b3d3d;
 	font-size: 14px;
 	font-weight: bold;
-	height: 32px;
-
+	height: 50px;
 	padding-top: 5px;
 }
 
@@ -120,11 +123,6 @@ select:focus > option:checked {
 	max-width: 800px;
 }
 
-.centeralign{
-	max-width: 1080px !important;
-}
-
-
 .btn{
 	border-radius: 0;
 }
@@ -180,6 +178,7 @@ table{
 #tableThead{
 	width: 91.6%;
 	margin:0 auto;
+	max-width: 800px;
 }
 
 tbody{
@@ -271,7 +270,6 @@ th{
 
 #currentMemberList,#finishedMemberList{
 	width: 91.6%;
-
 }
 
 
@@ -394,6 +392,23 @@ th{
 	background:#eee !important;
 }
 
+#infoMemberModify{
+	display: none;
+}
+
+#infoMemberDelete, #infoMemberModify{
+	float: right;
+	margin-right: 2%;
+	border: 0;
+	background: transparent;
+	width: 40px;
+	height: 40px;
+	padding: 11px;
+}
+	#infoMemberDelete img, #infoMemberModify img{
+		width: 100%;
+	}
+
 @media(min-width: 600px){
 
 	._regcount{
@@ -473,6 +488,20 @@ th{
 		display: none !important;
 	}
 
+	#infoMemberModify{
+		display: inline;
+		float: right;
+		margin-right: 2%;
+		border: 0;
+		background: transparent;
+		width: 40px;
+		height: 40px;
+		padding: 11px;
+	}
+		#infoMemberModify img{
+			width: 100%;
+		}
+
 }
 
 @media(min-width: 1000px){
@@ -480,6 +509,10 @@ th{
 	#tableThead{
 		width: 1080px;
 		
+	}
+
+	.centeralign{
+		max-width: 1080px !important;
 	}
 
 	.forscroll{

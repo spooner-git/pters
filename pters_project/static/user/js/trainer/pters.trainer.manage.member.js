@@ -67,7 +67,7 @@ $(document).ready(function(){
       $('#memberBirthDate, #memberBirthDate_info').html('')
     })
 
-    $('#upbutton-x,.cancelBtn').click(function(){
+    $('#upbutton-x,#upbutton-x-modify,.cancelBtn').click(function(){
       closePopup()
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
@@ -119,9 +119,10 @@ $(document).ready(function(){
 //#####################회원정보 팝업 //#####################
 
     $(document).on('click','td._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
-      $('#uptext2').text('회원 정보');
+      
       $('#page-base').fadeOut('fast');
-      $('#page-base-addstyle').fadeIn('fast');
+      $('#page-base-modifystyle').fadeIn('fast');
+
       var name = $(this).attr('data-name');
       $('#memberName_info').val(name)
       $('#memberPhone_info').val(DB[name].phone);
@@ -217,17 +218,27 @@ $(document).ready(function(){
     });
 
 
-    $('#infoMemberEdit').click(function(){ //회원정보창에서 수정 눌렀을때
-      $('#fast_check').val('2')
-      $('#memberName_info').attr('readonly',false);
-      $('#memberBirthYear_info').attr('readonly',false);
-      $('#memberBirthMonthSelected_info button').attr('disabled',false).removeClass('input_disabled_color');
-      $('#memberBirthDateSelected_info button').attr('disabled',false).removeClass('input_disabled_color');
-      $('#memberEmail_info').attr('readonly',false);
-      $('#memberPhone_info').attr('readonly',false);
-      $('#memberCount_info').attr('readonly',false);
-      $('#datepicker_info').attr('disabled',false).removeClass('input_disabled_color');
-      $('#datepicker2_info').attr('disabled',false).removeClass('input_disabled_color');
+    $('#upbutton-modify, #infoMemberModify').click(function(){ //회원정보창에서 수정 눌렀을때
+      if($(this).attr('data-type') == "view" ){
+        $('#uptext3').text('회원 정보 수정');
+        $(this).find('img').attr('src','/static/user/res/ptadd/btn-complete-checked.png');
+        $(this).attr('data-type','modify')
+
+        $('#fast_check').val('2')
+        $('#memberName_info').attr('readonly',false);
+        $('#memberBirthYear_info').attr('readonly',false);
+        $('#memberBirthMonthSelected_info button').attr('disabled',false).removeClass('input_disabled_color');
+        $('#memberBirthDateSelected_info button').attr('disabled',false).removeClass('input_disabled_color');
+        $('#memberEmail_info').attr('readonly',false);
+        $('#memberPhone_info').attr('readonly',false);
+        $('#memberCount_info').attr('readonly',false);
+        $('#datepicker_info').attr('disabled',false).removeClass('input_disabled_color');
+        $('#datepicker2_info').attr('disabled',false).removeClass('input_disabled_color');
+      }else if($(this).attr('data-type') == "modify" ){
+        alert('회원정보 수정된 내용을 서버로 송신')
+        closePopup()
+      }
+      
     });
 //#####################회원정보 팝업 //#####################
 
@@ -1138,9 +1149,6 @@ function limit_char(e){
 $("#upbutton-check,.submitBtn").click(function(){
     var $form = $('#member-add-form-new');
      if(select_all_check==true){
-
-             //ajax 회원정보 입력된 데이터 송신
-
              $.ajax({
                 url:'/trainer/member_registration/',
                 type:'POST',
@@ -1348,7 +1356,9 @@ function closePopup(){
           $('#page_managemember').show();
           }
           $('#page-base').fadeIn('fast');
-          $('#page-base-addstyle').fadeOut('fast');
+          $('#page-base-modifystyle').fadeOut('fast');
+          $('#upbutton-modify, #infoMemberModify').find('img').attr('src','/static/user/res/member/icon-edit.png');
+          $('#upbutton-modify, #infoMemberModify').attr('data-type','view')
           $('#memberInfoPopup').fadeOut('fast')
           $('#memberName_info').attr('readonly',true)
           $('#memberBirthYear_info').attr('readonly',true)
