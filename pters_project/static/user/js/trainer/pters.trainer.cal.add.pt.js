@@ -434,6 +434,8 @@ $(document).ready(function(){
               var classStart = classStartArr.join("_")
               //var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
               var tdClassStart = $("#"+classStart+" div");
+              var tdClass = $("#"+classStart);
+              tdClass.parent('div').siblings('.fake_for_blankpage').css('display','none')
               //schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
               if(Number(classHour)+Number(classDura)==25){	// 오전 1시에 일정이 차있을 경우 일정 박스가 Table 넘어가는 것 픽스
           				if(classDura<=3){
@@ -503,6 +505,8 @@ $(document).ready(function(){
               var classStart = classStartArr.join("_")
               //var classStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
               var tdClassStart = $("#"+classStart+" div");
+              var tdClass = $("#"+classStart);
+              tdClass.parent('div').siblings('.fake_for_blankpage').css('display','none')
               //schedule-id 추가 (일정 변경 및 삭제를 위함) hk.kim, 171007
               
               //tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
@@ -540,6 +544,8 @@ $(document).ready(function(){
                 var offStart = offStartArr.join("_")
                 //var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
                 var tdOffStart = $("#"+offStart+" div");
+                var tdOff = $("#"+offStart);
+                tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
                 if(Number(offHour)+Number(offDura)==25){  // 오전 1시에 일정이 차있을 경우 일정 박스가 Table 넘어가는 것 픽스
                   if(offDura<=3){
                   tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*35)+'px'}).html('<span class="memberName'+offDura+'">'+memberName+' </span>'+'<span class="offTimeText'+offDura+'">'+offHour+':'+offMinute+' ~ '+offEndHour+':'+offEndMinute+'</span>');      
@@ -587,6 +593,8 @@ $(document).ready(function(){
                 var offStart = offStartArr.join("_")
                 //var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
                 var tdOffStart = $("#"+offStart+" div");
+                var tdOff = $("#"+offStart);
+                tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
                 
                 tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
               };
