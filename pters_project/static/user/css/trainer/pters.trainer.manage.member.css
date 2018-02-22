@@ -26,7 +26,7 @@ button:focus{
 .confirmPopup{
 	display: none;
 	position: fixed;
-	background: transparent;
+	background: #ffffff;
 	border-color: transparent;
 	width: 80%;
 	max-width: 300px;
