@@ -1245,8 +1245,9 @@ $("#upbutton-check,.submitBtn").click(function(){
 
                       DataFormattingDict();
                       DataFormatting();
-                      currentMemberListSet('name');
-                      finishMemberListSet('name');
+                      currentMemberListSet('date','yes');
+                      finishMemberListSet('date','yes');
+                      $('#startR').attr('selected','selected')
                       console.log('success');
                     }
                 },
