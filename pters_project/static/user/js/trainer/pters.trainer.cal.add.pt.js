@@ -110,7 +110,6 @@ $(document).ready(function(){
               $("#id_training_time_off").val(hh+':00:00.000000');
               durTimeSet(hh,"mini");
             }
-            console.log(select_all_check)
       })
 
       if($('#calendar').width()<=600){
@@ -160,7 +159,6 @@ $(document).ready(function(){
       })
 
       function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
-         console.log(duration)
           var selectedDuration = Number(duration)
           var selectedTime = $('.blankSelected').parent('.td00').attr('id').split('_')
           var yy = Number(selectedTime[0])
@@ -320,7 +318,6 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(data);
                 classTimeArray = [];
                 offTimeArray = [];
                 classTimeArray_member_name = [];
@@ -816,12 +813,9 @@ $(document).ready(function(){
           var durTimeList = $('#durations_mini')
           break;
         }
-        console.log('selectedTime : ',selectedTime)
         var len = offAddOkArray.length;
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
-        console.log(offAddOkArray)
-        console.log('index:',index,'__substr: ',substr)
        if(substr>1){
           var fininfo = Number(selectedTime)+1
           if(fininfo>12){
@@ -902,9 +896,7 @@ $(document).ready(function(){
             var startnum = Number(startnum)+12 
         }
         var durnum = datadur
-        console.log(durnum)
         var finnum = Number(startnum)+Number(durnum)
-        console.log(startnum, durnum,finnum)
         for(var i=startnum; i<finnum; i++){
           $('#'+i+'g').addClass('graphindicator')
         }
@@ -936,7 +928,6 @@ $(document).ready(function(){
 
       function scrollToIndicator(dom){
         var offset = dom.offset();
-        console.log(offset)
           $('body, html').animate({scrollTop : offset.top-180},700)
       }
 

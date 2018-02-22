@@ -20,7 +20,7 @@
 
 
 <div class="confirmPopup">
-  <div class="KRtext confirmText">정말 회원을 삭제하시겠습니까?</div>
+  <div class="KRtext confirmText">정말 회원을 삭제하시겠습니까?<br>되돌릴 수 없습니다.</div>
   <div class="JPtext confirmText">日程を削除しますか</div>
   <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
   <div class="popup_inner popup_inner_delete">
@@ -109,8 +109,8 @@
       </div>
 
       <div>
-        <button id="infoMemberDelete" style="display:inline-block;">삭제</button>
-        <button id="infoMemberEdit" style="display:inline-block;">수정</button>
+        <button id="infoMemberDelete"><img src={% static "user/res/member/icon-delete-black.png" %}></button>
+        <button id="infoMemberModify" data-type="view"><img src={% static "user/res/member/icon-edit.png" %}></button>
       </div>
       <form action="/trainer/member_registration/" method="POST" class="member-form" id="member-add-form">
 
