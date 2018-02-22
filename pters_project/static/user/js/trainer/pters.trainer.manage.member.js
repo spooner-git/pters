@@ -965,7 +965,7 @@ $('._count .ptersCheckbox').parent('td').click(function(){
 $('#price1').click(function(){
   var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
   var priceInputValue = 1000000 + Number(priceInputValue);
-  $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value').val(priceInputValue)
 
 })
@@ -973,74 +973,79 @@ $('#price1').click(function(){
 $('#price2').click(function(){
   var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
   var priceInputValue = 500000 + Number(priceInputValue);
-  $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value').val(priceInputValue)
 })
 
 $('#price3').click(function(){
   var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
   var priceInputValue = 100000 + Number(priceInputValue);
-  $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value').val(priceInputValue)
 })
 
 $('#price4').click(function(){
   var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
   var priceInputValue = 50000 + Number(priceInputValue);
-  $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value').val(priceInputValue)
 })
 
 $('#price5').click(function(){
   var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
   var priceInputValue = 10000 + Number(priceInputValue);
-  $('#lecturePrice_add').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value').val(priceInputValue)
 })
 
 $('#price6').click(function(){
-  $('#lecturePrice_add').val("")
+  $('#lecturePrice_add').val("").attr('readonly',false)
   $('#lecturePrice_add_value').val(0)
 })
 
 $('#price1_2').click(function(){
   var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
   var priceInputValue = 1000000 + Number(priceInputValue);
-  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value_fast').val(priceInputValue)
 })
 
 $('#price2_2').click(function(){
   var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
   var priceInputValue = 500000 + Number(priceInputValue);
-  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value_fast').val(priceInputValue)
 })
 
 $('#price3_2').click(function(){
   var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
   var priceInputValue = 100000 + Number(priceInputValue);
-  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value_fast').val(priceInputValue)
 })
 
 $('#price4_2').click(function(){
   var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
   var priceInputValue = 50000 + Number(priceInputValue);
-  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value_fast').val(priceInputValue)
 })
 
 $('#price5_2').click(function(){
   var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
   var priceInputValue = 10000 + Number(priceInputValue);
-  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue))
+  $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
   $('#lecturePrice_add_value_fast').val(priceInputValue)
 })
 
 $('#price6_2').click(function(){
-  $('#lecturePrice_add_2').val("")
+  $('#lecturePrice_add_2').val("").attr('readonly',false)
   $('#lecturePrice_add_value_fast').val(0)
+})
+
+$('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
+    var priceInputValue = $(this).val().replace(/,/g, "")
+    $(this).val(numberWithCommas(priceInputValue))
 })
 
 //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
