@@ -266,12 +266,12 @@ img,a,div,span,p{
 
 .nextDates{
 	color : #282828;
-	opacity: 0.5;
+	opacity: 0;
 }
 
 .prevDates{
 	color : #282828;
-	opacity: 0.5;
+	opacity: 0;
 }
 
 .sunday{
@@ -301,14 +301,13 @@ img,a,div,span,p{
 	z-index: -1;
 }
 
-.dateMytime{
+.dateMytime{ /*달력 날짜에 일정이 있으면 핑크색 동그라미*/
 	position: absolute;
 	display:block;
 	margin:0 auto;
 	width: 28px;
 	height: 28px;
-	/*background: #fddadf;*/
-	background: #fddadf;
+	/*background: #fddadf; */
 	top: 21px;
 	bottom:0;
 	left: 0px;
@@ -317,13 +316,13 @@ img,a,div,span,p{
 	z-index: -1;
 }
 
-.greydateMytime{
+.greydateMytime{ /*달력 날짜에 지난 일정이 있으면 회색 동그라미*/
 	position: absolute;
 	display:block;
 	margin:0 auto;
 	width: 28px;
 	height: 28px;
-	background: #e4e4e4;
+	/*background: #e4e4e4;*/
 	top: 21px;
 	bottom:0;
 	left: 0px;
@@ -890,7 +889,7 @@ img,a,div,span,p{
 	}
 
 	.prevDates,.nextDates{
-		opacity: 0.2;
+		opacity: 0;
 	}
 	
 	.greydateMytime,.dateMytime{
