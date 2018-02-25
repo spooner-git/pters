@@ -491,7 +491,7 @@ img,a,div,span,p{
 .classTime{
 	position: absolute;
 	top: 0px;
-	width: 100%;
+	width: 98.5%;
 	background: #fbf3bd;
 	z-index: 100;
 	cursor: pointer;
@@ -518,7 +518,7 @@ img,a,div,span,p{
 .offTime{
 	position: absolute;
 	top: 0px;
-	width: 100%;
+	width: 98.5%;
 	background: #e2e2e2;
 	opacity: 0.9;
 	z-index: 100;
