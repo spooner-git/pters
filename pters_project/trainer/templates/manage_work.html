@@ -30,17 +30,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr id="totalSales" class="salesRow"><td>총 매출<br>(차감+등록)</td><td class="tablegap"></td><td></td>
+        <tr id="totalSales" class="salesRow"><td>총 매출<br>(등록+기타)</td><td class="tablegap"></td><td></td>
         </tr>
 
-        <tr id="subsSales" class="salesRow"><td>차감 매출<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
-        </tr>
-        <tr id="subsSalesChild" class="salesRow childRow"><td>>>차감 수</td><td class="tablegap"></td><td></td>
-        </tr>
-        
         <tr id="regiSales" class="salesRow"><td>등록 매출<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
         </tr>
         <tr id="regiSalesChild" class="salesRow childRow"><td>>>등록 건수</td><td class="tablegap"></td><td></td>
+
+        <tr id="subsSales" class="salesRow"><td>기타 매출<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="subsSalesChild" class="salesRow childRow"><td>>>차감 수</td><td class="tablegap"></td><td></td>
+        </tr>
 
         <tr id="totalMember" class="salesRow"><td>총 회원수<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
         </tr>
@@ -53,8 +53,10 @@
         </tr>
         <tr id="profit" class="profitRow"><td>이익금<br>(총 매출 기준)</td><td class="tablegap"></td><td></td>
         </tr>
+        <!--
         <tr id="profit2" class="profitRow"><td>이익금<br>(차감 매출 기준)</td><td class="tablegap"></td><td></td>
         </tr>
+      -->
         <tr id="profit3" class="profitRow"><td>이익금<br>(등록 매출 기준)</td><td class="tablegap"></td><td></td>
         </tr>
       </tbody>
@@ -89,7 +91,7 @@
 
           var newSalesArrayThisMonth = [1400000,1400000,1400000,1400000,750000,750000,1950000,750000]
           var newWalesArrayThisMonth_card = []
-          var subsSalesArray = [75000,65000,65000,70000,70000,70000,70000,70000,65000,650000,75000,75000,75000,75000,75000,75000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,75000,65000,65000,70000,70000,70000,70000,70000,65000,650000,75000,75000,75000,75000,75000,75000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,65000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000]
+          var subsSalesArray = [75000,65000]
           var arrayTest = ["김선겸_65000x30","원빈_70000x20","공유_75000x10"]
            
 
