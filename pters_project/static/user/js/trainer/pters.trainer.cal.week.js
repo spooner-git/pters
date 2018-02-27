@@ -488,7 +488,6 @@ $(document).ready(function(){
                 offTime();
                	addPtMemberListSet();
 
-
                 /*팝업의 timegraph 업데이트*/
                 classDateData = []
                 classTimeData = []
