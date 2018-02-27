@@ -45,7 +45,7 @@ $(document).ready(function(){
 		alert('까꿍~')
 	})
 
-
+	var clicked_td_date_info;
 	$(document).on('click','td',function(){
 		if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
 			$('#cal_popup_plancheck').fadeIn('fast');
@@ -63,8 +63,8 @@ $(document).ready(function(){
 			$('#countNum').text(countNum)
 			$('.popup_ymdText').html(infoText)
 			plancheck(yy+'_'+mm+'_'+dd)
+			clicked_td_date_info = yy+'_'+mm+'_'+dd
 		}
-		
 	})
 
 	$('#cal_popup_plancheck .btn_close_popup').click(function(){
@@ -174,7 +174,7 @@ $(document).ready(function(){
                     success:function(){
                       closeDeletePopup();
                       deleteCompleteSend();
-                      ajaxClassTime();
+                      ajaxClassTime()
                       },
 
                     //보내기후 팝업창 닫기
@@ -227,7 +227,7 @@ $(document).ready(function(){
                       closeDeletePopup();
                       deleteCompleteSend();
                       ajaxClassTime()
-                      fake_show()
+                      //fake_show()
                       console.log('success')
                       },
 
@@ -257,7 +257,7 @@ $(document).ready(function(){
                       closeDeletePopup();
                       deleteCompleteSend();
                       ajaxClassTime()
-                      fake_show()
+                      //fake_show()
                       console.log('success')
                       },
 
@@ -273,6 +273,8 @@ $(document).ready(function(){
                  })
 		}
 	})
+
+
 
 
 	$('#btn_close3, #popup_btn_delete_no').click(function(){ //일정삭제 확인 팝업 아니오 버튼 눌렀을때 팝업 닫기
@@ -303,6 +305,100 @@ $(document).ready(function(){
 		$(this).fadeOut(100)
 	})
 
+	function closeDeletePopup(){
+		$("#cal_popup_plandelete").css({'display':'none'})
+		$("#shade").css({'z-index':'100'})
+	}
+
+	function deleteBeforeSend(){
+		$('html').css("cursor","wait");
+        //$('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+        $('.ajaxloadingPC').show();
+
+	}
+
+	function deleteCompleteSend(){
+		$('html').css("cursor","auto");
+        //$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+        $('.ajaxloadingPC').hide();
+
+	}
+
+	function ajaxClassTime(){
+            $.ajax({
+              url: '/trainer/cal_day_ajax',
+              dataType : 'html',
+
+              beforeSend:function(){
+              	deleteBeforeSend();
+              },
+
+              success:function(data){
+              	var jsondata = JSON.parse(data);
+                classDateArray = []
+                classStartArray = []
+                classNameArray = []
+                countResult = []
+                
+                classTimeArray_member_name = [];
+                classArray_lecture_id = [];
+                scheduleIdArray = [];
+                offScheduleIdArray = [];
+                scheduleFinishArray = [];
+                memberLectureIdArray = [];
+                memberNameArray = [];
+                memberAvailCountArray = [];
+                messageArray = [];
+                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+                classTimeArray_member_name = jsondata.classTimeArray_member_name
+                classArray_lecture_id = jsondata.classArray_lecture_id
+                scheduleIdArray = jsondata.scheduleIdArray
+                offScheduleIdArray = jsondata.offScheduleIdArray
+                scheduleFinishArray = jsondata.scheduleFinishArray;
+                memberLectureIdArray = jsondata.memberLectureIdArray;
+                memberNameArray = jsondata.memberNameArray;
+                memberAvailCountArray = jsondata.memberAvailCountArray;
+                messageArray = jsondata.messageArray;
+                //DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
+                //DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
+                //$('.classTime,.offTime').parent().html('<div></div>')
+                
+                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
+				DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
+                DBdataProcessMonthTrainer();
+                classDatesTrainer();
+                plancheck(clicked_td_date_info)
+                var countNum = $('.plan_raw').length
+				$('#countNum').text(countNum)
+
+                //classTime();
+                //offTime();
+               	//addPtMemberListSet();
+
+
+                /*팝업의 timegraph 업데이트*/
+                //classDateData = []
+                //classTimeData = []
+                //offDateData=[]
+                //offTimeData = []
+                //offAddOkArray = [] //OFF 등록 시작 시간 리스트
+                //durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+                //DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
+                //DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+              },
+
+              complete:function(){
+              	deleteCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })    
+     }
 
 
 	var dateResult = []
@@ -670,16 +766,11 @@ $(document).ready(function(){
 			datasum[i] = classDateArray[i]+"/"+classTimeArray_member_name[i]
 		}
 		for(var i in summaryArray){ //중복 제거된 배열
-			/*
-			if(i.length<10){
-				i = i+"_"
-			}
-			*/
 			summaryArrayResult.push(i)
 		}
 
 		var len2 = summaryArrayResult.length;
-		//var countResult = []
+
 		for(var i=0; i<len2; i++){
 			var scan = summaryArrayResult[i]
 			countResult[i]=0
@@ -690,7 +781,7 @@ $(document).ready(function(){
 				}
 			}
 		}
-		//var dateResult = []
+
 		for(var i=0; i<summaryArrayResult.length; i++){
 			var splited = summaryArrayResult[i].split("_")
 			var yy = splited[0];
