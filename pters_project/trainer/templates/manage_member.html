@@ -236,11 +236,15 @@
         <div>
             
             <div class="ptaddbox form-group">
-                <label for="memberName" class="ptaddboxtext">
+                <label for="memberNameSex" class="ptaddboxtext">
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span>
                 </label>
-                <div class="dropdown pters_input_custom">
+                <div id="memberName" class="dropdown pters_input_custom">
                     <input type="text" class="dropdown form-control" id="memberName_add" name="name" placeholder="회원분의 성함을 입력해주세요." maxlength="10">
+                </div>
+                <div id="memberSex" class="pters_input_custom">
+                    <div id="memberMale" class="selectboxopt selectboxopt_left" value="M">남</div>
+                    <div id="memberFemale" class="selectboxopt selectboxopt_right" value="W">여</div>
                 </div>
             </div>
 
@@ -256,9 +260,10 @@
 
             <div class="ptaddbox form-group">
                 <label for="memberBirthSex" class="ptaddboxtext">
-                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 부가정보 (생년월일/성별)
+                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 생년월일
                 </label>
-                <div id="memberBirth" class="pters_input_custom">
+                <div id="memberBirth">
+                    <!--
                     <input type="text" class="dropdown form-control" id="memberBirthYear" name="birthyear" placeholder="4자리 연도입력" maxlength="4">
                     <div id="memberBirthMonthSelected" class="dropdown">
                         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown" name="birthmonth"><span style="color:#cccccc">월</span></button>
@@ -283,11 +288,20 @@
                             
                         </ul>
                     </div>
+                    -->
+                    <select class="login_dropdown" id="birth_year">
+                   </select>
+                   <select class="login_dropdown" id="birth_month">
+                   </select>
+                   <select class="login_dropdown" id="birth_date">
+                   </select>
                 </div>
+                <!--
                 <div id="memberSex">
                     <div id="memberMale" class="selectboxopt selectboxopt_left" value="M">남</div>
                     <div id="memberFemale" class="selectboxopt selectboxopt_right" value="W">여</div>
                 </div>
+            -->
             </div>
 
             <div class="ptaddbox form-group">
@@ -495,8 +509,6 @@
 
           var DB = {};
           var DBe = {};
-
-
          </script>
 
 

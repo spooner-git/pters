@@ -830,6 +830,7 @@ $("#memberName_add").keyup(function(){  //이름 입력시 하단에 핑크선
   }
 })
 
+/*
 $('#memberBirthYear, #memberBirthYear_info').keyup(function(){
   var input = $(this).val()
   if(input.length==4 && input>=1900 && input<=2200){
@@ -861,6 +862,7 @@ $(document).on('click','#memberBirthDate li a, #memberBirthDate_info li a',funct
    $(this).parents('div.dropdown').addClass("dropdown_selected")
    birthdayInput()
 })
+*/
 
 
 $('#memberSex .selectboxopt').click(function(){
@@ -893,6 +895,57 @@ $("#memberCount_add").keyup(function(){  //남은횟수 입력시 하단에 핑�
     check_dropdown_selected();
   }
 })
+
+
+
+
+
+var yearoption = ['<option selected disabled hidden>연도</option>']
+for(var i=2018; i>=1908; i--){
+    yearoption.push('<option class="birthoption">'+i+'년</option>')
+}
+var birth_year_options = yearoption.join('')
+$('#birth_year').html(birth_year_options)
+
+
+var monthoption = ['<option selected disabled hidden>월</option>']
+for(var i=1; i<=12; i++){
+    monthoption.push('<option data-month="'+i+'" class="birthoption">'+i+'월</option>')
+}
+var birth_month_options = monthoption.join('')
+$('#birth_month').html(birth_month_options)
+
+
+var dateoption = ['<option selected disabled hidden>일</option>']
+for(var i=1; i<=31; i++){
+    dateoption.push('<option class="birthoption">'+i+'일</option>')
+}
+var birth_date_options = dateoption.join('')
+$('#birth_date').html(birth_date_options)
+
+
+$('#birth_month').change(function(){
+    var dateoption = []
+    $('#birth_date').html("")
+    var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31];
+    var month = $(this).val().replace(/월/gi,"")
+    for(var i=1; i<=lastDay[month-1]; i++){
+        dateoption.push('<option class="birthoption">'+i+'일</option>')
+    }
+    var birth_date_options = dateoption.join('')
+    $('#birth_date').html(birth_date_options)
+})
+
+$('#birth_year, #birth_month, #birth_date').change(function(){
+    $(this).addClass("dropdown_selected")
+    $(this).css('color','#282828')
+    var year = $('#birth_year').val().replace(/년/gi,"")
+    var month = $('#birth_month').val().replace(/월/gi,"")
+    var date = $('#birth_date').val().replace(/일/gi,"")
+    var birthdata = year+'-'+month+'-'+date
+    $('#form_birth').attr('value',birthdata)
+})
+
 
 function birthdayInput(){
   var yy = $('#memberBirthYear').val()
@@ -1358,49 +1411,49 @@ function completeSend(){
 
 function closePopup(){
   if($('#memberInfoPopup').css('display')=='block'){ //회원정보팝업 띄웠을때 x눌렀을 경우
-        if($('body').width()<600){
-          $('#page_managemember').show();
-          }
-          $('#page-base').fadeIn('fast');
-          $('#page-base-modifystyle').fadeOut('fast');
-          $('#upbutton-modify, #infoMemberModify').find('img').attr('src','/static/user/res/member/icon-edit.png');
-          $('#upbutton-modify, #infoMemberModify').attr('data-type','view')
-          $('#memberInfoPopup').fadeOut('fast')
-          $('#memberName_info').attr('readonly',true)
-          $('#memberBirthYear_info').attr('readonly',true)
-          $('#memberBirthMonthSelected_info button').attr('disabled',true).addClass('input_disabled_color');
-          $('#memberBirthDateSelected_info button').attr('disabled',true).addClass('input_disabled_color');
-          $('#memberEmail_info').attr('readonly',true);
-          $('#memberPhone_info').attr('readonly',true);
-          $('#memberCount_info').attr('readonly',true);
-          $('#datepicker_info').attr('disabled',true).addClass('input_disabled_color');
-          $('#datepicker2_info').attr('disabled',true).addClass('input_disabled_color');
-          $('#memberSex div').removeClass('selectbox_checked');
-          $('.dropdown_selected').removeClass("dropdown_selected");
-          $('.confirmPopup').fadeOut('fast');
-          $('#shade').fadeOut('fast');
-          $('#shade3').fadeOut('fast');
-        }else{                                          //회원등록팝업 띄웠을때 x눌렀을 경우
-          if($('body').width()<600){
-          $('#page_managemember').show();
-          }
-          $('#page_addmember').fadeOut('fast');
-          $('#shade3').fadeOut('fast');
-          $('#float_btn').fadeIn('fast');
-          $('#page-base').fadeIn();
-          $('#page-base-addstyle').fadeOut();
+      if($('body').width()<600){
+        $('#page_managemember').show();
+      }
+      $('#page-base').fadeIn('fast');
+      $('#page-base-modifystyle').fadeOut('fast');
+      $('#upbutton-modify, #infoMemberModify').find('img').attr('src','/static/user/res/member/icon-edit.png');
+      $('#upbutton-modify, #infoMemberModify').attr('data-type','view')
+      $('#memberInfoPopup').fadeOut('fast')
+      $('#memberName_info').attr('readonly',true)
+      
+      /*
+      $('#memberBirthYear_info').attr('readonly',true)
+      $('#memberBirthMonthSelected_info button').attr('disabled',true).addClass('input_disabled_color');
+      $('#memberBirthDateSelected_info button').attr('disabled',true).addClass('input_disabled_color');
+      */
+      
+      $('#memberEmail_info').attr('readonly',true);
+      $('#memberPhone_info').attr('readonly',true);
+      $('#memberCount_info').attr('readonly',true);
+      $('#datepicker_info').attr('disabled',true).addClass('input_disabled_color');
+      $('#datepicker2_info').attr('disabled',true).addClass('input_disabled_color');
+      $('.confirmPopup').fadeOut('fast');
+      $('#shade').fadeOut('fast');
+      $('#shade3').fadeOut('fast');
+  }else{                                          //회원등록팝업 띄웠을때 x눌렀을 경우
+      if($('body').width()<600){
+        $('#page_managemember').show();
+      }
+      $('#page_addmember').fadeOut('fast');
+      $('#shade3').fadeOut('fast');
+      $('#float_btn').fadeIn('fast');
+      $('#page-base').fadeIn();
+      $('#page-base-addstyle').fadeOut();
 
-          $('.ptaddbox input,#memberDue_add_2').val("");
-          $('#memberBirthMonthSelected button').val("").html('<span style="color:#cccccc">월</span>');
-          $('#memberBirthDateSelected button').val("").html('<span style="color:#cccccc">일</span>');
-
-          $('._due div.checked').removeClass('checked ptersCheckboxInner');
-          $('._count div.checked').removeClass('checked ptersCheckboxInner');
-          $('p,#page_addmember input,div,.pters_input_custom').removeClass("dropdown_selected");
-          $('#memberSex div').removeClass('selectbox_checked');
-          $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>"); 
-          $('.submitBtn').removeClass('submitBtnActivated');
-        }
+      $('.ptaddbox input,#memberDue_add_2').val("");
+      $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
+      $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
+  }
+  $('.dropdown_selected').removeClass('dropdown_selected')
+  $('.checked').removeClass('checked')
+  $('.ptersCheckboxInner').removeClass('ptersCheckboxInner')
+  $('#memberSex div').removeClass('selectbox_checked')
+  $('.submitBtnActivated').removeClass('submitBtnActivated')
 };
  
 
