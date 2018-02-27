@@ -27,7 +27,7 @@ ul a{
 }
 
 
-#inputError{
+#inputError, #inputError_info{
 	position: relative;
 	width: 100%;
 	height: 35px;
@@ -38,7 +38,7 @@ ul a{
 	height: 35px;
 }
 
-#errorMsg{
+#errorMsg, #errorMsg_info{
 	background: #ff1533;
 	color:#ffffff;
 	font-size: 14px;
@@ -572,6 +572,10 @@ ul a{
 	background: #ffffff;
 }
 
+.selectbox_disable{
+	background: #eee;
+}
+
 #manualReg{
 	display: none;
 	width: 91.67%;
@@ -629,7 +633,7 @@ ul a{
 	width: 16.67%;
 }
 
-#memberName{
+#memberName_reg{
 	display: table-cell;
 	width: 90%;
 	vertical-align: middle;
@@ -641,10 +645,10 @@ ul a{
 	min-width: 70px;
 	height: 40px;
 	margin-top:10px;
+	background:#ffffff;
 }
 
 #memberMale,#memberFemale, #memberMale_info, #memberFemale_info{
-	background: #ffffff;
 	line-height: 38px;
 	border-bottom:1.5px solid #cccccc;
 }
@@ -679,7 +683,7 @@ ul a{
 }
 */
 
-#birth_year,#birth_month,#birth_date{
+.dropdown_birth{
 	height: 40px;
 	border: 0;
 	box-shadow: : 0 1px 0 0 #a2a2a2;
@@ -691,6 +695,11 @@ ul a{
 	-webkit-appearance:none;
 	text-align-last: center;
 	-webkit-text-align: center;
+}
+
+.dropdown_birth_info{
+	color: #282828;
+	background: #eee;
 }
 
 option{
