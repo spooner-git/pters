@@ -339,6 +339,7 @@ $(document).ready(function(){
                 classStartArray = []
                 classNameArray = []
                 countResult = []
+                dateResult = []
                 
                 classTimeArray_member_name = [];
                 classArray_lecture_id = [];
@@ -362,32 +363,16 @@ $(document).ready(function(){
                 memberNameArray = jsondata.memberNameArray;
                 memberAvailCountArray = jsondata.memberAvailCountArray;
                 messageArray = jsondata.messageArray;
-                //DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
-                //DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
-                //$('.classTime,.offTime').parent().html('<div></div>')
                 
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
 				DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
                 DBdataProcessMonthTrainer();
+                console.log(countResult)
                 classDatesTrainer();
                 plancheck(clicked_td_date_info)
                 var countNum = $('.plan_raw').length
 				$('#countNum').text(countNum)
-
-                //classTime();
-                //offTime();
-               	//addPtMemberListSet();
-
-
-                /*팝업의 timegraph 업데이트*/
-                //classDateData = []
-                //classTimeData = []
-                //offDateData=[]
-                //offTimeData = []
-                //offAddOkArray = [] //OFF 등록 시작 시간 리스트
-                //durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-                //DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
-                //DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+				
               },
 
               complete:function(){
@@ -418,6 +403,7 @@ $(document).ready(function(){
 	//dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
 	//classDates(); //나의 PT일정에 핑크색 동그라미 표시
 	classDatesTrainer(); // 트레이너 월간일정에 핑크색 동그라미 표시하고 PT 갯수 표기
+	console.log(countResult)
 
 
 	monthText(); //상단에 연, 월 표시
@@ -646,6 +632,7 @@ $(document).ready(function(){
 	};
 
 	function classDatesTrainer(){
+		$('._classTime').html('')
 		for(var i=0; i<dateResult.length; i++){
 			var arr = dateResult[i].split('_')
 			var yy = arr[0]
