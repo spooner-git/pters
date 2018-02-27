@@ -577,6 +577,18 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
+
+          var date = new Date();
+          var currentYear = date.getFullYear(); //현재 년도
+          var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
+          var currentDate = date.getDate(); //오늘 날짜
+          var currentHour = date.getHours(); //현재시간
+          var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
+          var currentPageMonth = currentMonth+1; //현재 달
+          var date2 = new Date();
+          var oriYear = date.getFullYear();
+          var oriMonth = date.getMonth()+1;
+          var oriDate = date.getDate();
           //front-end에서 다뤄야하는 데이터
 
           //PT 일정 등록시 필요한 정보
