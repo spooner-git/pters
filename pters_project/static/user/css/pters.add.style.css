@@ -55,11 +55,6 @@ ul a{
 	margin-bottom: 50px;
 }
 
-#memberBirthMonth, #memberBirthDate{
-	max-height: 230px;
-	overflow-y: auto;
-}
-
 .toggleBtnWrap{
 	display: inline-block;
 	width: 40px;
@@ -634,17 +629,27 @@ ul a{
 	width: 16.67%;
 }
 
+#memberName{
+	display: table-cell;
+	width: 90%;
+	vertical-align: middle;
+}
+
 #memberSex, #memberSex_info{
-	width: 70px;
+	display: table-cell;
+	vertical-align: middle;
+	min-width: 70px;
 	height: 40px;
 	margin-top:10px;
 }
 
 #memberMale,#memberFemale, #memberMale_info, #memberFemale_info{
 	background: #ffffff;
-	border-bottom:0.5px solid #cccccc;
+	line-height: 38px;
+	border-bottom:1.5px solid #cccccc;
 }
 
+/*
 #memberBirth,#memberBirth_info{
 	box-shadow: 0 0 0 0;
 }
@@ -668,6 +673,29 @@ ul a{
 	margin:0;
 }
 
+#memberBirthMonth, #memberBirthDate{
+	max-height: 230px;
+	overflow-y: auto;
+}
+*/
+
+#birth_year,#birth_month,#birth_date{
+	height: 40px;
+	border: 0;
+	box-shadow: : 0 1px 0 0 #a2a2a2;
+	-webkit-box-shadow : 0 1px 0 0 #a2a2a2;
+	border-radius: 0;
+	background-color: #ffffff;
+	width: 32%;
+	color: #cccccc;
+	-webkit-appearance:none;
+	text-align-last: center;
+	-webkit-text-align: center;
+}
+
+option{
+	color: #282828;
+}
 
 .inputunit{
 	position: absolute;
