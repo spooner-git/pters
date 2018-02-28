@@ -1108,7 +1108,6 @@ $(document).ready(function(){
         }
         dateplans.sort();
         var htmltojoin = []
-        console.log(dateplans)
         for(var i=1;i<=dateplans.length;i++){
           var splited = dateplans[i-1].split('_')
           var stime = splited[0]
