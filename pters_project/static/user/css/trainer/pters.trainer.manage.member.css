@@ -409,6 +409,10 @@ th{
 		width: 100%;
 	}
 
+.history_view{
+	width: 100%;
+}
+
 @media(min-width: 600px){
 
 	._regcount{

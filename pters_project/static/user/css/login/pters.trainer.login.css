@@ -120,7 +120,7 @@ body{
 }
 
 #loginButton{
-	color:#ffffff;
+	color:#fe4e65;
 	font-size: 18px !important;
 	font-weight: bold;
 }
@@ -140,7 +140,7 @@ body{
 
 .btn-primary{
 	background-color: transparent !important;
-	border-color: #ffffff !important;
+	border-color: #fe4e65 !important;
 	border-radius: 0px !important;
 	height: 50px !important;
 	font-size: 15px !important;

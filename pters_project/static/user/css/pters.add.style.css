@@ -695,6 +695,7 @@ ul a{
 	-webkit-appearance:none;
 	text-align-last: center;
 	-webkit-text-align: center;
+	text-align: -webkit-center;
 }
 
 .dropdown_birth_info{
