@@ -422,7 +422,6 @@ $(document).ready(function(){
                 plancheck(clicked_td_date_info)
                 var countNum = $('.plan_raw').length
 				$('#countNum').text(countNum)
-				
               },
 
               complete:function(){
@@ -436,9 +435,6 @@ $(document).ready(function(){
      }
 
 
-	var dateResult = []
-	var countResult = []
-	
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
 
 	calTable_Set(1,currentYear,currentPageMonth-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
@@ -514,6 +510,7 @@ $(document).ready(function(){
 			krHoliday();
 			//availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 			myswiper.update(); //이전페이지로 넘겼을때
+
 		}
 	};
 
@@ -829,7 +826,6 @@ $(document).ready(function(){
 		}
 		dateplans.sort();
 		var htmltojoin = []
-		console.log(dateplans)
 		for(var i=1;i<=dateplans.length;i++){
 			var splited = dateplans[i-1].split('_')
 			var stime = splited[0]
