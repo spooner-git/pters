@@ -470,7 +470,7 @@ img,a,div,span,p{
 }
 
 .popup_ymdText{
-	margin-top:9.5px;
+	margin-top:9px;
 	margin-bottom: 3px;
 	font-size: 14px;
 	font-weight: bold;
@@ -642,6 +642,7 @@ img,a,div,span,p{
 }
 
 .plancheckname{
+	position: relative;
 	font-weight: bold;
 }
 
@@ -651,8 +652,12 @@ img,a,div,span,p{
 	font-weight: bold;
 }
 
-.plancheckname{
-
+.plancheckname img{
+	width: 12px;
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 
