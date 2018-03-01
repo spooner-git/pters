@@ -1179,9 +1179,10 @@ $(document).ready(function(){
         x: -1,
         y: -1
       };
-      $('#popup_text0').click(function(){
+      $('#popup_text0, #popup_btn_complete').click(function(){
         setTimeout(function(){offset_for_canvas = $('#canvas').offset();},250)
-        $('body').css({'overflow-y':'hidden'})
+        //$('body').css({'overflow-y':'hidden'})
+        //$('#calendar').css({'position':'fixed'})
       })
 
       var canvas, ctx;
@@ -1208,7 +1209,7 @@ $(document).ready(function(){
           case "touchstart":
               initDraw(event);
               $('#canvas').css({'border-color':'#fe4e65'})
-              $('#popup_text0').css({'color':'#ffffff','background':'#fe4e65'}).val('filled')
+              $('#popup_text0, #popup_btn_complete').css({'color':'#ffffff','background':'#fe4e65'}).val('filled')
               break;
 
           case "touchmove":
@@ -1224,7 +1225,7 @@ $(document).ready(function(){
           case "mousedown":
               initDraw(event);
               $('#canvas').css({'border-color':'#fe4e65'})
-              $('#popup_text0').css({'color':'#ffffff','background':'#fe4e65'}).val('filled')
+              $('#popup_text0, #popup_btn_complete').css({'color':'#ffffff','background':'#fe4e65'}).val('filled')
               break;
           case "mousemove":
               if(pos.drawable){
@@ -1249,6 +1250,7 @@ $(document).ready(function(){
       }
 
       function draw(event){
+        event.preventDefault()
         var coors = getPosition(event);
         ctx.lineTo(coors.X, coors.Y);
         pos.x = coors.X;
