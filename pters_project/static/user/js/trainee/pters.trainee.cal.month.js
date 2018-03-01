@@ -28,6 +28,7 @@ $(document).ready(function(){
 	var notAvailableEndTime = Options.stoptimeEnd; //강사가 설정한 예약불가 시간 (종료)
 	var reserveOption = Options.reserve 
 
+
 	//플로팅 버튼
 	$('#float_btn').click(function(){
 		/*if($('#shade').css('z-index')<0){
@@ -49,6 +50,7 @@ $(document).ready(function(){
 
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
 		if($(this).hasClass('available')){
+			$('.cancellimit_time').text(Options.cancellimit+"시간 전")
 			if($(this).find('div').hasClass('dateMytime')){
 				$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 				$('#shade2').css({'display':'block'});
@@ -169,6 +171,8 @@ $(document).ready(function(){
         //durTimeSet(arry[0]);
         addGraphIndicator(1)
         check_dropdown_selected();
+        var selected_start_time = Number($('td.graphindicator').attr('id').replace(/g/gi,""))
+        $('.cancellimit_time').text(Options.cancellimit+"시간 전("+(selected_start_time-Options.cancellimit)+":00)")
     })
 
     function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화 

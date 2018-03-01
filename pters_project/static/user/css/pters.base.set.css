@@ -105,6 +105,10 @@ a:focus, a:hover{
     width: 50px;
 }
 
+#cal_day{
+    display: none;
+}
+
 .sidebar_div{
     height: 50px;
     border-top: 0.5px solid #cccccc;
@@ -236,7 +240,7 @@ a:focus, a:hover{
     cursor: pointer;
 }
 
-#upbutton-x{
+#upbutton-x, #upbutton-x-modify{
     float:left;
     left: 2%;
     border: 0px;
@@ -245,7 +249,7 @@ a:focus, a:hover{
     cursor: pointer;
 }
 
-#upbutton-alarm, #upbutton-check{
+#upbutton-alarm, #upbutton-check , #upbutton-modify{
     float:right;
     right: 2%;
     border: 0px;
@@ -254,7 +258,7 @@ a:focus, a:hover{
     width: 40px;
 }
 
-#upbutton-alarm:active, #upbutton-check:active{
+#upbutton-alarm:active, #upbutton-check:active, #upbutton-modify:active{
     background: #4e4c4c;
 }
 
@@ -355,6 +359,13 @@ a:focus, a:hover{
 #page-base-addstyle{
     display: none;
     z-index: 110;
+    background: #ffffff;
+}
+
+#page-base-modifystyle{
+    display: none;
+    z-index: 110;
+    background: #ffffff;
 }
 
 #pcver{

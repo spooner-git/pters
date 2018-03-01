@@ -14,15 +14,15 @@
 {% block content %}
         <div id="main_content" class="container" > <!--main_content-->
           <div class='center_box wrap'>
-            <div class='center_box_text center_box_text_up' onclick="location.href='{% url 'trainer:cal_day' %}'">
+            <div class='center_box_text center_box_text_up' onclick="location.href='{% url 'trainer:cal_week' %}'">
               <div class='center_box_day'><p href="#"></p></div>
               <div class='center_box_monthyear'><p href="#"></p></div>
             </div>
-            <div class='center_box_text' onclick="location.href='{% url 'trainer:cal_day' %}'" >
+            <div class='center_box_text' onclick="location.href='{% url 'trainer:cal_week' %}'" >
               <div class='center_box_plan'>
                 <p></p>
               </div>
-              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_day' %}" class="center_box_num">{{ today_schedule_num }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
+              <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_week' %}" class="center_box_num">{{ today_schedule_num }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
             </div>
           </div>
           <div class="lower_box wrap" onclick="location.href='{% url 'trainer:member_manage' %}'">

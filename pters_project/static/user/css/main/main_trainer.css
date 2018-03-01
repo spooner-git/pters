@@ -55,8 +55,13 @@ body{
 	cursor: pointer;
 }
 
-.lower_box_child div{
+.lower_box_child_inner{
 	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.lower_box_child_inner div{
 	top: 18%;
 }
 
@@ -209,10 +214,6 @@ body{
 
 	.center_box_gun{
 		font-size: 25px;
-	}
-
-	.lower_box_child div{
-		top: 18%;
 	}
 
 	.lower_box_child{
