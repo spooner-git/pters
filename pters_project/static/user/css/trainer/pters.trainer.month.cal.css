@@ -25,7 +25,7 @@ img,a,div,span,p{
 	bottom: 25px;
 	right: 25px;
 	border-radius: 50%;
-	z-index: 10;
+	z-index: 105;
 	cursor: pointer;
 }
 
@@ -56,11 +56,12 @@ img,a,div,span,p{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 #float_inner2{ /*2017.10.2*/
 	background-color: #ffffff;
-
 }
 
 #float_inner2 a{ /*2017.10.2*/
@@ -73,6 +74,8 @@ img,a,div,span,p{
 	margin: auto;
 	height: 70%;
 	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 
@@ -85,10 +88,11 @@ img,a,div,span,p{
 	background-color: grey;
 	opacity: 0;
 	border-radius: 50%;
-	z-index: 9;	
+	z-index: 103;	
 	font-size: 13px;
 	text-align: center; 
 }
+
 #date{
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -256,6 +260,7 @@ img,a,div,span,p{
 }
 
 #calendar td{
+	position: relative;
 	width: 14.3%;
 	/*color : #282828;*/
 }
@@ -266,12 +271,12 @@ img,a,div,span,p{
 
 .nextDates{
 	color : #282828;
-	opacity: 0.5;
+	opacity: 0;
 }
 
 .prevDates{
 	color : #282828;
-	opacity: 0.5;
+	opacity: 0;
 }
 
 .sunday{
@@ -301,14 +306,13 @@ img,a,div,span,p{
 	z-index: -1;
 }
 
-.dateMytime{
+.dateMytime{ /*달력 날짜에 일정이 있으면 핑크색 동그라미*/
 	position: absolute;
 	display:block;
 	margin:0 auto;
 	width: 28px;
 	height: 28px;
-	/*background: #fddadf;*/
-	background: #fddadf;
+	/*background: #fddadf; */
 	top: 21px;
 	bottom:0;
 	left: 0px;
@@ -317,13 +321,13 @@ img,a,div,span,p{
 	z-index: -1;
 }
 
-.greydateMytime{
+.greydateMytime{ /*달력 날짜에 지난 일정이 있으면 회색 동그라미*/
 	position: absolute;
 	display:block;
 	margin:0 auto;
 	width: 28px;
 	height: 28px;
-	background: #e4e4e4;
+	/*background: #e4e4e4;*/
 	top: 21px;
 	bottom:0;
 	left: 0px;
@@ -434,6 +438,15 @@ img,a,div,span,p{
 	z-index: 150;
 }
 
+#img_cal{
+	position: absolute;
+	top: 41%;
+	left:41.5%;
+	width: 25px;
+	margin-right: 14.845px;
+	margin-left: 14.845px;
+}
+
 .img_cal{
 	position: relative;
 	width: 25px;
@@ -457,7 +470,7 @@ img,a,div,span,p{
 }
 
 .popup_ymdText{
-	margin-top:9.5px;
+	margin-top:9px;
 	margin-bottom: 3px;
 	font-size: 14px;
 	font-weight: bold;
@@ -498,51 +511,31 @@ img,a,div,span,p{
 }
 
 
-#cal_popup{
+#cal_popup_planinfo{
 	display: none;
 	position: fixed;
 	background: transparent;
 	border-color: transparent;
 	top: 35%;
-	left: 10%;
-	width: 80%;
-	/*
-	background-color: #ffffff;
-	border: 1px solid #a2a2a2;
-	*/
-	z-index: -2;
+	width: 	100%;
+	max-width: 	330px;
+	left: 50%;
+	transform:translateX(-50%);
+	z-index: 160;
 	text-align: center;
 }
 
-#cal_popup2{
+#cal_popup_plandelete{
 	display: none;
 	position: fixed;
 	background: transparent;
 	border-color: transparent;
 	top: 35%;
-	left: 10%;
-	width: 80%;
-	/*
-	background-color: #ffffff;
-	border: 1px solid #a2a2a2;
-	*/
-	z-index: -2;
-	text-align: center;
-}
-
-#cal_popup3{
-	display: none;
-	position: fixed;
-	background: transparent;
-	border-color: transparent;
-	top: 35%;
-	left: 10%;
-	width: 80%;
-	/*
-	background-color: #ffffff;
-	border: 1px solid #a2a2a2;
-	*/
-	z-index: -2;
+	width: 	100%;
+	max-width: 	330px;
+	left: 50%;
+	transform:translateX(-50%);
+	z-index: 170;
 	text-align: center;
 }
 
@@ -572,7 +565,6 @@ img,a,div,span,p{
 	color: #000ecc;
 }
 
-
 #popup_img{
 	position: relative;
 	background: #ffffff;
@@ -581,16 +573,6 @@ img,a,div,span,p{
 	padding-bottom: 22.5px;
 }
 
-/*
-#img_cal{
-	position: absolute;
-	top: 41%;
-	left:41.5%;
-	width: 25px;
-	margin-right: 14.845px;
-	margin-left: 14.845px;
-}
-*/
 
 #btn_close, #btn_close2, #btn_close3, #btn_close4{
 	position: absolute;
@@ -637,7 +619,20 @@ img,a,div,span,p{
 
 .popup_inner span{
 	line-height: 45px;
+	font-size: 14px;
+	font-weight: bold;
+	cursor: pointer;
 }
+
+.popup_inner_change{
+	text-align: center;
+}
+
+.popup_inner_delete{
+	text-align: center;
+	color: #fe4e65;
+}
+
 
 
 .planchecktime,.plancheckname{
@@ -647,6 +642,7 @@ img,a,div,span,p{
 }
 
 .plancheckname{
+	position: relative;
 	font-weight: bold;
 }
 
@@ -656,8 +652,12 @@ img,a,div,span,p{
 	font-weight: bold;
 }
 
-.plancheckname{
-
+.plancheckname img{
+	width: 12px;
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 
@@ -676,6 +676,15 @@ img,a,div,span,p{
 	height: 100%;
 	background-color: black;
 	opacity: 0.7;
+	display: none;
+	z-index: 101;
+}
+
+#shade3{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: #f4f4f4;
 	display: none;
 	z-index: 101;
 }
@@ -699,6 +708,30 @@ img,a,div,span,p{
 	margin-top: 18px;
 }
 
+#canvasWrap{
+	position: relative;
+	width: 100%;
+	height: 0px;
+}
+#canvasWrap span{
+	position: absolute;
+	display: none;
+	width: 100%;
+	left:50%;
+	top:10px;
+	transform: translateX(-50%);
+	color: #e6e6e6;
+	z-index: 1500;
+}
+
+#canvas{
+	display: none;
+	position: relative;
+	background:#ffffff;
+	z-index: 1400;
+	border: 3px solid #282828;
+}
+
 
 /*미디어 쿼리*/
 
@@ -715,6 +748,11 @@ img,a,div,span,p{
 	#calendar td:hover{
 		background : #ffebee54;
 		opacity: 1;
+	}
+
+	#shade3{
+		background: black;
+		opacity: 0.8;
 	}
 
 	#hidetoggle{
@@ -890,7 +928,7 @@ img,a,div,span,p{
 	}
 
 	.prevDates,.nextDates{
-		opacity: 0.2;
+		opacity: 0;
 	}
 	
 	.greydateMytime,.dateMytime{

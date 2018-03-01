@@ -65,7 +65,7 @@
                             <div id="welcome"><span class="KRtext">안녕하세요!</span><span class="JPtext">こんにちは</span><span class="ENtext">What a nice day!</span></div>
                         </div>                     
 
-                        <div class="sidebar_div"><img src={% static "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" id="cal_day"><img src={% static "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
                             <a href="{% url 'trainer:cal_day' %}" class="sidebar_text __todayplan">
                             </a>
                         </div>
@@ -113,6 +113,22 @@
                     {% endblock %}
                     <button id="upbutton-check" class="navbar-toggle" aria-controls="navbar">
                         <img src={% static "user/res/ptadd/btn-complete.png" %} style="width:100%;">
+                    </button>
+                </div>
+            </div><!-- /.container -->
+        </nav><!-- /.navbar -->
+
+        <nav class="navbar navbar-fixed-top navbar-default" id="page-base-modifystyle">
+            <div class="container">
+                <div class="navbar-header">
+                    <button id="upbutton-x-modify" class="navbar-toggle" aria-controls="navbar">
+                        <img src={% static "user/res/ptadd/btn-x.png" %} style="width:90%;">
+                    </button>
+                    {% block nav_center_img2 %}
+                        <a id="uptext3" class="uptext">회원 정보</a>
+                    {% endblock %}
+                    <button id="upbutton-modify" class="navbar-toggle" aria-controls="navbar" data-type = "view">
+                        <img src={% static "user/res/member/icon-edit.png" %} style="width:100%;">
                     </button>
                 </div>
             </div><!-- /.container -->
