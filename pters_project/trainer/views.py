@@ -18,7 +18,7 @@ from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb ,HolidayTb
 from trainee.models import LectureTb
 from trainer.models import ClassTb
-from schedule.models import ScheduleTb, DeleteScheduleTb
+from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb
 
 
 class RegisterView(TemplateView):
@@ -531,6 +531,7 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
 
 
 # 반복 일정 추가
+
 @csrf_exempt
 def add_repeat_schedule_logic(request):
 
@@ -547,9 +548,119 @@ def add_repeat_schedule_logic(request):
 
     error = None
 
-    #schedule add logic add
+    class_info = None
+
+    #if repeat_freq == '':
+
+    #else:
+    #    repeat_type = ''
 
     if error is None:
+        # 강사 정보 가져오기
+        try:
+            class_info = ClassTb.objects.get(member_id=request.user.id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다'
+
+    if error is None:
+        '''
+
+        try:
+
+            #repeat_schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+            class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True,
+                                         null=True)  # Field name made lowercase.
+            lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True,
+                                           null=True)  # Field name made lowercase.
+            repeat_type_cd = models.CharField(db_column='REPEAT_TYPE_CD', max_length=10, blank=True,
+                                              null=True)  # Field name made lowercase.
+            week_info = models.CharField(db_column='WEEK_INFO', max_length=10, blank=True,
+                                         null=True)  # Field name made lowercase.
+            start_dt = models.DateField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
+            end_dt = models.DateField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
+            state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True,
+                                        null=True)  # Field name made lowercase.
+            en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True,
+                                           null=True)  # Field name made lowercase.
+            reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
+            mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
+
+            with transaction.atomic():
+                delete_schedule = RepeatScheduleTb(class_tb_id=class_info.id,
+                                                   repeat_type_cd=repeat_type,
+                                                   start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                                   state_cd=schedule_info.state_cd,
+                                                   en_dis_type=schedule_info.en_dis_type,
+                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+
+                if en_dis_type == '1':
+                    lecture_info.lecture_avail_count += 1
+                    # 진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
+                    if schedule_info.state_cd == 'PE':
+                        lecture_info.lecture_rem_count += 1
+
+                    lecture_info.mod_dt = timezone.now()
+                    lecture_info.save()
+
+                delete_schedule.save()
+                schedule_info.delete()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+
+    if error is None:
+        week_info = ['일', '월', '화', '수', '목', '금', '토']
+
+        log_start_date = start_date.strftime('%Y') + '년 ' \
+                         + start_date.strftime('%m') + '월 ' \
+                         + start_date.strftime('%d') + '일 ' \
+                         + week_info[int(start_date.strftime('%w'))] + '요일 '
+        if start_date.strftime('%p') == 'AM':
+            log_start_date = str(log_start_date) + '오전'
+        elif start_date.strftime('%p') == 'PM':
+            log_start_date = str(log_start_date) + '오후'
+        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
+
+        if end_date.strftime('%p') == 'AM':
+            log_end_date = '오전'
+        elif end_date.strftime('%p') == 'PM':
+            log_end_date = '오후'
+
+        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
+        if en_dis_type == '1':
+            log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' + member_name \
+                           + ' 회원님의</span> 일정을 <span class="status">삭제</span>했습니다.@' \
+                           + log_start_date \
+                           + ' - ' + log_end_date
+        else:
+            log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                           + ' OFF </span> 일정을 <span class="status">삭제</span>했습니다.@' \
+                           + log_start_date \
+                           + ' - ' + log_end_date
+        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+    #schedule add logic add
+    #요일 받아서 기간 안에 +7일씩 혹은 +14일씩 혹은 +2일씩 +1일씩 돌면서 검사
+    #문제가 있는 날짜 list 에 추가
+    #문제가 있는 날짜 return
+    #문제가 있는지 확인하는 form input 추가
+    #문제가 있는지 확인된 값이 1로 들어오면 그대로 돌면서 추가
+    #겹치는 일정이 있으면 추가 하지 않고 다음일정으로 등록
+
+    #반복일정 테이블에 스케쥴 id값 저장?
+    #-> 수정 삭제시에 해당 id만 제거 하거나 수정하면 될듯
+
+    #반복일정 삭제시는 제거하면 되니 문제 없음  - 오늘날짜 이후 일정만 삭제
+
+    #반복일정 수정시에는 수정하는 날짜 등록 가능한지 확인
+    #확인 완료시 일정삭제후 등록 하거나 일정 등록후 삭제
+'''
 
         return redirect(next_page)
     else:
