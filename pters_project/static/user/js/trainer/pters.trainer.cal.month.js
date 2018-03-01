@@ -345,7 +345,7 @@ $(document).ready(function(){
 	})
 
 	function closeDeletePopup(){
-		$("#cal_popup_plandelete").css({'display':'none'})
+		$("#cal_popup_plandelete, #cal_popup_planinfo").css({'display':'none'})
 		$("#shade").css({'z-index':'100'})
 	}
 
@@ -847,7 +847,12 @@ $(document).ready(function(){
 			}else if(stime>=12 && dateplans[i-2]==undefined){
 				var morningday = "오후"
 			}
-			htmltojoin.push('<div class="plan_raw" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'</span></div>')
+			if(splited[10]==1){
+				htmltojoin.push('<div class="plan_raw" title="완료 된 일정" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+
+			}else if(splited[10] == 0){
+				htmltojoin.push('<div class="plan_raw" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'</span></div>')
+			}
 		}
 		$('#cal_popup_plancheck .popup_inner').html(htmltojoin.join(''))
 	}
