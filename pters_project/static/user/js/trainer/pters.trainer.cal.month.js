@@ -151,6 +151,7 @@ $(document).ready(function(){
 	})
 
 	$(document).on('click','.plan_raw',function(){
+		$('#popup_btn_complete').css({'color':'#333','background':'#ffffff'}).val('')
 		var selectedDate = $('.popup_ymdText').text()
 		var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
 		var selectedPerson = $(this).find('.plancheckname').text()
