@@ -96,11 +96,11 @@
     <div class='arrowButton'>
             <a id="leftArrowButton" style="left: 4%">
               <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
-              <img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;">
+              <img src={% static "user/res/daycal_arrow.png" %} alt="" id="leftArrowButtonImg">
               <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible">Today</span>
             </a>
             <a id="rightArrowButton" style="right: 4%">
-              <img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;">
+              <img src={% static "user/res/daycal_arrow.png" %} alt="" id="rightArrowButtonImg">
               <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
               <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible">Today</span>
             </a>
@@ -157,7 +157,7 @@
 </div>
     
 
-<div id="calendar" class="container">
+<div id="calendar">
       <div class="swiper-container">
         <div id="timeIndicatorBar"></div>
           <div class="timeindex">
