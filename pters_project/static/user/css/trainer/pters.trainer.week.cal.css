@@ -175,30 +175,30 @@ img,a,div,span,p{
 	text-align:  center;
 }
 
-#cal_popup{
+#cal_popup_planinfo{
 	display: none;
 	position: fixed;
 	background: transparent;
 	border-color: transparent;
-	top: 35%;
+	top: 50%;
 	width: 	100%;
 	max-width: 	330px;
 	left: 50%;
-	transform:translateX(-50%);
+	transform:translate(-50%,-50%);
 	z-index: -2;
 	text-align: center;
 }
 
-#cal_popup3{
+#cal_popup_plandelete{
 	display: none;
 	position: fixed;
 	background: transparent;
 	border-color: transparent;
-	top: 35%;
+	top: 50%;
 	width: 	100%;
 	max-width: 	330px;
 	left: 50%;
-	transform:translateX(-50%);
+	transform:translate(-50%,-50%);
 	z-index: -2;
 	text-align: center;
 }
@@ -650,15 +650,6 @@ img,a,div,span,p{
 
 /*미디어 쿼리*/
 @media(min-width:418px){
-	#cal_popup{
-		
-	}
-
-	#cal_popup3{
-
-	}
-
-
 
 	#popup_info,#popup_info2,#popup_info3{
 		background: #ffffff;

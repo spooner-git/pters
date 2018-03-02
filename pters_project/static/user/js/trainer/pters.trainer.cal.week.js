@@ -186,13 +186,13 @@ $(document).ready(function(){
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 		
-		$('#popup_text0').css({'color':'#333','background':'#ffffff'}).val('')
+		$('#popup_btn_complete').css({'color':'#333','background':'#ffffff'}).val('')
         $('#canvas').hide().css({'border-color':'#282828'})
 		$('#canvasWrap').css({'height':'0px'})
 		$('#canvasWrap span').hide();
 
 		$('#page-addplan-pc').hide()
-		$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
+		$("#cal_popup_planinfo").fadeIn('fast').css({'z-index':'103'});
 		$('#shade').css({'display':'block'});
 		var schedule_finish_check = $(this).attr('data-schedule-check')
 		var info = $(this).attr('class-time').split('_')
@@ -233,11 +233,11 @@ $(document).ready(function(){
 		$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		if(schedule_finish_check=="0"){
-			$("#popup_text0").css("display","block")
+			$("#popup_btn_complete").css("display","block")
 			$("#popup_text1").css("display","block")
         }
         else{
-			$("#popup_text0").css("display","none")
+			$("#popup_btn_complete").css("display","none")
 			$("#popup_text1").css("display","none")
 		}
 		schedule_on_off = 1;
@@ -248,7 +248,7 @@ $(document).ready(function(){
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 		$('#page-addplan-pc').hide()
 		//$('.td00').css('background','transparent')
-		$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
+		$("#cal_popup_planinfo").fadeIn('fast').css({'z-index':'103'});
 		$('#shade').css({'display':'block'});
 		var info = $(this).attr('off-time').split('_')
 		var yy=info[0]
@@ -282,42 +282,35 @@ $(document).ready(function(){
 		$('#popup_info2').text(infoText2);
 		$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
-		$("#popup_text0").css("display","none")
+		$("#popup_btn_complete").css("display","none")
 		schedule_on_off = 0;
 	})
 
 	$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
-		if($('#cal_popup').css('display')=='block'){
-			$("#cal_popup").css({'display':'none','z-index':'-2'})
+		if($('#cal_popup_planinfo').css('display')=='block'){
+			$("#cal_popup_planinfo").css({'display':'none','z-index':'-2'})
 			$('#shade').css({'display':'none'});
 			$('body').css('overflow-y','overlay');
 		}
 	})
 
-	$("#btn_close3").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
-		if($('#cal_popup3').css('display')=='block'){
-			$("#cal_popup3").css({'display':'none','z-index':'-2'})
+	$("#btn_close3, #popup_btn_delete_no").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
+		if($('#cal_popup_plandelete').css('display')=='block'){
+			$("#cal_popup_plandelete").css({'display':'none','z-index':'-2'})
 			$('#shade').css({'display':'none'});
 			$('body').css('overflow-y','overlay');
 		}
 	})
 
-	$("#popup_text4").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
-		if($('#cal_popup3').css('display')=='block'){
-			$("#cal_popup3").css({'display':'none','z-index':'-2'})
-			$('#shade').css({'display':'none'});
-			$('body').css('overflow-y','overlay');
-		}
-	})
 
 //일정 완료 기능 추가 - hk.kim 180106
-	$("#popup_text0").click(function(){  //일정 완료 버튼 클릭
+	$("#popup_btn_complete").click(function(){  //일정 완료 버튼 클릭
 
 		if($(this).val()!="filled"){
 			$('#canvas').show()
 			$('#canvasWrap').animate({'height':'200px'},200)
 			$('#canvasWrap span').show();
-			$('#cal_popup').animate({'top':'15%'},200)
+			//$('#cal_popup_planinfo').animate({'top':'15%'},200)
 		}else if($(this).val()=="filled"){
 			var $pt_finish_form = $('#pt-finish-form');
 			if(schedule_on_off==1){
@@ -341,7 +334,7 @@ $(document).ready(function(){
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-             			$('#popup_text0').css({'color':'#333','background':'#ffffff'}).val('')
+             			$('#popup_btn_complete').css({'color':'#333','background':'#ffffff'}).val('')
                     	$('#canvas').hide().css({'border-color':'#282828'})
                     	$('#canvasWrap span').hide();
 						$('#canvasWrap').css({'height':'0px'})
@@ -374,12 +367,12 @@ $(document).ready(function(){
 			}
 	})
 	//일정 삭제 기능 추가 - hk.kim 171007
-	$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
-		$('#cal_popup').hide().css({'z-index':'-2'});
-		$('#cal_popup3').fadeIn('fast').css({'z-index':'103'});
+	$("#popup_btn_delete").click(function(){  //일정 삭제 버튼 클릭
+		$('#cal_popup_planinfo').hide().css({'z-index':'-2'});
+		$('#cal_popup_plandelete').fadeIn('fast').css({'z-index':'103'});
 	})
 
-	$('#popup_text3').click(function(){
+	$('#popup_btn_delete_yes').click(function(){
 		var $ptdelform = $('#daily-pt-delete-form');
 		var $offdelform = $('#daily-off-delete-form');
 		$('body').css('overflow-y','overlay');
@@ -510,12 +503,12 @@ $(document).ready(function(){
      }
 
 	function closeDeletePopup(){
-		if($('#cal_popup3').css('display')=='block'){
-			$("#cal_popup3").css({'display':'none','z-index':'-2'})
+		if($('#cal_popup_plandelete').css('display')=='block'){
+			$("#cal_popup_plandelete").css({'display':'none','z-index':'-2'})
 			$('#shade').css({'display':'none','z-index':'100'});
 		}
-		if($('#cal_popup').css('display')=='block'){
-			$("#cal_popup").css({'display':'none','z-index':'-2'})
+		if($('#cal_popup_planinfo').css('display')=='block'){
+			$("#cal_popup_planinfo").css({'display':'none','z-index':'-2'})
 			$('#shade').css({'display':'none','z-index':'100'});
 		}
 	}

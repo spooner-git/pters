@@ -516,11 +516,11 @@ img,a,div,span,p{
 	position: fixed;
 	background: transparent;
 	border-color: transparent;
-	top: 35%;
+	top: 50%;
 	width: 	100%;
 	max-width: 	330px;
 	left: 50%;
-	transform:translateX(-50%);
+	transform:translate(-50%, -50%);
 	z-index: 160;
 	text-align: center;
 }
@@ -530,11 +530,11 @@ img,a,div,span,p{
 	position: fixed;
 	background: transparent;
 	border-color: transparent;
-	top: 35%;
+	top: 50%;
 	width: 	100%;
 	max-width: 	330px;
 	left: 50%;
-	transform:translateX(-50%);
+	transform:translate(-50%,-50%);
 	z-index: 170;
 	text-align: center;
 }
@@ -633,7 +633,11 @@ img,a,div,span,p{
 	color: #fe4e65;
 }
 
-
+.plan_raw_blank{
+	line-height: 45px;
+	font-size: 13px;
+	font-weight: bold;
+}
 
 .planchecktime,.plancheckname{
 	display: inline-grid;
