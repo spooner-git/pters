@@ -396,11 +396,13 @@ img,a,div,span,p{
 	border-top: 1.5px solid #121212;
 }
 
+/*
 #ymdText img{
 	width: 100%;
 	position: relative;
 	z-index: -1;
 }
+*/
 
 #hidetoggle{
 	display: none;
@@ -434,6 +436,16 @@ img,a,div,span,p{
 	width: 100%;
 	height: 100%;
 	z-index: 10;
+}
+
+#leftArrowButtonImg{
+	width: 7px;
+}
+
+#rightArrowButtonImg{
+	-webkit-transform:rotate(180deg);
+	transform: rotate(180deg);
+	width: 7px;
 }
 
 .setunVisible{
