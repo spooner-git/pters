@@ -155,7 +155,7 @@ $(document).ready(function(){
 		var selectedDate = $('.popup_ymdText').text()
 		var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
 		var selectedPerson = $(this).find('.plancheckname').text()
-		$("#cal_popup_planinfo").fadeIn('fast').css({'top':'35%'});
+		$("#cal_popup_planinfo").fadeIn('fast')
 		$('#shade').css('z-index','155') //원래는 z-index가 100
 		$('#popup_info').text(selectedDate);
 		$('#popup_info2').text(selectedPerson+'의 '+ selectedTime + '시 일정');
@@ -195,7 +195,6 @@ $(document).ready(function(){
 			$('#canvas').show()
 			$('#canvasWrap').animate({'height':'200px'},200)
 			$('#canvasWrap span').show();
-			$('#cal_popup_planinfo').animate({'top':'15%'},200)
 		}else if($(this).val()=="filled"){
 			var $pt_finish_form = $('#pt-finish-form');
 			if(schedule_on_off==1){
