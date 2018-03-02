@@ -613,7 +613,8 @@
           //pt schedule이 끝났는지 확인
           var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}', {% endfor %}];
 
-          var messageArray = [{% for message in messages %}'{{ message }}',{% endfor %}]
+          var messageArray = [{% for message in messages %}'{{ message.error }}',{% endfor %}]
+          var dateMessageArray = [{% for message in messages %}'{{ message.error_date }}',{% endfor %}]
 
           var classTimeArray = [];
           var offTimeArray = [];

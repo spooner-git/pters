@@ -42,6 +42,7 @@ urlpatterns = [
     url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),
     url(r'^finish_schedule/$', views.finish_schedule_logic, name='finish_schedule'),
     url(r'^add_repeat_schedule/$', views.add_repeat_schedule_logic, name='add_repeat_schedule'),
+    url(r'^add_repeat_schedule_confirm/$', views.add_repeat_schedule_confirm, name='add_repeat_schedule_confirm'),
 
 
     url(r'^modify_pt/$', views.PtModifyView.as_view(), name='modify_pt'),
