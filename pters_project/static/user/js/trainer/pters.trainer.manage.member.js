@@ -142,7 +142,7 @@ $(document).ready(function(){
         dropdown_date_selected.prop('selected',true)
        
 
-        $('.selectbox_checked').removeClass('selectbox_checked');
+        $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked');
         if(DB[name].sex == "M"){
           $('#memberMale_info').addClass('selectbox_checked')
           $('#form_sex_modify').val('M')
@@ -182,7 +182,7 @@ $(document).ready(function(){
         dropdown_month_selected.prop('selected',true)
         dropdown_date_selected.prop('selected',true)
 
-        $('.selectbox_checked').removeClass('selectbox_checked')
+        $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked')
         if(DBe[name].sex == "M"){
           $('#memberMale_info').addClass('selectbox_checked')
           $('#form_sex_modify').val('M')
