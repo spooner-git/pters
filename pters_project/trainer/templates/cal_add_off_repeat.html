@@ -62,10 +62,9 @@
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
       <!-- 회원명 DB연동 필요-->
-      <li><a data-repeat="everyweek">매주</a></li>
-      <li><a data-repeat="biweek">격주</a></li>
-      <li><a data-repeat="onlyweek">일주일만</a></li>
-      <li><a data-repeat="everyday">매일</a></li>
+      <li><a data-repeat="WW">매주</a></li>
+      <li><a data-repeat="2W">격주</a></li>
+      <li><a data-repeat="DD">매일</a></li>
     </ul>
   </div>
 </div>
@@ -84,13 +83,13 @@
 <div id="daySelect" class="ptaddbox">
   <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %} style="width:14px;"> 요일별 일정</div>
     <div class="dateButtonGroup" style="width:100%;">
-        <div class="dateButton" data-date="sun">일</div>
-        <div class="dateButton" data-date="mon">월</div>
-        <div class="dateButton" data-date="tue">화</div>
-        <div class="dateButton" data-date="wed">수</div>
-        <div class="dateButton" data-date="ths">목</div>
-        <div class="dateButton" data-date="fri">금</div>
-        <div class="dateButton" data-date="sat">토</div>
+        <div class="dateButton" data-date="SUN">일</div>
+        <div class="dateButton" data-date="MON">월</div>
+        <div class="dateButton" data-date="TUE">화</div>
+        <div class="dateButton" data-date="WED">수</div>
+        <div class="dateButton" data-date="THS">목</div>
+        <div class="dateButton" data-date="FRI">금</div>
+        <div class="dateButton" data-date="SAT">토</div>
     </div>
   </div>
 
