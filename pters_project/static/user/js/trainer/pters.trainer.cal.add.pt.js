@@ -672,6 +672,10 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes_off").empty();
         $("#durations_off").empty();
+
+        $('._NORMAL_ADD').css('display','block')
+        $('._REPEAT_ADD').css('display','none')
+        $('#timeGraph').css('display','none')
       }
 
       function closeAddPopup_mini(){

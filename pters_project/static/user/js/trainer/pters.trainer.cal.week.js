@@ -99,6 +99,10 @@ $(document).ready(function(){
         $("#starttimes").empty();
         $("#durations").empty();
         $('.tdgraph').removeClass('graphindicator')
+
+        $('._NORMAL_ADD').css('display','block')
+        $('._REPEAT_ADD').css('display','none')
+        $('#timeGraph').css('display','none')
   	})
   //모바일 스타일
 
@@ -131,6 +135,10 @@ $(document).ready(function(){
         $("#starttimes").empty();
         $("#durations").empty();
         $('.tdgraph').removeClass('graphindicator')
+
+        $('._NORMAL_ADD').css('display','block')
+        $('._REPEAT_ADD').css('display','none')
+        $('#timeGraph').css('display','none')
   	})
 
   	$('.cancelBtn_mini').click(function(){

@@ -1,8 +1,20 @@
 $(document).ready(function(){
-      $( "#datepicker" ).datepicker({
+
+      $('#repeatSchedule').click(function(){
+          $('._NORMAL_ADD').hide('slow')
+          $('._REPEAT_ADD').show('slow')
+          if(addTypeSelect == "ptadd"){
+            $('#uptext2').text('PT 반복 일정 등록')  
+          }else if(addTypeSelect == "offadd"){
+            $('#uptext2').text('OFF 반복 일정 등록')
+          }
+      })
+
+
+      $( "#datepicker_repeat_start" ).datepicker({
         minDate : 0,
       });
-      $( "#datepicker2" ).datepicker({
+      $( "#datepicker_repeat_end" ).datepicker({
         minDate : 0,
       });
       var select_all_check = false;
@@ -73,10 +85,10 @@ $(document).ready(function(){
       })
 
 
-      $("#datepicker").change(function(){
-          if($("#datepicker").val() != '') {
+      $("#datepicker_repeat_start").change(function(){
+          if($("#datepicker_repeat_start").val() != '') {
               $("#dateSelector p").addClass("dropdown_selected");
-              $("#id_repeat_start_date").val($("#datepicker").val());
+              $("#id_repeat_start_date").val($("#datepicker_repeat_start").val());
               check_dropdown_selected();
           }
           else{
@@ -86,10 +98,10 @@ $(document).ready(function(){
           }
       })
 
-      $("#datepicker2").change(function(){
-          if($("#datepicker2").val() != '') {
+      $("#datepicker_repeat_end").change(function(){
+          if($("#datepicker_repeat_end").val() != '') {
               $("#dateSelector2 p").addClass("dropdown_selected");
-              $("#id_repeat_end_date").val($("#datepicker2").val());
+              $("#id_repeat_end_date").val($("#datepicker_repeat_end").val());
               check_dropdown_selected();
           }
           else{
