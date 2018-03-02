@@ -826,34 +826,41 @@ $(document).ready(function(){
 		}
 		dateplans.sort();
 		var htmltojoin = []
-		for(var i=1;i<=dateplans.length;i++){
-			var splited = dateplans[i-1].split('_')
-			var stime = splited[0]
-			if(stime.substr(0,1)=='0'){
-				var stime = stime.substr(1,1)
-			}
-			var etime = splited[2]
-			var name = splited[4]+" 회원님"
-			var morningday = ""
-			if(stime==0 & dateplans[i-2]==undefined){
-				var morningday = "오전"
-			}else if(stime<12 & dateplans[i-2]==undefined){
-				var morningday = "오전"
-			}else if(stime>=12 && dateplans[i-2]!=undefined){
-				var splitedprev = dateplans[i-2].split('_')
-				if(splitedprev[0]<12){
-					var morningday = "오후"	
+		if(dateplans.length>0){
+			for(var i=1;i<=dateplans.length;i++){
+				var splited = dateplans[i-1].split('_')
+				var stime = splited[0]
+				if(stime.substr(0,1)=='0'){
+					var stime = stime.substr(1,1)
 				}
-			}else if(stime>=12 && dateplans[i-2]==undefined){
-				var morningday = "오후"
-			}
-			if(splited[10]==1){
-				htmltojoin.push('<div class="plan_raw" title="완료 된 일정" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+				var etime = splited[2]
+				var name = splited[4]+" 회원님"
+				var morningday = ""
+				if(stime==0 & dateplans[i-2]==undefined){
+					var morningday = "오전"
+				}else if(stime<12 & dateplans[i-2]==undefined){
+					var morningday = "오전"
+				}else if(stime>=12 && dateplans[i-2]!=undefined){
+					var splitedprev = dateplans[i-2].split('_')
+					if(splitedprev[0]<12){
+						var morningday = "오후"	
+					}
+				}else if(stime>=12 && dateplans[i-2]==undefined){
+					var morningday = "오후"
+				}
 
-			}else if(splited[10] == 0){
-				htmltojoin.push('<div class="plan_raw" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'</span></div>')
+				if(splited[10]==1){
+					htmltojoin.push('<div class="plan_raw" title="완료 된 일정" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+
+				}else if(splited[10] == 0){
+					htmltojoin.push('<div class="plan_raw" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'</span></div>')
+				}
 			}
+		}else{
+			htmltojoin.push('<div class="plan_raw_blank">등록된 일정이 없습니다.</div>')
+
 		}
+		
 		$('#cal_popup_plancheck .popup_inner').html(htmltojoin.join(''))
 	}
 

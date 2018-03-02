@@ -633,7 +633,11 @@ img,a,div,span,p{
 	color: #fe4e65;
 }
 
-
+.plan_raw_blank{
+	line-height: 45px;
+	font-size: 13px;
+	font-weight: bold;
+}
 
 .planchecktime,.plancheckname{
 	display: inline-grid;
