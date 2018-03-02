@@ -93,7 +93,7 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['daily_lecture_data_member'] = daily_lecture_data_member
         context['daily_off_data_start_date'] = daily_off_data_start_date
         context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['lecture_reg_count'] = lecture_info.lecture_reg_count
+        context['lecture_avail_count'] = lecture_info.lecture_avail_count
 
         return context
 
@@ -156,7 +156,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
 
             class_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         start_dt__gte=fourteen_days_ago,
+                                                            start_dt__gte=fourteen_days_ago,
                                                          start_dt__lt=fifteen_days_after)
             for class_schedule_datum in class_schedule_data:
                 daily_off_data_start_date.append(class_schedule_datum.start_dt)
@@ -171,7 +171,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['daily_lecture_data_member'] = daily_lecture_data_member
         context['daily_off_data_start_date'] = daily_off_data_start_date
         context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['lecture_reg_count'] = lecture_info.lecture_reg_count
+        context['lecture_avail_count'] = lecture_info.lecture_avail_count
         context['holiday'] = holiday
 
         return context
@@ -280,7 +280,7 @@ def pt_delete_logic(request):
             error = '회원 PT 정보가 존재하지 않습니다.'
 
     if error is None:
-        if lecture_info.member_id != request.user.id:
+        if lecture_info.member_id != str(request.user.id):
             error = '회원 정보가 일치하지 않습니다.'
 
     if error is None:
@@ -410,7 +410,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             error = 'lecture가 존재하지 않습니다.'
 
     if error is None:
-        if lecture_info.member_id != user_id:
+        if lecture_info.member_id != str(user_id):
             error = '회원 정보가 일치하지 않습니다.'
 
     if error is None:
@@ -434,11 +434,12 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
 
     if error is None:
         with transaction.atomic():
-            lecture_schedule_data = ScheduleTb(class_tb_id=class_info.class_id,
-                                               lecture_tb_id=lecture_info.lecture_id, start_dt=start_date,
-                                               end_dt=end_date, state_cd='NP', en_dis_type='1',
+            lecture_schedule_data = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
+                                               start_dt=start_date, end_dt=end_date,
+                                               state_cd='NP', en_dis_type='1',
                                                reg_dt=timezone.now(), mod_dt=timezone.now())
             lecture_schedule_data.save()
+            lecture_info.lecture_avail_count -= 1
             lecture_info.mod_dt = timezone.now()
             lecture_info.save()
 
