@@ -372,6 +372,8 @@ $(document).ready(function(){
                 memberNameArray = [];
                 memberAvailCountArray = [];
                 messageArray = [];
+                dateMessageArray = [];
+                repeatArray= [];
                 var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date;
                 var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date;
                 var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date;
@@ -385,6 +387,8 @@ $(document).ready(function(){
                 memberNameArray = jsondata.memberNameArray;
                 memberAvailCountArray = jsondata.memberAvailCountArray;
                 messageArray = jsondata.messageArray;
+                dateMessageArray = jsondata.dateMessageArray;
+                repeatArray= jsondata.repeatArray;
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
                  $('.classTime,.offTime').parent().html('<div></div>');
