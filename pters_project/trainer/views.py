@@ -254,11 +254,12 @@ def add_schedule_logic(request):
     if error is None:
         error = add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
                                         request.user.id, request.user.first_name, lecture_id,
-                                        en_dis_type, member_name)
+                                        en_dis_type, member_name, None, 1)
 
     if error is None:
         return redirect(next_page)
     else:
+        print(error)
         messages.info(request, error)
         return redirect(next_page)
 
@@ -307,6 +308,7 @@ def delete_schedule_logic(request):
                 delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
                                                    class_tb_id=schedule_info.class_tb_id,
                                                    lecture_tb_id=schedule_info.lecture_tb_id,
+                                                   delete_repeat_schedule_tb_id=schedule_info.repeat_schedule_tb_id,
                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
                                                    state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
@@ -451,7 +453,8 @@ def finish_schedule_logic(request):
 
 
 def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
-                            user_id, user_name, lecture_id, en_dis_type, member_name):
+                            user_id, user_name, lecture_id, en_dis_type, member_name,
+                            repeat_id, log):
 
     error = None
     class_info = None
@@ -483,10 +486,18 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
 
     if error is None:
         with transaction.atomic():
-            add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
-                                           start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                           state_cd='NP', en_dis_type=en_dis_type,
-                                           reg_dt=timezone.now(), mod_dt=timezone.now())
+            if repeat_id is None:
+                add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
+                                               start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
+                                               state_cd='NP', en_dis_type=en_dis_type,
+                                               reg_dt=timezone.now(), mod_dt=timezone.now())
+            else:
+                add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
+                                               repeat_schedule_tb_id = repeat_id,
+                                               start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
+                                               state_cd='NP', en_dis_type=en_dis_type,
+                                               reg_dt=timezone.now(), mod_dt=timezone.now())
+
             add_schedule_info.save()
             if en_dis_type == '1':
                 member_lecture_info.lecture_avail_count -= 1
@@ -494,38 +505,39 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
                 member_lecture_info.save()
 
     if error is None:
-        week_info = ['일', '월', '화', '수', '목', '금', '토']
+        if log == 1:
+            week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = schedule_start_datetime.strftime('%Y')+'년 ' \
-                         + schedule_start_datetime.strftime('%m')+'월 ' \
-                         + schedule_start_datetime.strftime('%d')+'일 ' \
-                         + week_info[int(schedule_start_datetime.strftime('%w'))] + '요일 '
-        if schedule_start_datetime.strftime('%p') == 'AM':
-            log_start_date = str(log_start_date) + '오전'
-        elif schedule_start_datetime.strftime('%p') == 'PM':
-            log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + schedule_start_datetime.strftime(' %I:%M')
+            log_start_date = schedule_start_datetime.strftime('%Y')+'년 ' \
+                             + schedule_start_datetime.strftime('%m')+'월 ' \
+                             + schedule_start_datetime.strftime('%d')+'일 ' \
+                             + week_info[int(schedule_start_datetime.strftime('%w'))] + '요일 '
+            if schedule_start_datetime.strftime('%p') == 'AM':
+                log_start_date = str(log_start_date) + '오전'
+            elif schedule_start_datetime.strftime('%p') == 'PM':
+                log_start_date = str(log_start_date) + '오후'
+            log_start_date = str(log_start_date) + schedule_start_datetime.strftime(' %I:%M')
 
-        if schedule_end_datetime.strftime('%p') == 'AM':
-            log_end_date = '오전'
-        elif schedule_end_datetime.strftime('%p') == 'PM':
-            log_end_date = '오후'
+            if schedule_end_datetime.strftime('%p') == 'AM':
+                log_end_date = '오전'
+            elif schedule_end_datetime.strftime('%p') == 'PM':
+                log_end_date = '오후'
 
-        log_end_date = str(log_end_date) + schedule_end_datetime.strftime(' %I:%M')
-        if en_dis_type == '1':
-            log_contents = '<span>'+user_name + ' 강사님께서 ' + member_name \
-                           + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
-                           + log_start_date\
-                           + ' - '+log_end_date
-        else:
-            log_contents = '<span>'+user_name + ' 강사님께서 '\
-                           + ' OFF </span> 일정을 <span class="status">등록</span>했습니다.@'\
-                           + log_start_date\
-                           + ' - '+log_end_date
+            log_end_date = str(log_end_date) + schedule_end_datetime.strftime(' %I:%M')
+            if en_dis_type == '1':
+                log_contents = '<span>'+user_name + ' 강사님께서 ' + member_name \
+                               + ' 회원님의</span> 일정을 <span class="status">등록</span>했습니다.@'\
+                               + log_start_date\
+                               + ' - '+log_end_date
+            else:
+                log_contents = '<span>'+user_name + ' 강사님께서 '\
+                               + ' OFF </span> 일정을 <span class="status">등록</span>했습니다.@'\
+                               + log_start_date\
+                               + ' - '+log_end_date
 
-        log_data = LogTb(external_id=user_id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
-        log_data.save()
+            log_data = LogTb(external_id=user_id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
+                             use=1)
+            log_data.save()
     else:
         return error
 
@@ -554,10 +566,8 @@ def add_repeat_schedule_logic(request):
     repeat_week_type_data = []
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
+    repeat_schedule_info = None
     week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
-    check_date = None
-
-    today = datetime.date.today()
 
     if repeat_type == '':
         error = '반복 빈도를 선택해주세요.'
@@ -573,7 +583,6 @@ def add_repeat_schedule_logic(request):
         error = '반복일정 시작 날짜를 선택해 주세요.'
     else:
         repeat_schedule_start_date_info = datetime.datetime.strptime(repeat_schedule_start_date, '%Y-%m-%d')
-        check_date = repeat_schedule_start_date_info
         if repeat_schedule_end_date == '':
             repeat_schedule_end_date_info = repeat_schedule_start_date_info + datetime.timedelta(days=365)
         else:
@@ -599,6 +608,17 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id)
+
+    if error is None:
+        #반복 일정 데이터 등록
+        repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
+                                                repeat_type_cd=repeat_type,
+                                                week_info =repeat_week_type,
+                                                start_dt=repeat_schedule_start_date_info, end_dt=repeat_schedule_end_date,
+                                                state_cd='NP', en_dis_type=en_dis_type,
+                                                reg_dt=timezone.now(), mod_dt=timezone.now())
+
+        repeat_schedule_info.save()
 
     if error is None:
         #날짜 값 셋팅
@@ -640,6 +660,18 @@ def add_repeat_schedule_logic(request):
                     if error is None:
                         schedule_start_datetime_data.append(schedule_start_datetime)
                         schedule_end_datetime_data.append(schedule_end_datetime)
+                        error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
+                                                        schedule_end_datetime, request.user.id, request.user.first_name,
+                                                        lecture_id, en_dis_type, member_name,
+                                                        repeat_schedule_info.repeat_schedule_id, 0)
+
+                        #한번 더 확인 필요
+                        if error is not None:
+                            if error_date is None:
+                                error_date = error
+                            else:
+                                error_date = error_date + '\n' + error
+                        error = None
                     else:
                         error = None
 
@@ -649,108 +681,41 @@ def add_repeat_schedule_logic(request):
                         check_date = check_date + datetime.timedelta(days=7)
 
     if error is None:
-        '''
+        #error = error_date
+        if error_date is not None:
+            messages.info(request, error_date)
+            #request.session['error_date'] = error_date
+            request.session['repeat_schedule_id'] = repeat_schedule_info.repeat_schedule_id
+            return redirect(next_page)
+        return redirect(next_page)
+    else:
+        messages.info(request, error)
+        return redirect(next_page)
 
-        try:
 
-            #repeat_schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-            class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True,
-                                         null=True)  # Field name made lowercase.
-            lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True,
-                                           null=True)  # Field name made lowercase.
-            repeat_type_cd = models.CharField(db_column='REPEAT_TYPE_CD', max_length=10, blank=True,
-                                              null=True)  # Field name made lowercase.
-            week_info = models.CharField(db_column='WEEK_INFO', max_length=10, blank=True,
-                                         null=True)  # Field name made lowercase.
-            start_dt = models.DateField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
-            end_dt = models.DateField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
-            state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True,
-                                        null=True)  # Field name made lowercase.
-            en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True,
-                                           null=True)  # Field name made lowercase.
-            reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
-            mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
+@csrf_exempt
+def add_repeat_schedule_confirm(request):
 
-            with transaction.atomic():
-                delete_schedule = RepeatScheduleTb(class_tb_id=class_info.id,
-                                                   repeat_type_cd=repeat_type,
-                                                   start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
-                                                   state_cd=schedule_info.state_cd,
-                                                   en_dis_type=schedule_info.en_dis_type,
-                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+    repeat_schedule_id = request.POST.get('repeat_schedule_id')
+    repeat_confirm = request.POST.get('repeat_confirm')
 
-                if en_dis_type == '1':
-                    lecture_info.lecture_avail_count += 1
-                    # 진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
-                    if schedule_info.state_cd == 'PE':
-                        lecture_info.lecture_rem_count += 1
+    next_page = request.POST.get('next_page')
 
-                    lecture_info.mod_dt = timezone.now()
-                    lecture_info.save()
+    error = None
 
-                delete_schedule.save()
-                schedule_info.delete()
+    if repeat_schedule_id =='':
+        error = '확인할 반복일정을 선택해주세요.'
+    if repeat_confirm =='':
+        error = '확인할 반복일정에 대한 정보를 확인해주세요.'
 
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
+   # if repeat_confirm == 1:
+        #error = '반복일정 등록이 완료됐습니다.'
+    if error is None:
+        if repeat_confirm == 0:
+            repeat_schedule_data = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
+            repeat_schedule_data.delete()
 
     if error is None:
-        week_info = ['일', '월', '화', '수', '목', '금', '토']
-
-        log_start_date = start_date.strftime('%Y') + '년 ' \
-                         + start_date.strftime('%m') + '월 ' \
-                         + start_date.strftime('%d') + '일 ' \
-                         + week_info[int(start_date.strftime('%w'))] + '요일 '
-        if start_date.strftime('%p') == 'AM':
-            log_start_date = str(log_start_date) + '오전'
-        elif start_date.strftime('%p') == 'PM':
-            log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
-
-        if end_date.strftime('%p') == 'AM':
-            log_end_date = '오전'
-        elif end_date.strftime('%p') == 'PM':
-            log_end_date = '오후'
-
-        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        if en_dis_type == '1':
-            log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' + member_name \
-                           + ' 회원님의</span> 일정을 <span class="status">삭제</span>했습니다.@' \
-                           + log_start_date \
-                           + ' - ' + log_end_date
-        else:
-            log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
-                           + ' OFF </span> 일정을 <span class="status">삭제</span>했습니다.@' \
-                           + log_start_date \
-                           + ' - ' + log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
-        log_data.save()
-
-    #schedule add logic add
-    #요일 받아서 기간 안에 +7일씩 혹은 +14일씩 혹은 +2일씩 +1일씩 돌면서 검사
-    #문제가 있는 날짜 list 에 추가
-    #문제가 있는 날짜 return
-    #문제가 있는지 확인하는 form input 추가
-    #문제가 있는지 확인된 값이 1로 들어오면 그대로 돌면서 추가
-    #겹치는 일정이 있으면 추가 하지 않고 다음일정으로 등록
-
-    #반복일정 테이블에 스케쥴 id값 저장?
-    #-> 수정 삭제시에 해당 id만 제거 하거나 수정하면 될듯
-
-    #반복일정 삭제시는 제거하면 되니 문제 없음  - 오늘날짜 이후 일정만 삭제
-
-    #반복일정 수정시에는 수정하는 날짜 등록 가능한지 확인
-    #확인 완료시 일정삭제후 등록 하거나 일정 등록후 삭제
-'''
-        if error_date is None:
-            messages.info(request, '정상')
-        else:
-            messages.info(request, error)
         return redirect(next_page)
     else:
         messages.info(request, error)
@@ -873,6 +838,7 @@ class LogInTrainerView(TemplateView):
     template_name = 'login_trainer.html'
 
     def get_context_data(self, **kwargs):
+        logout(self.request)
         context = super(LogInTrainerView, self).get_context_data(**kwargs)
 
         return context
@@ -1047,6 +1013,10 @@ def login_trainer(request):
     password = request.POST.get('password')
     next_page = request.POST.get('next_page')
     error = None
+    if next_page == '':
+        next_page = '/trainer/'
+    if next_page is None:
+        next_page = '/trainer/'
 
     try:
         User.objects.get(username=username)

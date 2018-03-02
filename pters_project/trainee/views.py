@@ -252,30 +252,30 @@ def pt_delete_logic(request):
 
     error = None
     lecture_info = None
-    schedule_datum = None
+    schedule_info = None
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
 
     if error is None:
         try:
-            schedule_datum = ScheduleTb.objects.get(schedule_id=schedule_id)
+            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '스케쥴 정보가 정보가 존재하지 않습니다.'
 
     if error is None:
-        start_date = schedule_datum.start_dt
-        end_date = schedule_datum.end_dt
+        start_date = schedule_info.start_dt
+        end_date = schedule_info.end_dt
         if start_date < timezone.now():
             error = '이미 지난 일정입니다.'
 
     if error is None:
-        if schedule_datum.state_cd == 'PE':
+        if schedule_info.state_cd == 'PE':
             error = '이미 종료된 일정입니다.'
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=schedule_datum.lecture_tb_id)
+            lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id)
         except ObjectDoesNotExist:
             error = '회원 PT 정보가 존재하지 않습니다.'
 
@@ -286,15 +286,16 @@ def pt_delete_logic(request):
     if error is None:
         with transaction.atomic():
 
-            delete_schedule = DeleteScheduleTb(schedule_id=schedule_datum.schedule_id,
-                                               class_tb_id=schedule_datum.class_tb_id,
-                                               lecture_tb_id=schedule_datum.lecture_tb_id,
-                                               start_dt=schedule_datum.start_dt, end_dt=schedule_datum.end_dt,
-                                               state_cd=schedule_datum.state_cd, en_dis_type=schedule_datum.en_dis_type,
-                                               reg_dt=schedule_datum.reg_dt, mod_dt=timezone.now(), use=0)
+            delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
+                                               class_tb_id=schedule_info.class_tb_id,
+                                               lecture_tb_id=schedule_info.lecture_tb_id,
+                                               delete_repeat_schedule_tb_id=schedule_info.delete_repeat_schedule_tb_id,
+                                               start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                               state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
+                                               reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
 
             delete_schedule.save()
-            schedule_datum.delete()
+            schedule_info.delete()
 
             lecture_info.lecture_avail_count += 1
             lecture_info.mod_dt = timezone.now()
