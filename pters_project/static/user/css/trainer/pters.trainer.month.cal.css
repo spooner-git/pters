@@ -115,6 +115,29 @@ img,a,div,span,p{
 	z-index: 10;
 }
 
+#leftArrowButtonImg{
+	width: 7px;
+}
+
+#rightArrowButtonImg{
+	-webkit-transform:rotate(180deg);
+	transform: rotate(180deg);
+	width: 7px;
+}
+
+.arrowButton span{
+	font-weight: 600;
+}
+
+.arrowButton a{
+	position: absolute;
+	top: 0%;
+	font-size: 35px;
+	font-weight: 600;
+	color: #ffffff;
+	text-decoration: none;
+}
+
 .arrowButtonPC{
 	display: none;
 }
@@ -129,9 +152,11 @@ img,a,div,span,p{
 }
 
 #ymdText img{
+	/*
 	width: 100%;
 	position: relative;
 	z-index: -1;
+	*/
 }
 
 #hidetoggle{
@@ -176,19 +201,6 @@ img,a,div,span,p{
 }
 
 
-
-.arrowButton span{
-	font-weight: 600;
-}
-
-.arrowButton a{
-	position: absolute;
-	top: 0%;
-	font-size: 35px;
-	font-weight: 600;
-	color: #ffffff;
-	text-decoration: none;
-}
 
 .setunVisible{
 	visibility: hidden;
