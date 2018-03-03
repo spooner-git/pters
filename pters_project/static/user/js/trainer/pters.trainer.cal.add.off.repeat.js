@@ -65,7 +65,6 @@ $(document).ready(function(){
       }); //반복 빈도 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
 
-      var selectedDayGroup = []
       $('.dateButton').click(function(){
           var selectedDay = $(this).attr('data-date')
           if(!$(this).hasClass('dateButton_selected')){
