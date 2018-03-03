@@ -104,7 +104,7 @@ $(document).ready(function(){
         $('.dateButton').removeClass('dateButton_selected')
         $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
         $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
-        
+
         $('._NORMAL_ADD').css('display','block')
         $('._REPEAT_ADD').css('display','none')
         $('#timeGraph').css('display','none')
@@ -462,8 +462,9 @@ $(document).ready(function(){
               },
 
               success:function(data){
+              	console.log(data)
               	var jsondata = JSON.parse(data);
-                console.log(data)
+                //console.log(data)
                 classTimeArray = [];
                 offTimeArray = [];
                 classTimeArray_member_name = [];
@@ -498,6 +499,8 @@ $(document).ready(function(){
                 classTime();
                 offTime();
                	addPtMemberListSet();
+
+               	console.log(messageArray)
 
                 /*팝업의 timegraph 업데이트*/
                 classDateData = []
