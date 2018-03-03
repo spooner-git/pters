@@ -17,23 +17,36 @@ $(document).ready(function(){
        var select_all_check = false;
        var offset_for_canvas;
 
-      $("#datepicker").datepicker({
+      $("#datepicker, #datepicker_repeat_start, #datepicker_repeat_end").datepicker({
             minDate : 0,
               onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
                 if( curDate != instance.lastVal ){
-                  $("#dateSelector p").addClass("dropdown_selected");
+                  $(this).parent('p').addClass("dropdown_selected");
                   if(addTypeSelect == "ptadd"){
                       $("#id_training_date").val($("#datepicker").val()).submit();
+                      if($('#timeGraph').css('display')=='none'){
+                        $('#timeGraph').show(110,"swing");
+                      }
+                      $('.tdgraph').removeClass('graphindicator')
+                      timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
+                      timeGraphSet("off","grey","AddClass")
+                      startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
                   }else if(addTypeSelect =="offadd"){
                       $("#id_training_date_off").val($("#datepicker").val()).submit();
+                      if($('#timeGraph').css('display')=='none'){
+                        $('#timeGraph').show(110,"swing");
+                      }
+                      $('.tdgraph').removeClass('graphindicator')
+                      timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
+                      timeGraphSet("off","grey","AddClass")
+                      startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
+                  }else if(addTypeSelect == "repeatptadd"){
+                      $("#id_repeat_start_date").val($("#datepicker_repeat_start").val());  
+                      $("#id_repeat_end_date").val($("#datepicker_repeat_end").val());
+                  }else if(addTypeSelect == "repeatoffadd"){
+                      $("#id_repeat_start_date_off").val($("#datepicker_repeat_start").val());
+                      $("#id_repeat_end_date_off").val($("#datepicker_repeat_end").val());
                   }
-                  if($('#timeGraph').css('display')=='none'){
-                    $('#timeGraph').show(110,"swing");
-                  }
-                  $('.tdgraph').removeClass('graphindicator')
-                  timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
-                  timeGraphSet("off","grey","AddClass")
-                  startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
                   check_dropdown_selected();
                 }
               }
@@ -256,7 +269,6 @@ $(document).ready(function(){
           }else if(addTypeSelect == "repeatoffadd"){
             $("#id_repeat_dur_off").val($(this).attr('data-dur'));
           }
-          console.log(addTypeSelect)
           check_dropdown_selected();
       }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
@@ -724,6 +736,11 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes_off").empty();
         $("#durations_off").empty();
+
+        $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
+        $('.dateButton').removeClass('dateButton_selected')
+        $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
+        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
 
         $('._NORMAL_ADD').css('display','block')
         $('._REPEAT_ADD').css('display','none')

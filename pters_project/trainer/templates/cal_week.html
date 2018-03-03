@@ -428,7 +428,11 @@
     <div id="repeatSetting" class="ptaddbox _REPEAT_ADD">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/offadd/icon-repeat.png" %} style="width:14px;"> 반복 빈도</div>
       <div id="repeattypeSelected" class="dropdown">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+          <span class="KRtext" style="color:#cccccc;">선택</span>
+          <span class="JPtext" style="color:#cccccc;">選択</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span>
+        </button>
         <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
           <!-- 회원명 DB연동 필요-->
           <li><a data-repeat="WW">매주</a></li>
@@ -451,12 +455,12 @@
         </div>
     </div>
 
-    <div id="dateSelector" class="ptaddbox _REPEAT_ADD">
+    <div id="dateSelector_repeat_start" class="ptaddbox _REPEAT_ADD">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 반복 시작</div>
       <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_start" placeholder="-" readonly></p>  
     </div>
 
-    <div id="dateSelector2" class="ptaddbox _REPEAT_ADD">
+    <div id="dateSelector_repeat_end" class="ptaddbox _REPEAT_ADD">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 반복 종료</div>
       <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_end" placeholder="-" readonly></p>  
     </div>
@@ -464,7 +468,11 @@
     <div id="repeatStartTime" class="ptaddbox _REPEAT_ADD">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
       <div id="repeatstarttimesSelected" class="dropdown">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+          <span class="KRtext" style="color:#cccccc;">선택</span>
+          <span class="JPtext" style="color:#cccccc;">選択</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span>
+        </button>
         <ul id="repeatstarttimes" class="dropdown-menu pters_dropdown_custom">
           <!-- 회원명 DB연동 필요-->
           <li><a data-trainingtime="00:00:00.000000">오전 0시</a></li>
@@ -498,7 +506,11 @@
     <div id="repeatDurTime" class="ptaddbox _REPEAT_ADD">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
       <div id="repeatdurationsSelected" class="dropdown">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+          <span class="KRtext" style="color:#cccccc;">선택</span>
+          <span class="JPtext" style="color:#cccccc;">選択</span>
+          <span class="ENtext" style="color:#cccccc;">Select</span>
+        </button>
         <ul id="repeatdurations" class="dropdown-menu pters_dropdown_custom">
           <!-- 회원명 DB연동 필요-->
           <li><a data-dur="1">1시간</a></li>
