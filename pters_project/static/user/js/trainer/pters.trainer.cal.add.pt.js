@@ -313,11 +313,14 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(data){
+                      console.log(data)
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
-                        ajax_received_json_data()
+                        ajax_received_json_data(jsondata)
                         if(messageArray.length>0){
-                          alert(messageArray)
+                          var date = messageArray[0].replace(/\//gi,", ")
+                          alert('선택한 일정 중'+messageArray[0].split('/').length + '건의 일정이 겹칩니다.          ' + messageArray)
+                          completeSend();  
                         }else{
                           $('#calendar').show().css('height','100%')
                           closeAddPopup();
@@ -353,7 +356,6 @@ $(document).ready(function(){
               },
 
               success:function(data){
-                console.log(data)
                 var jsondata = JSON.parse(data);
                 ajax_received_json_data(jsondata)
               },
