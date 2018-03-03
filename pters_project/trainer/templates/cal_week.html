@@ -227,6 +227,30 @@
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
         <input type="hidden" name="add_memo" id="id_memo_mini_off">
     </form>
+
+    <form action="{% url 'trainer:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
+        <input type="hidden" name="lecture_id"        id="id_repeat_lecture_id">
+        <input type="hidden" name="member_name"       id="id_repeat_member_name">
+        <input type="hidden" name="repeat_freq"       id="id_repeat_freq">
+        <input type="hidden" name="repeat_start_date" id="id_repeat_start_date">
+        <input type="hidden" name="repeat_end_date"   id="id_repeat_end_date">
+        <input type="hidden" name="repeat_day"        id="id_repeat_day">
+        <input type="hidden" name="repeat_start_time" id="id_repeat_start_time">
+        <input type="hidden" name="repeat_dur"        id="id_repeat_dur">
+        <input type="hidden" name="en_dis_type" value="1">
+        <input type="hidden" name="next_page" value="{% url 'trainer:cal_day_ajax' %}">
+    </form>
+
+    <form action="{% url 'trainer:add_repeat_schedule' %}"  id="add-off-repeat-schedule-form" method="post">
+        <input type="hidden" name="repeat_freq"         id="id_repeat_freq_off">
+        <input type="hidden" name="repeat_start_date"   id="id_repeat_start_date_off">
+        <input type="hidden" name="repeat_end_date"     id="id_repeat_end_date_off">
+        <input type="hidden" name="repeat_day"          id="id_repeat_day_off">
+        <input type="hidden" name="repeat_start_time"   id="id_repeat_start_time_off">
+        <input type="hidden" name="repeat_dur"          id="id_repeat_dur_off">
+        <input type="hidden" name="en_dis_type" value="0">
+        <input type="hidden" name="next_page" value="{% url 'trainer:cal_day_ajax' %}">
+    </form>
     
     <div class="ptaddbox" id="pcaddpopup">
       <span class="KRtext">PT 일정 추가</span>
@@ -437,11 +461,11 @@
       <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_end" placeholder="-" readonly></p>  
     </div>
   
-    <div id="classStartTime" class="ptaddbox _REPEAT_ADD">
+    <div id="repeatStartTime" class="ptaddbox _REPEAT_ADD">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
-      <div id="starttimesSelected" class="dropdown">
+      <div id="repeatstarttimesSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-        <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
+        <ul id="repeatstarttimes" class="dropdown-menu pters_dropdown_custom">
           <!-- 회원명 DB연동 필요-->
           <li><a data-trainingtime="00:00:00.000000">오전 0시</a></li>
           <li><a data-trainingtime="01:00:00.000000">오전 1시</a></li>
@@ -471,11 +495,11 @@
       </div>
     </div>
 
-    <div id="classDuration" class="ptaddbox _REPEAT_ADD">
+    <div id="repeatDurTime" class="ptaddbox _REPEAT_ADD">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
-      <div id="durationsSelected" class="dropdown">
+      <div id="repeatdurationsSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-        <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+        <ul id="repeatdurations" class="dropdown-menu pters_dropdown_custom">
           <!-- 회원명 DB연동 필요-->
           <li><a data-dur="1">1시간</a></li>
           <li><a data-dur="2">2시간</a></li>

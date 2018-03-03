@@ -100,6 +100,8 @@ $(document).ready(function(){
         $("#durations").empty();
         $('.tdgraph').removeClass('graphindicator')
 
+        
+
         $('._NORMAL_ADD').css('display','block')
         $('._REPEAT_ADD').css('display','none')
         $('#timeGraph').css('display','none')

@@ -4,9 +4,13 @@ $(document).ready(function(){
           $('._NORMAL_ADD').hide('slow')
           $('._REPEAT_ADD').show('slow')
           if(addTypeSelect == "ptadd"){
-            $('#uptext2').text('PT 반복 일정 등록')  
+            $('#uptext2').text('PT 반복 일정 등록')
+            addTypeSelect = "repeatptadd"
+            $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
+            $("#id_repeat_member_name").val($('id_member_name').text());
           }else if(addTypeSelect == "offadd"){
             $('#uptext2').text('OFF 반복 일정 등록')
+            addTypeSelect = "repeatoffadd"
           }
       })
 
@@ -49,22 +53,16 @@ $(document).ready(function(){
       })
 
       $("#repeats li a").click(function(){
+        if(addTypeSelect == "repeatptadd"){
           $("#repeattypeSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-repeat'));
           $("#id_repeat_freq").val($(this).attr('data-repeat'));
+        }else if(addTypeSelect == "repeatoffadd"){
+          $("#repeattypeSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-repeat'));
+          $("#id_repeat_freq_off").val($(this).attr('data-repeat'));
+        }
+          
           check_dropdown_selected();
       }); //반복 빈도 드랍다운 박스 - 선택시 선택한 아이템이 표시
-
-      $("#starttimes li a").click(function(){
-          $("#starttimesSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).text());
-          $("#id_repeat_start_time").val($(this).attr('data-trainingtime'));
-          check_dropdown_selected();
-      }); //시작시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
-
-      $("#durations li a").click(function(){
-          $("#durationsSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
-          $("#id_repeat_dur").val($(this).attr('data-dur'));
-          check_dropdown_selected();
-  		}); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
 
       var selectedDayGroup = []
@@ -81,19 +79,32 @@ $(document).ready(function(){
             }
           }
           console.log(selectedDayGroup.join("/"))
-          $('#id_repeat_day').val(selectedDayGroup.join("/"))
+          if(addTypeSelect == "repeatptadd"){
+            $('#id_repeat_day').val(selectedDayGroup.join("/"))
+          }else if(addTypeSelect == "repeatoffadd"){
+            $('#id_repeat_day_off').val(selectedDayGroup.join("/"))
+          }
+          
       })
 
 
       $("#datepicker_repeat_start").change(function(){
           if($("#datepicker_repeat_start").val() != '') {
               $("#dateSelector p").addClass("dropdown_selected");
-              $("#id_repeat_start_date").val($("#datepicker_repeat_start").val());
+              if(addTypeSelect == "repeatptadd"){
+                $("#id_repeat_start_date").val($("#datepicker_repeat_start").val());  
+              }else if(addTypeSelect == "repeatoffadd"){
+                $("#id_repeat_start_date_off").val($("#datepicker_repeat_start").val());
+              }
               check_dropdown_selected();
           }
           else{
               $("#dateSelector p").removeClass("dropdown_selected");
-              $("#id_repeat_start_date").val('');
+              if(addTypeSelect == "repeatptadd"){
+                $("#id_repeat_start_date").val('');
+              }else if(addTypeSelect == "repeatoffadd"){
+                $("#id_repeat_start_date_off").val('');
+              }
               check_dropdown_selected();
           }
       })
@@ -101,30 +112,24 @@ $(document).ready(function(){
       $("#datepicker_repeat_end").change(function(){
           if($("#datepicker_repeat_end").val() != '') {
               $("#dateSelector2 p").addClass("dropdown_selected");
-              $("#id_repeat_end_date").val($("#datepicker_repeat_end").val());
+              if(addTypeSelect == "repeatptadd"){
+                $("#id_repeat_end_date").val($("#datepicker_repeat_end").val());
+              }else if(addTypeSelect == "repeatoffadd"){
+                $("#id_repeat_end_date_off").val($("#datepicker_repeat_end").val());
+              }
               check_dropdown_selected();
           }
           else{
               $("#dateSelector2 p").removeClass("dropdown_selected");
-              $("#id_repeat_end_date").val('');
+              if(addTypeSelect == "repeatptadd"){
+                $("#id_repeat_end_date").val('');
+              }else if(addTypeSelect == "repeatoffadd"){
+                $("#id_repeat_end_date_off").val('');
+              }
+              
               check_dropdown_selected();
           }
       })
-
-       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->핑크색)
-       	 var repeatSelect = $("#repeattypeSelected button");
-       	 var dateSelect = $("#dateSelector p");
-         var dateSelect2 = $("#dateSelector2 p");
-       	 var durSelect = $("#durationsSelected button");
-       	 var startSelect = $("#starttimesSelected button")
-       		 if((repeatSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (dateSelect2).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
-        	    $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-            	$('#submitBtn').addClass('submitBtnActivated');
-              select_all_check=true;
-        	}else{
-           	    select_all_check=false;
-       		}
-    	 }
 
     $("#submitBtn").click(function(){
          if(select_all_check==true){
@@ -134,6 +139,49 @@ $(document).ready(function(){
             //입력값 확인 메시지 출력 가능
          }
      })
+
+
+    function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
+        var memberSelect = $("#membersSelected button");
+        var durSelect_mini = $('#classDuration_mini #durationsSelected button')
+
+        var repeatSelect = $("#repeattypeSelected button");
+        var startSelect_repeat = $('#repeatstarttimesSelected button')
+        var durSelect_repeat = $('#repeatdurationsSelected button')
+        var dateSelect_repeat_start = $("#datepicker_repeat_start").parent('p');
+        var dateSelect_repeat_end = $("#datepicker_repeat_end").parent('p');
+
+       if(addTypeSelect == "repeatptadd"){
+            if((memberSelect).hasClass("dropdown_selected")==true && (repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                $('.submitBtn').addClass('submitBtnActivated')
+                select_all_check=true;
+            }else{
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                $('#submitBtn_mini').css('background','#282828');
+                $('.submitBtn').removeClass('submitBtnActivated')
+                select_all_check=false;
+            }
+        }else if(addTypeSelect == "repeatoffadd"){
+            if((repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                $('.submitBtn').addClass('submitBtnActivated')
+                select_all_check=true;
+            }else{
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                $('#submitBtn_mini').css('background','#282828');
+                $('.submitBtn').removeClass('submitBtnActivated')
+                select_all_check=false;
+            }
+        }
+      }
+
+
+
+
+
+
+
       //작은달력 설정
       $.datepicker.setDefaults({
         dateFormat: 'yy-mm-dd',
