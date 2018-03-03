@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
+from django.db import InternalError
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -259,7 +260,6 @@ def add_schedule_logic(request):
     if error is None:
         return redirect(next_page)
     else:
-        print(error)
         messages.info(request, error)
         return redirect(next_page)
 
@@ -308,29 +308,50 @@ def delete_schedule_logic(request):
                 delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
                                                    class_tb_id=schedule_info.class_tb_id,
                                                    lecture_tb_id=schedule_info.lecture_tb_id,
-                                                   delete_repeat_schedule_tb_id=schedule_info.repeat_schedule_tb_id,
+                                                   delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
                                                    state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
 
+                delete_schedule.save()
+                schedule_info.delete()
+
                 if en_dis_type == '1':
-                    lecture_info.lecture_avail_count += 1
+
+                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id)
+                    if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                        lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
+                                                                  - len(lecture_schedule_data)
+                    else:
+                        error = '예약 가능한 횟수를 확인해주세요.'
+                        raise ValidationError()
+
                     #진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
                     if schedule_info.state_cd == 'PE':
-                        lecture_info.lecture_rem_count += 1
+                        lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id,
+                                                                          state_cd='PE')
+                        if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count \
+                                                               - len(lecture_schedule_data)
+
+                        else:
+                            error = '예약 가능한 횟수를 확인해주세요.'
+                            raise ValidationError()
 
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.save()
 
-                delete_schedule.save()
-                schedule_info.delete()
-
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
+            error = '이미 삭제된 일정입니다'
+        except InternalError as e:
+            error = '이미 삭제된 일정입니다'
+        except ValidationError as e:
+            error = '예약 가능한 횟수를 확인해주세요.'
+    print(error)
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -408,17 +429,33 @@ def finish_schedule_logic(request):
             with transaction.atomic():
                 schedule_info.mod_dt = timezone.now()
                 schedule_info.state_cd = 'PE'
-                lecture_info.lecture_rem_count -= 1
-                lecture_info.mod_dt = timezone.now()
                 schedule_info.save()
+                # 남은 횟수 차감
+                if schedule_info.state_cd == 'PE':
+                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id,
+                                                                      state_cd='PE')
+                    if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count \
+                                                         - len(lecture_schedule_data)
+
+                    else:
+                        error = '예약 가능한 횟수를 확인해주세요.'
+                        raise ValidationError()
+
+                lecture_info.mod_dt = timezone.now()
                 lecture_info.save()
 
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
+        except ValidationError as e:
+            error = '예약 가능한 횟수를 확인해주세요.'
+        except InternalError as e:
+            error = '예약 가능 횟수를 확인해주세요.'
+    print(error)
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -485,25 +522,45 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
                 break
 
     if error is None:
-        with transaction.atomic():
-            if repeat_id is None:
-                add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
-                                               start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                               state_cd='NP', en_dis_type=en_dis_type,
-                                               reg_dt=timezone.now(), mod_dt=timezone.now())
-            else:
-                add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
-                                               repeat_schedule_tb_id = repeat_id,
-                                               start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                               state_cd='NP', en_dis_type=en_dis_type,
-                                               reg_dt=timezone.now(), mod_dt=timezone.now())
+        try:
+            with transaction.atomic():
 
-            add_schedule_info.save()
-            if en_dis_type == '1':
-                member_lecture_info.lecture_avail_count -= 1
-                member_lecture_info.mod_dt = timezone.now()
-                member_lecture_info.save()
+                if repeat_id is None:
+                    add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
+                                                   start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
+                                                   state_cd='NP', en_dis_type=en_dis_type,
+                                                   reg_dt=timezone.now(), mod_dt=timezone.now())
+                else:
+                    add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
+                                                   repeat_schedule_tb_id=repeat_id,
+                                                   start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
+                                                   state_cd='NP', en_dis_type=en_dis_type,
+                                                   reg_dt=timezone.now(), mod_dt=timezone.now())
+                add_schedule_info.save()
 
+                if en_dis_type == '1':
+                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id))
+                    if member_lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                        member_lecture_info.lecture_avail_count = member_lecture_info.lecture_reg_count \
+                                                                  - len(lecture_schedule_data)
+                        member_lecture_info.mod_dt = timezone.now()
+                        member_lecture_info.save()
+                    else:
+                        error = '예약 가능한 횟수를 확인해주세요.'
+                        #add_schedule_info.delete()
+                        raise ValidationError()
+
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '날짜가 중복됐습니다.'
+        except ValidationError as e:
+            error = '예약 가능한 횟수를 확인해주세요.'
+        except InternalError as e:
+            error = '예약 가능 횟수를 확인해주세요.'
+    print(error)
     if error is None:
         if log == 1:
             week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -655,11 +712,11 @@ def add_repeat_schedule_logic(request):
                             if error_date is None:
                                 error_date = error
                             else:
-                                error_date = error_date + '\n' + error
+                                error_date = error_date + '/' + error
                             break
                     if error is None:
-                        schedule_start_datetime_data.append(schedule_start_datetime)
-                        schedule_end_datetime_data.append(schedule_end_datetime)
+                        #schedule_start_datetime_data.append(schedule_start_datetime)
+                        #schedule_end_datetime_data.append(schedule_end_datetime)
                         error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
                                                         schedule_end_datetime, request.user.id, request.user.first_name,
                                                         lecture_id, en_dis_type, member_name,
@@ -963,8 +1020,8 @@ def member_registration(request):
         elif len(phone) == 10:
             password = phone[6:]
 
-        with transaction.atomic():
-            try:
+        try:
+            with transaction.atomic():
                 user = User.objects.create_user(username=phone, email=email, first_name=name, password=password)
                 group = Group.objects.get(name='trainee')
                 user.groups.add(group)
@@ -983,14 +1040,16 @@ def member_registration(request):
                                     reg_dt=now, use=1)
                 lecture.save()
 
-            except ValueError as e:
-                error = '이미 가입된 회원입니다.'
-            except IntegrityError as e:
-                error = '등록 값에 문제가 있습니다.'
-            except TypeError as e:
-                error = '등록 값의 형태가 문제 있습니다.'
-            except ValidationError as e:
-                error = '등록 값의 형태가 문제 있습니다'
+        except ValueError as e:
+            error = '이미 가입된 회원입니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '이미 가입된 회원입니다.'
 
     if error is None:
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 '\

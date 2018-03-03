@@ -2,7 +2,8 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db import InternalError
 from django.db import transaction
 from django.db import IntegrityError
 from django.shortcuts import redirect
@@ -284,23 +285,55 @@ def pt_delete_logic(request):
             error = '회원 정보가 일치하지 않습니다.'
 
     if error is None:
-        with transaction.atomic():
+        try:
+            with transaction.atomic():
 
-            delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
-                                               class_tb_id=schedule_info.class_tb_id,
-                                               lecture_tb_id=schedule_info.lecture_tb_id,
-                                               delete_repeat_schedule_tb_id=schedule_info.delete_repeat_schedule_tb_id,
-                                               start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
-                                               state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
-                                               reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+                delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
+                                                   class_tb_id=schedule_info.class_tb_id,
+                                                   lecture_tb_id=schedule_info.lecture_tb_id,
+                                                   delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
+                                                   start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                                   state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
+                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
 
-            delete_schedule.save()
-            schedule_info.delete()
+                delete_schedule.save()
+                schedule_info.delete()
 
-            lecture_info.lecture_avail_count += 1
-            lecture_info.mod_dt = timezone.now()
-            lecture_info.save()
+                lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id)
+                if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                    lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
+                                                              - len(lecture_schedule_data)
+                else:
+                    error = '예약 가능한 횟수를 확인해주세요.'
+                    raise ValidationError()
 
+                #진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
+                if schedule_info.state_cd == 'PE':
+                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id,
+                                                                      state_cd='PE')
+                    if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count \
+                                                           - len(lecture_schedule_data)
+
+                    else:
+                        error = '예약 가능한 횟수를 확인해주세요.'
+                        raise ValidationError()
+
+                lecture_info.mod_dt = timezone.now()
+                lecture_info.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값의 형태에 문제가 있습니다.'
+        except IntegrityError:
+            error = '이미 삭제된 일정입니다.'
+        except InternalError:
+            error = '이미 삭제된 일정입니다.'
+        except ValidationError as e:
+            error = '예약 가능한 횟수를 확인해주세요.'
+
+    print('trainee'+str(error))
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -330,7 +363,7 @@ def pt_delete_logic(request):
         return redirect(next_page)
     else:
         messages.info(request, error)
-        next_page = 'trainer:cal_month'
+        next_page = 'trainee:cal_month'
         return redirect(next_page)
 
 
@@ -434,15 +467,36 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
                 break
 
     if error is None:
-        with transaction.atomic():
-            lecture_schedule_data = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
-                                               start_dt=start_date, end_dt=end_date,
-                                               state_cd='NP', en_dis_type='1',
-                                               reg_dt=timezone.now(), mod_dt=timezone.now())
-            lecture_schedule_data.save()
-            lecture_info.lecture_avail_count -= 1
-            lecture_info.mod_dt = timezone.now()
-            lecture_info.save()
+        try:
+            with transaction.atomic():
+                lecture_schedule_data = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
+                                                   start_dt=start_date, end_dt=end_date,
+                                                   state_cd='NP', en_dis_type='1',
+                                                   reg_dt=timezone.now(), mod_dt=timezone.now())
+                lecture_schedule_data.save()
+
+                schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+                if lecture_info.lecture_reg_count >= len(schedule_data):
+                    lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
+                                                              - len(schedule_data)
+                    lecture_info.mod_dt = timezone.now()
+                    lecture_info.save()
+                else:
+                    error = '예약 가능한 횟수를 확인해주세요.'
+                    # add_schedule_info.delete()
+                    raise ValidationError()
+
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '날짜가 중복됐습니다.'
+        except InternalError:
+            error = '예약 가능한 횟수를 확인해주세요.'
+        except ValidationError:
+            error = '예약 가능한 횟수를 확인해주세요.'
+    print('trainee'+str(error))
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
