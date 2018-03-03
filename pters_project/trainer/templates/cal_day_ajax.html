@@ -27,8 +27,6 @@
       [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}"{{ pt_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "messageArray" :
       [{% for message in messages %}"{{ message }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "dateMessageArray" :
-      [{% for error_date_info in request.session.error_date %}"{{ error_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "repeatArray" :
       ["{{ request.session.repeat_schedule_id }}"]
     }
