@@ -320,7 +320,6 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                //console.log(data)
                 classTimeArray = [];
                 offTimeArray = [];
                 
