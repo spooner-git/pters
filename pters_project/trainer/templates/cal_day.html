@@ -505,6 +505,7 @@
 
           var messageArray = [{% for message in messages %}'{{ message }}',{% endfor %}]
           var dateMessageArray = [{% for error_date_info in error_date %}'{{ error_date_info }}',{% endfor %}]
+          var repeatArray = [{{ request.session.repeat_schedule_id }}]
 
           var classTimeArray = [];
           var offTimeArray = [];
