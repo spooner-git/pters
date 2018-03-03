@@ -681,7 +681,6 @@ def add_repeat_schedule_logic(request):
             for idx, week_info_detail in enumerate(week_info):
                 if week_info_detail == week_type_info:
                     week_idx = idx
-                    print(idx)
                     break
             check_date = repeat_schedule_start_date_info
             week_idx -= int(check_date.strftime('%w'))
