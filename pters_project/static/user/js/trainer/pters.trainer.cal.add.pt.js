@@ -308,16 +308,25 @@ $(document).ready(function(){
                     dataType : 'html',
 
                     beforeSend:function(){
-                      beforeSend();
+                        beforeSend();
                     },
 
                     //통신성공시 처리
                     success:function(data){
-                      $('#calendar').show().css('height','100%')
-                      closeAddPopup();
-                      closeAddPopup_mini()
-                      completeSend();
-                      ajaxClassTime();
+                      console.log(data)
+                        //ajaxClassTime();
+                        var jsondata = JSON.parse(data);
+                        ajax_received_json_data(jsondata)
+                        if(messageArray.length>0){
+                          var date = messageArray[0].replace(/\//gi,", ")
+                          alert('선택한 일정 중'+messageArray[0].split('/').length + '건의 일정이 겹칩니다.          ' + messageArray)
+                          completeSend();  
+                        }else{
+                          $('#calendar').show().css('height','100%')
+                          closeAddPopup();
+                          closeAddPopup_mini()
+                          completeSend();  
+                        }
                     },
 
                     //보내기후 팝업창 닫기
@@ -326,7 +335,7 @@ $(document).ready(function(){
 
                     //통신 실패시 처리
                     error:function(){
-                      alert("error : 서버와 통신 실패")
+                        alert("error : 서버와 통신 실패")
                     },
                  })
 
@@ -348,68 +357,7 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                classTimeArray = [];
-                offTimeArray = [];
-                
-                //월간 달력
-                classDateArray = []
-                classStartArray = []
-                classNameArray = []
-                countResult = []
-                dateResult = []
-                //월간 달력
-
-                classTimeArray_member_name = [];
-                classArray_lecture_id = [];
-                scheduleIdArray = [];
-                offScheduleIdArray = [];
-                scheduleFinishArray = [];
-                memberLectureIdArray = [];
-                memberNameArray = [];
-                memberAvailCountArray = [];
-                messageArray = [];
-                dateMessageArray = [];
-                repeatArray = [];
-                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
-                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
-                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
-                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
-                classTimeArray_member_name = jsondata.classTimeArray_member_name
-                classArray_lecture_id = jsondata.classArray_lecture_id
-                scheduleIdArray = jsondata.scheduleIdArray
-                offScheduleIdArray = jsondata.offScheduleIdArray
-                scheduleFinishArray = jsondata.scheduleFinishArray;
-                memberLectureIdArray = jsondata.memberLectureIdArray;
-                memberNameArray = jsondata.memberNameArray;
-                memberAvailCountArray = jsondata.memberAvailCountArray;
-                messageArray = jsondata.messageArray;
-                dateMessageArray = jsondata.dateMessageArray;
-                repeatArray = jsondata.repeatArray;
-                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
-                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
-                $('.classTime,.offTime').parent().html('<div></div>')
-                classTime();
-                offTime();
-                addPtMemberListSet();
-
-                /*팝업의 timegraph 업데이트*/
-                classDateData = []
-                classTimeData = []
-                offDateData= []
-                offTimeData = []
-                offAddOkArray = [] //OFF 등록 시작 시간 리스트
-                durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
-                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
-                /*팝업의 timegraph 업데이트*/
-                
-                $('.blankSelected_addview').removeClass('blankSelected')
-
-                //월간 달력
-                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
-                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
-                DBdataProcessMonthTrainer();
-                classDatesTrainer();
+                ajax_received_json_data(jsondata)
               },
 
               complete:function(){
@@ -420,6 +368,72 @@ $(document).ready(function(){
                 console.log('server error')
               }
             })    
+      }
+
+      function ajax_received_json_data(json){
+          var jsondata = json
+          classTimeArray = [];
+          offTimeArray = [];
+          
+          //월간 달력
+          classDateArray = []
+          classStartArray = []
+          classNameArray = []
+          countResult = []
+          dateResult = []
+          //월간 달력
+
+          classTimeArray_member_name = [];
+          classArray_lecture_id = [];
+          scheduleIdArray = [];
+          offScheduleIdArray = [];
+          scheduleFinishArray = [];
+          memberLectureIdArray = [];
+          memberNameArray = [];
+          memberAvailCountArray = [];
+          messageArray = [];
+          dateMessageArray = [];
+          repeatArray = [];
+          var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+          var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+          var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+          var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+          classTimeArray_member_name = jsondata.classTimeArray_member_name
+          classArray_lecture_id = jsondata.classArray_lecture_id
+          scheduleIdArray = jsondata.scheduleIdArray
+          offScheduleIdArray = jsondata.offScheduleIdArray
+          scheduleFinishArray = jsondata.scheduleFinishArray;
+          memberLectureIdArray = jsondata.memberLectureIdArray;
+          memberNameArray = jsondata.memberNameArray;
+          memberAvailCountArray = jsondata.memberAvailCountArray;
+          messageArray = jsondata.messageArray;
+          dateMessageArray = jsondata.dateMessageArray;
+          repeatArray = jsondata.repeatArray;
+          DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
+          DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
+          $('.classTime,.offTime').parent().html('<div></div>')
+          classTime();
+          offTime();
+          addPtMemberListSet();
+
+          /*팝업의 timegraph 업데이트*/
+          classDateData = []
+          classTimeData = []
+          offDateData= []
+          offTimeData = []
+          offAddOkArray = [] //OFF 등록 시작 시간 리스트
+          durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+          DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
+          DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+          /*팝업의 timegraph 업데이트*/
+          
+          $('.blankSelected_addview').removeClass('blankSelected')
+
+          //월간 달력
+          DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
+          DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
+          DBdataProcessMonthTrainer();
+          classDatesTrainer();
       }
 
       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
@@ -1056,7 +1070,6 @@ $(document).ready(function(){
           }else{
             startSplitArray[5] = String(dura+24)
           }
-
 
           if(option=="class"){
             startSplitArray.push(classTimeArray_member_name[i]) 
