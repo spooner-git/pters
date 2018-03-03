@@ -18,7 +18,7 @@ class MemberTb(models.Model):
     phone = models.CharField(db_column='PHONE', max_length=20, blank=True, null=True)  # Field name made lowercase.
     age = models.IntegerField(db_column='AGE', blank=True, null=True)  # Field name made lowercase.
     sex = models.CharField(db_column='SEX', max_length=2, blank=True, null=True)  # Field name made lowercase.
-    birthday_dt = models.DateTimeField(db_column='BIRTHDAY_DT', blank=True, null=True)  # Field name made lowercase.
+    birthday_dt = models.DateField(db_column='BIRTHDAY_DT', blank=True, null=True)  # Field name made lowercase.
     address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, null=True)  # Field name made lowercase.
     job = models.CharField(db_column='JOB', max_length=20, blank=True, null=True)  # Field name made lowercase.
     contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, null=True)  # Field name made lowercase.
