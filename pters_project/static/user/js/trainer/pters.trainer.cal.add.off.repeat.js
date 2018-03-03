@@ -87,50 +87,6 @@ $(document).ready(function(){
           
       })
 
-
-      $("#datepicker_repeat_start").change(function(){
-          if($("#datepicker_repeat_start").val() != '') {
-              $("#dateSelector p").addClass("dropdown_selected");
-              if(addTypeSelect == "repeatptadd"){
-                $("#id_repeat_start_date").val($("#datepicker_repeat_start").val());  
-              }else if(addTypeSelect == "repeatoffadd"){
-                $("#id_repeat_start_date_off").val($("#datepicker_repeat_start").val());
-              }
-              check_dropdown_selected();
-          }
-          else{
-              $("#dateSelector p").removeClass("dropdown_selected");
-              if(addTypeSelect == "repeatptadd"){
-                $("#id_repeat_start_date").val('');
-              }else if(addTypeSelect == "repeatoffadd"){
-                $("#id_repeat_start_date_off").val('');
-              }
-              check_dropdown_selected();
-          }
-      })
-
-      $("#datepicker_repeat_end").change(function(){
-          if($("#datepicker_repeat_end").val() != '') {
-              $("#dateSelector2 p").addClass("dropdown_selected");
-              if(addTypeSelect == "repeatptadd"){
-                $("#id_repeat_end_date").val($("#datepicker_repeat_end").val());
-              }else if(addTypeSelect == "repeatoffadd"){
-                $("#id_repeat_end_date_off").val($("#datepicker_repeat_end").val());
-              }
-              check_dropdown_selected();
-          }
-          else{
-              $("#dateSelector2 p").removeClass("dropdown_selected");
-              if(addTypeSelect == "repeatptadd"){
-                $("#id_repeat_end_date").val('');
-              }else if(addTypeSelect == "repeatoffadd"){
-                $("#id_repeat_end_date_off").val('');
-              }
-              
-              check_dropdown_selected();
-          }
-      })
-
     $("#submitBtn").click(function(){
          if(select_all_check==true){
              document.getElementById('add-repeat-schedule-form').submit();
