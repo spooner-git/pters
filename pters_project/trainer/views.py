@@ -144,6 +144,12 @@ def get_trainer_schedule_data(context, trainer_id):
     pt_schedule_end_datetime = []
     pt_schedule_member_name = []
     pt_schedule_finish_check = []
+    off_repeat_schedule_data = []
+    off_repeat_schedule_type = []
+    off_repeat_schedule_week_info = []
+    off_repeat_schedule_start_date = []
+    off_repeat_schedule_end_date = []
+    #off_repeat_schedule_reg_dt = []
 
     today = datetime.date.today()
     fourteen_days_ago = today - datetime.timedelta(days=14)
@@ -154,6 +160,16 @@ def get_trainer_schedule_data(context, trainer_id):
         class_info = ClassTb.objects.get(member_id=trainer_id)
     except ObjectDoesNotExist:
         error = '강사 정보가 존재하지 않습니다'
+
+    if error is None:
+        # 강사 클래스의 반복일정 불러오기
+        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                   en_dis_type='0')
+        for off_repeat_schedule_info in off_repeat_schedule_data:
+            off_repeat_schedule_type.append(off_repeat_schedule_info.repeat_type_cd)
+            off_repeat_schedule_week_info.append(off_repeat_schedule_info.week_info)
+            off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_dt))
+            off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_dt))
 
     # 강좌에 해당하는 수강/회원 정보 가져오기, 예약가능 횟수 1개 이상인 회원
     if error is None:
@@ -213,6 +229,10 @@ def get_trainer_schedule_data(context, trainer_id):
     context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
     context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
+    context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
+    context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
+    context['off_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
+    context['off_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
 
     return context
 

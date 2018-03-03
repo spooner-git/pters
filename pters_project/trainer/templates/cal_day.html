@@ -507,6 +507,11 @@
           var dateMessageArray = [{% for error_date_info in error_date %}'{{ error_date_info }}',{% endfor %}]
           var repeatArray = [{{ request.session.repeat_schedule_id }}]
 
+          var offRepeatScheduleTypeArray =  [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}'{{ off_repeat_schedule_type_info }}', {% endfor %}];
+          var offRepeatScheduleWeekInfoArray =  [{% for off_repeat_schedule_week_info_info in off_repeat_schedule_week_info_data %}'{{ off_repeat_schedule_week_info_info }}', {% endfor %}];
+          var offRepeatScheduleStartDateArray =  [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}'{{ off_repeat_schedule_start_date_info }}', {% endfor %}];
+          var offRepeatScheduleEndDateArray =  [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}'{{ off_repeat_schedule_end_date_info }}', {% endfor %}];
+
           var classTimeArray = [];
           var offTimeArray = [];
 
