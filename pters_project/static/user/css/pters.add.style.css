@@ -759,6 +759,8 @@ option{
 		position: fixed;
 		top: 150px;
 		width: 500px;
+		max-height: 700px;
+		overflow-y: auto;
 	}
 	
 	#page-addplan-pc{

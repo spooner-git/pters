@@ -99,6 +99,15 @@ $(document).ready(function(){
         $("#starttimes").empty();
         $("#durations").empty();
         $('.tdgraph').removeClass('graphindicator')
+
+        $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
+        $('.dateButton').removeClass('dateButton_selected')
+        $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
+        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
+        
+        $('._NORMAL_ADD').css('display','block')
+        $('._REPEAT_ADD').css('display','none')
+        $('#timeGraph').css('display','none')
   	})
   //모바일 스타일
 
@@ -131,6 +140,10 @@ $(document).ready(function(){
         $("#starttimes").empty();
         $("#durations").empty();
         $('.tdgraph').removeClass('graphindicator')
+
+        $('._NORMAL_ADD').css('display','block')
+        $('._REPEAT_ADD').css('display','none')
+        $('#timeGraph').css('display','none')
   	})
 
   	$('.cancelBtn_mini').click(function(){
