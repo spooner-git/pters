@@ -351,7 +351,6 @@ def delete_schedule_logic(request):
             error = '이미 삭제된 일정입니다'
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
-    print(error)
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -455,7 +454,6 @@ def finish_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
-    print(error)
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -560,7 +558,6 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
-    print(error)
     if error is None:
         if log == 1:
             week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -680,7 +677,7 @@ def add_repeat_schedule_logic(request):
     if error is None:
         #날짜 값 셋팅
         for week_type_info in repeat_week_type_data:
-            week_idx = None
+            week_idx = 0
             for idx, week_info_detail in enumerate(week_info):
                 if week_info_detail == week_type_info:
                     week_idx = idx
@@ -727,15 +724,15 @@ def add_repeat_schedule_logic(request):
                             if error_date is None:
                                 error_date = error
                             else:
-                                error_date = error_date + '\n' + error
+                                error_date = error_date + '/' + error
                         error = None
                     else:
                         error = None
 
-                    if repeat_type == '2W':
-                        check_date = check_date + datetime.timedelta(days=14)
-                    else:
-                        check_date = check_date + datetime.timedelta(days=7)
+                if repeat_type == '2W':
+                    check_date = check_date + datetime.timedelta(days=14)
+                else:
+                    check_date = check_date + datetime.timedelta(days=7)
 
     if error is None:
         #error = error_date
