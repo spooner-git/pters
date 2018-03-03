@@ -19,7 +19,7 @@ from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb ,HolidayTb
 from trainee.models import LectureTb
 from trainer.models import ClassTb
-from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb
+from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
 
 
 class RegisterView(TemplateView):
@@ -294,8 +294,6 @@ def delete_schedule_logic(request):
     next_page = request.POST.get('next_page')
 
     error = None
-    lecture_info = None
-    schedule_info = None
 
     if en_dis_type == '1':
         schedule_id = pt_schedule_id
@@ -306,104 +304,10 @@ def delete_schedule_logic(request):
         error = '스케쥴을 선택하세요.'
 
     if error is None:
-        try:
-            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
-        except ObjectDoesNotExist:
-            error = '스케쥴 정보가 존재하지 않습니다'
+        error = delete_schedule_logic_func(schedule_id, request.user.id, request.user.first_name,
+                                           member_name, 1)
 
     if error is None:
-        start_date = schedule_info.start_dt
-        end_date = schedule_info.end_dt
-
-    if en_dis_type == '1':
-        if error is None:
-            try:
-                lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use='1')
-            except ObjectDoesNotExist:
-                error = '회원 PT 정보가 존재하지 않습니다'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
-                                                   class_tb_id=schedule_info.class_tb_id,
-                                                   lecture_tb_id=schedule_info.lecture_tb_id,
-                                                   delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
-                                                   start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
-                                                   state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
-                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
-
-                delete_schedule.save()
-                schedule_info.delete()
-
-                if en_dis_type == '1':
-
-                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id)
-                    if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
-                        lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
-                                                                  - len(lecture_schedule_data)
-                    else:
-                        error = '예약 가능한 횟수를 확인해주세요.'
-                        raise ValidationError()
-
-                    #진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
-                    if schedule_info.state_cd == 'PE':
-                        lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id,
-                                                                          state_cd='PE')
-                        if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
-                            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count \
-                                                               - len(lecture_schedule_data)
-
-                        else:
-                            error = '예약 가능한 횟수를 확인해주세요.'
-                            raise ValidationError()
-
-                    lecture_info.mod_dt = timezone.now()
-                    lecture_info.save()
-
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '이미 삭제된 일정입니다'
-        except InternalError as e:
-            error = '이미 삭제된 일정입니다'
-        except ValidationError as e:
-            error = '예약 가능한 횟수를 확인해주세요.'
-
-    if error is None:
-        week_info = ['일', '월', '화', '수', '목', '금', '토']
-
-        log_start_date = start_date.strftime('%Y')+'년 ' \
-                         + start_date.strftime('%m')+'월 ' \
-                         + start_date.strftime('%d')+'일 ' \
-                         + week_info[int(start_date.strftime('%w'))] + '요일 '
-        if start_date.strftime('%p') == 'AM':
-            log_start_date = str(log_start_date) + '오전'
-        elif start_date.strftime('%p') == 'PM':
-            log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
-
-        if end_date.strftime('%p') == 'AM':
-            log_end_date = '오전'
-        elif end_date.strftime('%p') == 'PM':
-            log_end_date = '오후'
-
-        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        if en_dis_type == '1':
-            log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_name \
-                           + ' 회원님의</span> 일정을 <span class="status">삭제</span>했습니다.@'\
-                           + log_start_date\
-                           + ' - '+log_end_date
-        else:
-            log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
-                           + ' OFF </span> 일정을 <span class="status">삭제</span>했습니다.@' \
-                           + log_start_date \
-                           + ' - ' + log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
-        log_data.save()
         return redirect(next_page)
     else:
         messages.info(request, error)
@@ -505,6 +409,117 @@ def finish_schedule_logic(request):
     else:
         messages.info(request, error)
         return redirect(next_page)
+
+
+def delete_schedule_logic_func(schedule_id, user_id, user_name, member_name, log):
+
+    error = None
+    lecture_info = None
+    schedule_info = None
+    en_dis_type = None
+
+    try:
+        schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+    except ObjectDoesNotExist:
+        error = '스케쥴 정보가 존재하지 않습니다'
+
+    if error is None:
+        start_date = schedule_info.start_dt
+        end_date = schedule_info.end_dt
+        en_dis_type = schedule_info.en_dis_type
+
+    if en_dis_type == '1':
+        if error is None:
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use='1')
+            except ObjectDoesNotExist:
+                error = '회원 PT 정보가 존재하지 않습니다'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
+                                                   class_tb_id=schedule_info.class_tb_id,
+                                                   lecture_tb_id=schedule_info.lecture_tb_id,
+                                                   delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
+                                                   start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                                   state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
+                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+
+                delete_schedule.save()
+                schedule_info.delete()
+
+                if en_dis_type == '1':
+
+                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id)
+                    if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                        lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
+                                                                  - len(lecture_schedule_data)
+                    else:
+                        error = '예약 가능한 횟수를 확인해주세요.'
+                        raise ValidationError()
+
+                    #진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
+                    if schedule_info.state_cd == 'PE':
+                        lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id,
+                                                                          state_cd='PE')
+                        if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count \
+                                                               - len(lecture_schedule_data)
+
+                        else:
+                            error = '예약 가능한 횟수를 확인해주세요.'
+                            raise ValidationError()
+
+                    lecture_info.mod_dt = timezone.now()
+                    lecture_info.save()
+
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '이미 삭제된 일정입니다'
+        except InternalError as e:
+            error = '이미 삭제된 일정입니다'
+        except ValidationError as e:
+            error = '예약 가능한 횟수를 확인해주세요.'
+
+    if error is None:
+        if log == 1:
+            week_info = ['일', '월', '화', '수', '목', '금', '토']
+
+            log_start_date = start_date.strftime('%Y')+'년 ' \
+                             + start_date.strftime('%m')+'월 ' \
+                             + start_date.strftime('%d')+'일 ' \
+                             + week_info[int(start_date.strftime('%w'))] + '요일 '
+            if start_date.strftime('%p') == 'AM':
+                log_start_date = str(log_start_date) + '오전'
+            elif start_date.strftime('%p') == 'PM':
+                log_start_date = str(log_start_date) + '오후'
+            log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
+
+            if end_date.strftime('%p') == 'AM':
+                log_end_date = '오전'
+            elif end_date.strftime('%p') == 'PM':
+                log_end_date = '오후'
+
+            log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
+            if en_dis_type == '1':
+                log_contents = '<span>'+user_name + ' 강사님께서 ' + member_name \
+                               + ' 회원님의</span> 일정을 <span class="status">삭제</span>했습니다.@'\
+                               + log_start_date\
+                               + ' - '+log_end_date
+            else:
+                log_contents = '<span>' + user_name + ' 강사님께서 ' \
+                               + ' OFF </span> 일정을 <span class="status">삭제</span>했습니다.@' \
+                               + log_start_date \
+                               + ' - ' + log_end_date
+            log_data = LogTb(external_id=user_id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
+                             use=1)
+            log_data.save()
+    else:
+        return error
 
 
 def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
@@ -635,8 +650,6 @@ def add_repeat_schedule_logic(request):
     error = None
     error_date = None
     class_info = None
-    schedule_start_datetime_data = []
-    schedule_end_datetime_data = []
     repeat_week_type_data = []
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
@@ -732,8 +745,6 @@ def add_repeat_schedule_logic(request):
                                 error_date = error_date + '/' + error
                             break
                     if error is None:
-                        #schedule_start_datetime_data.append(schedule_start_datetime)
-                        #schedule_end_datetime_data.append(schedule_end_datetime)
                         error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
                                                         schedule_end_datetime, request.user.id, request.user.first_name,
                                                         lecture_id, en_dis_type, member_name,
@@ -755,7 +766,6 @@ def add_repeat_schedule_logic(request):
                     check_date = check_date + datetime.timedelta(days=7)
 
     if error is None:
-        #error = error_date
         if error_date is not None:
             messages.info(request, error_date)
             #request.session['error_date'] = error_date
@@ -772,28 +782,196 @@ def add_repeat_schedule_confirm(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     repeat_confirm = request.POST.get('repeat_confirm')
-
     next_page = request.POST.get('next_page')
 
     error = None
+    repeat_schedule_data = None
+    start_date = None
+    end_date = None
+    en_dis_type = None
+    lecture_info = None
+    member_info = None
 
-    if repeat_schedule_id =='':
+    if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
-    if repeat_confirm =='':
+    if repeat_confirm == '':
         error = '확인할 반복일정에 대한 정보를 확인해주세요.'
 
-   # if repeat_confirm == 1:
-        #error = '반복일정 등록이 완료됐습니다.'
+    if error is None:
+        try:
+            repeat_schedule_data = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
+        except ObjectDoesNotExist:
+            error = '반복 일정이 존재하지 않습니다'
+
+    if error is None:
+        start_date = repeat_schedule_data.start_dt
+        end_date = repeat_schedule_data.end_dt
+        en_dis_type = repeat_schedule_data.en_dis_type
+
+    if error is None:
+        if en_dis_type == '1':
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_data.lecture_tb_id)
+            except ObjectDoesNotExist:
+                error = '회원 PT 정보가 존재하지 않습니다'
+
+            if error is None:
+                member_info = MemberTb.objects.get(member_id=lecture_info.member_id)
+
     if error is None:
         if repeat_confirm == 0:
-            repeat_schedule_data = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
-            repeat_schedule_data.delete()
+            try:
+                with transaction.atomic():
+                    schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id)
+                    schedule_data.delete()
+                    repeat_schedule_data.delete()
+            except TypeError as e:
+                error = '등록 값의 형태에 문제가 있습니다.'
+            except ValueError as e:
+                error = '등록 값에 문제가 있습니다.'
+            except IntegrityError as e:
+                error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
+            except InternalError as e:
+                error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
+            except ValidationError as e:
+                error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
+            if error is None:
+                error = '반복일정 등록이 취소됐습니다.'
+        else:
+
+            log_start_date = start_date.strftime('%Y')+'년 ' \
+                             + start_date.strftime('%m')+'월 ' \
+                             + start_date.strftime('%d')+'일 '
+            log_start_date = str(log_start_date)
+
+            log_end_date = end_date.strftime('%Y')+'년 ' \
+                             + end_date.strftime('%m')+'월 ' \
+                             + end_date.strftime('%d')+'일 '
+            log_end_date = str(log_end_date)
+
+            if en_dis_type == '1':
+                log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_info.name \
+                               + ' 회원님의</span> 반복 일정을 <span class="status">등록</span>했습니다.@'\
+                               + log_start_date\
+                               + ' - '+log_end_date
+            else:
+                log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                               + ' OFF </span> 반복 일정을 <span class="status">등록</span>했습니다.@' \
+                               + log_start_date \
+                               + ' - ' + log_end_date
+            log_data = LogTb(external_id=request.user.id, log_type='LR01', contents=log_contents, reg_dt=timezone.now(),
+                             use=1)
+            log_data.save()
+
+            error = '반복일정 등록이 완료됐습니다.'
 
     if error is None:
         return redirect(next_page)
     else:
         messages.info(request, error)
         return redirect(next_page)
+
+
+@csrf_exempt
+def delete_repeat_schedule_logic(request):
+
+    repeat_schedule_id = request.POST.get('repeat_schedule_id')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    schedule_data = None
+    start_date = None
+    end_date = None
+    en_dis_type = None
+    lecture_info = None
+    member_info = None
+
+    now = timezone.now()
+
+    if repeat_schedule_id == '':
+        error = '확인할 반복일정을 선택해주세요.'
+
+    if error is None:
+        try:
+            repeat_schedule_data = RepeatScheduleTb.objects.get(repeat_schedule_tb_id=repeat_schedule_id)
+        except ObjectDoesNotExist:
+            error = '반복 일정이 존재하지 않습니다'
+
+    if error is None:
+        start_date = repeat_schedule_data.start_dt
+        end_date = repeat_schedule_data.end_dt
+        en_dis_type = repeat_schedule_data.en_dis_type
+
+    if error is None:
+        if en_dis_type == '1':
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_data.lecture_tb_id)
+            except ObjectDoesNotExist:
+                error = '회원 PT 정보가 존재하지 않습니다.'
+            if error is None:
+                try:
+                    member_info = MemberTb.objects.get(member_id=lecture_info.member_id)
+                except ObjectDoesNotExist:
+                    error = '회원 정보가 존재하지 않습니다.'
+
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id, start_dt__gte=now)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                for delete_schedule_info in schedule_data:
+                    delete_schedule_logic_func(delete_schedule_info.schedule_id, request.user.id,
+                                               request.user.first_name, member_info.name, 0)
+                delete_repeat_schedule = DeleteRepeatScheduleTb(class_tb_id=repeat_schedule_data.class_id, lecture_tb_id=repeat_schedule_data.lecture_id,
+                                                                repeat_type_cd=repeat_schedule_data.repeat_type,
+                                                                week_info=repeat_schedule_data.repeat_week_type,
+                                                                start_dt=repeat_schedule_data.repeat_schedule_start_date_info,
+                                                                end_dt=repeat_schedule_data.repeat_schedule_end_date,
+                                                                state_cd=repeat_schedule_data.state_cd, en_dis_type=repeat_schedule_data.en_dis_type,
+                                                                reg_dt=repeat_schedule_data.reg_dt, mod_dt=repeat_schedule_data.mod_dt)
+                delete_repeat_schedule.save()
+                repeat_schedule_data.delete()
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '이미 삭제된 일정입니다'
+        except InternalError as e:
+            error = '이미 삭제된 일정입니다'
+        except ValidationError as e:
+            error = '예약 가능한 횟수를 확인해주세요.'
+
+    if error is None:
+        log_start_date = start_date.strftime('%Y')+'년 ' \
+                         + start_date.strftime('%m')+'월 ' \
+                         + start_date.strftime('%d')+'일 '
+        log_start_date = str(log_start_date)
+
+        log_end_date = end_date.strftime('%Y')+'년 ' \
+                         + end_date.strftime('%m')+'월 ' \
+                         + end_date.strftime('%d')+'일 '
+        log_end_date = str(log_end_date)
+
+        if en_dis_type == '1':
+            log_contents = '<span>'+request.user.first_name + ' 강사님께서 ' + member_info.name \
+                           + ' 회원님의</span> 반복 일정을 <span class="status">삭제</span>했습니다.@'\
+                           + log_start_date\
+                           + ' - '+log_end_date
+        else:
+            log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                           + ' OFF </span> 반복 일정을 <span class="status">삭제</span>했습니다.@' \
+                           + log_start_date \
+                           + ' - ' + log_end_date
+        log_data = LogTb(external_id=request.user.id, log_type='LR02', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+        return redirect(next_page)
+    else:
+        messages.info(request, error)
+        return redirect(next_page)
+
 
 
 class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
