@@ -333,7 +333,6 @@ def pt_delete_logic(request):
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
 
-    print('trainee'+str(error))
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -496,7 +495,6 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             error = '예약 가능한 횟수를 확인해주세요.'
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
-    print('trainee'+str(error))
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
