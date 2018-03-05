@@ -18,41 +18,26 @@ from trainer import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^login/$', views.login_trainer, name='login'),
-    url(r'^logout/$', views.logout_trainer, name='logout'),
-    #url(r'^login_page/$', views.login_trainer_view, name='login_page'),
-    
-    url(r'^register_login/$', views.RegisterView.as_view(), name='register_login'),
 
+    #강사 - 회원정보 등록 관련
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     url(r'^member_manage_ajax/$', views.ManageMemberViewAjax.as_view(), name='member_manage_ajax'),
     url(r'^add_member_info/$', views.add_member_info_logic, name='add_member_info'),
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
     url(r'^delete_member_info/$', views.delete_member_info_logic, name='delete_member_info'),
 
-    url(r'^trainer_login/$', views.LogInTrainerView.as_view(), name='trainer_login'),
-    url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
-    url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),
-
-    #일정 관련
+    # 일정 조회 관련
     url(r'^cal_day/$', views.CalDayView.as_view(), name='cal_day'),
     url(r'^cal_day_ajax/$', views.CalDayViewAjax.as_view(), name='cal_day_ajax'),
     url(r'^cal_week/$', views.CalWeekView.as_view(), name='cal_week'),
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
     url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_repeat_off'),
 
-    url(r'^add_schedule/$', views.add_schedule_logic, name='add_schedule'),
-    url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),
-    url(r'^finish_schedule/$', views.finish_schedule_logic, name='finish_schedule'),
-    url(r'^add_repeat_schedule/$', views.add_repeat_schedule_logic, name='add_repeat_schedule'),
-    url(r'^add_repeat_schedule_confirm/$', views.add_repeat_schedule_confirm, name='add_repeat_schedule_confirm'),
-    url(r'^delete_repeat_schedule/$', views.delete_repeat_schedule_logic, name='delete_repeat_schedule'),
+    #log 관련
+    url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
+    url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),
 
-    url(r'^modify_pt/$', views.PtModifyView.as_view(), name='modify_pt'),
-    url(r'^modify_pt_logic/$', views.modify_pt_logic, name='modify_pt_logic'),
-    url(r'^modify_off/$', views.OffModifyView.as_view(), name='modify_off'),
-    url(r'^modify_off_logic/$', views.modify_off_logic, name='modify_off_logic'),
-
+    #기타 setting 관련
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),

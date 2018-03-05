@@ -14,14 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from login import views
+from schedule import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^login/$', views.login_trainer, name='login'),
-    url(r'^logout/$', views.logout_trainer, name='logout'),
-    url(r'^register/$', views.RegisterView.as_view(), name='register'),
-
-    # url(r'^login_page/$', views.login_trainer_view, name='login_page'),
+    # 일정 등록 삭제 관련
+    url(r'^add_schedule/$', views.add_schedule_logic, name='add_schedule'),
+    url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),
+    url(r'^finish_schedule/$', views.finish_schedule_logic, name='finish_schedule'),
+    url(r'^add_repeat_schedule/$', views.add_repeat_schedule_logic, name='add_repeat_schedule'),
+    url(r'^add_repeat_schedule_confirm/$', views.add_repeat_schedule_confirm, name='add_repeat_schedule_confirm'),
+    url(r'^delete_repeat_schedule/$', views.delete_repeat_schedule_logic, name='delete_repeat_schedule'),
 
 ]

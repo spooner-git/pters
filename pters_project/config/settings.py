@@ -151,7 +151,7 @@ STATICFILES_DIRS = (
 )
 
 #AUTH_USER_MODEL = 'core.User'
-LOGIN_URL = '/trainer/trainer_login/'
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/trainer/index/'
 #AUTH_USER_MODEL = 'login.models.MemberTb'
 
