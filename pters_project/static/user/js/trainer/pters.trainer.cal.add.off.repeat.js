@@ -132,7 +132,7 @@ $(document).ready(function(){
         }
     }
 
-    function fill_repeat_info_off(){
+    function fill_repeat_info_off(){ //반복일정 요약 채우기
       var len = offRepeatScheduleTypeArray.length
       var repeat_info_dict= { 'KOR':
                               {'DD':'매일', 'WW':'매주', '2W':'격주',
