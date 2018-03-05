@@ -284,17 +284,17 @@ $(document).ready(function(){
          e.preventDefault();
          if(addTypeSelect=="ptadd"){
             var $form = $('#pt-add-form')
-            var serverURL = '/trainer/add_schedule/'
+            var serverURL = '/schedule/add_schedule/'
          }else if(addTypeSelect=="offadd"){
             var $form = $('#off-add-form')
-            var serverURL = '/trainer/add_schedule/'
+            var serverURL = '/schedule/add_schedule/'
          }else if(addTypeSelect=="repeatptadd"){
             var $form = $('#add-repeat-schedule-form')
-            var serverURL = '/trainer/add_repeat_schedule/'
+            var serverURL = '/schedule/add_repeat_schedule/'
          }
          else if(addTypeSelect=="repeatoffadd"){
             var $form = $('#add-off-repeat-schedule-form')
-            var serverURL = '/trainer/add_repeat_schedule/'
+            var serverURL = '/schedule/add_repeat_schedule/'
          }
 
         
