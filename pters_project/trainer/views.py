@@ -1390,11 +1390,11 @@ def delete_member_info_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                user.is_active = 0
-                user.save()
-                member.use = 0
-                member.mod_dt = timezone.now()
-                member.save()
+                #user.is_active = 0
+                #user.save()
+                #member.use = 0
+                #member.mod_dt = timezone.now()
+                #member.save()
                 for lecture_info in lecture_data:
                     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                               lecture_tb_id=lecture_info.lecture_id,
@@ -1420,7 +1420,7 @@ def delete_member_info_logic(request):
     if error is None:
 
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
-                       + member.name + ' 회원님의</span> 정보를 <span class="status">삭제</span>했습니다.'
+                       + member.name + ' 회원님의</span> 수강정보를 <span class="status">삭제</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB02', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
