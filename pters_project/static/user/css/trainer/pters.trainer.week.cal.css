@@ -159,7 +159,7 @@ img,a,div,span,p{
 	height: 100%;
 	background-color: #f4f4f4;
 	display: none;
-	z-index: 101;
+	z-index: 110;
 }
 
 #filterPopup_mini{
@@ -185,11 +185,11 @@ img,a,div,span,p{
 	max-width: 	330px;
 	left: 50%;
 	transform:translate(-50%,-50%);
-	z-index: -2;
+	z-index: 120;
 	text-align: center;
 }
 
-#cal_popup_plandelete{
+#cal_popup_plandelete, #cal_popup_repeatconfirm{
 	display: none;
 	position: fixed;
 	background: transparent;
@@ -199,14 +199,15 @@ img,a,div,span,p{
 	max-width: 	330px;
 	left: 50%;
 	transform:translate(-50%,-50%);
-	z-index: -2;
+	z-index: 120;
 	text-align: center;
 }
 
 .popup_info_text{
 	background: #ffffff;
 	position: relative;
-	width: 100%;
+	margin : 0 auto;
+	width: 330px;
 	text-align: center;
 	color: #3b3d3d;
 	font-size: 14px;
@@ -232,13 +233,14 @@ img,a,div,span,p{
 	margin-left: 14.845px;
 }
 
-#btn_close,#btn_close3{
+.popup_close_x_button{
 	position: absolute;
 	top: 31%;
 	left: 85%;
 	padding: 10px;
 	width: 35px;
 	float: right;
+	cursor: pointer;
 }
 
 .popup_inner{
@@ -280,7 +282,7 @@ img,a,div,span,p{
 	bottom: 25px;
 	right: 25px;
 	border-radius: 50%;
-	z-index: 105;
+	z-index: 121;
 	cursor: pointer;
 }
 
@@ -343,7 +345,7 @@ img,a,div,span,p{
 	background-color: grey;
 	opacity: 0;
 	border-radius: 50%;
-	z-index: 103;	
+	z-index: 120;	
 	font-size: 13px;
 	text-align: center; 
 }
@@ -663,6 +665,7 @@ img,a,div,span,p{
 /*미디어 쿼리*/
 @media(min-width:418px){
 
+	/*
 	#popup_info,#popup_info2,#popup_info3{
 		background: #ffffff;
 		position: relative;
@@ -673,6 +676,7 @@ img,a,div,span,p{
 		font-size: 14px;
 		font-weight: bold;
 	}
+	*/
 
 	#popup_img{
 		position: relative;
@@ -694,7 +698,7 @@ img,a,div,span,p{
 		margin-left: 14.845px;
 	}
 
-	#btn_close,#btn_close3{
+	.popup_close_x_button{
 		position: absolute;
 		top: 22%;
 		left: 85%;

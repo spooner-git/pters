@@ -12,7 +12,7 @@ ul a{
 	display: none;
 	position: absolute;
 	width: 100%;
-	z-index: 102;
+	z-index: 110;
 	left: 0%;
 	background: #f4f4f4;
 	top: 50px;
@@ -525,7 +525,7 @@ ul a{
 	display:none;
 }
 
-#btn_close,.cancelBtn,.cancelBtn_mini{
+.cancelBtn,.cancelBtn_mini{
 	cursor: pointer;
 }
 
