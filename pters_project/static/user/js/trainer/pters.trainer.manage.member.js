@@ -128,6 +128,7 @@ $(document).ready(function(){
         var name = $(this).attr('data-name');
         $('#memberName_info').val(name)
         $('#memberId').val(DB[name].id);
+        $('#deleteMemberId').val(DB[name].id);
         $('#memberPhone_info').val(DB[name].phone);
         $('#comment_info').val(DB[name].contents);
         //$('#memberCount_info').val(DB[name].count);
@@ -230,6 +231,8 @@ $(document).ready(function(){
     $('.confirmYes').click(function(){
       $('.confirmPopup').fadeOut('fast');
       $('#shade').fadeOut('fast');
+      console.log('delete confirm')
+      deleteMemberAjax();
     });
 
     $('.confirmNo').click(function(){
@@ -1252,7 +1255,7 @@ $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후
     var $form = $('#member-add-form-new');
      if(select_all_check==true){
              $.ajax({
-                url:'/trainer/member_registration/',
+                url:'/trainer/add_member_info/',
                 type:'POST',
                 data:$form.serialize(),
                 dataType : 'html',
@@ -1270,69 +1273,7 @@ $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
-                    console.log(data);
-                    idArray = [];
-                    nameArray =[];
-                    phoneArray = [];
-                    contentsArray = [];
-                    countArray = [];
-                    startArray = [];
-                    modifyDateArray = [];
-                    emailArray = [];
-                    endArray = [];
-                    regCountArray = [];
-                    availCountArray = [];
-                    birthdayArray = [];
-                    sexArray = [];
-
-                    finishIdArray = [];
-                    finishnameArray =[];
-                    finishphoneArray = [];
-                    finishContentsArray = [];
-                    finishcountArray = [];
-                    finishstartArray = [];
-                    finishmodifyDateArray = [];
-                    finishemailArray = [];
-                    finishendArray = [];
-
-                    finishRegCountArray = [];
-                    finishAvailCountArray = [];
-                    finishbirthdayArray = [];
-                    finishsexArray = [];
-                    messageArray = [];
-
-                    idArray = jsondata.idArray;
-                    nameArray =jsondata.nameArray;
-                    phoneArray = jsondata.phoneArray;
-                    contentsArray = jsondata.contentsArray;
-                    countArray = jsondata.countArray;
-                    startArray = jsondata.startArray;
-                    modifyDateArray = jsondata.modifyDateArray;
-                    emailArray = jsondata.emailArray;
-                    endArray = jsondata.endArray;
-                    regCountArray = jsondata.regCountArray;
-                    availCountArray = jsondata.availCountArray;
-
-                    finishIdArray = jsondata.finishIdArray;
-                    finishnameArray = jsondata.finishnameArray;
-                    finishphoneArray = jsondata.finishphoneArray;
-                    finishContentsArray = jsondata.finishContentsArray;
-                    finishcountArray = jsondata.finishcountArray;
-                    finishstartArray = jsondata.finishstartArray;
-                    finishmodifyDateArray = jsondata.finishmodifyDateArray;
-                    finishemailArray = jsondata.finishemailArray;
-                    finishendArray = jsondata.finishendArray;
-
-                    finishRegCountArray = jsondata.finishRegCountArray;
-                    finishAvailCountArray = jsondata.finishAvailCountArray;
-
-                      //처리 필요 - hk.kim 180110
-                    birthdayArray = jsondata.birthdayArray;
-                    finishbirthdayArray = jsondata.finishbirthdayArray;
-                    sexArray = jsondata.sexArray;
-                    finishsexArray = jsondata.finishsexArray;
-                    messageArray = jsondata.messageArray;
-
+                    memberAjaxSuccess(data);
                     if(messageArray.length>0){
                       $('html').css("cursor","auto")
                       $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -1396,7 +1337,7 @@ $('#upbutton-modify, #infoMemberModify').click(function(){ //회원정보창에�
         var $form = $('#member-add-form-modify');
         if(select_all_check==false){
            $.ajax({
-              url:'/trainer/member_info_update/',
+              url:'/trainer/update_member_info/',
               type:'POST',
               data:$form.serialize(),
               dataType : 'html',
@@ -1413,91 +1354,33 @@ $('#upbutton-modify, #infoMemberModify').click(function(){ //회원정보창에�
 
               //통신성공시 처리
               success:function(data){
-                  var jsondata = JSON.parse(data);
-                  idArray = [];
-                  nameArray =[];
-                  phoneArray = [];
-                  contentsArray = [];
-                  countArray = [];
-                  startArray = [];
-                  modifyDateArray = [];
-                  emailArray = [];
-                  endArray = [];
-                  regCountArray = [];
-                  availCountArray = [];
-                  birthdayArray = [];
-                  sexArray = [];
+                    memberAjaxSuccess(data);
 
-                  finishIdArray = [];
-                  finishnameArray =[];
-                  finishphoneArray = [];
-                  finishContentsArray = [];
-                  finishcountArray = [];
-                  finishstartArray = [];
-                  finishmodifyDateArray = [];
-                  finishemailArray = [];
-                  finishendArray = [];
+                    if(messageArray.length>0){
+                        $('html').css("cursor","auto")
+                        $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                        scrollToIndicator($('#page_addmember'))
+                        $('#inputError_info').fadeIn()
+                        setTimeout(function(){$('#inputError_info').fadeOut()},10000)
+                        $('#errorMsg_info p').text(messageArray)
 
-                  finishRegCountArray = [];
-                  finishAvailCountArray = [];
-                  finishbirthdayArray = [];
-                  finishsexArray = [];
-                  messageArray = [];
-
-                  idArray = jsondata.idArray;
-                  nameArray =jsondata.nameArray;
-                  phoneArray = jsondata.phoneArray;
-                  contentsArray = jsondata.contentsArray;
-                  countArray = jsondata.countArray;
-                  startArray = jsondata.startArray;
-                  modifyDateArray = jsondata.modifyDateArray;
-                  emailArray = jsondata.emailArray;
-                  endArray = jsondata.endArray;
-                  regCountArray = jsondata.regCountArray;
-                  availCountArray = jsondata.availCountArray;
-
-                  finishIdArray = jsondata.finishIdArray;
-                  finishnameArray = jsondata.finishnameArray;
-                  finishphoneArray = jsondata.finishphoneArray;
-                  finishContentsArray = jsondata.finishContentsArray;
-                  finishcountArray = jsondata.finishcountArray;
-                  finishstartArray = jsondata.finishstartArray;
-                  finishmodifyDateArray = jsondata.finishmodifyDateArray;
-                  finishemailArray = jsondata.finishemailArray;
-                  finishendArray = jsondata.finishendArray;
-
-                  finishRegCountArray = jsondata.finishRegCountArray;
-                  finishAvailCountArray = jsondata.finishAvailCountArray;
-
-                    //처리 필요 - hk.kim 180110
-                  birthdayArray = jsondata.birthdayArray;
-                  finishbirthdayArray = jsondata.finishbirthdayArray;
-                  sexArray = jsondata.sexArray;
-                  finishsexArray = jsondata.finishsexArray;
-                  messageArray = jsondata.messageArray;
-
-                  if(messageArray.length>0){
-                    $('html').css("cursor","auto")
-                    $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                    scrollToIndicator($('#page_addmember'))
-                    $('#inputError_info').fadeIn()
-                    setTimeout(function(){$('#inputError_info').fadeOut()},10000)
-                    $('#errorMsg_info p').text(messageArray)
-                  }else{
-                    closePopup()
-                    if($('body').width()<600){
-                      $('#page_managemember').show();
                     }
-                    $('html').css("cursor","auto")
-                    $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                    else{
+                        closePopup()
 
-                    DataFormattingDict();
-                    DataFormatting();
-                    currentMemberListSet('date','yes');
-                    finishMemberListSet('date','yes');
-                    $('#startR').attr('selected','selected')
-                    console.log('success');
-                  }
+                        if($('body').width()<600){
+                          $('#page_managemember').show();
+                        }
+                        $('html').css("cursor","auto")
+                        $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                        DataFormattingDict();
+                        DataFormatting();
+                        currentMemberListSet('date','yes');
+                        finishMemberListSet('date','yes');
+                        $('#startR').attr('selected','selected')
+                        console.log('success');
+                    }
               },
 
               //통신 실패시 처리
@@ -1520,8 +1403,10 @@ $('#upbutton-modify, #infoMemberModify').click(function(){ //회원정보창에�
 
 function ajaxMemberData(){
 
+                      var $form = $('#member-add-form-modify');
           $.ajax({
             url: '/trainer/member_manage_ajax',
+
             dataType : 'html',
 
             beforeSend:function(){
@@ -1530,57 +1415,7 @@ function ajaxMemberData(){
 
             success:function(data){
               var jsondata = JSON.parse(data);
-              idArray = [];
-              nameArray =[];
-              phoneArray = [];
-              contentsArray = [];
-              countArray = [];
-              startArray = [];
-              modifyDateArray = [];
-              emailArray = [];
-              endArray = [];
-              regCountArray = [];
-              availCountArray = [];
-
-              finishIdArray = [];
-              finishnameArray =[];
-              finishphoneArray = [];
-              finishContentsArray = [];
-              finishcountArray = [];
-              finishstartArray = [];
-              finishmodifyDateArray = [];
-              finishemailArray = [];
-              finishendArray = [];
-
-                //처리 필요 - hk.kim 180110
-              finishRegCountArray = [];
-              finishAvailCountArray = [];
-
-              idArray = jsondata.idArray;
-              nameArray =jsondata.nameArray;
-              phoneArray = jsondata.phoneArray;
-              contentsArray = jsondata.contentsArray;
-              countArray = jsondata.countArray;
-              startArray = jsondata.startArray;
-              modifyDateArray = jsondata.modifyDateArray;
-              emailArray = jsondata.emailArray;
-              endArray = jsondata.endArray;
-              regCountArray = jsondata.regCountArray;
-              availCountArray = jsondata.availCountArray;
-
-              finishIdArray = jsondata.finishIdArray;
-              finishnameArray = jsondata.finishnameArray;
-              finishphoneArray = jsondata.finishphoneArray;
-              finishContentsArray = jsondata.finishContentsArray;
-              finishcountArray = jsondata.finishcountArray;
-              finishstartArray = jsondata.finishstartArray;
-              finishmodifyDateArray = jsondata.finishmodifyDateArray;
-              finishemailArray = jsondata.finishemailArray;
-              finishendArray = jsondata.finishendArray;
-
-                //처리 필요 - hk.kim 180110
-              finishRegCountArray = jsondata.finishRegCountArray;
-              finishAvailCountArray = jsondata.finishAvailCountArray;
+              memberAjaxSuccess(data);
 
               DataFormattingDict()
               DataFormatting()
@@ -1596,6 +1431,125 @@ function ajaxMemberData(){
               console.log('server error')
             }
           })
+}
+
+function deleteMemberAjax(){
+        var $form = $('#member-delete-form');
+          $.ajax({
+            url: '/trainer/delete_member_info/',
+            type:'POST',
+            data:$form.serialize(),
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                memberAjaxSuccess(data);
+
+                if(messageArray.length>0){
+                    $('html').css("cursor","auto")
+                    $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                    scrollToIndicator($('#page_addmember'))
+                    $('#inputError_info').fadeIn()
+                    setTimeout(function(){$('#inputError_info').fadeOut()},10000)
+                    $('#errorMsg_info p').text(messageArray)
+
+                }
+                else{
+                    closePopup()
+
+                    if($('body').width()<600){
+                      $('#page_managemember').show();
+                    }
+                    $('html').css("cursor","auto")
+                    $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                    DataFormattingDict();
+                    DataFormatting();
+                    currentMemberListSet('date','yes');
+                    finishMemberListSet('date','yes');
+                    $('#startR').attr('selected','selected')
+                    console.log('success');
+                }
+            },
+
+            complete:function(){
+              completeSend();
+            },
+
+            error:function(){
+              console.log('server error')
+            }
+          })
+}
+
+function memberAjaxSuccess(data){
+    var jsondata = JSON.parse(data);
+    idArray = [];
+    nameArray =[];
+    phoneArray = [];
+    contentsArray = [];
+    countArray = [];
+    startArray = [];
+    modifyDateArray = [];
+    emailArray = [];
+    endArray = [];
+    regCountArray = [];
+    availCountArray = [];
+    birthdayArray = [];
+    sexArray = [];
+
+    finishIdArray = [];
+    finishnameArray =[];
+    finishphoneArray = [];
+    finishContentsArray = [];
+    finishcountArray = [];
+    finishstartArray = [];
+    finishmodifyDateArray = [];
+    finishemailArray = [];
+    finishendArray = [];
+
+    finishRegCountArray = [];
+    finishAvailCountArray = [];
+    finishbirthdayArray = [];
+    finishsexArray = [];
+    messageArray = [];
+
+    idArray = jsondata.idArray;
+    nameArray =jsondata.nameArray;
+    phoneArray = jsondata.phoneArray;
+    contentsArray = jsondata.contentsArray;
+    countArray = jsondata.countArray;
+    startArray = jsondata.startArray;
+    modifyDateArray = jsondata.modifyDateArray;
+    emailArray = jsondata.emailArray;
+    endArray = jsondata.endArray;
+    regCountArray = jsondata.regCountArray;
+    availCountArray = jsondata.availCountArray;
+
+    finishIdArray = jsondata.finishIdArray;
+    finishnameArray = jsondata.finishnameArray;
+    finishphoneArray = jsondata.finishphoneArray;
+    finishContentsArray = jsondata.finishContentsArray;
+    finishcountArray = jsondata.finishcountArray;
+    finishstartArray = jsondata.finishstartArray;
+    finishmodifyDateArray = jsondata.finishmodifyDateArray;
+    finishemailArray = jsondata.finishemailArray;
+    finishendArray = jsondata.finishendArray;
+
+    finishRegCountArray = jsondata.finishRegCountArray;
+    finishAvailCountArray = jsondata.finishAvailCountArray;
+
+    //처리 필요 - hk.kim 180110
+    birthdayArray = jsondata.birthdayArray;
+    finishbirthdayArray = jsondata.finishbirthdayArray;
+    sexArray = jsondata.sexArray;
+    finishsexArray = jsondata.finishsexArray;
+    messageArray = jsondata.messageArray;
+
 }
 
 function beforeSend(){
