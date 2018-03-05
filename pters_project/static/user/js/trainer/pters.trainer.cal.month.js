@@ -201,7 +201,7 @@ $(document).ready(function(){
 			if(schedule_on_off==1){
 				//PT 일정 완료 처리시
 				$.ajax({
-                    url:'/trainer/finish_schedule/',
+                    url:'/schedule/finish_schedule/',
                     type:'POST',
                     data:$pt_finish_form.serialize(),
 
@@ -254,7 +254,7 @@ $(document).ready(function(){
 		if(schedule_on_off==1){
 				//PT 일정 삭제시
 				$.ajax({
-                    url:'/trainer/delete_schedule/',
+                    url:'/schedule/delete_schedule/',
                     type:'POST',
                     data:$ptdelform.serialize(),
 
@@ -284,7 +284,7 @@ $(document).ready(function(){
 		}
 		else{
 				$.ajax({
-                    url:'/trainer/delete_schedule/',
+                    url:'/schedule/delete_schedule/',
                     type:'POST',
                     data:$offdelform.serialize(),
 

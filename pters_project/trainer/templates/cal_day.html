@@ -13,30 +13,18 @@
 <!-- 로딩 
 <img src="/static/user/res/loader.gif" alt="데이터 로딩중" style="width:100%;" class="loaders">
   -->
-  <form action="{% url 'trainer:delete_schedule' %}" id="daily-pt-delete-form" method="post">
+  <form action="{% url 'schedule:delete_schedule' %}" id="daily-pt-delete-form" method="post">
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="member_name"   id="id_member_name_delete">
     <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
-  <form action="{% url 'trainer:delete_schedule' %}" id="daily-off-delete-form" method="post">
+  <form action="{% url 'schedule:delete_schedule' %}" id="daily-off-delete-form" method="post">
     <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
     <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
-
-  <form action="{% url 'trainer:modify_pt' %}" id="pt-modify-form" method="get">
-    <input type="hidden" name="schedule_id" id="id_schedule_id_modify">
-    <input type="hidden" name="lecture_id"   id="id_lecture_id_modify">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
-  </form>
-
-  <form action="{% url 'trainer:modify_off' %}" id="off-modify-form" method="get">
-    <input type="hidden" name="off_schedule_id" id="id_off_schedule_id_modify">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day' %}'>
-  </form>
-
-  <form action="{% url 'trainer:finish_schedule' %}" id="pt-finish-form" method="get">
+  <form action="{% url 'schedule:finish_schedule' %}" id="pt-finish-form" method="get">
     <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
     <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
     <input type="hidden" name="member_name"   id="id_member_name_finish">
@@ -158,7 +146,7 @@
             </div>
         {% endfor %}
     {% endif %}
-    <form action="{% url 'trainer:add_schedule' %}" id="pt-add-form" method="post">
+    <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
         <input type="hidden" name="training_date" id="id_training_date">
@@ -168,7 +156,7 @@
         <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
     </form>
 
-    <form action="{% url 'trainer:add_schedule' %}" id="off-add-form" method="post">
+    <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
         <input type="hidden" name="training_date" id="id_training_date_off">
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
@@ -308,7 +296,7 @@
     <div id="repeatSchedule" class="ptaddbox repeatbox" style="display:none;">
         <div id="repeatScheduleText" class="ptaddboxtext repeattext">
           <img src={% static "user/res/ptadd/icon-repeat-cal.png" %} class="icons">
-           <span onclick="location.href='{% url 'trainer:add_repeat_off' %}'">반복일정</span>
+           <span onclick="location.href='{% url 'schedule:add_repeat_off' %}'">반복일정</span>
            <img class="icons-next-button" src={% static "user/res/ptadd/btn-next-white.png" %}>
          </div>
         
@@ -333,7 +321,7 @@
 
 
  <div id="page-addplan-pc">
-    <form action="{% url 'trainer:add_schedule' %}" id="pt-add-form" method="post">
+    <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
         <input type="hidden" name="training_date" id="id_training_date">
