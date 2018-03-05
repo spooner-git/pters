@@ -276,7 +276,7 @@ def pt_delete_logic(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id)
+            lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use='1')
         except ObjectDoesNotExist:
             error = '회원 PT 정보가 존재하지 않습니다.'
 
@@ -438,7 +438,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         end_date = start_date + datetime.timedelta(hours=int(pt_schedule_time_duration))
 
         try:
-            lecture_info = LectureTb.objects.get(member_id=user_id)
+            lecture_info = LectureTb.objects.get(member_id=user_id, use='1')
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
 
