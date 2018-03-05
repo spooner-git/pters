@@ -84,6 +84,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalDayViewAjax, self).get_context_data(**kwargs)
+        #print(self.request.POST.get('date'))2018-03-05
         context = get_trainer_schedule_data_func(context, self.request.user.id)
 
         return context
