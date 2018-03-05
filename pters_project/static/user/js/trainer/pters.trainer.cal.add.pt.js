@@ -296,7 +296,6 @@ $(document).ready(function(){
             var $form = $('#add-off-repeat-schedule-form')
             var serverURL = '/schedule/add_repeat_schedule/'
          }
-
         
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
@@ -308,24 +307,31 @@ $(document).ready(function(){
                     dataType : 'html',
 
                     beforeSend:function(){
-                        beforeSend();
+                        beforeSend(); //ajax 로딩 이미지 출력
                     },
 
                     //통신성공시 처리
                     success:function(data){
-                      console.log(data)
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
                         ajax_received_json_data(jsondata)
-                        if(messageArray.length>0){
+                        if(messageArray.length>0 && addTypeSelect == "repeatoffadd"){
                           var date = messageArray[0].replace(/\//gi,", ")
-                          alert('선택한 일정 중'+messageArray[0].split('/').length + '건의 일정이 겹칩니다.          ' + messageArray)
-                          completeSend();  
-                        }else{
-                          $('#calendar').show().css('height','100%')
-                          closeAddPopup();
-                          closeAddPopup_mini()
-                          completeSend();  
+                          $('._repeatconfirmQuestion').text('선택한 일정 중 '+messageArray[0].split('/').length + '건의 일정이 겹칩니다.')
+                          var repeat_info = popup_repeat_confirm()
+                          var day_info = repeat_info.day_info
+                          var dur_info = repeat_info.dur_info
+                          $('#repeat_confirm_day').text(messageArray[0].replace(/\//gi,','))
+                          $('#repeat_confirm_dur').text('중복 일정을 제외하고 등록하시겠습니까?')
+
+                          completeSend(); //ajax 로딩 이미지 숨기기
+                        }else if(messageArray.length==0 && addTypeSelect == "repeatoffadd"){
+                          var repeat_info = popup_repeat_confirm()
+                          var day_info = repeat_info.day_info
+                          var dur_info = repeat_info.dur_info
+                          $('#repeat_confirm_day').text(day_info)
+                          $('#repeat_confirm_dur').text(dur_info)
+                          completeSend(); //ajax 로딩 이미지 숨기기
                         }
                     },
 
@@ -345,6 +351,20 @@ $(document).ready(function(){
          }
       })
 
+      //OFF반복일정 확인 팝업 "아니오" 눌렀을때 (선택지: 반복 설정 다시 하겠다)
+      $('#btn_close_repeatconfirm, #popup_btn_repeatconfim_no').click(function(){
+        $('#cal_popup_repeatconfirm').fadeOut('fast')
+        $('shade').hide()
+      })
+      
+      //OFF반복일정 확인 팝업 "예" 눌렀을때 (선택지: 중복 무시하고 반복 넣겠다)
+      $('#popup_btn_repeatconfirm_yes').click(function(){
+        $('#cal_popup_repeatconfirm').fadeOut('fast')
+        $('#calendar').show().css('height','100%')
+        closeAddPopup();
+        closeAddPopup_mini()
+      })
+
       
       function ajaxClassTime(){
             $.ajax({
@@ -352,7 +372,7 @@ $(document).ready(function(){
               dataType : 'html',
 
               beforeSend:function(){
-                  beforeSend();
+                  beforeSend(); //ajax 로딩이미지 출력
               },
 
               success:function(data){
@@ -361,7 +381,7 @@ $(document).ready(function(){
               },
 
               complete:function(){
-                completeSend();
+                completeSend(); //ajax 로딩이미지 숨기기
               },
 
               error:function(){
@@ -509,6 +529,46 @@ $(document).ready(function(){
                 select_all_check=false;
             }
         }
+      }
+
+      function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확인 팝업을 보여준다.
+          $('#shade').show()
+          var repeat_info_dict= { 'KOR':
+                                {'DD':'매일', 'WW':'매주', '2W':'격주',
+                                 'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+                                'JAP':
+                                {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                                 'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+                                'JAP':
+                                {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                                 'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+                               }
+          $('#cal_popup_repeatconfirm').fadeIn('fast')
+          $('#shade').show()
+          var repeat_type = repeat_info_dict['KOR'][$('#id_repeat_freq_off').val()]
+          var repeat_start = $('#id_repeat_start_date_off').val().replace(/-/gi,'.')
+          var repeat_end = $('#id_repeat_end_date_off').val().replace(/-/gi,'.')
+          var repeat_day = function(){
+                              var repeat_day_info_raw = $('#id_repeat_day_off').val().split('/')
+                              var repeat_day_info = ""
+                              if(repeat_day_info_raw.length>1){
+                                for(var j=0; j<repeat_day_info_raw.length; j++){
+                                    var repeat_day_info = repeat_day_info + ',' + repeat_info_dict['KOR'][repeat_day_info_raw[j]]
+                                }
+                              }else if(repeat_day_info_raw.length == 1){
+                                var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+                              }
+                              if(repeat_day_info.substr(0,1) == ','){
+                                var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+                              }
+                              return repeat_day_info
+                          };
+          var repeat_input_day_info = repeat_type + ' ' + repeat_day()
+          var repeat_input_dur_info = repeat_start + ' ~ ' + repeat_end
+          return {
+                  day_info : repeat_input_day_info,
+                  dur_info : repeat_input_dur_info
+                }
       }
 
       function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
@@ -706,17 +766,13 @@ $(document).ready(function(){
         $('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
-        $('#shade').css({'z-index':'200'});
       }
 
       function completeSend(){
         $('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade').css({'z-index':'100'});
         $('#shade').hide();
-        //$('#calendar').show();
-        //alert('complete: 일정 정상 등록')
       }
 
 

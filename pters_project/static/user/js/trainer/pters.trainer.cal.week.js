@@ -18,9 +18,6 @@ $(document).ready(function(){
 		addTypeSelect = "ptadd"
 		$('#memberName,#remainCount').css('display','block');
 	    $('#page-addplan').fadeIn('fast');
-	    if($('body').width()<600){
-	        $('#calendar').hide();
-	    }
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
 	    $('#uptext2').text('PT 일정 등록')
@@ -29,6 +26,8 @@ $(document).ready(function(){
 	    $("#datepicker").datepicker('setDate',null)
 	    
 	    if($('body').width()<600){
+	    	$('#calendar').hide();
+	        $('#shade').hide()
 	    	$('#shade3').fadeIn('fast');
 		    $('#calendar').css('height','0')
 		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
@@ -46,9 +45,6 @@ $(document).ready(function(){
 		addTypeSelect = "offadd"
 		$('#memberName,#remainCount').css('display','none');
 	    $('#page-addplan').fadeIn('fast');
-	    if($('body').width()<600){
-	        $('#calendar').hide();
-	    }
 	    $('#uptext2').text('OFF 일정 등록')
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
@@ -57,6 +53,8 @@ $(document).ready(function(){
 	    $("#datepicker").datepicker('setDate',null)
 	    
 	    if($('body').width()<600){
+	    	$('#calendar').hide();
+	        $('#shade').hide()
 	    	$('#shade3').fadeIn('fast');
 		    $('#calendar').css('height','0')
 		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
@@ -214,7 +212,7 @@ $(document).ready(function(){
 		$('#canvasWrap span').hide();
 
 		$('#page-addplan-pc').hide()
-		$("#cal_popup_planinfo").fadeIn('fast').css({'z-index':'103'});
+		$("#cal_popup_planinfo").fadeIn('fast');
 		$('#shade').css({'display':'block'});
 		var schedule_finish_check = $(this).attr('data-schedule-check')
 		var info = $(this).attr('class-time').split('_')
@@ -271,7 +269,7 @@ $(document).ready(function(){
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 		$('#page-addplan-pc').hide()
 		//$('.td00').css('background','transparent')
-		$("#cal_popup_planinfo").fadeIn('fast').css({'z-index':'103'});
+		$("#cal_popup_planinfo").fadeIn('fast');
 		$('#shade').css({'display':'block'});
 		var info = $(this).attr('off-time').split('_')
 		var yy=info[0]
@@ -311,7 +309,7 @@ $(document).ready(function(){
 
 	$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
 		if($('#cal_popup_planinfo').css('display')=='block'){
-			$("#cal_popup_planinfo").css({'display':'none','z-index':'-2'})
+			$("#cal_popup_planinfo").css({'display':'none'})
 			$('#shade').css({'display':'none'});
 			$('body').css('overflow-y','overlay');
 		}
@@ -319,7 +317,7 @@ $(document).ready(function(){
 
 	$("#btn_close3, #popup_btn_delete_no").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
 		if($('#cal_popup_plandelete').css('display')=='block'){
-			$("#cal_popup_plandelete").css({'display':'none','z-index':'-2'})
+			$("#cal_popup_plandelete").css({'display':'none'})
 			$('#shade').css({'display':'none'});
 			$('body').css('overflow-y','overlay');
 		}
@@ -391,9 +389,10 @@ $(document).ready(function(){
 	})
 	//일정 삭제 기능 추가 - hk.kim 171007
 	$("#popup_btn_delete").click(function(){  //일정 삭제 버튼 클릭
-		$('#cal_popup_planinfo').hide().css({'z-index':'-2'});
-		$('#cal_popup_plandelete').fadeIn('fast').css({'z-index':'103'});
+		$('#cal_popup_planinfo').hide();
+		$('#cal_popup_plandelete').fadeIn('fast');
 	})
+
 
 	$('#popup_btn_delete_yes').click(function(){
 		var $ptdelform = $('#daily-pt-delete-form');
@@ -542,12 +541,12 @@ $(document).ready(function(){
 
 	function closeDeletePopup(){
 		if($('#cal_popup_plandelete').css('display')=='block'){
-			$("#cal_popup_plandelete").css({'display':'none','z-index':'-2'})
-			$('#shade').css({'display':'none','z-index':'100'});
+			$("#cal_popup_plandelete").css({'display':'none'})
+			$('#shade').css({'display':'none'});
 		}
 		if($('#cal_popup_planinfo').css('display')=='block'){
-			$("#cal_popup_planinfo").css({'display':'none','z-index':'-2'})
-			$('#shade').css({'display':'none','z-index':'100'});
+			$("#cal_popup_planinfo").css({'display':'none'})
+			$('#shade').css({'display':'none'});
 		}
 	}
 
@@ -555,14 +554,14 @@ $(document).ready(function(){
 		$('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
-        $('#shade').css({'display':'block','z-index':'200'});
+        $('#shade').css({'display':'block'});
 	}
 
 	function deleteCompleteSend(){
 		$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade').css({'display':'none','z-index':'100'});
+        $('#shade').css({'display':'none'});
 	}
 
 
