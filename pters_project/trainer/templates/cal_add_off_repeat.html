@@ -21,7 +21,7 @@
         {% endfor %}
     {% endif %}
 
-<form action="{% url 'trainer:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
+<form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
     <input type="hidden" name="repeat_freq" id="id_repeat_freq">
     <input type="hidden" name="repeat_start_date" id="id_repeat_start_date">
     <input type="hidden" name="repeat_end_date" id="id_repeat_end_date">
