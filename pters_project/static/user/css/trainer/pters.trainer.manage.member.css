@@ -190,7 +190,7 @@ th{
 	background:#eeeeee;
 }
 
-._countnum,._email,._finday,._manage{
+._countnum,._id,._email,._finday,._manage{
 	display: none;
 }
 
@@ -203,6 +203,13 @@ th{
 
 ._tdname{
 	width: 23%;
+	line-height: 19px;
+	vertical-align: middle !important;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+._id{
 	line-height: 19px;
 	vertical-align: middle !important;
 	padding-top: 8px;
@@ -536,7 +543,7 @@ th{
 		overflow-y: overlay;
 	}
 
-	._countnum,._email,._finday,._manage{
+	._countnum,._id,._email,._finday,._manage{
 		display: table-cell;
 	}
 
@@ -548,9 +555,13 @@ th{
 		width: 85px;
 		font-size: 14px;
 	}
-	
+
+	._id{
+		width: 70px;
+	}
+
 	._email{
-		width: 140px;
+		width: 70px;
 	}
 
 	._regcount{
