@@ -12,6 +12,7 @@ $(document).ready(function(){
             $('#uptext2').text('OFF 반복 일정 등록')
             addTypeSelect = "repeatoffadd"
           }
+          fill_repeat_info_off()
       })
 
 
@@ -129,7 +130,52 @@ $(document).ready(function(){
                 select_all_check=false;
             }
         }
+    }
+
+    function fill_repeat_info_off(){
+      var len = offRepeatScheduleTypeArray.length
+      var repeat_info_dict= { 'KOR':
+                              {'DD':'매일', 'WW':'매주', '2W':'격주',
+                               'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+                              'JAP':
+                              {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                               'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+                              'JAP':
+                              {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                               'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+                             }
+      var schedulesHTML = []
+      for(var i=0; i<len; i++){
+        var repeat_type = repeat_info_dict['KOR'][offRepeatScheduleTypeArray[i]]
+        var repeat_start = offRepeatScheduleStartDateArray[i].replace(/-/gi,".");
+        var repeat_end = '반복종료 : ' + offRepeatScheduleEndDateArray[i].replace(/-/gi,".");
+        var repeat_day = function(){
+          var repeat_day_info_raw = offRepeatScheduleWeekInfoArray[i].split('/')
+          var repeat_day_info = ""
+          if(repeat_day_info_raw.length>1){
+            for(var j=0; j<repeat_day_info_raw.length; j++){
+                var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+            }
+          }else if(repeat_day_info_raw.length == 1){
+            var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+          }
+          
+          if(repeat_day_info.substr(0,1) == '/'){
+            var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+          }
+          
+
+          return repeat_day_info
+        };
+
+        var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +'</span>'
+        var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end+'</span>'
+        schedulesHTML[i] = '<div class="summaryInnerBox">'+summaryInnerBoxText_1+summaryInnerBoxText_2+'</div>'
       }
+
+      var summaryText = '<span id="summaryText">일정요약</span>'
+      $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
+    }
 
 
 
