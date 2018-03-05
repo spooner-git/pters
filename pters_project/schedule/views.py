@@ -183,7 +183,6 @@ def get_trainer_schedule_data_func(context, trainer_id):
     pt_schedule_end_datetime = []
     pt_schedule_member_name = []
     pt_schedule_finish_check = []
-    off_repeat_schedule_data = []
     off_repeat_schedule_type = []
     off_repeat_schedule_week_info = []
     off_repeat_schedule_start_date = []
