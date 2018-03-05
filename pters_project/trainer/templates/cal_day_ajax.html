@@ -30,6 +30,8 @@
       "repeatArray" :
       ["{{ request.session.repeat_schedule_id }}"],
 
+      "offRepeatScheduleIdArray" :
+      [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}"{{ off_repeat_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offRepeatScheduleTypeArray" :
       [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}"{{ off_repeat_schedule_type_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offRepeatScheduleWeekInfoArray" :
@@ -37,6 +39,10 @@
       "offRepeatScheduleStartDateArray" :
       [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}"{{ off_repeat_schedule_start_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offRepeatScheduleEndDateArray" :
-      [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}"{{ off_repeat_schedule_end_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+      [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}"{{ off_repeat_schedule_end_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleStartTimeArray" :
+      [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}"{{ off_repeat_schedule_start_time_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleTimeDurationArray" :
+      [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}"{{ off_repeat_schedule_time_duration_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
 
     }
