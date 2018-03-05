@@ -183,10 +183,13 @@ def get_trainer_schedule_data_func(context, trainer_id):
     pt_schedule_end_datetime = []
     pt_schedule_member_name = []
     pt_schedule_finish_check = []
+    off_repeat_schedule_id = []
     off_repeat_schedule_type = []
     off_repeat_schedule_week_info = []
     off_repeat_schedule_start_date = []
     off_repeat_schedule_end_date = []
+    off_repeat_schedule_start_time = []
+    off_repeat_schedule_time_duration = []
     #off_repeat_schedule_reg_dt = []
 
     today = datetime.date.today()
@@ -204,10 +207,13 @@ def get_trainer_schedule_data_func(context, trainer_id):
         off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                                    en_dis_type='0')
         for off_repeat_schedule_info in off_repeat_schedule_data:
+            off_repeat_schedule_id.append(off_repeat_schedule_info.repeat_schedule_id)
             off_repeat_schedule_type.append(off_repeat_schedule_info.repeat_type_cd)
             off_repeat_schedule_week_info.append(off_repeat_schedule_info.week_info)
-            off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_dt))
-            off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_dt))
+            off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_date))
+            off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_date))
+            off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
+            off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
 
     # 강좌에 해당하는 수강/회원 정보 가져오기, 예약가능 횟수 1개 이상인 회원
     if error is None:
@@ -267,10 +273,13 @@ def get_trainer_schedule_data_func(context, trainer_id):
     context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
     context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
+    context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
     context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
     context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
     context['off_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
     context['off_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
+    context['off_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
+    context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
 
     return context
 
@@ -591,7 +600,8 @@ def add_repeat_schedule_logic(request):
         repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                 repeat_type_cd=repeat_type,
                                                 week_info =repeat_week_type,
-                                                start_dt=repeat_schedule_start_date_info, end_dt=repeat_schedule_end_date,
+                                                start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date,
+                                                start_time=repeat_schedule_time, time_duration=repeat_schedule_time_duration,
                                                 state_cd='NP', en_dis_type=en_dis_type,
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 
@@ -614,7 +624,9 @@ def add_repeat_schedule_logic(request):
             while check_date <= repeat_schedule_end_date_info:
 
                 try:
-                    schedule_start_datetime = datetime.datetime.strptime(str(check_date).split(' ')[0]+' '+repeat_schedule_time, '%Y-%m-%d %H:%M:%S.%f')
+                    schedule_start_datetime = datetime.datetime.strptime(str(check_date).split(' ')[0]
+                                                                         + ' ' + repeat_schedule_time,
+                                                                         '%Y-%m-%d %H:%M:%S.%f')
                     schedule_end_datetime = schedule_start_datetime + datetime.timedelta(hours=int(repeat_schedule_time_duration))
                 except ValueError as e:
                     error = '등록 값에 문제가 있습니다.'
@@ -694,8 +706,8 @@ def add_repeat_schedule_confirm(request):
             error = '반복 일정이 존재하지 않습니다'
 
     if error is None:
-        start_date = repeat_schedule_data.start_dt
-        end_date = repeat_schedule_data.end_dt
+        start_date = repeat_schedule_data.start_date
+        end_date = repeat_schedule_data.end_date
         en_dis_type = repeat_schedule_data.en_dis_type
 
     if error is None:
@@ -775,6 +787,7 @@ def delete_repeat_schedule_logic(request):
     en_dis_type = None
     lecture_info = None
     member_info = None
+    repeat_schedule_info = None
 
     now = timezone.now()
 
@@ -783,19 +796,19 @@ def delete_repeat_schedule_logic(request):
 
     if error is None:
         try:
-            repeat_schedule_data = RepeatScheduleTb.objects.get(repeat_schedule_tb_id=repeat_schedule_id)
+            repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_tb_id=repeat_schedule_id)
         except ObjectDoesNotExist:
             error = '반복 일정이 존재하지 않습니다'
 
     if error is None:
-        start_date = repeat_schedule_data.start_dt
-        end_date = repeat_schedule_data.end_dt
-        en_dis_type = repeat_schedule_data.en_dis_type
+        start_date = repeat_schedule_info.start_date
+        end_date = repeat_schedule_info.end_date
+        en_dis_type = repeat_schedule_info.en_dis_type
 
     if error is None:
         if en_dis_type == '1':
             try:
-                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_data.lecture_tb_id)
+                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_info.lecture_tb_id)
             except ObjectDoesNotExist:
                 error = '회원 PT 정보가 존재하지 않습니다.'
             if error is None:
@@ -818,15 +831,17 @@ def delete_repeat_schedule_logic(request):
                 if error is not None:
                     raise ValidationError()
 
-                delete_repeat_schedule = DeleteRepeatScheduleTb(class_tb_id=repeat_schedule_data.class_id, lecture_tb_id=repeat_schedule_data.lecture_id,
-                                                                repeat_type_cd=repeat_schedule_data.repeat_type,
-                                                                week_info=repeat_schedule_data.repeat_week_type,
-                                                                start_dt=repeat_schedule_data.repeat_schedule_start_date_info,
-                                                                end_dt=repeat_schedule_data.repeat_schedule_end_date,
-                                                                state_cd=repeat_schedule_data.state_cd, en_dis_type=repeat_schedule_data.en_dis_type,
-                                                                reg_dt=repeat_schedule_data.reg_dt, mod_dt=repeat_schedule_data.mod_dt)
+                delete_repeat_schedule = DeleteRepeatScheduleTb(class_tb_id=repeat_schedule_info.class_id, lecture_tb_id=repeat_schedule_info.lecture_id,
+                                                                repeat_type_cd=repeat_schedule_info.repeat_type_cd,
+                                                                week_info=repeat_schedule_info.week_info,
+                                                                start_date=repeat_schedule_info.start_date,
+                                                                end_date=repeat_schedule_info.end_date,
+                                                                start_time=repeat_schedule_info.start_time,
+                                                                time_duration=repeat_schedule_info.time_duration,
+                                                                state_cd=repeat_schedule_info.state_cd, en_dis_type=repeat_schedule_info.en_dis_type,
+                                                                reg_dt=repeat_schedule_info.reg_dt, mod_dt=repeat_schedule_info.mod_dt)
                 delete_repeat_schedule.save()
-                repeat_schedule_data.delete()
+                repeat_schedule_info.delete()
 
         except TypeError as e:
             error = '등록 값의 형태에 문제가 있습니다.'
