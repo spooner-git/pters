@@ -19,14 +19,17 @@ from trainer import views
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^login/$', views.login_trainer, name='login'),
+    url(r'^logout/$', views.logout_trainer, name='logout'),
+    #url(r'^login_page/$', views.login_trainer_view, name='login_page'),
     
     url(r'^register_login/$', views.RegisterView.as_view(), name='register_login'),
 
-    url(r'^logout/$', views.logout_trainer, name='logout'),
-    #url(r'^login_page/$', views.login_trainer_view, name='login_page'),
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     url(r'^member_manage_ajax/$', views.ManageMemberViewAjax.as_view(), name='member_manage_ajax'),
-    url(r'^member_registration/$', views.member_registration, name='member_registration'),
+    url(r'^add_member_info/$', views.add_member_info_logic, name='add_member_info'),
+    url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
+    url(r'^delete_member_info/$', views.delete_member_info_logic, name='delete_member_info'),
+
     url(r'^trainer_login/$', views.LogInTrainerView.as_view(), name='trainer_login'),
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
     url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),

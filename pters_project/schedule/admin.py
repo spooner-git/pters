@@ -6,14 +6,16 @@ from schedule.models import RepeatScheduleTb, ScheduleTb, DeleteRepeatScheduleTb
 
 @admin.register(RepeatScheduleTb)
 class RepeatScheduleTbAdmin(admin.ModelAdmin):
-    list_display = ('repeat_schedule_id', 'class_tb', 'lecture_tb', 'repeat_type_cd'
-                    , 'week_info', 'start_dt', 'end_dt', 'state_cd', 'en_dis_type', 'reg_dt', 'mod_dt')
+    list_display = ('repeat_schedule_id', 'class_tb', 'lecture_tb', 'repeat_type_cd',
+                    'week_info', 'start_date', 'end_date', 'start_dt', 'end_dt',
+                    'state_cd', 'en_dis_type', 'reg_dt', 'mod_dt')
 
 
 @admin.register(DeleteRepeatScheduleTb)
 class DeleteRepeatScheduleTbAdmin(admin.ModelAdmin):
-    list_display = ('repeat_schedule_id', 'class_tb', 'lecture_tb', 'repeat_type_cd'
-                    , 'week_info', 'start_dt', 'end_dt', 'state_cd', 'en_dis_type', 'reg_dt', 'mod_dt', 'use')
+    list_display = ('repeat_schedule_id', 'class_tb', 'lecture_tb', 'repeat_type_cd',
+                    'week_info', 'start_date', 'end_date','start_dt', 'end_dt',
+                    'state_cd', 'en_dis_type', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(ScheduleTb)

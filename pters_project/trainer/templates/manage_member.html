@@ -18,7 +18,10 @@
     
 </div>
 
-
+<form action="{% url 'trainer:delete_member_info' %}" method="POST" class="member-form" id="member-delete-form">
+    <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
+    <input type="hidden" name="id" id="deleteMemberId">
+</form>
 <div class="confirmPopup">
     <div style="height: 40px;"><img src={% static "user/res/stopmark.png" %} style="width:35px;margin-top:6px;"></div>
     <div class="KRtext confirmText">정말 회원을 삭제하시겠습니까?<br>되돌릴 수 없습니다.</div>
@@ -75,6 +78,7 @@
           <tr style="border-bottom:0;">
             <th class="_countnum">순번</th>
             <th class="_tdname">회원명</th>
+            <th class="_id">회원 ID</th>
             <th class="_email">Email</th> 
             <th class="_regcount">등록 횟수</th>
             <th class="_remaincount">남은 횟수</th>
@@ -112,18 +116,17 @@
     </div>
 
     <div class="ptaddbox" id="pcaddpopup">
-       <span>회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+       <span id="uptext-pc-modify">회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
     </div>
 
     <div>
        <button id="infoMemberDelete"><img src={% static "user/res/member/icon-delete-black.png" %}></button>
        <button id="infoMemberModify" data-type="view"><img src={% static "user/res/member/icon-edit.png" %}></button>
     </div>
-    <form action="/trainer/member_registration/" method="POST" class="member-form" id="member-add-form-modify">
+    <form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
         <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
-        <input type="hidden" name="fast_check" id="fast_check_modify" value="0">
-        <input type="hidden" name="sex" id="form_sex_modify" value="">
-        <input type="hidden" name="birthday" id="form_birth_modify" value="">
+        <input type="hidden" name="sex" id="form_sex_modify">
+        <input type="hidden" name="birthday" id="form_birth_modify">
 
         <div class="ptaddbox form-group">
             <label for="memberName_info" class="ptaddboxtext">
@@ -131,6 +134,16 @@
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="text" class="dropdown form-control" id="memberName_info" name="name" readonly>
+            </div>
+        </div>
+
+
+        <div class="ptaddbox form-group">
+            <label for="memberId" class="ptaddboxtext">
+                <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 ID
+            </label>
+            <div class="dropdown pters_input_custom">
+                <input type="text" class="dropdown form-control" id="memberId" name="id" readonly>
             </div>
         </div>
 
@@ -186,7 +199,7 @@
                 <input type="tel" class="dropdown form-control" id="memberPhone_info" name="phone" required="required" readonly>
             </div>
         </div>
-
+<!--
         <div class="ptaddbox form-group">
             <label for="memberCount_info" class="ptaddboxtext">
                 <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
@@ -195,6 +208,7 @@
                 <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
             </div>
         </div>
+-->
 
         <div class="ptaddbox form-group">
             <label for="memberEmail_info" class="ptaddboxtext">
@@ -205,7 +219,7 @@
             </div>
         </div>
 
-
+<!--
         <div id="dateSelector_info" class="ptaddbox">
             <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
             <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
@@ -214,13 +228,13 @@
             <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
             <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
         </div>
-
+-->
         <div class="ptaddbox form-group">
             <label for="comment_info" class="ptaddboxtext">
                 <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
             </label>
             <div class="dropdown pters_input_custom">
-                <textarea class="dropdown form-control" rows="1" id="comment_info" name="contents"></textarea>    
+                <textarea class="dropdown form-control" rows="1" id="comment_info" name="contents" readonly></textarea>
             </div>  
         </div>
 
@@ -253,7 +267,7 @@
       <span>신규 회원 추가</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
     </div>
 
-    <form action="{% url 'trainer:member_registration' %}" method="POST" class="member-form" id="member-add-form-new">
+    <form action="{% url 'trainer:add_member_info' %}" method="POST" class="member-form" id="member-add-form-new">
         <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
         <input type="hidden" name="fast_check" id="fast_check" value="0">
         <input type="hidden" name="sex" id="form_sex" value="">
@@ -471,7 +485,7 @@
                 <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
             </label>
             <div class="dropdown pters_input_custom">
-                <textarea class="dropdown form-control" rows="1" id="comment" name="contents"></textarea>    
+                <textarea class="dropdown form-control" rows="1" id="comment" name="contents" ></textarea>
             </div>  
         </div>
 
@@ -502,34 +516,40 @@
          <script>
           $('#uptext').text("회원 관리")
           $('footer').hide()
-           
-          var nameArray =[{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.member_info.name }}',{% endif %}{% endfor %}]
-          var phoneArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.member_info.phone }}',{% endif %}{% endfor %}]
-          var countArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_rem_count }}',{% endif %}{% endfor %}]
-          var startArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
-          var modifyDateArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.member_info.mod_dt }}',{% endif %}{% endfor %}]
-          var emailArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.member_info.user.email }}',{% endif %}{% endfor %}]
-          var endArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
+
+          var idArray =[{% for lecture in lecture_info %}'{{ lecture.member_info.user }}',{% endfor %}]
+          var nameArray =[{% for lecture in lecture_info %}'{{ lecture.member_info.name }}',{% endfor %}]
+          var phoneArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.phone }}',{% endfor %}]
+          var contentsArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.contents }}',{% endfor %}]
+          var birthdayArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.birthday_dt }}',{% endfor %}]
+          var sexArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.sex }}',{% endfor %}]
+
+          var countArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_rem_count }}',{% endfor %}]
+          var startArray = [{% for lecture in lecture_info %}'{{ lecture.start_date }}',{% endfor %}]
+          var modifyDateArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.mod_dt }}',{% endfor %}]
+          var emailArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.user.email }}',{% endfor %}]
+          var endArray = [{% for lecture in lecture_info %}'{{ lecture.end_date }}',{% endfor %}]
 
           //처리 필요 - hk.kim 180110
-          var regCountArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_reg_count }}',{% endif %}{% endfor %}]
-          var availCountArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.lecture_avail_count }}',{% endif %}{% endfor %}]
-          var birthdayArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.member_info.birthday_dt }}',{% endif %}{% endfor %}]
-          var sexArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count > 0 %}'{{ lecture.member_info.sex }}',{% endif %}{% endfor %}]
+          var regCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_reg_count }}',{% endfor %}]
+          var availCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
 
-          var finishnameArray =[{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.member_info.name }}',{% endif %}{% endfor %}]
-          var finishphoneArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.member_info.phone }}',{% endif %}{% endfor %}]
-          var finishcountArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_rem_count }}',{% endif %}{% endfor %}]
-          var finishstartArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.start_date }}',{% endif %}{% endfor %}]
-          var finishmodifyDateArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.member_info.mod_dt }}',{% endif %}{% endfor %}]
-          var finishemailArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.member_info.user.email }}',{% endif %}{% endfor %}]
-          var finishendArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.end_date }}',{% endif %}{% endfor %}]
-          var finishbirthdayArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.member_info.birthday_dt }}',{% endif %}{% endfor %}]
-          var finishsexArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.member_info.sex }}',{% endif %}{% endfor %}]
+          var finishIdArray =[{% for lecture in lecture_finish_info %}'{{ lecture.member_info.user }}',{% endfor %}]
+          var finishnameArray =[{% for lecture in lecture_finish_info %}'{{ lecture.member_info.name }}',{% endfor %}]
+          var finishphoneArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.phone }}',{% endfor %}]
+          var finishContentsArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.contents }}',{% endfor %}]
+          var finishbirthdayArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.birthday_dt }}',{% endfor %}]
+          var finishsexArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.sex }}',{% endfor %}]
+
+          var finishcountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_rem_count }}',{% endfor %}]
+          var finishstartArray = [{% for lecture in lecture_finish_info %}'{{ lecture.start_date }}',{% endfor %}]
+          var finishmodifyDateArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.mod_dt }}',{% endfor %}]
+          var finishemailArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.user.email }}',{% endfor %}]
+          var finishendArray = [{% for lecture in lecture_finish_info %}'{{ lecture.end_date }}',{% endfor %}]
 
           //처리 필요 - hk.kim 180110
-          var finishRegCountArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_reg_count }}',{% endif %}{% endfor %}]
-          var finishAvailCountArray = [{% for lecture in lecture_info %}{% if lecture.lecture_rem_count == 0 %}'{{ lecture.lecture_avail_count }}',{% endif %}{% endfor %}]
+          var finishRegCountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_reg_count }}',{% endfor %}]
+          var finishAvailCountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
 
           var messageArray = [{% for message in messages %}'{{ message }}',{% endfor %}]
 
