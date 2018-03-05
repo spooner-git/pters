@@ -27,6 +27,8 @@ urlpatterns = [
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     url(r'^member_manage_ajax/$', views.ManageMemberViewAjax.as_view(), name='member_manage_ajax'),
     url(r'^member_registration/$', views.member_registration, name='member_registration'),
+    url(r'^member_info_update/$', views.member_info_update, name='member_info_update'),
+
     url(r'^trainer_login/$', views.LogInTrainerView.as_view(), name='trainer_login'),
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
     url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),

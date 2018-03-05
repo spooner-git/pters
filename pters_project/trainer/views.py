@@ -1018,9 +1018,17 @@ def get_member_data(context, trainer_id):
     # 강좌에 해당하는 수강/회원 정보 가져오기
     if error is None:
         # 강좌에 해당하는 수강정보 가져오기
-        context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+        context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_rem_count__gt=0)
+        context['lecture_finish_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_rem_count=0)
 
         for lecture in context['lecture_info']:
+            # 수강정보에 해당하는 회원정보 가져오기
+            try:
+                lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id)
+            except ObjectDoesNotExist:
+                error = '회원 정보가 존재하지 않습니다'
+
+        for lecture in context['lecture_finish_info']:
             # 수강정보에 해당하는 회원정보 가져오기
             try:
                 lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id)
@@ -1257,6 +1265,100 @@ def member_registration(request):
 
         return redirect(next_page)
 
+
+# 회원가입 api
+@csrf_exempt
+def member_info_update(request):
+    id = request.POST.get('id')
+    email = request.POST.get('email')
+    name = request.POST.get('name')
+    phone = request.POST.get('phone')
+    contents = request.POST.get('contents')
+    sex = request.POST.get('sex')
+    birthday_dt = request.POST.get('birthday')
+    next_page = request.POST.get('next_page')
+
+    print(id)
+    print(email)
+    print(name)
+    print(phone)
+    print(contents)
+    print(sex)
+    print(birthday_dt)
+    print(next_page)
+
+    error = None
+    now = timezone.now()
+
+    #if User.objects.filter(username=phone).exists():
+    #    error = '이미 가입된 회원 입니다.'
+    # elif User.objects.filter(email=email).exists():
+    #    error = '이미 가입된 회원 입니다.'
+    # elif email == '':
+    #    error = 'e-mail 정보를 입력해 주세요.'
+    if id == '':
+        error = '회원 ID를 확인해 주세요.1'
+
+    if name == '':
+        error = '이름을 입력해 주세요.'
+    elif phone == '':
+        error = '연락처를 입력해 주세요.'
+    elif len(phone) != 11 and len(phone) != 10:
+        error = '연락처를 확인해 주세요.'
+    elif not phone.isdigit():
+        error = '연락처를 확인해 주세요.'
+
+    if error is None:
+        try:
+            user = User.objects.get(username=id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.2'
+
+        try:
+            member = MemberTb.objects.get(user_id=user.id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.3'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                user.first_name = name
+                user.email = email
+                user.save()
+                member.name = name
+                member.phone = phone
+                member.contents = contents
+                member.sex = sex
+
+                if birthday_dt != '':
+                    member.birthday_dt = birthday_dt
+                member.mod_dt = timezone.now()
+                member.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                       + name + ' 회원님의</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.info(request, error)
+
+        return redirect(next_page)
 
 
 # 로그인 api

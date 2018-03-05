@@ -17,8 +17,10 @@ class RepeatScheduleTb(models.Model):
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     repeat_type_cd = models.CharField(db_column='REPEAT_TYPE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     week_info = models.CharField(db_column='WEEK_INFO', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    start_dt = models.DateField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
-    end_dt = models.DateField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
+    start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
+    end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
+    start_dt = models.DateTimeField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
+    end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
@@ -39,6 +41,8 @@ class DeleteRepeatScheduleTb(models.Model):
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     repeat_type_cd = models.CharField(db_column='REPEAT_TYPE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     week_info = models.CharField(db_column='WEEK_INFO', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
+    end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
     start_dt = models.DateField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
     end_dt = models.DateField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
