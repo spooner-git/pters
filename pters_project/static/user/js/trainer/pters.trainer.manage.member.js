@@ -35,10 +35,28 @@ $(document).ready(function(){
     })
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
+      //플로팅 버튼 Start
     $('#float_btn').click(function(){
+      $("#float_btn").animate({opacity:'1'})
+      if($('#shade').css('display')=='none'){
+        $('#shade').show();
+        $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
+        $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
+        $('#float_btn').addClass('rotate_btn');
+      }else{
+        $('#shade').hide();
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn').removeClass('rotate_btn');
+      }
+    });
+    //플로팅 버튼 End
+
+    $('#float_inner1').click(function(){
         $('#page_addmember').fadeIn('fast')
+        $('#shade').hide()
         $('#shade3').fadeIn('fast');
-        $(this).fadeOut();
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').fadeOut();
         $('#uptext2').text('신규 회원 등록')
         $('#page-base').fadeOut();
         $('#page-base-addstyle').fadeIn();
@@ -52,6 +70,30 @@ $(document).ready(function(){
         $('#form_birth').val('')
         $('#memberBirthDate, #memberBirthDate_info').html('')
         birth_dropdown_set()
+    })
+
+    $('#float_inner2').click(function(){
+        alert('float_inner2')
+        /*
+        $('#page_addmember').fadeIn('fast')
+        $('#shade').hide()
+        $('#shade3').fadeIn('fast');
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').fadeOut();
+        $('#uptext2').text('신규 회원 등록')
+        $('#page-base').fadeOut();
+        $('#page-base-addstyle').fadeIn();
+        scrollToIndicator($('#page_addmember'))
+        if($('body').width()<600){
+          $('#page_managemember').hide();
+        }
+
+        $('#inputError').css('display','none')
+        $('#fast_check').val('0')
+        $('#form_birth').val('')
+        $('#memberBirthDate, #memberBirthDate_info').html('')
+        birth_dropdown_set()
+        */
     })
 
     $('.ymdText-pc-add').click(function(){
@@ -123,6 +165,7 @@ $(document).ready(function(){
     $(document).on('click','td._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
         
         birth_dropdown_set()
+        $('#float_btn_wrap').fadeOut();
         $('#page-base').fadeOut('fast');
         $('#page-base-modifystyle').fadeIn('fast');
         var name = $(this).attr('data-name');
@@ -166,6 +209,7 @@ $(document).ready(function(){
     });
 
     $(document).on('click','td._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+        $('#float_btn_wrap').fadeOut();
         $('#uptext2').text('회원 정보')
         $('#page-base').fadeOut('fast');
         $('#page-base-addstyle').fadeIn('fast');
@@ -1573,6 +1617,8 @@ function closePopup(){
     if($('#memberInfoPopup').css('display')=='block'){ //회원정보팝업 띄웠을때 x눌렀을 경우
           if($('body').width()<600){
             $('#page_managemember').show();
+            $('#float_btn_wrap').fadeIn();
+            $('#float_btn').removeClass('rotate_btn');
           }
           $('#page-base').fadeIn('fast');
           $('#page-base-modifystyle').fadeOut('fast');
@@ -1599,6 +1645,8 @@ function closePopup(){
     }else{                                          //회원등록팝업 띄웠을때 x눌렀을 경우
           if($('body').width()<600){
             $('#page_managemember').show();
+            $('#float_btn_wrap').fadeIn();
+            $('#float_btn').removeClass('rotate_btn');
           }
           $('#page_addmember').fadeOut('fast');
           $('#shade3').fadeOut('fast');
