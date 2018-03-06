@@ -21,6 +21,8 @@ urlpatterns = [
     url(r'^login/$', views.login_trainer, name='login'),
     url(r'^logout/$', views.logout_trainer, name='logout'),
     url(r'^register/$', views.RegisterView.as_view(), name='register'),
+    url(r'^add_member_info/$', views.add_member_info_logic, name='add_member_info'),
+
 
     # url(r'^login_page/$', views.login_trainer_view, name='login_page'),
 
