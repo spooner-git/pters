@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -106,12 +107,12 @@ def delete_schedule_logic_func(schedule_info):
 
     error = None
     lecture_info = None
-    en_dis_type = None
+    en_dis_type = schedule_info.en_dis_type
 
     if en_dis_type == '1':
         if error is None:
             try:
-                lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use='1')
+                lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
                 error = '회원 PT 정보가 존재하지 않습니다'
 
@@ -131,7 +132,7 @@ def delete_schedule_logic_func(schedule_info):
 
                 if en_dis_type == '1':
 
-                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id)
+                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                     if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
                         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
                                                                   - len(lecture_schedule_data)
@@ -141,7 +142,7 @@ def delete_schedule_logic_func(schedule_info):
 
                     #진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
                     if schedule_info.state_cd == 'PE':
-                        lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id,
+                        lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                           state_cd='PE')
                         if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
                             lecture_info.lecture_rem_count = lecture_info.lecture_reg_count \
@@ -150,7 +151,8 @@ def delete_schedule_logic_func(schedule_info):
                         else:
                             error = '예약 가능한 횟수를 확인해주세요.'
                             raise ValidationError()
-
+                    print(str(lecture_info.lecture_avail_count))
+                    print(str(lecture_info.lecture_rem_count))
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.save()
 
@@ -168,7 +170,7 @@ def delete_schedule_logic_func(schedule_info):
     return error
 
 
-def get_trainer_schedule_data_func(context, trainer_id):
+def get_trainer_schedule_data_func(context, trainer_id, date):
 
     error = None
     class_info = None
@@ -191,7 +193,12 @@ def get_trainer_schedule_data_func(context, trainer_id):
     off_repeat_schedule_time_duration = []
     #off_repeat_schedule_reg_dt = []
 
-    today = datetime.date.today()
+    today = date
+    if today == '':
+        today = datetime.date.today()
+    elif today is None:
+        today = datetime.date.today()
+
     fourteen_days_ago = today - datetime.timedelta(days=14)
     fifteen_days_after = today + datetime.timedelta(days=15)
 
@@ -395,6 +402,7 @@ def delete_schedule_logic(request):
     if error is None:
         error = delete_schedule_logic_func(schedule_info)
 
+    print(error)
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -604,6 +612,7 @@ def add_repeat_schedule_logic(request):
                                                 state_cd='NP', en_dis_type=en_dis_type,
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 
+        request.session['repeat_schedule_id'] = repeat_schedule_info.repeat_schedule_id
         repeat_schedule_info.save()
 
     if error is None:
@@ -669,8 +678,6 @@ def add_repeat_schedule_logic(request):
     if error is None:
         if error_date is not None:
             messages.info(request, error_date)
-            #request.session['error_date'] = error_date
-            request.session['repeat_schedule_id'] = repeat_schedule_info.repeat_schedule_id
             return redirect(next_page)
         return redirect(next_page)
     else:

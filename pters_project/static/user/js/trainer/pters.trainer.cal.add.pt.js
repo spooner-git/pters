@@ -333,6 +333,7 @@ $(document).ready(function(){
                           $('#repeat_confirm_dur').text(dur_info)
                           completeSend(); //ajax 로딩 이미지 숨기기
                         }
+
                     },
 
                     //보내기후 팝업창 닫기
