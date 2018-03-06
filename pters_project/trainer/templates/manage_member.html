@@ -10,8 +10,18 @@
 {% block content %}
 
  <!--플로팅 버튼-->
-<div id="float_btn">
-    <img src={% static "user/res/memberadd/float_plus_member.png" %} alt="">
+
+   <!--플로팅 버튼-->
+<div id="float_btn_wrap">
+    <div id="float_btn">
+      <img src={% static "user/res/memberadd/float_plus_member.png" %} alt="">  <!--2017.10.2-->
+    </div>
+    <div id="float_inner1" class="float_inner">
+        <a class="KRtext">신규<br/>회원</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+    </div>
+    <div id="float_inner2" class="float_inner">
+        <a class="KRtext">연장<br/>회원</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
+    </div>
 </div>
 
 <div id="instructPopup" class="instructPopup">
