@@ -157,7 +157,6 @@ $(document).ready(function(){
           }else if(repeat_day_info_raw.length == 1){
             var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
           }
-          
           if(repeat_day_info.substr(0,1) == '/'){
             var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
           }

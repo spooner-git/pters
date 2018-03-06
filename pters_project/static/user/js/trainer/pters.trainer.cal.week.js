@@ -1520,7 +1520,6 @@ $(document).ready(function(){
           startSplitArray[5] = String(dura+24)
         }
 
-
         if(option=="class"){
           startSplitArray.push(classTimeArray_member_name[i]) 
           result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
