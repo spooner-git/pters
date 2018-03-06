@@ -226,6 +226,12 @@ ul a{
 	-webkit-border-radius: 0px;
 }
 
+.pters_input_namefield{
+	width: 49%;
+	display: inline-block;
+	height: 40px;
+}
+
 .pters_input_custom{
 	border: 0px;
 	margin-top: 0px;

@@ -282,6 +282,8 @@
         <input type="hidden" name="fast_check" id="fast_check" value="0">
         <input type="hidden" name="sex" id="form_sex" value="">
         <input type="hidden" name="birthday" id="form_birth" value="">
+        <input type="hidden" name="name" id="form_name" value="">
+
 
         <div>
             
@@ -290,7 +292,8 @@
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span>
                 </label>
                 <div id="memberName_reg" class="dropdown pters_input_custom">
-                    <input type="text" class="dropdown form-control" id="memberName_add" name="name" placeholder="회원분의 성함을 입력해주세요." maxlength="10">
+                    <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="회원분의 성을 입력해주세요." maxlength="10">
+                    <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="회원분의 이름을 입력해주세요." maxlength="10">
                 </div>
                 <div id="memberSex" class="pters_input_custom">
                     <div id="memberMale" class="selectboxopt selectboxopt_left" value="M">남</div>

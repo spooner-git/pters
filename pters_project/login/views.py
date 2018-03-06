@@ -57,11 +57,35 @@ def login_trainer(request):
         return redirect(next_page)
 
 
-class RegisterView(TemplateView):
-    template_name = 'register_member.html'
+class RegisterTrainerView(TemplateView):
+    template_name = 'login_register_trainer.html'
 
     def get_context_data(self, **kwargs):
-        context = super(RegisterView, self).get_context_data(**kwargs)
+        context = super(RegisterTrainerView, self).get_context_data(**kwargs)
+
+        return context
+
+class RegisterGeneralView(TemplateView):
+    template_name = 'login_register_general.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RegisterGeneralView, self).get_context_data(**kwargs)
+
+        return context
+
+class RegisterBusinessView(TemplateView):
+    template_name = 'login_register_business.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RegisterBusinessView, self).get_context_data(**kwargs)
+
+        return context
+
+class RegisterTypeSelectView(TemplateView):
+    template_name = 'login_register_type.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RegisterTypeSelectView, self).get_context_data(**kwargs)
 
         return context
 

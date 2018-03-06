@@ -2,7 +2,12 @@
 body{
 	font-family: 'Noto Sans KR' !important;
 	margin: 0;
-	background-color: #282828;
+	background-image: url("/static/user/res/main/bg-image.png");
+	background-repeat: no-repeat;
+	background-position-x:center;
+	background-position-y:center;
+	background-size:100%;
+	background-color: black !important;
 }
 
 .registerbox{
@@ -16,11 +21,21 @@ body{
 		font-weight: bold;
 		font-size: 21px;
 		margin-top: 0;
-		margin-bottom: 40px;
+		margin-bottom: 20px;
 	}
 		.registerbox_label span{
 			color: #fe4e65;
 		}
+		.registerbox_label img{
+			width: 15px;
+			float: right;
+			margin-top: 7px;
+			cursor: pointer;
+		}
+
+	.registerbox_sublabel{
+		font-size: 15px;
+	}
 	
 	.outerbox{
 		margin-top: 15px;
@@ -28,6 +43,39 @@ body{
 		.outerbox input{
 			line-height: 21px;
 			width: 170px;
+		}
+
+	.outerbox_horizontal{
+		display: inline-block;
+		width: 100%;
+		margin:10px 0 10px 0;
+		text-align:center;
+	}
+		.outerbox_horizontal button{
+			width: 20%;
+			min-width: 78px;
+			height: 40px;
+			border: 0;
+			border-radius: 5px;
+			font-size: 13px;
+			font-weight: bold;
+			font-family: 'Noto Sans KR' !important;
+			cursor: pointer;
+			opacity: 0.9;
+			box-shadow: 1px 1px 0px 0px #cccccc;
+			margin: 0 5px 0 5px;
+		}
+		.outerbox_horizontal button:hover{
+			opacity: 1;
+		}
+		.outerbox_horizontal div{
+			border: 0;
+			border-radius: 5px;
+			font-size: 13px;
+			font-weight: bold;
+			font-family: 'Noto Sans KR' !important;
+			box-shadow: 1px 1px 0px 0px #cccccc;
+			margin: 0 50px 0 50px;
 		}
 
 	.selector_button{
@@ -73,21 +121,76 @@ body{
 			font-size: 13px;
 		}
 
+.explainbox{
+	display: none;
+	background-color: #f1f1f1;
+	width: 210px;
+	height: 500px;
+	margin: 0 16px 0 16px !important;
+	word-break: break-all;
+	padding: 10px;
+}
+
 .buttongroup{
 	text-align: center;
 	margin-top: 30px;
 }
 
+.bg-pink{
+	background-color: #fe4e65;
+	color: #ffffff;
+}
+.bg-yellow{
+	background-color: #ffe466;
+}
+.bg-grey{
+	background-color: #282828;
+	color: #ffffff;
+}
+.font-pink{
+	color: #fe4e65;
+}
 
 
 .fixfooter{
 	display: none;
 }
 
+.bottomzero{
+	bottom: 0;
+}
+
 @media(min-width: 600px){
+	body{
+		background-image: url("/static/user/res/main/bg-image-pc-login.png");
+		background-position-y:unset;
+		background-size: auto;
+	}
+
 	.registerbox{
+		width: 800px;
 		margin-top: 50px;
-		margin-bottom: 50px;
+		margin-bottom: 45px;
+	}
+
+	.outerbox_horizontal{
+		display: inline-block;
+		width: 800px;
+		margin:10px 0 10px 0;
+		text-align:center;
+	}
+		.outerbox_horizontal button{
+			width: 140px;
+			height: 40px;
+			margin: 0 52px 0 52px;
+		}
+
+	.explainbox{
+		display: inline-block;
+		background-color: #f1f1f1;
+		width: 210px;
+		height: 500px;
+		margin: 0 8px 0 8px !important;
 	}
 	.fixfooter{
 		position: relative;
@@ -96,7 +199,6 @@ body{
 	    width: 100%;
 	    left: 50%;
 	    transform: translateX(-50%);
-	    bottom: 0;
 	}
 		.bottomfooter1{
 		    color: #7d7d7d;
