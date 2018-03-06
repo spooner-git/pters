@@ -19,7 +19,7 @@ from trainer import views
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
 
-    #강사 - 회원정보 등록 관련
+    # 강사 - 회원정보 등록 관련
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     url(r'^member_manage_ajax/$', views.ManageMemberViewAjax.as_view(), name='member_manage_ajax'),
     url(r'^add_member_info/$', views.add_member_info_logic, name='add_member_info'),
@@ -33,11 +33,11 @@ urlpatterns = [
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
     url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_repeat_off'),
 
-    #log 관련
+    # log 관련
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
     url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),
 
-    #기타 setting 관련
+    # 기타 setting 관련
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
