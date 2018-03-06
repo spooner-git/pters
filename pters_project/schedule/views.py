@@ -606,14 +606,14 @@ def add_repeat_schedule_logic(request):
         #반복 일정 데이터 등록
         repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                 repeat_type_cd=repeat_type,
-                                                week_info =repeat_week_type,
+                                                week_info=repeat_week_type,
                                                 start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date,
                                                 start_time=repeat_schedule_time, time_duration=repeat_schedule_time_duration,
                                                 state_cd='NP', en_dis_type=en_dis_type,
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 
-        request.session['repeat_schedule_id'] = repeat_schedule_info.repeat_schedule_id
         repeat_schedule_info.save()
+        request.session['repeat_schedule_id'] = repeat_schedule_info.repeat_schedule_id
 
     if error is None:
         #날짜 값 셋팅
@@ -727,7 +727,7 @@ def add_repeat_schedule_confirm(request):
                 member_info = MemberTb.objects.get(member_id=lecture_info.member_id)
 
     if error is None:
-        if repeat_confirm == 0:
+        if repeat_confirm == '0':
             try:
                 with transaction.atomic():
                     schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id)
@@ -772,7 +772,6 @@ def add_repeat_schedule_confirm(request):
             log_data.save()
 
             error = '반복일정 등록이 완료됐습니다.'
-
     if error is None:
         return redirect(next_page)
     else:
