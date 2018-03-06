@@ -165,7 +165,6 @@ def delete_schedule_logic_func(schedule_info):
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
 
-
     return error
 
 
