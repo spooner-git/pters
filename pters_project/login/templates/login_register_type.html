@@ -1,0 +1,68 @@
+
+{% load static %}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+{% block local_css %}
+
+<meta name="registertrainer" content="trainer_register">
+<link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.register.css" %}>
+
+<link rel="icon" href="/static/common/favicon.ico">
+<link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+<link rel="shortcut icon" href="/static/common/favicon-152.png">
+
+{% endblock %}
+
+{% block content %}
+<body> 
+    <div class="typeselectbox registerbox">
+        <p class="registerbox_label">
+          <span>PTERS </span>가입 유형 선택 
+          <img src="/static/user/res/ptadd/btn-x.png" onclick="location.href='{% url 'login:logout' %}'">
+        </p>
+        <p class="registerbox_sublabel">
+         가입하고자 하는 회원 유형을 선택해주세요. <br> PTERS는 누구에게나 무료입니다!
+        </p>
+        <div class="outerbox_horizontal">
+          <button class="bg-pink" onclick="location.href='{% url 'login:register_general' %}'">일반 회원</button>
+          <button class="bg-yellow" onclick="location.href='{% url 'login:register_trainer' %}'">트레이너</button>
+          <button class="bg-grey" onclick="location.href='{% url 'login:register_business' %}'">센터사업자</button>
+        </div>
+        <div class="outerbox_horizontal">
+          <div class="explainbox"><p>담당 트레이너와 일정 관리를 <br> 하고자 하는 <span class="font-pink">고객 회원님</span></p></div>
+          <div class="explainbox"><p>회원님과의 일정을 관리하고 싶은<br><span class="font-pink">트레이너님</span></p></div>
+          <div class="explainbox"><p>소속 트레이너와 회원님들의 일정을 <br>한번에 관리하는 <span class="font-pink">센터 운영 사업자님</span></p></div>
+        </div>
+    </div>
+
+    <footer class="fixfooter bottomzero">
+        <div class="bottomfooter1">
+            <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+        </div>
+        <div class="bottomfooter2">
+            <p>스푸너(SPOONER) 통신판매업 신고 : 제 2017-서울동작-0672호, 사업자등록번호 : 463-56-00284, 대표자 : OOO,XXX</p>
+            <p>Tel : xxxx-xxxx, Fax : xxxx-xxxx, 주소 : 서울특별시 동작구 신대방동 보라매로 5가길 7 캐릭터그린빌 오피스텔 x층 XXX호</p>
+            <p>이용 및 제휴문의 : skkim@spooner.co.kr</p>
+            <p>- </p>
+            <p>Copyright(C) SPOONER All rights reserved.</p>
+        </div>
+    </footer>
+
+
+{% endblock %}
+
+{% block local_js_footer %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+
+
+</script>
+{% endblock %}
+
+</body>

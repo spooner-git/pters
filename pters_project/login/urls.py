@@ -20,9 +20,10 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^login/$', views.login_trainer, name='login'),
     url(r'^logout/$', views.logout_trainer, name='logout'),
-    url(r'^register/$', views.RegisterView.as_view(), name='register'),
-    url(r'^add_member_info/$', views.add_member_info_logic, name='add_member_info'),
-
+    url(r'^register_trainer/$', views.RegisterTrainerView.as_view(), name='register_trainer'),
+    url(r'^register_general/$', views.RegisterGeneralView.as_view(), name='register_general'),
+    url(r'^register_business/$', views.RegisterBusinessView.as_view(), name='register_business'),
+    url(r'^registertype/$', views.RegisterTypeSelectView.as_view(), name='registertype'),
 
     # url(r'^login_page/$', views.login_trainer_view, name='login_page'),
 
