@@ -342,6 +342,7 @@ $(document).ready(function(){
                           closeAddPopup_mini()
                           completeSend()
                         }
+
                     },
 
                     //보내기후 팝업창 닫기
