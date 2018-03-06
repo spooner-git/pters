@@ -33,7 +33,7 @@ $(document).ready(function(){
  	}
 
 	$('.center_box_day p').text(currentDate+','+datetext); //일, 요일 표시
-	$('.center_box_monthyear p').text(currentMonth+1+monthtext+currentYear+yeartext); //월, 연도 표시
+	$('.center_box_monthyear p').text(currentYear+yeartext+(Number(currentMonth)+1)+monthtext); //월, 연도 표시
 	$('.center_box_plan p').text(todayplantext)
 
 	$(window).scroll(function(){
