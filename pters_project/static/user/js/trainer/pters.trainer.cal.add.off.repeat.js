@@ -82,7 +82,8 @@ $(document).ready(function(){
             $('#id_repeat_day').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
           }else if(addTypeSelect == "repeatoffadd"){
             $('#id_repeat_day_off').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
-          } 
+          }
+          console.log($('#id_repeat_day_off').val())
       })
 
     $("#submitBtn").click(function(){
@@ -147,6 +148,9 @@ $(document).ready(function(){
         var repeat_type = repeat_info_dict['KOR'][offRepeatScheduleTypeArray[i]]
         var repeat_start = offRepeatScheduleStartDateArray[i].replace(/-/gi,".");
         var repeat_end = '반복종료 : ' + offRepeatScheduleEndDateArray[i].replace(/-/gi,".");
+        var repeat_time = Number(offRepeatScheduleStartTimeArray[i].split(':')[0])+0
+        var repeat_dur = offRepeatScheduleTimeDurationArray[i]
+        var repeat_sum = Number(repeat_time) + Number(repeat_dur)
         var repeat_day = function(){
           var repeat_day_info_raw = offRepeatScheduleWeekInfoArray[i].split('/')
           var repeat_day_info = ""
@@ -161,11 +165,10 @@ $(document).ready(function(){
             var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
           }
           
-
           return repeat_day_info
         };
 
-        var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +'</span>'
+        var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)</span>'
         var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end+'</span>'
         schedulesHTML[i] = '<div class="summaryInnerBox">'+summaryInnerBoxText_1+summaryInnerBoxText_2+'</div>'
       }

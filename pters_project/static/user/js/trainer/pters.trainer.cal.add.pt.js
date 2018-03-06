@@ -461,7 +461,7 @@ $(document).ready(function(){
           repeatArray = [];
           offRepeatScheduleIdArray = [];
           offRepeatScheduleTypeArray = [];
-          offRepeatScheduleWeekInforray = [];
+          offRepeatScheduleWeekInfoArray = [];
           offRepeatScheduleStartDateArray = [];
           offRepeatScheduleEndDateArray = [];
           offRepeatScheduleStartTimeArray = [];
@@ -484,7 +484,7 @@ $(document).ready(function(){
           repeatArray = jsondata.repeatArray;
           offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
           offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
-          offRepeatScheduleWeekInforray = jsondata.offRepeatScheduleWeekInforray;
+          offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
           offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
           offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
           offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;

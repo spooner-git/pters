@@ -373,6 +373,7 @@ $(document).ready(function(){
 	//PC버전 새로고침 버튼
 	$('.ymdText-pc-add-refresh').click(function(){ 
 		ajaxClassTime()
+		console.log(repeatArray)
 	})
 	//PC버전 새로고침 버튼
 
@@ -488,7 +489,7 @@ $(document).ready(function(){
                 repeatArray= [];
                 offRepeatScheduleIdArray = [];
                 offRepeatScheduleTypeArray = [];
-				offRepeatScheduleWeekInforray = [];
+				offRepeatScheduleWeekInfoArray = [];
 				offRepeatScheduleStartDateArray = [];
 				offRepeatScheduleEndDateArray = [];
 			    offRepeatScheduleStartTimeArray = [];
@@ -510,7 +511,7 @@ $(document).ready(function(){
                 repeatArray = jsondata.repeatArray;
                 offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
 			    offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
-			    offRepeatScheduleWeekInforray = jsondata.offRepeatScheduleWeekInforray;
+			    offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
 			    offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
 			    offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
 			    offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
