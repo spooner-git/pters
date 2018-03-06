@@ -336,6 +336,11 @@ $(document).ready(function(){
                           $('#id_repeat_schedule_id_confirm').val(repeatArray)
                           completeSend(); //ajax 로딩 이미지 숨기기
                           $('#shade').show()
+                        }else{
+                          $('#calendar').show().css('height','100%')
+                          closeAddPopup()
+                          closeAddPopup_mini()
+                          completeSend()
                         }
                     },
 
