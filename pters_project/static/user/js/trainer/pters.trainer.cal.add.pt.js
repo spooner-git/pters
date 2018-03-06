@@ -313,6 +313,7 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(data){
                         //ajaxClassTime();
+                        console.log($form.serialize() + '_________________form')
                         var jsondata = JSON.parse(data);
                         ajax_received_json_data(jsondata)
                         if(messageArray.length>0 && addTypeSelect == "repeatoffadd"){
@@ -323,15 +324,18 @@ $(document).ready(function(){
                           var dur_info = repeat_info.dur_info
                           $('#repeat_confirm_day').text(messageArray[0].replace(/\//gi,','))
                           $('#repeat_confirm_dur').text('중복 일정을 제외하고 등록하시겠습니까?')
-
+                          $('#id_repeat_schedule_id_confirm').val(repeatArray)
                           completeSend(); //ajax 로딩 이미지 숨기기
+                          $('#shade').show()
                         }else if(messageArray.length==0 && addTypeSelect == "repeatoffadd"){
                           var repeat_info = popup_repeat_confirm()
                           var day_info = repeat_info.day_info
                           var dur_info = repeat_info.dur_info
                           $('#repeat_confirm_day').text(day_info)
                           $('#repeat_confirm_dur').text(dur_info)
+                          $('#id_repeat_schedule_id_confirm').val(repeatArray)
                           completeSend(); //ajax 로딩 이미지 숨기기
+                          $('#shade').show()
                         }
                     },
 
@@ -353,17 +357,48 @@ $(document).ready(function(){
 
       //OFF반복일정 확인 팝업 "아니오" 눌렀을때 (선택지: 반복 설정 다시 하겠다)
       $('#btn_close_repeatconfirm, #popup_btn_repeatconfim_no').click(function(){
-        $('#cal_popup_repeatconfirm').fadeOut('fast')
-        $('shade').hide()
+        $('#id_repeat_confirm').val(0);
+        $('#cal_popup_repeatconfirm').fadeOut('fast');
+        $('shade').hide();
+        ajaxRepeatConfirmSend();
       })
       
       //OFF반복일정 확인 팝업 "예" 눌렀을때 (선택지: 중복 무시하고 반복 넣겠다)
       $('#popup_btn_repeatconfirm_yes').click(function(){
-        $('#cal_popup_repeatconfirm').fadeOut('fast')
-        $('#calendar').show().css('height','100%')
+        $('#id_repeat_confirm').val(1);
+        $('#cal_popup_repeatconfirm').fadeOut('fast');
+        $('#calendar').show().css('height','100%');
+        ajaxRepeatConfirmSend();
         closeAddPopup();
-        closeAddPopup_mini()
+        closeAddPopup_mini();
       })
+
+      function ajaxRepeatConfirmSend(){
+            var $form = $('#confirm-repeat-schedule-form')
+            var serverURL = '/schedule/add_repeat_schedule_confirm/'
+            $.ajax({
+              url: serverURL,
+              data: $form.serialize(),
+              dataType : 'html',
+
+              beforeSend:function(){
+                  beforeSend(); //ajax 로딩이미지 출력
+              },
+
+              success:function(data){
+                var jsondata = JSON.parse(data);
+                ajax_received_json_data(jsondata)
+              },
+
+              complete:function(){
+                completeSend(); //ajax 로딩이미지 숨기기
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })    
+      }
 
       
       function ajaxClassTime(){
@@ -769,6 +804,7 @@ $(document).ready(function(){
       }
 
       function beforeSend(){
+        $('#shade').show();
         $('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
