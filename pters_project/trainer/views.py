@@ -8,11 +8,13 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.views.generic.base import ContextMixin
 
 from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
@@ -75,19 +77,29 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalDayView, self).get_context_data(**kwargs)
-        context = get_trainer_schedule_data_func(context, self.request.user.id)
+        date = datetime.date.today()
+        context = get_trainer_schedule_data_func(context, self.request.user.id, date)
         return context
 
 
-class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'cal_day_ajax.html'
 
-    def get_context_data(self, **kwargs):
+    def get(self, request, *args, **kwargs):
         context = super(CalDayViewAjax, self).get_context_data(**kwargs)
-        #print(self.request.POST.get('date'))2018-03-05
-        context = get_trainer_schedule_data_func(context, self.request.user.id)
+        date = datetime.date.today()
+        context = get_trainer_schedule_data_func(context, self.request.user.id, date)
 
-        return context
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        date = request.POST.get('date')
+        if date == '':
+            date = datetime.date.today()
+        context = super(CalDayViewAjax, self).get_context_data(**kwargs)
+        context = get_trainer_schedule_data_func(context, self.request.user.id, date)
+
+        return render(request, self.template_name, context)
 
 
 class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -95,7 +107,8 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalWeekView, self).get_context_data(**kwargs)
-        context = get_trainer_schedule_data_func(context, self.request.user.id)
+        date = datetime.date.today()
+        context = get_trainer_schedule_data_func(context, self.request.user.id, date)
 
         return context
 
@@ -105,7 +118,8 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
-        context = get_trainer_schedule_data_func(context, self.request.user.id)
+        date = datetime.date.today()
+        context = get_trainer_schedule_data_func(context, self.request.user.id, date)
 
         holiday = HolidayTb.objects.filter(use='1')
         context['holiday'] = holiday
