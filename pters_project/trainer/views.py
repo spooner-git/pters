@@ -526,7 +526,6 @@ def delete_member_info_logic(request):
 
     if error is None:
 
-
         try:
             user = User.objects.get(username=member_id, is_active=1)
         except ObjectDoesNotExist:

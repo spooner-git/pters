@@ -314,6 +314,7 @@ $(document).ready(function(){
                     success:function(data){
                         //ajaxClassTime();
                         console.log($form.serialize() + '_________________form')
+                        console.log(data)
                         var jsondata = JSON.parse(data);
                         ajax_received_json_data(jsondata)
                         if(messageArray.length>0 && addTypeSelect == "repeatoffadd"){
@@ -382,8 +383,11 @@ $(document).ready(function(){
       function ajaxRepeatConfirmSend(){
             var $form = $('#confirm-repeat-schedule-form')
             var serverURL = '/schedule/add_repeat_schedule_confirm/'
+          console.log($('#id_repeat_schedule_id_confirm').val())
+          console.log($('#id_repeat_confirm').val())
             $.ajax({
               url: serverURL,
+              type:'POST',
               data: $form.serialize(),
               dataType : 'html',
 

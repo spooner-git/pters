@@ -24,6 +24,8 @@ urlpatterns = [
     url(r'^register_general/$', views.RegisterGeneralView.as_view(), name='register_general'),
     url(r'^register_business/$', views.RegisterBusinessView.as_view(), name='register_business'),
     url(r'^registertype/$', views.RegisterTypeSelectView.as_view(), name='registertype'),
+    url(r'^add_member_info/$', views.add_member_info_logic, name='add_member_info'),
+    url(r'^check_member_duplication/$', views.check_member_duplication_logic, name='check_member_duplication'),
 
     # url(r'^login_page/$', views.login_trainer_view, name='login_page'),
 
