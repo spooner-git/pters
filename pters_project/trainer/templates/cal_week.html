@@ -30,8 +30,8 @@
   <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
 </form>
 <form action="{% url 'schedule:add_repeat_schedule_confirm' %}" id="confirm-repeat-schedule-form" method="get">
-  <input type="hidden" name="repeat_schedule_id" id="id_repeat_schedule_id_confirm">
-  <input type="hidden" name="repeat_confirm"   id="id_repeat_confirm">
+  <input type="hidden" name="repeat_schedule_id" id="id_repeat_schedule_id_confirm"> <!--ajax로 받은 id-->
+  <input type="hidden" name="repeat_confirm"   id="id_repeat_confirm">  <!--val 1, 0-->
   <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
 </form>
 
@@ -212,6 +212,7 @@
 
 
 <div id="page-addplan" class="wrap">
+  <!--
     {% if messages %}
         {% for message in messages %}
             <div id="inputError">
@@ -219,6 +220,7 @@
             </div>
         {% endfor %}
     {% endif %}
+  -->
     <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
@@ -456,13 +458,13 @@
     <div id="daySelect" class="ptaddbox _REPEAT_ADD">
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %} style="width:14px;"> 요일별 일정</div>
         <div class="dateButtonGroup" style="width:100%;">
-            <div class="dateButton" data-date="SUN">일</div>
-            <div class="dateButton" data-date="MON">월</div>
-            <div class="dateButton" data-date="TUE">화</div>
-            <div class="dateButton" data-date="WED">수</div>
-            <div class="dateButton" data-date="THS">목</div>
-            <div class="dateButton" data-date="FRI">금</div>
-            <div class="dateButton" data-date="SAT">토</div>
+            <div class="dateButton" data-date="1_SUN">일</div>
+            <div class="dateButton" data-date="2_MON">월</div>
+            <div class="dateButton" data-date="3_TUE">화</div>
+            <div class="dateButton" data-date="4_WED">수</div>
+            <div class="dateButton" data-date="5_THS">목</div>
+            <div class="dateButton" data-date="6_FRI">금</div>
+            <div class="dateButton" data-date="7_SAT">토</div>
         </div>
     </div>
 

@@ -1617,7 +1617,7 @@ function closePopup(){
     if($('#memberInfoPopup').css('display')=='block'){ //회원정보팝업 띄웠을때 x눌렀을 경우
           if($('body').width()<600){
             $('#page_managemember').show();
-            $('#float_btn_wrap').fadeIn();
+            $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
           }
           $('#page-base').fadeIn('fast');
@@ -1645,7 +1645,7 @@ function closePopup(){
     }else{                                          //회원등록팝업 띄웠을때 x눌렀을 경우
           if($('body').width()<600){
             $('#page_managemember').show();
-            $('#float_btn_wrap').fadeIn();
+            $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
           }
           $('#page_addmember').fadeOut('fast');
