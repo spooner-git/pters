@@ -78,13 +78,11 @@ $(document).ready(function(){
               selectedDayGroup.splice(index,1) 
             }
           }
-          console.log(selectedDayGroup.join("/"))
           if(addTypeSelect == "repeatptadd"){
-            $('#id_repeat_day').val(selectedDayGroup.join("/"))
+            $('#id_repeat_day').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
           }else if(addTypeSelect == "repeatoffadd"){
-            $('#id_repeat_day_off').val(selectedDayGroup.join("/"))
-          }
-          
+            $('#id_repeat_day_off').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
+          } 
       })
 
     $("#submitBtn").click(function(){
