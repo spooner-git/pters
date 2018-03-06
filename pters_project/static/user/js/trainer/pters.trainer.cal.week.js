@@ -76,7 +76,7 @@ $(document).ready(function(){
 	    if($('body').width()<600){
 	        $('#calendar').show();
 	    }
-	    $('#float_btn_wrap').fadeIn();
+	    $('#float_btn_wrap').show();
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
 	    $('#page-base-addstyle').fadeOut();
@@ -118,7 +118,7 @@ $(document).ready(function(){
 	    if($('body').width()<600){
 	        $('#calendar').show();
 	    }
-	    $('#float_btn_wrap').fadeIn();
+	    $('#float_btn_wrap').show();
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
 	    $('#page-base-addstyle').fadeOut();
