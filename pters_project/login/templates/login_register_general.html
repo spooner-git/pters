@@ -26,6 +26,7 @@
         <input type="hidden" id="newemail" value="" >
         <input type="hidden" id="newbirth" value="" >
         <input type="hidden" id="newregion" value="" >
+        <input type="hidden" id="id_duplicate_check" value="" >
     </form>
 
     <div class="registerbox">
@@ -39,7 +40,9 @@
        </div>
 
        <div class="outerbox">
-            <input type="text" name="" placeholder="새로운 ID" id="id_input"><button class="register_button" onclick="javascript:check_id();">중복 확인</button>
+            <input type="text" name="" placeholder="새로운 ID" id="id_input">
+            <button class="register_button" onclick="javascript:check_id();">중복 확인</button>
+            <span class="id_confirm"></span>
        </div>
 
        <div class="outerbox">
@@ -298,9 +301,14 @@
 
                 //통신성공시 처리
                 success:function(data){
-                    console.log(data)
                     var jsondata = JSON.parse(data);
-
+                    var id_check_message = jsondata.id_check_result
+                    if(id_check_message[0].length>0){
+                      var error_msg = id_check_message[0]
+                      $('.id_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
+                    }else{
+                      $('.id_confirm').text('사용 가능').css({'display':'inline','color':'green'})
+                    }
                   },
 
                 //보내기후 팝업창 닫기
