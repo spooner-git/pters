@@ -320,23 +320,24 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(data){
+                        console.log(data)
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
-                        messageArray = jsondata.messageArray;
+                        //messageArray = jsondata.messageArray;
+                        RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
-                        console.log(messageArray)
-                        if(messageArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
-                          console.log('if')
-                          var date = messageArray[0].replace(/\//gi,", ")
-                          $('._repeatconfirmQuestion').text('선택한 일정 중 '+messageArray[0].split('/').length + '건의 일정이 겹칩니다.')
+                        console.log(RepeatDuplicationDateArray)
+                        if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
+                          var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ")
+                          $('._repeatconfirmQuestion').text('선택한 일정 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.')
                           var repeat_info = popup_repeat_confirm()
                           $('#repeat_confirm_day').text(messageArray[0].replace(/\//gi,','))
                           $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
                           $('#id_repeat_schedule_id_confirm').val(repeatArray)
                           completeSend(); //ajax 로딩 이미지 숨기기
                           $('#shade').show()
-                        }else if(messageArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
-                          console.log('else if')
+
+                        }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
                           var repeat_info = popup_repeat_confirm()
                           var day_info = repeat_info.day_info
                           var dur_info = repeat_info.dur_info
@@ -505,7 +506,7 @@ $(document).ready(function(){
           memberNameArray = [];
           memberAvailCountArray = [];
           messageArray = [];
-          //dateMessageArray = [];
+          RepeatDuplicationDateArray = [];
           repeatArray = [];
           offRepeatScheduleIdArray = [];
           offRepeatScheduleTypeArray = [];
@@ -535,7 +536,7 @@ $(document).ready(function(){
           memberNameArray = jsondata.memberNameArray;
           memberAvailCountArray = jsondata.memberAvailCountArray;
           messageArray = jsondata.messageArray;
-          //dateMessageArray = jsondata.dateMessageArray;
+          RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
           repeatArray = jsondata.repeatArray;
           offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
           offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
