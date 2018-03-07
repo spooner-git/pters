@@ -1,0 +1,4 @@
+{
+      "id_check_result" :
+      [{% for message in messages %}"{{ message }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+}

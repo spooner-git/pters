@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, logout, login
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -246,10 +246,12 @@ def add_member_info_logic(request):
 
 @csrf_exempt
 def check_member_duplication_logic(request):
-    user_id = request.POST.get('id')
-    next_page = request.POST.get('next_page')
+    user_id = request.POST.get('id', '')
+    next_page = '/login/check_member_id/'
 
     error = None
+    if user_id == '':
+        error = 'id를 입력해주세요.'
 
     if User.objects.filter(username=user_id).exists():
         error = '이미 가입된 회원 입니다.'
@@ -259,3 +261,23 @@ def check_member_duplication_logic(request):
     else:
         messages.info(request, error)
         return redirect(next_page)
+
+
+class CheckMemberIdView(TemplateView):
+    template_name = 'id_check_ajax.html'
+    error = None
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        user_id = request.POST.get('id', '')
+        if user_id == '':
+            error = 'id를 입력해주세요.'
+
+        if User.objects.filter(username=user_id).exists():
+            error = '이미 가입된 회원 입니다.'
+
+        return render(request, self.template_name, {'error': error} )
+
