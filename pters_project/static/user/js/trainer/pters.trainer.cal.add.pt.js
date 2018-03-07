@@ -325,7 +325,8 @@ $(document).ready(function(){
                         messageArray = jsondata.messageArray;
                         repeatArray = jsondata.repeatArray;
                         console.log(messageArray)
-                        if(messageArray.length>0 && addTypeSelect == "repeatoffadd"){
+                        if(messageArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
+                          console.log('if')
                           var date = messageArray[0].replace(/\//gi,", ")
                           $('._repeatconfirmQuestion').text('선택한 일정 중 '+messageArray[0].split('/').length + '건의 일정이 겹칩니다.')
                           var repeat_info = popup_repeat_confirm()
@@ -334,7 +335,8 @@ $(document).ready(function(){
                           $('#id_repeat_schedule_id_confirm').val(repeatArray)
                           completeSend(); //ajax 로딩 이미지 숨기기
                           $('#shade').show()
-                        }else if(messageArray.length==0 && addTypeSelect == "repeatoffadd"){
+                        }else if(messageArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
+                          console.log('else if')
                           var repeat_info = popup_repeat_confirm()
                           var day_info = repeat_info.day_info
                           var dur_info = repeat_info.dur_info
