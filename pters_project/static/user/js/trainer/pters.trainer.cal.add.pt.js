@@ -446,7 +446,7 @@ $(document).ready(function(){
             $.ajax({
               url: '/trainer/cal_day_ajax/',
               type : 'POST',
-              data : {"date":today_form, 'day':1}, //월간 46 , 주간 18, 하루 1
+              data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
               dataType : 'html',
 
               beforeSend:function(){
