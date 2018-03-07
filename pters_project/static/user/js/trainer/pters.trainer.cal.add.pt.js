@@ -318,6 +318,7 @@ $(document).ready(function(){
                         var jsondata = JSON.parse(data);
                         messageArray = jsondata.messageArray;
                         repeatArray = jsondata.repeatArray;
+                        console.log(messageArray)
                         if(messageArray.length>0 && addTypeSelect == "repeatoffadd"){
                           var date = messageArray[0].replace(/\//gi,", ")
                           $('._repeatconfirmQuestion').text('선택한 일정 중 '+messageArray[0].split('/').length + '건의 일정이 겹칩니다.')
