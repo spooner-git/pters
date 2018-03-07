@@ -19,13 +19,13 @@
 <body> 
 
     <form>
-        <input id="newname" value="" hidden>
-        <input id="newsex" value="" hidden>
-        <input id="newid" value="" hidden>
-        <input id="newpw" value="" hidden>
-        <input id="newemail" value="" hidden>
-        <input id="newbirth" value="" hidden>
-        <input id="newregion" value="" hidden>
+        <input type="hidden" id="newname" value="" >
+        <input type="hidden" id="newsex" value="" >
+        <input type="hidden" id="newid" value="" >
+        <input type="hidden" id="newpw" value="" >
+        <input type="hidden" id="newemail" value="" >
+        <input type="hidden" id="newbirth" value="" >
+        <input type="hidden" id="newregion" value="" >
     </form>
 
 
@@ -35,8 +35,8 @@
        <div class="outerbox">
             <input type="text" name="" maxlength="5" placeholder="성" id="familyname_input">
             <input type="text" name="" maxlength="5" placeholder="이름" id="lastname_input">
-            <button class="selector_button">남</button>
-            <button class="selector_button">여</button>
+            <button class="selector_button" data-type="M">남</button>
+            <button class="selector_button" data-type="W">여</button>
        </div>
 
        <div class="outerbox">
@@ -210,12 +210,12 @@
     $('.selector_button').click(function(){
         $(this).addClass('selector_button_checked')
         $(this).siblings().removeClass('selector_button_checked')
-        $('#newsex').attr('value',$(this).text())
+        $('#newsex').attr('value',$(this).attr('data-type'))
     })
 
     $('#familyname_input').keyup(function(){
         if($(this).val().length>0 && $('#lastname_input').val().length>0){
-            $('#newname').attr('value', $(this).val() + '_' + $('#lastname_input').val())
+            $('#newname').attr('value', $(this).val() + '' + $('#lastname_input').val())
         }else{
             $('#newname').attr('value',"")
         }
@@ -223,7 +223,7 @@
     
     $('#lastname_input').keyup(function(){
         if($(this).val().length>0 && $('#familyname_input').val().length>0){
-            $('#newname').attr('value', $('#familyname_input').val() + '_' + $(this).val())
+            $('#newname').attr('value', $('#familyname_input').val() + '' + $(this).val())
         }else{
             $('#newname').attr('value',"")
         }
@@ -265,7 +265,7 @@
         var year = $('#birth_year').val().replace(/년/gi,"")
         var month = $('#birth_month').val().replace(/월/gi,"")
         var date = $('#birth_date').val().replace(/일/gi,"")
-        var birthdata = year+'_'+month+'_'+date
+        var birthdata = year+'-'+month+'-'+date
         $('#newbirth').attr('value',birthdata)
     })
 
