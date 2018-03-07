@@ -254,6 +254,8 @@ def pt_delete_logic(request):
     error = None
     lecture_info = None
     schedule_info = None
+    today = datetime.date.today()
+    fifteen_days_after = today + datetime.timedelta(days=15)
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
@@ -267,8 +269,12 @@ def pt_delete_logic(request):
     if error is None:
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
-        if start_date < timezone.now():
+        if start_date < timezone.now():  # 강사 설정 시간으로 변경필요
             error = '이미 지난 일정입니다.'
+
+    if error is None:
+        if start_date >= fifteen_days_after:
+            error = '입력할 수 없는 날짜입니다.'
 
     if error is None:
         if schedule_info.state_cd == 'PE':
@@ -424,6 +430,9 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     error = None
     lecture_info = None
     class_info = None
+    today = datetime.date.today()
+    fourteen_days_ago = today - datetime.timedelta(days=14)
+    fifteen_days_after = today + datetime.timedelta(days=15)
 
     if pt_schedule_date == '':
         error = '날짜를 선택해 주세요.'
@@ -441,6 +450,14 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             lecture_info = LectureTb.objects.get(member_id=user_id, use='1')
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
+
+    if error is None:
+        if start_date >= fifteen_days_after:
+            error = '입력할 수 없는 날짜입니다.'
+
+    if error is None:
+        if start_date < fourteen_days_ago:
+            error = '입력할 수 없는 날짜입니다.'
 
     if error is None:
         if lecture_info.member_id != str(user_id):
