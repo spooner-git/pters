@@ -168,7 +168,7 @@ def delete_schedule_logic_func(schedule_info):
     return error
 
 
-def get_trainer_schedule_data_func(context, trainer_id, date):
+def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
 
     error = None
     class_info = None
@@ -190,9 +190,9 @@ def get_trainer_schedule_data_func(context, trainer_id, date):
     off_repeat_schedule_start_time = []
     off_repeat_schedule_time_duration = []
     #off_repeat_schedule_reg_dt = []
-    today = datetime.datetime.strptime(date, '%Y-%m-%d')
-    fourteen_days_ago = today - datetime.timedelta(days=14)
-    fifteen_days_after = today + datetime.timedelta(days=15)
+    #today = datetime.datetime.strptime(date, '%Y-%m-%d')
+    #fourteen_days_ago = today - datetime.timedelta(days=14)
+    #fifteen_days_after = today + datetime.timedelta(days=15)
 
     # 강사 정보 가져오기
     try:
@@ -228,8 +228,8 @@ def get_trainer_schedule_data_func(context, trainer_id, date):
     # OFF 일정 조회
     if error is None:
         off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                      en_dis_type='0', start_dt__gte=fourteen_days_ago,
-                                                      start_dt__lt=fifteen_days_after)
+                                                      en_dis_type='0', start_dt__gte=start_date,
+                                                      start_dt__lt=end_date)
         for off_schedule_datum in off_schedule_data:
             off_schedule_id.append(off_schedule_datum.schedule_id)
             off_schedule_start_datetime.append(off_schedule_datum.start_dt)
@@ -245,8 +245,8 @@ def get_trainer_schedule_data_func(context, trainer_id, date):
             # 강좌별로 연결된 PT 스케쥴 가져오기
             lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
                                                                        en_dis_type='1',
-                                                                       start_dt__gte=fourteen_days_ago,
-                                                                       start_dt__lt=fifteen_days_after)
+                                                                       start_dt__gte=start_date,
+                                                                       start_dt__lt=end_date)
             # PT 스케쥴 정보 셋팅
             for pt_schedule_datum in lecture_datum.pt_schedule_data:
                 # lecture schedule id 셋팅
