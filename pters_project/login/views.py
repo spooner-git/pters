@@ -8,6 +8,8 @@ from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.shortcuts import redirect, render
+from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -244,28 +246,10 @@ def add_member_info_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
-def check_member_duplication_logic(request):
-    user_id = request.POST.get('id', '')
-    next_page = '/login/check_member_id/'
-
-    error = None
-    if user_id == '':
-        error = 'id를 입력해주세요.'
-
-    if User.objects.filter(username=user_id).exists():
-        error = '이미 가입된 회원 입니다.'
-
-    if error is None:
-        return redirect(next_page)
-    else:
-        messages.info(request, error)
-        return redirect(next_page)
-
-
-class CheckMemberIdView(TemplateView):
+@method_decorator(csrf_exempt, name='dispatch')
+class CheckMemberIdView(View):
     template_name = 'id_check_ajax.html'
-    error = None
+    error = ''
 
     def get(self, request, *args, **kwargs):
 
@@ -274,10 +258,9 @@ class CheckMemberIdView(TemplateView):
     def post(self, request, *args, **kwargs):
         user_id = request.POST.get('id', '')
         if user_id == '':
-            error = 'id를 입력해주세요.'
+            self.error = 'id를 입력해주세요.'
 
         if User.objects.filter(username=user_id).exists():
-            error = '이미 가입된 회원 입니다.'
-
-        return render(request, self.template_name, {'error': error} )
+            self.error = '이미 가입된 회원 입니다.'
+        return render(request, self.template_name, {'error': self.error})
 
