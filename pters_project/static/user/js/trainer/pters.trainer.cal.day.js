@@ -373,7 +373,7 @@ $(document).ready(function(){
                 memberNameArray = [];
                 memberAvailCountArray = [];
                 messageArray = [];
-                dateMessageArray = [];
+				RepeatDuplicationDateArray = [];
                 repeatArray= [];
           		offRepeatScheduleIdArray = [];
 			    offRepeatScheduleTypeArray = [];
@@ -402,7 +402,7 @@ $(document).ready(function(){
                 memberNameArray = jsondata.memberNameArray;
                 memberAvailCountArray = jsondata.memberAvailCountArray;
                 messageArray = jsondata.messageArray;
-                dateMessageArray = jsondata.dateMessageArray;
+                RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                 repeatArray= jsondata.repeatArray;
           		offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
 			    offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
