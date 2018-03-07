@@ -151,8 +151,6 @@ def delete_schedule_logic_func(schedule_info):
                         else:
                             error = '예약 가능한 횟수를 확인해주세요.'
                             raise ValidationError()
-                    print(str(lecture_info.lecture_avail_count))
-                    print(str(lecture_info.lecture_rem_count))
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.save()
 
