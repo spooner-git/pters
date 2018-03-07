@@ -1,20 +1,45 @@
 $(document).ready(function(){
 
       $('#repeatSchedule').click(function(){ //일정추가 팝업에서 반복일정을 누르면 반복일정 관련 메뉴 나타남
-          $('._NORMAL_ADD').hide('slow')
-          $('._REPEAT_ADD').show('slow')
+          
           if(addTypeSelect == "ptadd"){
+            $('._NORMAL_ADD, ._NORMAL_ADD_timegraph').hide('slow')
+            $('._REPEAT_ADD').show('slow')
             $('#uptext2').text('PT 반복 일정 등록')
             addTypeSelect = "repeatptadd"
             $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
             $("#id_repeat_member_name").val($('id_member_name').text());
+            $(this).find('.icons-next-button').addClass('rotate_90')
+            fill_repeat_info_off()
+            console.log(addTypeSelect)
           }else if(addTypeSelect == "offadd"){
+            $('._NORMAL_ADD, ._NORMAL_ADD_timegraph').hide('slow')
+            $('._REPEAT_ADD').show('slow')
             $('#uptext2').text('OFF 반복 일정 등록')
             addTypeSelect = "repeatoffadd"
-          }
-          fill_repeat_info_off()
+            $(this).find('.icons-next-button').addClass('rotate_90')
+            fill_repeat_info_off()
+            console.log(addTypeSelect)
+          }else if(addTypeSelect == "repeatptadd"){
+            $('._NORMAL_ADD').show('slow')
+            $('._REPEAT_ADD').hide('slow')
+            if($('#datepicker').val().length>0){
+                $('._NORMAL_ADD_timegraph').show('slow')
+            }
+            $(this).find('.icons-next-button').removeClass('rotate_90')
+            addTypeSelect = "ptadd"
+            console.log(addTypeSelect)
+          }else if(addTypeSelect == "repeatoffadd"){
+            $('._NORMAL_ADD').show('slow')
+            $('._REPEAT_ADD').hide('slow')
+            if($('#datepicker').val().length>0){
+                $('._NORMAL_ADD_timegraph').show('slow')
+            }
+            $(this).find('.icons-next-button').removeClass('rotate_90')
+            addTypeSelect = "offadd"
+            console.log(addTypeSelect)
+          }   
       })
-
 
 
       var select_all_check = false;
@@ -174,10 +199,11 @@ $(document).ready(function(){
 
 
     /*미니달력 관련*/
-    $( "#datepicker_repeat_start" ).datepicker({
+    $("#datepicker_repeat_start").datepicker({
       minDate : 0,
+      
     });
-    $( "#datepicker_repeat_end" ).datepicker({
+    $("#datepicker_repeat_end").datepicker({
       minDate : 0,
     });
 

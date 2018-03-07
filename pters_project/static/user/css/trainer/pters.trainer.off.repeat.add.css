@@ -6,6 +6,11 @@ body{
 	display: none;
 }
 
+.rotate_90{
+	transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+}
+
 #repeatSchedule{
 	cursor: pointer;
 }
