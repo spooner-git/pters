@@ -835,8 +835,42 @@ $(document).ready(function(){
 			calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기	
 			//classTime();
 			//offTime();
-			classTime_Active('next')
-			offTime_Active('next')
+
+			var $weekNum4 = $('#weekNum_4').attr('data-date')
+			var currentPage_date_center = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
+			$.ajax({
+                url:'/schedule/finish_schedule/',
+                type:'POST',
+                data:{'date_center_view':currentPage_date_center},
+
+
+                beforeSend:function(){
+                	deleteBeforeSend();
+                },
+
+                //통신성공시 처리
+                success:function(){
+                  	closeDeletePopup();
+                    //classTime_Active('next')
+					//offTime_Active('next')
+					classTime()
+					offTime()
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+         			$('#popup_btn_complete').css({'color':'#333','background':'#ffffff'}).val('')
+                	$('#canvas').hide().css({'border-color':'#282828'})
+                	$('#canvasWrap span').hide();
+					$('#canvasWrap').css({'height':'0px'})
+					$('body').css('overflow-y','overlay');
+                  },
+
+                //통신 실패시 처리
+                error:function(){
+                },
+            })
+			
 			
 			//DBrepeatdata(repeatData,'class')
 			//DBrepeatdata(offrepeatData,'off')
