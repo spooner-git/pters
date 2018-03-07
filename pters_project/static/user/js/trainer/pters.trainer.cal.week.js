@@ -508,7 +508,7 @@ $(document).ready(function(){
             $.ajax({
               url: '/trainer/cal_day_ajax/',
               type : 'POST',
-			  data : {"date":today_form},
+			  data : {"date":today_form, 'day':46},
 			  dataType : 'html',
 
               beforeSend:function(){
@@ -542,6 +542,7 @@ $(document).ready(function(){
                 var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
                 var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
                 var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+                console.log(updatedClassTimeArray_start_date)
                 classTimeArray_member_name = jsondata.classTimeArray_member_name
                 classArray_lecture_id = jsondata.classArray_lecture_id
                 scheduleIdArray = jsondata.scheduleIdArray
