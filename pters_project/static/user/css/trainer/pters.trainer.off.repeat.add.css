@@ -70,6 +70,7 @@ body{
 	right: 0;
 	text-align: center;
 	background: #cccccc;
+	cursor: pointer;
 }
 
 .deleteBtnBin img{

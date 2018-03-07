@@ -396,70 +396,105 @@ $(document).ready(function(){
 
 
 	$('#popup_btn_delete_yes').click(function(){
-		var $ptdelform = $('#daily-pt-delete-form');
-		var $offdelform = $('#daily-off-delete-form');
-		$('body').css('overflow-y','overlay');
-		if(schedule_on_off==1){
-				//PT 일정 삭제시
-				$.ajax({
-                    url:'/schedule/delete_schedule/',
-                    type:'POST',
-                    data:$ptdelform.serialize(),
+		if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd"){
+			$.ajax({
+                url:'/schedule/delete_repeat_schedule/',
+                type:'POST',
+                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val()},
 
-                    beforeSend:function(){
-                     	deleteBeforeSend();
-                    },
+                beforeSend:function(){
+                	console.log({"repeat_schedule_id":$('#id_repeat_schedule_id_confirm').val()})
+                 	deleteBeforeSend();
+                },
 
-                    //통신성공시 처리
-                    success:function(){
-                      closeDeletePopup();
-                      deleteCompleteSend();
-                      ajaxClassTime()
-                      fake_show()
-                      console.log('success')
-                      },
+                //통신성공시 처리
+                success:function(){
+                  closeDeletePopup();
+                  ajaxClassTime()
+                  deleteCompleteSend();
+                  },
 
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                    	
-                      },
+                //보내기후 팝업창 닫기
+                complete:function(){
+                	$('#id_repeat_schedule_id_confirm').val('')
+                  },
 
-                    //통신 실패시 처리
-                    error:function(){
-                      console.log("error")
-                    },
-                 })
+                //통신 실패시 처리
+                error:function(){
+                  alert("에러: 서버 통신 실패")
+                  closeDeletePopup();
+                  deleteCompleteSend();
+                },
+            })
+		}else{
+			var $ptdelform = $('#daily-pt-delete-form');
+			var $offdelform = $('#daily-off-delete-form');
+			$('body').css('overflow-y','overlay');
+			if(schedule_on_off==1){
+					//PT 일정 삭제시
+					$.ajax({
+	                    url:'/schedule/delete_schedule/',
+	                    type:'POST',
+	                    data:$ptdelform.serialize(),
+
+	                    beforeSend:function(){
+	                     	deleteBeforeSend();
+	                    },
+
+	                    //통신성공시 처리
+	                    success:function(){
+	                      closeDeletePopup();
+	                      deleteCompleteSend();
+	                      ajaxClassTime()
+	                      fake_show()
+	                      console.log('success')
+	                      },
+
+	                    //보내기후 팝업창 닫기
+	                    complete:function(){
+	                    	
+	                      },
+
+	                    //통신 실패시 처리
+	                    error:function(){
+	                      console.log("error")
+	                    },
+	                 })
+			}
+			else{
+					$.ajax({
+	                    url:'/schedule/delete_schedule/',
+	                    type:'POST',
+	                    data:$offdelform.serialize(),
+
+	                    beforeSend:function(){
+	                    	deleteBeforeSend();
+	                    },
+
+	                    //통신성공시 처리
+	                    success:function(){
+	                      closeDeletePopup();
+	                      deleteCompleteSend();
+	                      ajaxClassTime()
+	                      fake_show()
+	                      console.log('success')
+	                      },
+
+	                     //보내기후 팝업창 닫기
+	                    complete:function(){
+	                      	
+	                      },
+
+	                    //통신 실패시 처리
+	                    error:function(){
+	                      console.log("error")
+	                    },
+	                 })
+			}
 		}
-		else{
-				$.ajax({
-                    url:'/schedule/delete_schedule/',
-                    type:'POST',
-                    data:$offdelform.serialize(),
 
-                    beforeSend:function(){
-                    	deleteBeforeSend();
-                    },
 
-                    //통신성공시 처리
-                    success:function(){
-                      closeDeletePopup();
-                      deleteCompleteSend();
-                      ajaxClassTime()
-                      fake_show()
-                      console.log('success')
-                      },
-
-                     //보내기후 팝업창 닫기
-                    complete:function(){
-                      	
-                      },
-
-                    //통신 실패시 처리
-                    error:function(){
-                      console.log("error")
-                    },
-                 })
-		}
+		
 	})
 
 	function ajaxClassTime(){

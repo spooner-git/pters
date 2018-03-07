@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-      $('#repeatSchedule').click(function(){
+      $('#repeatSchedule').click(function(){ //일정추가 팝업에서 반복일정을 누르면 반복일정 관련 메뉴 나타남
           $('._NORMAL_ADD').hide('slow')
           $('._REPEAT_ADD').show('slow')
           if(addTypeSelect == "ptadd"){
@@ -16,44 +16,37 @@ $(document).ready(function(){
       })
 
 
-      $( "#datepicker_repeat_start" ).datepicker({
-        minDate : 0,
-      });
-      $( "#datepicker_repeat_end" ).datepicker({
-        minDate : 0,
-      });
-      var select_all_check = false;
-      //달력 선택된 날짜
-      //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
-      $('#inputError').fadeIn('slow')
 
-      $('span.deleteBtn').click(function(){ //일정요약에서 반복일정 오른쪽 화살표 누르면 휴지통 열림
-        var btn = $(this).find('div')
-        if(btn.css('width')=='0px'){
-          btn.animate({'width':'40px'},300)
-          btn.find('img').css({'display':'block'})
-        $('.deleteBtnBin').not(btn).animate({'width':'0px'},230);
-        $('.deleteBtnBin img').not(btn.find('img')).css({'display':'none'})
+      var select_all_check = false;
+
+      $(document).on('click','.deleteBtn',function(){ //일정요약에서 반복일정 오른쪽 화살표 누르면 휴지통 열림
+        var $btn = $(this).find('div')
+        if($btn.css('width')=='0px'){
+          $btn.animate({'width':'40px'},300)
+          $btn.find('img').css({'display':'block'})
+        $('.deleteBtnBin').not($btn).animate({'width':'0px'},230);
+        $('.deleteBtnBin img').not($btn.find('img')).css({'display':'none'})
         }
       })
 
-      $('div.deleteBtnBin img').click(function(){
-        $(this).parents('.summaryInnerBox').hide('fast','swing',function(){$(this).parents('.summaryInnerBox').detach()});
+      
+      $(document).on('click','div.deleteBtnBin',function(){
+        var id_info = $(this).parents('div.summaryInnerBox').attr('data-id')
+        $('#id_repeat_schedule_id_confirm').val(id_info)
+        $('#cal_popup_plandelete').fadeIn()
+        $('#shade').show()
+      })
+      
+
+
+      $(document).on('click','.summaryInnerBoxText, .summaryInnerBoxText2',function(){ //반복일정 텍스트 누르면 휴지통 닫힘
+        var $btn = $('.deleteBtnBin')
+          $btn.animate({'width':'0px'},230)
+          $btn.find('img').css({'display':'none'})
       })
 
-      $('.summaryInnerBoxText').click(function(){ //매주 월요일 오전 11시 누르면 휴지통 닫힘
-        var btn = $('.deleteBtnBin')
-          btn.animate({'width':'0px'},230)
-          btn.find('img').css({'display':'none'})
-      })
 
-      $('.summaryInnerBoxText2').click(function(){ // 반복종료 :2017.12.31 누르면 휴지통 닫힘
-        var btn = $('.deleteBtnBin')
-          btn.animate({'width':'0px'},230)
-          btn.find('img').css({'display':'none'})
-      })
-
-      $("#repeats li a").click(function(){
+      $("#repeats li a").click(function(){ //반복 빈도 드랍다운 박스 - 선택시 선택한 아이템이 표시
         if(addTypeSelect == "repeatptadd"){
           $("#repeattypeSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-repeat'));
           $("#id_repeat_freq").val($(this).attr('data-repeat'));
@@ -63,10 +56,10 @@ $(document).ready(function(){
         }
           
           check_dropdown_selected();
-      }); //반복 빈도 드랍다운 박스 - 선택시 선택한 아이템이 표시
+      }); 
 
 
-      $('.dateButton').click(function(){
+      $('.dateButton').click(function(){ // 반복일정 요일선택 (월/화/수/목/금/토/일)
           var selectedDay = $(this).attr('data-date')
           if(!$(this).hasClass('dateButton_selected')){
             $(this).addClass('dateButton_selected')
@@ -99,7 +92,6 @@ $(document).ready(function(){
     function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
         var memberSelect = $("#membersSelected button");
         var durSelect_mini = $('#classDuration_mini #durationsSelected button')
-
         var repeatSelect = $("#repeattypeSelected button");
         var startSelect_repeat = $('#repeatstarttimesSelected button')
         var durSelect_repeat = $('#repeatdurationsSelected button')
@@ -145,6 +137,7 @@ $(document).ready(function(){
                              }
       var schedulesHTML = []
       for(var i=0; i<len; i++){
+        var repeat_id = offRepeatScheduleIdArray[i]
         var repeat_type = repeat_info_dict['KOR'][offRepeatScheduleTypeArray[i]]
         var repeat_start = offRepeatScheduleStartDateArray[i].replace(/-/gi,".");
         var repeat_end = '반복종료 : ' + offRepeatScheduleEndDateArray[i].replace(/-/gi,".");
@@ -170,7 +163,8 @@ $(document).ready(function(){
 
         var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)</span>'
         var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end+'</span>'
-        schedulesHTML[i] = '<div class="summaryInnerBox">'+summaryInnerBoxText_1+summaryInnerBoxText_2+'</div>'
+        var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+        schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
       }
 
       var summaryText = '<span id="summaryText">일정요약</span>'
@@ -179,21 +173,26 @@ $(document).ready(function(){
 
 
 
-
-
-
-
-      //작은달력 설정
-      $.datepicker.setDefaults({
-        dateFormat: 'yy-mm-dd',
-        prevText: '이전 달',
-        nextText: '다음 달',
-        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-        showMonthAfterYear: true,
-        yearSuffix: '년'
+    /*미니달력 관련*/
+    $( "#datepicker_repeat_start" ).datepicker({
+      minDate : 0,
     });
+    $( "#datepicker_repeat_end" ).datepicker({
+      minDate : 0,
+    });
+
+    $.datepicker.setDefaults({
+      dateFormat: 'yy-mm-dd',
+      prevText: '이전 달',
+      nextText: '다음 달',
+      monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+      monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+      dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+      dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+      dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+      showMonthAfterYear: true,
+      yearSuffix: '년'
+    });
+    /*미니달력 관련*/
+     
 });
