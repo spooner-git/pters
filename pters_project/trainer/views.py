@@ -16,12 +16,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
-from config.views import date_check_func, AccessTestMixin
+from config.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
-from schedule.views import add_schedule_logic_func, delete_schedule_logic_func, get_trainer_schedule_data_func
+from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
 from trainer.models import ClassTb
-from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
+from schedule.models import ScheduleTb
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
