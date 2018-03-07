@@ -25,7 +25,7 @@ img,a,div,span,p{
 	bottom: 25px;
 	right: 25px;
 	border-radius: 50%;
-	z-index: 105;
+	z-index: 121;
 	cursor: pointer;
 }
 
@@ -88,7 +88,7 @@ img,a,div,span,p{
 	background-color: grey;
 	opacity: 0;
 	border-radius: 50%;
-	z-index: 103;	
+	z-index: 120;	
 	font-size: 13px;
 	text-align: center; 
 }
@@ -459,6 +459,16 @@ img,a,div,span,p{
 	margin-left: 14.845px;
 }
 
+.popup_close_x_button{
+	position: absolute;
+	top: 31%;
+	left: 85%;
+	padding: 10px;
+	width: 35px;
+	float: right;
+	cursor: pointer;
+}
+
 .img_cal{
 	position: relative;
 	width: 25px;
@@ -537,7 +547,7 @@ img,a,div,span,p{
 	text-align: center;
 }
 
-#cal_popup_plandelete{
+#cal_popup_plandelete, #cal_popup_repeatconfirm{
 	display: none;
 	position: fixed;
 	background: transparent;
@@ -1105,6 +1115,15 @@ img,a,div,span,p{
 
 	.popup_inner{
 		max-height: 500px;
+	}
+
+	.popup_close_x_button{
+		position: absolute;
+		top: 22%;
+		left: 85%;
+		padding: 10px;
+		width: 35px;
+		float: right;
 	}
 }
 
