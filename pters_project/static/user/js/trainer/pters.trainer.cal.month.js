@@ -47,6 +47,7 @@ $(document).ready(function(){
 	    $("#datepicker").datepicker('setDate',null)
 	    
 	    if($('body').width()<600){
+	    	$('#shade').hide()
 	    	$('#shade3').fadeIn('fast');
 		    $('#calendar').css('height','0')
 		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
@@ -75,6 +76,7 @@ $(document).ready(function(){
 	    $("#datepicker").datepicker('setDate',null)
 	    
 	    if($('body').width()<600){
+	    	$('#shade').hide()
 	    	$('#shade3').fadeIn('fast');
 		    $('#calendar').css('height','0')
 		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
@@ -117,6 +119,17 @@ $(document).ready(function(){
         $("#starttimes").empty();
         $("#durations").empty();
         $('.tdgraph').removeClass('graphindicator')
+
+        $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
+        $('.dateButton').removeClass('dateButton_selected')
+        $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
+        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
+        //$('#page-addplan form input').val('')
+        selectedDayGroup = []
+
+        $('._NORMAL_ADD').css('display','block')
+        $('._REPEAT_ADD').css('display','none')
+        $('#timeGraph').css('display','none')
   	})
 
 	$(document).on('click','.admonth',function(){
@@ -247,11 +260,45 @@ $(document).ready(function(){
 		$('#cal_popup_plandelete').fadeIn('fast')
 	})
 
+
 	$('#popup_btn_delete_yes').click(function(){
-		var $ptdelform = $('#daily-pt-delete-form');
-		var $offdelform = $('#daily-off-delete-form');
-		$('body').css('overflow-y','overlay');
-		if(schedule_on_off==1){
+		if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd"){
+			$.ajax({
+                url:'/schedule/delete_repeat_schedule/',
+                type:'POST',
+                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
+                dataType:'html',
+
+                beforeSend:function(){
+                 	deleteBeforeSend();
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                  var jsondata = JSON.parse(data);
+                  closeDeletePopup();
+                  ajax_received_json_data(jsondata)
+                  deleteCompleteSend();
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                	$('#id_repeat_schedule_id_confirm').val('')
+                	fill_repeat_info_off()
+                  },
+
+                //통신 실패시 처리
+                error:function(){
+                  alert("에러: 서버 통신 실패")
+                  closeDeletePopup();
+                  deleteCompleteSend();
+                },
+            })
+		}else{
+			var $ptdelform = $('#daily-pt-delete-form');
+			var $offdelform = $('#daily-off-delete-form');
+			$('body').css('overflow-y','overlay');
+			if(schedule_on_off==1){
 				//PT 일정 삭제시
 				$.ajax({
                     url:'/schedule/delete_schedule/',
@@ -281,8 +328,8 @@ $(document).ready(function(){
                       console.log("error")
                     },
                  })
-		}
-		else{
+			}
+			else{
 				$.ajax({
                     url:'/schedule/delete_schedule/',
                     type:'POST',
@@ -311,10 +358,9 @@ $(document).ready(function(){
                       console.log("error")
                     },
                  })
+			}
 		}
 	})
-
-
 
 
 	$('#btn_close3, #popup_btn_delete_no').click(function(){ //일정삭제 확인 팝업 아니오 버튼 눌렀을때 팝업 닫기
@@ -365,9 +411,20 @@ $(document).ready(function(){
 	}
 
 	function ajaxClassTime(){
+
+			var yyyy = $('#yearText').text()
+			var mm = $('#monthText').text().replace(/월/gi,"")
+			if(mm.length<2){
+				var mm = '0' + mm
+			}
+			var today_form = yyyy+'-'+ mm +'-'+"01"
+			console.log(today_form)
+
             $.ajax({
-              url: '/trainer/cal_day_ajax',
-              dataType : 'html',
+              url: '/trainer/cal_day_ajax/',
+              type : 'POST',
+			  data : {"date":today_form, "day":46},
+			  dataType : 'html',
 
               beforeSend:function(){
               	deleteBeforeSend();
@@ -436,8 +493,8 @@ $(document).ready(function(){
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
 				DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
                 DBdataProcessMonthTrainer();
-       			
                 classDatesTrainer();
+
                 plancheck(clicked_td_date_info)
                 var countNum = $('.plan_raw').length
 				$('#countNum').text(countNum)
@@ -453,6 +510,82 @@ $(document).ready(function(){
             })    
      }
 
+	function ajax_received_json_data(json){
+		var jsondata = json
+		classTimeArray = [];
+		offTimeArray = [];
+
+		//월간 달력
+		classDateArray = []
+		classStartArray = []
+		classNameArray = []
+		countResult = []
+		dateResult = []
+		//월간 달력
+
+		classTimeArray_member_name = [];
+		classArray_lecture_id = [];
+		scheduleIdArray = [];
+		offScheduleIdArray = [];
+		scheduleFinishArray = [];
+		memberLectureIdArray = [];
+		memberNameArray = [];
+		memberAvailCountArray = [];
+		messageArray = [];
+		//dateMessageArray = [];
+		repeatArray = [];
+		offRepeatScheduleIdArray = [];
+		offRepeatScheduleTypeArray = [];
+		offRepeatScheduleWeekInfoArray = [];
+		offRepeatScheduleStartDateArray = [];
+		offRepeatScheduleEndDateArray = [];
+		offRepeatScheduleStartTimeArray = [];
+		offRepeatScheduleTimeDurationArray = [];
+
+		var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+		var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+		var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+		var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+		classTimeArray_member_name = jsondata.classTimeArray_member_name
+		classArray_lecture_id = jsondata.classArray_lecture_id
+		scheduleIdArray = jsondata.scheduleIdArray
+		offScheduleIdArray = jsondata.offScheduleIdArray
+		scheduleFinishArray = jsondata.scheduleFinishArray;
+		memberLectureIdArray = jsondata.memberLectureIdArray;
+		memberNameArray = jsondata.memberNameArray;
+		memberAvailCountArray = jsondata.memberAvailCountArray;
+		messageArray = jsondata.messageArray;
+		repeatArray = jsondata.repeatArray;
+		offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
+		offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
+		offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
+		offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
+		offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
+		offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
+		offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+
+		/*팝업의 timegraph 업데이트*/
+		classDateData = []
+		classTimeData = []
+		offDateData= []
+		offTimeData = []
+		offAddOkArray = [] //OFF 등록 시작 시간 리스트
+		durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+		DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
+		DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+		/*팝업의 timegraph 업데이트*/
+
+		$('.blankSelected_addview').removeClass('blankSelected')
+
+		DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
+		DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
+		DBdataProcessMonthTrainer();
+		classDatesTrainer();
+		plancheck(clicked_td_date_info)
+        var countNum = $('.plan_raw').length
+		$('#countNum').text(countNum)
+	}
+
 
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -465,7 +598,6 @@ $(document).ready(function(){
 	DBdataProcessMonthTrainer(); //트레이너 월간일정에서 날짜별 PT갯수 표기를 위함
 
 	//dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
-	//classDates(); //나의 PT일정에 핑크색 동그라미 표시
 	classDatesTrainer(); // 트레이너 월간일정에 핑크색 동그라미 표시하고 PT 갯수 표기
 	addPtMemberListSet()
 
@@ -508,11 +640,11 @@ $(document).ready(function(){
 			//(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
 			calTable_Set(3,currentYear,currentPageMonth+1); //새로 추가되는 슬라이드에 달력 채우기	
 			//dateDisabled();
-			//classDates();
 			classDatesTrainer();
 			monthText();
 			krHoliday();
 			//availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
+			ajaxClassTime()
 			myswiper.update(); //슬라이드 업데이트
 
 		},
@@ -523,11 +655,11 @@ $(document).ready(function(){
 			//(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
 			calTable_Set(1,currentYear,currentPageMonth-1);	
 			//dateDisabled();
-			//classDates();
 			classDatesTrainer();
 			monthText();
 			krHoliday();
 			//availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
+			ajaxClassTime()
 			myswiper.update(); //이전페이지로 넘겼을때
 
 		}
@@ -971,6 +1103,54 @@ $(document).ready(function(){
         memberMobileList.html(member_arraySum_mobile);
         memberPcList.html(member_arraySum_pc);
 	}
+
+	function fill_repeat_info_off(){ //반복일정 요약 채우기
+      var len = offRepeatScheduleTypeArray.length
+      var repeat_info_dict= { 'KOR':
+                              {'DD':'매일', 'WW':'매주', '2W':'격주',
+                               'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+                              'JAP':
+                              {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                               'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+                              'JAP':
+                              {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                               'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+                             }
+      var schedulesHTML = []
+      for(var i=0; i<len; i++){
+        var repeat_id = offRepeatScheduleIdArray[i]
+        var repeat_type = repeat_info_dict['KOR'][offRepeatScheduleTypeArray[i]]
+        var repeat_start = offRepeatScheduleStartDateArray[i].replace(/-/gi,".");
+        var repeat_end = '반복종료 : ' + offRepeatScheduleEndDateArray[i].replace(/-/gi,".");
+        var repeat_time = Number(offRepeatScheduleStartTimeArray[i].split(':')[0])+0
+        var repeat_dur = offRepeatScheduleTimeDurationArray[i]
+        var repeat_sum = Number(repeat_time) + Number(repeat_dur)
+        var repeat_day = function(){
+          var repeat_day_info_raw = offRepeatScheduleWeekInfoArray[i].split('/')
+          var repeat_day_info = ""
+          if(repeat_day_info_raw.length>1){
+            for(var j=0; j<repeat_day_info_raw.length; j++){
+                var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+            }
+          }else if(repeat_day_info_raw.length == 1){
+            var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+          }
+          if(repeat_day_info.substr(0,1) == '/'){
+            var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+          }
+          
+          return repeat_day_info
+        };
+
+        var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)</span>'
+        var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end+'</span>'
+        var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+        schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
+      }
+
+      var summaryText = '<span id="summaryText">일정요약</span>'
+      $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
+    }
 
 
 });//document(ready)
