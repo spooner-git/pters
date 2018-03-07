@@ -797,13 +797,13 @@ def delete_repeat_schedule_logic(request):
     repeat_schedule_info = None
 
     now = timezone.now()
-
+    print(str(repeat_schedule_id))
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
 
     if error is None:
         try:
-            repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_tb_id=repeat_schedule_id)
+            repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
         except ObjectDoesNotExist:
             error = '반복 일정이 존재하지 않습니다'
 
@@ -811,6 +811,7 @@ def delete_repeat_schedule_logic(request):
         start_date = repeat_schedule_info.start_date
         end_date = repeat_schedule_info.end_date
         en_dis_type = repeat_schedule_info.en_dis_type
+        print(start_date)
 
     if error is None:
         if en_dis_type == '1':
@@ -832,13 +833,15 @@ def delete_repeat_schedule_logic(request):
             with transaction.atomic():
                 for delete_schedule_info in schedule_data:
                     error = delete_schedule_logic_func(delete_schedule_info)
+                    print(str(delete_schedule_info.start_dt))
                     if error is not None:
                         break
 
                 if error is not None:
                     raise ValidationError()
 
-                delete_repeat_schedule = DeleteRepeatScheduleTb(class_tb_id=repeat_schedule_info.class_id, lecture_tb_id=repeat_schedule_info.lecture_id,
+                delete_repeat_schedule = DeleteRepeatScheduleTb(class_tb_id=repeat_schedule_info.class_tb_id, lecture_tb_id=repeat_schedule_info.lecture_tb_id,
+                                                                repeat_schedule_id=repeat_schedule_info.repeat_schedule_id,
                                                                 repeat_type_cd=repeat_schedule_info.repeat_type_cd,
                                                                 week_info=repeat_schedule_info.week_info,
                                                                 start_date=repeat_schedule_info.start_date,
@@ -846,7 +849,7 @@ def delete_repeat_schedule_logic(request):
                                                                 start_time=repeat_schedule_info.start_time,
                                                                 time_duration=repeat_schedule_info.time_duration,
                                                                 state_cd=repeat_schedule_info.state_cd, en_dis_type=repeat_schedule_info.en_dis_type,
-                                                                reg_dt=repeat_schedule_info.reg_dt, mod_dt=repeat_schedule_info.mod_dt)
+                                                                reg_dt=repeat_schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
                 delete_repeat_schedule.save()
                 repeat_schedule_info.delete()
 
@@ -855,12 +858,12 @@ def delete_repeat_schedule_logic(request):
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
-            error = '이미 삭제된 일정입니다'
+            error = '이미 삭제된 일정입니다1'
         except InternalError as e:
-            error = '이미 삭제된 일정입니다'
+            error = '이미 삭제된 일정입니다2'
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
-
+    print(error)
     if error is None:
         log_start_date = start_date.strftime('%Y')+'년 ' \
                          + start_date.strftime('%m')+'월 ' \
