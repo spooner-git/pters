@@ -373,6 +373,7 @@ $(document).ready(function(){
 	//PC버전 새로고침 버튼
 	$('.ymdText-pc-add-refresh').click(function(){ 
 		ajaxClassTime()
+		console.log(repeatArray)
 	})
 	//PC버전 새로고침 버튼
 
@@ -1519,7 +1520,6 @@ $(document).ready(function(){
         }else{
           startSplitArray[5] = String(dura+24)
         }
-
 
         if(option=="class"){
           startSplitArray.push(classTimeArray_member_name[i]) 
