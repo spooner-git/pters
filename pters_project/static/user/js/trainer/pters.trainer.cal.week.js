@@ -249,8 +249,10 @@ $(document).ready(function(){
 		$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
 		$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
+		$("#id_repeat_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
+		$("#id_repeat_lecture_id").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		if(schedule_finish_check=="0"){
@@ -532,6 +534,14 @@ $(document).ready(function(){
 				offRepeatScheduleEndDateArray = [];
 			    offRepeatScheduleStartTimeArray = [];
 			    offRepeatScheduleTimeDurationArray = [];
+
+                ptRepeatScheduleIdArray = [];
+                ptRepeatScheduleTypeArray = [];
+				ptRepeatScheduleWeekInfoArray = [];
+				ptRepeatScheduleStartDateArray = [];
+				ptRepeatScheduleEndDateArray = [];
+			    ptRepeatScheduleStartTimeArray = [];
+			    ptRepeatScheduleTimeDurationArray = [];
                 var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
                 var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
                 var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
@@ -554,6 +564,13 @@ $(document).ready(function(){
 			    offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
 			    offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
 			    offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+                ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+			    ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+			    ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+			    ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+			    ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+			    ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+			    ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
                 $('.classTime,.offTime').parent().html('<div></div>')
@@ -613,6 +630,13 @@ $(document).ready(function(){
           offRepeatScheduleEndDateArray = [];
           offRepeatScheduleStartTimeArray = [];
           offRepeatScheduleTimeDurationArray = [];
+          ptRepeatScheduleIdArray = [];
+          ptRepeatScheduleTypeArray = [];
+          ptRepeatScheduleWeekInfoArray = [];
+          ptRepeatScheduleStartDateArray = [];
+          ptRepeatScheduleEndDateArray = [];
+          ptRepeatScheduleStartTimeArray = [];
+          ptRepeatScheduleTimeDurationArray = [];
 
           var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
           var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
@@ -635,6 +659,13 @@ $(document).ready(function(){
           offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
           offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
           offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+          ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+          ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+          ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+          ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+          ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+          ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+          ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
           DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
           DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
           $('.classTime,.offTime').parent().html('<div></div>')

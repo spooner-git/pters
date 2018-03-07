@@ -9,7 +9,7 @@ $(document).ready(function(){
             $('#uptext2').text('PT 반복 일정 등록')
             addTypeSelect = "repeatptadd"
             $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
-            $("#id_repeat_member_name").val($('id_member_name').text());
+            $("#id_repeat_member_name").val($('#id_member_name').val());
             $(this).find('.icons-next-button').addClass('rotate_90')
             check_dropdown_selected()
             fill_repeat_info_off()

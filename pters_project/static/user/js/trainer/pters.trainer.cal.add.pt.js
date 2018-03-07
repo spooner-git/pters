@@ -512,6 +512,13 @@ $(document).ready(function(){
           offRepeatScheduleEndDateArray = [];
           offRepeatScheduleStartTimeArray = [];
           offRepeatScheduleTimeDurationArray = [];
+          ptRepeatScheduleIdArray = [];
+          ptRepeatScheduleTypeArray = [];
+          ptRepeatScheduleWeekInfoArray = [];
+          ptRepeatScheduleStartDateArray = [];
+          ptRepeatScheduleEndDateArray = [];
+          ptRepeatScheduleStartTimeArray = [];
+          ptRepeatScheduleTimeDurationArray = [];
 
           var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
           var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
@@ -535,6 +542,13 @@ $(document).ready(function(){
           offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
           offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
           offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+          ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+          ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+          ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+          ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+          ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+          ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+          ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
           DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
           DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
           $('.classTime,.offTime').parent().html('<div></div>')

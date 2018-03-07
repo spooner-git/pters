@@ -456,6 +456,13 @@ $(document).ready(function(){
 			    offRepeatScheduleEndDateArray = [];
 			    offRepeatScheduleStartTimeArray = [];
 			    offRepeatScheduleTimeDurationArray = [];
+          		ptRepeatScheduleIdArray = [];
+			    ptRepeatScheduleTypeArray = [];
+			    ptRepeatScheduleWeekInfoArray = [];
+			    ptRepeatScheduleStartDateArray = [];
+			    ptRepeatScheduleEndDateArray = [];
+			    ptRepeatScheduleStartTimeArray = [];
+			    ptRepeatScheduleTimeDurationArray = [];
                 var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
                 var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
                 var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
@@ -478,6 +485,13 @@ $(document).ready(function(){
 			    offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
 			    offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
 			    offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+          		ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+			    ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+			    ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+			    ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+			    ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+			    ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+			    ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
 
                 /*팝업의 timegraph 업데이트*/
                 classDateData = []
@@ -541,6 +555,13 @@ $(document).ready(function(){
 		offRepeatScheduleEndDateArray = [];
 		offRepeatScheduleStartTimeArray = [];
 		offRepeatScheduleTimeDurationArray = [];
+		ptRepeatScheduleIdArray = [];
+		ptRepeatScheduleTypeArray = [];
+		ptRepeatScheduleWeekInfoArray = [];
+		ptRepeatScheduleStartDateArray = [];
+		ptRepeatScheduleEndDateArray = [];
+		ptRepeatScheduleStartTimeArray = [];
+		ptRepeatScheduleTimeDurationArray = [];
 
 		var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
 		var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
@@ -563,6 +584,13 @@ $(document).ready(function(){
 		offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
 		offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
 		offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+		ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+		ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+		ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+		ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+		ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+		ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+		ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
 
 		/*팝업의 timegraph 업데이트*/
 		classDateData = []
