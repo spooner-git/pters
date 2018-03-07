@@ -492,18 +492,17 @@ $(document).ready(function(){
 	                    },
 	                 })
 			}
-		}
-
-
-		
+		}		
 	})
+
 
 	function ajaxClassTime(){
 		var today = new Date();
 		var dd = today.getDate();
 		var mm = today.getMonth()+1; //January is 0!
 		var yyyy = today.getFullYear();
-		today_form = yyyy+'-'+mm+'-'+dd
+		var $weekNum4 = $('#weekNum_4').attr('data-date')
+		var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
 
             $.ajax({
               url: '/trainer/cal_day_ajax/',
@@ -843,42 +842,7 @@ $(document).ready(function(){
 			calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기	
 			//classTime();
 			//offTime();
-
-			var $weekNum4 = $('#weekNum_4').attr('data-date')
-			var currentPage_date_center = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
-			$.ajax({
-                url:'/schedule/finish_schedule/',
-                type:'POST',
-                data:{'date_center_view':currentPage_date_center},
-
-
-                beforeSend:function(){
-                	deleteBeforeSend();
-                },
-
-                //통신성공시 처리
-                success:function(){
-                  	closeDeletePopup();
-                    //classTime_Active('next')
-					//offTime_Active('next')
-					classTime()
-					offTime()
-                  },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-         			$('#popup_btn_complete').css({'color':'#333','background':'#ffffff'}).val('')
-                	$('#canvas').hide().css({'border-color':'#282828'})
-                	$('#canvasWrap span').hide();
-					$('#canvasWrap').css({'height':'0px'})
-					$('body').css('overflow-y','overlay');
-                  },
-
-                //통신 실패시 처리
-                error:function(){
-                },
-            })
-			
+			ajaxClassTime()
 			
 			//DBrepeatdata(repeatData,'class')
 			//DBrepeatdata(offrepeatData,'off')
@@ -893,12 +857,11 @@ $(document).ready(function(){
 			myswiper.removeSlide(4);
 			myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
 			calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);
-
-					
+			ajaxClassTime()
 			//classTime();
 			//offTime();
-			classTime_Active('prev')
-			offTime_Active('prev')
+			//classTime_Active('prev')
+			//offTime_Active('prev')
 			
 			//DBrepeatdata(repeatData,'class')
 			//DBrepeatdata(offrepeatData,'off')
