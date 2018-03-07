@@ -221,7 +221,7 @@ def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
             off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
             off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
 
-        pt_repeat_schedule_data = RepeatScheduleTb.objexts.filter(class_tb_id=class_info.class_id,
+        pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                                   en_dis_type='1')
         for pt_repeat_schedule_info in pt_repeat_schedule_data:
             pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
