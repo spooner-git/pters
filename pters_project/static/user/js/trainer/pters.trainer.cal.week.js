@@ -373,7 +373,6 @@ $(document).ready(function(){
 	//PC버전 새로고침 버튼
 	$('.ymdText-pc-add-refresh').click(function(){ 
 		ajaxClassTime()
-		console.log(repeatArray)
 	})
 	//PC버전 새로고침 버튼
 
@@ -500,7 +499,6 @@ $(document).ready(function(){
 
 			var $weekNum4 = $('#weekNum_4').attr('data-date')
 			var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
-			console.log(today_form)
 
             $.ajax({
               url: '/trainer/cal_day_ajax/',
@@ -513,7 +511,6 @@ $(document).ready(function(){
               },
 
               success:function(data){
-              	//console.log(data)
               	var jsondata = JSON.parse(data);
                 classTimeArray = [];
                 offTimeArray = [];
@@ -539,7 +536,6 @@ $(document).ready(function(){
                 var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
                 var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
                 var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
-                console.log(updatedClassTimeArray_start_date)
                 classTimeArray_member_name = jsondata.classTimeArray_member_name
                 classArray_lecture_id = jsondata.classArray_lecture_id
                 scheduleIdArray = jsondata.scheduleIdArray
@@ -564,8 +560,6 @@ $(document).ready(function(){
                 classTime();
                 offTime();
                	addPtMemberListSet();
-
-               	console.log(offRepeatScheduleIdArray)
 
                 /*팝업의 timegraph 업데이트*/
                 classDateData = []

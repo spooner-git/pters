@@ -22,7 +22,7 @@ body{
 #offRepeatSummary{
 	position: relative;
 	background: #282828;
-	padding-top: 16px;
+	padding-top: 40px;
 	padding-bottom: 16px;
 	margin-top: 0px;
 }
@@ -45,14 +45,12 @@ body{
 	margin-top: 1px;
 	position: relative;
 	background:#ffffff; 
-	width: 82%;
+	width: 100%;
 	height: 40px;
-	margin-left: auto;
 }
 
 .summaryInnerBoxText{
 	line-height: 40px;
-	margin-right: 5%;
 	margin-left: 3%;
 	font-size: 87%;
 	font-weight: 500;
@@ -61,6 +59,8 @@ body{
 }
 
 .summaryInnerBoxText2{
+	float: right;
+	margin-right: 20px;
 	line-height: 40px;
 	font-size: 75%;
 	letter-spacing: -0.2px;
@@ -133,6 +133,39 @@ body{
 	background: #fe4e65 !important;
 }
 
-@media(min-width:600px){
+@media(min-width:300px){
+	.summaryInnerBoxText{
+		font-size:11px;
+		margin-left: 1%;
+	}
 
+	.summaryInnerBoxText_Repeatendtext{
+		display: none;
+	}
+
+	.summaryInnerBoxText_Repeatendtext_small{
+		display: inline;
+	}
+}
+
+@media(min-width:350px){
+	.summaryInnerBoxText{
+		font-size:12px;
+		margin-left: 2%;
+	}
+}
+
+@media(min-width:440px){
+	.summaryInnerBoxText{
+		font-size:13px;
+		margin-left: 1%;
+	}
+
+	.summaryInnerBoxText_Repeatendtext{
+		display: inline;
+	}
+
+	.summaryInnerBoxText_Repeatendtext_small{
+		display: none;
+	}
 }

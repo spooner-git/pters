@@ -205,7 +205,9 @@ $(document).ready(function(){
         var repeat_id = offRepeatScheduleIdArray[i]
         var repeat_type = repeat_info_dict['KOR'][offRepeatScheduleTypeArray[i]]
         var repeat_start = offRepeatScheduleStartDateArray[i].replace(/-/gi,".");
-        var repeat_end = '반복종료 : ' + offRepeatScheduleEndDateArray[i].replace(/-/gi,".");
+        var repeat_end_text_small = "<span class='summaryInnerBoxText_Repeatendtext_small'>~</span>"
+        var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
+        var repeat_end = offRepeatScheduleEndDateArray[i].replace(/-/gi,".");
         var repeat_time = Number(offRepeatScheduleStartTimeArray[i].split(':')[0])+0
         var repeat_dur = offRepeatScheduleTimeDurationArray[i]
         var repeat_sum = Number(repeat_time) + Number(repeat_dur)
@@ -227,7 +229,7 @@ $(document).ready(function(){
         };
 
         var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)</span>'
-        var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end+'</span>'
+        var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>'
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
       }
