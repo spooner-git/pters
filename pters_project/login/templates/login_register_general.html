@@ -39,7 +39,7 @@
        </div>
 
        <div class="outerbox">
-            <input type="text" name="" placeholder="새로운 ID" id="id_input"><button class="register_button">중복 확인</button>
+            <input type="text" name="" placeholder="새로운 ID" id="id_input"><button class="register_button" onclick="javascript:check_id();">중복 확인</button>
        </div>
 
        <div class="outerbox">
@@ -285,6 +285,35 @@
         location.href="{% url 'login:logout' %}"
     }
 
+
+    function check_id(){
+        $.ajax({
+                url:'/login/check_member_id/',
+                type:'POST',
+                data:{"id" : $('#id_input').val() },
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    console.log(data)
+                    var jsondata = JSON.parse(data);
+
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                  },
+
+                //통신 실패시 처리
+                error:function(){
+                  alert("에러: 서버 통신 실패")
+                },
+            })
+    }
 </script>
 {% endblock %}
 
