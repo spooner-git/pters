@@ -508,7 +508,7 @@ $(document).ready(function(){
             $.ajax({
               url: '/trainer/cal_day_ajax/',
               type : 'POST',
-			  data : {"date":today_form, 'day':46},
+			  data : {"date":today_form, 'day':3},
 			  dataType : 'html',
 
               beforeSend:function(){
