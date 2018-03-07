@@ -192,13 +192,7 @@ def get_trainer_schedule_data_func(context, trainer_id, date):
     off_repeat_schedule_start_time = []
     off_repeat_schedule_time_duration = []
     #off_repeat_schedule_reg_dt = []
-
-    today = date
-    if today == '':
-        today = datetime.date.today()
-    elif today is None:
-        today = datetime.date.today()
-
+    today = datetime.datetime.strptime(date, '%Y-%m-%d')
     fourteen_days_ago = today - datetime.timedelta(days=14)
     fifteen_days_after = today + datetime.timedelta(days=15)
 
