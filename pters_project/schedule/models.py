@@ -83,7 +83,7 @@ class ScheduleTb(models.Model):
     schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
-    repeat_schedule_tb = models.ForeignKey(RepeatScheduleTb, on_delete=models.CASCADE, default='', blank=True, null=True) # Field name made lowercase.
+    repeat_schedule_tb = models.ForeignKey(RepeatScheduleTb, on_delete=models.SET_NULL, default='', blank=True, null=True) # Field name made lowercase.
     start_dt = models.DateTimeField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
     end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.

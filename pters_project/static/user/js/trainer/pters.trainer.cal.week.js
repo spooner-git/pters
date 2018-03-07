@@ -400,7 +400,7 @@ $(document).ready(function(){
 			$.ajax({
                 url:'/schedule/delete_repeat_schedule/',
                 type:'POST',
-                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val()},
+                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
 
                 beforeSend:function(){
                 	console.log({"repeat_schedule_id":$('#id_repeat_schedule_id_confirm').val()})
