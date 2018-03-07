@@ -384,7 +384,7 @@ def add_schedule_logic(request):
         log_data.save()
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
 
 
@@ -455,7 +455,7 @@ def delete_schedule_logic(request):
         log_data.save()
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
 
 
@@ -552,7 +552,7 @@ def finish_schedule_logic(request):
         log_data.save()
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
 
 
@@ -573,6 +573,7 @@ def add_repeat_schedule_logic(request):
 
     error = None
     error_date = None
+    error_message = None
     class_info = None
     repeat_week_type_data = []
     repeat_schedule_start_date_info = None
@@ -612,7 +613,7 @@ def add_repeat_schedule_logic(request):
             error = '회원을 선택해 주세요.'
         elif member_name == '':
             error = '회원을 선택해 주세요.'
-    print(str(lecture_id))
+
     if error is None:
     #강사 정보 가져오기
         try:
@@ -683,101 +684,40 @@ def add_repeat_schedule_logic(request):
                         else:
                             error_date = error_date + '/' + error
                         break
-                if error is None:
-                    error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
-                                                    schedule_end_datetime, request.user.id,
-                                                    lecture_id, en_dis_type,
-                                                    repeat_schedule_info.repeat_schedule_id)
+            if error is None:
+                error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
+                                                schedule_end_datetime, request.user.id,
+                                                lecture_id, en_dis_type,
+                                                repeat_schedule_info.repeat_schedule_id)
 
-                    if error == '예약 가능한 횟수가 없습니다':
-                        check_date = repeat_schedule_end_date_info + datetime.timedelta(days=1)
-                        error = None
-                    elif error == '예약 가능한 횟수를 확인해주세요.':
-                        check_date = repeat_schedule_end_date_info + datetime.timedelta(days=1)
-                        error = None
+                if error == '예약 가능한 횟수가 없습니다':
+                    check_date = repeat_schedule_end_date_info + datetime.timedelta(days=1)
+                elif error == '예약 가능한 횟수를 확인해주세요.':
+                    check_date = repeat_schedule_end_date_info + datetime.timedelta(days=1)
 
-                    # 한번 더 확인 필요
-                    if error is not None:
-                        if error_date is None:
-                            error_date = error
-                        else:
-                            error_date = error_date + '/' + error
-                    error = None
-                else:
-                    error = None
+                # 한번 더 확인 필요 - 등록시간 겹치는 경우 고려 필요
+                if error is not None:
+                    if error_message is None:
+                        error_message = error
+                    else:
+                        error_message = error_message + '/' + error
+            else:
+                error_message = error
+            error = None
 
             check_date = check_date + datetime.timedelta(days=1)
 
             if int(check_date.strftime('%w')) == 0:
                 if repeat_type == '2W':
                     check_date = check_date + datetime.timedelta(days=7)
-            '''
-        #날짜 값 셋팅
-        for week_type_info in repeat_week_type_data:
-            week_idx = 0
-            for idx, week_info_detail in enumerate(week_info):
-                if week_info_detail == week_type_info:
-                    week_idx = idx
-                    break
-            check_date = repeat_schedule_start_date_info
-            week_idx -= int(check_date.strftime('%w'))
-            if week_idx < 0:
-                week_idx += 7
 
-            check_date = check_date + datetime.timedelta(days=week_idx)
-            while check_date <= repeat_schedule_end_date_info:
-
-                try:
-                    schedule_start_datetime = datetime.datetime.strptime(str(check_date).split(' ')[0]
-                                                                         + ' ' + repeat_schedule_time,
-                                                                         '%Y-%m-%d %H:%M:%S.%f')
-                    schedule_end_datetime = schedule_start_datetime + datetime.timedelta(hours=int(repeat_schedule_time_duration))
-                except ValueError as e:
-                    error = '등록 값에 문제가 있습니다.'
-                except IntegrityError as e:
-                    error = '등록 값에 문제가 있습니다.'
-                except TypeError as e:
-                    error = '등록 값의 형태에 문제가 있습니다.'
-
-                if error is None:
-                    for schedule_datum in schedule_data:
-                        error = date_check_func(str(check_date).split(' ')[0], schedule_start_datetime, schedule_end_datetime,
-                                                schedule_datum.start_dt, schedule_datum.end_dt)
-
-                        if error is not None:
-                            if error_date is None:
-                                error_date = error
-                            else:
-                                error_date = error_date + '/' + error
-                            break
-                    if error is None:
-                        error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
-                                                        schedule_end_datetime, request.user.id,
-                                                        lecture_id, en_dis_type,
-                                                        repeat_schedule_info.repeat_schedule_id)
-
-                        #한번 더 확인 필요
-                        if error is not None:
-                            if error_date is None:
-                                error_date = error
-                            else:
-                                error_date = error_date + '/' + error
-                        error = None
-                    else:
-                        error = None
-
-                if repeat_type == '2W':
-                    check_date = check_date + datetime.timedelta(days=14)
-                else:
-                    check_date = check_date + datetime.timedelta(days=7)
-'''
     if error is None:
         if error_date is not None:
             messages.info(request, error_date)
             return redirect(next_page)
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
 
 
@@ -795,6 +735,7 @@ def add_repeat_schedule_confirm(request):
     en_dis_type = None
     lecture_info = None
     member_info = None
+    information = None
 
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
@@ -851,7 +792,7 @@ def add_repeat_schedule_confirm(request):
             except ValidationError as e:
                 error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
             if error is None:
-                error = '반복일정 등록이 취소됐습니다.'
+                information = '반복일정 등록이 취소됐습니다.'
         else:
 
             log_start_date = start_date.strftime('%Y')+'년 ' \
@@ -878,11 +819,15 @@ def add_repeat_schedule_confirm(request):
                              use=1)
             log_data.save()
 
-            error = '반복일정 등록이 완료됐습니다.'
+            information = '반복일정 등록이 완료됐습니다.'
     if error is None:
-        return redirect(next_page)
+        if information is None:
+            return redirect(next_page)
+        else:
+            messages.info(request, information)
+            return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
 
 
@@ -991,6 +936,6 @@ def delete_repeat_schedule_logic(request):
         log_data.save()
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
 
