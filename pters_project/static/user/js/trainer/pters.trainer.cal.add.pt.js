@@ -331,7 +331,7 @@ $(document).ready(function(){
                           var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ")
                           $('._repeatconfirmQuestion').text('선택한 일정 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.')
                           var repeat_info = popup_repeat_confirm()
-                          $('#repeat_confirm_day').text(messageArray[0].replace(/\//gi,','))
+                          $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
                           $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
                           $('#id_repeat_schedule_id_confirm').val(repeatArray)
                           completeSend(); //ajax 로딩 이미지 숨기기
@@ -659,11 +659,23 @@ $(document).ready(function(){
                                }
           $('#cal_popup_repeatconfirm').fadeIn('fast')
           $('#shade').show()
-          var repeat_type = repeat_info_dict['KOR'][$('#id_repeat_freq_off').val()]
-          var repeat_start = $('#id_repeat_start_date_off').val().replace(/-/gi,'.')
-          var repeat_end = $('#id_repeat_end_date_off').val().replace(/-/gi,'.')
+          if(addTypeSelect == "repeatoffadd"){
+            var $id_repeat_freq = $('#id_repeat_freq_off')
+            var $id_repeat_start_date = $('#id_repeat_start_date_off')
+            var $id_repeat_end_date = $('#id_repeat_end_date_off')
+            var $id_repeat_day = $('#id_repeat_day_off')
+          }else if(addTypeSelect == "repeatptadd"){
+            var $id_repeat_freq = $('#id_repeat_freq')
+            var $id_repeat_start_date= $('#id_repeat_start_date')
+            var $id_repeat_end_date = $('#id_repeat_end_date')
+            var $id_repeat_day = $('#id_repeat_day')
+          }
+
+          var repeat_type = repeat_info_dict['KOR'][$id_repeat_freq.val()]
+          var repeat_start = $id_repeat_start_date.val().replace(/-/gi,'.')
+          var repeat_end = $id_repeat_end_date.val().replace(/-/gi,'.')
           var repeat_day = function(){
-                              var repeat_day_info_raw = $('#id_repeat_day_off').val().split('/')
+                              var repeat_day_info_raw = $id_repeat_day.val().split('/')
                               var repeat_day_info = ""
                               if(repeat_day_info_raw.length>1){
                                 for(var j=0; j<repeat_day_info_raw.length; j++){
