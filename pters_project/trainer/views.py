@@ -77,25 +77,27 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalDayView, self).get_context_data(**kwargs)
-        date = datetime.date.today()
+        date = datetime.date.today().strftime('%Y-%m-%d')
         context = get_trainer_schedule_data_func(context, self.request.user.id, date)
         return context
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'cal_day_ajax.html'
 
     def get(self, request, *args, **kwargs):
         context = super(CalDayViewAjax, self).get_context_data(**kwargs)
-        date = datetime.date.today()
+        date = datetime.date.today().strftime('%Y-%m-%d')
         context = get_trainer_schedule_data_func(context, self.request.user.id, date)
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        date = request.POST.get('date','')
+        date = request.POST.get('date', '')
         if date == '':
-            date = datetime.date.today()
+            date = datetime.date.today().strftime('%Y-%m-%d')
+
         context = super(CalDayViewAjax, self).get_context_data(**kwargs)
         context = get_trainer_schedule_data_func(context, self.request.user.id, date)
 
@@ -107,7 +109,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalWeekView, self).get_context_data(**kwargs)
-        date = datetime.date.today()
+        date = datetime.date.today().strftime('%Y-%m-%d')
         context = get_trainer_schedule_data_func(context, self.request.user.id, date)
 
         return context
@@ -118,7 +120,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
-        date = datetime.date.today()
+        date = datetime.date.today().strftime('%Y-%m-%d')
         context = get_trainer_schedule_data_func(context, self.request.user.id, date)
 
         holiday = HolidayTb.objects.filter(use='1')
