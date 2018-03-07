@@ -562,7 +562,10 @@ def add_repeat_schedule_logic(request):
         else:
             temp_data = repeat_week_type.split('/')
             for week_type_info in temp_data:
-                repeat_week_type_data.append(week_type_info)
+                for idx, week_info_detail in enumerate(week_info):
+                    if week_info_detail == week_type_info:
+                        repeat_week_type_data.append(idx)
+                        break
 
     if repeat_schedule_start_date == '':
         error = '반복일정 시작 날짜를 선택해 주세요.'
@@ -599,7 +602,7 @@ def add_repeat_schedule_logic(request):
         repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                 repeat_type_cd=repeat_type,
                                                 week_info=repeat_week_type,
-                                                start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date,
+                                                start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date_info,
                                                 start_time=repeat_schedule_time, time_duration=repeat_schedule_time_duration,
                                                 state_cd='NP', en_dis_type=en_dis_type,
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
@@ -610,6 +613,79 @@ def add_repeat_schedule_logic(request):
         request.session['repeat_schedule_id'] = repeat_schedule_info.repeat_schedule_id
 
     if error is None:
+
+        check_date = repeat_schedule_start_date_info
+        while check_date <= repeat_schedule_end_date_info:
+            week_idx = -1
+            for week_type_info in repeat_week_type_data:
+                if week_type_info >= int(check_date.strftime('%w')):
+                    week_idx = week_type_info
+                    break
+            if week_idx == -1:
+                week_idx = repeat_week_type_data[0]
+
+            week_idx -= int(check_date.strftime('%w'))
+            if week_idx < 0:
+                if repeat_type == '2W':
+                    week_idx += 14
+                else:
+                    week_idx += 7
+
+            check_date = check_date + datetime.timedelta(days=week_idx)
+            try:
+                schedule_start_datetime = datetime.datetime.strptime(str(check_date).split(' ')[0]
+                                                                     + ' ' + repeat_schedule_time,
+                                                                     '%Y-%m-%d %H:%M:%S.%f')
+                schedule_end_datetime = schedule_start_datetime + datetime.timedelta(
+                    hours=int(repeat_schedule_time_duration))
+            except ValueError as e:
+                error = '등록 값에 문제가 있습니다.'
+            except IntegrityError as e:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError as e:
+                error = '등록 값의 형태에 문제가 있습니다.'
+
+            if error is None:
+                for schedule_datum in schedule_data:
+                    error = date_check_func(str(check_date).split(' ')[0], schedule_start_datetime,
+                                            schedule_end_datetime,
+                                            schedule_datum.start_dt, schedule_datum.end_dt)
+
+                    if error is not None:
+                        if error_date is None:
+                            error_date = error
+                        else:
+                            error_date = error_date + '/' + error
+                        break
+                if error is None:
+                    error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
+                                                    schedule_end_datetime, request.user.id,
+                                                    lecture_id, en_dis_type,
+                                                    repeat_schedule_info.repeat_schedule_id)
+
+                    if error == '예약 가능한 횟수가 없습니다':
+                        check_date = repeat_schedule_end_date_info + datetime.timedelta(days=1)
+                        error = None
+                    elif error == '예약 가능한 횟수를 확인해주세요.':
+                        check_date = repeat_schedule_end_date_info + datetime.timedelta(days=1)
+                        error = None
+
+                    # 한번 더 확인 필요
+                    if error is not None:
+                        if error_date is None:
+                            error_date = error
+                        else:
+                            error_date = error_date + '/' + error
+                    error = None
+                else:
+                    error = None
+
+            check_date = check_date + datetime.timedelta(days=1)
+
+            if int(check_date.strftime('%w')) == 0:
+                if repeat_type == '2W':
+                    check_date = check_date + datetime.timedelta(days=7)
+            '''
         #날짜 값 셋팅
         for week_type_info in repeat_week_type_data:
             week_idx = 0
@@ -668,7 +744,7 @@ def add_repeat_schedule_logic(request):
                     check_date = check_date + datetime.timedelta(days=14)
                 else:
                     check_date = check_date + datetime.timedelta(days=7)
-
+'''
     if error is None:
         if error_date is not None:
             messages.info(request, error_date)

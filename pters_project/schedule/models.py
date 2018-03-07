@@ -16,7 +16,7 @@ class RepeatScheduleTb(models.Model):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     repeat_type_cd = models.CharField(db_column='REPEAT_TYPE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    week_info = models.CharField(db_column='WEEK_INFO', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    week_info = models.CharField(db_column='WEEK_INFO', max_length=100, blank=True, null=True)  # Field name made lowercase.
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
     start_time = models.CharField(db_column='START_TIME', max_length=20, blank=True, null=True)  # Field name made lowercase.
@@ -40,7 +40,7 @@ class DeleteRepeatScheduleTb(models.Model):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     repeat_type_cd = models.CharField(db_column='REPEAT_TYPE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    week_info = models.CharField(db_column='WEEK_INFO', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    week_info = models.CharField(db_column='WEEK_INFO', max_length=100, blank=True, null=True)  # Field name made lowercase.
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
     start_time = models.CharField(db_column='START_TIME', max_length=20, blank=True, null=True)  # Field name made lowercase.

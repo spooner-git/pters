@@ -249,8 +249,10 @@ $(document).ready(function(){
 		$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
 		$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
+		$("#id_repeat_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
+		$("#id_repeat_lecture_id").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		if(schedule_finish_check=="0"){
@@ -508,7 +510,7 @@ $(document).ready(function(){
             $.ajax({
               url: '/trainer/cal_day_ajax/',
               type : 'POST',
-			  data : {"date":today_form, 'day':3},
+			  data : {"date":today_form, 'day':30},
 			  dataType : 'html',
 
               beforeSend:function(){
