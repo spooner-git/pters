@@ -280,6 +280,8 @@ $(document).ready(function(){
          //scrollToIndicator($(this))
       })
 
+
+
       $("#upbutton-check, #submitBtn_pt, #submitBtn_mini").click(function(e){
          e.preventDefault();
          if(addTypeSelect=="ptadd"){
@@ -313,18 +315,15 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(data){
                         //ajaxClassTime();
-                        console.log($form.serialize() + '_________________form')
-                        console.log(data)
                         var jsondata = JSON.parse(data);
-                        ajax_received_json_data(jsondata)
+                        messageArray = jsondata.messageArray;
+                        repeatArray = jsondata.repeatArray;
                         if(messageArray.length>0 && addTypeSelect == "repeatoffadd"){
                           var date = messageArray[0].replace(/\//gi,", ")
                           $('._repeatconfirmQuestion').text('선택한 일정 중 '+messageArray[0].split('/').length + '건의 일정이 겹칩니다.')
                           var repeat_info = popup_repeat_confirm()
-                          var day_info = repeat_info.day_info
-                          var dur_info = repeat_info.dur_info
                           $('#repeat_confirm_day').text(messageArray[0].replace(/\//gi,','))
-                          $('#repeat_confirm_dur').text('중복 일정을 제외하고 등록하시겠습니까?')
+                          $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
                           $('#id_repeat_schedule_id_confirm').val(repeatArray)
                           completeSend(); //ajax 로딩 이미지 숨기기
                           $('#shade').show()
@@ -338,6 +337,7 @@ $(document).ready(function(){
                           completeSend(); //ajax 로딩 이미지 숨기기
                           $('#shade').show()
                         }else{
+                          ajax_received_json_data(jsondata)
                           $('#calendar').show().css('height','100%')
                           closeAddPopup()
                           closeAddPopup_mini()
@@ -383,8 +383,6 @@ $(document).ready(function(){
       function ajaxRepeatConfirmSend(){
             var $form = $('#confirm-repeat-schedule-form')
             var serverURL = '/schedule/add_repeat_schedule_confirm/'
-          console.log($('#id_repeat_schedule_id_confirm').val())
-          console.log($('#id_repeat_confirm').val())
             $.ajax({
               url: serverURL,
               type:'POST',
