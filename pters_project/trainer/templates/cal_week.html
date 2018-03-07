@@ -756,8 +756,8 @@
           //pt schedule이 끝났는지 확인
           var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}', {% endfor %}];
 
-          var messageArray = [{% for message in messages %}'{{ message.error }}',{% endfor %}];
-          var dateMessageArray = [{% for message in messages %}'{{ message.error_date }}',{% endfor %}];
+          var messageArray = [{% for message in messages %}{% if message.tags == "error" %}'{{ message }}',{% endif %}{% endfor %}];
+          var RepeatDuplicationDateArray = [{% for message in messages %}{% if message.tags == "info" %}'{{ message }}',{% endif %}{% endfor %}];
           var repeatArray = [{{ request.session.repeat_schedule_id }}];
 
           var offRepeatScheduleIdArray =  [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}'{{ off_repeat_schedule_id_info }}', {% endfor %}];

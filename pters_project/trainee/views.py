@@ -367,7 +367,7 @@ def pt_delete_logic(request):
         log_data.save()
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         next_page = 'trainee:cal_month'
         return redirect(next_page)
 
@@ -395,7 +395,7 @@ def pt_add_logic(request):
     if error is None:
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
 
 
@@ -421,7 +421,7 @@ def pt_add_array_logic(request):
 
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
 
 

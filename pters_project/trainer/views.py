@@ -67,7 +67,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['new_member_num'] = new_member_num
 
         if error is not None:
-            messages.info(self.request, error)
+            messages.error(self.request, error)
 
         return context
 
@@ -441,7 +441,7 @@ def add_member_info_logic(request):
         log_data.save()
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
 
         return redirect(next_page)
 
@@ -520,7 +520,7 @@ def update_member_info_logic(request):
 
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
 
         return redirect(next_page)
 
@@ -597,7 +597,7 @@ def delete_member_info_logic(request):
 
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
 
         return redirect(next_page)
 
@@ -627,5 +627,5 @@ def alarm_delete_logic(request):
 
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
