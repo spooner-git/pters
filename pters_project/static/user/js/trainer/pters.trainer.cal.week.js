@@ -11,7 +11,7 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
-	//setInterval(function(){ajaxClassTime()},60000) 자동 ajax 새로고침(일정가져오기)
+	setInterval(function(){ajaxClassTime()},60000)// 자동 ajax 새로고침(일정가져오기)
 
 	$('#float_inner1, .ymdText-pc-add-pt').click(function(){ //PT추가버튼
 		scrollToDom($('#calendar'))
@@ -499,9 +499,17 @@ $(document).ready(function(){
 	})
 
 	function ajaxClassTime(){
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth()+1; //January is 0!
+		var yyyy = today.getFullYear();
+		today_form = yyyy+'-'+mm+'-'+dd
+
             $.ajax({
-              url: '/trainer/cal_day_ajax',
-              dataType : 'html',
+              url: '/trainer/cal_day_ajax/',
+              type : 'POST',
+			  data : {"date":today_form},
+			  dataType : 'html',
 
               beforeSend:function(){
               	deleteBeforeSend();
