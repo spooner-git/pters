@@ -28,22 +28,28 @@ $(document).ready(function(){
                         $('#timeGraph').show(110,"swing");
                       }
                       $('.tdgraph').removeClass('graphindicator')
-                      timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
-                      timeGraphSet("off","grey","AddClass")
-                      startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
+                      ajaxTimeGraphSet()
+                      //timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
+                      //timeGraphSet("off","grey","AddClass")
+                      //startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
                   }else if(addTypeSelect =="offadd"){
                       $("#id_training_date_off").val($("#datepicker").val()).submit();
                       if($('#timeGraph').css('display')=='none'){
                         $('#timeGraph').show(110,"swing");
                       }
                       $('.tdgraph').removeClass('graphindicator')
-                      timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
-                      timeGraphSet("off","grey","AddClass")
-                      startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
+                      ajaxTimeGraphSet()
+                      //timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
+                      //timeGraphSet("off","grey","AddClass")
+                      //startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
                   }else if(addTypeSelect == "repeatptadd"){
-                      $("#id_repeat_start_date").val($("#datepicker_repeat_start").val());  
+                      $("#datepicker_repeat_end").datepicker('option','minDate',$("#datepicker_repeat_start").val())
+                      $("#datepicker_repeat_start").datepicker('option','maxDate',$("#datepicker_repeat_end").val())
+                      $("#id_repeat_start_date").val($("#datepicker_repeat_start").val());
                       $("#id_repeat_end_date").val($("#datepicker_repeat_end").val());
                   }else if(addTypeSelect == "repeatoffadd"){
+                      $("#datepicker_repeat_end").datepicker('option','minDate',$("#datepicker_repeat_start").val())
+                      $("#datepicker_repeat_start").datepicker('option','maxDate',$("#datepicker_repeat_end").val())
                       $("#id_repeat_start_date_off").val($("#datepicker_repeat_start").val());
                       $("#id_repeat_end_date_off").val($("#datepicker_repeat_end").val());
                   }
@@ -432,6 +438,47 @@ $(document).ready(function(){
                 console.log('server error')
               }
             })    
+      }
+
+      function ajaxTimeGraphSet(){
+            var today_form = $('#datepicker').val()
+
+            $.ajax({
+              url: '/trainer/cal_day_ajax/',
+              type : 'POST',
+              data : {"date":today_form},
+              dataType : 'html',
+
+              beforeSend:function(){
+              },
+
+              success:function(data){
+                var jsondata = JSON.parse(data);
+                /*팝업의 timegraph 업데이트*/
+                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+                classDateData = []
+                classTimeData = []
+                offDateData=[]
+                offTimeData = []
+                offAddOkArray = [] //OFF 등록 시작 시간 리스트
+                durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
+                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+                timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
+                timeGraphSet("off","grey","AddClass")
+                startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
+              },
+
+              complete:function(){
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            }) 
       }
 
       function ajax_received_json_data(json){
