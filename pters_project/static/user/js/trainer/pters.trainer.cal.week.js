@@ -403,7 +403,6 @@ $(document).ready(function(){
                 data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val()},
 
                 beforeSend:function(){
-                	console.log({"repeat_schedule_id":$('#id_repeat_schedule_id_confirm').val()})
                  	deleteBeforeSend();
                 },
 
