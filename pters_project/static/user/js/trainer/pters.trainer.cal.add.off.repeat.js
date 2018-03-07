@@ -3,6 +3,7 @@ $(document).ready(function(){
       $('#repeatSchedule').click(function(){ //일정추가 팝업에서 반복일정을 누르면 반복일정 관련 메뉴 나타남
           
           if(addTypeSelect == "ptadd"){
+            
             $('._NORMAL_ADD, ._NORMAL_ADD_timegraph').hide('slow')
             $('._REPEAT_ADD').show('slow')
             $('#uptext2').text('PT 반복 일정 등록')
@@ -10,17 +11,21 @@ $(document).ready(function(){
             $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
             $("#id_repeat_member_name").val($('id_member_name').text());
             $(this).find('.icons-next-button').addClass('rotate_90')
+            check_dropdown_selected()
             fill_repeat_info_off()
             console.log(addTypeSelect)
           }else if(addTypeSelect == "offadd"){
+            
             $('._NORMAL_ADD, ._NORMAL_ADD_timegraph').hide('slow')
             $('._REPEAT_ADD').show('slow')
             $('#uptext2').text('OFF 반복 일정 등록')
             addTypeSelect = "repeatoffadd"
+            check_dropdown_selected()
             $(this).find('.icons-next-button').addClass('rotate_90')
             fill_repeat_info_off()
             console.log(addTypeSelect)
           }else if(addTypeSelect == "repeatptadd"){
+            
             $('._NORMAL_ADD').show('slow')
             $('._REPEAT_ADD').hide('slow')
             if($('#datepicker').val().length>0){
@@ -28,8 +33,10 @@ $(document).ready(function(){
             }
             $(this).find('.icons-next-button').removeClass('rotate_90')
             addTypeSelect = "ptadd"
+            check_dropdown_selected()
             console.log(addTypeSelect)
           }else if(addTypeSelect == "repeatoffadd"){
+            
             $('._NORMAL_ADD').show('slow')
             $('._REPEAT_ADD').hide('slow')
             if($('#datepicker').val().length>0){
@@ -37,6 +44,7 @@ $(document).ready(function(){
             }
             $(this).find('.icons-next-button').removeClass('rotate_90')
             addTypeSelect = "offadd"
+            check_dropdown_selected()
             console.log(addTypeSelect)
           }   
       })
@@ -116,14 +124,46 @@ $(document).ready(function(){
 
     function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
         var memberSelect = $("#membersSelected button");
+        var dateSelect = $("#dateSelector p");
+        var durSelect = $("#durationsSelected button");
         var durSelect_mini = $('#classDuration_mini #durationsSelected button')
+        var startSelect = $("#starttimesSelected button")
+
         var repeatSelect = $("#repeattypeSelected button");
         var startSelect_repeat = $('#repeatstarttimesSelected button')
         var durSelect_repeat = $('#repeatdurationsSelected button')
         var dateSelect_repeat_start = $("#datepicker_repeat_start").parent('p');
         var dateSelect_repeat_end = $("#datepicker_repeat_end").parent('p');
 
-       if(addTypeSelect == "repeatptadd"){
+        if(addTypeSelect == "ptadd"){
+            if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                $('.submitBtn').addClass('submitBtnActivated')
+                select_all_check=true;
+            }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect).hasClass("dropdown_selected")==true){
+                $('#submitBtn_mini').css('background','#fe4e65');
+                select_all_check=true;
+            }else{
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                $('.submitBtn').removeClass('submitBtnActivated')
+                $('#submitBtn_mini').css('background','#282828');
+                select_all_check=false;
+            }
+        }else if(addTypeSelect == "offadd"){
+            if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                $('.submitBtn').addClass('submitBtnActivated')
+                select_all_check=true;
+            }else if($('#page-addplan-pc').css('display')=='block' && durSelect_mini.hasClass("dropdown_selected")==true){
+                $('#submitBtn_mini').css('background','#fe4e65');
+                select_all_check=true;
+            }else{
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                $('#submitBtn_mini').css('background','#282828');
+                $('.submitBtn').removeClass('submitBtnActivated')
+                select_all_check=false;
+            }
+        }else if(addTypeSelect == "repeatptadd"){
             if((memberSelect).hasClass("dropdown_selected")==true && (repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 $('.submitBtn').addClass('submitBtnActivated')
@@ -146,7 +186,7 @@ $(document).ready(function(){
                 select_all_check=false;
             }
         }
-    }
+      }
 
     function fill_repeat_info_off(){ //반복일정 요약 채우기
       var len = offRepeatScheduleTypeArray.length
