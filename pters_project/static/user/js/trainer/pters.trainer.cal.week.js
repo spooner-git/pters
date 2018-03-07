@@ -433,77 +433,74 @@ $(document).ready(function(){
 			var $offdelform = $('#daily-off-delete-form');
 			$('body').css('overflow-y','overlay');
 			if(schedule_on_off==1){
-					//PT 일정 삭제시
-					$.ajax({
-	                    url:'/schedule/delete_schedule/',
-	                    type:'POST',
-	                    data:$ptdelform.serialize(),
+				//PT 일정 삭제시
+				$.ajax({
+                    url:'/schedule/delete_schedule/',
+                    type:'POST',
+                    data:$ptdelform.serialize(),
 
-	                    beforeSend:function(){
-	                     	deleteBeforeSend();
-	                    },
+                    beforeSend:function(){
+                     	deleteBeforeSend();
+                    },
 
-	                    //통신성공시 처리
-	                    success:function(){
-	                      closeDeletePopup();
-	                      deleteCompleteSend();
-	                      ajaxClassTime()
-	                      fake_show()
-	                      console.log('success')
-	                      },
+                    //통신성공시 처리
+                    success:function(){
+                      closeDeletePopup();
+                      deleteCompleteSend();
+                      ajaxClassTime()
+                      fake_show()
+                      console.log('success')
+                      },
 
-	                    //보내기후 팝업창 닫기
-	                    complete:function(){
-	                    	
-	                      },
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    	
+                      },
 
-	                    //통신 실패시 처리
-	                    error:function(){
-	                      console.log("error")
-	                    },
-	                 })
-		}else{
-					$.ajax({
-	                    url:'/schedule/delete_schedule/',
-	                    type:'POST',
-	                    data:$offdelform.serialize(),
+                    //통신 실패시 처리
+                    error:function(){
+                      console.log("error")
+                    },
+                })
+			}else{
+				$.ajax({
+                    url:'/schedule/delete_schedule/',
+                    type:'POST',
+                    data:$offdelform.serialize(),
 
-	                    beforeSend:function(){
-	                    	deleteBeforeSend();
-	                    },
+                    beforeSend:function(){
+                    	deleteBeforeSend();
+                    },
 
-	                    //통신성공시 처리
-	                    success:function(){
-	                      closeDeletePopup();
-	                      deleteCompleteSend();
-	                      ajaxClassTime()
-	                      fake_show()
-	                      console.log('success')
-	                      },
+                    //통신성공시 처리
+                    success:function(){
+                      closeDeletePopup();
+                      deleteCompleteSend();
+                      ajaxClassTime()
+                      fake_show()
+                      console.log('success')
+                      },
 
-	                     //보내기후 팝업창 닫기
-	                    complete:function(){
-	                      	
-	                      },
+                     //보내기후 팝업창 닫기
+                    complete:function(){
+                      	
+                      },
 
-	                    //통신 실패시 처리
-	                    error:function(){
-	                      console.log("error")
-	                    },
-	                 })
+                    //통신 실패시 처리
+                    error:function(){
+                      console.log("error")
+                    },
+                 })
 			}
 		}		
 	})
 
 
 	function ajaxClassTime(){
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1; //January is 0!
-		var yyyy = today.getFullYear();
-		var $weekNum4 = $('#weekNum_4').attr('data-date')
-		var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
-		console.log(today_form)
+
+			var $weekNum4 = $('#weekNum_4').attr('data-date')
+			var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
+			console.log(today_form)
 
             $.ajax({
               url: '/trainer/cal_day_ajax/',
@@ -686,14 +683,14 @@ $(document).ready(function(){
 		$('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
-        $('#shade').css({'display':'block'});
+        //$('#shade').css({'display':'block'});
 	}
 
 	function deleteCompleteSend(){
 		$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade').css({'display':'none'});
+        //$('#shade').css({'display':'none'});
 	}
 
 
