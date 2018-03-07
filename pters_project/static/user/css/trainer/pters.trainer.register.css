@@ -88,7 +88,7 @@ body{
 			color: #ffffff;
 		}
 
-	.pw_confirm{
+	.pw_confirm,.id_confirm{
 		display: none;
 		font-size: 12px;
 	}
