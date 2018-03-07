@@ -613,6 +613,8 @@ def add_repeat_schedule_logic(request):
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 
         repeat_schedule_info.save()
+        if repeat_schedule_info.repeat_schedule_id is None:
+            request.session['repeat_schedule_id'] = ''
         request.session['repeat_schedule_id'] = repeat_schedule_info.repeat_schedule_id
 
     if error is None:

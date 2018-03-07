@@ -93,7 +93,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        date = request.POST.get('date')
+        date = request.POST.get('date','')
         if date == '':
             date = datetime.date.today()
         context = super(CalDayViewAjax, self).get_context_data(**kwargs)
