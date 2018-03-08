@@ -47,4 +47,6 @@ urlpatterns = [
     url(r'^sales_setting/$', views.SalesSettingView.as_view(), name='sales_setting'),
     url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
 
+    url(r'^update_setting_reserve/$', views.update_setting_reserve_logic, name='update_setting_reserve'),
+
 ]
