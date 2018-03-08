@@ -734,6 +734,9 @@
           var oriDate = date.getDate();
           //front-end에서 다뤄야하는 데이터
 
+          var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+          var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+
           //PT 일정 등록시 필요한 정보
           var memberNameArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.name }}',{% endfor %}];
           var memberAvailCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}];
@@ -775,7 +778,6 @@
           var ptRepeatScheduleEndDateArray =  [{% for pt_repeat_schedule_end_date_info in pt_repeat_schedule_end_date_data %}'{{ pt_repeat_schedule_end_date_info }}', {% endfor %}];
           var ptRepeatScheduleStartTimeArray =  [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}'{{ pt_repeat_schedule_start_time_info }}', {% endfor %}];
           var ptRepeatScheduleTimeDurationArray =  [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}'{{ pt_repeat_schedule_time_duration_info }}', {% endfor %}];
-
 
           var classTimeArray = [];
           var offTimeArray = [];

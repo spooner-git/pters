@@ -20,6 +20,7 @@ from config.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
 from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
+from trainee.views import get_trainee_lecture_data_func
 from trainer.models import ClassTb
 from schedule.models import ScheduleTb
 
@@ -81,6 +82,10 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today
         end_date = today + datetime.timedelta(days=1)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
+
+        holiday = HolidayTb.objects.filter(use='1')
+        context['holiday'] = holiday
+
         return context
 
 
@@ -125,6 +130,9 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=18)
         end_date = today + datetime.timedelta(days=19)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
+
+        holiday = HolidayTb.objects.filter(use='1')
+        context['holiday'] = holiday
 
         return context
 
@@ -629,3 +637,24 @@ def alarm_delete_logic(request):
     else:
         messages.error(request, error)
         return redirect(next_page)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'member_lecture_data_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(ReadMemberLectureData, self).get_context_data(**kwargs)
+
+        context = get_trainee_lecture_data_func(context, self.request.user.id, None)
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        lecture_id = request.POST.get('lecture_id', None)
+
+        context = super(ReadMemberLectureData, self).get_context_data(**kwargs)
+        context = get_trainee_lecture_data_func(context, self.request.user.id, lecture_id)
+
+        return render(request, self.template_name, context)
+

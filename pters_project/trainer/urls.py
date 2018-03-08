@@ -33,6 +33,9 @@ urlpatterns = [
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
     url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_repeat_off'),
 
+    # 회원 데이터 관련
+    url(r'^read_member_lecture_data/$', views.ReadMemberLectureData.as_view(), name='read_member_lecture_data'),
+
     # log 관련
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
     url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),
