@@ -9,6 +9,14 @@
 
 
 {% block content %}
+
+<form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
+  <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time">
+  <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition">
+  <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:reserve_setting' %}'>
+</form>
+
 <div id="memberReserveSettingText" class="settingMenu">
   <p class="settingText">회원 예약 허용 시간대 설정</p>
   <p class="settingText2">회원이 직접 예약 가능한 시간대를 설정합니다.</p>
