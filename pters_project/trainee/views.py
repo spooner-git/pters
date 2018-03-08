@@ -279,7 +279,7 @@ def pt_delete_logic(request):
     error = None
     lecture_info = None
     schedule_info = None
-    today = datetime.date.today()
+    today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
 
     if schedule_id == '':
@@ -415,6 +415,10 @@ def pt_add_logic(request):
         error = '시작 시간을 선택해 주세요.'
 
     if error is None:
+        if int(time_duration) > 1 :
+            error = '진행 시간은 1시간만 선택 가능합니다.'
+
+    if error is None:
         error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name)
 
     if error is None:
@@ -455,8 +459,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     error = None
     lecture_info = None
     class_info = None
-    today = datetime.date.today()
-    fourteen_days_ago = today - datetime.timedelta(days=14)
+    today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
 
     if pt_schedule_date == '':
@@ -481,7 +484,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             error = '입력할 수 없는 날짜입니다.'
 
     if error is None:
-        if start_date < fourteen_days_ago:
+        if start_date < timezone.now():
             error = '입력할 수 없는 날짜입니다.'
 
     if error is None:
