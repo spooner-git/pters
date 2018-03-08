@@ -75,6 +75,12 @@ body{
 	color: #fe4e65;
 	font-weight: 600;
 }
+	.lower_box_num:hover{
+		color: #fe4e65;
+	}
+	.lower_box_num:focus{
+		color: #fe4e65;
+	}
 
 .center_box_text{
 	width: 91.67%;
