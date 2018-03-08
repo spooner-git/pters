@@ -18,14 +18,17 @@
 {% block content %}
 <body> 
 
-    <form>
-        <input type="hidden" id="newname" value="" >
-        <input type="hidden" id="newsex" value="" >
-        <input type="hidden" id="newid" value="" >
-        <input type="hidden" id="newpw" value="" >
-        <input type="hidden" id="newemail" value="" >
-        <input type="hidden" id="newbirth" value="" >
-        <input type="hidden" id="newregion" value="" >
+    <form action="{% url 'login:add_member_info' %}" id="add-trainer-member-form" method="post">
+        <input type="hidden" name="name" id="newname" value="" >
+        <input type="hidden" name="sex" id="newsex" value="" >
+        <input type="hidden" name="id" id="newid" value="" >
+        <input type="hidden" name="password" id="newpw" value="" >
+        <input type="hidden" name="email" id="newemail" value="" >
+        <input type="hidden" name="birthday" id="newbirth" value="" >
+        <input type="hidden" name="address" id="newregion" value="" >
+        <input type="hidden" id="id_duplicate_check" value="" >
+        <input type="hidden" name="group_type" value="trainer">
+        <input type="hidden" name="next_page" value="{% url 'login:login' %}" >
     </form>
 
 
@@ -279,6 +282,8 @@
     $('#registerMember').click(function(){
         if($('#checkbox1').is(':checked') && $('#checkbox2').is(':checked')){
             alert('정상 : 테스트 페이지 입니다.')
+            document.getElementById('add-trainer-member-form').submit();
+
         }else{
             alert('약관 동의필요 : 테스트 페이지 입니다.')
         }

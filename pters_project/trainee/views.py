@@ -25,10 +25,31 @@ from django.utils import timezone
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
-    url = '/trainee/cal_month/'
+    # url = '/trainee/cal_month/'
+    def get(self, request, **kwargs):
+        error = None
+        lecture_info = None
+        try:
+            lecture_info = LectureTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'lecture가 존재하지 않습니다.'
+
+        if error is None:
+            self.url = '/trainee/cal_month/'
+        else:
+            self.url = '/trainee/blank/'
+        return super(IndexView, self).get(request, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
+
+
+class BlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BlankView, self).get_context_data(**kwargs)
+        return context
 
 
 class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
