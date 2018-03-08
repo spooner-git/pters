@@ -89,6 +89,7 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 daily_off_data_start_date.append(class_schedule_datum.start_dt)
                 daily_off_data_end_date.append(class_schedule_datum.end_dt)
 
+        holiday = HolidayTb.objects.filter(use='1')
         context['month_lecture_data'] = month_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
         context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
@@ -97,6 +98,7 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['daily_off_data_start_date'] = daily_off_data_start_date
         context['daily_off_data_end_date'] = daily_off_data_end_date
         context['lecture_avail_count'] = lecture_info.lecture_avail_count
+        context['holiday'] = holiday
 
         return context
 

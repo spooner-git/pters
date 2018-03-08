@@ -82,6 +82,10 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today
         end_date = today + datetime.timedelta(days=1)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
+
+        holiday = HolidayTb.objects.filter(use='1')
+        context['holiday'] = holiday
+
         return context
 
 
@@ -126,6 +130,9 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=18)
         end_date = today + datetime.timedelta(days=19)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
+
+        holiday = HolidayTb.objects.filter(use='1')
+        context['holiday'] = holiday
 
         return context
 
