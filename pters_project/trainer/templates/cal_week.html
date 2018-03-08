@@ -161,7 +161,7 @@
 
     
 <div id="week" class="time-row">
-        <div class="slidegap" style="background:#f4f4f4;"><span></span><span></span></div>
+        <div class="slidegap"><span></span><span></span></div>
         <div id="weekNum_1" class="weekNum"><span class="weekToday-style"></span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span><span class="weekToday-style" style="color: #d21245;">일</span></div>
         <div id="weekNum_2" class="weekNum"><span class="weekToday-style"></span><span id="monDate" class="weekToday-style"></span><span class="weekToday-style">월</span></div>
         <div id="weekNum_3" class="weekNum"><span class="weekToday-style"></span><span id="tueDate" class="weekToday-style"></span><span class="weekToday-style">화</span></div>
@@ -811,16 +811,16 @@
 
             $('#hidetoggle').click(function(){
               if($(this).attr('data-type') == '0'){
-                $(this).css({'padding-top':'10px','color':'#282828'}).attr('data-type','1')
+                $(this).css({'margin-top':'0px','color':'#282828','background':'#f7f7f7'}).attr('data-type','1')
                 $(this).find('img').css('-webkit-transform','rotate(-90deg)')
-                $('#ymdText-pc').css({'padding-top':'17px','background':'#ffffff'})
+                $('#ymdText-pc').css({'margin-top':'17px'})
                 $('#week').css({'padding-top':'24px'})
                 $('#calendar').css('padding-top','19px')
                 $('#ymdText').css('display','none')
               }else{
-                $(this).css({'padding-top':'75px','color':'#f4f4f4'}).attr('data-type','0')
+                $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type','0')
                 $(this).find('img').css('-webkit-transform','rotate(90deg)')
-                $('#ymdText-pc').css({'padding-top':'100px','background':'transparent'})
+                $('#ymdText-pc').css({'margin-top':'100px'})
                 $('#week').css({'padding-top':'115px'})
                 $('#calendar').css('padding-top','110px')
                 $('#ymdText').css('display','block')
@@ -851,6 +851,8 @@
 
 
             $('footer').css('display','none')
+
+            $('td')
 
 
             //sk 테스트중, 클릭 팝업

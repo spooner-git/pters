@@ -5,7 +5,7 @@ body{
 	font-family: 'Noto Sans KR';
 	padding-top: 50px;
 	width: 100%;
-	background: #ffffff;
+	background: #f7f7f7;
 }
 
 .swiper-container{
@@ -844,7 +844,7 @@ img,a,div,span,p{
 		text-align: center;
 		z-index: 5;
 		vertical-align: middle;
-		background-color: #ffffff;
+		background-color: #f7f7f7;
 	}
 
 	#ymdText-pc div{
@@ -892,6 +892,16 @@ img,a,div,span,p{
 	#calendar td{
 		border-left:0.5px solid #cccccc;
 		border-right: 0.5px solid #cccccc;
+	}
+
+	.tdsaturday{
+		border-right-color:#f7f7f7 !important;
+		color: #115a8e !important;
+	}
+
+	.tdsunday{
+		border-left-color: #f7f7f7 !important;
+		color: #d21245 !important;
 	}
 
 	.arrowButtonPC{
@@ -1052,7 +1062,7 @@ img,a,div,span,p{
 		padding: 0;
 		top: 0;
 		height: 42px;
-		background-color: #f7f7f7;
+		background-color: #ffffff;
 		margin-top: 215px;
 		z-index: 5;
 	}
@@ -1065,6 +1075,14 @@ img,a,div,span,p{
 
 	.weekdays{
 		color: #888888 !important;
+	}
+
+	#sunday{
+		border-left-color: #f7f7f7 !important;
+	}
+
+	#saturday{
+		border-right-color: #f7f7f7 !important;
 	}
 
 	.blackballoon_trainer,.balloon_trainer{
