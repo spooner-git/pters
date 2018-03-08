@@ -758,6 +758,16 @@ img,a,div,span,p{
 	border: 3px solid #282828;
 }
 
+.tdsaturday{
+	border-right-color:#f7f7f7 !important;
+	color: #115a8e !important;
+}
+
+.tdsunday{
+	border-left-color: #f7f7f7 !important;
+	color: #d21245 !important;
+}
+
 
 /*미디어 쿼리*/
 
@@ -892,16 +902,6 @@ img,a,div,span,p{
 	#calendar td{
 		border-left:0.5px solid #cccccc;
 		border-right: 0.5px solid #cccccc;
-	}
-
-	.tdsaturday{
-		border-right-color:#f7f7f7 !important;
-		color: #115a8e !important;
-	}
-
-	.tdsunday{
-		border-left-color: #f7f7f7 !important;
-		color: #d21245 !important;
 	}
 
 	.arrowButtonPC{
