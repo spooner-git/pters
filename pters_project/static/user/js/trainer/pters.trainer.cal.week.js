@@ -525,6 +525,7 @@ $(document).ready(function(){
                 scheduleIdArray = [];
                 offScheduleIdArray = [];
                 scheduleFinishArray = [];
+          		scheduleNoteArray = [];
                 memberLectureIdArray = [];
                 memberNameArray = [];
                 memberAvailCountArray = [];
@@ -555,6 +556,7 @@ $(document).ready(function(){
                 scheduleIdArray = jsondata.scheduleIdArray
                 offScheduleIdArray = jsondata.offScheduleIdArray
                 scheduleFinishArray = jsondata.scheduleFinishArray;
+          		scheduleNoteArray = jsondata.scheduleNoteArray;
                 memberLectureIdArray = jsondata.memberLectureIdArray;
                 memberNameArray = jsondata.memberNameArray;
                 memberAvailCountArray = jsondata.memberAvailCountArray;
@@ -621,6 +623,7 @@ $(document).ready(function(){
           scheduleIdArray = [];
           offScheduleIdArray = [];
           scheduleFinishArray = [];
+          scheduleNoteArray = [];
           memberLectureIdArray = [];
           memberNameArray = [];
           memberAvailCountArray = [];
@@ -651,6 +654,7 @@ $(document).ready(function(){
           scheduleIdArray = jsondata.scheduleIdArray
           offScheduleIdArray = jsondata.offScheduleIdArray
           scheduleFinishArray = jsondata.scheduleFinishArray;
+          scheduleNoteArray = jsondata.scheduleNoteArray;
           memberLectureIdArray = jsondata.memberLectureIdArray;
           memberNameArray = jsondata.memberNameArray;
           memberAvailCountArray = jsondata.memberAvailCountArray;
