@@ -25,6 +25,9 @@
       [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}"{{ pt_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleFinishArray":
       [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}"{{ pt_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "scheduleNoteArray":
+      [{% for pt_schedule_note_info in pt_schedule_note %}"{{ pt_schedule_note_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
       "RepeatDuplicationDateArray" :
