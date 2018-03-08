@@ -584,6 +584,7 @@ def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
     pt_schedule_end_datetime = []
     pt_schedule_member_name = []
     pt_schedule_finish_check = []
+    pt_schedule_note = []
 
     pt_repeat_schedule_id = []
     pt_repeat_schedule_type = []
@@ -616,6 +617,7 @@ def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
             pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
             pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
             pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
+
 
     # 강좌에 해당하는 수강/회원 정보 가져오기, 예약가능 횟수 1개 이상인 회원
     if error is None:
@@ -651,6 +653,10 @@ def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
                 pt_schedule_member_name.append(member_data.name)
                 pt_schedule_start_datetime.append(pt_schedule_datum.start_dt)
                 pt_schedule_end_datetime.append(pt_schedule_datum.end_dt)
+                if pt_schedule_datum.note is None:
+                    pt_schedule_note.append('')
+                else:
+                    pt_schedule_note.append(pt_schedule_datum.note)
                 # 끝난 스케쥴인지 확인
                 if pt_schedule_datum.state_cd == 'PE':
                     pt_schedule_finish_check.append(1)
@@ -663,6 +669,7 @@ def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
     context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
     context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
+    context['pt_schedule_note'] = pt_schedule_note
 
     context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
     context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type

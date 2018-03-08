@@ -69,6 +69,7 @@ class DeleteScheduleTb(models.Model):
     end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     sign_data_url = models.CharField(db_column='SIGN_DATA_URL', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    note = models.CharField(db_column='NOTE', max_length=255, blank=True, null=True)
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
@@ -88,6 +89,7 @@ class ScheduleTb(models.Model):
     end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     sign_data_url = models.CharField(db_column='SIGN_DATA_URL', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    note = models.CharField(db_column='NOTE', max_length=255, blank=True, null=True)
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
