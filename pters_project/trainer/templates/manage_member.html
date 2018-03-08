@@ -162,7 +162,7 @@
                 <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 부가정보
             </label>
             <div id="memberBirth_info">
-            <!--
+                <!--
                 <input type="text" class="dropdown form-control" id="memberBirthYear_info" name="birthyear" maxlength="4" readonly>
                 <div id="memberBirthMonthSelected_info" class="dropdown">
                     <button class="btn btn-default dropdown-toggle pters_dropdown_custom input_disabled_color" type="button" data-toggle="dropdown" name="birthmonth" disabled></button>
@@ -187,7 +187,7 @@
                         
                     </ul>
                 </div>
-            --> 
+                --> 
                 <select class="dropdown_birth dropdown_birth_info" id="birth_year_info" disabled>
                 </select>
                 <select class="dropdown_birth dropdown_birth_info" id="birth_month_info" disabled>
@@ -209,16 +209,16 @@
                 <input type="tel" class="dropdown form-control" id="memberPhone_info" name="phone" required="required" readonly>
             </div>
         </div>
-<!--
-        <div class="ptaddbox form-group">
-            <label for="memberCount_info" class="ptaddboxtext">
-                <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
-            </label>
-            <div class="dropdown pters_input_custom">
-                <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
-            </div>
-        </div>
--->
+            <!--
+                    <div class="ptaddbox form-group">
+                        <label for="memberCount_info" class="ptaddboxtext">
+                            <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
+                        </label>
+                        <div class="dropdown pters_input_custom">
+                            <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
+                        </div>
+                    </div>
+            -->
 
         <div class="ptaddbox form-group">
             <label for="memberEmail_info" class="ptaddboxtext">
@@ -229,16 +229,16 @@
             </div>
         </div>
 
-<!--
-        <div id="dateSelector_info" class="ptaddbox">
-            <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
-            <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
-        </div>
-        <div id="dateSelector2_info"  class="ptaddbox">
-            <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
-            <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
-        </div>
--->
+            <!--
+                    <div id="dateSelector_info" class="ptaddbox">
+                        <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
+                        <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
+                    </div>
+                    <div id="dateSelector2_info"  class="ptaddbox">
+                        <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
+                        <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
+                    </div>
+            -->
         <div class="ptaddbox form-group">
             <label for="comment_info" class="ptaddboxtext">
                 <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
@@ -263,6 +263,38 @@
     </div>
 </div>
 
+<div id="memberInfoPopup_PC" class="infopopup_pc wrap">
+    <label id="memberInfoPopup_PC_label">
+        <img src="/static/user/res/member/icon-female-pink.png">최피티 회원님
+        <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" title="닫기">
+    </label>
+
+    <div id="memberName_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label><div id="memberName_info_PC">1980년 9월 9일</div>
+    </div>
+    <div id="memberPhone_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label><div id="memberPhone_info_PC">010-9999-0000</div>
+    </div>
+    <div id="memberRegCount_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록횟수</label><div id="memberRegCount_info_PC">30회</div>
+    </div>
+    <div id="memberRemainCount_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">남은횟수</label><div id="memberRemainCount_info_PC">8회</div>
+    </div>
+    <div id="memberEmail_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-mail-grey.png">E-mail</label><div id="memberEmail_info_PC">trainees@pters.co.kr</div>
+    </div>
+    <div id="memberStart_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-cal-grey.png">시작일자</label><div id="memberStart_info_PC">2018년 1월 1일</div>
+    </div>
+    <div id="memberEnd_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-cal-grey.png">종료일자</label><div id="memberEnd_info_PC">2018년 12월 31일</div>
+    </div>
+    <div id="memberComment_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-info.png">특이사항</label><div id="memberComment_info_PC">다이어트</div>
+    </div>
+</div>
+
 
 
 <div id="page_addmember" class="wrap"> 
@@ -284,9 +316,7 @@
         <input type="hidden" name="birthday" id="form_birth" value="">
         <input type="hidden" name="name" id="form_name" value="">
 
-
-        <div>
-            
+        <div>            
             <div class="ptaddbox form-group">
                 <label for="memberNameSex" class="ptaddboxtext">
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span>
