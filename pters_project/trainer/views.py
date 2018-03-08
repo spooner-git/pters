@@ -658,3 +658,82 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
 
         return render(request, self.template_name, context)
 
+
+# 강사 setting 업데이트 api
+@csrf_exempt
+def update_setting_reserve_logic(request):
+    member_id = request.POST.get('id')
+    email = request.POST.get('email')
+    name = request.POST.get('name')
+    phone = request.POST.get('phone')
+    contents = request.POST.get('contents')
+    sex = request.POST.get('sex')
+    birthday_dt = request.POST.get('birthday')
+    next_page = request.POST.get('next_page')
+
+    error = None
+
+    if member_id == '':
+        error = '회원 ID를 확인해 주세요.1'
+
+    if name == '':
+        error = '이름을 입력해 주세요.'
+    elif phone == '':
+        error = '연락처를 입력해 주세요.'
+    elif len(phone) != 11 and len(phone) != 10:
+        error = '연락처를 확인해 주세요.'
+    elif not phone.isdigit():
+        error = '연락처를 확인해 주세요.'
+
+    if error is None:
+        try:
+            user = User.objects.get(username=member_id, is_active=1)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.2'
+
+        try:
+            member = MemberTb.objects.get(user_id=user.id, use=1)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.3'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                user.first_name = name
+                user.email = email
+                user.save()
+                member.name = name
+                member.phone = phone
+                member.contents = contents
+                member.sex = sex
+
+                if birthday_dt != '':
+                    member.birthday_dt = birthday_dt
+                member.mod_dt = timezone.now()
+                member.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                       + name + ' 회원님의</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
