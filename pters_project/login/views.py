@@ -1,4 +1,4 @@
-from datetime import timezone
+import datetime
 
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
@@ -9,6 +9,7 @@ from django.db import InternalError
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
+from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
@@ -16,8 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from django.views.generic import TemplateView
 
-from login.models import MemberTb, LogTb
-from trainee.models import LectureTb
+from login.models import MemberTb
 from trainer.models import ClassTb
 
 
@@ -76,6 +76,7 @@ class RegisterTrainerView(TemplateView):
 
         return context
 
+
 class RegisterGeneralView(TemplateView):
     template_name = 'login_register_general.html'
 
@@ -84,6 +85,7 @@ class RegisterGeneralView(TemplateView):
 
         return context
 
+
 class RegisterBusinessView(TemplateView):
     template_name = 'login_register_business.html'
 
@@ -91,6 +93,7 @@ class RegisterBusinessView(TemplateView):
         context = super(RegisterBusinessView, self).get_context_data(**kwargs)
 
         return context
+
 
 class RegisterTypeSelectView(TemplateView):
     template_name = 'login_register_type.html'
@@ -112,115 +115,58 @@ def logout_trainer(request):
 # 회원가입 api
 @csrf_exempt
 def add_member_info_logic(request):
-    fast_check = request.POST.get('fast_check')
-    email = request.POST.get('email')
-    name = request.POST.get('name')
-    phone = request.POST.get('phone')
-    contents = request.POST.get('contents')
-    counts = request.POST.get('counts')
-    price = request.POST.get('price')
-    start_date = request.POST.get('start_date')
-    end_date = request.POST.get('end_date')
-    counts_fast = request.POST.get('counts_fast')
-    price_fast = request.POST.get('price_fast')
-    start_date_fast = request.POST.get('start_date_fast')
-    end_date_fast = request.POST.get('end_date_fast')
-    sex = request.POST.get('sex')
-    birthday_dt = request.POST.get('birthday')
-    next_page = request.POST.get('next_page')
+    user_id = request.POST.get('id', '')
+    password = request.POST.get('password', '')
+    email = request.POST.get('email', '')
+    name = request.POST.get('name', '')
+    phone = request.POST.get('phone', '')
+    sex = request.POST.get('sex', '')
+    group_type = request.POST.get('group_type', 'trainee')
+    birthday_dt = request.POST.get('birthday', '')
+    next_page = request.POST.get('next_page', '')
 
     error = None
-    input_start_date = ''
-    input_end_date = ''
-    input_counts = 0
-    input_price = 0
-    now = timezone.now()
-    class_info = None
 
-    if User.objects.filter(username=phone).exists():
+    if user_id == '':
+        error = 'ID를 입력해 주세요.'
+    elif User.objects.filter(username=user_id).exists():
         error = '이미 가입된 회원 입니다.'
     # elif User.objects.filter(email=email).exists():
     #    error = '이미 가입된 회원 입니다.'
     # elif email == '':
     #    error = 'e-mail 정보를 입력해 주세요.'
+    elif password == '':
+        error = '비밀번호를 입력해 주세요.'
     elif name == '':
         error = '이름을 입력해 주세요.'
-    elif phone == '':
-        error = '연락처를 입력해 주세요.'
-    elif len(phone) != 11 and len(phone) != 10:
-        error = '연락처를 확인해 주세요.'
-    elif not phone.isdigit():
-        error = '연락처를 확인해 주세요.'
-
-    if error is None:
-        if fast_check == '0':
-            if counts_fast == '':
-                error = '남은 횟수를 입력해 주세요.'
-            elif start_date_fast == '':
-                error = '시작 날짜를 입력해 주세요.'
-            else:
-                input_counts = counts_fast
-                input_start_date = start_date_fast
-                if price_fast == '':
-                    input_price = 0
-                else:
-                    input_price = price_fast
-                if end_date_fast == '':
-                    input_end_date = '9999-12-31'
-                else:
-                    input_end_date = end_date_fast
-
-        elif fast_check == '1':
-            if counts == '':
-                error = '남은 횟수를 입력해 주세요.'
-            elif start_date == '':
-                error = '시작 날짜를 입력해 주세요.'
-            else:
-                input_counts = counts
-                input_start_date = start_date
-                if price == '':
-                    input_price = 0
-                else:
-                    input_price = price
-                if end_date == '':
-                    input_end_date = '9999-12-31'
-                else:
-                    input_end_date = end_date
-
-    if error is None:
-        if len(phone) == 11:
-            password = phone[7:]
-        elif len(phone) == 10:
-            password = phone[6:]
-
-    if error is None:
-
-        try:
-            class_info = ClassTb.objects.get(member_id=request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 강좌 정보가 없습니다.'
+    #elif phone == '':
+    #    error = '연락처를 입력해 주세요.'
+    #elif len(phone) != 11 and len(phone) != 10:
+    #    error = '연락처를 확인해 주세요.'
+    #elif not phone.isdigit():
+    #    error = '연락처를 확인해 주세요.'
 
     if error is None:
         try:
             with transaction.atomic():
-                user = User.objects.create_user(username=phone, email=email, first_name=name, password=password)
-                group = Group.objects.get(name='trainee')
+                user = User.objects.create_user(username=user_id, email=email, first_name=name, password=password)
+                group = Group.objects.get(name=group_type)
                 user.groups.add(group)
                 if birthday_dt == '':
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                       mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
                 else:
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                       birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
                                       user_id=user.id)
                 member.save()
-                lecture = LectureTb(class_tb_id=class_info.class_id, member_id=member.member_id,
-                                    lecture_reg_count=input_counts, lecture_rem_count=input_counts,
-                                    lecture_avail_count=input_counts, price=input_price, option_cd='DC',
-                                    state_cd='IP',
-                                    start_date=input_start_date, end_date=input_end_date, mod_dt=now,
-                                    reg_dt=now, use=1)
-                lecture.save()
+                if group_type == 'trainer':
+                    class_info = ClassTb(member_id=member.member_id, class_type_cd='PT',
+                                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
+                                         class_hour='1', start_hour_unit='1', class_member_num='100',
+                                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(),use='1')
+
+                    class_info.save()
 
         except ValueError as e:
             error = '이미 가입된 회원입니다.'
@@ -234,15 +180,10 @@ def add_member_info_logic(request):
             error = '이미 가입된 회원입니다.'
 
     if error is None:
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
-                       + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
-        log_data.save()
+        messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
         return redirect(next_page)
     else:
-        messages.info(request, error)
-
+        messages.error(request, error)
         return redirect(next_page)
 
 
