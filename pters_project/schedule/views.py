@@ -30,7 +30,7 @@ class IndexView(TemplateView):
 
 
 def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
-                            user_id, lecture_id, en_dis_type, repeat_id):
+                            user_id, lecture_id, note, en_dis_type, repeat_id):
 
     error = None
     class_info = None
@@ -67,13 +67,13 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
                 if repeat_id is None:
                     add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                    start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                                   state_cd='NP', en_dis_type=en_dis_type,
+                                                   state_cd='NP', note=note, en_dis_type=en_dis_type,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
                 else:
                     add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                    repeat_schedule_tb_id=repeat_id,
                                                    start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                                   state_cd='NP', en_dis_type=en_dis_type,
+                                                   state_cd='NP', note=note, en_dis_type=en_dis_type,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
                 add_schedule_info.save()
 
@@ -124,7 +124,8 @@ def delete_schedule_logic_func(schedule_info):
                                                    lecture_tb_id=schedule_info.lecture_tb_id,
                                                    delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
-                                                   state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
+                                                   state_cd=schedule_info.state_cd, note=schedule_info.note,
+                                                   en_dis_type=schedule_info.en_dis_type,
                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
 
                 delete_schedule.save()
@@ -182,6 +183,7 @@ def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
     pt_schedule_end_datetime = []
     pt_schedule_member_name = []
     pt_schedule_finish_check = []
+    pt_schedule_note = []
     off_repeat_schedule_id = []
     off_repeat_schedule_type = []
     off_repeat_schedule_week_info = []
@@ -275,6 +277,10 @@ def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
                 pt_schedule_member_name.append(member_data.name)
                 pt_schedule_start_datetime.append(pt_schedule_datum.start_dt)
                 pt_schedule_end_datetime.append(pt_schedule_datum.end_dt)
+                if pt_schedule_datum.note is None:
+                    pt_schedule_note.append('')
+                else:
+                    pt_schedule_note.append(pt_schedule_datum.note)
                 # 끝난 스케쥴인지 확인
                 if pt_schedule_datum.state_cd == 'PE':
                     pt_schedule_finish_check.append(1)
@@ -290,6 +296,7 @@ def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
     context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
     context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
+    context['pt_schedule_note'] = pt_schedule_note
     context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
     context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
     context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
@@ -318,6 +325,7 @@ def add_schedule_logic(request):
     schedule_time = request.POST.get('training_time')
     schedule_time_duration = request.POST.get('time_duration')
     en_dis_type = request.POST.get('en_dis_type')
+    note = request.POST.get('add_memo', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -373,7 +381,7 @@ def add_schedule_logic(request):
             with transaction.atomic():
                 for input_datetime in input_datetime_list:
                     error = add_schedule_logic_func(schedule_date, input_datetime[0], input_datetime[1],
-                                                    request.user.id, lecture_id,
+                                                    request.user.id, lecture_id, note,
                                                     en_dis_type, None)
                     if error is not None:
                         break
