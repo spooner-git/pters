@@ -5,7 +5,7 @@ body{
 	position: relative;
 	padding-top: 50px;
 	width: 100%;
-	background: #ffffff;
+	background: #f7f7f7;
 }
 
 
@@ -28,10 +28,12 @@ body{
 
 .slidegap{
 	display: table-cell;
+	background:#f7f7f7;
 	width: 9.1%;
 	height: 29px;
 	color: transparent;
-	border: 0;
+	border-top: 1px solid #cccccc;
+	border-right: 0.5px solid #cccccc;
 }
 
 .timeindex{
@@ -563,7 +565,7 @@ img,a,div,span,p{
 }
 
 .currentTimeBlackBox{
-	background: black;
+	background: black !important;
 	border-color: black;
 	color: #ffffff !important;
 }
@@ -619,7 +621,7 @@ img,a,div,span,p{
 
 .reserveavailable{
 	/*background: #e9f5ff;*/
-	background: #ffebee;
+	background: #ffffff !important;
 }
 
 .currentTimeBox{
@@ -664,6 +666,7 @@ img,a,div,span,p{
 
 /*미디어 쿼리*/
 @media(min-width:418px){
+
 
 	/*
 	#popup_info,#popup_info2,#popup_info3{
@@ -728,16 +731,21 @@ img,a,div,span,p{
 @media(min-width: 600px){
 	#calendar{
 		position: relative;
+		background:#ffffff;
 		margin:0 auto;
 		padding-top: 110px;
 		margin-bottom: 60px;
+	}
+
+	.slidegap{
+		background:#ffffff;
 	}
 
 	#hidetoggle{
 		display: block;
 		position: fixed;
 		text-align: left;
-		padding-top: 75px;
+		margin-top: 75px;
 		color: #f4f4f4;
 		font-size: 12px;
 		font-weight: 300;
@@ -754,12 +762,13 @@ img,a,div,span,p{
 	#ymdText-pc{
 		display: block;
 		position: fixed;
-		padding-top: 100px;
+		margin-top: 100px;
 		width:100%;
 		height: 50px;
 		text-align: center;
 		z-index: 5;
 		vertical-align: middle;
+		background:#f7f7f7;
 	}
 
 	#ymdText-pc div{
@@ -806,10 +815,14 @@ img,a,div,span,p{
 
 	.hour{
 		height: 46px;
+		background:#ffffff;
 	}
 
 	.weekNum{
+		background:#ededed;
 		padding-bottom: 15px;
+		border-top: 1px solid #cccccc;
+		border-right: 1px solid #f7f7f7;
 	}
 
 	.timeindex_time{
@@ -830,11 +843,11 @@ img,a,div,span,p{
 
 	.classTime{
 		top: 2px;
-		left: 3px;
+		left: 1px;
 	}
 
 	.offTime{
-		left: 2px;
+		left: 1px;
 	}
 
 	.classTime,.offTime,.classTime_checked{
