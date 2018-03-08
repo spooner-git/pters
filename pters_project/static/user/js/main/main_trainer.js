@@ -46,5 +46,7 @@ $(document).ready(function(){
 		}
 	})
 
+	$('.bottomfooter1').find('img').attr('src','/static/user/res/spooner.png')
+
 });
 
