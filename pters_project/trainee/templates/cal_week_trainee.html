@@ -75,6 +75,9 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
+            var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+            var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+
           //front-end에서 다뤄야하는 데이터
           var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
           var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];

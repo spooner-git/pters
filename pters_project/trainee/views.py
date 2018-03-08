@@ -6,18 +6,20 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import InternalError
 from django.db import transaction
 from django.db import IntegrityError
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 # Create your views here.
+from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
+from django.views.generic.base import ContextMixin, View
 
 from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
 from trainee.models import LectureTb
 from trainer.models import ClassTb
-from schedule.models import ScheduleTb, DeleteScheduleTb
+from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb
 
 from django.utils import timezone
 
@@ -87,6 +89,7 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 daily_off_data_start_date.append(class_schedule_datum.start_dt)
                 daily_off_data_end_date.append(class_schedule_datum.end_dt)
 
+        holiday = HolidayTb.objects.filter(use='1')
         context['month_lecture_data'] = month_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
         context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
@@ -95,6 +98,7 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['daily_off_data_start_date'] = daily_off_data_start_date
         context['daily_off_data_end_date'] = daily_off_data_end_date
         context['lecture_avail_count'] = lecture_info.lecture_avail_count
+        context['holiday'] = holiday
 
         return context
 
@@ -544,3 +548,104 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         return error
 
 
+def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
+
+    error = None
+    class_info = None
+    context['lecture_info'] = None
+
+    pt_schedule_id = []
+    pt_schedule_lecture_id = []
+    pt_schedule_start_datetime = []
+    pt_schedule_end_datetime = []
+    pt_schedule_member_name = []
+    pt_schedule_finish_check = []
+
+    pt_repeat_schedule_id = []
+    pt_repeat_schedule_type = []
+    pt_repeat_schedule_week_info = []
+    pt_repeat_schedule_start_date = []
+    pt_repeat_schedule_end_date = []
+    pt_repeat_schedule_start_time = []
+    pt_repeat_schedule_time_duration = []
+
+    # 강사 정보 가져오기
+    try:
+        class_info = ClassTb.objects.get(member_id=trainer_id)
+    except ObjectDoesNotExist:
+        error = '강사 정보가 존재하지 않습니다'
+
+    if error is None:
+        # 강사 클래스의 반복일정 불러오기
+        if lecture_id is None:
+            pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                      en_dis_type='1')
+        else:
+            pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                      lecture_tb_id=lecture_id,
+                                                                      en_dis_type='1')
+        for pt_repeat_schedule_info in pt_repeat_schedule_data:
+            pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
+            pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
+            pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
+            pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
+            pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
+            pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
+            pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
+
+    # 강좌에 해당하는 수강/회원 정보 가져오기, 예약가능 횟수 1개 이상인 회원
+    if error is None:
+        # 강좌에 해당하는 수강정보 가져오기
+        if lecture_id is None:
+            context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                               lecture_avail_count__gte=1, use=1)
+        else:
+            context['lecture_info'] = LectureTb.objects.filter(lecture_id=lecture_id,
+                                                               lecture_avail_count__gte=1, use=1)
+        for lecture in context['lecture_info']:
+            # 수강정보에 해당하는 회원정보 가져오기
+            try:
+                lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
+            except ObjectDoesNotExist:
+                error = '회원 정보가 존재하지 않습니다'
+
+    # PT 일정 조회
+    if error is None:
+        # 회원에 해당하는 강좌 정보 불러오기
+        for lecture_datum in context['lecture_info']:
+            # 강좌별로 연결되어있는 회원 리스트 불러오기
+            member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
+            # 강좌별로 연결된 PT 스케쥴 가져오기
+            lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
+                                                                       en_dis_type='1')
+            # PT 스케쥴 정보 셋팅
+            for pt_schedule_datum in lecture_datum.pt_schedule_data:
+                # lecture schedule id 셋팅
+                pt_schedule_id.append(pt_schedule_datum.schedule_id)
+                # lecture schedule 에 해당하는 lecture id 셋팅
+                pt_schedule_lecture_id.append(lecture_datum.lecture_id)
+                pt_schedule_member_name.append(member_data.name)
+                pt_schedule_start_datetime.append(pt_schedule_datum.start_dt)
+                pt_schedule_end_datetime.append(pt_schedule_datum.end_dt)
+                # 끝난 스케쥴인지 확인
+                if pt_schedule_datum.state_cd == 'PE':
+                    pt_schedule_finish_check.append(1)
+                else:
+                    pt_schedule_finish_check.append(0)
+
+    context['pt_schedule_id'] = pt_schedule_id
+    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
+    context['pt_schedule_member_name'] = pt_schedule_member_name
+    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
+    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
+    context['pt_schedule_finish_check'] = pt_schedule_finish_check
+
+    context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
+    context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
+    context['pt_repeat_schedule_week_info_data'] = pt_repeat_schedule_week_info
+    context['pt_repeat_schedule_start_date_data'] = pt_repeat_schedule_start_date
+    context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
+    context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
+    context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
+
+    return context
