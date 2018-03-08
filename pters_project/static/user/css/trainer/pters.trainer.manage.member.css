@@ -372,6 +372,61 @@ th{
 }
 
 
+
+.infopopup_pc{
+	display: none;
+	position: absolute;
+	background: #ffffff;
+	padding: 20px;
+	width: 350px;
+	z-index:105;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+
+	border: 1px solid #cccccc;
+}
+
+
+/*-----------------PC 회원정보 팝업-----------------------*/
+.infopopup_pc > label{
+	font-size: 17px;
+	width: 100%;
+}
+	.infopopup_pc > label img:nth-child(1){
+		width: 17px;
+		margin:0 5px 5px 0;
+	}
+	.infopopup_pc > label img:nth-child(2){
+		width: 15px;
+		float: right;
+		cursor: pointer;
+	}
+		.member_info_PC_wrap{
+			display: table;
+			width: 100%;
+			font-size: 14px;
+			margin: 10px 0 10px 0;
+		}
+			.member_info_PC_wrap label{
+				display: table-cell;
+				width: 35%;
+				color: #7d7d7d;
+			}
+			.member_info_PC_wrap div{
+				display: table-cell;
+				width: 65%;
+				color: #282828;
+				font-weight: 500;
+			}
+			.member_info_PC_wrap img{
+				width: 15px;
+				margin:0 5px 4px 0;
+			}
+/*-----------------PC 회원정보 팝업-----------------------*/
+
+
+
 ._tdname, ._tdnamee{
 	cursor: pointer;
 }
@@ -618,7 +673,7 @@ th{
 	}
 
 	._email{
-		width: 70px;
+		width: 115px;
 	}
 
 	._regcount{
@@ -640,7 +695,7 @@ th{
 	}
 
 	._contact{
-		width: 100px;
+		width: 70px;
 
 	}
 

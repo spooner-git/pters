@@ -111,7 +111,7 @@ $(document).ready(function(){
         birth_dropdown_set()
     })
 
-    $('#upbutton-x,#upbutton-x-modify,.cancelBtn').click(function(){
+    $('#upbutton-x,#upbutton-x-modify,.cancelBtn,#btn_close_info_PC').click(function(){
         closePopup()
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
@@ -163,49 +163,54 @@ $(document).ready(function(){
 //#####################회원정보 팝업 //#####################
 
     $(document).on('click','td._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
-        
-        birth_dropdown_set()
-        $('#float_btn_wrap').fadeOut();
-        $('#page-base').fadeOut('fast');
-        $('#page-base-modifystyle').fadeIn('fast');
-        var name = $(this).attr('data-name');
-        $('#memberName_info').val(name)
-        $('#memberId').val(DB[name].id);
-        $('#deleteMemberId').val(DB[name].id);
-        $('#memberPhone_info').val(DB[name].phone);
-        $('#comment_info').val(DB[name].contents);
-        //$('#memberCount_info').val(DB[name].count);
-        $('#memberEmail_info').val(DB[name].email);
-        //$('#datepicker_info').val(DB[name].start);
-        //$('#datepicker2_info').val(DB[name].end);
-
-        var dropdown_year_selected = $('#birth_year_info option[data-year='+DB[name].birth.split(' ')[0]+']')
-        var dropdown_month_selected = $('#birth_month_info option[data-month="'+DB[name].birth.split(' ')[1]+'"]')
-        var dropdown_date_selected = $('#birth_date_info option[data-date="'+DB[name].birth.split(' ')[2]+'"]')
-
-        dropdown_year_selected.prop('selected',true)
-        dropdown_month_selected.prop('selected',true)
-        dropdown_date_selected.prop('selected',true)
-       
-
-        $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked');
-        if(DB[name].sex == "M"){
-          $('#memberMale_info').addClass('selectbox_checked')
-          $('#form_sex_modify').val('M')
-        }else if(DB[name].sex == "W"){
-          $('#memberFemale_info').addClass('selectbox_checked')
-          $('#form_sex_modify').val('W')
-        }
-        $('#memberInfoPopup').fadeIn('fast');
-        $('#shade3').fadeIn('fast');
-        scrollToIndicator($('#page_managemember'));
         if($('body').width()<600){
-          $('#page_managemember').hide();
-        }
+            birth_dropdown_set()
+            $('#float_btn_wrap').fadeOut();
+            $('#page-base').fadeOut('fast');
+            $('#page-base-modifystyle').fadeIn('fast');
+            var name = $(this).attr('data-name');
+            $('#memberName_info').val(name)
+            $('#memberId').val(DB[name].id);
+            $('#deleteMemberId').val(DB[name].id);
+            $('#memberPhone_info').val(DB[name].phone);
+            $('#comment_info').val(DB[name].contents);
+            //$('#memberCount_info').val(DB[name].count);
+            $('#memberEmail_info').val(DB[name].email);
+            //$('#datepicker_info').val(DB[name].start);
+            //$('#datepicker2_info').val(DB[name].end);
 
-        $('#inputError_info').css('display','none')
-        $('#fast_check').val('0')
-        $('#form_birth').val('')
+            var dropdown_year_selected = $('#birth_year_info option[data-year='+DB[name].birth.split(' ')[0]+']')
+            var dropdown_month_selected = $('#birth_month_info option[data-month="'+DB[name].birth.split(' ')[1]+'"]')
+            var dropdown_date_selected = $('#birth_date_info option[data-date="'+DB[name].birth.split(' ')[2]+'"]')
+
+            dropdown_year_selected.prop('selected',true)
+            dropdown_month_selected.prop('selected',true)
+            dropdown_date_selected.prop('selected',true)
+           
+
+            $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked');
+            if(DB[name].sex == "M"){
+              $('#memberMale_info').addClass('selectbox_checked')
+              $('#form_sex_modify').val('M')
+            }else if(DB[name].sex == "W"){
+              $('#memberFemale_info').addClass('selectbox_checked')
+              $('#form_sex_modify').val('W')
+            }
+            $('#memberInfoPopup').fadeIn('fast');
+            $('#shade3').fadeIn('fast');
+            scrollToIndicator($('#page_managemember'));
+            if($('body').width()<600){
+              $('#page_managemember').hide();
+            }
+
+            $('#inputError_info').css('display','none')
+            $('#fast_check').val('0')
+            $('#form_birth').val('')
+        }else if($('body').width()>=600){
+            $('#memberInfoPopup_PC').fadeIn('fast')
+            $('#shade3').fadeIn('fast');
+        }
+        
     });
 
     $(document).on('click','td._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
@@ -1606,12 +1611,12 @@ function completeSend(){
 }
 
 function closePopup(){
-    if($('#memberInfoPopup').css('display')=='block'){ //회원정보팝업 띄웠을때 x눌렀을 경우
-          if($('body').width()<600){
+    if($('#memberInfoPopup').css('display')=='block'){ //회원정보팝업 모바일버전 띄웠을때 x눌렀을 경우
+          //if($('body').width()<600){
             $('#page_managemember').show();
             $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
-          }
+          //}
           $('#page-base').fadeIn('fast');
           $('#page-base-modifystyle').fadeOut('fast');
           $('#upbutton-modify, #infoMemberModify').find('img').attr('src','/static/user/res/member/icon-edit.png');
@@ -1632,7 +1637,9 @@ function closePopup(){
           //$('#datepicker_info').attr('disabled',true).addClass('input_disabled_color');
           //$('#datepicker2_info').attr('disabled',true).addClass('input_disabled_color');
           $('.confirmPopup').fadeOut('fast');
-          $('#shade').fadeOut('fast');
+          $('#shade3').fadeOut('fast');
+    }else if($('#memberInfoPopup_PC').css('display')=="block"){             //회원정보팝업 PC버전 띄웠을때 x눌렀을 경우
+          $('#memberInfoPopup_PC').fadeOut('fast')
           $('#shade3').fadeOut('fast');
     }else{                                          //회원등록팝업 띄웠을때 x눌렀을 경우
           if($('body').width()<600){
