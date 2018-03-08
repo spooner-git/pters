@@ -46,7 +46,10 @@ $(document).ready(function(){
 		}
 	})
 
+
+	$('#loginInfo').find('img').attr('src','/static/user/res/icon-name-white.png')
 	$('.bottomfooter1').find('img').attr('src','/static/user/res/spooner.png')
+
 
 });
 
