@@ -113,6 +113,10 @@ $(document).ready(function(){
   	})
   //모바일 스타일
 
+  	$('body').click(function(){
+  		console.log(addTypeSelect)
+  	})
+
   //PC 스타일
   	$('.cancelBtn').click(function(){
 	    $('#shade').hide();
@@ -152,6 +156,7 @@ $(document).ready(function(){
         //$('#page-addplan form input').val('')
         selectedDayGroup = []
 
+        addTypeSelect = "ptadd"
         $('._NORMAL_ADD').css('display','block')
         $('._REPEAT_ADD').css('display','none')
         $('#timeGraph').css('display','none')
@@ -395,12 +400,14 @@ $(document).ready(function(){
 	})
 	//일정 삭제 기능 추가 - hk.kim 171007
 	$("#popup_btn_delete").click(function(){  //일정 삭제 버튼 클릭
+		console.log(addTypeSelect)
 		$('#cal_popup_planinfo').hide();
 		$('#cal_popup_plandelete').fadeIn('fast');
 	})
 
 
 	$('#popup_btn_delete_yes').click(function(){
+		console.log(addTypeSelect)
 		if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd"){
 			$.ajax({
                 url:'/schedule/delete_repeat_schedule/',
