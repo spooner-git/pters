@@ -110,7 +110,7 @@ $(document).ready(function(){
         birth_dropdown_set()
     })
 
-    $('#upbutton-x,#upbutton-x-modify,.cancelBtn, #btn_close_info_PC').click(function(){
+    $('#upbutton-x,#upbutton-x-modify,.cancelBtn, ._btn_close_info_PC').click(function(){
         closePopup()
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
@@ -214,6 +214,16 @@ $(document).ready(function(){
         }else if($('body').width()>=600){
             $('#memberInfoPopup_PC').fadeIn('fast')
             $('#shade3').fadeIn('fast');
+            if(DB[name].sex == "M"){
+              var html = '<img src="/static/user/res/member/icon-male-blue.png">'+name+'<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">'
+              $('#memberInfoPopup_PC_label').html(html)
+            }else if(DB[name].sex == "W"){
+              var html = '<img src="/static/user/res/member/icon-female-pink.png">'+name+'<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">'
+              $('#memberInfoPopup_PC_label').html(html)
+            }else{
+              var html = '<img src="/static/user/res/member/icon-female-pink.png">'+name+'<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">'
+              $('#memberInfoPopup_PC_label').html(html)
+            }
             $('#memberName_info_PC').text(name)
             $('#memberPhone_info_PC').text(DB[name].phone);
             $('#memberRegCount_info_PC').text(DB[name].regcount)
