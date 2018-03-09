@@ -114,12 +114,12 @@ $(document).ready(function(){
       });
 
        $("#upbutton-alarm").click(function(){
-         if(select_all_check==true){
-             document.getElementById('pt-add-form').submit();
-         }else{
+         //if(select_all_check==true){
+             document.getElementById('update-setting-reserve-form').submit();
+         //}else{
              
             //입력값 확인 메시지 출력 가능
-         }
+         //}
      })
 
       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
@@ -130,9 +130,9 @@ $(document).ready(function(){
         
         if((ulMorningDay).hasClass("dropdown_selected")==true && (ulMorningDay2).hasClass("dropdown_selected")==true && (ulTimes).hasClass("dropdown_selected")==true && (ulTimes2).hasClass("dropdown_selected")==true){
             $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-            select_all_check=true;
+            //select_all_check=true;
         }else{
-            select_all_check=false;
+            //select_all_check=false;
         }
      }
 
