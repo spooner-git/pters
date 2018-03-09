@@ -100,6 +100,7 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
 
+    print(error)
     return error
 
 
@@ -166,6 +167,7 @@ def delete_schedule_logic_func(schedule_info):
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
 
+    print(error)
     return error
 
 
@@ -405,6 +407,7 @@ def add_schedule_logic(request):
         except InternalError as e:
             error = error
 
+    print(error)
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -481,6 +484,8 @@ def delete_schedule_logic(request):
 
     if error is None:
         error = delete_schedule_logic_func(schedule_info)
+
+    print(error)
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -588,6 +593,7 @@ def finish_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
+    print(error)
 
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -923,6 +929,8 @@ def add_repeat_schedule_confirm(request):
             log_data.save()
 
             information = '반복일정 등록이 완료됐습니다.'
+
+    print(error)
     if error is None:
         if information is None:
             return redirect(next_page)
@@ -1017,6 +1025,9 @@ def delete_repeat_schedule_logic(request):
             error = '이미 삭제된 일정입니다2'
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
+
+    print(error)
+
     if error is None:
         log_start_date = start_date.strftime('%Y')+'년 ' \
                          + start_date.strftime('%m')+'월 ' \
