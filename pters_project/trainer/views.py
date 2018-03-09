@@ -35,7 +35,15 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_info = None
         today = datetime.date.today()
         one_day_after = today + datetime.timedelta(days=1)
-        fourteen_days_ago = today - datetime.timedelta(days=14)
+        month_first_day = today.replace(day=1)
+
+        next_year = int(month_first_day.strftime('%Y')) + 1
+        next_month = int(month_first_day.strftime('%m')) % 12 + 1
+        next_month_first_day = month_first_day.replace(month=next_month)
+
+        if next_month == 1:
+            next_month_first_day = next_month_first_day.replace(year=next_year)
+
         today_schedule_num = 0
         new_member_num = 0
         context['total_member_num'] = 0
@@ -62,7 +70,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                                                            start_dt__gte=today, start_dt__lt=one_day_after,
                                                            en_dis_type='1').count()
             new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                      start_date__gte=fourteen_days_ago, use='1').count()
+                                                      start_date__gte=month_first_day,
+                                                      start_date__lt=next_month_first_day, use='1').count()
 
         context['today_schedule_num'] = today_schedule_num
         context['new_member_num'] = new_member_num
