@@ -11,9 +11,9 @@
 {% block content %}
 
 <form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
-  <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value="09:00-22:00">
-  <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value="2">
-  <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value="0">
+  <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value="09:00-22:00"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value="2"> <!--시간 숫자-->
+  <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value="0"> <!--예약금지 활성 1, 비활성 0-->
   <input type="hidden" name="next_page" value = '{% url 'trainer:reserve_setting' %}'>
 </form>
 
@@ -34,18 +34,18 @@
       <div id="hourSelect" class="dropdown pters_dropdown_setting_custom">
             <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
             <ul id="ulTimes" class="dropdown-menu pters_dropdown_custom ulTimes">
-              <li><a data-dur="1">1시</a></li>
-              <li><a data-dur="2">2시</a></li>
-              <li><a data-dur="3">3시</a></li>
-              <li><a data-dur="4">4시</a></li>
-              <li><a data-dur="5">5시</a></li>
-              <li><a data-dur="6">6시</a></li>
-              <li><a data-dur="7">7시</a></li>
-              <li><a data-dur="8">8시</a></li>
-              <li><a data-dur="9">9시</a></li>
-              <li><a data-dur="10">10시</a></li>
-              <li><a data-dur="11">11시</a></li>
-              <li><a data-dur="12">12시</a></li>
+              <li><a data-time="1">1시</a></li>
+              <li><a data-time="2">2시</a></li>
+              <li><a data-time="3">3시</a></li>
+              <li><a data-time="4">4시</a></li>
+              <li><a data-time="5">5시</a></li>
+              <li><a data-time="6">6시</a></li>
+              <li><a data-time="7">7시</a></li>
+              <li><a data-time="8">8시</a></li>
+              <li><a data-time="9">9시</a></li>
+              <li><a data-time="10">10시</a></li>
+              <li><a data-time="11">11시</a></li>
+              <li><a data-time="12">12시</a></li>
             </ul>
       </div>
     </div>
@@ -63,19 +63,18 @@
           <div id="hourSelect2" class="dropdown pters_dropdown_setting_custom">
                 <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
                 <ul id="ulTimes2" class="dropdown-menu pters_dropdown_custom ulTimes">
-
-                  <li><a data-dur="1">1시</a></li>
-                  <li><a data-dur="2">2시</a></li>
-                  <li><a data-dur="3">3시</a></li>
-                  <li><a data-dur="4">4시</a></li>
-                  <li><a data-dur="5">5시</a></li>
-                  <li><a data-dur="6">6시</a></li>
-                  <li><a data-dur="7">7시</a></li>
-                  <li><a data-dur="8">8시</a></li>
-                  <li><a data-dur="9">9시</a></li>
-                  <li><a data-dur="10">10시</a></li>
-                  <li><a data-dur="11">11시</a></li>
-                  <li><a data-dur="12">12시</a></li>
+                  <li><a data-time="1">1시</a></li>
+                  <li><a data-time="2">2시</a></li>
+                  <li><a data-time="3">3시</a></li>
+                  <li><a data-time="4">4시</a></li>
+                  <li><a data-time="5">5시</a></li>
+                  <li><a data-time="6">6시</a></li>
+                  <li><a data-time="7">7시</a></li>
+                  <li><a data-time="8">8시</a></li>
+                  <li><a data-time="9">9시</a></li>
+                  <li><a data-time="10">10시</a></li>
+                  <li><a data-time="11">11시</a></li>
+                  <li><a data-time="12">12시</a></li>
                 </ul>
           </div>
     </div>  
@@ -92,21 +91,21 @@
         <div id="timeSelect" class="dropdown pters_dropdown_setting_custom" style="margin-left:62px;">
               <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
               <ul id="ulTimes3" class="dropdown-menu pters_dropdown_custom ulTimes">
-                <li><a data-dur="1">1시간 전</a></li>
-                <li><a data-dur="2">2시간 전</a></li>
-                <li><a data-dur="3">3시간 전</a></li>
-                <li><a data-dur="4">4시간 전</a></li>
-                <li><a data-dur="5">5시간 전</a></li>
-                <li><a data-dur="6">6시간 전</a></li>
-                <li><a data-dur="7">7시간 전</a></li>
-                <li><a data-dur="8">8시간 전</a></li>
-                <li><a data-dur="9">9시간 전</a></li>
-                <li><a data-dur="10">10시간 전</a></li>
-                <li><a data-dur="11">11시간 전</a></li>
-                <li><a data-dur="12">12시간 전</a></li>
-                <li><a data-dur="24">1일 전</a></li>
-                <li><a data-dur="48">2일 전</a></li>
-                <li><a data-dur="72">3일 전</a></li>
+                <li><a data-time="1">1시간 전</a></li>
+                <li><a data-time="2">2시간 전</a></li>
+                <li><a data-time="3">3시간 전</a></li>
+                <li><a data-time="4">4시간 전</a></li>
+                <li><a data-time="5">5시간 전</a></li>
+                <li><a data-time="6">6시간 전</a></li>
+                <li><a data-time="7">7시간 전</a></li>
+                <li><a data-time="8">8시간 전</a></li>
+                <li><a data-time="9">9시간 전</a></li>
+                <li><a data-time="10">10시간 전</a></li>
+                <li><a data-time="11">11시간 전</a></li>
+                <li><a data-time="12">12시간 전</a></li>
+                <li><a data-time="24">1일 전</a></li>
+                <li><a data-time="48">2일 전</a></li>
+                <li><a data-time="72">3일 전</a></li>
               </ul>
         </div>
         <div class="dropdown pters_dropdown_setting_custom">

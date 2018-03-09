@@ -487,6 +487,7 @@ def pt_add_logic(request):
     fifteen_days_after = today + datetime.timedelta(days=15)
     disable_time = timezone.now()
     nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
+
     lt_res_01 = None
     lt_res_02 = None
     lt_res_03 = None
@@ -525,22 +526,23 @@ def pt_add_logic(request):
             lt_res_01 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_01 = '00:00-24:00'
+
+        reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
+        reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
         try:
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_02', use=1)
             lt_res_02 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_02 = '0'
+        reserve_prohibition_time = lt_res_02
         try:
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_03', use=1)
             lt_res_03 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_03 = '0'
+        reserve_stop = lt_res_03
 
-    reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
-    reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
 
-    reserve_prohibition_time = lt_res_02
-    reserve_stop = lt_res_03
 
     if error is None:
         if lecture_info.member_id != str(request.user.id):
