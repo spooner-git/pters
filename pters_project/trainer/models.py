@@ -35,10 +35,9 @@ class CompanyTb(models.Model):
 
 class SettingTb(models.Model):
     setting_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.CharField(db_column='MEMBER_ID', default='', max_length=20)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     setting_type_cd = models.CharField(db_column='SETTING_TYPE_CD', max_length=10)  # Field name made lowercase.
-    setting_cd = models.CharField(db_column='SETTING_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    setting_info = models.CharField(db_column='SETTING_INFO', max_length=255, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
