@@ -734,6 +734,10 @@ img,a,div,span,p{
 	margin-top: 18px;
 }
 
+#float_btn_wrap{
+	display: block;
+}
+
 #canvasWrap{
 	position: relative;
 	width: 100%;
@@ -1147,20 +1151,19 @@ img,a,div,span,p{
 
 @media(min-width: 730px){
 
-	/*
+	
 	.ymdText-pc-add{
 		display: inline;
 		line-height: 50px;
 		position: absolute;
 		right: 0;
-		margin-right: 20px;
 	}
-	*/
+	
 
 	.ymdText-pc-add-off{
 		display: inline;
 		margin-right: 5px;
-		padding:5px 8px 5px 8px;
+		padding:5px;
 		font-size: 14px;
 		border:1px solid #282828;
 		cursor: pointer;
@@ -1173,7 +1176,7 @@ img,a,div,span,p{
 	.ymdText-pc-add-pt{
 		display: inline;
 		margin-left: 5px;
-		padding:5px 13px 5px 13px;
+		padding:5px;
 		color: #fe4e65;
 		font-size: 14px;
 		border:1px solid #fe4e65;
@@ -1184,6 +1187,9 @@ img,a,div,span,p{
 			color: #ffffff;
 		}
 
+	#float_btn_wrap{
+		display: none !important;
+	}
 }
 
 @media(max-width: 1130px) and (min-width: 600px){

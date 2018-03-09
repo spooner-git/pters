@@ -32,6 +32,7 @@ $(document).ready(function(){
 		    $('#calendar').css('height','0')
 		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
 	    }else{
+	    	$('#calendar').css('position','fixed')
 	    	$('#pcaddpopup').show()
 			$('#pcaddpopup_off').hide()
 	    }
@@ -59,6 +60,7 @@ $(document).ready(function(){
 		    $('#calendar').css('height','0')
 		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
 	    }else{
+	    	$('#calendar').css('position','fixed')
 	    	$('#pcaddpopup').hide()
 	    	$('#pcaddpopup_off').show()
 	    }
@@ -117,6 +119,8 @@ $(document).ready(function(){
 	    $('#page-addplan').fadeOut('fast','swing');
 	    if($('body').width()<600){
 	        $('#calendar').show();
+	    }else{
+	    	$('#calendar').css('position','relative')
 	    }
 	    $('#float_btn_wrap').show();
 	    $('#float_btn').removeClass('rotate_btn');

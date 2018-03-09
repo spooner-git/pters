@@ -762,11 +762,10 @@ option{
 	}
 	
 	#page-addplan{
-		position: fixed;
+		position: absolute;
 		top: 150px;
 		width: 500px;
-		max-height: 700px;
-		overflow-y: auto;
+		margin-bottom: 50px;
 	}
 	
 	#page-addplan-pc{
