@@ -313,7 +313,7 @@ class ReserveSettingView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReserveSettingView, self).get_context_data(**kwargs)
-        context = get_setting_data(context, self.request.user.id)
+        context = get_trainer_setting_data(context, self.request.user.id)
 
         return context
 
@@ -746,11 +746,11 @@ class TrainerSettingViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainerSettingViewAjax, self).get_context_data(**kwargs)
-        context = get_setting_data(context, self.request.user.id)
+        context = get_trainer_setting_data(context, self.request.user.id)
         return context
 
 
-def get_setting_data(context, user_id):
+def get_trainer_setting_data(context, user_id):
 
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_01')
