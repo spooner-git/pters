@@ -52,6 +52,7 @@ $(document).ready(function(){
 		    $('#calendar').css('height','0')
 		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
 	    }else{
+	    	$('#calendar').css('position','fixed')
 	    	$('#pcaddpopup').show()
 			$('#pcaddpopup_off').hide()
 	    }
@@ -81,6 +82,7 @@ $(document).ready(function(){
 		    $('#calendar').css('height','0')
 		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
 	    }else{
+	    	$('#calendar').css('position','fixed')
 	    	$('#pcaddpopup').hide()
 	    	$('#pcaddpopup_off').show()
 	    }
@@ -102,6 +104,50 @@ $(document).ready(function(){
 	    $('#float_btn').removeClass('rotate_btn');
 	    $('#page-base').fadeIn();
 	    $('#page-base-addstyle').fadeOut();
+
+	    $("#membersSelected button").removeClass("dropdown_selected");
+        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
+        $("#membersSelected .btn:first-child").val("");
+        $("#countsSelected,.countsSelected").text("")
+        $("#dateSelector p").removeClass("dropdown_selected");
+        $('#timeGraph').hide();
+        $("#starttimesSelected button").removeClass("dropdown_selected");
+        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected .btn:first-child").val("");
+        $("#durationsSelected button").removeClass("dropdown_selected");
+        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected .btn:first-child").val("");
+        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+        $("#starttimes").empty();
+        $("#durations").empty();
+        $('.tdgraph').removeClass('graphindicator')
+
+        $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
+        $('.dateButton').removeClass('dateButton_selected')
+        $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
+        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
+        //$('#page-addplan form input').val('')
+        selectedDayGroup = []
+
+        $('._NORMAL_ADD').css('display','block')
+        $('._REPEAT_ADD').css('display','none')
+        $('#timeGraph').css('display','none')
+  	})
+
+  	//PC 스타일
+  	$('.cancelBtn').click(function(){
+	    $('#shade').hide();
+	    $('#page-addplan').fadeOut('fast','swing');
+	    if($('body').width()<600){
+	        $('#calendar').show();
+	    }else{
+	    	$('#calendar').css('position','relative')
+	    }
+	    $('#float_btn_wrap').show();
+	    $('#float_btn').removeClass('rotate_btn');
+	    $('#page-base').fadeIn();
+	    $('#page-base-addstyle').fadeOut();
+	    $('.submitBtn').removeClass('submitBtnActivated')
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
         $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");

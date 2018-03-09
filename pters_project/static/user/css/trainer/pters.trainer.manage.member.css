@@ -65,7 +65,8 @@ button:focus{
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
-	top: 30%;
+	width: 100%;
+	line-height: 50px;
 	font-size: 14px;
 	font-weight: bold;
 	cursor: pointer;
@@ -201,7 +202,7 @@ th{
 	padding-bottom: 8px;
 }
 
-._tdname{
+._tdname, ._tdnamee{
 	width: 23%;
 	line-height: 19px;
 	vertical-align: middle !important;
@@ -427,12 +428,10 @@ th{
 
 
 
-._tdname, ._tdnamee{
-	cursor: pointer;
-}
 
-._tdname{
+._tdname,._tdnamee{
 	font-size: 105%;
+	cursor: pointer;
 }
 
 #memberDelete{
@@ -663,7 +662,7 @@ th{
 		width: 30px;
 	}
 
-	._tdname{
+	._tdname,._tdnamee{
 		width: 85px;
 		font-size: 14px;
 	}
