@@ -516,6 +516,10 @@ $(document).ready(function(){
       
       //OFF반복일정 확인 팝업 "예" 눌렀을때 (선택지: 중복 무시하고 반복 넣겠다)
       $('#popup_btn_repeatconfirm_yes').click(function(){
+        addTypeSelect = "ptadd"
+        if($('body').width()>=600){
+            $('#calendar').css('position','relative')
+        }
         $('#id_repeat_confirm').val(1);
         $('#cal_popup_repeatconfirm').fadeOut('fast');
         $('#calendar').show().css('height','100%');
