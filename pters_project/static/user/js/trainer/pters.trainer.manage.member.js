@@ -1,11 +1,10 @@
 $(document).ready(function(){
+
     $(".btn-group > .btn").click(function(){
    	 		$(this).addClass("active").siblings().removeClass("active");
 		});
 
-    $('.alignSelect li a').click(function(){
-        $('.alignSelect button').text($(this).text())
-    })
+
 
       var ts;
 		$("body").bind("touchstart",function(e){
@@ -111,7 +110,7 @@ $(document).ready(function(){
         birth_dropdown_set()
     })
 
-    $('#upbutton-x,#upbutton-x-modify,.cancelBtn,#btn_close_info_PC').click(function(){
+    $('#upbutton-x,#upbutton-x-modify,.cancelBtn, #btn_close_info_PC').click(function(){
         closePopup()
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
@@ -142,23 +141,28 @@ $(document).ready(function(){
 			}
 		});
 
+    var alignType = "name"
     $('.alignSelect').change(function(){
         if($(this).val()=="회원명 가나다 순"){
             currentMemberListSet('name');
             finishMemberListSet('name');
+            alignType = 'name'
         }else if($(this).val()=="남은 횟수 많은 순"){
             currentMemberListSet('count','yes');
+            alignType = 'countH'
         }else if($(this).val()=="남은 횟수 적은 순"){
             currentMemberListSet('count');
+            alignType = 'countL'
         }else if($(this).val()=="시작 일자 과거 순"){
             currentMemberListSet('date');
             finishMemberListSet('date');
+            alignType = 'startP'
         }else if($(this).val()=="시작 일자 최근 순"){
             currentMemberListSet('date','yes');
             finishMemberListSet('date','yes');
+            alignType = 'startR'
         }
     })
-
 
 //#####################회원정보 팝업 //#####################
 
@@ -276,6 +280,14 @@ $(document).ready(function(){
       $('.confirmPopup').fadeIn('fast');
       $('#shade').fadeIn('fast');
     });
+
+    $(document).on('click','._info_delete',function(){
+      var selectedUserId = $(this).parent('td').siblings('._id').text()
+      $('#deleteMemberId').val(selectedUserId)
+
+      $('.confirmPopup').fadeIn('fast');
+      $('#shade').fadeIn('fast');
+    })
 
     $('.confirmYes').click(function(){
       $('.confirmPopup').fadeOut('fast');
@@ -511,9 +523,9 @@ function currentMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
           var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'     
           var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
-          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
-          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'
+          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">'
+          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
+          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">'
 
           var nametd = '<td class="_tdname" data-name="'+array[2]+'">'+name+nameimage+'</td>'
           var idtd = '<td class="_id" data-name="'+id+'">'+id+'</td>'
@@ -568,9 +580,9 @@ function currentMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
           var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
           var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
-          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
-          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'
+          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">'
+          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
+          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">'
 
           var nametd = '<td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td>'
           var idtd = '<td class="_id">'+id+'</td>'
@@ -625,9 +637,9 @@ function currentMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
           var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
           var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
-          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
-          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'    
+          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">'
+          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
+          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">'  
           
           var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
           var idtd = '<td class="_id">'+id+'</td>'
@@ -700,9 +712,9 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
           var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
           var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
-          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
-          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'
+          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">'
+          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
+          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">'
           
           var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
           var idtd = '<td class="_id">'+id+'</td>'
@@ -756,9 +768,9 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
           var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>'  
           var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">'
-          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
-          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
-          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'    
+          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">'
+          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
+          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">'
           
           var nametd = '<td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td>'
           var idtd = '<td class="_id">'+id+'</td>'
@@ -812,9 +824,9 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>'
           var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>' 
           var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">' 
-          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon" title="삭제">'
-          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon" title="수정">'
-          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon" title="정보">'    
+          var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">'
+          var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
+          var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">' 
 
           var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
           var idtd = '<td class="_id">'+id+'</td>'
@@ -1510,9 +1522,39 @@ function deleteMemberAjax(){
 
                     DataFormattingDict();
                     DataFormatting();
-                    currentMemberListSet('date','yes');
-                    finishMemberListSet('date','yes');
                     $('#startR').attr('selected','selected')
+                    switch(alignType){
+                      case 'name':
+                          currentMemberListSet('name');
+                          finishMemberListSet('name');
+                          $('#name').attr('selected','selected')
+                      break;
+                      case 'countH':
+                          currentMemberListSet('count','yes');
+                          finishMemberListSet('count','yes');
+                          $('#countH').attr('selected','selected')
+                      break;
+                      case 'countL':
+                          currentMemberListSet('count');
+                          finishMemberListSet('count');
+                          $('#countL').attr('selected','selected')
+                      break;
+                      case 'startP':
+                          currentMemberListSet('date');
+                          finishMemberListSet('date');
+                          $('#startP').attr('selected','selected')
+                      break;
+                      case 'startR':
+                          currentMemberListSet('date','yes');
+                          finishMemberListSet('date','yes');
+                          $('#startR').attr('selected','selected')
+                      break;
+                      case 'recent':
+                          currentMemberListSet('date','yes');
+                          finishMemberListSet('date','yes');
+                          $('#recent').attr('selected','selected')
+                      break;
+                    }
                     console.log('success');
                 }
             },

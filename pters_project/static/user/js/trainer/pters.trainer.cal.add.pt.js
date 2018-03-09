@@ -401,17 +401,18 @@ $(document).ready(function(){
             var $form = $('#pt-add-form')
             var serverURL = '/schedule/add_schedule/'
             var serializeArray = $form.serializeArray();
-            console.log(serializeArray)
 
             var yyyy = $('#yearText').text()
             var mm = $('#monthText').text().replace(/월/gi,"")
             if(mm.length<2){
               var mm = '0' + mm
             }
+
             var today_form = yyyy+'-'+ mm +'-'+"01"
             console.log(today_form) //{"date":today_form, "day":46},
             serializeArray.push({"date":today_form, "day":46})
             var sendData = serializeArray
+
             console.log(sendData)
 
          }else if(addTypeSelect=="offadd"){
