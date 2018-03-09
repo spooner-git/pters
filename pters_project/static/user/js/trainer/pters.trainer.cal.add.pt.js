@@ -410,7 +410,9 @@ $(document).ready(function(){
             }
             var today_form = yyyy+'-'+ mm +'-'+"01"
             console.log(today_form) //{"date":today_form, "day":46},
-            serializeArray.push({"date":today_form, "day":46})
+            //serializeArray.push({"date":today_form, "day":46})
+             serializeArray.push({"name":"date", "value":today_form})
+             serializeArray.push({"name":"day", "value":46})
             var sendData = serializeArray
             console.log(sendData)
 

@@ -326,11 +326,16 @@ def add_schedule_logic(request):
     schedule_time_duration = request.POST.get('time_duration')
     en_dis_type = request.POST.get('en_dis_type')
     note = request.POST.get('add_memo', '')
+    date = request.POST.get('date', '')
+    day = request.POST.get('day', '')
     next_page = request.POST.get('next_page')
 
     error = None
     schedule_start_datetime = None
     input_datetime_list = []
+
+    request.session['date'] = date
+    request.session['day'] = day
 
     if en_dis_type == '1':
         if lecture_id == '':
@@ -400,6 +405,7 @@ def add_schedule_logic(request):
         except InternalError as e:
             error = error
 
+
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -446,9 +452,13 @@ def delete_schedule_logic(request):
     off_schedule_id = request.POST.get('off_schedule_id')
     member_name = request.POST.get('member_name')
     en_dis_type = request.POST.get('en_dis_type')
+    date = request.POST.get('date', '')
+    day = request.POST.get('day', '')
     next_page = request.POST.get('next_page')
 
     error = None
+    request.session['date'] = date
+    request.session['day'] = day
 
     if en_dis_type == '1':
         schedule_id = pt_schedule_id
@@ -515,11 +525,15 @@ def delete_schedule_logic(request):
 def finish_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     member_name = request.POST.get('member_name')
+    date = request.POST.get('date', '')
+    day = request.POST.get('day', '')
     next_page = request.POST.get('next_page')
 
     error = None
     schedule_info = None
     lecture_info = None
+    request.session['date'] = date
+    request.session['day'] = day
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
@@ -616,9 +630,11 @@ def add_repeat_schedule_logic(request):
     repeat_type = request.POST.get('repeat_freq')
     repeat_schedule_start_date = request.POST.get('repeat_start_date')
     repeat_schedule_end_date = request.POST.get('repeat_end_date')
-    repeat_week_type = request.POST.get('repeat_day')
+    repeat_week_type = request.POST.get('repeat_day', '')
     repeat_schedule_time = request.POST.get('repeat_start_time')
     repeat_schedule_time_duration = request.POST.get('repeat_dur')
+    date = request.POST.get('date', '')
+    day = request.POST.get('day', '')
     en_dis_type = request.POST.get('en_dis_type')
     next_page = request.POST.get('next_page')
 
@@ -630,7 +646,8 @@ def add_repeat_schedule_logic(request):
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
     repeat_schedule_info = None
-
+    request.session['date'] = date
+    request.session['day'] = day
 
     week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
 
@@ -806,6 +823,8 @@ def add_repeat_schedule_confirm(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     repeat_confirm = request.POST.get('repeat_confirm')
+    date = request.POST.get('date', '')
+    day = request.POST.get('day', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -816,6 +835,8 @@ def add_repeat_schedule_confirm(request):
     lecture_info = None
     member_info = None
     information = None
+    request.session['date'] = date
+    request.session['day'] = day
 
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
@@ -915,6 +936,8 @@ def add_repeat_schedule_confirm(request):
 def delete_repeat_schedule_logic(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
+    date = request.POST.get('date', '')
+    day = request.POST.get('day', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -925,6 +948,8 @@ def delete_repeat_schedule_logic(request):
     lecture_info = None
     member_info = None
     repeat_schedule_info = None
+    request.session['date'] = date
+    request.session['day'] = day
 
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
