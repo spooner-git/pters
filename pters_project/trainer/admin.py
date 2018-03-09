@@ -18,7 +18,7 @@ class CompanyTbAdmin(admin.ModelAdmin):
 
 @admin.register(SettingTb)
 class SettingTbAdmin(admin.ModelAdmin):
-    list_display = ('setting_id', 'member', 'setting_type_cd', 'setting_cd', 'state_cd',
+    list_display = ('setting_id', 'member', 'setting_type_cd', 'setting_info',
                     'reg_dt', 'mod_dt', 'use')
 
 
