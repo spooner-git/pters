@@ -691,15 +691,15 @@ def update_setting_reserve_logic(request):
         try:
             lt_res_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_RES_01')
         except ObjectDoesNotExist:
-            lt_res_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_01', reg_dt=timezone.now(), use='1')
+            lt_res_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_01', reg_dt=timezone.now(), use=1)
         try:
             lt_res_02 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_RES_02')
         except ObjectDoesNotExist:
-            lt_res_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_02', reg_dt=timezone.now(), use='1')
+            lt_res_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_02', reg_dt=timezone.now(), use=1)
         try:
             lt_res_03 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_RES_03')
         except ObjectDoesNotExist:
-            lt_res_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_03', reg_dt=timezone.now(), use='1')
+            lt_res_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_03', reg_dt=timezone.now(), use=1)
 
     if error is None:
         try:
