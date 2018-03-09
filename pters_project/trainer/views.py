@@ -95,9 +95,15 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = super(CalDayViewAjax, self).get_context_data(**kwargs)
+        date = request.session.get('date', '')
+        day = request.session.get('day', '')
         today = datetime.date.today()
-        start_date = today - datetime.timedelta(days=46)
-        end_date = today + datetime.timedelta(days=47)
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(47))
 
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
 
