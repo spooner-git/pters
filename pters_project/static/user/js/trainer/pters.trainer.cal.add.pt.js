@@ -393,6 +393,24 @@ $(document).ready(function(){
          //scrollToIndicator($(this))
       })
 
+      function send_Data(serializeArray){
+          if($('#calendar').hasClass('_calmonth')){
+            var yyyy = $('#yearText').text().replace(/년/gi,"")
+            var mm = $('#monthText').text().replace(/월/gi,"")
+            if(mm.length<2){
+              var mm = '0' + mm
+            }
+            var today_form = yyyy+'-'+ mm +'-'+"01"
+          }else if($('#calendar').hasClass('_calweek')){
+            var $weekNum4 = $('#weekNum_4').attr('data-date')
+            var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
+          }
+          serializeArray.push({"name":"date", "value":today_form})
+          serializeArray.push({"name":"day", "value":46})
+          var sendData = serializeArray
+          console.log(sendData)
+          return sendData
+      }
 
 
       $("#upbutton-check, #submitBtn_pt, #submitBtn_mini").click(function(e){
@@ -401,32 +419,25 @@ $(document).ready(function(){
             var $form = $('#pt-add-form')
             var serverURL = '/schedule/add_schedule/'
             var serializeArray = $form.serializeArray();
-
-            var yyyy = $('#yearText').text()
-            var mm = $('#monthText').text().replace(/월/gi,"")
-            if(mm.length<2){
-              var mm = '0' + mm
-            }
-
-            var today_form = yyyy+'-'+ mm +'-'+"01"
-            console.log(today_form) //{"date":today_form, "day":46},
-            //serializeArray.push({"date":today_form, "day":46})
-             serializeArray.push({"name":"date", "value":today_form})
-             serializeArray.push({"name":"day", "value":46})
-            var sendData = serializeArray
-
-            console.log(sendData)
+            var sendData = send_Data(serializeArray)
 
          }else if(addTypeSelect=="offadd"){
             var $form = $('#off-add-form')
             var serverURL = '/schedule/add_schedule/'
+            var serializeArray = $form.serializeArray();
+            var sendData = send_Data(serializeArray)
+
          }else if(addTypeSelect=="repeatptadd"){
             var $form = $('#add-repeat-schedule-form')
             var serverURL = '/schedule/add_repeat_schedule/'
+            var serializeArray = $form.serializeArray();
+            var sendData = send_Data(serializeArray)
          }
          else if(addTypeSelect=="repeatoffadd"){
             var $form = $('#add-off-repeat-schedule-form')
             var serverURL = '/schedule/add_repeat_schedule/'
+            var serializeArray = $form.serializeArray();
+            var sendData = send_Data(serializeArray)
          }
         
          if(select_all_check==true){
@@ -435,7 +446,6 @@ $(document).ready(function(){
                  $.ajax({
                     url: serverURL,
                     type:'POST',
-                    //data:$form.serialize(),
                     data:sendData,
                     dataType : 'html',
 
