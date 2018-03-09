@@ -6,14 +6,12 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import InternalError
 from django.db import transaction
 from django.db import IntegrityError
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 
 # Create your views here.
-from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
-from django.views.generic.base import ContextMixin, View
 
 from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
@@ -82,6 +80,10 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
             except ObjectDoesNotExist:
                 error = 'class가 존재하지 않습니다'
+
+        # 강사 setting 값 로드
+        if error is None:
+            context = get_trainer_setting_data(context, class_info.member_id)
 
         if error is None:
             try:
@@ -166,6 +168,10 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             except ObjectDoesNotExist:
                 error = 'class가 존재하지 않습니다'
 
+        # 강사 setting 값 로드
+        if error is None:
+            context = get_trainer_setting_data(context, class_info.member_id)
+
         if error is None:
             member_data = MemberTb.objects.get(member_id=lecture_info.member_id)
             schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id,
@@ -233,6 +239,10 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
             except ObjectDoesNotExist:
                 error = 'class가 존재하지 않습니다'
+
+        # 강사 setting 값 로드
+        if error is None:
+            context = get_trainer_setting_data(context, class_info.member_id)
 
         if error is None:
             member_data = MemberTb.objects.get(member_id=lecture_info.member_id)
@@ -816,5 +826,32 @@ def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
     context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
     context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
     context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
+
+    return context
+
+
+def get_trainer_setting_data(context, user_id):
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_01')
+        lt_res_01 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_01 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_02')
+        lt_res_02 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_02 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_03')
+        lt_res_03 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_03 = ''
+
+    context['lt_res_01'] = lt_res_01
+    context['lt_res_02'] = lt_res_02
+    context['lt_res_03'] = lt_res_03
 
     return context
