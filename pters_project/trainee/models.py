@@ -19,6 +19,7 @@ class LectureTb(models.Model):
     price = models.IntegerField(db_column='PRICE', blank=True, null=True)  # Field name made lowercase.
     option_cd = models.CharField(db_column='OPTION_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', blank=True, null=True)
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.

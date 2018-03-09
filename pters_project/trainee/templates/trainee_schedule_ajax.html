@@ -1,0 +1,19 @@
+    {
+      "classTimeArray_start_date" :
+      [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}"{{ pt_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classTimeArray_end_date" : 
+      [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}"{{ pt_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "scheduleIdArray" :
+      [{% for pt_schedule_id_info in pt_schedule_id %}"{{ pt_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "scheduleFinishArray":
+      [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}"{{ pt_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classTimeArray_member_name" :
+      [{% for pt_schedule_member_name_info in pt_schedule_member_name %}"{{ pt_schedule_member_name_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offTimeArray_start_date" :
+      [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}"{{ off_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offTimeArray_end_date" :
+      [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}"{{ off_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }
