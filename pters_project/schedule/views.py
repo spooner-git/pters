@@ -768,7 +768,7 @@ def add_repeat_schedule_logic(request):
                         for input_datetime in input_datetime_list:
                             error = add_schedule_logic_func(str(check_date).split(' ')[0], input_datetime[0],
                                                             input_datetime[1], request.user.id,
-                                                            lecture_id, en_dis_type,
+                                                            lecture_id, '', en_dis_type,
                                                             repeat_schedule_info.repeat_schedule_id)
                             if error is not None:
                                 break
@@ -808,6 +808,8 @@ def add_repeat_schedule_logic(request):
                 if repeat_type == '2W':
                     check_date = check_date + datetime.timedelta(days=7)
 
+    print(error)
+    print(error_date)
     if error is None:
         if error_date is not None:
             messages.info(request, error_date)
