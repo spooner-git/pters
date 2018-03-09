@@ -167,6 +167,7 @@ $(document).ready(function(){
 //#####################회원정보 팝업 //#####################
 
     $(document).on('click','td._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+        var name = $(this).attr('data-name');
         if($('body').width()<600){
             birth_dropdown_set()
             $('#float_btn_wrap').fadeOut();
@@ -213,50 +214,81 @@ $(document).ready(function(){
         }else if($('body').width()>=600){
             $('#memberInfoPopup_PC').fadeIn('fast')
             $('#shade3').fadeIn('fast');
+            $('#memberName_info_PC').text(name)
+            $('#memberPhone_info_PC').text(DB[name].phone);
+            $('#memberRegCount_info_PC').text(DB[name].regcount)
+            $('#memberRemainCount_info_PC').text(DB[name].count)
+            $('#memberEmail_info_PC').text(DB[name].email)
+            $('#memberStart_info_PC').text(DB[name].start)
+            var end = DB[name].end
+            if(end == "9999년 12월 31일"){
+              var end = "소진시까지"
+            }
+            $('#memberEnd_info_PC').text(end)
+            $('#memberComment_info_PC').text('-')
         }
         
     });
 
     $(document).on('click','td._tdnamee',function(){  //종료 회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
-        $('#float_btn_wrap').fadeOut();
-        $('#uptext2').text('회원 정보')
-        $('#page-base').fadeOut('fast');
-        $('#page-base-addstyle').fadeIn('fast');
-        var name = $(this).attr('data-name');
-        $('#memberName').val(name);
-        $('#memberPhone').val(DBe[name].phone);
-        $('#memberCount').val(DBe[name].count);
-        $('#memberEmail').val(DBe[name].email);
-        $('#datepicker').val(DBe[name].start);
-        $('#datepicker2').val(DBe[name].end);
+      var name = $(this).attr('data-name');
+      if($('body').width()<600){
+          $('#float_btn_wrap').fadeOut();
+          $('#uptext2').text('회원 정보')
+          $('#page-base').fadeOut('fast');
+          $('#page-base-addstyle').fadeIn('fast');
+          var name = $(this).attr('data-name');
+          $('#memberName').val(name);
+          $('#memberPhone').val(DBe[name].phone);
+          $('#memberCount').val(DBe[name].count);
+          $('#memberEmail').val(DBe[name].email);
+          $('#datepicker').val(DBe[name].start);
+          $('#datepicker2').val(DBe[name].end);
 
-        var dropdown_year_selected = $('#birth_year_info option[data-year='+DBe[name].birth.split(' ')[0]+']')
-        var dropdown_month_selected = $('#birth_month_info option[data-month="'+DBe[name].birth.split(' ')[1]+'"]')
-        var dropdown_date_selected = $('#birth_date_info option[data-date="'+DBe[name].birth.split(' ')[2]+'"]')
+          var dropdown_year_selected = $('#birth_year_info option[data-year='+DBe[name].birth.split(' ')[0]+']')
+          var dropdown_month_selected = $('#birth_month_info option[data-month="'+DBe[name].birth.split(' ')[1]+'"]')
+          var dropdown_date_selected = $('#birth_date_info option[data-date="'+DBe[name].birth.split(' ')[2]+'"]')
 
-        dropdown_year_selected.prop('selected',true)
-        dropdown_month_selected.prop('selected',true)
-        dropdown_date_selected.prop('selected',true)
+          dropdown_year_selected.prop('selected',true)
+          dropdown_month_selected.prop('selected',true)
+          dropdown_date_selected.prop('selected',true)
 
-        $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked')
-        if(DBe[name].sex == "M"){
-          $('#memberMale_info').addClass('selectbox_checked')
-          $('#form_sex_modify').val('M')
-        }else if(DBe[name].sex == "W"){
-          $('#memberFemale_info').addClass('selectbox_checked')
-          $('#form_sex_modify').val('W')
-        }
-        $('#memberInfoPopup').fadeIn('fast');
-        $('#shade3').fadeIn('fast');
-        scrollToIndicator($('#page_managemember'));
-        $('html,body').scrollTop();
-        if($('body').width()<600){
-          $('#page_managemember').hide();
-        }
+          $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked')
+          if(DBe[name].sex == "M"){
+            $('#memberMale_info').addClass('selectbox_checked')
+            $('#form_sex_modify').val('M')
+          }else if(DBe[name].sex == "W"){
+            $('#memberFemale_info').addClass('selectbox_checked')
+            $('#form_sex_modify').val('W')
+          }
+          $('#memberInfoPopup').fadeIn('fast');
+          $('#shade3').fadeIn('fast');
+          scrollToIndicator($('#page_managemember'));
+          $('html,body').scrollTop();
+          if($('body').width()<600){
+            $('#page_managemember').hide();
+          }
 
-        $('#inputError_info').css('display','none')
-        $('#fast_check').val('0')
-        $('#form_birth').val('')
+          $('#inputError_info').css('display','none')
+          $('#fast_check').val('0')
+          $('#form_birth').val('')
+      }else if($('body').width()>=600){
+          console.log(DBe)
+          $('#memberInfoPopup_PC').fadeIn('fast')
+          $('#shade3').fadeIn('fast');
+          $('#memberName_info_PC').text(name)
+          $('#memberPhone_info_PC').text(DBe[name].phone);
+          $('#memberRegCount_info_PC').text(DBe[name].regcount)
+          $('#memberRemainCount_info_PC').text(DBe[name].count)
+          $('#memberEmail_info_PC').text(DBe[name].email)
+          $('#memberStart_info_PC').text(DBe[name].start)
+          var end = DBe[name].end
+          if(end == "9999년 12월 31일"){
+            var end = "소진시까지"
+          }
+          $('#memberEnd_info_PC').text(end)
+          $('#memberComment_info_PC').text('-')
+      }
     });
 
     /*
@@ -439,21 +471,32 @@ function DataFormatting(){
         var enddate = enddateFixArry[0]+enddateFixArry[1]+enddateFixArry[2]
       }
     //날짜형식을 yyyymmdd 로 맞추기
-      var countOri = finishcountArray[i]
-      finishcountList[i]=finishcountArray[i]+'_'+finishnameArray[i]+'_'+finishIdArray[i]+'_'+finishphoneArray[i]+'_'+finishContentsArray[i]+'_'+date+'_'+enddate+'/'+finishemailArray[i]
-      finishnameList[i]=finishnameArray[i]+'_'+finishIdArray[i]+'_'+finishphoneArray[i]+'_'+finishContentsArray[i]+'_'+finishcountArray[i]+'_'+date+'_'+enddate+'/'+finishemailArray[i]
-      finishdateList[i]=date+'_'+finishnameArray[i]+'_'+finishIdArray[i]+'_'+finishphoneArray[i]+'_'+finishContentsArray[i]+'_'+finishcountArray[i]+'_'+enddate+'/'+finishemailArray[i]
+      var finishcountOri = finishcountArray[i]
+      var finishregcountOri = finishRegCountArray[i]
+      var len4 = finishregcountOri.length
+      if(len4==1){
+        var finishregcountFix = '000'+finishregcountOri
+      }else if(len4==2){
+        var finishregcountFix = '00'+finishregcountOri
+      }else if(len4==3){
+        var finishregcountFix = '0'+finishregcountOri
+      }else if(len4==4){
+        var finishregcountFix = finishregcountOri
+      }
+      finishcountList[i]=finishcountArray[i]+'_'+finishregcountFix+'_'+finishnameArray[i]+'_'+finishIdArray[i]+'_'+finishphoneArray[i]+'_'+finishContentsArray[i]+'_'+date+'_'+enddate+'/'+finishemailArray[i]
+      finishnameList[i]=finishnameArray[i]+'_'+finishIdArray[i]+'_'+finishphoneArray[i]+'_'+finishContentsArray[i]+'_'+finishcountArray[i]+'_'+finishregcountOri+'_'+date+'_'+enddate+'/'+finishemailArray[i]
+      finishdateList[i]=date+'_'+finishnameArray[i]+'_'+finishIdArray[i]+'_'+finishphoneArray[i]+'_'+finishContentsArray[i]+'_'+finishcountArray[i]+'_'+finishregcountOri+'_'+enddate+'/'+finishemailArray[i]
     }
 }
 
 function DataFormattingDict(){
     var DBlength = nameArray.length;
     for(var i=0; i<DBlength;i++){
-      DB[nameArray[i]] = {'id':idArray[i],'email':emailArray[i],'count':countArray[i],'phone':phoneArray[i],'contents':contentsArray[i],'start':startArray[i],'end':endArray[i], 'birth':birthdayArray[i], 'sex':sexArray[i]};
+      DB[nameArray[i]] = {'id':idArray[i],'email':emailArray[i],'count':countArray[i],'regcount':regCountArray[i], 'phone':phoneArray[i],'contents':contentsArray[i],'start':startArray[i],'end':endArray[i], 'birth':birthdayArray[i], 'sex':sexArray[i]};
     }
     var DBendlength = finishnameArray.length;
     for(var j=0; j<DBendlength;j++){
-      DBe[finishnameArray[j]] = {'id':finishIdArray[j], 'email':finishemailArray[j],'count':finishcountArray[j],'phone':finishphoneArray[j],'contents':finishContentsArray[j],'start':finishstartArray[j],'end':finishendArray[j], 'birth':finishbirthdayArray[j], 'sex':finishsexArray[j] };
+      DBe[finishnameArray[j]] = {'id':finishIdArray[j], 'email':finishemailArray[j],'count':finishcountArray[j],'regcount':regCountArray[j],'phone':finishphoneArray[j],'contents':finishContentsArray[j],'start':finishstartArray[j],'end':finishendArray[j], 'birth':finishbirthdayArray[j], 'sex':finishsexArray[j] };
     }
     $('#currentMemberNum').text("진행중 회원수 : "+DBlength)
     $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
@@ -687,13 +730,14 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var array = countLists[i].split('_');
           var arrayforemail = countLists[i].split('/')
           var email = arrayforemail[1];
-          var name = array[1];
-          var id = array[2];
-          var contents = array[4];
+          var name = array[2];
+          var id = array[3];
+          var contents = array[5];
           var count = array[0];
-          var starts = array[5];
+          var regcount = array[1];
+          var starts = array[6];
           var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
-          var ends = array[6];
+          var ends = array[7];
           var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
           if(end == "9999.12.31"){
             var end = "소진시까지"
@@ -716,10 +760,10 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
           var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">'
           
-          var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
+          var nametd = '<td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td>'
           var idtd = '<td class="_id">'+id+'</td>'
           var emailtd = '<td class="_email">'+email+'</td>'
-          var regcounttd = '<td class="_regcount">'+count+'</td>'
+          var regcounttd = '<td class="_regcount">'+regcount+'</td>'
           var remaincounttd = '<td class="_remaincount">'+count+'</td>'
           var startdatetd = '<td class="_startdate">'+start+'</td>'
           var enddatetd = '<td class="_finday">'+end+'</td>'
@@ -747,9 +791,10 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var id = array[1];
           var contents = array[3];
           var count = array[4];
-          var starts = array[5];
+          var regcount = array[5]
+          var starts = array[6];
           var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
-          var ends = array[6];
+          var ends = array[7];
           var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
           if(end == "9999.12.31"){
             var end = "소진시까지"
@@ -772,10 +817,10 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
           var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">'
           
-          var nametd = '<td class="_tdname" data-name="'+array[0]+'">'+name+nameimage+'</td>'
+          var nametd = '<td class="_tdnamee" data-name="'+array[0]+'">'+name+nameimage+'</td>'
           var idtd = '<td class="_id">'+id+'</td>'
           var emailtd = '<td class="_email">'+email+'</td>'
-          var regcounttd = '<td class="_regcount">'+count+'</td>'
+          var regcounttd = '<td class="_regcount">'+regcount+'</td>'
           var remaincounttd = '<td class="_remaincount">'+count+'</td>'
           var startdatetd = '<td class="_startdate">'+start+'</td>'
           var enddatetd = '<td class="_finday">'+end+'</td>'
@@ -803,9 +848,10 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var id = array[2];
           var contents = array[4];
           var count = array[5];
+           var regcount = array[6];
           var starts = array[0];
           var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
-          var ends = array[6];
+          var ends = array[7];
           var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2)
           if(end == "9999.12.31"){
             var end = "소진시까지"
@@ -828,10 +874,10 @@ function finishMemberListSet (option,Reverse){  //멤버 리스트 뿌리기
           var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
           var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">' 
 
-          var nametd = '<td class="_tdname" data-name="'+array[1]+'">'+name+nameimage+'</td>'
+          var nametd = '<td class="_tdnamee" data-name="'+array[1]+'">'+name+nameimage+'</td>'
           var idtd = '<td class="_id">'+id+'</td>'
           var emailtd = '<td class="_email">'+email+'</td>'
-          var regcounttd = '<td class="_regcount">'+count+'</td>'
+          var regcounttd = '<td class="_regcount">'+regcount+'</td>'
           var remaincounttd = '<td class="_remaincount">'+count+'</td>'
           var startdatetd = '<td class="_startdate">'+start+'</td>'
           var enddatetd = '<td class="_finday">'+end+'</td>'
