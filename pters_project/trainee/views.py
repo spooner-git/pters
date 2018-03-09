@@ -18,7 +18,7 @@ from django.views.generic.base import ContextMixin, View
 from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
 from trainee.models import LectureTb
-from trainer.models import ClassTb
+from trainer.models import ClassTb, SettingTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb
 
 from django.utils import timezone
@@ -278,9 +278,14 @@ def pt_delete_logic(request):
 
     error = None
     lecture_info = None
+    class_info = None
     schedule_info = None
+    start_date = None
+    end_date = None
     today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
+    disable_time = timezone.now()
+    nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
@@ -312,9 +317,62 @@ def pt_delete_logic(request):
             error = '회원 PT 정보가 존재하지 않습니다.'
 
     if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+
+    if error is None:
         if lecture_info.member_id != str(request.user.id):
             error = '회원 정보가 일치하지 않습니다.'
 
+    if error is None:
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_01', use='1')
+            lt_res_01 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_01 = '00:00-24:00'
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_02', use='1')
+            lt_res_02 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_02 = '0'
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_03', use='1')
+            lt_res_03 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_03 = '0'
+
+    reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
+    reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
+
+    reserve_prohibition_time = lt_res_02
+    reserve_stop = lt_res_03
+
+    if error is None:
+        if lecture_info.member_id != str(request.user.id):
+            error = '회원 정보가 일치하지 않습니다.'
+
+    if reserve_prohibition_time != '':
+        disable_time = disable_time + datetime.timedelta(hours=int(reserve_prohibition_time))
+
+    if reserve_stop == '1':
+        error = '강사 설정에 의해 현재 예약이 일시 정지 되어있습니다.'
+
+    if error is None:
+        if nowtime < reserve_avail_start_time:
+            error = '현재는 삭제할수 없는 시간입니다.'
+        if nowtime > reserve_avail_end_time:
+            error = '현재는 삭제할수 없는 시간입니다.'
+
+    if error is None:
+        if start_date >= fifteen_days_after:
+            error = '삭제할 수 없는 날짜입니다.'
+
+    if error is None:
+        if start_date < disable_time:
+            error = '삭제할 수 없는 일정입니다.'
+    print(error)
     if error is None:
         try:
             with transaction.atomic():
@@ -400,12 +458,20 @@ def pt_delete_logic(request):
 # pt 일정 추가
 @csrf_exempt
 def pt_add_logic(request):
-    training_date = request.POST.get('training_date')
-    time_duration = request.POST.get('time_duration')
-    training_time = request.POST.get('training_time')
+    training_date = request.POST.get('training_date', '')
+    time_duration = request.POST.get('time_duration', '')
+    training_time = request.POST.get('training_time', '')
     next_page = request.POST.get('next_page')
 
     error = None
+    lecture_info = None
+    class_info = None
+    start_date = None
+    end_date = None
+    today = datetime.datetime.today()
+    fifteen_days_after = today + datetime.timedelta(days=15)
+    disable_time = timezone.now()
+    nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
 
     if training_date == '':
         error = '날짜를 선택해 주세요.'
@@ -415,8 +481,72 @@ def pt_add_logic(request):
         error = '시작 시간을 선택해 주세요.'
 
     if error is None:
-        if int(time_duration) > 1 :
+        if int(time_duration) > 1:
             error = '진행 시간은 1시간만 선택 가능합니다.'
+
+    if error is None:
+
+        start_date = datetime.datetime.strptime(training_date+' '+training_time, '%Y-%m-%d %H:%M:%S.%f')
+        end_date = start_date + datetime.timedelta(hours=int(time_duration))
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(member_id=request.user.id, use='1')
+        except ObjectDoesNotExist:
+            error = 'lecture가 존재하지 않습니다.'
+
+    if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
+
+    if error is None:
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_01', use='1')
+            lt_res_01 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_01 = '00:00-24:00'
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_02', use='1')
+            lt_res_02 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_02 = '0'
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_03', use='1')
+            lt_res_03 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_03 = '0'
+
+    reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
+    reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
+
+    reserve_prohibition_time = lt_res_02
+    reserve_stop = lt_res_03
+
+    if error is None:
+        if lecture_info.member_id != str(request.user.id):
+            error = '회원 정보가 일치하지 않습니다.'
+
+    if reserve_prohibition_time != '':
+        disable_time = disable_time + datetime.timedelta(hours=int(reserve_prohibition_time))
+
+    if reserve_stop == '1':
+        error = '강사 설정에 의해 현재 예약이 일시 정지 되어있습니다.'
+
+    if error is None:
+        if nowtime < reserve_avail_start_time:
+            error = '현재는 입력할수 없는 시간입니다.'
+        if nowtime > reserve_avail_end_time:
+            error = '현재는 입력할수 없는 시간입니다.'
+
+    if error is None:
+        if start_date >= fifteen_days_after:
+            error = '입력할 수 없는 날짜입니다.'
+
+    if error is None:
+        if start_date < disable_time:
+            error = '입력할 수 없는 일정입니다.'
 
     if error is None:
         error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name)

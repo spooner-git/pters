@@ -21,7 +21,7 @@ from login.models import MemberTb, LogTb, HolidayTb
 from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
 from trainee.views import get_trainee_lecture_data_func
-from trainer.models import ClassTb
+from trainer.models import ClassTb, SettingTb
 from schedule.models import ScheduleTb
 
 
@@ -313,6 +313,7 @@ class ReserveSettingView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReserveSettingView, self).get_context_data(**kwargs)
+        context = get_setting_data(context, self.request.user.id)
 
         return context
 
@@ -668,56 +669,52 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
 # 강사 setting 업데이트 api
 @csrf_exempt
 def update_setting_reserve_logic(request):
-    member_id = request.POST.get('id')
-    email = request.POST.get('email')
-    name = request.POST.get('name')
-    phone = request.POST.get('phone')
-    contents = request.POST.get('contents')
-    sex = request.POST.get('sex')
-    birthday_dt = request.POST.get('birthday')
+    setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
+    setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '')
+    setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition', '')
     next_page = request.POST.get('next_page')
 
     error = None
+    lt_res_01 = None
+    lt_res_02 = None
+    lt_res_03 = None
 
-    if member_id == '':
-        error = '회원 ID를 확인해 주세요.1'
-
-    if name == '':
-        error = '이름을 입력해 주세요.'
-    elif phone == '':
-        error = '연락처를 입력해 주세요.'
-    elif len(phone) != 11 and len(phone) != 10:
-        error = '연락처를 확인해 주세요.'
-    elif not phone.isdigit():
-        error = '연락처를 확인해 주세요.'
+    if error is None:
+        if setting_member_reserve_time_available == '':
+            setting_member_reserve_time_available = '00:00-24:00'
+        if setting_member_reserve_time_prohibition == '':
+            setting_member_reserve_time_prohibition = '0'
+        if setting_member_reserve_prohibition == '':
+            setting_member_reserve_prohibition = '0'
 
     if error is None:
         try:
-            user = User.objects.get(username=member_id, is_active=1)
+            lt_res_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_RES_01')
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.2'
-
+            lt_res_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_01', reg_dt=timezone.now(), use='1')
         try:
-            member = MemberTb.objects.get(user_id=user.id, use=1)
+            lt_res_02 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_RES_02')
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.3'
+            lt_res_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_02', reg_dt=timezone.now(), use='1')
+        try:
+            lt_res_03 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_RES_03')
+        except ObjectDoesNotExist:
+            lt_res_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_03', reg_dt=timezone.now(), use='1')
 
     if error is None:
         try:
             with transaction.atomic():
-                user.first_name = name
-                user.email = email
-                user.save()
-                member.name = name
-                member.phone = phone
-                member.contents = contents
-                member.sex = sex
+                lt_res_01.mod_dt = timezone.now()
+                lt_res_01.setting_info = setting_member_reserve_time_available
+                lt_res_01.save()
 
-                if birthday_dt != '':
-                    member.birthday_dt = birthday_dt
-                member.mod_dt = timezone.now()
-                member.save()
+                lt_res_02.mod_dt = timezone.now()
+                lt_res_02.setting_info = setting_member_reserve_time_prohibition
+                lt_res_02.save()
 
+                lt_res_03.mod_dt = timezone.now()
+                lt_res_03.setting_info = setting_member_reserve_prohibition
+                lt_res_03.save()
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
@@ -731,9 +728,9 @@ def update_setting_reserve_logic(request):
 
     if error is None:
 
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
-                       + name + ' 회원님의</span> 정보를 <span class="status">수정</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
+        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
+                      + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
 
@@ -742,4 +739,40 @@ def update_setting_reserve_logic(request):
         messages.error(request, error)
 
         return redirect(next_page)
+
+
+class TrainerSettingViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'setting_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TrainerSettingViewAjax, self).get_context_data(**kwargs)
+        context = get_setting_data(context, self.request.user.id)
+        return context
+
+
+def get_setting_data(context, user_id):
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_01')
+        lt_res_01 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_01 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_02')
+        lt_res_02 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_02 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_03')
+        lt_res_03 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_03 = ''
+
+    context['lt_res_01'] = lt_res_01
+    context['lt_res_02'] = lt_res_02
+    context['lt_res_03'] = lt_res_03
+
+    return context
 
