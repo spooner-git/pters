@@ -374,12 +374,13 @@ th{
 
 
 
+/*-----------------PC 회원정보 팝업-----------------------*/
 .infopopup_pc{
 	display: none;
 	position: absolute;
 	background: #ffffff;
 	padding: 20px;
-	width: 350px;
+	width: 400px;
 	z-index:105;
 	top: 50%;
 	left: 50%;
@@ -388,8 +389,6 @@ th{
 	border: 1px solid #cccccc;
 }
 
-
-/*-----------------PC 회원정보 팝업-----------------------*/
 .infopopup_pc > label{
 	font-size: 17px;
 	width: 100%;
@@ -424,6 +423,23 @@ th{
 				width: 15px;
 				margin:0 5px 4px 0;
 			}
+
+	.member_info_PC_buttons_wrap button{
+		display: inline-block;
+		font-size: 13px;
+		border: 0.5px solid #282828;
+		margin-left: 5px !important;
+		margin-right: 5px !important;
+	}
+	.member_info_PC_buttons_wrap button:nth-child(1){
+		background:#ffffff;
+		color: #282828;
+	}
+		.member_info_PC_buttons_wrap button:nth-child(1):active{
+			background:#fe4e65;
+			color: #ffffff;
+		}
+
 /*-----------------PC 회원정보 팝업-----------------------*/
 
 
