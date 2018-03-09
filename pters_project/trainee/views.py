@@ -21,8 +21,6 @@ from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb
 
 from django.utils import timezone
 
-from trainer.views import get_trainer_setting_data
-
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     # url = '/trainee/cal_month/'
@@ -828,5 +826,32 @@ def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
     context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
     context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
     context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
+
+    return context
+
+
+def get_trainer_setting_data(context, user_id):
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_01')
+        lt_res_01 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_01 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_02')
+        lt_res_02 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_02 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_03')
+        lt_res_03 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_03 = ''
+
+    context['lt_res_01'] = lt_res_01
+    context['lt_res_02'] = lt_res_02
+    context['lt_res_03'] = lt_res_03
 
     return context
