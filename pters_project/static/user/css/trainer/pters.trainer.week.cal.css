@@ -161,7 +161,7 @@ img,a,div,span,p{
 	height: 100%;
 	background-color: #f4f4f4;
 	display: none;
-	z-index: 110;
+	z-index: 100;
 }
 
 #filterPopup_mini{
@@ -732,7 +732,6 @@ img,a,div,span,p{
 	#calendar{
 		position: relative;
 		background:#ffffff;
-		margin:0 auto;
 		padding-top: 110px;
 		margin-bottom: 60px;
 	}

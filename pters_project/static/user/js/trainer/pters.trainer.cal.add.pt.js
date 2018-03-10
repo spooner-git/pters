@@ -408,7 +408,7 @@ $(document).ready(function(){
           serializeArray.push({"name":"date", "value":today_form})
           serializeArray.push({"name":"day", "value":46})
           var sendData = serializeArray
-          console.log(sendData)
+          //console.log(sendData)
           return sendData
       }
 
@@ -438,6 +438,7 @@ $(document).ready(function(){
             var serverURL = '/schedule/add_repeat_schedule/'
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
+            //console.log(select_all_check)
          }
         
          if(select_all_check==true){
@@ -501,6 +502,7 @@ $(document).ready(function(){
                  })
 
          }else{
+          alert('빠진 항목 체크해봐야함')
             //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
          }
@@ -786,7 +788,7 @@ $(document).ready(function(){
       }
 
       function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확인 팝업을 보여준다.
-          $('#shade').show()
+          $('#shade3').show()
           var repeat_info_dict= { 'KOR':
                                 {'DD':'매일', 'WW':'매주', '2W':'격주',
                                  'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
