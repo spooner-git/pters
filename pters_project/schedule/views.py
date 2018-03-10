@@ -103,7 +103,7 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
 
-    print(error)
+    # print(error)
     return error
 
 
@@ -178,7 +178,7 @@ def delete_schedule_logic_func(schedule_info):
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
 
-    print(error)
+    # print(error)
     return error
 
 
@@ -429,7 +429,7 @@ def add_schedule_logic(request):
         except InternalError as e:
             error = error
 
-    print(error)
+    # print(error)
 
     if error is None:
 
@@ -491,7 +491,7 @@ def delete_schedule_logic(request):
     if error is None:
         error = delete_schedule_logic_func(schedule_info)
 
-    print(error)
+    # print(error)
 
     if error is None:
 
@@ -591,7 +591,7 @@ def finish_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
-    print(error)
+    # print(error)
 
     if error is None:
 
@@ -795,8 +795,8 @@ def add_repeat_schedule_logic(request):
                 if repeat_type == '2W':
                     check_date = check_date + datetime.timedelta(days=7)
 
-    print(error)
-    print(error_date)
+    # print(error)
+    # print(error_date)
     if error is None:
 
         if error_date is not None:
@@ -907,7 +907,7 @@ def add_repeat_schedule_confirm(request):
 
             information = '반복일정 등록이 완료됐습니다.'
 
-    print(error)
+    # print(error)
     if error is None:
         if information is None:
             return redirect(next_page)
@@ -1013,7 +1013,7 @@ def delete_repeat_schedule_logic(request):
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
 
-    print(error)
+    # print(error)
 
     if error is None:
         member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
@@ -1060,7 +1060,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
             if error is None:
                 update_check = lecture_info.schedule_check
 
-        print(error)
+        # print(error)
         context['data_changed'] = update_check
         if error is not None:
             messages.error(self.request, error)

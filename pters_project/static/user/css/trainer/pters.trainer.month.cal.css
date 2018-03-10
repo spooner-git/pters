@@ -712,7 +712,7 @@ img,a,div,span,p{
 	height: 100%;
 	background-color: #f4f4f4;
 	display: none;
-	z-index: 101;
+	z-index: 100;
 }
 
 .available{

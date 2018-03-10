@@ -110,6 +110,7 @@ $(document).ready(function(){
             $('#id_repeat_day_off').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
           }
           console.log($('#id_repeat_day_off').val())
+          check_dropdown_selected();
       })
 
     $("#submitBtn").click(function(){
@@ -175,6 +176,7 @@ $(document).ready(function(){
                 select_all_check=false;
             }
         }else if(addTypeSelect == "repeatoffadd"){
+          console.log('add_repeat의 checkdropdown')
             if((repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 $('.submitBtn').addClass('submitBtnActivated')

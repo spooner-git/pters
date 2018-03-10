@@ -67,7 +67,7 @@ $(document).ready(function(){
 			$('#pcaddpopup_off').hide()
 	    }
 	    if($(this).hasClass('ymdText-pc-add-pt')){
-	    	$('#shade').fadeIn('fast')
+	    	$('#shade3').fadeIn('fast')
 	    }
 	})
 
@@ -96,7 +96,7 @@ $(document).ready(function(){
 	    }
 
 	    if($(this).hasClass('ymdText-pc-add-off')){
-	    	$('#shade').fadeIn('fast')
+	    	$('#shade3').fadeIn('fast')
 	    }
 	})
 
@@ -149,7 +149,7 @@ $(document).ready(function(){
 
   //PC 스타일
   	$('.cancelBtn').click(function(){
-	    $('#shade').hide();
+	    $('#shade3').hide();
 	    $('#page-addplan').fadeOut('fast','swing');
 	    if($('body').width()<600){
 	        $('#calendar').show();
@@ -252,7 +252,11 @@ $(document).ready(function(){
 
 		$('#page-addplan-pc').hide()
 		$("#cal_popup_planinfo").fadeIn('fast');
-		$('#shade').css({'display':'block'});
+		if($('body').width()>600){
+			$('#shade3').css({'display':'block'});	
+		}else{
+			$('#shade').css({'display':'block'});
+		}
 		var schedule_finish_check = $(this).attr('data-schedule-check')
 		var info = $(this).attr('class-time').split('_')
 		var yy=info[0]
@@ -311,7 +315,11 @@ $(document).ready(function(){
 		$('#page-addplan-pc').hide()
 		//$('.td00').css('background','transparent')
 		$("#cal_popup_planinfo").fadeIn('fast');
-		$('#shade').css({'display':'block'});
+		if($('body').width()>600){
+			$('#shade3').css({'display':'block'});	
+		}else{
+			$('#shade').css({'display':'block'});
+		}
 		var info = $(this).attr('off-time').split('_')
 		var yy=info[0]
 		var mm=info[1]
@@ -351,7 +359,7 @@ $(document).ready(function(){
 	$("#btn_close").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
 		if($('#cal_popup_planinfo').css('display')=='block'){
 			$("#cal_popup_planinfo").css({'display':'none'})
-			$('#shade').css({'display':'none'});
+			$('#shade3, #shade').css({'display':'none'});
 			$('body').css('overflow-y','overlay');
 		}
 	})
@@ -359,7 +367,7 @@ $(document).ready(function(){
 	$("#btn_close3, #popup_btn_delete_no").click(function(){  //팝업 X버튼 눌렀을때 팝업 닫기
 		if($('#cal_popup_plandelete').css('display')=='block'){
 			$("#cal_popup_plandelete").css({'display':'none'})
-			$('#shade').css({'display':'none'});
+			$('#shade3, #shade').css({'display':'none'});
 			$('body').css('overflow-y','overlay');
 		}
 	})
@@ -746,11 +754,11 @@ $(document).ready(function(){
 	function closeDeletePopup(){
 		if($('#cal_popup_plandelete').css('display')=='block'){
 			$("#cal_popup_plandelete").css({'display':'none'})
-			$('#shade').css({'display':'none'});
+			$('#shade3, #shade').css({'display':'none'});
 		}
 		if($('#cal_popup_planinfo').css('display')=='block'){
 			$("#cal_popup_planinfo").css({'display':'none'})
-			$('#shade').css({'display':'none'});
+			$('#shade3, #shade').css({'display':'none'});
 		}
 	}
 
