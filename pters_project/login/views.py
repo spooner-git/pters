@@ -154,17 +154,17 @@ def add_member_info_logic(request):
                 user.groups.add(group)
                 if birthday_dt == '':
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
+                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
                 else:
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                       birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                      user_id=user.id)
+                                      user_id=user.id, use=1)
                 member.save()
                 if group_type == 'trainer':
                     class_info = ClassTb(member_id=member.member_id, class_type_cd='PT',
                                          start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
-                                         class_hour='1', start_hour_unit='1', class_member_num='100',
-                                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(),use='1')
+                                         class_hour=1, start_hour_unit=1, class_member_num=100,
+                                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
                     class_info.save()
 

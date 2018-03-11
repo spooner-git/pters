@@ -138,7 +138,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 daily_off_data_start_date.append(class_schedule_datum.start_dt)
                 daily_off_data_end_date.append(class_schedule_datum.end_dt)
 
-        holiday = HolidayTb.objects.filter(use='1')
+        holiday = HolidayTb.objects.filter(use=1)
 
         context['month_lecture_data'] = month_data
         context['daily_lecture_schedule_id'] = lecture_schedule_data
@@ -198,7 +198,7 @@ def pt_delete_logic(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use='1')
+            lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
         except ObjectDoesNotExist:
             error = '회원 PT 정보가 존재하지 않습니다.'
 
@@ -383,7 +383,7 @@ def pt_add_logic(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(member_id=request.user.id, use='1')
+            lecture_info = LectureTb.objects.get(member_id=request.user.id, use=1)
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
 
@@ -498,7 +498,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         end_date = start_date + datetime.timedelta(hours=int(pt_schedule_time_duration))
 
         try:
-            lecture_info = LectureTb.objects.get(member_id=user_id, use='1')
+            lecture_info = LectureTb.objects.get(member_id=user_id, use=1)
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
 
@@ -829,7 +829,7 @@ def get_trainee_schedule_data_func(context, user_id):
             daily_off_data_start_date.append(class_schedule_datum.start_dt)
             daily_off_data_end_date.append(class_schedule_datum.end_dt)
 
-    holiday = HolidayTb.objects.filter(use='1')
+    holiday = HolidayTb.objects.filter(use=1)
 
     context['month_lecture_data'] = month_data
     context['daily_lecture_schedule_id'] = lecture_schedule_data

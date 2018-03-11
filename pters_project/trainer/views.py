@@ -59,11 +59,11 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None :
             #남은 횟수 1개 이상인 경우 - 180215 hk.kim
             context['total_member_num'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                   lecture_rem_count__gte=1).count()
+                                                                   lecture_rem_count__gte=1, use=1).count()
             #남은 횟수 1개 이상 3개 미만인 경우 - 180215 hk.kim
             context['to_be_end_member_num'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                                        lecture_rem_count__gte=1,
-                                                                       lecture_rem_count__lte=3).count()
+                                                                       lecture_rem_count__lte=3, use=1).count()
 
         if error is None:
             today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
@@ -71,7 +71,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                                                            en_dis_type='1').count()
             new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                       start_date__gte=month_first_day,
-                                                      start_date__lt=next_month_first_day, use='1').count()
+                                                      start_date__lt=next_month_first_day, use=1).count()
 
         context['today_schedule_num'] = today_schedule_num
         context['new_member_num'] = new_member_num
@@ -92,7 +92,7 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         end_date = today + datetime.timedelta(days=1)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
 
-        holiday = HolidayTb.objects.filter(use='1')
+        holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
 
         return context
@@ -146,7 +146,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         end_date = today + datetime.timedelta(days=19)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
 
-        holiday = HolidayTb.objects.filter(use='1')
+        holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
 
         return context
@@ -162,7 +162,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         end_date = today + datetime.timedelta(days=47)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
 
-        holiday = HolidayTb.objects.filter(use='1')
+        holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
 
         return context
@@ -260,7 +260,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             log_data = LogTb.objects.filter(external_id=self.request.user.id, use=1).order_by('-reg_dt')
 
         if error is None:
-            lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+            lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
 
             for lecture_info in lecture_data:
                 log_data |= LogTb.objects.filter(external_id=lecture_info.member_id, use=1).order_by('-reg_dt')
@@ -362,7 +362,7 @@ def add_member_info_logic(request):
     input_counts = 0
     input_price = 0
     now = timezone.now()
-    class_info= None
+    class_info = None
 
     if User.objects.filter(username=phone).exists():
         error = '이미 가입된 회원 입니다.'
