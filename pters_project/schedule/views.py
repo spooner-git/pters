@@ -47,7 +47,7 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
     if en_dis_type == '1':
         if error is None:
             try:
-                member_lecture_info = LectureTb.objects.get(lecture_id=int(lecture_id))
+                member_lecture_info = LectureTb.objects.get(lecture_id=int(lecture_id), use=1)
             except ObjectDoesNotExist:
                 error = '회원 PT 정보가 존재하지 않습니다'
         if error is None:
@@ -433,7 +433,7 @@ def add_schedule_logic(request):
 
     if error is None:
 
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
@@ -495,7 +495,7 @@ def delete_schedule_logic(request):
 
     if error is None:
 
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
@@ -595,7 +595,7 @@ def finish_schedule_logic(request):
 
     if error is None:
 
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
@@ -855,7 +855,7 @@ def add_repeat_schedule_confirm(request):
     if error is None:
         if en_dis_type == '1':
             try:
-                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_data.lecture_tb_id)
+                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_data.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
                 error = '회원 PT 정보가 존재하지 않습니다'
 
@@ -898,7 +898,7 @@ def add_repeat_schedule_confirm(request):
             if error is None:
                 information = '반복일정 등록이 취소됐습니다.'
         else:
-            member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+            member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
             for member_lecture_info in member_lecture_data:
                 member_lecture_info.schedule_check = 1
                 member_lecture_info.save()
@@ -963,7 +963,7 @@ def delete_repeat_schedule_logic(request):
     if error is None:
         if en_dis_type == '1':
             try:
-                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_info.lecture_tb_id)
+                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_info.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
                 error = '회원 PT 정보가 존재하지 않습니다.'
             if error is None:
@@ -1016,7 +1016,7 @@ def delete_repeat_schedule_logic(request):
     # print(error)
 
     if error is None:
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
@@ -1045,7 +1045,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
         if group.name == 'trainer':
             # 강사 정보 가져오기
             try:
-                class_info = ClassTb.objects.get(member_id=self.request.user.id)
+                class_info = ClassTb.objects.get(member_id=self.request.user.id, use=1)
             except ObjectDoesNotExist:
                 error = '강사 정보가 존재하지 않습니다'
 
@@ -1054,7 +1054,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
 
         if group.name == 'trainee':
             try:
-                lecture_info = LectureTb.objects.get(member=self.request.user.id)
+                lecture_info = LectureTb.objects.get(member=self.request.user.id, use=1)
             except ObjectDoesNotExist:
                 error = '회원 PT 정보가 존재하지 않습니다'
             if error is None:
