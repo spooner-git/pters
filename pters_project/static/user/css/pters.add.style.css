@@ -27,7 +27,7 @@ ul a{
 }
 
 
-#inputError, #inputError_info{
+#inputError, #inputError_info, #inputError_info_PC{
 	position: relative;
 	width: 100%;
 	height: 35px;
@@ -38,7 +38,7 @@ ul a{
 	height: 35px;
 }
 
-#errorMsg, #errorMsg_info{
+#errorMsg, #errorMsg_info, #errorMsg_info_PC{
 	background: #ff1533;
 	color:#ffffff;
 	font-size: 14px;

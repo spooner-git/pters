@@ -9,6 +9,8 @@
 
 {% block content %}
 
+<img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
+
  <!--플로팅 버튼-->
 
    <!--플로팅 버튼-->
@@ -209,7 +211,7 @@
                 <input type="tel" class="dropdown form-control" id="memberPhone_info" name="phone" required="required" readonly>
             </div>
         </div>
-            <!--
+            
                     <div class="ptaddbox form-group">
                         <label for="memberCount_info" class="ptaddboxtext">
                             <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
@@ -218,7 +220,7 @@
                             <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
                         </div>
                     </div>
-            -->
+            
 
         <div class="ptaddbox form-group">
             <label for="memberEmail_info" class="ptaddboxtext">
@@ -229,7 +231,7 @@
             </div>
         </div>
 
-            <!--
+            
                     <div id="dateSelector_info" class="ptaddbox">
                         <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
                         <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
@@ -238,7 +240,7 @@
                         <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
                         <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
                     </div>
-            -->
+            
         <div class="ptaddbox form-group">
             <label for="comment_info" class="ptaddboxtext">
                 <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
@@ -263,39 +265,55 @@
     </div>
 </div>
 
+
+
+
 <div id="memberInfoPopup_PC" class="infopopup_pc wrap">
+    <div id="inputError_info_PC" style="position: absolute;top: 0;left: 0;">
+        <div id="errorMsg_info_PC" class="inputErrorInner" style="height: 22px;">
+            <p style="line-height: 22px;vertical-align: middle;margin:0;"></p>
+        </div>
+    </div>
+
     <label id="memberInfoPopup_PC_label">
         <img src="/static/user/res/member/icon-female-pink.png">
         <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">
     </label>
 
-    <div id="memberName_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label><div id="memberName_info_PC">1980년 9월 9일</div>
+
+    <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-user.png">아이디</label><div id="memberId_info_PC"></div>
+    </div>
+    <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
+        <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
+        <input id="memberBirth_Year_info_PC" readonly>
+        <input id="memberBirth_Month_info_PC" readonly>
+        <input id="memberBirth_Date_info_PC" readonly>
     </div>
     <div id="memberPhone_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label><div id="memberPhone_info_PC">010-9999-0000</div>
+        <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label><input id="memberPhone_info_PC" readonly>
     </div>
     <div id="memberRegCount_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록횟수</label><div id="memberRegCount_info_PC">30회</div>
+        <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록횟수</label><input id="memberRegCount_info_PC" readonly>
     </div>
     <div id="memberRemainCount_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">남은횟수</label><div id="memberRemainCount_info_PC">8회</div>
+        <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">남은횟수</label><input id="memberRemainCount_info_PC" readonly>
     </div>
     <div id="memberEmail_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-mail-grey.png">E-mail</label><div id="memberEmail_info_PC">trainees@pters.co.kr</div>
+        <label><img src="/static/user/res/member/icon-mail-grey.png">E-mail</label><input id="memberEmail_info_PC" readonly>
     </div>
     <div id="memberStart_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-cal-grey.png">시작일자</label><div id="memberStart_info_PC">2018년 1월 1일</div>
+        <label><img src="/static/user/res/member/icon-cal-grey.png">시작일자</label><input id="memberStart_info_PC" disabled>
     </div>
     <div id="memberEnd_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-cal-grey.png">종료일자</label><div id="memberEnd_info_PC">2018년 12월 31일</div>
+        <label><img src="/static/user/res/member/icon-cal-grey.png">종료일자</label><input id="memberEnd_info_PC" disabled>
     </div>
     <div id="memberComment_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-info.png">특이사항</label><div id="memberComment_info_PC">다이어트</div>
+        <label><img src="/static/user/res/member/icon-info.png">특이사항</label><input id="memberComment_info_PC" readonly>
     </div>
     <div class="member_info_PC_buttons_wrap popupBtn_mini">
         <button class="submitBtn _info_delete">삭제</button>
-        <button class="submitBtn _info_modify">수정</button>
+        <button class="submitBtn _info_modify" data-type="view">수정</button>
         <button class="submitBtn _btn_close_info_PC">닫기</button>
     </div>
 </div>
