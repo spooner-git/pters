@@ -24,6 +24,29 @@
           {{ form.as_p }}
         </div>
     </form>
+    
+    <form action="{% url 'login:add_member_info_email' %}" id="add-member-form" method="post">
+        <input type="hidden" name="id" id="newid2" value="" >
+        <input type="hidden" name="name" id="newname" value="" >
+        <input type="hidden" name="sex" id="newsex" value="" >
+        <input type="hidden" name="birthday" id="newbirth" value="" >
+        <input type="hidden" name="address" id="newregion" value="" >
+        <input type="hidden" id="id_duplicate_check" value="" >
+        <input type="hidden" name="group_type" value="trainer">
+        <input type="hidden" name="next_page" value="{% url 'login:login' %}" >
+    </form>
+
+    <form action="{% url 'login:add_member_info_email' %}" id="add-member-form" method="post">
+        <input type="hidden" name="id" id="newid2" value="" >
+        <input type="hidden" name="name" id="newname" value="" >
+        <input type="hidden" name="sex" id="newsex" value="" >
+        <input type="hidden" name="birthday" id="newbirth" value="" >
+        <input type="hidden" name="address" id="newregion" value="" >
+        <input type="hidden" id="id_duplicate_check" value="" >
+        <input type="hidden" name="group_type" value="trainer">
+        <input type="hidden" name="next_page" value="{% url 'login:login' %}" >
+    </form>
+
     <form action="{% url 'login:add_member_info_email' %}" id="add-member-form" method="post">
         <input type="hidden" name="id" id="newid2" value="" >
         <input type="hidden" name="name" id="newname" value="" >
