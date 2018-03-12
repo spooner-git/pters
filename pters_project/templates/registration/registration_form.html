@@ -457,8 +457,6 @@
                     
                   },
               })
-              
-            memberInfo_add();
         }else{
             alert('약관 동의필요 : 테스트 페이지 입니다.')
         }
@@ -476,10 +474,11 @@
 
                 //통신성공시 처리
                 success:function(data){
+                  console.log(data)
                     
                     var jsondata = JSON.parse(data);
                     if(jsondata.messageArray.length > 0){
-                      $('#global_error_msg').show().html($('.errorlist li:nth-child(1)').text()+'<br>'+$('.errorlist li:nth-child(2)').text())
+                      $('#global_error_msg').show().html(jsondata.messageArray)
                       $('.registerbox_add').css('transform','translateX(-50%)')
                       $('._step2_label').css('transform','translateX(-50%)')
                       $('.promise_wrap').css('transform','translateX(250%)')
@@ -489,8 +488,7 @@
                         $('#global_error_msg').fadeOut()
                         //$('ul.errorlist').remove()
                       },10000)
-                    }
-                    else{
+                    }else{
                       alert('이메일 인증후 로그인 해주세요')
                       goHome()
                     }
