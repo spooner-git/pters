@@ -11,8 +11,7 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
-	setInterval(function(){ajaxCheckSchedule()},60000)// 자동 ajax 새로고침(일정가져오기)
-
+	setInterval(function(){ajaxCheckSchedule()}, 60000)// 자동 ajax 새로고침(일정가져오기)
 
 
 	function ajaxCheckSchedule(){
@@ -22,19 +21,19 @@ $(document).ready(function(){
 			  dataType : 'html',
 
               beforeSend:function(){
-              	deleteBeforeSend();
+              	//AjaxBeforeSend();
               },
 
               success:function(data){
               	var jsondata = JSON.parse(data);
                 var update_data_changed = jsondata.data_changed;
-				if(update_data_changed==1){
+				if(update_data_changed[0]=="1"){
 					ajaxClassTime();
 				}
 			  },
 
               complete:function(){
-              	deleteCompleteSend();
+              	//AjaxCompleteSend();
               },
 
               error:function(){
@@ -42,6 +41,7 @@ $(document).ready(function(){
               }
             })
      }
+
 
 	$('#float_inner1, .ymdText-pc-add-pt').click(function(){ //PT추가버튼
 		scrollToDom($('#calendar'))
@@ -392,13 +392,13 @@ $(document).ready(function(){
 
 
                     beforeSend:function(){
-                    	deleteBeforeSend();
+                    	AjaxBeforeSend();
                     },
 
                     //통신성공시 처리
                     success:function(){
                       closeDeletePopup();
-                      deleteCompleteSend();
+                      AjaxCompleteSend();
                       ajaxClassTime();
                       },
 
@@ -454,7 +454,7 @@ $(document).ready(function(){
                 dataType:'html',
 
                 beforeSend:function(){
-                 	deleteBeforeSend();
+                 	AjaxBeforeSend();
                 },
 
                 //통신성공시 처리
@@ -462,7 +462,7 @@ $(document).ready(function(){
                   var jsondata = JSON.parse(data);
                   closeDeletePopup();
                   ajax_received_json_data(jsondata)
-                  deleteCompleteSend();
+                  AjaxCompleteSend();
                   },
 
                 //보내기후 팝업창 닫기
@@ -479,7 +479,7 @@ $(document).ready(function(){
                 error:function(){
                   alert("에러: 서버 통신 실패")
                   closeDeletePopup();
-                  deleteCompleteSend();
+                  AjaxCompleteSend();
                 },
             })
 		}else{
@@ -494,13 +494,13 @@ $(document).ready(function(){
                     data:$ptdelform.serialize(),
 
                     beforeSend:function(){
-                     	deleteBeforeSend();
+                     	AjaxBeforeSend();
                     },
 
                     //통신성공시 처리
                     success:function(){
                       closeDeletePopup();
-                      deleteCompleteSend();
+                      AjaxCompleteSend();
                       ajaxClassTime()
                       fake_show()
                       console.log('success')
@@ -523,13 +523,13 @@ $(document).ready(function(){
                     data:$offdelform.serialize(),
 
                     beforeSend:function(){
-                    	deleteBeforeSend();
+                    	AjaxBeforeSend();
                     },
 
                     //통신성공시 처리
                     success:function(){
                       closeDeletePopup();
-                      deleteCompleteSend();
+                      AjaxCompleteSend();
                       ajaxClassTime()
                       fake_show()
                       console.log('success')
@@ -562,7 +562,7 @@ $(document).ready(function(){
 			  dataType : 'html',
 
               beforeSend:function(){
-              	deleteBeforeSend();
+              	AjaxBeforeSend();
               },
 
               success:function(data){
@@ -645,16 +645,16 @@ $(document).ready(function(){
               },
 
               complete:function(){
-              	deleteCompleteSend();
+              	AjaxCompleteSend();
               },
 
               error:function(){
                 console.log('server error')
               }
             })    
-     }
+    }
 
-     function ajax_received_json_data(json){
+    function ajax_received_json_data(json){
           var jsondata = json
           classTimeArray = [];
           offTimeArray = [];
@@ -749,7 +749,7 @@ $(document).ready(function(){
           //DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
           //DBdataProcessMonthTrainer();
           //classDatesTrainer();
-      }
+    }
 
 	function closeDeletePopup(){
 		if($('#cal_popup_plandelete').css('display')=='block'){
@@ -762,14 +762,14 @@ $(document).ready(function(){
 		}
 	}
 
-	function deleteBeforeSend(){
+	function AjaxBeforeSend(){
 		$('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
         //$('#shade').css({'display':'block'});
 	}
 
-	function deleteCompleteSend(){
+	function AjaxCompleteSend(){
 		$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
