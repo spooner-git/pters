@@ -48,6 +48,7 @@ urlpatterns = [
     url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
     url(r'^trainer_setting_ajax/$', views.TrainerSettingViewAjax.as_view(), name='trainer_setting_ajax'),
 
+    url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
     url(r'^update_setting_reserve/$', views.update_setting_reserve_logic, name='update_setting_reserve'),
     url(r'^update_setting_language/$', views.update_setting_language_logic, name='update_setting_language'),
 
