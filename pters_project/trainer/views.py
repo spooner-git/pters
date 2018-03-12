@@ -1210,7 +1210,7 @@ def get_trainer_setting_data(context, user_id):
         setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_LAN_01')
         lt_lan_01 = setting_data.setting_info
     except ObjectDoesNotExist:
-        lt_lan_01 = ''
+        lt_lan_01 = 'KOR'
 
 
     try:
