@@ -26,9 +26,9 @@
          가입하고자 하는 회원 유형을 선택해주세요. <br> PTERS는 누구에게나 무료입니다!
         </p>
         <div class="outerbox_horizontal">
-          <button class="bg-pink" onclick="location.href='{% url 'login:register_general' %}'">일반 회원</button>
-          <button class="bg-yellow" onclick="location.href='{% url 'login:register_trainer' %}'">트레이너</button>
-          <button class="bg-grey" onclick="location.href='{% url 'login:register_business' %}'">센터사업자</button>
+          <button class="bg-pink" onclick="location.href='/accounts/register/?group_type=trainee'">일반 회원</button>
+          <button class="bg-yellow" onclick="location.href='/accounts/register/?group_type=trainer'">트레이너</button>
+          <button class="bg-grey" onclick="location.href='/accounts/register/?group_type=center'">센터사업자</button>
         </div>
         <div class="outerbox_horizontal">
           <div class="explainbox"><p>담당 트레이너와 일정 관리를 <br> 하고자 하는 <span class="font-pink">고객 회원님</span></p></div>
