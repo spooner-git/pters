@@ -411,10 +411,7 @@ function remove_front_zeros(rawData){
         }
       }
     }
-    
 }
-
-
 
 function DataFormatting(type){
     switch(type){
@@ -490,7 +487,6 @@ function DataFormattingDict(){
     $('#currentMemberNum').text("진행중 회원수 : "+DBlength)
     $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
 }
-
 
 function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
     
@@ -622,8 +618,6 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
     $tabletbody.remove()
     $table.append(result)
 }
-
-
 
 function scrollToIndicator(dom){
   var offset = dom.offset();
