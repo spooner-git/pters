@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User, Group
-from login.models import MemberTb
+from login.models import MemberTb, Profile
 
 
 class AuthUserForm(forms.ModelForm):
@@ -15,6 +15,13 @@ class AuthUserForm(forms.ModelForm):
     #class Meta:
         #model = UserGroups
         #fields = ('user_id', 'group_id')
+
+
+#class ProfileForm(forms.ModelForm):
+
+#    class Meta:
+#        model = Profile
+#        fields = ('name','phone', 'age')
 
 
 class MemberForm(forms.ModelForm):

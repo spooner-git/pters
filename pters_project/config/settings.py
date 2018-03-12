@@ -150,8 +150,24 @@ STATICFILES_DIRS = (
   'static/',
 )
 
+#LOGIN URL
 #AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/trainer/index/'
-#AUTH_USER_MODEL = 'login.models.MemberTb'
 
+
+# Registration
+# https://django-registration.readthedocs.io/en/2.1.2/index.html
+
+ACCOUNT_ACTIVATION_DAYS = 1
+
+# Email Activation
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'savekhg@gmail.com'
+EMAIL_HOST_PASSWORD = 'ausrl1032'
+#SERVER_EMAIL = 'hkkim@spooner.co.kr'
+#DEFAULT_FROM_MAIL = 'Spooner_Developer'
