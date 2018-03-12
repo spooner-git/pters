@@ -76,6 +76,9 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['today_schedule_num'] = today_schedule_num
         context['new_member_num'] = new_member_num
 
+        context = get_trainer_setting_data(context, self.request.user.id)
+        self.request.session['setting_language'] = context['lt_lan_01']
+
         if error is not None:
             messages.error(self.request, error)
 
@@ -675,7 +678,7 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
         return render(request, self.template_name, context)
 
 
-# 강사 setting 업데이트 api
+# 강사 예약허용시간 setting 업데이트 api
 @csrf_exempt
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
@@ -750,6 +753,57 @@ def update_setting_reserve_logic(request):
         return redirect(next_page)
 
 
+# 강사 언어 setting 업데이트 api
+@csrf_exempt
+def update_setting_language_logic(request):
+    setting_member_language = request.POST.get('setting_member_language', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    lt_lan_01 = None
+    if error is None:
+        if setting_member_language == '':
+            setting_member_language = 'KOR'
+
+    if error is None:
+        try:
+            lt_lan_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')
+        except ObjectDoesNotExist:
+            lt_lan_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_LAN_01', reg_dt=timezone.now(), use=1)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                lt_lan_01.mod_dt = timezone.now()
+                lt_lan_01.setting_info = setting_member_language
+                lt_lan_01.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+        request.session.setting_language = setting_member_language
+        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
+                      + '언어 설정</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
 class TrainerSettingViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_ajax.html'
 
@@ -779,9 +833,15 @@ def get_trainer_setting_data(context, user_id):
     except ObjectDoesNotExist:
         lt_res_03 = ''
 
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_LAN_01')
+        lt_lan_01 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_lan_01 = ''
+
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
-
+    context['lt_lan_01'] = lt_lan_01
     return context
 

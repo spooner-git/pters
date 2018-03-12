@@ -79,6 +79,11 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
         context = get_trainee_schedule_data_func(context, self.request.user.id)
+
+        # 강사 setting 값 로드
+        context = get_trainee_setting_data(context, self.request.user.id)
+        self.request.session['setting_language'] = context['lt_lan_01']
+
         return context
 
 
@@ -116,7 +121,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # 강사 setting 값 로드
         if error is None:
             context = get_trainer_setting_data(context, class_info.member_id)
-
+            self.request.session['setting_language'] = context['lt_lan_01']
         if error is None:
             member_data = MemberTb.objects.get(member_id=lecture_info.member_id)
             schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id, en_dis_type='1')
@@ -729,7 +734,18 @@ def get_trainer_setting_data(context, user_id):
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
+    return context
 
+
+def get_trainee_setting_data(context, user_id):
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_LAN_01')
+        lt_lan_01 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_lan_01 = 'KOR'
+
+    context['lt_lan_01'] = lt_lan_01
     return context
 
 

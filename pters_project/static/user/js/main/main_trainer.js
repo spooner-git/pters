@@ -15,17 +15,17 @@ $(document).ready(function(){
  	var datetext
  	var todayplantext
 
- 	if(Options.language=="Korea"){
+ 	if(Options.language=="KOR"){
  		var monthtext = "월 ";
  		var yeartext = "년 ";
  		var datetext = currentDay[currentDayinfo]
  		var todayplantext = "오늘의 일정"
- 	}else if(Options.language=="Japan"){
+ 	}else if(Options.language=="JPN"){
  		var monthtext = "月 "
  		var yeartext = "年 "
  		var datetext = currentDayJP[currentDayinfo]
  		var todayplantext = "今日の日程"
- 	}else if(Options.language=="English"){
+ 	}else if(Options.language=="ENG"){
  		var monthtext = ", "
  		var yeartext = " "
  		var datetext = currentDayEN[currentDayinfo]
