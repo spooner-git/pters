@@ -228,11 +228,11 @@ def get_member_data(context, trainer_id):
                                                            lecture_rem_count__gt=0, use=1)
         context['lecture_finish_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                                   lecture_rem_count=0, use=1)
-
         for lecture in context['lecture_info']:
             # 수강정보에 해당하는 회원정보 가져오기
             try:
                 lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
+                lecture.user_info = User.objects.get(username=lecture.member_info.user)
             except ObjectDoesNotExist:
                 error = '회원 정보가 존재하지 않습니다'
 
@@ -240,6 +240,7 @@ def get_member_data(context, trainer_id):
             # 수강정보에 해당하는 회원정보 가져오기
             try:
                 lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
+                lecture.user_info = User.objects.get(username=lecture.member_info.user)
             except ObjectDoesNotExist:
                 error = '회원 정보가 존재하지 않습니다'
 
