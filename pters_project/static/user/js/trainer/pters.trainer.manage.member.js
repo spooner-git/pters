@@ -1520,6 +1520,7 @@ function ajax_received_json_data(data){
     availCountArray = [];
     birthdayArray = [];
     sexArray = [];
+    emailActiveArray = [];
 
     finishIdArray = [];
     finishnameArray =[];
@@ -1535,6 +1536,8 @@ function ajax_received_json_data(data){
     finishAvailCountArray = [];
     finishbirthdayArray = [];
     finishsexArray = [];
+
+    finishEmailActiveArray = [];
     messageArray = [];
 
     idArray = jsondata.idArray;
@@ -1548,6 +1551,7 @@ function ajax_received_json_data(data){
     endArray = jsondata.endArray;
     regCountArray = jsondata.regCountArray;
     availCountArray = jsondata.availCountArray;
+    emailActiveArray = jsondata.emailActiveArray;
 
     finishIdArray = jsondata.finishIdArray;
     finishnameArray = jsondata.finishnameArray;
@@ -1562,6 +1566,7 @@ function ajax_received_json_data(data){
     finishRegCountArray = jsondata.finishRegCountArray;
     finishAvailCountArray = jsondata.finishAvailCountArray;
 
+    finishEmailActiveArray = jsondata.finishEmailActiveArray;
     //처리 필요 - hk.kim 180110
     birthdayArray = jsondata.birthdayArray;
     finishbirthdayArray = jsondata.finishbirthdayArray;

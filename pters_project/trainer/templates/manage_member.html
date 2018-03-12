@@ -610,6 +610,8 @@
           var regCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_reg_count }}',{% endfor %}]
           var availCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
 
+          var emailActiveArray = [{% for lecture in lecture_info %}'{{ lecture.user_info.is_active }}',{% endfor %}]
+
           var finishIdArray =[{% for lecture in lecture_finish_info %}'{{ lecture.member_info.user }}',{% endfor %}]
           var finishnameArray =[{% for lecture in lecture_finish_info %}'{{ lecture.member_info.name }}',{% endfor %}]
           var finishphoneArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.phone }}',{% endfor %}]
@@ -626,6 +628,8 @@
           //처리 필요 - hk.kim 180110
           var finishRegCountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_reg_count }}',{% endfor %}]
           var finishAvailCountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
+
+          var finishEmailActiveArray = [{% for lecture in lecture_finish_info %}'{{ lecture.user_info.is_active }}',{% endfor %}]
 
           var messageArray = [{% for message in messages %}'{{ message }}',{% endfor %}]
 
