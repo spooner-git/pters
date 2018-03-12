@@ -28,6 +28,9 @@
     "sexArray" :
     [{% for lecture in lecture_info %}"{{ lecture.member_info.sex }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+    "emailActiveArray" :
+    [{% for lecture in lecture_info %}"{{ lecture.user_info.is_active }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
     "finishIdArray" :
     [{% for lecture in lecture_finish_info %}"{{ lecture.member_info.user }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "finishnameArray" :
@@ -57,6 +60,11 @@
     "finishAvailCountArray" :
     [{% for lecture in lecture_finish_info %}"{{ lecture.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+    "finishEmailActiveArray" :
+    [{% for lecture in lecture_finish_info %}"{{ lecture.user_info.is_active }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
     "messageArray" :
     [{% for message in messages %}"{{ message }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+
+
 }
