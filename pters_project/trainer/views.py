@@ -316,6 +316,7 @@ class PushSettingView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PushSettingView, self).get_context_data(**kwargs)
+        context = get_trainer_setting_data(context, self.request.user.id)
 
         return context
 
@@ -721,7 +722,7 @@ def update_setting_push_logic(request):
         try:
             with transaction.atomic():
                 lt_pus_01.mod_dt = timezone.now()
-                lt_pus_01.setting_info = setting_trainee_schedule_confirm1+'-'+setting_trainee_schedule_confirm2
+                lt_pus_01.setting_info = setting_trainee_schedule_confirm1+'/'+setting_trainee_schedule_confirm2
                 lt_pus_01.save()
 
                 lt_pus_02.mod_dt = timezone.now()
@@ -923,9 +924,48 @@ def get_trainer_setting_data(context, user_id):
     except ObjectDoesNotExist:
         lt_lan_01 = ''
 
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_01')
+        lt_pus_data = setting_data.setting_info.split('/')
+        lt_pus_01 = lt_pus_data[0]
+        lt_pus_02 = lt_pus_data[1]
+    except ObjectDoesNotExist:
+        lt_pus_01 = ''
+        lt_pus_02 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_02')
+        lt_pus_03 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_pus_03 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_03')
+        lt_pus_04 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_pus_04 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_04')
+        lt_pus_data = setting_data.setting_info.split('/')
+        lt_pus_05 = lt_pus_data[0]
+        lt_pus_06 = lt_pus_data[1]
+    except ObjectDoesNotExist:
+        lt_pus_05 = ''
+        lt_pus_06 = ''
+
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
     context['lt_lan_01'] = lt_lan_01
+
+    context['lt_pus_01'] = lt_pus_01
+    context['lt_pus_02'] = lt_pus_02
+    context['lt_pus_03'] = lt_pus_03
+    context['lt_pus_04'] = lt_pus_04
+    context['lt_pus_05'] = lt_pus_05
+    context['lt_pus_06'] = lt_pus_06
+
     return context
 
