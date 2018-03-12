@@ -22,7 +22,7 @@ urlpatterns = [
     # 강사 - 회원정보 등록 관련
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     url(r'^member_manage_ajax/$', views.ManageMemberViewAjax.as_view(), name='member_manage_ajax'),
-    url(r'^add_member_info/$', views.add_member_info_logic, name='add_member_info'),
+    url(r'^add_member_info/$', views.add_member_info_logic_test, name='add_member_info'),
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
     url(r'^delete_member_info/$', views.delete_member_info_logic, name='delete_member_info'),
 
