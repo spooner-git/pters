@@ -274,3 +274,11 @@ class CheckMemberIdView(View):
             self.error = '이미 가입된 회원 입니다.'
         return render(request, self.template_name, {'error': self.error})
 
+
+class RegisterErrorView(TemplateView):
+    template_name = 'registration_error_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RegisterErrorView, self).get_context_data(**kwargs)
+
+        return context

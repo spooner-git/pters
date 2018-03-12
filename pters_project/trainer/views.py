@@ -228,11 +228,11 @@ def get_member_data(context, trainer_id):
                                                            lecture_rem_count__gt=0, use=1)
         context['lecture_finish_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                                   lecture_rem_count=0, use=1)
-
         for lecture in context['lecture_info']:
             # 수강정보에 해당하는 회원정보 가져오기
             try:
                 lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
+                lecture.user_info = User.objects.get(username=lecture.member_info.user)
             except ObjectDoesNotExist:
                 error = '회원 정보가 존재하지 않습니다'
 
@@ -240,6 +240,7 @@ def get_member_data(context, trainer_id):
             # 수강정보에 해당하는 회원정보 가져오기
             try:
                 lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
+                lecture.user_info = User.objects.get(username=lecture.member_info.user)
             except ObjectDoesNotExist:
                 error = '회원 정보가 존재하지 않습니다'
 
@@ -316,6 +317,7 @@ class PushSettingView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PushSettingView, self).get_context_data(**kwargs)
+        context = get_trainer_setting_data(context, self.request.user.id)
 
         return context
 
@@ -465,6 +467,153 @@ def add_member_info_logic(request):
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 '\
                        + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),use=1)
+        log_data.save()
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+# 회원가입 api
+@csrf_exempt
+def add_member_info_logic_test(request):
+    fast_check = request.POST.get('fast_check')
+    user_id = request.POST.get('user_id')
+    name = request.POST.get('name')
+    phone = request.POST.get('phone')
+    contents = request.POST.get('contents')
+    counts = request.POST.get('counts')
+    price = request.POST.get('price')
+    start_date = request.POST.get('start_date')
+    end_date = request.POST.get('end_date')
+    counts_fast = request.POST.get('counts_fast')
+    price_fast = request.POST.get('price_fast')
+    start_date_fast = request.POST.get('start_date_fast')
+    end_date_fast = request.POST.get('end_date_fast')
+    sex = request.POST.get('sex')
+    birthday_dt = request.POST.get('birthday')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    input_start_date = ''
+    input_end_date = ''
+    input_counts = 0
+    input_price = 0
+    now = timezone.now()
+    class_info = None
+
+    #if User.objects.filter(username=phone).exists():
+    #    error = '이미 가입된 회원 입니다.'
+    # elif User.objects.filter(email=email).exists():
+    #    error = '이미 가입된 회원 입니다.'
+    # elif email == '':
+    #    error = 'e-mail 정보를 입력해 주세요.'
+    if name == '':
+        error = '이름을 입력해 주세요.'
+    elif phone == '':
+        error = '연락처를 입력해 주세요.'
+    elif len(phone) != 11 and len(phone) != 10:
+        error = '연락처를 확인해 주세요.'
+    elif not phone.isdigit():
+        error = '연락처를 확인해 주세요.'
+
+    if error is None:
+        if fast_check == '0':
+            if counts_fast == '':
+                error = '남은 횟수를 입력해 주세요.'
+            elif start_date_fast == '':
+                error = '시작 날짜를 입력해 주세요.'
+            else:
+                input_counts = counts_fast
+                input_start_date = start_date_fast
+                if price_fast == '':
+                    input_price = 0
+                else:
+                    input_price = price_fast
+                if end_date_fast == '':
+                    input_end_date = '9999-12-31'
+                else:
+                    input_end_date = end_date_fast
+
+        elif fast_check == '1':
+            if counts == '':
+                error = '남은 횟수를 입력해 주세요.'
+            elif start_date == '':
+                error = '시작 날짜를 입력해 주세요.'
+            else:
+                input_counts = counts
+                input_start_date = start_date
+                if price == '':
+                    input_price = 0
+                else:
+                    input_price = price
+                if end_date == '':
+                    input_end_date = '9999-12-31'
+                else:
+                    input_end_date = end_date
+
+    if error is None:
+        if len(phone) == 11:
+            password = phone[7:]
+        elif len(phone) == 10:
+            password = phone[6:]
+
+    if error is None:
+
+        try:
+            class_info = ClassTb.objects.get(member_id=request.user.id)
+        except ObjectDoesNotExist:
+            error = '강사 강좌 정보가 없습니다.'
+
+    if error is None:
+        try:
+            user = User.objects.get(username=user_id)
+
+        except ObjectDoesNotExist:
+            error = '필수 입력 사항을 확인해주세요.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+
+                group = Group.objects.get(name='trainee')
+                user.groups.add(group)
+                user.set_password(password)
+                user.first_name = name
+                user.save()
+                if birthday_dt == '':
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
+                else:
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                                      birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
+                                      user_id=user.id)
+                member.save()
+                lecture = LectureTb(class_tb_id=class_info.class_id, member_id=member.member_id,
+                                    lecture_reg_count=input_counts, lecture_rem_count=input_counts,
+                                    lecture_avail_count=input_counts, price=input_price, option_cd='DC',
+                                    state_cd='IP',
+                                    start_date=input_start_date, end_date=input_end_date, mod_dt=now,
+                                    reg_dt=now, use=1)
+                lecture.save()
+
+        except ValueError as e:
+            error = '이미 가입된 회원입니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '이미 가입된 회원입니다.'
+
+    if error is None:
+        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                       + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
         log_data.save()
         return redirect(next_page)
     else:
@@ -680,6 +829,90 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
 
 # 강사 예약허용시간 setting 업데이트 api
 @csrf_exempt
+def update_setting_push_logic(request):
+    setting_trainee_schedule_confirm1 = request.POST.get('setting_trainee_schedule_confirm1', '')
+    setting_trainee_schedule_confirm2 = request.POST.get('setting_trainee_schedule_confirm2', '')
+    setting_trainee_no_schedule_confirm = request.POST.get('setting_trainee_no_schedule_confirm', '')
+    setting_trainer_schedule_confirm = request.POST.get('setting_trainer_schedule_confirm', '')
+    setting_trainer_no_schedule_confirm1 = request.POST.get('setting_trainer_no_schedule_confirm1', '')
+    setting_trainer_no_schedule_confirm2 = request.POST.get('setting_trainer_no_schedule_confirm2', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    lt_pus_01 = None
+    lt_pus_02 = None
+    lt_pus_03 = None
+    lt_pus_04 = None
+
+    if error is None:
+        try:
+            lt_pus_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_01')
+        except ObjectDoesNotExist:
+            lt_pus_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_01', reg_dt=timezone.now(),
+                                  use=1)
+        try:
+            lt_pus_02 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_02')
+        except ObjectDoesNotExist:
+            lt_pus_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_02', reg_dt=timezone.now(),
+                                  use=1)
+        try:
+            lt_pus_03 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_03')
+        except ObjectDoesNotExist:
+            lt_pus_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_03', reg_dt=timezone.now(),
+                                  use=1)
+        try:
+            lt_pus_04 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_04')
+        except ObjectDoesNotExist:
+            lt_pus_04 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_04', reg_dt=timezone.now(),
+                                  use=1)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                lt_pus_01.mod_dt = timezone.now()
+                lt_pus_01.setting_info = setting_trainee_schedule_confirm1+'/'+setting_trainee_schedule_confirm2
+                lt_pus_01.save()
+
+                lt_pus_02.mod_dt = timezone.now()
+                lt_pus_02.setting_info = setting_trainee_no_schedule_confirm
+                lt_pus_02.save()
+
+                lt_pus_03.mod_dt = timezone.now()
+                lt_pus_03.setting_info = setting_trainer_schedule_confirm
+                lt_pus_03.save()
+
+                lt_pus_04.mod_dt = timezone.now()
+                lt_pus_04.setting_info = setting_trainer_no_schedule_confirm1+'/'+setting_trainer_no_schedule_confirm2
+                lt_pus_04.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
+                       + 'PUSH 설정</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+# 강사 예약허용시간 setting 업데이트 api
+@csrf_exempt
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
     setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '')
@@ -753,6 +986,146 @@ def update_setting_reserve_logic(request):
         return redirect(next_page)
 
 
+# 강사 예약허용시간 setting 업데이트 api
+@csrf_exempt
+def update_setting_sales_logic(request):
+    setting_sales_10 = request.POST.get('setting_sales_10', '')
+    setting_sales_20 = request.POST.get('setting_sales_20', '')
+    setting_sales_30 = request.POST.get('setting_sales_30', '')
+    setting_sales_40 = request.POST.get('setting_sales_40', '')
+    setting_sales_50 = request.POST.get('setting_sales_50', '')
+    setting_sales = request.POST.get('setting_sales', '')
+    setting_sales_type = request.POST.get('setting_sales_type', '0')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    lt_sal_01 = ''
+    lt_sal_02 = ''
+    lt_sal_03 = ''
+    lt_sal_04 = ''
+    lt_sal_05 = ''
+    lt_sal_00 = ''
+
+    if error is None:
+        if setting_sales_type == '0':
+            setting_sal_01 = setting_sales_10
+            setting_sal_02 = setting_sales_20
+            setting_sal_03 = setting_sales_30
+            setting_sal_04 = setting_sales_40
+            setting_sal_05 = setting_sales_50
+        else:
+            setting_sal_00 = setting_sales
+
+    if error is None:
+            try:
+                lt_sal_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_01')
+            except ObjectDoesNotExist:
+                lt_sal_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_01', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_02 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_02')
+            except ObjectDoesNotExist:
+                lt_sal_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_02', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_03 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_03')
+            except ObjectDoesNotExist:
+                lt_sal_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_03', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_04 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_04')
+            except ObjectDoesNotExist:
+                lt_sal_04 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_04', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_05 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_05')
+            except ObjectDoesNotExist:
+                lt_sal_05 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_05', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_00 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_00')
+            except ObjectDoesNotExist:
+                lt_sal_00 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_00', reg_dt=timezone.now(),
+                                      use=1)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                if setting_sales_type == '0':
+                    lt_sal_01.mod_dt = timezone.now()
+                    lt_sal_01.setting_info = setting_sal_01
+                    lt_sal_01.save()
+
+                    lt_sal_02.mod_dt = timezone.now()
+                    lt_sal_02.setting_info = setting_sal_02
+                    lt_sal_02.save()
+
+                    lt_sal_03.mod_dt = timezone.now()
+                    lt_sal_03.setting_info = setting_sal_03
+                    lt_sal_03.save()
+
+                    lt_sal_04.mod_dt = timezone.now()
+                    lt_sal_04.setting_info = setting_sal_04
+                    lt_sal_04.save()
+
+                    lt_sal_05.mod_dt = timezone.now()
+                    lt_sal_05.setting_info = setting_sal_05
+                    lt_sal_05.save()
+
+                    lt_sal_00.mod_dt = timezone.now()
+                    lt_sal_00.setting_info = ''
+                    lt_sal_00.save()
+                else:
+                    lt_sal_01.mod_dt = timezone.now()
+                    lt_sal_01.setting_info = ''
+                    lt_sal_01.save()
+
+                    lt_sal_02.mod_dt = timezone.now()
+                    lt_sal_02.setting_info = ''
+                    lt_sal_02.save()
+
+                    lt_sal_03.mod_dt = timezone.now()
+                    lt_sal_03.setting_info = ''
+                    lt_sal_03.save()
+
+                    lt_sal_04.mod_dt = timezone.now()
+                    lt_sal_04.setting_info = ''
+                    lt_sal_04.save()
+
+                    lt_sal_05.mod_dt = timezone.now()
+                    lt_sal_05.setting_info = ''
+                    lt_sal_05.save()
+
+                    lt_sal_00.mod_dt = timezone.now()
+                    lt_sal_00.setting_info = setting_sal_00
+                    lt_sal_00.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
+                       + '강의금액 설정</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
 # 강사 언어 setting 업데이트 api
 @csrf_exempt
 def update_setting_language_logic(request):
@@ -791,8 +1164,8 @@ def update_setting_language_logic(request):
 
     if error is None:
         request.session.setting_language = setting_member_language
-        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
-                      + '언어 설정</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_contents = '<span>' + request.user.first_name + ' 님께서 '\
+                       + '언어 설정</span> 정보를 <span class="status">수정</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
@@ -839,9 +1212,48 @@ def get_trainer_setting_data(context, user_id):
     except ObjectDoesNotExist:
         lt_lan_01 = ''
 
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_01')
+        lt_pus_data = setting_data.setting_info.split('/')
+        lt_pus_01 = lt_pus_data[0]
+        lt_pus_02 = lt_pus_data[1]
+    except ObjectDoesNotExist:
+        lt_pus_01 = ''
+        lt_pus_02 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_02')
+        lt_pus_03 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_pus_03 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_03')
+        lt_pus_04 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_pus_04 = ''
+
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_04')
+        lt_pus_data = setting_data.setting_info.split('/')
+        lt_pus_05 = lt_pus_data[0]
+        lt_pus_06 = lt_pus_data[1]
+    except ObjectDoesNotExist:
+        lt_pus_05 = ''
+        lt_pus_06 = ''
+
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
     context['lt_lan_01'] = lt_lan_01
+
+    context['lt_pus_01'] = lt_pus_01
+    context['lt_pus_02'] = lt_pus_02
+    context['lt_pus_03'] = lt_pus_03
+    context['lt_pus_04'] = lt_pus_04
+    context['lt_pus_05'] = lt_pus_05
+    context['lt_pus_06'] = lt_pus_06
+
     return context
 

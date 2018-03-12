@@ -22,7 +22,7 @@ urlpatterns = [
     # 강사 - 회원정보 등록 관련
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     url(r'^member_manage_ajax/$', views.ManageMemberViewAjax.as_view(), name='member_manage_ajax'),
-    url(r'^add_member_info/$', views.add_member_info_logic, name='add_member_info'),
+    url(r'^add_member_info/$', views.add_member_info_logic_test, name='add_member_info'),
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
     url(r'^delete_member_info/$', views.delete_member_info_logic, name='delete_member_info'),
 
@@ -48,7 +48,9 @@ urlpatterns = [
     url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
     url(r'^trainer_setting_ajax/$', views.TrainerSettingViewAjax.as_view(), name='trainer_setting_ajax'),
 
+    url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
     url(r'^update_setting_reserve/$', views.update_setting_reserve_logic, name='update_setting_reserve'),
+    url(r'^update_setting_sales/$', views.update_setting_sales_logic, name='update_setting_sales'),
     url(r'^update_setting_language/$', views.update_setting_language_logic, name='update_setting_language'),
 
 ]

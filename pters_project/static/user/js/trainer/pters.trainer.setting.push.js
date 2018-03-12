@@ -112,6 +112,15 @@ $(document).ready(function(){
             check_dropdown_selected();
       });
 
+       $("#upbutton-alarm").click(function(){
+         //if(select_all_check==true){
+             document.getElementById('update-setting-push-form').submit();
+         //}else{
+
+            //입력값 확인 메시지 출력 가능
+         //}
+     })
+
       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
         var ulMorningDay = $("#morningdaySelect button");
         var ulMorningDay2 = $("#morningdaySelect2 button");

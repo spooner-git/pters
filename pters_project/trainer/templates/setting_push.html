@@ -9,6 +9,19 @@
 
 
 {% block content %}
+
+
+<form action="{% url 'trainer:update_setting_push' %}" id="update-setting-push-form" method="post">
+  <input type="hidden" name="setting_trainee_schedule_confirm1" id="id_setting_trainee_schedule_confirm1" value="09:00"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_trainee_schedule_confirm2" id="id_setting_trainee_schedule_confirm2" value="16:00"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_trainee_no_schedule_confirm"   id="id_setting_trainee_no_schedule_confirm" value="7"> <!--시간 숫자-->
+  <input type="hidden" name="setting_trainer_schedule_confirm"   id="id_setting_trainer_schedule_confirm" value="08:00-22:00"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_trainer_no_schedule_confirm1"   id="id_setting_trainer_no_schedule_confirm1" value="08:00-22:00"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_trainer_no_schedule_confirm2"   id="id_setting_trainer_no_schedule_confirm2" value="5"> <!--시간 숫자-->
+
+  <input type="hidden" name="next_page" value = '{% url 'trainer:push_setting' %}'>
+</form>
+
 <div id="memberPushSettingText" class="settingMenu">
   <span class="settingText">회원 푸시 알림</span>
 </div>
@@ -176,6 +189,14 @@
                           "limit":4,              //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
                           "reserve":"disable",     //회원 일정 기능을 enable/disable
           }
+        </script>
+        <script>
+              var lt_pus_01 =  ['{{ lt_pus_01 }}'];
+              var lt_pus_02 =  ['{{ lt_pus_02 }}'];
+              var lt_pus_03 =  ['{{ lt_pus_03 }}'];
+              var lt_pus_04 =  ['{{ lt_pus_04 }}'];
+              var lt_pus_05 =  ['{{ lt_pus_05 }}'];
+              var lt_pus_06 =  ['{{ lt_pus_06 }}'];
         </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.setting.push.js" %}></script>
         

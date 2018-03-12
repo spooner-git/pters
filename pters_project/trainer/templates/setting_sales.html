@@ -9,6 +9,18 @@
 
 
 {% block content %}
+
+<form action="{% url 'trainer:update_setting_sales' %}" id="update-setting-push-form" method="post">
+  <input type="hidden" name="setting_sales_10" id="id_setting_sales_10" value="100000"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_sales_20" id="id_setting_sales_20" value="200000"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_sales_30" id="id_setting_sales_30" value="300000"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_sales_40" id="id_setting_sales_40" value="400000"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_sales_50" id="id_setting_sales_50" value="500000"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_sales" id="id_setting_sales" value="0"> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_sales_type" id="id_setting_sales_type" value="0">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:sales_setting' %}'>
+</form>
+
 <div id="defaultFeeSettingText" class="settingMenu">
   <p class="settingText">강의 기본 금액</p>
   <p class="settingText2">강의의 금액을 설정합니다. 업무 관리의 매출 계산에 활용됩니다.</p>
@@ -61,6 +73,14 @@
                           "limit":4,              //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
                           "reserve":"disable",     //회원 일정 기능을 enable/disable
           }
+        </script>
+        <script>
+              var lt_sal_01 =  ['{{ lt_sal_01 }}'];
+              var lt_sal_02 =  ['{{ lt_sal_02 }}'];
+              var lt_sal_03 =  ['{{ lt_sal_03 }}'];
+              var lt_sal_04 =  ['{{ lt_sal_04 }}'];
+              var lt_sal_05 =  ['{{ lt_sal_05 }}'];
+              var lt_sal_00 =  ['{{ lt_sal_00 }}'];
         </script>
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.setting.sales.js" %}></script>
         

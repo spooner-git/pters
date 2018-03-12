@@ -315,7 +315,7 @@ $(document).ready(function(){
         $('#page-base-modifystyle').fadeIn('fast');
         $('#memberName_info').val(Data[userID].name)
         $('#memberId').val(userID);
-        $('#deleteMemberId').val(Data[userID].id);
+        $('#deleteMemberId').val(userID);
         $('#memberPhone_info').val(Data[userID].phone);
         $('#comment_info').val(Data[userID].contents);
         //$('#memberCount_info').val(Data[name].count);
@@ -818,6 +818,8 @@ $("#memberEmail_add").keyup(function(){  //이메일 입력시 하단에 핑크�
     $(this).removeClass("dropdown_selected")
     check_dropdown_selected();
   }
+  $('#id_email').val($('#memberEmail_add').val())
+
 })
 
 $("#memberLastName_add, #memberFirstName_add").keyup(function(){  //이름 입력시 하단에 핑크선
@@ -860,6 +862,8 @@ $("#memberPhone_add").keyup(function(){  //전화번호 입력시 하단에 핑�
     $(this).removeClass("dropdown_selected")
     check_dropdown_selected();
   }
+  $('#id_username').val($('#memberPhone_add').val())
+  $('#id_user_id').val($('#memberPhone_add').val())
 })
 
 $("#memberCount_add").keyup(function(){  //남은횟수 입력시 하단에 핑크선
@@ -1196,9 +1200,51 @@ function limit_char(e){
 
 
 $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
-    var $form = $('#member-add-form-new');
+    //var $form = $('#member-add-form-new');
+    var $form2 = $('#add-member-id-form');
+    var url2 = '/accounts/register/';
      if(select_all_check==true){
              $.ajax({
+                url:'/accounts/register/',
+                type:'POST',
+                data:$form2.serialize(),
+                dataType : 'html',
+
+                beforeSend:function(){
+                  beforeSend()
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                  completeSend()
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    //var jsondata = JSON.parse(data);
+                    add_member_form_func();
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                  alert("error")
+                },
+             })
+
+     }else{
+        scrollToIndicator($('#page_addmember'))
+        $('#inputError').fadeIn()
+        setTimeout(function(){$('#inputError').fadeOut()},10000)
+        $('#errorMsg p').text('모든 필수 정보를 입력해주세요')
+        //입력값 확인 메시지 출력 가능
+     }
+})
+
+
+    function add_member_form_func(){
+        var $form = $('#member-add-form-new');
+
+        $.ajax({
                 url:'/trainer/add_member_info/',
                 type:'POST',
                 data:$form.serialize(),
@@ -1248,15 +1294,7 @@ $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후
                   alert("error")
                 },
              })
-
-     }else{
-        scrollToIndicator($('#page_addmember'))
-        $('#inputError').fadeIn()
-        setTimeout(function(){$('#inputError').fadeOut()},10000)
-        $('#errorMsg p').text('모든 필수 정보를 입력해주세요')
-        //입력값 확인 메시지 출력 가능
-     }
-})
+    }
 
 $('#upbutton-modify, #infoMemberModify').click(function(){ //회원정보창에서 수정 눌렀을때
     if($(this).attr('data-type') == "view" ){
@@ -1482,6 +1520,7 @@ function ajax_received_json_data(data){
     availCountArray = [];
     birthdayArray = [];
     sexArray = [];
+    emailActiveArray = [];
 
     finishIdArray = [];
     finishnameArray =[];
@@ -1497,6 +1536,8 @@ function ajax_received_json_data(data){
     finishAvailCountArray = [];
     finishbirthdayArray = [];
     finishsexArray = [];
+
+    finishEmailActiveArray = [];
     messageArray = [];
 
     idArray = jsondata.idArray;
@@ -1510,6 +1551,7 @@ function ajax_received_json_data(data){
     endArray = jsondata.endArray;
     regCountArray = jsondata.regCountArray;
     availCountArray = jsondata.availCountArray;
+    emailActiveArray = jsondata.emailActiveArray;
 
     finishIdArray = jsondata.finishIdArray;
     finishnameArray = jsondata.finishnameArray;
@@ -1524,6 +1566,7 @@ function ajax_received_json_data(data){
     finishRegCountArray = jsondata.finishRegCountArray;
     finishAvailCountArray = jsondata.finishAvailCountArray;
 
+    finishEmailActiveArray = jsondata.finishEmailActiveArray;
     //처리 필요 - hk.kim 180110
     birthdayArray = jsondata.birthdayArray;
     finishbirthdayArray = jsondata.finishbirthdayArray;
