@@ -219,17 +219,20 @@
              }; 
 
              var Options = {
-                          "language" : "Korea", //Korea, Japan, English, Chinese, Spanish
+                          "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
                           "location" : "Japan", //Korea, Japan, English, Chinese
               }
 
-              if(Options.language=="Japan"){
+              if(Options.language=="JPN"){
+                  console.log('jpn')
                 $(".KRtext, .ENtext").remove();
                 $(".JPtext").show();
-              }else if(Options.language=="English"){
+              }else if(Options.language=="ENG"){
+                  console.log('eng')
                 $(".KRtext, .JPtext").remove();
                 $(".ENtext").show();
-              }else if(Options.language=="Korea"){
+              }else if(Options.language=="KOR"){
+                  console.log('kor')
                 $(".ENtext, .JPtext").remove();
                 $(".KRtext").show();
               }
