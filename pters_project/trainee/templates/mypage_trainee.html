@@ -55,25 +55,25 @@
 </div>
 
 <div id="countBoardWrap">
-    <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">예약 가능 횟수</p><p><span>10</span>회</p></div>
-    <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">PT 완료 횟수</p><p><span>6</span>회</p></div>    
+    <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">예약 가능 횟수</p><p><span>{{lecture_info.lecture_avail_count}} </span>회</p></div>
+    <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">PT 완료 횟수</p><p><span>{{lecture_finish_count}} </span>회</p></div>
 </div>
 
 <div id="planBoardWrap">
-    <div class="planBoard"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 PT 일정</p><p>2017년 7월 23일 오후 1시-2시</p></div>
+    <div class="planBoard"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 PT 일정</p><p>{{ next_schedule_start_dt }}</p></div>
     <div class="planBoard"><p><img src="/static/user/res/member/icon-repeat.png" alt="">PT 반복 일정</p><p>매주 수요일 오후 3시 <span>반복종료:2017.12.31</span></p></div> 
 </div>
 
 <div id="dateBoardWrap">
-    <div class="dateBoard"><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 시작일</p><p>2017년 7월 23일</p></div>
-    <div class="dateBoard"><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 종료일</p><p>2018년 1월 3일</p></div>    
+    <div class="dateBoard"><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 시작일</p><p>{{lecture_info.start_date}}</p></div>
+    <div class="dateBoard"><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 종료일</p><p>{{lecture_info.end_date}}</p></div>
 </div>
 
 <div id="trainerInfoTap">
     <img src="/static/user/res/member/icon-user.png" alt=""><span>담당 트레이너 정보</span>
 </div>
 <div id="trainerInfoWrap">
-    <div class="trainerInfo"><span>박서준 트레이너</span><img src="/static/user/res/member/icon-call.png" alt=""><img src="/static/user/res/member/icon-message.png" alt=""></div>
+    <div class="trainerInfo"><span>{{ class_info.mem_info.name }} 트레이너</span><img src="/static/user/res/member/icon-call.png" alt=""><img src="/static/user/res/member/icon-message.png" alt=""></div>
 </div>
 
 
@@ -95,6 +95,16 @@
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
             var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
+            var ptRepeatScheduleIdArray =  [{% for pt_repeat_schedule_id_info in pt_repeat_schedule_id_data %}'{{ pt_repeat_schedule_id_info }}', {% endfor %}];
+            var ptRepeatScheduleTypeArray =  [{% for pt_repeat_schedule_type_info in pt_repeat_schedule_type_data %}'{{ pt_repeat_schedule_type_info }}', {% endfor %}];
+            var ptRepeatScheduleWeekInfoArray =  [{% for pt_repeat_schedule_week_info_info in pt_repeat_schedule_week_info_data %}'{{ pt_repeat_schedule_week_info_info }}', {% endfor %}];
+            var ptRepeatScheduleStartDateArray =  [{% for pt_repeat_schedule_start_date_info in pt_repeat_schedule_start_date_data %}'{{ pt_repeat_schedule_start_date_info }}', {% endfor %}];
+            var ptRepeatScheduleEndDateArray =  [{% for pt_repeat_schedule_end_date_info in pt_repeat_schedule_end_date_data %}'{{ pt_repeat_schedule_end_date_info }}', {% endfor %}];
+            var ptRepeatScheduleStartTimeArray =  [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}'{{ pt_repeat_schedule_start_time_info }}', {% endfor %}];
+            var ptRepeatScheduleTimeDurationArray =  [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}'{{ pt_repeat_schedule_time_duration_info }}', {% endfor %}];
+
+
+            var next_schedule = ['{{ next_schedule }}'];
             var lt_res_01 =  ['{{ lt_res_01 }}'];
             var lt_res_02 =  ['{{ lt_res_02 }}'];
             var lt_res_03 =  ['{{ lt_res_03 }}'];

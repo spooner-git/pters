@@ -126,17 +126,17 @@ $(document).ready(function(){
 			var dayarryJP = ['日','月','火','水','木','金','土']
 			var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
 			switch(Options.language){
-				case "Korea" :
+				case "KOR" :
 				var member = " 회원님의 ";
 				var yourplan = "시 일정";
 				var day = dayarryKR[dayraw];
 				break;
-				case "Japan" :
+				case "JPN" :
 				var member = "様の ";
 				var yourplan = "時日程";
 				var day = dayarryJP[dayraw];
 				break;
-				case "English" :
+				case "ENG" :
 				var member = "'s schedule at ";
 				var yourplan = ":00";
 				var day = dayarryEN[dayraw];
@@ -183,17 +183,17 @@ $(document).ready(function(){
 			var dayarryJP = ['日','月','火','水','木','金','土']
 			var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
 			switch(Options.language){
-				case "Korea" :
+				case "KOR" :
 				var comment = ""
 				var yourplan = "시 OFF 일정";
 				var day = dayarryKR[dayraw];
 				break;
-				case "Japan" :
+				case "JPN" :
 				var comment = ""
 				var yourplan = "時 OFF日程";
 				var day = dayarryJP[dayraw];
 				break;
-				case "English" :
+				case "ENG" :
 				var comment = "OFF at "
 				var yourplan = ":00";
 				var day = dayarryEN[dayraw];
@@ -620,15 +620,15 @@ $(document).ready(function(){
 
 	function calTable_Set(Index,Year,Month,Day){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
 		switch(Options.language){
-			case "Korea" :
+			case "KOR" :
 			var morning = "오전";
 			var afternoon = "오후";
 			break;
-			case "Japan" :
+			case "JPN" :
 			var morning = "午前";
 			var afternoon = "午後";
 			break;
-			case "English" :
+			case "ENG" :
 			var morning = "AM";
 			var afternoon = "PM";
 			break; 
@@ -796,19 +796,19 @@ $(document).ready(function(){
 			var textDay
 
 			switch(Options.language){
-				case "Korea" :
+				case "KOR" :
 				var year = "년 ";
 				var month = "월 ";
 				var date = "일 ";
 				var textDay = dayKorea[dayToday];
 				break;
-				case "Japan" :
+				case "JPN" :
 				var year = "年 ";
 				var month = "月 ";
 				var date = "日 ";
 				var textDay = dayJapan[dayToday];
 				break;
-				case "English" :
+				case "ENG" :
 				var year = ". ";
 				var month = ". ";
 				var date = ". ";
