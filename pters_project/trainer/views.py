@@ -838,6 +838,146 @@ def update_setting_reserve_logic(request):
         return redirect(next_page)
 
 
+# 강사 예약허용시간 setting 업데이트 api
+@csrf_exempt
+def update_setting_sales_logic(request):
+    setting_sales_10 = request.POST.get('setting_sales_10', '')
+    setting_sales_20 = request.POST.get('setting_sales_20', '')
+    setting_sales_30 = request.POST.get('setting_sales_30', '')
+    setting_sales_40 = request.POST.get('setting_sales_40', '')
+    setting_sales_50 = request.POST.get('setting_sales_50', '')
+    setting_sales = request.POST.get('setting_sales', '')
+    setting_sales_type = request.POST.get('setting_sales_type', '0')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    lt_sal_01 = ''
+    lt_sal_02 = ''
+    lt_sal_03 = ''
+    lt_sal_04 = ''
+    lt_sal_05 = ''
+    lt_sal_00 = ''
+
+    if error is None:
+        if setting_sales_type == '0':
+            setting_sal_01 = setting_sales_10
+            setting_sal_02 = setting_sales_20
+            setting_sal_03 = setting_sales_30
+            setting_sal_04 = setting_sales_40
+            setting_sal_05 = setting_sales_50
+        else:
+            setting_sal_00 = setting_sales
+
+    if error is None:
+            try:
+                lt_sal_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_01')
+            except ObjectDoesNotExist:
+                lt_sal_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_01', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_02 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_02')
+            except ObjectDoesNotExist:
+                lt_sal_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_02', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_03 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_03')
+            except ObjectDoesNotExist:
+                lt_sal_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_03', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_04 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_04')
+            except ObjectDoesNotExist:
+                lt_sal_04 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_04', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_05 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_05')
+            except ObjectDoesNotExist:
+                lt_sal_05 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_05', reg_dt=timezone.now(),
+                                      use=1)
+            try:
+                lt_sal_00 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_00')
+            except ObjectDoesNotExist:
+                lt_sal_00 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_00', reg_dt=timezone.now(),
+                                      use=1)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                if setting_sales_type == '0':
+                    lt_sal_01.mod_dt = timezone.now()
+                    lt_sal_01.setting_info = setting_sal_01
+                    lt_sal_01.save()
+
+                    lt_sal_02.mod_dt = timezone.now()
+                    lt_sal_02.setting_info = setting_sal_02
+                    lt_sal_02.save()
+
+                    lt_sal_03.mod_dt = timezone.now()
+                    lt_sal_03.setting_info = setting_sal_03
+                    lt_sal_03.save()
+
+                    lt_sal_04.mod_dt = timezone.now()
+                    lt_sal_04.setting_info = setting_sal_04
+                    lt_sal_04.save()
+
+                    lt_sal_05.mod_dt = timezone.now()
+                    lt_sal_05.setting_info = setting_sal_05
+                    lt_sal_05.save()
+
+                    lt_sal_00.mod_dt = timezone.now()
+                    lt_sal_00.setting_info = ''
+                    lt_sal_00.save()
+                else:
+                    lt_sal_01.mod_dt = timezone.now()
+                    lt_sal_01.setting_info = ''
+                    lt_sal_01.save()
+
+                    lt_sal_02.mod_dt = timezone.now()
+                    lt_sal_02.setting_info = ''
+                    lt_sal_02.save()
+
+                    lt_sal_03.mod_dt = timezone.now()
+                    lt_sal_03.setting_info = ''
+                    lt_sal_03.save()
+
+                    lt_sal_04.mod_dt = timezone.now()
+                    lt_sal_04.setting_info = ''
+                    lt_sal_04.save()
+
+                    lt_sal_05.mod_dt = timezone.now()
+                    lt_sal_05.setting_info = ''
+                    lt_sal_05.save()
+
+                    lt_sal_00.mod_dt = timezone.now()
+                    lt_sal_00.setting_info = setting_sal_00
+                    lt_sal_00.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
+                       + '강의금액 설정</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
 # 강사 언어 setting 업데이트 api
 @csrf_exempt
 def update_setting_language_logic(request):

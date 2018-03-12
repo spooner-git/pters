@@ -50,6 +50,7 @@ urlpatterns = [
 
     url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
     url(r'^update_setting_reserve/$', views.update_setting_reserve_logic, name='update_setting_reserve'),
+    url(r'^update_setting_sales/$', views.update_setting_sales_logic, name='update_setting_sales'),
     url(r'^update_setting_language/$', views.update_setting_language_logic, name='update_setting_language'),
 
 ]
