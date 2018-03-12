@@ -8,14 +8,116 @@ body{
 	background-position-y:center;
 	background-size:100%;
 	background-color: black !important;
+	overflow-x: hidden;
 }
 
+#global_error_msg{
+	position: absolute;
+	display: none;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40px;
+	background: red;
+	color: #ffffff;
+	font-size: 13px;
+	padding-left: 20px;
+}
+
+.registerbox_add{
+	position: absolute;
+	max-width: 900px;
+	width: 500px;
+	padding: 30px;
+	background:#ffffff12;
+	top: 0;
+	left: 50%;
+	color: #ffffff;
+	transform: translateX(250%);
+	margin-top: 250px;
+	transition: 1s;
+}
+
+._step1_label{
+	position: absolute;
+	width: 960px;
+	top: 0;
+	left: 50%;
+	margin-top: 0;
+	transform: translateX(-50%);
+	transition: 1s;
+	z-index: -1;
+}
+
+._step2_label{
+	position: absolute;
+	width: 560px;
+	top: 0;
+	left: 50%;
+	margin-top: 0;
+	transform: translateX(250%);
+	transition: 1s;
+}
+	._step2_label span{
+		color: #ffffff;
+	}
+
+._step3_label{
+	position: absolute;
+	width: 560px;
+	top: 0;
+	left: 50%;
+	margin-top: 0;
+	transform: translateX(250%);
+	transition: 1s;
+}
+
+div._step1_label, div._step2_label, div._step3_label{
+	top: 50px;
+}
+
+.promise_wrap{
+	position: absolute;
+	max-width: 900px;
+	width: 500px;
+	padding: 30px;
+	top: 0;
+	left: 50%;
+	transform: translateX(250%);
+	margin-top: 180px;
+	transition: 1s;
+	color: #ffffff;
+}
+
+.send_page_left{
+	transform:translateX(-250%);
+}
+
+.send_page_center{
+	transform: translateX(-50%);
+}
+
+.send_page_right{
+	transform: translateX(250%);
+}
+
+.send_page_center_firstpage{
+	transform: translateX(0%);
+}
+
+
+
+
+
+
 .registerbox{
-	max-width: 800px;
+	max-width: 900px;
 	padding: 30px;
 	margin: 0 auto;
 }
 	.registerbox_label{
+		position: relative;
+		height: 50px;
 		font-weight: bold;
 		font-size: 23px;
 		margin-top: 0;
@@ -24,18 +126,20 @@ body{
 		text-align: center;
 	}
 		.registerbox_label span{
-			color: #fe4e65;
+			
 		}
-		.registerbox_label img:nth-child(1){
+		
+		.back_arrow{
+			width: 10px;
+			float: left;
+			padding: 5px 10px 5px 10px;
+			cursor: pointer;
+		}
+		.registerbox_label p img{
+			float: none;
 			width: 90px;
 			margin-bottom: -3px;
 			margin-right: 7px;
-			cursor: pointer;
-		}
-		.registerbox_label img:nth-child(2){
-			width: 10px;
-			float: left;
-			margin-top: 7px;
 			cursor: pointer;
 		}
 
@@ -52,12 +156,12 @@ body{
 			line-height: 21px;
 			width: 170px;
 		}
-
 	.outerbox_horizontal{
 		display: inline-block;
 		width: 100%;
 		margin:10px 0 10px 0;
 		text-align:center;
+		transition: 1s;
 	}
 		.outerbox_horizontal button{
 			position: absolute;
@@ -127,6 +231,7 @@ body{
 		font-size: 11px;
 		border: 1px solid #282828;
 		overflow-y: scroll;
+		background-color: #282828c7;
 	}
 		.contractread_check{
 			font-size: 13px;
@@ -186,6 +291,10 @@ body{
 	bottom: 0;
 }
 
+
+
+
+
 @media(min-width: 600px){
 	body{
 		background-image: url("/static/user/res/main/bg-image-pc-login.png");
@@ -194,7 +303,7 @@ body{
 	}
 
 	.registerbox{
-		width: 800px;
+		width: 900px;
 		margin-top: 50px;
 		margin-bottom: 66px;
 	}
@@ -202,7 +311,7 @@ body{
 	.outerbox_horizontal{
 		display: inline-block;
 		width: 900px;
-		margin:10px 0 10px 0;
+		margin:100px 0 10px 0;
 		text-align:center;
 	}
 		.outerbox_horizontal button{
