@@ -30,6 +30,15 @@
     
 </div>
 
+<form action="/accounts/register/" id="add-member-id-form" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="username" id="id_username">
+    <input type="hidden" name="email" id="id_email">
+    <input type="hidden" name="password1" id="id_password1" value="0000abcd">
+    <input type="hidden" name="password2" id="id_password2" value="0000abcd">
+</form>
+
+
 <form action="{% url 'trainer:delete_member_info' %}" method="POST" class="member-form" id="member-delete-form">
     <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
     <input type="hidden" name="id" id="deleteMemberId">
@@ -338,6 +347,7 @@
         <input type="hidden" name="sex" id="form_sex" value="">
         <input type="hidden" name="birthday" id="form_birth" value="">
         <input type="hidden" name="name" id="form_name" value="">
+        <input type="hidden" name="user_id" id="id_user_id">
 
         <div>            
             <div class="ptaddbox form-group">
@@ -600,6 +610,8 @@
           var regCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_reg_count }}',{% endfor %}]
           var availCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
 
+          var emailActiveArray = [{% for lecture in lecture_info %}'{{ lecture.user_info.is_active }}',{% endfor %}]
+
           var finishIdArray =[{% for lecture in lecture_finish_info %}'{{ lecture.member_info.user }}',{% endfor %}]
           var finishnameArray =[{% for lecture in lecture_finish_info %}'{{ lecture.member_info.name }}',{% endfor %}]
           var finishphoneArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.phone }}',{% endfor %}]
@@ -616,6 +628,8 @@
           //처리 필요 - hk.kim 180110
           var finishRegCountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_reg_count }}',{% endfor %}]
           var finishAvailCountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
+
+          var finishEmailActiveArray = [{% for lecture in lecture_finish_info %}'{{ lecture.user_info.is_active }}',{% endfor %}]
 
           var messageArray = [{% for message in messages %}'{{ message }}',{% endfor %}]
 
