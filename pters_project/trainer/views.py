@@ -680,6 +680,90 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
 
 # 강사 예약허용시간 setting 업데이트 api
 @csrf_exempt
+def update_setting_push_logic(request):
+    setting_trainee_schedule_confirm1 = request.POST.get('setting_trainee_schedule_confirm1', '')
+    setting_trainee_schedule_confirm2 = request.POST.get('setting_trainee_schedule_confirm2', '')
+    setting_trainee_no_schedule_confirm = request.POST.get('setting_trainee_no_schedule_confirm', '')
+    setting_trainer_schedule_confirm = request.POST.get('setting_trainer_schedule_confirm', '')
+    setting_trainer_no_schedule_confirm1 = request.POST.get('setting_trainer_no_schedule_confirm1', '')
+    setting_trainer_no_schedule_confirm2 = request.POST.get('setting_trainer_no_schedule_confirm2', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    lt_pus_01 = None
+    lt_pus_02 = None
+    lt_pus_03 = None
+    lt_pus_04 = None
+
+    if error is None:
+        try:
+            lt_pus_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_01')
+        except ObjectDoesNotExist:
+            lt_pus_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_01', reg_dt=timezone.now(),
+                                  use=1)
+        try:
+            lt_pus_02 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_02')
+        except ObjectDoesNotExist:
+            lt_pus_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_02', reg_dt=timezone.now(),
+                                  use=1)
+        try:
+            lt_pus_03 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_03')
+        except ObjectDoesNotExist:
+            lt_pus_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_03', reg_dt=timezone.now(),
+                                  use=1)
+        try:
+            lt_pus_04 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_04')
+        except ObjectDoesNotExist:
+            lt_pus_04 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_04', reg_dt=timezone.now(),
+                                  use=1)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                lt_pus_01.mod_dt = timezone.now()
+                lt_pus_01.setting_info = setting_trainee_schedule_confirm1+'-'+setting_trainee_schedule_confirm2
+                lt_pus_01.save()
+
+                lt_pus_02.mod_dt = timezone.now()
+                lt_pus_02.setting_info = setting_trainee_no_schedule_confirm
+                lt_pus_02.save()
+
+                lt_pus_03.mod_dt = timezone.now()
+                lt_pus_03.setting_info = setting_trainer_schedule_confirm
+                lt_pus_03.save()
+
+                lt_pus_04.mod_dt = timezone.now()
+                lt_pus_04.setting_info = setting_trainer_no_schedule_confirm1+'/'+setting_trainer_no_schedule_confirm2
+                lt_pus_04.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
+                       + 'PUSH 설정</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+# 강사 예약허용시간 setting 업데이트 api
+@csrf_exempt
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
     setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '')
@@ -791,8 +875,8 @@ def update_setting_language_logic(request):
 
     if error is None:
         request.session.setting_language = setting_member_language
-        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
-                      + '언어 설정</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_contents = '<span>' + request.user.first_name + ' 님께서 '\
+                       + '언어 설정</span> 정보를 <span class="status">수정</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
