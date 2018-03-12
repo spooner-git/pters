@@ -23,7 +23,7 @@ $(document).ready(function(){
 	 };
 
 
-   if(Options.language == "Japan"){
+   if(Options.language == "JPN"){
       $('.__todayplan').text("今日の日程")
       $('.__weekplan').text("日程表")
       $('.__monthplan').text("カレンダー")
@@ -36,7 +36,7 @@ $(document).ready(function(){
       $('#uptext span').text("様のスケジュール")
 
       $('.__mypage').text("マイページ")
-   }else if(Options.language == "English"){
+   }else if(Options.language == "ENG"){
       $('.__todayplan').text("Daily")
       $('.__weekplan').text("Schedule")
       $('.__monthplan').text("Calendar")
@@ -49,7 +49,7 @@ $(document).ready(function(){
       $('#uptext span').text("'s schedule")
 
       $('.__mypage').text("My page")
-   }else if(Options.language == "Korea"){
+   }else if(Options.language == "KOR"){
       $('.__todayplan').text("오늘 일정")
       $('.__weekplan').text("주간 일정")
       $('.__monthplan').text("월간 일정")
