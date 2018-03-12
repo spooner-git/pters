@@ -268,17 +268,17 @@ $(document).ready(function(){
 		var dayarryJP = ['日','月','火','水','木','金','土']
 		var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
 		switch(Options.language){
-			case "Korea" :
+			case "KOR" :
 			var member = " 회원님의 ";
 			var yourplan = "시 일정";
 			var day = dayarryKR[dayraw];
 			break;
-			case "Japan" :
+			case "JPN" :
 			var member = "様の ";
 			var yourplan = "時日程";
 			var day = dayarryJP[dayraw];
 			break;
-			case "English" :
+			case "ENG" :
 			var member = "'s schedule at ";
 			var yourplan = ":00";
 			var day = dayarryEN[dayraw];
@@ -330,17 +330,17 @@ $(document).ready(function(){
 		var dayarryJP = ['日','月','火','水','木','金','土']
 		var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
 		switch(Options.language){
-			case "Korea" :
+			case "KOR" :
 			var comment = ""
 			var yourplan = "시 OFF 일정";
 			var day = dayarryKR[dayraw];
 			break;
-			case "Japan" :
+			case "JPN" :
 			var comment = ""
 			var yourplan = "時 OFF日程";
 			var day = dayarryJP[dayraw];
 			break;
-			case "English" :
+			case "ENG" :
 			var comment = "OFF at "
 			var yourplan = ":00";
 			var day = dayarryEN[dayraw];
