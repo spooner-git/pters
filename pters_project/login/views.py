@@ -17,6 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from django.views.generic import TemplateView
 
+#from login.forms import ProfileForm
 from login.models import MemberTb
 from trainer.models import ClassTb
 
@@ -152,16 +153,16 @@ def add_member_info_logic(request):
                 user = User.objects.create_user(username=user_id, email=email, first_name=name, password=password)
                 group = Group.objects.get(name=group_type)
                 user.groups.add(group)
+
                 if birthday_dt == '':
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                       mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
                 else:
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                      birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                      user_id=user.id, use=1)
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, birthday_dt=birthday_dt,
+                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
                 member.save()
                 if group_type == 'trainer':
-                    class_info = ClassTb(member_id=member.member_id, class_type_cd='PT',
+                    class_info = ClassTb(member_id=user.id, class_type_cd='PT',
                                          start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
                                          class_hour=1, start_hour_unit=1, class_member_num=100,
                                          state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
@@ -173,9 +174,77 @@ def add_member_info_logic(request):
         except IntegrityError as e:
             error = '등록 값에 문제가 있습니다.'
         except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값의 형태가 문제 있습니다.1'
         except ValidationError as e:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값의 형태가 문제 있습니다.2'
+        except InternalError:
+            error = '이미 가입된 회원입니다.'
+
+    if error is None:
+        messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+        return redirect(next_page)
+
+
+# 회원가입 api
+@csrf_exempt
+def add_member_info_logic_test(request):
+    user_id = request.POST.get('id', '')
+    name = request.POST.get('name', '')
+    phone = request.POST.get('phone', '')
+    sex = request.POST.get('sex', '')
+    group_type = request.POST.get('group_type', 'trainee')
+    birthday_dt = request.POST.get('birthday', '')
+    next_page = request.POST.get('next_page', '')
+
+    error = None
+
+    if user_id == '':
+        error = 'ID를 입력해 주세요.'
+    elif name == '':
+        error = '이름을 입력해 주세요.'
+    if group_type == '':
+        group_type = 'trainee'
+
+    if error is None:
+        try:
+            user = User.objects.get(username=user_id)
+
+        except ObjectDoesNotExist:
+            error = '필수 입력 사항을 확인해주세요.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                group = Group.objects.get(name=group_type)
+                user.groups.add(group)
+                user.first_name = name
+                user.save()
+                if birthday_dt == '':
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
+                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+                else:
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
+                                      birthday_dt=birthday_dt,user_id=user.id, use=1)
+                member.save()
+                if group_type == 'trainer':
+                    class_info = ClassTb(member_id=user.id, class_type_cd='PT',
+                                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
+                                         class_hour=1, start_hour_unit=1, class_member_num=100,
+                                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+
+                    class_info.save()
+
+        except ValueError as e:
+            error = '이미 가입된 회원입니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.1'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다.2'
         except InternalError:
             error = '이미 가입된 회원입니다.'
 
