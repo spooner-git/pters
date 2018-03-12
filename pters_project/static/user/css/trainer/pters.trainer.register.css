@@ -11,30 +11,38 @@ body{
 }
 
 .registerbox{
-	background-color: #ffffffde;
-	border: 5px solid #fe4e65;
 	max-width: 800px;
 	padding: 30px;
 	margin: 0 auto;
 }
 	.registerbox_label{
 		font-weight: bold;
-		font-size: 21px;
+		font-size: 23px;
 		margin-top: 0;
 		margin-bottom: 20px;
+		color: #ffffff;
+		text-align: center;
 	}
 		.registerbox_label span{
 			color: #fe4e65;
 		}
-		.registerbox_label img{
-			width: 15px;
-			float: right;
+		.registerbox_label img:nth-child(1){
+			width: 90px;
+			margin-bottom: -3px;
+			margin-right: 7px;
+			cursor: pointer;
+		}
+		.registerbox_label img:nth-child(2){
+			width: 10px;
+			float: left;
 			margin-top: 7px;
 			cursor: pointer;
 		}
 
 	.registerbox_sublabel{
 		font-size: 15px;
+		color: #ffffff;
+		text-align: center;
 	}
 	
 	.outerbox{
@@ -52,29 +60,32 @@ body{
 		text-align:center;
 	}
 		.outerbox_horizontal button{
-			width: 20%;
+			position: absolute;
+			background-color: transparent;
+			bottom: 0;
+			width: 90%;
 			min-width: 78px;
 			height: 40px;
-			border: 0;
-			border-radius: 5px;
-			font-size: 13px;
-			font-weight: bold;
+			border-top: 1px solid #adadad;
+			color: #ffffff;
+			font-size: 15px;
+			font-weight: 500;
 			font-family: 'Noto Sans KR' !important;
 			cursor: pointer;
-			opacity: 0.9;
-			box-shadow: 1px 1px 0px 0px #cccccc;
-			margin: 0 5px 0 5px;
+			opacity: 1;
+			margin-bottom: 10px;
+			left: 50%;
+			transform: translateX(-50%);
 		}
 		.outerbox_horizontal button:hover{
 			opacity: 1;
+			color: #fe4e65;
 		}
 		.outerbox_horizontal div{
-			border: 0;
-			border-radius: 5px;
+			border: 0.5px solid #adadad;
 			font-size: 13px;
 			font-weight: bold;
 			font-family: 'Noto Sans KR' !important;
-			box-shadow: 1px 1px 0px 0px #cccccc;
 			margin: 0 50px 0 50px;
 		}
 
@@ -123,13 +134,28 @@ body{
 
 .explainbox{
 	display: none;
-	background-color: #f1f1f1;
+	position: relative;
 	width: 210px;
 	height: 500px;
 	margin: 0 16px 0 16px !important;
 	word-break: break-all;
-	padding: 10px;
 }
+	.explainbox p{
+		color: #ffffff;
+		border-bottom: 0.5px solid #adadad;
+		line-height: 30px;
+		padding-bottom: 10px;
+		font-weight: 500;
+		font-size: 14px;
+	}
+	.explainbox img{
+		height: 25px;
+		margin-top: 15px;
+	}
+	.explainbox .font-pink{
+		font-size: 18px;
+	}
+
 
 .buttongroup{
 	text-align: center;
@@ -175,20 +201,17 @@ body{
 
 	.outerbox_horizontal{
 		display: inline-block;
-		width: 800px;
+		width: 900px;
 		margin:10px 0 10px 0;
 		text-align:center;
 	}
 		.outerbox_horizontal button{
-			width: 140px;
 			height: 40px;
-			margin: 0 52px 0 52px;
 		}
 
 	.explainbox{
 		display: inline-block;
-		background-color: #f1f1f1;
-		width: 210px;
+		width: 275px;
 		height: 500px;
 		margin: 0 8px 0 8px !important;
 	}

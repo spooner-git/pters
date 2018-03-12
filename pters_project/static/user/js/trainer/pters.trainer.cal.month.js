@@ -12,6 +12,38 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 $(document).ready(function(){
 
 
+	setInterval(function(){ajaxCheckSchedule()}, 60000)// 자동 ajax 새로고침(일정가져오기)
+
+
+	function ajaxCheckSchedule(){
+
+            $.ajax({
+              url: '/schedule/check_schedule_update/',
+			  dataType : 'html',
+
+              beforeSend:function(){
+              	//AjaxBeforeSend();
+              },
+
+              success:function(data){
+              	var jsondata = JSON.parse(data);
+                var update_data_changed = jsondata.data_changed;
+				if(update_data_changed[0]=="1"){
+					ajaxClassTime();
+				}
+			  },
+
+              complete:function(){
+              	//AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })
+     }
+
+
 
 	var notAvailableStartTime = 22; //강사가 설정한 예약불가 시간 (시작)
 	var notAvailableEndTime = 8; //강사가 설정한 예약불가 시간 (종료)
@@ -266,13 +298,13 @@ $(document).ready(function(){
 
 
                     beforeSend:function(){
-                      deleteBeforeSend();
+                      AjaxBeforeSend();
                     },
 
                     //통신성공시 처리
                     success:function(){
                       closeDeletePopup();
-                      deleteCompleteSend();
+                      AjaxCompleteSend();
                       ajaxClassTime()
                       },
 
@@ -316,7 +348,7 @@ $(document).ready(function(){
                 dataType:'html',
 
                 beforeSend:function(){
-                 	deleteBeforeSend();
+                 	AjaxBeforeSend();
                 },
 
                 //통신성공시 처리
@@ -324,7 +356,7 @@ $(document).ready(function(){
                   var jsondata = JSON.parse(data);
                   closeDeletePopup();
                   ajax_received_json_data(jsondata)
-                  deleteCompleteSend();
+                  AjaxCompleteSend();
                   },
 
                 //보내기후 팝업창 닫기
@@ -337,7 +369,7 @@ $(document).ready(function(){
                 error:function(){
                   alert("에러: 서버 통신 실패")
                   closeDeletePopup();
-                  deleteCompleteSend();
+                  AjaxCompleteSend();
                 },
             })
 		}else{
@@ -352,13 +384,13 @@ $(document).ready(function(){
                     data:$ptdelform.serialize(),
 
                     beforeSend:function(){
-                     	deleteBeforeSend();
+                     	AjaxBeforeSend();
                     },
 
                     //통신성공시 처리
                     success:function(){
                       closeDeletePopup();
-                      deleteCompleteSend();
+                      AjaxCompleteSend();
                       ajaxClassTime()
                       //fake_show()
                       console.log('success')
@@ -382,13 +414,13 @@ $(document).ready(function(){
                     data:$offdelform.serialize(),
 
                     beforeSend:function(){
-                    	deleteBeforeSend();
+                    	AjaxBeforeSend();
                     },
 
                     //통신성공시 처리
                     success:function(){
                       closeDeletePopup();
-                      deleteCompleteSend();
+                      AjaxCompleteSend();
                       ajaxClassTime()
                       //fake_show()
                       console.log('success')
@@ -442,14 +474,14 @@ $(document).ready(function(){
 		$("#shade").css({'z-index':'100'})
 	}
 
-	function deleteBeforeSend(){
+	function AjaxBeforeSend(){
 		$('html').css("cursor","wait");
         //$('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
 
 	}
 
-	function deleteCompleteSend(){
+	function AjaxCompleteSend(){
 		$('html').css("cursor","auto");
         //$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
@@ -473,7 +505,7 @@ $(document).ready(function(){
 			  dataType : 'html',
 
               beforeSend:function(){
-              	deleteBeforeSend();
+              	AjaxBeforeSend();
               },
 
               success:function(data){
@@ -563,7 +595,7 @@ $(document).ready(function(){
               },
 
               complete:function(){
-              	deleteCompleteSend();
+              	AjaxCompleteSend();
               },
 
               error:function(){
