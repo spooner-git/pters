@@ -92,68 +92,11 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MyPageView, self).get_context_data(**kwargs)
-        error = None
-        class_info = None
-        lecture_info = None
-
-        month_data = []
-        lecture_schedule_data = []
-        daily_lecture_data_start_date = []
-        daily_lecture_data_end_date = []
-        daily_lecture_data_member = []
-        daily_off_data_start_date = []
-        daily_off_data_end_date = []
-        today = datetime.date.today()
-        fourteen_days_ago = today - datetime.timedelta(days=14)
-        fifteen_days_after = today + datetime.timedelta(days=15)
-
-        try:
-            lecture_info = LectureTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = 'lecture가 존재하지 않습니다.'
-
-        if error is None:
-            try:
-                class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
-            except ObjectDoesNotExist:
-                error = 'class가 존재하지 않습니다'
+        context = get_trainee_schedule_data_func(context, self.request.user.id)
 
         # 강사 setting 값 로드
-        if error is None:
-            context = get_trainer_setting_data(context, class_info.member_id)
-            self.request.session['setting_language'] = context['lt_lan_01']
-        if error is None:
-            member_data = MemberTb.objects.get(member_id=lecture_info.member_id)
-            schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id, en_dis_type='1')
-            for schedule_datum in schedule_data:
-                schedule_datum.data = schedule_datum.start_dt.timetuple()
-                month_data.append(str(schedule_datum.data.tm_year)+'_'+str(schedule_datum.data.tm_mon)+'_'
-                                  + str(schedule_datum.data.tm_mday))
-                lecture_schedule_data.append(schedule_datum.schedule_id)
-                daily_lecture_data_start_date.append(schedule_datum.start_dt)
-                daily_lecture_data_end_date.append(schedule_datum.end_dt)
-                daily_lecture_data_member.append(member_data.name)
-
-        if error is None:
-
-            class_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                            start_dt__gte=fourteen_days_ago,
-                                                            start_dt__lt=fifteen_days_after)
-            for class_schedule_datum in class_schedule_data:
-                daily_off_data_start_date.append(class_schedule_datum.start_dt)
-                daily_off_data_end_date.append(class_schedule_datum.end_dt)
-
-        holiday = HolidayTb.objects.filter(use=1)
-
-        context['month_lecture_data'] = month_data
-        context['daily_lecture_schedule_id'] = lecture_schedule_data
-        context['daily_lecture_data_start_date'] = daily_lecture_data_start_date
-        context['daily_lecture_data_end_date'] = daily_lecture_data_end_date
-        context['daily_lecture_data_member'] = daily_lecture_data_member
-        context['daily_off_data_start_date'] = daily_off_data_start_date
-        context['daily_off_data_end_date'] = daily_off_data_end_date
-        context['lecture_reg_count'] = lecture_info.lecture_reg_count
-        context['holiday'] = holiday
+        context = get_trainee_setting_data(context, self.request.user.id)
+        self.request.session['setting_language'] = context['lt_lan_01']
 
         return context
 
@@ -800,9 +743,21 @@ def get_trainee_schedule_data_func(context, user_id):
     daily_off_data_start_date = []
     daily_off_data_end_date = []
     pt_schedule_finish_check = []
+
+    pt_repeat_schedule_id = []
+    pt_repeat_schedule_type = []
+    pt_repeat_schedule_week_info = []
+    pt_repeat_schedule_start_date = []
+    pt_repeat_schedule_end_date = []
+    pt_repeat_schedule_start_time = []
+    pt_repeat_schedule_time_duration = []
+
     today = datetime.date.today()
+    now = timezone.now()
     fourteen_days_ago = today - datetime.timedelta(days=14)
     fifteen_days_after = today + datetime.timedelta(days=15)
+    next_schedule_start_dt = ''
+    next_schedule_end_dt = ''
 
     try:
         lecture_info = LectureTb.objects.get(member_id=user_id)
@@ -815,26 +770,51 @@ def get_trainee_schedule_data_func(context, user_id):
         except ObjectDoesNotExist:
             error = 'class가 존재하지 않습니다'
 
+    if error is None:
+        try:
+            class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다.'
+
+
     # 강사 setting 값 로드
     if error is None:
         context = get_trainer_setting_data(context, class_info.member_id)
 
     if error is None:
         member_data = MemberTb.objects.get(member_id=lecture_info.member_id)
+        pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id, en_dis_type='1')
         schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id,
                                                   en_dis_type='1')
-        for schedule_datum in schedule_data:
-            schedule_datum.data = schedule_datum.start_dt.timetuple()
-            month_data.append(str(schedule_datum.data.tm_year) + '_' + str(schedule_datum.data.tm_mon) + '_'
-                              + str(schedule_datum.data.tm_mday))
-            lecture_schedule_data.append(schedule_datum.schedule_id)
-            daily_lecture_data_start_date.append(schedule_datum.start_dt)
-            daily_lecture_data_end_date.append(schedule_datum.end_dt)
+        for schedule_info in schedule_data:
+            schedule_info.data = schedule_info.start_dt.timetuple()
+            month_data.append(str(schedule_info.data.tm_year) + '_' + str(schedule_info.data.tm_mon) + '_'
+                              + str(schedule_info.data.tm_mday))
+            lecture_schedule_data.append(schedule_info.schedule_id)
+            daily_lecture_data_start_date.append(schedule_info.start_dt)
+            if schedule_info.start_dt > now:
+                if next_schedule_start_dt is '':
+                    next_schedule_start_dt = schedule_info.start_dt
+                    next_schedule_end_dt = schedule_info.end_dt
+                elif next_schedule_start_dt > schedule_info.start_dt:
+                    next_schedule_start_dt = schedule_info.start_dt
+                    next_schedule_end_dt = schedule_info.end_dt
+
+            daily_lecture_data_end_date.append(schedule_info.end_dt)
             daily_lecture_data_member.append(member_data.name)
-            if schedule_datum.state_cd == 'PE':
+            if schedule_info.state_cd == 'PE':
                 pt_schedule_finish_check.append(1)
             else:
                 pt_schedule_finish_check.append(0)
+
+        for pt_repeat_schedule_info in pt_repeat_schedule_data:
+            pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
+            pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
+            pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
+            pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
+            pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
+            pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
+            pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
 
     if error is None:
 
@@ -855,7 +835,20 @@ def get_trainee_schedule_data_func(context, user_id):
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
     context['daily_off_data_start_date'] = daily_off_data_start_date
     context['daily_off_data_end_date'] = daily_off_data_end_date
-    context['lecture_avail_count'] = lecture_info.lecture_avail_count
+
+    context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
+    context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
+    context['pt_repeat_schedule_week_info_data'] = pt_repeat_schedule_week_info
+    context['pt_repeat_schedule_start_date_data'] = pt_repeat_schedule_start_date
+    context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
+    context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
+    context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
+
+    context['next_schedule_start_dt'] = next_schedule_start_dt
+    context['next_schedule_end_dt'] = next_schedule_end_dt
+    context['lecture_info'] = lecture_info
+    context['class_info'] = class_info
+    context['lecture_finish_count'] = lecture_info.lecture_reg_count - lecture_info.lecture_rem_count
     context['holiday'] = holiday
 
     return context

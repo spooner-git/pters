@@ -315,7 +315,7 @@ $(document).ready(function(){
         $('#page-base-modifystyle').fadeIn('fast');
         $('#memberName_info').val(Data[userID].name)
         $('#memberId').val(userID);
-        $('#deleteMemberId').val(Data[userID].id);
+        $('#deleteMemberId').val(userID);
         $('#memberPhone_info').val(Data[userID].phone);
         $('#comment_info').val(Data[userID].contents);
         //$('#memberCount_info').val(Data[name].count);
