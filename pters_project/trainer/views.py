@@ -501,6 +501,7 @@ def add_member_info_logic_test(request):
     end_date_fast = request.POST.get('end_date_fast')
     sex = request.POST.get('sex')
     birthday_dt = request.POST.get('birthday')
+    search_confirm = request.POST.get('search_confirm', '0')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -508,7 +509,6 @@ def add_member_info_logic_test(request):
     input_end_date = ''
     input_counts = 0
     input_price = 0
-    now = timezone.now()
     class_info = None
 
     #if User.objects.filter(username=phone).exists():
@@ -517,14 +517,15 @@ def add_member_info_logic_test(request):
     #    error = '이미 가입된 회원 입니다.'
     # elif email == '':
     #    error = 'e-mail 정보를 입력해 주세요.'
-    if name == '':
-        error = '이름을 입력해 주세요.'
-    elif phone == '':
-        error = '연락처를 입력해 주세요.'
-    elif len(phone) != 11 and len(phone) != 10:
-        error = '연락처를 확인해 주세요.'
-    elif not phone.isdigit():
-        error = '연락처를 확인해 주세요.'
+    if search_confirm == '0':
+        if name == '':
+            error = '이름을 입력해 주세요.'
+        elif phone == '':
+            error = '연락처를 입력해 주세요.'
+        elif len(phone) != 11 and len(phone) != 10:
+            error = '연락처를 확인해 주세요.'
+        elif not phone.isdigit():
+            error = '연락처를 확인해 주세요.'
 
     if error is None:
         if fast_check == '0':
@@ -561,11 +562,12 @@ def add_member_info_logic_test(request):
                 else:
                     input_end_date = end_date
 
-    if error is None:
-        if len(phone) == 11:
-            password = phone[7:]
-        elif len(phone) == 10:
-            password = phone[6:]
+    if search_confirm == '0':
+        if error is None:
+            if len(phone) == 11:
+                password = phone[7:]
+            elif len(phone) == 10:
+                password = phone[6:]
 
     if error is None:
 
@@ -585,26 +587,24 @@ def add_member_info_logic_test(request):
         try:
             with transaction.atomic():
 
-                group = Group.objects.get(name='trainee')
-                user.groups.add(group)
-                user.set_password(password)
-                user.first_name = name
-                user.save()
-                if birthday_dt == '':
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
-                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
-                else:
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
-                                      birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                      user_id=user.id)
-                member.save()
-                lecture = LectureTb(class_tb_id=class_info.class_id, member_id=member.member_id,
-                                    lecture_reg_count=input_counts, lecture_rem_count=input_counts,
-                                    lecture_avail_count=input_counts, price=input_price, option_cd='DC',
-                                    state_cd='IP',
-                                    start_date=input_start_date, end_date=input_end_date, mod_dt=now,
-                                    reg_dt=now, use=1)
-                lecture.save()
+                state_cd = 'NP'
+                if search_confirm == '0':
+                    group = Group.objects.get(name='trainee')
+                    user.groups.add(group)
+                    user.set_password(password)
+                    user.first_name = name
+                    user.save()
+                    if birthday_dt == '':
+                        member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                                          mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
+                    else:
+                        member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                                          birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
+                                          user_id=user.id)
+                    member.save()
+                    state_cd = 'IP'
+
+                add_lecture_info_logic_func(class_info.class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date)
 
         except ValueError as e:
             error = '이미 가입된 회원입니다.'
@@ -630,6 +630,21 @@ def add_member_info_logic_test(request):
         return redirect(next_page)
 
 
+def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, start_date, end_date):
+
+    error = None
+
+    lecture = LectureTb(class_tb_id=class_id, member_id=member_id,
+                        lecture_reg_count=counts, lecture_rem_count=counts,
+                        lecture_avail_count=counts, price=price, option_cd='DC',
+                        state_cd=state_cd,
+                        start_date=start_date, end_date=end_date, mod_dt=timezone.now(),
+                        reg_dt=timezone.now(), use=1)
+    lecture.save()
+
+    return error
+
+
 # 회원수정 api
 @csrf_exempt
 def update_member_info_logic(request):
@@ -645,7 +660,7 @@ def update_member_info_logic(request):
     error = None
 
     if member_id == '':
-        error = '회원 ID를 확인해 주세요.1'
+        error = '회원 ID를 확인해 주세요.'
 
     if name == '':
         error = '이름을 입력해 주세요.'
@@ -660,12 +675,12 @@ def update_member_info_logic(request):
         try:
             user = User.objects.get(username=member_id, is_active=1)
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.2'
+            error = '회원 ID를 확인해 주세요.'
 
         try:
             member = MemberTb.objects.get(user_id=user.id, use=1)
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.3'
+            error = '회원 ID를 확인해 주세요.'
 
     if error is None:
         try:
@@ -776,6 +791,110 @@ def delete_member_info_logic(request):
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
                        + member.name + ' 회원님의</span> 수강정보를 <span class="status">삭제</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB02', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'search_member_id_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetMemberInfoView, self).get_context_data(**kwargs)
+        user_id = request.POST.get('id', '')
+
+        member = ''
+        user = ''
+        error = None
+        print(user_id)
+
+        if user_id == '':
+            error = 'id를 입력해주세요.'
+
+        if error is None:
+            try:
+                user = User.objects.get(username=user_id, is_active=1)
+            except ObjectDoesNotExist:
+                error = '회원 ID를 확인해 주세요.'
+
+        if error is None:
+            try:
+                member = MemberTb.objects.get(user_id=user.id, use=1)
+            except ObjectDoesNotExist:
+                error = '회원 ID를 확인해 주세요.'
+
+        #context['user'] = user
+
+        context['member_info'] = member
+        messages.error(request, error)
+
+        return render(request, self.template_name, context)
+
+
+# 회원수정 api
+@csrf_exempt
+def get_member_info_logic(request):
+    member_id = request.POST.get('id')
+    next_page = request.POST.get('next_page')
+
+    error = None
+
+    if member_id == '':
+        error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            user = User.objects.get(username=member_id, is_active=1)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+        try:
+            member = MemberTb.objects.get(user_id=user.id, use=1)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                user.first_name = name
+                user.email = email
+                user.save()
+                member.name = name
+                member.phone = phone
+                member.contents = contents
+                member.sex = sex
+
+                if birthday_dt != '':
+                    member.birthday_dt = birthday_dt
+                member.mod_dt = timezone.now()
+                member.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                       + name + ' 회원님의</span> 정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
 
