@@ -782,9 +782,9 @@ var select_all_check = false;
 $('#memberSearchButton').click(function(){
     var searchID = $('#memberSearch_add').val()
     $.ajax({
-            url:'/accounts/register/',
+            url:'/trainer/get_member_info/',
             type:'POST',
-            data: {'memberSearch':searchID},
+            data: {'id':searchID},
             dataType : 'html',
 
             beforeSend:function(){
@@ -798,18 +798,21 @@ $('#memberSearchButton').click(function(){
 
             //통신성공시 처리
             success:function(data){
+                console.log(data)
                 var jsondata = JSON.parse(data);
-                if(jsondata.messageArray>1){
+                if(jsondata.messageArray.length>0){
                   $('#inputError').fadeIn()
                   setTimeout(function(){$('#inputError').fadeOut()},10000)
                   $('#errorMsg p').text('검색된 아이디가 없습니다')
                 }else{
-                  id_search_memberLastName = jsondata.성
-                  id_search_memberFirstName = jsondata.이름
-                  id_search_memberPhone = jsondata.전화번호
-                  id_search_memberBirth = jsondata.생일 //형식 1999년 02월 08일
-                  id_search_memberEmail = jsondata.이메일
-                  fill_member_info_by_ID()  
+
+                  id_search_memberLastName = jsondata.nameInfo;
+                  id_search_memberFirstName = jsondata.nameInfo;
+                  id_search_memberPhone = jsondata.phoneInfo;
+                  id_search_memberBirth = jsondata.birthdayInfo + ''; //형식 1999년 02월 08일
+                  id_search_memberEmail = jsondata.emailInfo;
+                  id_search_memberId = jsondata.idInfo;
+                  fill_member_info_by_ID_search();
                 }
                 
             },
@@ -824,17 +827,33 @@ $('#memberSearchButton').click(function(){
 })
 
 function fill_member_info_by_ID_search(){
-    $('#memberLastName_add').val(id_search_memberLastName)
-    $('#memberFirstName_add').val(id_search_memberFirstName)
-    $('#memberPhone_add').val(id_search_memberPhone)
-    $('#memberEmail_add').val(id_search_memberEmail)
+    $('#id_search_confirm').val('1');
+    $('#memberLastName_add').val(id_search_memberLastName);
+    $('#memberFirstName_add').val(id_search_memberFirstName);
+    $('#memberPhone_add').val(id_search_memberPhone);
+    $('#memberEmail_add').val(id_search_memberEmail);
+    $('#id_user_id').val(id_search_memberId);
+    var dropdown_year_selected = $('#birth_year option[data-year="'+id_search_memberBirth.split(' ')[0]+'"]');
+    var dropdown_month_selected = $('#birth_month option[data-month="'+id_search_memberBirth.split(' ')[1]+'"]');
+    var dropdown_date_selected = $('#birth_date option[data-date="'+id_search_memberBirth.split(' ')[2]+'"]');
+    dropdown_year_selected.prop('selected',true);
+    dropdown_month_selected.prop('selected',true);
+    dropdown_date_selected.prop('selected',true);
 
-    var dropdown_year_selected = $('#birth_year_info option[data-year='+id_search_memberBirth.split(' ')[0]+']')
-    var dropdown_month_selected = $('#birth_month_info option[data-month="'+id_search_memberBirth.split(' ')[1]+'"]')
-    var dropdown_date_selected = $('#birth_date_info option[data-date="'+id_search_memberBirth.split(' ')[2]+'"]')
-    dropdown_year_selected.prop('selected',true)
-    dropdown_month_selected.prop('selected',true)
-    dropdown_date_selected.prop('selected',true)
+    $('#memberLastName_add').prop('disabled',true);
+    $('#memberFirstName_add').prop('disabled',true);
+    $('#memberPhone_add').prop('disabled',true);
+    $('#memberEmail_add').prop('disabled',true);
+    $('#birth_year').prop('disabled',true);
+    $('#birth_month').prop('disabled',true);
+    $('#birth_date').prop('disabled',true);
+    $('#memberLastName_add').addClass("dropdown_selected");
+    $('#memberFirstName_add').addClass("dropdown_selected");
+    $('#memberPhone_add').addClass("dropdown_selected");
+    $('#memberEmail_add').addClass("dropdown_selected");
+    $('#birth_year').addClass('dropdown_selected');
+    $('#birth_month').addClass('dropdown_selected');
+    $('#birth_date').addClass('dropdown_selected');
 } 
 
 
@@ -1235,9 +1254,13 @@ function limit_char(e){
 
 $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
     //var $form = $('#member-add-form-new');
+    var test = $('#id_search_confirm').val();
+
     var $form2 = $('#add-member-id-form');
     var url2 = '/accounts/register/';
+    console.log(test)
      if(select_all_check==true){
+         if(test==0){
              $.ajax({
                 url:'/accounts/register/',
                 type:'POST',
@@ -1264,7 +1287,10 @@ $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후
                   alert("error")
                 },
              })
-
+        }
+        else{
+            add_member_form_func();
+         }
      }else{
         scrollToIndicator($('#page_addmember'))
         $('#inputError').fadeIn()
@@ -1638,6 +1664,16 @@ function closePopup(){
           $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
           $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
     }
+    // hk.kim 180313
+    $('#id_search_confirm').val('0');
+    $('#memberLastName_add').prop('disabled',false);
+    $('#memberFirstName_add').prop('disabled',false);
+    $('#memberPhone_add').prop('disabled',false);
+    $('#memberEmail_add').prop('disabled',false);
+    $('#birth_year').prop('disabled',false);
+    $('#birth_month').prop('disabled',false);
+    $('#birth_date').prop('disabled',false);
+
     $('.dropdown_selected').removeClass('dropdown_selected')
     $('.checked').removeClass('checked')
     $('.ptersCheckboxInner').removeClass('ptersCheckboxInner')
