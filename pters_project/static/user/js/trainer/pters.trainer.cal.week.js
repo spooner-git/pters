@@ -383,13 +383,16 @@ $(document).ready(function(){
 			//$('#cal_popup_planinfo').animate({'top':'15%'},200)
 		}else if($(this).val()=="filled"){
 			var $pt_finish_form = $('#pt-finish-form');
+			var drawCanvas = document.getElementById('canvas');
+			var send_data = $pt_finish_form.serializeArray();
+			send_data.push({"name":"imgUpload", "value":drawCanvas.toDataURL('image/png')})
+			// image upload test - hk.kim 180313
 			if(schedule_on_off==1){
 				//PT 일정 완료 처리시
 				$.ajax({
                     url:'/schedule/finish_schedule/',
                     type:'POST',
-                    data:$pt_finish_form.serialize(),
-
+                    data:send_data,
 
                     beforeSend:function(){
                     	AjaxBeforeSend();

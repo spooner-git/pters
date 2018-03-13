@@ -25,7 +25,7 @@
   <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
 </form>
 
-<form action="{% url 'schedule:finish_schedule' %}" id="pt-finish-form" method="get">
+<form action="{% url 'schedule:finish_schedule' %}" id="pt-finish-form" method="post" enctype='multipart/form-data'>
   <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
   <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
   <input type="hidden" name="member_name"   id="id_member_name_finish">
