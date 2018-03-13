@@ -318,10 +318,11 @@ $(document).ready(function(){
         $('#deleteMemberId').val(userID);
         $('#memberPhone_info').val(Data[userID].phone);
         $('#comment_info').val(Data[userID].contents);
-        //$('#memberCount_info').val(Data[name].count);
+        $('#memberRegCount_info').val(Data[userID].regcount);
+        $('#memberCount_info').val(Data[userID].count);
         $('#memberEmail_info').val(Data[userID].email);
-        //$('#datepicker_info').val(Data[name].start);
-        //$('#datepicker2_info').val(Data[name].end);
+        $('#datepicker_info').val(Data[userID].start);
+        $('#datepicker2_info').val(Data[userID].end);
 
         var dropdown_year_selected = $('#birth_year_info option[data-year='+Data[userID].birth.split(' ')[0]+']')
         var dropdown_month_selected = $('#birth_month_info option[data-month="'+Data[userID].birth.split(' ')[1]+'"]')
