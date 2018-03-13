@@ -110,14 +110,33 @@
 
             ///********************* 회원 월간 달력 옵션*************************************///
             ///********************* 회원 월간 달력 옵션*************************************///
-            var Options = {
-                        "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
-                        "reserve":"enable", //회원 일정 기능을 enable/disable
-                        "stoptimeStart":22, //강사가 설정한 예약불가 시간 (시작)
-                        "stoptimeEnd":8,    //강사가 설정한 예약불가 시간 (종료)
-                        "limit":1,          //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅 (ex: 1일경우, 15시 일정을 14시 이후에 추가 불가)
-                        "cancellimit":1,    //현재시간부터 몇시간 앞 일정 캔슬 가능하게 할지 셋팅 (ex: 3일경우, 18시 일정을 15시 이후에 삭제 불가)
+            var Options = {  "stoptimeStart":21,             //강사가 설정한 예약불가 시간 (시작)
+                              "stoptimeEnd":8,                //강사가 설정한 예약불가 시간 (종료)
+                              "limit":'{{ lt_res_02 }}',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅 (ex: 1일경우, 15시 일정을 14시 이후에 추가 불가)
+                              "cancellimit":,                 //현재시간부터 몇시간 앞 일정 캔슬 가능하게 할지 셋팅 (ex: 3일경우, 18시 일정을 15시 이후에 삭제 불가)
+                              "reserve":'{{ lt_res_03 }}',    //회원 일정 기능을 enable 1/disable 0
+
+
+                              "firstPushToMember":,
+                              "secondPushToMember":,
+                              "regErgentPushToMember":,
+                              "planChangePush":,
+                              "regErgentPush":,
+
+
+                              "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
+                              "location" : "Japan",           //Korea, Japan, English, Chinese
             }
+            if(Options.language=="JPN"){
+                $(".KRtext, .ENtext").remove();
+                $(".JPtext").show();
+              }else if(Options.language=="ENG"){
+                $(".KRtext, .JPtext").remove();
+                $(".ENtext").show();
+              }else if(Options.language=="KOR"){
+                $(".ENtext, .JPtext").remove();
+                $(".KRtext").show();
+              }
             ///********************* 회원 월간 달력 옵션*************************************///
             ///********************* 회원 월간 달력 옵션*************************************///
 
