@@ -359,7 +359,22 @@
         <input type="hidden" name="name" id="form_name" value="">
         <input type="hidden" name="user_id" id="id_user_id">
 
-        <div>            
+        <div>
+            <div class="ptaddbox form-group">
+                <label for="memberSearch" class="ptaddboxtext">
+                    <img class="icons"  style="width:13px;" src={% static "user/res/icon-earth.png" %}> 회원 아이디 검색 <span style="color: #fe4e65;">*</span>
+                    <p class="icons_description"> <br>PTERS에 이미 가입되어있는 회원님의 정보를 가져옵니다.</p>
+                </label>
+                <div id="memberSearch" class="dropdown pters_input_custom">
+                    <input type="tel" class="dropdown form-control" id="memberSearch_add" name="phone" required="required" placeholder="검색할 아이디를 입력해주세요" maxlength="11">
+                    <button class="memberSearchButton" id="memberSearchButton">
+                    검색
+                    </button>
+                </div>
+
+                
+            </div>
+
             <div class="ptaddbox form-group">
                 <label for="memberNameSex" class="ptaddboxtext">
                     <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span>
