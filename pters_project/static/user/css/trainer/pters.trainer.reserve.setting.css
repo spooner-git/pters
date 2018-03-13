@@ -1,7 +1,6 @@
 body{
 	padding-top: 50px;
 	margin:0 auto;
-	max-width: 500px;
 }
 
 .pters_dropdown_setting_custom{
@@ -96,6 +95,10 @@ li a{
 	font-weight: 500;
 	color: #282828;
 	padding-top: 15px;
+}
+
+.settingBox{
+	position: relative;
 }
 
 .settingText{
