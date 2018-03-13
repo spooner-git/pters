@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^add_schedule/$', views.add_schedule_logic, name='add_schedule'),
     url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),
     url(r'^finish_schedule/$', views.finish_schedule_logic, name='finish_schedule'),
+    #url(r'^finish_schedule_image/$', views.finish_schedule_image_logic, name='finish_schedule_image'),
     url(r'^add_repeat_schedule/$', views.add_repeat_schedule_logic, name='add_repeat_schedule'),
     url(r'^add_repeat_schedule_confirm/$', views.add_repeat_schedule_confirm, name='add_repeat_schedule_confirm'),
     url(r'^delete_repeat_schedule/$', views.delete_repeat_schedule_logic, name='delete_repeat_schedule'),

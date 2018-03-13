@@ -20,7 +20,9 @@ from login.models import LogTb, MemberTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
 from trainee.models import LectureTb
 from trainer.models import ClassTb
+import base64
 
+from django.core.files.base import ContentFile
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -515,8 +517,15 @@ def finish_schedule_logic(request):
     member_name = request.POST.get('member_name')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
+    #imgUpload = request.POST.get('imgUpload')
     next_page = request.POST.get('next_page')
 
+    # image upload test - hk.kim 180313
+    # format, imgstr = imgUpload.split(';base64,')
+    # ext = format.split('/')[-1]
+    # data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+
+    #print(str(imgUpload))
     error = None
     schedule_info = None
     lecture_info = None
