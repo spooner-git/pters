@@ -639,6 +639,19 @@ ul a{
 	width: 16.67%;
 }
 
+#memberSearch_add{
+	display: table-cell;
+	width: 90%;
+}
+
+#memberSearchButton{
+	display: table-cell;
+	width: 9%;
+}
+
+
+
+
 #memberName_reg{
 	display: table-cell;
 	width: 90%;

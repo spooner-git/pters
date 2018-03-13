@@ -499,7 +499,6 @@ function remove_front_zeros(rawData){
     var len = String(rawData).length;
     var raw = rawData
     var result;
-    console.log(rawData)
     if(rawData =='0'){
       return rawData
     }else{
@@ -674,10 +673,6 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
       var dateLists = dateList.sort()
     }
 
-    console.log(countList)
-    console.log(nameLists)
-    console.log(dateLists)
-
     var len = countLists.length;
     var arrayResult = []
     for(var i=0; i<len; i++){
@@ -739,7 +734,6 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
         }
 
-        console.log(count,regcount)
         var count = remove_front_zeros(count)
         var regcount = remove_front_zeros(regcount)
         
@@ -784,6 +778,66 @@ function scrollToIndicator(dom){
 
 
 var select_all_check = false;
+
+$('#memberSearchButton').click(function(){
+    var searchID = $('#memberSearch_add').val()
+    $.ajax({
+            url:'/accounts/register/',
+            type:'POST',
+            data: {'memberSearch':searchID},
+            dataType : 'html',
+
+            beforeSend:function(){
+              beforeSend()
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+              completeSend()
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray>1){
+                  $('#inputError').fadeIn()
+                  setTimeout(function(){$('#inputError').fadeOut()},10000)
+                  $('#errorMsg p').text('검색된 아이디가 없습니다')
+                }else{
+                  id_search_memberLastName = jsondata.성
+                  id_search_memberFirstName = jsondata.이름
+                  id_search_memberPhone = jsondata.전화번호
+                  id_search_memberBirth = jsondata.생일 //형식 1999년 02월 08일
+                  id_search_memberEmail = jsondata.이메일
+                  fill_member_info_by_ID()  
+                }
+                
+            },
+
+            //통신 실패시 처리
+            error:function(){
+              $('#inputError').fadeIn()
+              setTimeout(function(){$('#inputError').fadeOut()},10000)
+              $('#errorMsg p').text('아이디를 입력해주세요')
+            },
+    })
+})
+
+function fill_member_info_by_ID_search(){
+    $('#memberLastName_add').val(id_search_memberLastName)
+    $('#memberFirstName_add').val(id_search_memberFirstName)
+    $('#memberPhone_add').val(id_search_memberPhone)
+    $('#memberEmail_add').val(id_search_memberEmail)
+
+    var dropdown_year_selected = $('#birth_year_info option[data-year='+id_search_memberBirth.split(' ')[0]+']')
+    var dropdown_month_selected = $('#birth_month_info option[data-month="'+id_search_memberBirth.split(' ')[1]+'"]')
+    var dropdown_date_selected = $('#birth_date_info option[data-date="'+id_search_memberBirth.split(' ')[2]+'"]')
+    dropdown_year_selected.prop('selected',true)
+    dropdown_month_selected.prop('selected',true)
+    dropdown_date_selected.prop('selected',true)
+} 
+
+
 
 $("#datepicker_add, #datepicker2_add").datepicker({
   minDate : 0,
@@ -940,27 +994,6 @@ function birth_dropdown_set(){
   })
 }
 
-/*
-function birthdayInput(){
-  var yy = $('#memberBirthYear').val()
-  var yy_info = $('#memberBirthYear_info').val()
-  if(yy.length==0 && yy_info>0){
-    var yy = $('#memberBirthYear_info').val()
-  }
-  var mm = $('#memberBirthMonth').siblings('button').val()
-  var mm_info = $('#memberBirthMonth_info').siblings('button').val()
-  console.log(mm,mm_info,mm.length)
-  if(mm.length==0 && mm_info>0){
-    var mm = $('#memberBirthMonth_info').siblings('button').val()
-  }
-  var dd = $('#memberBirthDate').siblings('button').val()
-  var dd_info = $('#memberBirthDate_info').siblings('button').val()
-  if(dd.length==0 && dd_info>0){
-    var dd = $('#memberBirthDate_info').siblings('button').val()
-  }
-  $('#form_birth').val(yy+'-'+mm+'-'+dd)
-}
-*/
 
 
 //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
@@ -1387,40 +1420,6 @@ $('#upbutton-modify, #infoMemberModify').click(function(){ //회원정보창에�
       
 });
 
-/*
-function ajaxMemberData(){
-
-          var $form = $('#member-add-form-modify');
-          $.ajax({
-            url: '/trainer/member_manage_ajax',
-
-            dataType : 'html',
-
-            beforeSend:function(){
-                beforeSend();
-            },
-
-            success:function(data){
-              var jsondata = JSON.parse(data);
-              ajax_received_json_data(data);
-
-              DataFormattingDict('ID')
-              DataFormatting('current');
-              DataFormatting('finished');
-              memberListSet('current','name')
-              memberListSet('finished','name')
-            },
-
-            complete:function(){
-              completeSend();
-            },
-
-            error:function(){
-              console.log('server error')
-            }
-          })
-}
-*/
 
 function deleteMemberAjax(){
         var $form = $('#member-delete-form');
