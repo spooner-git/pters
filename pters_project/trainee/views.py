@@ -34,11 +34,14 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
         if len(lecture_data) == 0:
             self.url = '/trainee/blank/'
-        else:
+        elif len(lecture_data) == 1:
             for lecture_info in lecture_data:
                 if lecture_info.state_cd == 'NP':
-                    self.url = '/trainee/lecture_check/'
-                    break
+                    self.url = '/trainee/lecture_select/'
+                else:
+                    self.request.session['lecture_id'] = lecture_info.lecture_id
+        else:
+            self.url = '/trainee/lecture_select/'
 
         return super(IndexView, self).get(request, **kwargs)
 
@@ -88,6 +91,40 @@ class LectureCheckView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_lecture_select.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LectureSelectView, self).get_context_data(**kwargs)
+        error = None
+
+        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
+
+        for lecture_info in lecture_data:
+            class_info = None
+            trainer_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
+            except ObjectDoesNotExist:
+                error = '강사 정보가 없습니다.'
+
+            if error is None:
+                try:
+                    trainer_info = MemberTb.objects.get(member_id=class_info.member_id)
+                except ObjectDoesNotExist:
+                    error = '강사 회원정보가 없습니다.'
+
+            if error is None:
+                lecture_info.class_info = class_info
+                lecture_info.trainer_info = trainer_info
+
+        messages.error(self.request, error)
+
+        context['lecture_data'] = lecture_data
+
+        return context
+
+
 @csrf_exempt
 def lecture_processing(request):
 
@@ -101,7 +138,7 @@ def lecture_processing(request):
         error = '수강정보를 선택해 주세요.'
 
     if check == '':
-        error = '수락/거절은 선택해 주세요.'
+        error = '수강정보를 선택해 주세요.'
 
     if error is None:
         try:
@@ -116,6 +153,8 @@ def lecture_processing(request):
         elif check == '0':
             lecture_info.state_cd = 'IP'
             lecture_info.save()
+        elif check == '2':
+            request.session['lecture_id'] = lecture_id
 
     if error is None:
 
@@ -130,7 +169,12 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(WeekAddView, self).get_context_data(**kwargs)
-        context = get_trainee_schedule_data_func(context, self.request.user.id)
+        error = None
+        lecture_id = self.request.session.get('lecture_id', '')
+        if lecture_id is None or '':
+            error = '수강정보를 확인해 주세요.'
+        if error is None:
+            context = get_trainee_schedule_data_func(context, self.request.user.id)
 
         return context
 
@@ -150,11 +194,17 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
-        context = get_trainee_schedule_data_func(context, self.request.user.id)
+        error = None
+        lecture_id = self.request.session.get('lecture_id', '')
+        if lecture_id is None or '':
+            error = '수강정보를 확인해 주세요.'
 
-        # 강사 setting 값 로드
-        context = get_trainee_setting_data(context, self.request.user.id)
-        self.request.session['setting_language'] = context['lt_lan_01']
+        if error is None:
+            context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id)
+
+            # 강사 setting 값 로드
+            context = get_trainee_setting_data(context, self.request.user.id)
+            self.request.session['setting_language'] = context['lt_lan_01']
 
         return context
 
@@ -164,11 +214,17 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MyPageView, self).get_context_data(**kwargs)
-        context = get_trainee_schedule_data_func(context, self.request.user.id)
+        error = None
+        lecture_id = self.request.session.get('lecture_id', '')
+        if lecture_id is None or '':
+            error = '수강정보를 확인해 주세요.'
 
-        # 강사 setting 값 로드
-        context = get_trainee_setting_data(context, self.request.user.id)
-        self.request.session['setting_language'] = context['lt_lan_01']
+        if error is None:
+            context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id)
+
+            # 강사 setting 값 로드
+            context = get_trainee_setting_data(context, self.request.user.id)
+            self.request.session['setting_language'] = context['lt_lan_01']
 
         return context
 
@@ -237,7 +293,7 @@ def pt_delete_logic(request):
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_01', use=1)
             lt_res_01 = setting_data_info.setting_info
         except ObjectDoesNotExist:
-            lt_res_01 = '00:00-24:00'
+            lt_res_01 = '00:00-23:59'
         try:
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_02', use=1)
             lt_res_02 = setting_data_info.setting_info
@@ -366,6 +422,7 @@ def pt_delete_logic(request):
 # pt 일정 추가
 @csrf_exempt
 def pt_add_logic(request):
+    lecture_id = request.POST.get('lecture_id', '')
     training_date = request.POST.get('training_date', '')
     time_duration = request.POST.get('time_duration', '')
     training_time = request.POST.get('training_time', '')
@@ -385,7 +442,9 @@ def pt_add_logic(request):
     lt_res_02 = None
     lt_res_03 = None
 
-    if training_date == '':
+    if lecture_id == '':
+        error = '수강정보를 확인해주세요.'
+    elif training_date == '':
         error = '날짜를 선택해 주세요.'
     elif time_duration == '':
         error = '진행 시간을 선택해 주세요.'
@@ -403,7 +462,7 @@ def pt_add_logic(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(member_id=request.user.id, use=1)
+            lecture_info = LectureTb.objects.get(member_id=request.user.id, lecture_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
 
@@ -418,7 +477,7 @@ def pt_add_logic(request):
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_01', use=1)
             lt_res_01 = setting_data_info.setting_info
         except ObjectDoesNotExist:
-            lt_res_01 = '00:00-24:00'
+            lt_res_01 = '00:00-23:59'
 
         reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
         reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
@@ -460,7 +519,7 @@ def pt_add_logic(request):
             error = '입력할 수 없는 일정입니다.'
 
     if error is None:
-        error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name)
+        error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name, lecture_id)
 
     if error is None:
         class_info.schedule_check = 1
@@ -474,6 +533,7 @@ def pt_add_logic(request):
 # pt 일정 추가
 @csrf_exempt
 def pt_add_array_logic(request):
+    lecture_id = request.POST.get('lecture_id')
     add_pt_size = request.POST.get('add_pt_size')
     training_date = request.POST.getlist('training_date[]')
     time_duration = request.POST.getlist('time_duration[]')
@@ -487,7 +547,7 @@ def pt_add_array_logic(request):
 
     for i in range(0, int(add_pt_size)):
         error = pt_add_logic_func(training_date[i], time_duration[i], training_time[i],
-                                  request.user.id, request.user.first_name)
+                                  request.user.id, request.user.first_name, lecture_id)
 
     if error is None:
 
@@ -497,7 +557,7 @@ def pt_add_array_logic(request):
         return redirect(next_page)
 
 
-def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_time, user_id, user_name):
+def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_time, user_id, user_name, lecture_id):
 
     error = None
     lecture_info = None
@@ -518,7 +578,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         end_date = start_date + datetime.timedelta(hours=int(pt_schedule_time_duration))
 
         try:
-            lecture_info = LectureTb.objects.get(member_id=user_id, use=1)
+            lecture_info = LectureTb.objects.get(member_id=user_id,lecture_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
 
@@ -802,7 +862,7 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         return render(request, self.template_name, context)
 
 
-def get_trainee_schedule_data_func(context, user_id):
+def get_trainee_schedule_data_func(context, user_id, lecture_id):
     error = None
     class_info = None
     lecture_info = None
@@ -831,10 +891,14 @@ def get_trainee_schedule_data_func(context, user_id):
     next_schedule_start_dt = ''
     next_schedule_end_dt = ''
 
-    try:
-        lecture_info = LectureTb.objects.get(member_id=user_id)
-    except ObjectDoesNotExist:
-        error = 'lecture가 존재하지 않습니다.'
+    if lecture_id is None or '':
+        error = '수강 정보가 없습니다.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(member_id=user_id, lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = 'lecture가 존재하지 않습니다.'
 
     if error is None:
         try:
