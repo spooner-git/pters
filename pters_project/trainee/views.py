@@ -28,17 +28,18 @@ from django.utils import timezone
 class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     # url = '/trainee/cal_month/'
     def get(self, request, **kwargs):
-        error = None
-        lecture_info = None
-        try:
-            lecture_info = LectureTb.objects.get(member_id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = 'lecture가 존재하지 않습니다.'
 
-        if error is None:
-            self.url = '/trainee/cal_month/'
-        else:
+        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
+        self.url = '/trainee/cal_month/'
+
+        if len(lecture_data) == 0:
             self.url = '/trainee/blank/'
+        else:
+            for lecture_info in lecture_data:
+                if lecture_info.state_cd == 'NP':
+                    self.url = '/trainee/lecture_check/'
+                    break
+
         return super(IndexView, self).get(request, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
@@ -51,6 +52,77 @@ class BlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BlankView, self).get_context_data(**kwargs)
         return context
+
+
+class LectureCheckView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_lecture_check.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LectureCheckView, self).get_context_data(**kwargs)
+        error = None
+
+        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
+
+        for lecture_info in lecture_data:
+            class_info = None
+            trainer_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
+            except ObjectDoesNotExist:
+                error = '강사 정보가 없습니다.'
+
+            if error is None:
+                try:
+                    trainer_info = MemberTb.objects.get(member_id=class_info.member_id)
+                except ObjectDoesNotExist:
+                    error = '강사 회원정보가 없습니다.'
+
+            if error is None:
+                lecture_info.class_info = class_info
+                lecture_info.trainer_info = trainer_info
+
+        messages.error(self.request, error)
+
+        context['lecture_data'] = lecture_data
+
+        return context
+
+
+@csrf_exempt
+def lecture_processing(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    check = request.POST.get('check', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    lecture_info = None
+    if lecture_id == '':
+        error = '수강정보를 선택해 주세요.'
+
+    if check == '':
+        error = '수락/거절은 선택해 주세요.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강정보가 존재하지 않습니다.'
+
+    if error is None:
+        if check == '1':
+            lecture_info.delete()
+
+        elif check == '0':
+            lecture_info.state_cd = 'IP'
+            lecture_info.save()
+
+    if error is None:
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+    return redirect(next_page)
 
 
 class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -852,3 +924,5 @@ def get_trainee_schedule_data_func(context, user_id):
     context['holiday'] = holiday
 
     return context
+
+

@@ -579,6 +579,7 @@ def add_member_info_logic_test(request):
         try:
             with transaction.atomic():
 
+                state_cd = 'NP'
                 if search_confirm == '0':
                     group = Group.objects.get(name='trainee')
                     user.groups.add(group)
@@ -593,8 +594,9 @@ def add_member_info_logic_test(request):
                                           birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
                                           user_id=user.id)
                     member.save()
+                    state_cd = 'IP'
 
-                add_lecture_info_logic_func(class_info.class_id, user.id, input_counts, input_price, input_start_date, input_end_date)
+                add_lecture_info_logic_func(class_info.class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date)
 
         except ValueError as e:
             error = '이미 가입된 회원입니다.'
@@ -620,21 +622,14 @@ def add_member_info_logic_test(request):
         return redirect(next_page)
 
 
-def add_member_info_logic_func(user_id, name, phone, contents, sex):
-
-    error = None
-
-    return error
-
-
-def add_lecture_info_logic_func(class_id, member_id, conunts, price, start_date, end_date):
+def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, start_date, end_date):
 
     error = None
 
     lecture = LectureTb(class_tb_id=class_id, member_id=member_id,
-                        lecture_reg_count=conunts, lecture_rem_count=conunts,
-                        lecture_avail_count=conunts, price=price, option_cd='DC',
-                        state_cd='IP',
+                        lecture_reg_count=counts, lecture_rem_count=counts,
+                        lecture_avail_count=counts, price=price, option_cd='DC',
+                        state_cd=state_cd,
                         start_date=start_date, end_date=end_date, mod_dt=timezone.now(),
                         reg_dt=timezone.now(), use=1)
     lecture.save()
