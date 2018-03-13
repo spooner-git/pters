@@ -340,6 +340,14 @@ class SalesSettingView(AccessTestMixin, TemplateView):
 
         return context
 
+class LanguageSettingView(AccessTestMixin, TemplateView):
+    template_name = 'setting_language.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LanguageSettingView, self).get_context_data(**kwargs)
+
+        return context
+
 
 # 회원가입 api
 @csrf_exempt

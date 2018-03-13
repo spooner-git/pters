@@ -492,6 +492,16 @@ a:focus, a:hover{
     .centermenu_logo{
         display: inline-block;
     }
+
+    .fixfooter{
+        display: block;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 150px;
+        background: #ffffff;
+        z-index: 1;
+    }
 }
 
 @media(min-width: 760px){
@@ -501,6 +511,11 @@ a:focus, a:hover{
     }
 }
 
+@media(max-height: 820px){
+    .fixfooter{
+        visibility: hidden;
+    }
+}
 
 @media(min-width:900px){
     #loginInfo{
@@ -526,14 +541,6 @@ a:focus, a:hover{
         color: #ffffff;
     }
 
-    .fixfooter{
-        display: block;
-        position: relative;
-        width: 100%;
-        height: 150px;
-        background: #ffffff;
-        z-index: 1;
-    }
 }
 
 

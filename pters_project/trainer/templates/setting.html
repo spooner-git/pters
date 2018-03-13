@@ -23,12 +23,12 @@
   <span class="settingText">예약 허용 시간</span>
   <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
 </div>
-<div id="salesSetting" class="settingMenu" onclick="location.href='{% url 'trainer:sales_setting' %}'">
+<div id="salesSetting" class="settingMenu" onclick="location.href='{% url 'trainer:sales_setting' %}'" style="display: none;">
   <img src="/static/user/res/icon-money.png" alt="" class="settingImg">
   <span class="settingText">업무 설정</span>
   <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
 </div>
-<div id="languageSetting" class="settingMenu">
+<div id="languageSetting" class="settingMenu" onclick="location.href='{% url 'trainer:language_setting' %}'">
   <img src="/static/user/res/icon-earth.png" alt="" class="settingImg">
   <span class="settingText">언어/Language/言語</span>
   <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
