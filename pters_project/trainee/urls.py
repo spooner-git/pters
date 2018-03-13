@@ -27,6 +27,10 @@ urlpatterns = [
     url(r'^pt_add_array_logic/$', views.pt_add_array_logic, name='pt_add_array_logic'),
     url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
 
+    url(r'^lecture_check/$', views.LectureCheckView.as_view(), name='lecture_check'),
+
+    url(r'^lecture_processing/$', views.lecture_processing, name='lecture_processing'),
+
     url(r'^read_trainee_schedule_ajax/$', views.ReadTraineeScheduleViewAjax.as_view(), name='read_trainee_schedule_ajax'),
 
 ]

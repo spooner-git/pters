@@ -203,8 +203,7 @@ def add_member_info_logic_test(request):
 
     if user_id == '':
         error = 'ID를 입력해 주세요.'
-    elif name == '':
-        error = '이름을 입력해 주세요.'
+
     if group_type == '':
         group_type = 'trainee'
 
