@@ -32,20 +32,20 @@
           
 
         <div class="outerbox_horizontal" data-view="init">
-          <div class="explainbox">
+          <div class="explainbox _type_trainee">
             <img src="/static/user/res/login/icon-reg-user.png">
             <p>담당 트레이너와 일정 관리를 <br><span class="font-pink">고객 회원님</span></p>
-            <button class="" >일반 회원 가입</button>
+            <div class="explaintype"><button class="" >일반 회원 가입</button></div>
           </div>
-          <div class="explainbox">
-            <img src="/static/user/res/login/icon-reg-trainer.png" style="height: 20px;margin-bottom: 5px;">
+          <div class="explainbox _type_trainer">
+            <img src="/static/user/res/login/icon-reg-trainer.png" style="height: 20px;margin-bottom: 5px;margin-top: 20px;">
             <p>회원님과 일정을 관리하고 싶은<br><span class="font-pink">트레이너님</span></p>
-            <button class="" >트레이너 가입</button>
+            <div class="explaintype"><button class="" >트레이너 가입</button></div>
           </div>
-          <div class="explainbox">
+          <div class="explainbox _type_gym">
             <img src="/static/user/res/login/icon-reg-gym.png">
             <p>소속 트레이너와 회원님들의 일정을 한번에<br><span class="font-pink">센터 운영 사업자님</span></p>
-            <button class="" >센터사업자 가입</button>
+            <div class="explaintype"><button class="" >센터사업자 가입</button></div>
           </div>
         </div>
 
@@ -231,11 +231,22 @@
 
   var group_type, $form; 
 
+  $('div.explainbox ').click(function(){
+      if($(this).find('.explaintype').css('height') == '0px'){
+        $(this).find('.explaintype').css('height','150px')
+        $(this).find('button').css('visibility','visible')
+        $(this).siblings('.explainbox').find('button').css('visibility','hidden')
+        $(this).siblings('.explainbox').find('.explaintype').css('height','0px')
+      }
+  })
+
+
   $('.explainbox button').click(function(){
       $('._step1_label').css('transform','translateX(-250%)')
       $('.outerbox_horizontal').css('transform','translateX(-250%)')
       $('.registerbox_add').css('transform','translateX(-50%)')
       $('._step2_label').css('transform','translateX(-50%)')
+      scrollToIndicator($('.typeselectbox'),500)
 
       $('.outerbox_horizontal').attr('data-view',0)
       $('._step2_label span').text($(this).text())
@@ -249,8 +260,13 @@
         group_type = 'business'
         $form = $('#add-member-business-form')
       }
-      console.log(group_type, $form)
   })
+
+  function scrollToIndicator(dom, delaytime){
+    var offset = dom.offset();
+      $('body, html').animate({scrollTop : offset.top}, delaytime)
+  }
+
 
   $('button#registerMember').click(function(){
     var duplicate_check = $form.find('#id_duplicate_check').val()
@@ -273,7 +289,7 @@
   function goPrev(){
     if($('.outerbox_horizontal').attr('data-view')==0){
         $('._step1_label').css('transform','translateX(-50%)')
-        $('.outerbox_horizontal').css('transform','translateX(0%)')
+        $('.outerbox_horizontal').css('transform','translateX(-50%)')
         $('.registerbox_add').css('transform','translateX(250%)')
         $('._step2_label').css('transform','translateX(250%)')
         $('.outerbox_horizontal').attr('data-view','init')

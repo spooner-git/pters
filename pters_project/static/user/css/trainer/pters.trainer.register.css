@@ -1,14 +1,20 @@
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
-body{
+
+
+html,body{
 	font-family: 'Noto Sans KR' !important;
 	margin: 0;
 	background-image: url("/static/user/res/main/bg-image.png");
 	background-repeat: no-repeat;
 	background-position-x:center;
-	background-position-y:center;
+	background-position-y:top;
 	background-size:100%;
 	background-color: black !important;
 	overflow-x: hidden;
+	position: relative;
+	width: 100%;
+	-webkit-overflow-scrolling:touch;
+	user-select: none;
 }
 
 #global_error_msg{
@@ -26,37 +32,45 @@ body{
 
 .registerbox_add{
 	position: absolute;
-	max-width: 900px;
-	width: 500px;
+	max-width: 500px;
+	width: 95%;
 	padding: 30px;
 	background:#ffffff12;
 	top: 0;
 	left: 50%;
 	color: #ffffff;
 	transform: translateX(250%);
-	margin-top: 250px;
+	-webkit-transform: translateX(250%);
+	margin-top: 160px;
 	transition: 1s;
+	-webkit-transition: 1s;
 }
 
 ._step1_label{
 	position: absolute;
-	width: 960px;
+	width: 90%;
+	max-width: 560px;
 	top: 0;
 	left: 50%;
 	margin-top: 0;
 	transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
 	transition: 1s;
+	-webkit-transition: 1s;
 	z-index: -1;
 }
 
 ._step2_label{
 	position: absolute;
-	width: 560px;
+	width: 90%;
+	max-width: 560px;
 	top: 0;
 	left: 50%;
 	margin-top: 0;
 	transform: translateX(250%);
+	-webkit-transform: translateX(250%);
 	transition: 1s;
+	-webkit-transition: 1s;
 }
 	._step2_label span{
 		color: #ffffff;
@@ -64,12 +78,15 @@ body{
 
 ._step3_label{
 	position: absolute;
-	width: 560px;
+	width: 90%;
+	max-width: 560px;
 	top: 0;
 	left: 50%;
 	margin-top: 0;
 	transform: translateX(250%);
+	-webkit-transform: translateX(250%);
 	transition: 1s;
+	-webkit-transition: 1s;
 }
 
 div._step1_label, div._step2_label, div._step3_label{
@@ -78,35 +95,18 @@ div._step1_label, div._step2_label, div._step3_label{
 
 .promise_wrap{
 	position: absolute;
-	max-width: 900px;
-	width: 500px;
+	max-width: 600px;
+	width: 95%;
 	padding: 30px;
 	top: 0;
 	left: 50%;
 	transform: translateX(250%);
-	margin-top: 180px;
+	-webkit-transform: translateX(250%);
+	margin-top: 125px;
 	transition: 1s;
+	-webkit-transition: 1s;
 	color: #ffffff;
 }
-
-.send_page_left{
-	transform:translateX(-250%);
-}
-
-.send_page_center{
-	transform: translateX(-50%);
-}
-
-.send_page_right{
-	transform: translateX(250%);
-}
-
-.send_page_center_firstpage{
-	transform: translateX(0%);
-}
-
-
-
 
 
 
@@ -116,14 +116,19 @@ div._step1_label, div._step2_label, div._step3_label{
 	margin: 0 auto;
 }
 	.registerbox_label{
-		position: relative;
-		height: 50px;
+		position: absolute;
+		height: 125px;
 		font-weight: bold;
 		font-size: 23px;
 		margin-top: 0;
 		margin-bottom: 20px;
 		color: #ffffff;
 		text-align: center;
+		left: 50%;
+		transform: translateX(-50%);
+		-webkit-transform: translateX(-50%);
+		width: 90%;
+		max-width: 1080px;
 	}
 		.registerbox_label span{
 			
@@ -157,11 +162,16 @@ div._step1_label, div._step2_label, div._step3_label{
 			width: 170px;
 		}
 	.outerbox_horizontal{
+		position: absolute;
+		left: 50%;
+		transform:translateX(-50%);
+		-webkit-transform:translateX(-50%);
 		display: inline-block;
-		width: 100%;
-		margin:10px 0 10px 0;
+		width: 90%;
+		margin:150px 0 10px 0;
 		text-align:center;
 		transition: 1s;
+		-webkit-transition: 1s;
 	}
 		.outerbox_horizontal button{
 			position: absolute;
@@ -180,6 +190,7 @@ div._step1_label, div._step2_label, div._step3_label{
 			margin-bottom: 10px;
 			left: 50%;
 			transform: translateX(-50%);
+			-webkit-transform: translateX(-50%);
 		}
 		.outerbox_horizontal button:hover{
 			opacity: 1;
@@ -191,6 +202,8 @@ div._step1_label, div._step2_label, div._step3_label{
 			font-weight: bold;
 			font-family: 'Noto Sans KR' !important;
 			margin: 0 50px 0 50px;
+			margin: 0 auto;
+			margin-top: 5px;
 		}
 
 	.selector_button{
@@ -227,7 +240,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	.contractread{
 		width: 100%;
 		margin: 0 auto;
-		height: 200px;
+		height: 120px;
 		font-size: 11px;
 		border: 1px solid #282828;
 		overflow-y: scroll;
@@ -238,27 +251,37 @@ div._step1_label, div._step2_label, div._step3_label{
 		}
 
 .explainbox{
-	display: none;
 	position: relative;
-	width: 210px;
-	height: 500px;
-	margin: 0 16px 0 16px !important;
+	width: 100%;
 	word-break: break-all;
 }
 	.explainbox p{
 		color: #ffffff;
-		border-bottom: 0.5px solid #adadad;
-		line-height: 30px;
-		padding-bottom: 10px;
+		line-height: 22px;
 		font-weight: 500;
 		font-size: 14px;
+		margin-top: 5px;
+		margin-bottom: 5px;
 	}
 	.explainbox img{
+		display: none;
 		height: 25px;
-		margin-top: 15px;
+		margin-top: 10px;
+		margin-left: auto;
+		margin-right: auto;
 	}
 	.explainbox .font-pink{
 		font-size: 18px;
+	}
+	.explaintype{
+		height: 0px;
+		transition: 1s;
+		-webkit-transition: 1s;
+	}
+	.explaintype button{
+		visibility: hidden;
+		transition: 0.5s;
+		-webkit-transition: 0.5s;
 	}
 
 
@@ -307,11 +330,14 @@ div._step1_label, div._step2_label, div._step3_label{
 		margin-top: 50px;
 		margin-bottom: 66px;
 	}
+		.registerbox_label{
+			height: 50px;
+		}
 
 	.outerbox_horizontal{
 		display: inline-block;
 		width: 900px;
-		margin:100px 0 10px 0;
+		margin:150px 0 10px 0;
 		text-align:center;
 	}
 		.outerbox_horizontal button{
@@ -321,16 +347,44 @@ div._step1_label, div._step2_label, div._step3_label{
 	.explainbox{
 		display: inline-block;
 		width: 275px;
-		height: 500px;
 		margin: 0 8px 0 8px !important;
 	}
+		.explaintype{
+			display: block;
+			height: 300px;
+		}
+		.explaintype button{
+			visibility: visible;
+		}
+		.explainbox p{
+			line-height: 30px;
+			margin-top : 13px;
+		}
+		.explainbox img{
+			display: block;
+			margin-top: 15px;
+		}
+
+	.registerbox_add{
+		margin-top: 250px;
+	}
+
+	.promise_wrap{
+		margin-top: 180px;
+	}
+
+	.contractread{
+		height: 200px;
+	}
+
 	.fixfooter{
-		position: relative;
+		position: absolute;
 	    display: block;
 	    background: rgba(40, 40, 40, 0.50);
 	    width: 100%;
 	    left: 50%;
 	    transform: translateX(-50%);
+	    -webkit-transform: translateX(-50%);
 	    padding-bottom: 15px;
 	}
 	.fixfooter p{
@@ -361,4 +415,10 @@ div._step1_label, div._step2_label, div._step3_label{
 			.bottomfooter2 p{
 			    margin-bottom:1px;
 			}
+}
+
+@media(max-height: 820px){
+	.fixfooter{
+		display: none;
+	}
 }
