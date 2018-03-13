@@ -1,5 +1,5 @@
 $(document).ready(function(){
-      $('#uptext').text("푸시 알림 설정")
+      $('#uptext2').text("푸시 알림 설정")
       $('#switch1').click(function(){
       	if($(this).find('.switchball').hasClass('switchoff')){
       		$(this).find('.switchball').removeClass('switchoff').addClass('switchon')
@@ -112,7 +112,7 @@ $(document).ready(function(){
             check_dropdown_selected();
       });
 
-       $("#upbutton-alarm").click(function(){
+       $("#upbutton-check").click(function(){
          //if(select_all_check==true){
              document.getElementById('update-setting-push-form').submit();
          //}else{
@@ -120,6 +120,10 @@ $(document).ready(function(){
             //입력값 확인 메시지 출력 가능
          //}
      })
+
+       $('#upbutton-x').click(function(){
+          location.href="/trainer/trainer_setting/"
+        })
 
       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
         var ulMorningDay = $("#morningdaySelect button");
@@ -131,7 +135,7 @@ $(document).ready(function(){
         var ulurgentDay = $("#urgentMemberAlarmSelect button");
         var ulurgentMember = $("#urgentMemberAlarmWhenSelect button")
         if((ulMorningDay).hasClass("dropdown_selected")==true && (ulMorningDay2).hasClass("dropdown_selected")==true && (ulTimes).hasClass("dropdown_selected")==true && (ulTimes2).hasClass("dropdown_selected")==true && (ulnoRegMember).hasClass("dropdown_selected")==true && (ulchangedPlan).hasClass("dropdown_selected")==true && (ulurgentDay).hasClass("dropdown_selected")==true &&(ulurgentMember).hasClass("dropdown_selected")==true){
-            $("#upbutton-alarm").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             select_all_check=true;
             console.log('checked')
         }else{

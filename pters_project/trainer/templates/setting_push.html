@@ -1,4 +1,4 @@
-{% extends "trainer_base_setting_inner.html" %}
+{% extends "trainer_base.html" %}
 {% load static %}
 
 {% block local_css %}
@@ -22,10 +22,10 @@
   <input type="hidden" name="next_page" value = '{% url 'trainer:push_setting' %}'>
 </form>
 
-<div id="memberPushSettingText" class="settingMenu">
+<div id="memberPushSettingText" class="settingMenu wrap">
   <span class="settingText">회원 푸시 알림</span>
 </div>
-<div id="memberPushSetting" class="settingBox">
+<div id="memberPushSetting" class="settingBox wrap">
   <div class="iconText">
     <img src="/static/user/res/icon-calendar-week.png" alt="" class="icons"><span> PT 일정 확인 안내</span><div id="switch1" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>  
   </div>
@@ -115,10 +115,10 @@
         </div>
     </div> 
 </div>
-<div id="trainerPushSettingText" class="settingMenu">
+<div id="trainerPushSettingText" class="settingMenu wrap">
       <span class="settingText">강사 푸시 알림</span>
 </div>
-<div id="trainerPushSetting">
+<div id="trainerPushSetting" class="wrap">
     
     <div class="iconText">
           <img src="/static/user/res/icon-calendar-week.png" alt="" class="icons"><span> 회원이 일정 추가/변경시 알림</span><div id="switch3" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
@@ -188,7 +188,10 @@
                           "rsvDisableSet" : 'on', //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅 on/off
                           "limit":4,              //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
                           "reserve":"disable",     //회원 일정 기능을 enable/disable
+                          "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
+                          "location" : "Japan", //Korea, Japan, English, Chinese
           }
+          $('#page-base-addstyle').css('display','block')
         </script>
         <script>
               var lt_pus_01 =  ['{{ lt_pus_01 }}'];
