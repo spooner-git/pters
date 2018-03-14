@@ -7,42 +7,9 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 
-from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.db import models
 
-'''
-class Profile(models.Model):
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
-    name = models.CharField(db_column='NAME', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    phone = models.CharField(db_column='PHONE', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    age = models.IntegerField(db_column='AGE', blank=True, null=True)  # Field name made lowercase.
-    sex = models.CharField(db_column='SEX', max_length=2, blank=True, null=True)  # Field name made lowercase.
-    birthday_dt = models.DateField(db_column='BIRTHDAY_DT', blank=True, null=True)  # Field name made lowercase.
-    address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    job = models.CharField(db_column='JOB', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
-    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
-    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = 'PROFILE_TB'
-
-    def __str__(self):
-        return self.name
-
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Profile.objects.create(user=instance)
-
-    @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.profile.save()
-'''
 
 class MemberTb(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

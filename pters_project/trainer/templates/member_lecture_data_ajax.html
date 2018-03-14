@@ -1,25 +1,12 @@
     {
+      "memberIdArray":
+      [{% for member_info in member_data %}"{{ member_info.user.id  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberNameArray":
-      [{% for lecture in lecture_info %}"{{ lecture.member_info.name  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for member_info in member_data %}"{{ member_info.name  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberAvailCountArray":
-      [{% for lecture in lecture_info %}"{{ lecture.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for member_info in member_data %}"{{ member_info.lecture_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberLectureIdArray":
-      [{% for lecture in lecture_info %}"{{ lecture.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
-      "scheduleIdArray" :
-      [{% for pt_schedule_id_info in pt_schedule_id %}"{{ pt_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "classArray_lecture_id" :
-      [{% for pt_schedule_lecture_id_info in pt_schedule_lecture_id %}"{{ pt_schedule_lecture_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "classTimeArray_member_name" :
-      [{% for pt_schedule_member_name_info in pt_schedule_member_name %}"{{ pt_schedule_member_name_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "classTimeArray_start_date" :
-      [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}"{{ pt_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "classTimeArray_end_date" :
-      [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}"{{ pt_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "scheduleFinishArray":
-      [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}"{{ pt_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "scheduleNoteArray":
-      [{% for pt_schedule_note_info in pt_schedule_note %}"{{ pt_schedule_note_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for member_info in member_data %}"{{ member_info.lecture_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],

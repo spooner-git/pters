@@ -148,6 +148,10 @@ def lecture_processing(request):
 
     if error is None:
         if check == '1':
+            repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
+            schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id)
+            repeat_schedule_data.delete()
+            schedule_data.delete()
             lecture_info.delete()
 
         elif check == '0':
@@ -334,7 +338,6 @@ def pt_delete_logic(request):
     if error is None:
         if start_date < disable_time:
             error = '삭제할 수 없는 일정입니다.'
-    print(error)
     if error is None:
         try:
             with transaction.atomic():
@@ -676,19 +679,10 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         return error
 
 
-def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
+def get_trainee_repeat_schedule_data_func(context, trainer_id, member_id):
 
     error = None
     class_info = None
-    context['lecture_info'] = None
-
-    pt_schedule_id = []
-    pt_schedule_lecture_id = []
-    pt_schedule_start_datetime = []
-    pt_schedule_end_datetime = []
-    pt_schedule_member_name = []
-    pt_schedule_finish_check = []
-    pt_schedule_note = []
 
     pt_repeat_schedule_id = []
     pt_repeat_schedule_type = []
@@ -697,22 +691,40 @@ def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
     pt_repeat_schedule_end_date = []
     pt_repeat_schedule_start_time = []
     pt_repeat_schedule_time_duration = []
+    lecture_list = None
 
-    # 강사 정보 가져오기
+    # 강좌 정보 가져오기
     try:
         class_info = ClassTb.objects.get(member_id=trainer_id)
     except ObjectDoesNotExist:
         error = '강사 정보가 존재하지 않습니다'
 
+    # 수강 정보 불러 오기
+    if error is None:
+        if member_id is None or '':
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP',
+                                                    lecture_rem_count__gt=0, use=1)
+            lecture_list |= LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='NP',
+                                                    lecture_rem_count__gt=0, use=1)
+        else:
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_id,
+                                                    lecture_rem_count__gt=0,
+                                                    state_cd='IP', use=1)
+            lecture_list |= LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_id,
+                                                     state_cd='NP',
+                                                    lecture_rem_count__gt=0, use=1)
+
     if error is None:
         # 강사 클래스의 반복일정 불러오기
-        if lecture_id is None:
-            pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                      en_dis_type='1')
-        else:
-            pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                      lecture_tb_id=lecture_id,
-                                                                      en_dis_type='1')
+        pt_repeat_schedule_data = RepeatScheduleTb
+
+        for idx, lecture_info in enumerate(lecture_list):
+            if idx == 0:
+                pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                          en_dis_type='1')
+            else:
+                pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                           en_dis_type='1')
         for pt_repeat_schedule_info in pt_repeat_schedule_data:
             pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
             pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
@@ -721,59 +733,6 @@ def get_trainee_lecture_data_func(context, trainer_id, lecture_id):
             pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
             pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
             pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
-
-
-    # 강좌에 해당하는 수강/회원 정보 가져오기, 예약가능 횟수 1개 이상인 회원
-    if error is None:
-        # 강좌에 해당하는 수강정보 가져오기
-        if lecture_id is None:
-            context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                               lecture_avail_count__gte=1, use=1)
-        else:
-            context['lecture_info'] = LectureTb.objects.filter(lecture_id=lecture_id,
-                                                               lecture_avail_count__gte=1, use=1)
-        for lecture in context['lecture_info']:
-            # 수강정보에 해당하는 회원정보 가져오기
-            try:
-                lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
-            except ObjectDoesNotExist:
-                error = '회원 정보가 존재하지 않습니다'
-
-    # PT 일정 조회
-    if error is None:
-        # 회원에 해당하는 강좌 정보 불러오기
-        for lecture_datum in context['lecture_info']:
-            # 강좌별로 연결되어있는 회원 리스트 불러오기
-            member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
-            # 강좌별로 연결된 PT 스케쥴 가져오기
-            lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
-                                                                       en_dis_type='1')
-            # PT 스케쥴 정보 셋팅
-            for pt_schedule_datum in lecture_datum.pt_schedule_data:
-                # lecture schedule id 셋팅
-                pt_schedule_id.append(pt_schedule_datum.schedule_id)
-                # lecture schedule 에 해당하는 lecture id 셋팅
-                pt_schedule_lecture_id.append(lecture_datum.lecture_id)
-                pt_schedule_member_name.append(member_data.name)
-                pt_schedule_start_datetime.append(pt_schedule_datum.start_dt)
-                pt_schedule_end_datetime.append(pt_schedule_datum.end_dt)
-                if pt_schedule_datum.note is None:
-                    pt_schedule_note.append('')
-                else:
-                    pt_schedule_note.append(pt_schedule_datum.note)
-                # 끝난 스케쥴인지 확인
-                if pt_schedule_datum.state_cd == 'PE':
-                    pt_schedule_finish_check.append(1)
-                else:
-                    pt_schedule_finish_check.append(0)
-
-    context['pt_schedule_id'] = pt_schedule_id
-    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
-    context['pt_schedule_member_name'] = pt_schedule_member_name
-    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
-    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
-    context['pt_schedule_finish_check'] = pt_schedule_finish_check
-    context['pt_schedule_note'] = pt_schedule_note
 
     context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
     context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
