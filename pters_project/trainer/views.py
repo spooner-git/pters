@@ -215,6 +215,8 @@ def get_member_data(context, trainer_id):
     class_info = None
     context['lecture_info'] = None
 
+    member_list = []
+    member_finish_list = []
     # 강사 정보 가져오기
     try:
         class_info = ClassTb.objects.get(member_id=trainer_id)
@@ -225,14 +227,13 @@ def get_member_data(context, trainer_id):
     if error is None:
         # 강좌에 해당하는 수강정보 가져오기
         context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                           lecture_rem_count__gt=0, use=1)
+                                                           lecture_rem_count__gt=0, use=1).order_by('-member_id')
         context['lecture_finish_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                  lecture_rem_count=0, use=1)
+                                                                  lecture_rem_count=0, use=1).order_by('-member_id')
         for lecture in context['lecture_info']:
             # 수강정보에 해당하는 회원정보 가져오기
             try:
                 lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
-                lecture.user_info = User.objects.get(username=lecture.member_info.user)
             except ObjectDoesNotExist:
                 error = '회원 정보가 존재하지 않습니다'
 
@@ -240,9 +241,30 @@ def get_member_data(context, trainer_id):
             # 수강정보에 해당하는 회원정보 가져오기
             try:
                 lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
-                lecture.user_info = User.objects.get(username=lecture.member_info.user)
             except ObjectDoesNotExist:
                 error = '회원 정보가 존재하지 않습니다'
+
+    if error is None:
+        all_member = MemberTb.objects.filter(use=1).order_by('name')
+
+        for member_info in all_member:
+            member_data = member_info
+
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
+                                                    lecture_rem_count__gt=0, use=1).order_by('-start_date')
+            lecture_finish_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
+                                                           lecture_rem_count=0, use=1).order_by('-start_date')
+            if len(lecture_list) > 0:
+                member_data.lecture_counts = len(lecture_list)
+                member_data.lecture_info = lecture_list[0]
+                member_list.append(member_data)
+            if len(lecture_finish_list) > 0:
+                member_data.lecture_counts = len(lecture_finish_list)
+                member_data.lecture_info = lecture_finish_list[0]
+                member_finish_list.append(member_data)
+
+        context['member_data'] = member_list
+        context['member_finish_data'] = member_finish_list
 
     return context
 
