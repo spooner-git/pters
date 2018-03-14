@@ -97,6 +97,61 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(LectureSelectView, self).get_context_data(**kwargs)
         error = None
+        class_data = []
+        # lecture_data2 = []
+        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
+
+        for lecture_info in lecture_data:
+            class_info = None
+            trainer_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
+            except ObjectDoesNotExist:
+                error = '강사 정보가 없습니다.'
+
+            if error is None:
+                class_data.append(class_info)
+                try:
+                    trainer_info = MemberTb.objects.get(member_id=class_info.member_id)
+                except ObjectDoesNotExist:
+                    error = '강사 회원정보가 없습니다.'
+
+            if error is None:
+                lecture_info.class_info = class_info
+                lecture_info.trainer_info = trainer_info
+
+        messages.error(self.request, error)
+
+        context['lecture_data'] = lecture_data
+
+        '''
+                for class_info in class_data:
+                    lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=self.request.user.id)
+                    lecture_class = class_info
+                    if len(lecture_list) > 0:
+                        lecture_class.np_lecture_counts = 0
+                        lecture_class.lecture_counts = len(lecture_list)
+                        input_lecture_info = lecture_list[0]
+                        for idx, lecture_info in enumerate(lecture_list):
+                            if lecture_info.state_cd == 'NP':
+                                lecture_class.np_lecture_counts += 1
+                            if idx != 0:
+                                input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
+                                input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
+                                input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+
+                        member_data.lecture_info = input_lecture_info
+                        member_list.append(member_data)
+        '''
+        return context
+
+
+class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_lecture_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReadTraineeLectureViewAjax, self).get_context_data(**kwargs)
+        error = None
 
         lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
 
