@@ -162,42 +162,17 @@
             ///********************* 강의 선택*************************************///
             ///********************* 강의 선택*************************************///
 
-            var lec_select_regCountArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_reg_count }}',{% endfor %}]
-            var lec_select_countArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_rem_count }}',{% endfor %}]
-            var lec_select_startArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.start_date }}',{% endfor %}]
-            var lec_select_endArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.end_date }}',{% endfor %}]
-            var lec_select_trainerNameArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.trainer_info.name }}',{% endfor %}]
+            var lec_select_regCountArray = []
+            var lec_select_countArray = []
+            var lec_select_startArray = []
+            var lec_select_endArray = []
+            var lec_select_lectureIdArray = []
+            var lec_select_trainerNameArray = []
+            var lec_select_availCountArray = []
 
-            var lec_select_modifyDateArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.mod_dt }}',{% endfor %}]
-            var lec_select_emailArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.user.email }}',{% endfor %}]
+            ajax_read_lecture_info_from_db()
 
-            var lec_select_availCountArray = [{% for lecture in lecture_data %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
-            var lec_select_emailActiveArray = [{% for lecture in lecture_data %}'{{ lecture.user_info.is_active }}',{% endfor %}]
-
-
-            function open_lecture_select_popup(){
-                read_lecture_info_from_db()
-                $('#popup_lecture_select').fadeIn('fast')
-                $('#shade2').show()
-
-
-                var len = trainerNameArray.length;
-                var list_table_to_join = []
-                for(var i=0; i<len; i++){
-                  var table = '<div class="pters_table" style="margin-top:0;">'
-                  var lectureName = '<div class="pters_table_cell table_lecture_name">'+trainerNameArray[i]+'</div>'
-                  var trainerName = '<div class="pters_table_cell table_trainer_name">'+trainerNameArray[i]+'</div>'
-                  var selection = '<div class="pters_table_cell table_selection"><a>선택</a></div>'
-                  var sum = table + lectureName + trainerName + selection + '</div>'
-                  list_table_to_join.push(sum)
-                }
-                console.log(list_table_to_join)
-                var list_table = list_table_to_join.join('')
-
-                $('#popup_lecture_select').append(list_table)
-            }
-
-            function read_lecture_info_from_db(){
+            function ajax_read_lecture_info_from_db(){
                 $.ajax({
                       url: '/trainee/read_trainee_lecture_ajax/',
                        dataType : 'html',
@@ -207,9 +182,16 @@
                       },
 
                       success:function(data){
+                        console.log('ajax')
                         var jsondata = JSON.parse(data);
+                        lec_select_regCountArray = jsondata.regCountArray
+                        lec_select_countArray = jsondata.countArray
+                        lec_select_startArray = jsondata.startArray
+                        lec_select_endArray = jsondata.endArray
+                        lec_select_lectureIdArray = jsondata.lectureIdArray
+                        lec_select_trainerNameArray = jsondata.trainerNameArray
+                        lec_select_availCountArray = jsondata.availCountArray
                         console.log(jsondata)
-                        
                       },
 
                       complete:function(){
@@ -222,8 +204,24 @@
                     })
             }
 
+            function open_lecture_select_popup(){
+                $('#popup_lecture_select').fadeIn('fast')
+                $('#shade2').show()
+                var len = lec_select_trainerNameArray.length;
+                var list_table_to_join = []
+                for(var i=0; i<len; i++){
+                  var table = '<div class="pters_table" style="margin-top:0;">'
+                  var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_trainerNameArray[i]+'</div>'
+                  var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
+                  var selection = '<div class="pters_table_cell table_selection"><a data="'+lec_select_lectureIdArray[i]+'">선택</a></div>'
+                  var sum = table + lectureName + trainerName + selection + '</div>'
+                  list_table_to_join.push(sum)
+                }
+                console.log(list_table_to_join)
+                var list_table = list_table_to_join.join('')
 
-
+                $('#popup_lecture_select').append(list_table)
+            }
 
             function lecture_check(lecture_id, check){
               $('#id_check_lecture_id').val(lecture_id);
