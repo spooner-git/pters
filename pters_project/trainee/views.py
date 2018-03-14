@@ -246,6 +246,7 @@ class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVi
 def lecture_processing(request):
 
     lecture_id = request.POST.get('lecture_id', '')
+    class_id = request.POST.get('class_id', '')
     check = request.POST.get('check', '')
     next_page = request.POST.get('next_page')
 
@@ -275,6 +276,7 @@ def lecture_processing(request):
             lecture_info.state_cd = 'IP'
             lecture_info.save()
         elif check == '2':
+            request.session['class_id'] = class_id
             request.session['lecture_id'] = lecture_id
 
     if error is None:
@@ -320,6 +322,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CalMonthView, self).get_context_data(**kwargs)
         error = None
+        class_id = self.request.session.get('class_id', '')
         lecture_id = self.request.session.get('lecture_id', '')
 
         today = datetime.date.today()
@@ -1019,7 +1022,6 @@ def get_trainee_schedule_data_func(context, user_id, lecture_id, start_date, end
         except ObjectDoesNotExist:
             error = '강사 정보가 존재하지 않습니다.'
 
-
     # 강사 setting 값 로드
     if error is None:
         context = get_trainer_setting_data(context, class_info.member_id)
@@ -1093,6 +1095,147 @@ def get_trainee_schedule_data_func(context, user_id, lecture_id, start_date, end
     context['class_info'] = class_info
     context['lecture_finish_count'] = lecture_info.lecture_reg_count - lecture_info.lecture_rem_count
     context['holiday'] = holiday
+
+    return context
+
+
+def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id, start_date, end_date):
+    error = None
+
+    context['lecture_info'] = None
+    off_schedule_id = []
+    off_schedule_start_datetime = []
+    off_schedule_end_datetime = []
+    pt_schedule_id = []
+    pt_schedule_lecture_id = []
+    pt_schedule_start_datetime = []
+    pt_schedule_end_datetime = []
+    pt_schedule_member_name = []
+    pt_schedule_finish_check = []
+    pt_schedule_note = []
+    off_repeat_schedule_id = []
+    off_repeat_schedule_type = []
+    off_repeat_schedule_week_info = []
+    off_repeat_schedule_start_date = []
+    off_repeat_schedule_end_date = []
+    off_repeat_schedule_start_time = []
+    off_repeat_schedule_time_duration = []
+
+    pt_repeat_schedule_id = []
+    pt_repeat_schedule_type = []
+    pt_repeat_schedule_week_info = []
+    pt_repeat_schedule_start_date = []
+    pt_repeat_schedule_end_date = []
+    pt_repeat_schedule_start_time = []
+    pt_repeat_schedule_time_duration = []
+    #off_repeat_schedule_reg_dt = []
+    #today = datetime.datetime.strptime(date, '%Y-%m-%d')
+    #fourteen_days_ago = today - datetime.timedelta(days=14)
+    #fifteen_days_after = today + datetime.timedelta(days=15)
+
+    # 강사 정보 가져오기
+    try:
+        class_info = ClassTb.objects.get(member_id=class_id)
+    except ObjectDoesNotExist:
+        error = '강사 정보가 존재하지 않습니다'
+
+    if error is None:
+        # 강사 클래스의 반복일정 불러오기
+        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                   en_dis_type='0')
+        for off_repeat_schedule_info in off_repeat_schedule_data:
+            off_repeat_schedule_id.append(off_repeat_schedule_info.repeat_schedule_id)
+            off_repeat_schedule_type.append(off_repeat_schedule_info.repeat_type_cd)
+            off_repeat_schedule_week_info.append(off_repeat_schedule_info.week_info)
+            off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_date))
+            off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_date))
+            off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
+            off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
+
+        pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                  en_dis_type='1')
+        for pt_repeat_schedule_info in pt_repeat_schedule_data:
+            pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
+            pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
+            pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
+            pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
+            pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
+            pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
+            pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
+
+    # OFF 일정 조회
+    if error is None:
+        off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                      en_dis_type='0', start_dt__gte=start_date,
+                                                      start_dt__lt=end_date)
+        for off_schedule_datum in off_schedule_data:
+            off_schedule_id.append(off_schedule_datum.schedule_id)
+            off_schedule_start_datetime.append(off_schedule_datum.start_dt)
+            off_schedule_end_datetime.append(off_schedule_datum.end_dt)
+
+    # PT 일정 조회
+    if error is None:
+        # 강사에 해당하는 강좌 정보 불러오기
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+        for lecture_datum in lecture_data:
+            # 강좌별로 연결되어있는 회원 리스트 불러오기
+            member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
+            # 강좌별로 연결된 PT 스케쥴 가져오기
+            lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
+                                                                       en_dis_type='1',
+                                                                       start_dt__gte=start_date,
+                                                                       start_dt__lt=end_date)
+            # PT 스케쥴 정보 셋팅
+            for pt_schedule_datum in lecture_datum.pt_schedule_data:
+                # lecture schedule id 셋팅
+                pt_schedule_id.append(pt_schedule_datum.schedule_id)
+                # lecture schedule 에 해당하는 lecture id 셋팅
+                pt_schedule_lecture_id.append(lecture_datum.lecture_id)
+                pt_schedule_member_name.append(member_data.name)
+                pt_schedule_start_datetime.append(pt_schedule_datum.start_dt)
+                pt_schedule_end_datetime.append(pt_schedule_datum.end_dt)
+                if pt_schedule_datum.note is None:
+                    pt_schedule_note.append('')
+                else:
+                    pt_schedule_note.append(pt_schedule_datum.note)
+                # 끝난 스케쥴인지 확인
+                if pt_schedule_datum.state_cd == 'PE':
+                    pt_schedule_finish_check.append(1)
+                else:
+                    pt_schedule_finish_check.append(0)
+
+    if error is None:
+        class_info.schedule_check = 0
+        class_info.save()
+
+    context['off_schedule_id'] = off_schedule_id
+    context['off_schedule_start_datetime'] = off_schedule_start_datetime
+    context['off_schedule_end_datetime'] = off_schedule_end_datetime
+    context['pt_schedule_id'] = pt_schedule_id
+    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
+    context['pt_schedule_member_name'] = pt_schedule_member_name
+
+    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
+    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
+    context['pt_schedule_finish_check'] = pt_schedule_finish_check
+    context['pt_schedule_note'] = pt_schedule_note
+
+    context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
+    context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
+    context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
+    context['off_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
+    context['off_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
+    context['off_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
+    context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
+
+    context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
+    context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
+    context['pt_repeat_schedule_week_info_data'] = pt_repeat_schedule_week_info
+    context['pt_repeat_schedule_start_date_data'] = pt_repeat_schedule_start_date
+    context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
+    context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
+    context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
+
 
     return context
 
