@@ -178,20 +178,34 @@
             }
 
             if(ptRepeatScheduleTypeArray.length>0){
-              var trainee_repeat_type = repeat_info_dict[Options.language][ptRepeatScheduleTypeArray[0]]
-              var trainee_repeat_day = repeat_info_dict[Options.language][ptRepeatScheduleWeekInfoArray[0]]
-              var trainee_repeat_time = time_format_to_hangul(ptRepeatScheduleStartTimeArray[0])
-              var trainee_repeat_end = '반복종료 : '+ date_format_to_hangul(ptRepeatScheduleEndDateArray[0])
+                var trainee_repeat_type = repeat_info_dict[Options.language][ptRepeatScheduleTypeArray[0]]
+                var trainee_repeat_day = function(){
+                                          var repeat_day_info_raw = ptRepeatScheduleWeekInfoArray[0].split('/')
+                                          var repeat_day_info = ""
+                                          if(repeat_day_info_raw.length>1){
+                                              for(var j=0; j<repeat_day_info_raw.length; j++){
+                                                  var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+                                              }
+                                          }else if(repeat_day_info_raw.length == 1){
+                                              var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+                                          }
+                                          if(repeat_day_info.substr(0,1) == '/'){
+                                              var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+                                          }
+                                            return repeat_day_info
+                                        };
+                var trainee_repeat_time = time_format_to_hangul(ptRepeatScheduleStartTimeArray[0])
+                var trainee_repeat_end = '반복종료 : '+ date_format_to_hangul(ptRepeatScheduleEndDateArray[0])
             }else{
-              var trainee_repeat_type = ''
-              var trainee_repeat_day = '-'
-              var trainee_repeat_time = ''
-              var trainee_repeat_end = ''
+                var trainee_repeat_type = ''
+                var trainee_repeat_day = '-'
+                var trainee_repeat_time = ''
+                var trainee_repeat_end = ''
             }
 
             $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
             $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_type+' '
-                                                  +trainee_repeat_day + ' '
+                                                  +trainee_repeat_day() + ' '
                                                   +trainee_repeat_time)
             $('._Repeat_Info span').text(trainee_repeat_end)
               
