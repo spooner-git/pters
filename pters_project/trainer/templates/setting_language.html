@@ -44,18 +44,6 @@
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <script>
-          var Options = { 
-                          "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
-                          "location" : "Japan", //Korea, Japan, English, Chinese
-          }
-
-          if(Options.language == "KOR"){
-            $('#uptext2').text("언어 설정")
-          }else if(Options.language == "ENG"){
-            $('#uptext2').text("Language Setting")
-          }else if(Options.language == "JPN"){
-            $('#uptext2').text("言語")
-          }
 
           $('#page-base-addstyle').css('display','block')
           
