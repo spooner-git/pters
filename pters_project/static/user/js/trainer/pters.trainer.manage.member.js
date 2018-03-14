@@ -453,7 +453,7 @@ memberListSet('finished','name')
 //#####################페이지 들어오면 초기 시작 함수//#####################
 
 
-
+/*
 function date_format_to_yyyymmdd(rawData){
   var replaced =  rawData.replace(/년 |월 |일|:|-| /gi,'_').split('_')
   var yyyy = replaced[0]
@@ -467,6 +467,7 @@ function date_format_to_yyyymmdd(rawData){
   }
   return yyyy+mm+dd
 }
+*/
 
 function count_format_to_nnnn(rawData){
   if(rawData == '0'){
@@ -557,8 +558,8 @@ function DataFormatting(type){
     }
 
     for(i=0; i<len; i++){
-      var date    = date_format_to_yyyymmdd(startDateArray[i])
-      var enddate = date_format_to_yyyymmdd(endDateArray[i])
+      var date    = date_format_to_yyyymmdd(startDateArray[i],'')
+      var enddate = date_format_to_yyyymmdd(endDateArray[i],'')
       //날짜형식을 yyyymmdd 로 맞추기
 
       var countOri = remainCountArray[i]
@@ -572,6 +573,7 @@ function DataFormatting(type){
       dateListResult[i]=date+'_'+nameInfoArray[i]+'_'+idInfoArray[i]+'_'+phoneInfoArray[i]+'_'+contentInfoArray[i]+'_'+countOri+'_'+regcountOri+'_'+enddate+'/'+emailInfoArray[i]
     }
 }
+
 
 function DataFormattingDict(Option){
     switch(Option){
