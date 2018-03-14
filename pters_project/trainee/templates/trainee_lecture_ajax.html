@@ -17,6 +17,8 @@
       [{% for class_info in class_data %}"{{ class_info.class_type_name}}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "classIdArray":
       [{% for class_info in class_data %}"{{ class_info.class_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "npLectureCountsArray":
+      [{% for class_info in class_data %}"{{ class_info.np_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
