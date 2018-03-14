@@ -582,6 +582,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
 
+
     if pt_schedule_date == '':
         error = '날짜를 선택해 주세요.'
     elif pt_schedule_time_duration == '':
@@ -598,6 +599,9 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             lecture_info = LectureTb.objects.get(member_id=user_id,lecture_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
+
+    seven_days_ago = start_date - datetime.timedelta(days=7)
+    seven_days_after = end_date + datetime.timedelta(days=7)
 
     if error is None:
         if start_date >= fifteen_days_after:
@@ -620,15 +624,6 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     if error is None:
         if lecture_info.lecture_avail_count == 0:
             error = '예약 가능한 횟수가 없습니다'
-
-    if error is None:
-        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id)
-
-        for schedule_datum in schedule_data:
-            error = date_check_func(pt_schedule_date, start_date, end_date,
-                                    schedule_datum.start_dt, schedule_datum.end_dt)
-            if error is not None:
-                break
 
     if error is None:
         try:
@@ -660,6 +655,26 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         except InternalError:
             error = '예약 가능한 횟수를 확인해주세요.'
         except ValidationError:
+            error = '예약 가능한 횟수를 확인해주세요.'
+
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                  start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after).exclude(schedule_id=lecture_schedule_data.schedule_id)
+        for schedule_datum in schedule_data:
+            error = date_check_func(pt_schedule_date, start_date, end_date,
+                                    schedule_datum.start_dt, schedule_datum.end_dt)
+            if error is not None:
+                break
+    if error is not None:
+        lecture_schedule_data.delete()
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id))
+        if lecture_info.lecture_reg_count >= len(schedule_data):
+            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
+                                                      - len(schedule_data)
+            lecture_info.mod_dt = timezone.now()
+            lecture_info.save()
+
+        else:
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
