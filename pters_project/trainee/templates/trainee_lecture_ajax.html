@@ -11,6 +11,10 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.trainer_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "availCountArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "lectureIdArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }
