@@ -24,8 +24,8 @@ $(document).ready(function(){
 	var oriMonth = date.getMonth()+1;
 	var oriDate = date.getDate();
 
-	var notAvailableStartTime = Options.stoptimeStart; //강사가 설정한 예약불가 시간 (시작)
-	var notAvailableEndTime = Options.stoptimeEnd; //강사가 설정한 예약불가 시간 (종료)
+	var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시작 시간 (시작)
+	var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
 	var reserveOption = Options.reserve 
 
 
@@ -94,14 +94,15 @@ $(document).ready(function(){
 				var infoText2 = yy+'년 '+ mm+'월 '+ dd+'일 ' + day
 				$('#popup_info4').text(infoText2);
 				console.log($('#popup_info4').text())
-				timeGraphSet("class","grey");  //시간 테이블 채우기
-		        timeGraphSet("off","grey")
-		        startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+				//timeGraphSet("class","grey");  //시간 테이블 채우기
+		        //timeGraphSet("off","grey")
+		        //startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+		        ajaxTimeGraphSet()
 				$('#id_training_date').val(yy+'-'+mm+'-'+dd);
 			}
 		}else if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
 			$('#shade2').css({'display':'block'});
-			$('#ng_popup_text').html('<p>현재시간은 일정 예약이 불가한 시간입니다.</p><p style="color:#fe4e65;font-size=13px;">예약불가 시간대<br> '+notAvailableStartTime+'시 ~ '+notAvailableEndTime+'시</p>')
+			$('#ng_popup_text').html('<p>현재시간은 일정 예약이 불가한 시간입니다.</p><p style="color:#fe4e65;font-size=13px;">예약가능 시간대<br> '+availableStartTime+'시 ~ '+availableEndTime+'시</p>')
 			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
 			//$(this).fadeOut(5000)
 			})
@@ -263,7 +264,7 @@ $(document).ready(function(){
 	//dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
 	classDates(); //나의 PT일정에 핑크색 동그라미 표시
 	monthText(); //상단에 연, 월 표시
-	availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
+	availableDateIndicator(availableStartTime,availableEndTime);
 	krHoliday(); //대한민국 공휴일
 
 	//다음페이지로 슬라이드 했을때 액션
@@ -302,7 +303,8 @@ $(document).ready(function(){
 			classDates();
 			monthText();
 			krHoliday();
-			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
+			availableDateIndicator(availableStartTime,availableEndTime);
+			ajaxClassTime()
 			myswiper.update(); //슬라이드 업데이트
 
 		},
@@ -317,7 +319,8 @@ $(document).ready(function(){
 			classDates();
 			monthText();
 			krHoliday();
-			availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
+			availableDateIndicator(availableStartTime,availableEndTime);
+			ajaxClassTime()
 			myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
@@ -449,14 +452,19 @@ $(document).ready(function(){
 				var odd='0'+oriDate
 			}
 
+			var classTime = classStartArray[i]
+			if(classTime == "24:00"){
+				var classTime = "00:00"
+			}
+
 			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
-				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').text(classStartArray[i])
+				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').text(classTime)
 			}else{
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
-				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').text(classStartArray[i])
+				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').text(classTime)
 			}
 		};
 	};
@@ -477,30 +485,29 @@ $(document).ready(function(){
 	};
 
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
-	function availableDateIndicator(not_AvailableStartTime,Endtime){ 
-	// 요소설명
-	// not_AvailableStartTime : 강사가 설정한 '회원이 예약 불가능한 시간대 시작시간'
-	// not_AvailableStartTime : 강사가 설정한 '회원이 예약 불가능한 시간대 종료시간'
-	// ex : 밤 22시 ~ 익일 새벽 6시까지 일정 설정 불가 (24시간제로 입력)
-	//Start : 17, End : 6 current: 14
-		if(currentHour<Endtime || currentHour>=not_AvailableStartTime){
-			for(i=currentDate;i<=currentDate+14;i++){
-				if(i>lastDay[oriMonth-1] && oriMonth<12){
-				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
-				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
-					$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
-				}else{
-				 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')
-				}
-			}
-		}else{
+	function availableDateIndicator(availableStartTime,Endtime){ 
+		// 요소설명
+		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 시작시간'
+		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 마감시간'
+
+		if(currentHour<Endtime || currentHour>=availableStartTime){
 			for(i=currentDate;i<=currentDate+14;i++){
 				if(i>lastDay[oriMonth-1] && oriMonth<12){
 				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
 				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
 					$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
 				}else{
-				 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('available')	
+				 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('available')
+				}
+			}
+		}else{
+			for(i=currentDate;i<=currentDate+14;i++){
+				if(i>lastDay[oriMonth-1] && oriMonth<12){
+				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
+				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
+					$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
+				}else{
+				 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')	
 				}
 			}
 		}	
@@ -549,23 +556,131 @@ $(document).ready(function(){
 		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
 	}
 
+	function ajaxClassTime(){
 
+		var yyyy = $('#yearText').text()
+		var mm = $('#monthText').text().replace(/월/gi,"")
+		if(mm.length<2){
+			var mm = '0' + mm
+		}
+		var today_form = yyyy+'-'+ mm +'-'+"01"
+		console.log(today_form)
 
+        $.ajax({
+          url: '/trainee/read_trainee_schedule_ajax/',
+          type : 'POST',
+		  data : {"date":today_form, "day":46},
+		  dataType : 'html',
+
+          beforeSend:function(){
+          	AjaxBeforeSend();
+          },
+
+          success:function(data){
+          	var jsondata = JSON.parse(data);
+          	classTimeArray_start_date = []
+          	classTimeArray_end_date = []
+          	scheduleIdArray = []
+          	scheduleFinishArray = []
+          	classTimeArray_member_name = []
+          	offTimeArray_start_date = []
+          	offTimeArray_end_date = []
+          	classDateArray = []
+          	classStartArray = []
+          	
+            
+            classTimeArray_start_date = jsondata.classTimeArray_start_date
+            classTimeArray_end_date = jsondata.classTimeArray_end_date
+            classTimeArray_start_date = jsondata.classTimeArray_start_date
+          	classTimeArray_end_date = jsondata.classTimeArray_end_date
+          	scheduleIdArray = jsondata.scheduleIdArray
+          	scheduleFinishArray = jsondata.scheduleFinishArray
+          	classTimeArray_member_name = jsondata.classTimeArray_member_name
+          	offTimeArray_start_date = jsondata.offTimeArray_start_date
+          	offTimeArray_end_date = jsondata.offTimeArray_end_date
+
+          	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
+          },
+
+          complete:function(){
+          	AjaxCompleteSend();
+          },
+
+          error:function(){
+            console.log('server error')
+          }
+        })    
+    }
+
+    function ajaxTimeGraphSet(){
+            var today_form = $('#datepicker').val()
+
+            $.ajax({
+              url: '/trainee/read_trainee_schedule_ajax/',
+              type : 'POST',
+              data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
+              dataType : 'html',
+
+              beforeSend:function(){
+              },
+
+              success:function(data){
+                var jsondata = JSON.parse(data);
+                /*팝업의 timegraph 업데이트*/
+                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+                classDateData = []
+                classTimeData = []
+                offDateData=[]
+                offTimeData = []
+                offAddOkArray = [] //OFF 등록 시작 시간 리스트
+                durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
+                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+                timeGraphSet("class","grey");  //시간 테이블 채우기
+		        timeGraphSet("off","grey")
+                startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+              },
+
+              complete:function(){
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            }) 
+    }
+
+    function AjaxBeforeSend(){
+		$('html').css("cursor","wait");
+        //$('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+        $('.ajaxloadingPC').show();
+
+	}
+
+	function AjaxCompleteSend(){
+		$('html').css("cursor","auto");
+        //$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+        $('.ajaxloadingPC').hide();
+
+	}
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//일정 추가관련//
 
-	var classDateData = []
-    var classTimeData = []
-    var offDateData=[]
-    var offTimeData = []
-    var offAddOkArray = [] //OFF 등록 시작 시간 리스트
-    var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+	//var classDateData = []
+    //var classTimeData = []
+    //var offDateData=[]
+    //var offTimeData = []
+    //var offAddOkArray = [] //OFF 등록 시작 시간 리스트
+    //var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
 
-    DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
-    DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
+    //DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
+    //DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
 
 
 
@@ -598,10 +713,10 @@ $(document).ready(function(){
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
         console.log(offAddOkArray)
-      }
+    }
 
     function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
-    //DB데이터 가공
+    	//DB데이터 가공
       var classTimeLength = startarray.length
       var startlength = startarray.length;
       var endlength = endarray.length;
@@ -712,8 +827,9 @@ $(document).ready(function(){
           }
         }
         timeGraphLimitSet(Options.limit)
-      }
+    }
 
+    //Options.limit = 4
     function timeGraphLimitSet(limit){  //회원달력 전용 timeGraphLimitSet 함수 
         var selecteddatearry = $('#popup_info4').text().replace(/년 |월 |일 |:| /gi,"_").split("_")
         var yy_ = selecteddatearry[0];
@@ -742,27 +858,29 @@ $(document).ready(function(){
         var today = yy+'-'+mm+'-'+dd
         console.log(selecteddate,today)
         if(selecteddate==today){
-          for(var i=5;i<=24;i++){
+          for(var i=0;i<=23;i++){
             var time = $('#'+i+'g')
+            console.log(hh,limit,hh+limit)
             if(i<=hh+limit){
               time.addClass('greytimegraph')
             }
           }
         }
-      }
+    }
 
 
 
     function startTimeArraySet(){ //offAddOkArray 채우기 : 시작시간 리스트 채우기
         offAddOkArray = []
-        for(i=5;i<=24;i++){
+        for(i=0;i<=23;i++){
           if(!$('#'+i+'g').hasClass('pinktimegraph') == true && !$('#'+i+'g').hasClass('greytimegraph') == true){
             offAddOkArray.push(i);
           }
         }
-      }
+        console.log(offAddOkArray)
+    }
 
-      function durTimeSet(selectedTime){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
+    function durTimeSet(selectedTime){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
         var len = offAddOkArray.length;
         var durTimeList = $('#durations')
         var index = offAddOkArray.indexOf(Number(selectedTime));
@@ -794,9 +912,9 @@ $(document).ready(function(){
             }
           }
         }
-      }
+    }
 
-      function addGraphIndicator(datadur){
+    function addGraphIndicator(datadur){
         $('.tdgraph').removeClass('graphindicator');
         var starttext = $('#starttimesSelected button').val().split(' ');
         var daymorning = starttext[0];
@@ -817,7 +935,7 @@ $(document).ready(function(){
         for(var i=startnum; i<finnum; i++){
           $('#'+i+'g').addClass('graphindicator')
         }
-      }
+    }
 
 
 });//document(ready)

@@ -223,7 +223,6 @@
 
              
              var stoptime = '{{ lt_res_01 }}'
-             console.log(stoptime.length)
              if(stoptime.length>0){
                 var stoptimeStart = Number('{{ lt_res_01 }}'.split(':')[0])
                 var stoptimeEnd = Number('{{ lt_res_01 }}'.split('-')[1].split(':')[0])
@@ -247,7 +246,6 @@
                               "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
                               "location" : "Japan",           //Korea, Japan, English, Chinese
             }
-            var stoptime = '{{ lt_res_01 }}'
 
               if(Options.language=="JPN"){
                 $(".KRtext, .ENtext").remove();
