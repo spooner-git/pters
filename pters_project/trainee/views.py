@@ -175,10 +175,14 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(WeekAddView, self).get_context_data(**kwargs)
         error = None
         lecture_id = self.request.session.get('lecture_id', '')
+
+        today = datetime.date.today()
+        start_date = today - datetime.timedelta(days=46)
+        end_date = today + datetime.timedelta(days=47)
         if lecture_id is None or '':
             error = '수강정보를 확인해 주세요.'
         if error is None:
-            context = get_trainee_schedule_data_func(context, self.request.user.id)
+            context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
         return context
 
@@ -200,11 +204,16 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(CalMonthView, self).get_context_data(**kwargs)
         error = None
         lecture_id = self.request.session.get('lecture_id', '')
+
+        today = datetime.date.today()
+        start_date = today - datetime.timedelta(days=46)
+        end_date = today + datetime.timedelta(days=47)
+
         if lecture_id is None or '':
             error = '수강정보를 확인해 주세요.'
 
         if error is None:
-            context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id)
+            context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
             # 강사 setting 값 로드
             context = get_trainee_setting_data(context, self.request.user.id)
@@ -220,11 +229,16 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(MyPageView, self).get_context_data(**kwargs)
         error = None
         lecture_id = self.request.session.get('lecture_id', '')
+
+        today = datetime.date.today()
+        start_date = today - datetime.timedelta(days=46)
+        end_date = today + datetime.timedelta(days=47)
+
         if lecture_id is None or '':
             error = '수강정보를 확인해 주세요.'
 
         if error is None:
-            context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id)
+            context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
             # 강사 setting 값 로드
             context = get_trainee_setting_data(context, self.request.user.id)
@@ -791,6 +805,7 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         context = super(ReadTraineeScheduleViewAjax, self).get_context_data(**kwargs)
         date = request.session.get('date', '')
         day = request.session.get('day', '')
+        lecture_id = self.request.session.get('lecture_id', '')
         today = datetime.date.today()
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -799,13 +814,14 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(47))
 
-        context = get_trainee_schedule_data_func(context, self.request.user.id, start_date, end_date)
+        context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         date = request.POST.get('date', '')
         day = request.POST.get('day', '')
+        lecture_id = self.request.session.get('lecture_id', '')
         today = datetime.date.today()
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -816,12 +832,12 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         end_date = today + datetime.timedelta(days=int(day)+1)
 
         context = super(ReadTraineeScheduleViewAjax, self).get_context_data(**kwargs)
-        context = get_trainee_schedule_data_func(context, self.request.user.id, start_date, end_date)
+        context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
         return render(request, self.template_name, context)
 
 
-def get_trainee_schedule_data_func(context, user_id, lecture_id):
+def get_trainee_schedule_data_func(context, user_id, lecture_id, start_date, end_date):
     error = None
     class_info = None
     lecture_info = None
@@ -845,8 +861,8 @@ def get_trainee_schedule_data_func(context, user_id, lecture_id):
 
     today = datetime.date.today()
     now = timezone.now()
-    fourteen_days_ago = today - datetime.timedelta(days=14)
-    fifteen_days_after = today + datetime.timedelta(days=15)
+    # fourteen_days_ago = today - datetime.timedelta(days=14)
+    # fifteen_days_after = today + datetime.timedelta(days=15)
     next_schedule_start_dt = ''
     next_schedule_end_dt = ''
 
@@ -914,8 +930,8 @@ def get_trainee_schedule_data_func(context, user_id, lecture_id):
     if error is None:
 
         class_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                        start_dt__gte=fourteen_days_ago,
-                                                        start_dt__lt=fifteen_days_after)
+                                                        start_dt__gte=start_date,
+                                                        start_dt__lt=end_date)
         for class_schedule_datum in class_schedule_data:
             daily_off_data_start_date.append(class_schedule_datum.start_dt)
             daily_off_data_end_date.append(class_schedule_datum.end_dt)
