@@ -225,6 +225,7 @@
     {% endif %}
   -->
     <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
+        <input type="hidden" name="member_id"    id="id_member_id">
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
         <input type="hidden" name="training_date" id="id_training_date">
@@ -245,6 +246,7 @@
     </form>
 
     <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
+        <input type="hidden" name="member_id"        id="id_repeat_member_id">
         <input type="hidden" name="lecture_id"        id="id_repeat_lecture_id">
         <input type="hidden" name="member_name"       id="id_repeat_member_name">
         <input type="hidden" name="repeat_freq"       id="id_repeat_freq">
@@ -748,9 +750,10 @@
           var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
 
           //PT 일정 등록시 필요한 정보
-          var memberNameArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.name }}',{% endfor %}];
-          var memberAvailCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}];
-          var memberLectureIdArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_id }}',{% endfor %}];
+          var memberIdArray =[{% for member_info in member_data %}'{{ member_info.user.id }}',{% endfor %}];
+          var memberNameArray = [{% for member_info in member_data %}'{{ member_info.name }}',{% endfor %}];
+          var memberAvailCountArray = [{% for member_info in member_data %}'{{ member_info.lecture_info.lecture_avail_count }}',{% endfor %}];
+          var memberLectureIdArray = [{% for member_info in member_data %}'{{ member_info.lecture_info.lecture_id }}',{% endfor %}];
 
           //OFF 일정 관련 정보
           var offScheduleIdArray = [{% for off_schedule_id_info in off_schedule_id %}'{{ off_schedule_id_info }}', {% endfor %}];

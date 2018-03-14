@@ -105,7 +105,6 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
 
-    # print(error)
     return error
 
 
@@ -249,18 +248,6 @@ def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
             pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
             pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
 
-    # 강좌에 해당하는 수강/회원 정보 가져오기, 예약가능 횟수 1개 이상인 회원
-    if error is None:
-        # 강좌에 해당하는 수강정보 가져오기
-        context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                           lecture_avail_count__gte=1, use=1)
-        for lecture in context['lecture_info']:
-            # 수강정보에 해당하는 회원정보 가져오기
-            try:
-                lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
-            except ObjectDoesNotExist:
-                error = '회원 정보가 존재하지 않습니다'
-
     # OFF 일정 조회
     if error is None:
         off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
@@ -312,10 +299,12 @@ def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
     context['pt_schedule_id'] = pt_schedule_id
     context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
     context['pt_schedule_member_name'] = pt_schedule_member_name
+
     context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
     context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
     context['pt_schedule_note'] = pt_schedule_note
+
     context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
     context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
     context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
@@ -339,6 +328,7 @@ def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
 @csrf_exempt
 def add_schedule_logic(request):
     lecture_id = request.POST.get('lecture_id')
+    member_id = request.POST.get('member_id')
     member_name = request.POST.get('member_name')
     schedule_date = request.POST.get('training_date')
     schedule_time = request.POST.get('training_time')
@@ -357,7 +347,7 @@ def add_schedule_logic(request):
     request.session['day'] = day
 
     if en_dis_type == '1':
-        if lecture_id == '':
+        if member_id == '':
             error = '회원을 선택해 주세요.'
 
     if schedule_date == '':
@@ -411,6 +401,7 @@ def add_schedule_logic(request):
         try:
             with transaction.atomic():
                 for input_datetime in input_datetime_list:
+                    lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
                     error = add_schedule_logic_func(schedule_date, input_datetime[0], input_datetime[1],
                                                     request.user.id, lecture_id, note,
                                                     en_dis_type, None)
@@ -562,6 +553,10 @@ def finish_schedule_logic(request):
             error = '회원 PT 정보가 존재하지 않습니다'
 
     if error is None:
+        if lecture_info.state_cd == 'NP':
+            error = '회원이 수락하지 않은 스케쥴입니다.'
+
+    if error is None:
         # 강사 정보 가져오기
         try:
             class_info = ClassTb.objects.get(class_id=schedule_info.class_tb_id)
@@ -620,7 +615,7 @@ def finish_schedule_logic(request):
 # 반복 일정 추가
 @csrf_exempt
 def add_repeat_schedule_logic(request):
-
+    member_id = request.POST.get('member_id')
     lecture_id = request.POST.get('lecture_id')
     member_name = request.POST.get('member_name')
     repeat_type = request.POST.get('repeat_freq')
@@ -762,6 +757,7 @@ def add_repeat_schedule_logic(request):
                 try:
                     with transaction.atomic():
                         for input_datetime in input_datetime_list:
+                            lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
                             error = add_schedule_logic_func(str(check_date).split(' ')[0], input_datetime[0],
                                                             input_datetime[1], request.user.id,
                                                             lecture_id, '', en_dis_type,
@@ -796,6 +792,7 @@ def add_repeat_schedule_logic(request):
                         error_message = error_message + '/' + error
             else:
                 error_message = error
+
             error = None
 
             check_date = check_date + datetime.timedelta(days=1)
@@ -804,12 +801,9 @@ def add_repeat_schedule_logic(request):
                 if repeat_type == '2W':
                     check_date = check_date + datetime.timedelta(days=7)
 
-    # print(error)
-    # print(error_date)
     if error is None:
-
-        if error_date is not None:
-            messages.info(request, error_date)
+        if error_message is not None:
+            messages.info(request, error_message)
             return redirect(next_page)
         return redirect(next_page)
     else:
@@ -1140,3 +1134,16 @@ def save_log_data(start_date, end_date, user_id, user_name, member_name, en_dis_
     log_data = LogTb(external_id=user_id, log_type=log_type, contents=log_contents, reg_dt=timezone.now(),
                      use=1)
     log_data.save()
+
+
+def get_member_schedule_input_lecture(class_id, member_id):
+
+    lecture_id = None
+    # 강좌에 해당하는 수강/회원 정보 가져오기
+    lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id,
+                                            lecture_avail_count__gt=0, use=1).order_by('start_date')
+    if len(lecture_list) > 0:
+        lecture_id = lecture_list[0].lecture_id
+
+    return lecture_id
+
