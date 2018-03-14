@@ -286,4 +286,9 @@
 	.subjectbar{
 		text-align: center;
 	}
+
+	.fixfooter{
+		position: relative;
+		margin-top: 50px;
+	}
 }

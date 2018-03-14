@@ -8,6 +8,8 @@
 {% endblock %}
 
 {% block content %}
+<img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
+
 <form action="{% url 'trainee:pt_delete_logic' %}" id="pt-delete-form" method="post">
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="next_page" value = '{% url 'trainee:cal_month' %}'>
@@ -74,6 +76,11 @@
           <table class="timegraphtext">
             <tbody>
               <tr>
+                <td>00</td>
+                <td>01</td>
+                <td>02</td>
+                <td>03</td>
+                <td>04</td>
                 <td>05</td>
                 <td>06</td>
                 <td>07</td>
@@ -93,9 +100,13 @@
                 <td>21</td>
                 <td>22</td>
                 <td>23</td>
-                <td>24</td>
               </tr>
               <tr>
+                <td id="0g" class="tdgraph"></td>
+                <td id="1g" class="tdgraph"></td>
+                <td id="2g" class="tdgraph"></td>
+                <td id="3g" class="tdgraph"></td>
+                <td id="4g" class="tdgraph"></td>
                 <td id="5g" class="tdgraph"></td>
                 <td id="6g" class="tdgraph"></td>
                 <td id="7g" class="tdgraph"></td>
@@ -115,7 +126,6 @@
                 <td id="21g" class="tdgraph"></td>
                 <td id="22g" class="tdgraph"></td>
                 <td id="23g" class="tdgraph"></td>
-                <td id="24g" class="tdgraph"></td>
               </tr>
             </tbody>
           </table>
