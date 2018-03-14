@@ -162,7 +162,6 @@
             ///********************* 강의 선택*************************************///
             ///********************* 강의 선택*************************************///
 
-            /*
             var lec_select_regCountArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_reg_count }}',{% endfor %}]
             var lec_select_countArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_rem_count }}',{% endfor %}]
             var lec_select_startArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.start_date }}',{% endfor %}]
@@ -174,26 +173,10 @@
 
             var lec_select_availCountArray = [{% for lecture in lecture_data %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
             var lec_select_emailActiveArray = [{% for lecture in lecture_data %}'{{ lecture.user_info.is_active }}',{% endfor %}]
-            */
 
-            var regCountArray = ['30','20',]
-            var countArray = ['30','20',]
-            var startArray = ['2018년 3월 14일','2018년 3월 14일',]
-            var endArray = ['2019년 3월 14일','2018년 5월 14일',]
-            var trainerNameArray = ['김선겸','김선겸',]
-
-            var modifyDateArray = ['','',]
-            var emailArray = ['','',]
-
-            //처리 필요 - hk.kim 180110
-            var availCountArray = ['6','20',]
-
-            var emailActiveArray = ['','',]
-
-            '<div class="pters_table">'
-              '<div class="pters_table_cell"></div>'
 
             function open_lecture_select_popup(){
+                read_lecture_info_from_db()
                 $('#popup_lecture_select').fadeIn('fast')
                 $('#shade2').show()
 
@@ -212,6 +195,31 @@
                 var list_table = list_table_to_join.join('')
 
                 $('#popup_lecture_select').append(list_table)
+            }
+
+            function read_lecture_info_from_db(){
+                $.ajax({
+                      url: '/trainee/read_trainee_lecture_ajax/',
+                       dataType : 'html',
+
+                      beforeSend:function(){
+                        
+                      },
+
+                      success:function(data){
+                        var jsondata = JSON.parse(data);
+                        console.log(jsondata)
+                        
+                      },
+
+                      complete:function(){
+                        
+                      },
+
+                      error:function(){
+                        console.log('server error')
+                      }
+                    })
             }
 
 
