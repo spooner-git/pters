@@ -46,7 +46,15 @@
                       <td class="_contact">
                           {{ lecture_info.trainer_info.name }} 트레이너
                           <a href="tel:{{ lecture_info.trainer_info.phone }}"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>
-                          <a class="phonenum" href="tel:{{ lecture_info.trainer_info.phone }}">{{ lecture_info.trainer_info.phone }}</a>
+                          <a class="phonenum" href="tel:{{ lecture_info.trainer_info.phone }}">
+                            <script type="text/javascript">
+                              telnumber = function(){
+                                var dbnum = '{{ lecture_info.trainer_info.phone }}'
+                                return dbnum.substr(0,3)+'.'+dbnum.substr(3,4)+'.'+dbnum.substr(7,4)
+                              }
+                              document.write(telnumber())
+                            </script>
+                          </a>
                           <a href="sms:{{ lecture_info.trainer_info.phone }}"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>
                       </td>
                       <td class="_manage">
