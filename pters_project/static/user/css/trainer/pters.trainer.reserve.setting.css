@@ -22,6 +22,24 @@ li a{
 	min-width: 80px;
 }
 
+.dropdown button{
+	max-width: 130px;
+}
+
+#memberReserveSetting{
+	z-index: 2;
+}
+
+#hourSelect, #hourSelect2{
+	display: inline-flex;
+	width: 50%;
+}
+
+#timeSelect{
+	width: auto;
+	display: inline-flex;
+}
+
 #pushTimeSet{
 	display: none;
 }
@@ -99,7 +117,9 @@ li a{
 
 .settingBox{
 	position: relative;
+	z-index: 1;
 }
+
 
 .settingText{
 	margin: 0;
@@ -122,6 +142,8 @@ li a{
 
 
 .iconText{
+	display: inline-block;
+	width: 45%;
 	position: relative;
 	font-size: 13.9px;
 	color: #3b3d3d;
