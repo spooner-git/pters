@@ -222,8 +222,18 @@
              }; 
 
              
-             var Options = {  "stoptimeStart": Number('{{ lt_res_01 }}'.split(':')[0]) ,             //강사가 설정한 예약불가 시간 (시작)
-                              "stoptimeEnd": Number('{{ lt_res_01 }}'.split('-')[1].split(':')[0]) ,                //강사가 설정한 예약불가 시간 (종료)
+             var stoptime = '{{ lt_res_01 }}'
+             console.log(stoptime.length)
+             if(stoptime.length>0){
+                var stoptimeStart = Number('{{ lt_res_01 }}'.split(':')[0])
+                var stoptimeEnd = Number('{{ lt_res_01 }}'.split('-')[1].split(':')[0])
+             }else{
+                var stoptimeStart = ''
+                var stoptimeEnd = ''
+             }
+
+             var Options = {  "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
+                              "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
                               "limit":'{{ lt_res_02 }}',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
                               "reserve":'{{ lt_res_03 }}',    //회원 일정 기능을 enable 1/disable 0
 
