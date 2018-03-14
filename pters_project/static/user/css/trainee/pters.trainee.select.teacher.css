@@ -42,3 +42,11 @@
 		.table_selection{
 			width: 30%;
 		}
+
+._npOpen{
+	cursor: pointer;
+}
+
+.displayNone{
+	display: none;
+}

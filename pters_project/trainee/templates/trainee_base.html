@@ -191,7 +191,7 @@
                         lec_select_lectureIdArray = jsondata.lectureIdArray
                         lec_select_trainerNameArray = jsondata.trainerNameArray
                         lec_select_availCountArray = jsondata.availCountArray
-                        console.log(jsondata)
+                        lec_select_npLectureCountsArray = jsondata.npLectureCountsArray
                       },
 
                       complete:function(){
@@ -210,18 +210,50 @@
                 var len = lec_select_trainerNameArray.length;
                 var list_table_to_join = []
                 for(var i=0; i<len; i++){
-                  var table = '<div class="pters_table" style="margin-top:0;">'
-                  var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_trainerNameArray[i]+'</div>'
-                  var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
-                  var selection = '<div class="pters_table_cell table_selection"><a data="'+lec_select_lectureIdArray[i]+'">선택</a></div>'
-                  var sum = table + lectureName + trainerName + selection + '</div>'
-                  list_table_to_join.push(sum)
+                  if(lec_select_npLectureCountsArray[i] == '0'){
+                      var table = '<div class="pters_table" style="margin-top:0;">'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_trainerNameArray[i]+'</div>'
+                      var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
+                      var selection = '<div class="pters_table_cell table_selection"><a data="'+lec_select_lectureIdArray[i]+'">선택</a></div>'
+                      var sum = table + lectureName + trainerName + selection + '</div>'
+                      list_table_to_join.push(sum)
+                  }else{
+                      var table = '<div class="pters_table" style="margin-top:0;">'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_trainerNameArray[i]+'</div>'
+                      var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
+                      var selection = '<div class="pters_table_cell table_selection _npOpen">New<img src="/static/user/res/daycal_arrow_pink.png" style="transform:rotate(-90deg); width:5px;margin-left:7px;"></div>'
+                      var sum = table + lectureName + trainerName + selection + '</div>'
+                      list_table_to_join.push(sum)
+                      for(var j=0; j<lec_select_npLectureCountsArray[i]; j++){
+                          var table = '<div class="pters_table displayNone" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[i]+'">'
+                          var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_trainerNameArray[i]+'</div>'
+                          var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
+                          var selection = '<div class="pters_table_cell table_selection"><a data="'
+                                          +lec_select_lectureIdArray[i]+'">수락/</a><a data="'
+                                          +lec_select_lectureIdArray[i]+'">거절</a></div>'
+                          var sum = table + lectureName + trainerName + selection + '</div>'
+                          list_table_to_join.push(sum)
+                      }
+                  }
                 }
-                console.log(list_table_to_join)
                 var list_table = list_table_to_join.join('')
 
                 $('#popup_lecture_select').append(list_table)
             }
+
+            $(document).on('click','div._npOpen',function(){
+                var trainer = $(this).siblings('.table_trainer_name').text()
+                var $hiddenElement = $('.pters_table[data-pter='+trainer+']')
+                if($hiddenElement.hasClass('displayNone')){
+                    $hiddenElement.removeClass('displayNone')
+                    $(this).find('img').css('transform','rotate(90deg)')
+                }else{
+                    $hiddenElement.addClass('displayNone')
+                    $(this).find('img').css('transform','rotate(-90deg)')
+                }
+                
+                
+            })
 
             function lecture_check(lecture_id, check){
               $('#id_check_lecture_id').val(lecture_id);
