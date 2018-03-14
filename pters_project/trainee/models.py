@@ -20,12 +20,13 @@ class LectureTb(models.Model):
     option_cd = models.CharField(db_column='OPTION_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', blank=True, null=True)
+    note = models.CharField(db_column='NOTE', max_length=255, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'LECTURE_TB'
 
     def __str__(self):

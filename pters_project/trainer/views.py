@@ -20,7 +20,7 @@ from config.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
 from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
-from trainee.views import get_trainee_lecture_data_func
+from trainee.views import get_trainee_repeat_schedule_data_func
 from trainer.models import ClassTb, SettingTb
 from schedule.models import ScheduleTb
 
@@ -129,6 +129,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
         end_date = today + datetime.timedelta(days=int(47))
 
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
+        context = get_member_data(context, self.request.user.id, None)
 
         return render(request, self.template_name, context)
 
@@ -146,6 +147,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
 
         context = super(CalDayViewAjax, self).get_context_data(**kwargs)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
+        context = get_member_data(context, self.request.user.id, None)
 
         return render(request, self.template_name, context)
 
@@ -159,7 +161,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=18)
         end_date = today + datetime.timedelta(days=19)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
-
+        context = get_member_data(context, self.request.user.id, None)
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
 
@@ -175,6 +177,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=46)
         end_date = today + datetime.timedelta(days=47)
         context = get_trainer_schedule_data_func(context, self.request.user.id, start_date, end_date)
+        context = get_member_data(context, self.request.user.id, None)
 
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
@@ -196,7 +199,7 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ManageMemberView, self).get_context_data(**kwargs)
-        context = get_member_data(context,self.request.user.id)
+        context = get_member_data(context, self.request.user.id, None)
 
         return context
 
@@ -206,7 +209,7 @@ class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ManageMemberViewAjax, self).get_context_data(**kwargs)
-        context = get_member_data(context,self.request.user.id)
+        context = get_member_data(context, self.request.user.id, None)
         return context
 
 
@@ -215,16 +218,15 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ManageWorkView, self).get_context_data(**kwargs)
-        context = get_member_data(context,self.request.user.id)
+        context = get_member_data(context, self.request.user.id, None)
 
         return context
 
 
-def get_member_data(context, trainer_id):
+def get_member_data(context, trainer_id, member_id):
 
     error = None
     class_info = None
-    context['lecture_info'] = None
 
     member_list = []
     member_finish_list = []
@@ -234,44 +236,47 @@ def get_member_data(context, trainer_id):
     except ObjectDoesNotExist:
         error = '강사 정보가 존재하지 않습니다'
 
-    # 강좌에 해당하는 수강/회원 정보 가져오기
     if error is None:
-        # 강좌에 해당하는 수강정보 가져오기
-        context['lecture_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                           lecture_rem_count__gt=0, use=1).order_by('-member_id')
-        context['lecture_finish_info'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                  lecture_rem_count=0, use=1).order_by('-member_id')
-        for lecture in context['lecture_info']:
-            # 수강정보에 해당하는 회원정보 가져오기
-            try:
-                lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
-            except ObjectDoesNotExist:
-                error = '회원 정보가 존재하지 않습니다'
-
-        for lecture in context['lecture_finish_info']:
-            # 수강정보에 해당하는 회원정보 가져오기
-            try:
-                lecture.member_info = MemberTb.objects.get(member_id=lecture.member_id, use=1)
-            except ObjectDoesNotExist:
-                error = '회원 정보가 존재하지 않습니다'
-
-    if error is None:
-        all_member = MemberTb.objects.filter(use=1).order_by('name')
+        if member_id is None or '':
+            all_member = MemberTb.objects.filter(use=1).order_by('name')
+        else:
+            all_member = MemberTb.objects.filter(member_id=member_id, use=1).order_by('name')
 
         for member_info in all_member:
             member_data = member_info
 
+            # 강좌에 해당하는 수강/회원 정보 가져오기
             lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
                                                     lecture_rem_count__gt=0, use=1).order_by('-start_date')
             lecture_finish_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
                                                            lecture_rem_count=0, use=1).order_by('-start_date')
             if len(lecture_list) > 0:
+                member_data.np_lecture_counts = 0
                 member_data.lecture_counts = len(lecture_list)
-                member_data.lecture_info = lecture_list[0]
+                input_lecture_info = lecture_list[0]
+                for idx, lecture_info in enumerate(lecture_list):
+                    if lecture_info.state_cd == 'NP':
+                        member_data.np_lecture_counts += 1
+                    if idx != 0:
+                        input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
+                        input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
+                        input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+
+                member_data.lecture_info = input_lecture_info
                 member_list.append(member_data)
+
             if len(lecture_finish_list) > 0:
                 member_data.lecture_counts = len(lecture_finish_list)
-                member_data.lecture_info = lecture_finish_list[0]
+                input_lecture_info = lecture_finish_list[0]
+                for idx, lecture_info in enumerate(lecture_finish_list):
+                    if lecture_info.state_cd == 'NP':
+                        member_data.np_lecture_counts += 1
+                    if idx != 0:
+                        input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
+                        input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
+                        input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+
+                member_data.lecture_info = input_lecture_info
                 member_finish_list.append(member_data)
 
         context['member_data'] = member_list
@@ -637,7 +642,7 @@ def add_member_info_logic_test(request):
                     member.save()
                     state_cd = 'IP'
 
-                add_lecture_info_logic_func(class_info.class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date)
+                add_lecture_info_logic_func(class_info.class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
 
         except ValueError as e:
             error = '이미 가입된 회원입니다.'
@@ -663,7 +668,7 @@ def add_member_info_logic_test(request):
         return redirect(next_page)
 
 
-def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, start_date, end_date):
+def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, start_date, end_date, note):
 
     error = None
 
@@ -671,7 +676,9 @@ def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, st
                         lecture_reg_count=counts, lecture_rem_count=counts,
                         lecture_avail_count=counts, price=price, option_cd='DC',
                         state_cd=state_cd,
-                        start_date=start_date, end_date=end_date, mod_dt=timezone.now(),
+                        start_date=start_date, end_date=end_date,
+                        note=note,
+                        mod_dt=timezone.now(),
                         reg_dt=timezone.now(), use=1)
     lecture.save()
 
@@ -849,7 +856,6 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
         member = ''
         user = ''
         error = None
-        print(user_id)
 
         if user_id == '':
             error = 'id를 입력해주세요.'
@@ -872,70 +878,6 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
         messages.error(request, error)
 
         return render(request, self.template_name, context)
-
-
-# 회원수정 api
-@csrf_exempt
-def get_member_info_logic(request):
-    member_id = request.POST.get('id')
-    next_page = request.POST.get('next_page')
-
-    error = None
-
-    if member_id == '':
-        error = '회원 ID를 확인해 주세요.'
-
-    if error is None:
-        try:
-            user = User.objects.get(username=member_id, is_active=1)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
-
-        try:
-            member = MemberTb.objects.get(user_id=user.id, use=1)
-        except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                user.first_name = name
-                user.email = email
-                user.save()
-                member.name = name
-                member.phone = phone
-                member.contents = contents
-                member.sex = sex
-
-                if birthday_dt != '':
-                    member.birthday_dt = birthday_dt
-                member.mod_dt = timezone.now()
-                member.save()
-
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
-            error = '등록 값의 형태가 문제 있습니다'
-        except InternalError:
-            error = '등록 값에 문제가 있습니다.'
-
-    if error is None:
-
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
-                       + name + ' 회원님의</span> 정보를 <span class="status">수정</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
-        log_data.save()
-
-        return redirect(next_page)
-    else:
-        messages.error(request, error)
-
-        return redirect(next_page)
 
 
 # log 삭제
@@ -974,15 +916,17 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
     def get(self, request, *args, **kwargs):
         context = super(ReadMemberLectureData, self).get_context_data(**kwargs)
 
-        context = get_trainee_lecture_data_func(context, self.request.user.id, None)
+        context = get_trainee_repeat_schedule_data_func(context, self.request.user.id, None)
+        context = get_member_data(context, self.request.user.id, None)
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         lecture_id = request.POST.get('lecture_id', None)
-
+        member_id = request.POST.get('member_id', None)
         context = super(ReadMemberLectureData, self).get_context_data(**kwargs)
-        context = get_trainee_lecture_data_func(context, self.request.user.id, lecture_id)
+        context = get_trainee_repeat_schedule_data_func(context, self.request.user.id, member_id)
+        context = get_member_data(context, self.request.user.id, member_id)
 
         return render(request, self.template_name, context)
 

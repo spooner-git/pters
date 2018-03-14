@@ -223,6 +223,7 @@ $(document).ready(function(){
       		$("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
           $('#remainCount_mini_text').show()
       		$("#id_lecture_id").val($(this).attr('data-lectureid'));
+      		$("#id_member_id").val($(this).attr('data-memberid'));
           $("#id_member_name").val($(this).text());
           check_dropdown_selected();
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
@@ -233,7 +234,7 @@ $(document).ready(function(){
           $.ajax({
               url: serverURL,
               type:'POST',
-              data: {"lecture_id": $(this).attr('data-lectureid')},
+              data: {"lecture_id": $(this).attr('data-lectureid'), "member_id": $(this).attr('data-memberid')},
               dataType : 'html',
 
               beforeSend:function(){
@@ -249,16 +250,19 @@ $(document).ready(function(){
                 ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
                 ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
                 ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
-                selectedMemberAvailCountArray = jsondata.memberAvailCountArray
-                selectedMemberLectureIdArray = jsondata.memberLectureIdArray
+                selectedMemberIdArray = jsondata.memberIdArray;
+                selectedMemberAvailCountArray = jsondata.memberAvailCountArray;
+                selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
                 selectedMemberNameArray = jsondata.memberNameArray
 
                 fill_repeat_info('class');
                 $("#countsSelected,.countsSelected").text(selectedMemberAvailCountArray[0]);
                 if(addTypeSelect == "ptadd"){
+                  $("#id_member_id").val(selectedMemberIdArray[0]);
                   $("#id_lecture_id").val(selectedMemberLectureIdArray[0]);
                   $("#id_member_name").val(selectedMemberNameArray[0]);
                 }else if(addTypeSelect == "repeatptadd"){
+                  $("#id_repeat_member_id").val(selectedMemberIdArray[0]);
                   $("#id_repeat_lecture_id").val(selectedMemberLectureIdArray[0]);
                   $("#id_repeat_member_name").val(selectedMemberNameArray[0]);
                 }
@@ -643,6 +647,7 @@ $(document).ready(function(){
           offScheduleIdArray = [];
           scheduleFinishArray = [];
           scheduleNoteArray = [];
+          memberIdArray = [];
           memberLectureIdArray = [];
           memberNameArray = [];
           memberAvailCountArray = [];
@@ -674,6 +679,7 @@ $(document).ready(function(){
           offScheduleIdArray = jsondata.offScheduleIdArray
           scheduleFinishArray = jsondata.scheduleFinishArray;
           scheduleNoteArray = jsondata.scheduleNoteArray;
+          memberIdArray = jsondata.memberIdArray;
           memberLectureIdArray = jsondata.memberLectureIdArray;
           memberNameArray = jsondata.memberNameArray;
           memberAvailCountArray = jsondata.memberAvailCountArray;
@@ -1573,15 +1579,15 @@ $(document).ready(function(){
       function addPtMemberListSet(){
         var memberMobileList = $('#members_mobile');
         var memberPcList = $('#members_pc');
-        var memberSize = memberLectureIdArray.length;
+        var memberSize = memberIdArray.length;
         var member_array_mobile = [];
         var member_array_pc = [];
         memberMobileList.empty();
         memberPcList.empty();
         for(var i=0; i<memberSize; i++){
         	//member_array[i] = '<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
-			    member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
-        	member_array_pc[i] = '<li><a id="member_pc_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+			    member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'" data-memberid="'+memberIdArray[i]+'" data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+        	member_array_pc[i] = '<li><a id="member_pc_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'" data-memberid="'+memberIdArray[i]+'" data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
         	//memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
 			//memberMobileList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
 
