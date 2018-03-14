@@ -148,6 +148,27 @@ function time_format_to_hangul(timedata){
    return hangul_time = hourText + ' ' + hour + '시'
 }
 
+function db_datatimehangul_format_realign(dbhangul){
+   var data = dbhangul.split(' ')
+   var len = data.length
+   var realign = []
+   for(var i=0; i<len; i++){
+      if(data[i].indexOf('년')!=-1){
+         realign[0] = data[i]
+      }else if(data[i].indexOf('월')!=-1){
+         realign[1] = data[i]
+      }else if(data[i].indexOf('일')!=-1){
+         realign[2] = data[i]
+      }else if(data[i].indexOf('오전')!=-1 || data[i].indexOf('오후')!=-1){
+         realign[3] = data[i]
+      }else if(data[i].indexOf(':')!=-1){
+         realign[4] = data[i]
+      }
+   }
+   return realign.join(' ')
+}
+
+
 function count_format_to_nnnn(rawData){
   if(rawData == '0'){
     return rawData

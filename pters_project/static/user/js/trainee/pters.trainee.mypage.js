@@ -11,8 +11,8 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
-	var currentYearhistory = [1,9,29,27,22,26,18,11,0,16,19,0] //12달 순서대로 각달의 PT 수업 갯수
-	var lastYearhistory = [0,0,0,0,0,0,0,0,0,12,18,12]
+	var currentYearhistory = [10,5,16,17,22,20,18,11,3,16,19,0] //12달 순서대로 각달의 PT 수업 갯수
+	var lastYearhistory = [1,5,10,15,29,10,12,22,27,12,18,12]
 
 	var graphVerticalLength = 30;
 	var graphHorizontalLength = 36
