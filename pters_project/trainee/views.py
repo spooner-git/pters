@@ -97,6 +97,61 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(LectureSelectView, self).get_context_data(**kwargs)
         error = None
+        class_data = []
+        # lecture_data2 = []
+        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
+
+        for lecture_info in lecture_data:
+            class_info = None
+            trainer_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
+            except ObjectDoesNotExist:
+                error = '강사 정보가 없습니다.'
+
+            if error is None:
+                class_data.append(class_info)
+                try:
+                    trainer_info = MemberTb.objects.get(member_id=class_info.member_id)
+                except ObjectDoesNotExist:
+                    error = '강사 회원정보가 없습니다.'
+
+            if error is None:
+                lecture_info.class_info = class_info
+                lecture_info.trainer_info = trainer_info
+
+        messages.error(self.request, error)
+
+        context['lecture_data'] = lecture_data
+
+        '''
+                for class_info in class_data:
+                    lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=self.request.user.id)
+                    lecture_class = class_info
+                    if len(lecture_list) > 0:
+                        lecture_class.np_lecture_counts = 0
+                        lecture_class.lecture_counts = len(lecture_list)
+                        input_lecture_info = lecture_list[0]
+                        for idx, lecture_info in enumerate(lecture_list):
+                            if lecture_info.state_cd == 'NP':
+                                lecture_class.np_lecture_counts += 1
+                            if idx != 0:
+                                input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
+                                input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
+                                input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+
+                        member_data.lecture_info = input_lecture_info
+                        member_list.append(member_data)
+        '''
+        return context
+
+
+class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_lecture_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReadTraineeLectureViewAjax, self).get_context_data(**kwargs)
+        error = None
 
         lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
 
@@ -582,6 +637,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
 
+
     if pt_schedule_date == '':
         error = '날짜를 선택해 주세요.'
     elif pt_schedule_time_duration == '':
@@ -598,6 +654,9 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             lecture_info = LectureTb.objects.get(member_id=user_id,lecture_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
+
+    seven_days_ago = start_date - datetime.timedelta(days=7)
+    seven_days_after = end_date + datetime.timedelta(days=7)
 
     if error is None:
         if start_date >= fifteen_days_after:
@@ -620,15 +679,6 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     if error is None:
         if lecture_info.lecture_avail_count == 0:
             error = '예약 가능한 횟수가 없습니다'
-
-    if error is None:
-        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id)
-
-        for schedule_datum in schedule_data:
-            error = date_check_func(pt_schedule_date, start_date, end_date,
-                                    schedule_datum.start_dt, schedule_datum.end_dt)
-            if error is not None:
-                break
 
     if error is None:
         try:
@@ -660,6 +710,26 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         except InternalError:
             error = '예약 가능한 횟수를 확인해주세요.'
         except ValidationError:
+            error = '예약 가능한 횟수를 확인해주세요.'
+
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                  start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after).exclude(schedule_id=lecture_schedule_data.schedule_id)
+        for schedule_datum in schedule_data:
+            error = date_check_func(pt_schedule_date, start_date, end_date,
+                                    schedule_datum.start_dt, schedule_datum.end_dt)
+            if error is not None:
+                break
+    if error is not None:
+        lecture_schedule_data.delete()
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id))
+        if lecture_info.lecture_reg_count >= len(schedule_data):
+            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
+                                                      - len(schedule_data)
+            lecture_info.mod_dt = timezone.now()
+            lecture_info.save()
+
+        else:
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:

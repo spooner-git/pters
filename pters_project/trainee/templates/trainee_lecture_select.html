@@ -82,14 +82,14 @@
           var startArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.start_date }}',{% endfor %}]
           var endArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.end_date }}',{% endfor %}]
           var trainerNameArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.trainer_info.name }}',{% endfor %}]
-
-          var modifyDateArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.mod_dt }}',{% endfor %}]
-          var emailArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.user.email }}',{% endfor %}]
-
-          //처리 필요 - hk.kim 180110
           var availCountArray = [{% for lecture in lecture_data %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
 
-          var emailActiveArray = [{% for lecture in lecture_data %}'{{ lecture.user_info.is_active }}',{% endfor %}]
+         // var modifyDateArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.mod_dt }}',{% endfor %}]
+         // var emailArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.user.email }}',{% endfor %}]
+
+          //처리 필요 - hk.kim 180110
+
+         // var emailActiveArray = [{% for lecture in lecture_data %}'{{ lecture.user_info.is_active }}',{% endfor %}]
 
             ///********************* 회원 월간 달력 옵션*************************************///
             ///********************* 회원 월간 달력 옵션*************************************///

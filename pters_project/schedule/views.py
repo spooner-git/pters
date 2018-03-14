@@ -38,6 +38,9 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
 
     error = None
     class_info = None
+    add_schedule_info = None
+    seven_days_ago = schedule_start_datetime - datetime.timedelta(days=7)
+    seven_days_after = schedule_end_datetime + datetime.timedelta(days=7)
 
     if error is None:
         # 강사 정보 가져오기
@@ -55,14 +58,6 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
         if error is None:
             if member_lecture_info.lecture_avail_count == 0:
                 error = '예약 가능한 횟수가 없습니다'
-
-    if error is None:
-        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id)
-        for schedule_datum in schedule_data:
-            error = date_check_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
-                                    schedule_datum.start_dt, schedule_datum.end_dt)
-            if error is not None:
-                break
 
     if error is None:
         try:
@@ -104,6 +99,28 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
+
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                  start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after).exclude(schedule_id=add_schedule_info.schedule_id)
+        for schedule_datum in schedule_data:
+            error = date_check_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
+                                    schedule_datum.start_dt, schedule_datum.end_dt)
+            if error is not None:
+                break
+
+    if error is not None:
+        add_schedule_info.delete()
+        if en_dis_type == '1':
+            lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id))
+            if member_lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                member_lecture_info.lecture_avail_count = member_lecture_info.lecture_reg_count \
+                                                          - len(lecture_schedule_data)
+                member_lecture_info.mod_dt = timezone.now()
+                member_lecture_info.save()
+
+            else:
+                error = '예약 가능한 횟수를 확인해주세요.'
 
     return error
 
@@ -377,6 +394,9 @@ def add_schedule_logic(request):
             error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
+
+        '''
+        # 날짜 값 셋팅 - 1시간 단위
         time_test = 0
         while time_test < int(schedule_time_duration):
             date_time_set = []
@@ -396,10 +416,15 @@ def add_schedule_logic(request):
                 date_time_set.append(input_schedule_start_datetime)
                 date_time_set.append(input_schedule_end_datetime)
                 input_datetime_list.append(date_time_set)
-
+        '''
     if error is None:
         try:
             with transaction.atomic():
+                lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
+                error = add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
+                                                request.user.id, lecture_id, note,
+                                                en_dis_type, None)
+                '''
                 for input_datetime in input_datetime_list:
                     lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
                     error = add_schedule_logic_func(schedule_date, input_datetime[0], input_datetime[1],
@@ -407,7 +432,7 @@ def add_schedule_logic(request):
                                                     en_dis_type, None)
                     if error is not None:
                         break
-
+                '''
                 if error is not None:
                     raise ValidationError()
 
@@ -722,15 +747,15 @@ def add_repeat_schedule_logic(request):
                 schedule_start_datetime = datetime.datetime.strptime(str(check_date).split(' ')[0]
                                                                      + ' ' + repeat_schedule_time,
                                                                      '%Y-%m-%d %H:%M:%S.%f')
-                # schedule_end_datetime = schedule_start_datetime + datetime.timedelta(
-                #    hours=int(repeat_schedule_time_duration))
+                schedule_end_datetime = schedule_start_datetime + datetime.timedelta(hours=int(repeat_schedule_time_duration))
             except ValueError as e:
                 error = '등록 값에 문제가 있습니다.'
             except IntegrityError as e:
                 error = '등록 값에 문제가 있습니다.'
             except TypeError as e:
                 error = '등록 값의 형태에 문제가 있습니다.'
-
+            '''
+            # 1시간 단위 날짜 값 셋팅
             if error is None:
                 time_test = 0
                 while time_test < int(repeat_schedule_time_duration):
@@ -751,11 +776,18 @@ def add_repeat_schedule_logic(request):
                         date_time_set.append(input_schedule_start_datetime)
                         date_time_set.append(input_schedule_end_datetime)
                         input_datetime_list.append(date_time_set)
-
+            '''
             if error is None:
 
                 try:
                     with transaction.atomic():
+                        lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
+                        error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
+                                                        schedule_end_datetime, request.user.id,
+                                                        lecture_id, '', en_dis_type,
+                                                        repeat_schedule_info.repeat_schedule_id)
+                        '''
+                        # 1시간 단위 날짜 값 셋팅
                         for input_datetime in input_datetime_list:
                             lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
                             error = add_schedule_logic_func(str(check_date).split(' ')[0], input_datetime[0],
@@ -764,7 +796,7 @@ def add_repeat_schedule_logic(request):
                                                             repeat_schedule_info.repeat_schedule_id)
                             if error is not None:
                                 break
-
+                        '''
                         if error is not None:
                             raise ValidationError()
 
