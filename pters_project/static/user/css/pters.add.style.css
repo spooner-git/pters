@@ -52,7 +52,6 @@ ul a{
 	overflow-y: auto;
 	padding-top: 0;
 	padding-bottom: 0;
-	margin-bottom: 50px;
 }
 
 .toggleBtnWrap{
@@ -309,7 +308,7 @@ ul a{
 }
 
 .ptaddboxtext_trainee_popup{
-	position: absolute;
+	display: inline-block;
 	z-index: 1;
 	top: 15px;
 	font-weight: bold;
@@ -480,8 +479,9 @@ ul a{
 }
 
 .dropdown_trainee_popup{
-	width: 77%;
-	margin-left: 23%;
+	display: inline-block;
+	width: 210px;
+	margin-left: 10px;
 	margin-top: 0;
 	height: 50px;
 }

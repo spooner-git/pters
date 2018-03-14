@@ -221,8 +221,8 @@
               //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
              }; 
 
+
             var stoptime = '{{ request.session.setting_member_reserve_time_available }}'
-             console.log(stoptime.length)
              if(stoptime.length>0){
                 var stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0])
                 var stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0])
