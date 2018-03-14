@@ -29,7 +29,7 @@ class CompanyTb(models.Model):
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'COMPANY_TB'
 
 

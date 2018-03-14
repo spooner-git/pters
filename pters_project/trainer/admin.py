@@ -6,8 +6,9 @@ from trainer.models import ClassTb, CompanyTb, SettingTb, ShopEmployeeTb
 
 @admin.register(ClassTb)
 class ClassTbAdmin(admin.ModelAdmin):
-    list_display = ('class_id', 'member_id', 'class_type_cd', 'subject_cd', 'subject_detail_nm', 'start_date', 'end_date',
-                    'class_hour', 'start_hour_unit','class_member_num', 'state_cd', 'schedule_check',
+    list_display = ('class_id', 'member_id', 'class_type_cd', 'subject_cd', 'subject_detail_nm',
+                    'start_date', 'end_date',
+                    'class_hour', 'start_hour_unit', 'class_member_num', 'state_cd', 'schedule_check',
                     'reg_dt', 'mod_dt', 'use')
 
 
