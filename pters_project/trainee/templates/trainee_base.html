@@ -17,6 +17,7 @@
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
         <link rel="stylesheet" href={% static "user/css/pters.base.set.css" %}>
+        <link rel="stylesheet" href={% static "user/css/trainee/pters.trainee.select.teacher.css" %}>
         <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
         {% block local_css %}
         {% endblock %}
@@ -45,18 +46,18 @@
      <nav class="navbar navbar-fixed-top" id="pcver">
             <div class="centermenu">
                 <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
-                <div class="centermenu_box wrap" style="margin-left: 14px;">
+                <div class="centermenu_box" style="margin-left: 97px;text-align: left;">
                     <div class="centermenu_div">
                         <a href="{% url 'trainee:mypage_trainee' %}" class="centermenu_text"></a>
                     </div>
                     <div class="centermenu_div">
-                        <a href="#" class="centermenu_text"></a>
+                        <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month'%}'">달력</a>
                     </div>
                     <div class="centermenu_div">
-                        <a class="centermenu_text">{{user.first_name}} 회원님의 PT일정</a>
+                        <a class="centermenu_text" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">마이페이지</a>
                     </div>
                     <div class="centermenu_div">
-                        <a href="#" class="centermenu_text"></a>
+                        <a class="centermenu_text" onclick="open_lecture_select_popup()">강의 선택</a>
                     </div>
                     <div class="centermenu_div">
                         <a href="#" class="centermenu_text"></a>
@@ -73,6 +74,17 @@
                 <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
             </div>
         </nav>
+
+        <div id="popup_lecture_select">
+            <label>강의 선택</label>
+            <p>관리하고자 하는 강의를 선택해 주세요.</p>
+            <div class="pters_table">
+              <div class="pters_table_cell_head table_lecture_name">강의명</div>
+              <div class="pters_table_cell_head table_trainer_name">트레이너</div>
+              <!--<div class="pters_table_cell">연락처</div>-->
+              <div class="pters_table_cell_head table_selection">선택</div>
+            </div>
+        </div>
         
     {% endblock %}
     
@@ -130,7 +142,6 @@
                               "planChangePush":'-',
                               "regErgentPush":'-',
 
-
                               "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
                               "location" : "Japan",           //Korea, Japan, English, Chinese
             }
@@ -148,25 +159,98 @@
             ///********************* 회원 월간 달력 옵션*************************************///
 
 
+            ///********************* 강의 선택*************************************///
+            ///********************* 강의 선택*************************************///
 
-             function openNav(){
-               $("#outer_Sidenav").animate({"width":"100%"},1);
-               $("#inner_Sidenav").css("width","80%");
-               $(".sidebar_text").css({'font-size':"15px",'opacity':"1"})
-               $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
-               $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
-               $('body').css('overflow-y','hidden')
-               $('#shade').css({'background-color':'black','z-index':'50'});
-             }
+            /*
+            var lec_select_regCountArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_reg_count }}',{% endfor %}]
+            var lec_select_countArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_rem_count }}',{% endfor %}]
+            var lec_select_startArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.start_date }}',{% endfor %}]
+            var lec_select_endArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.end_date }}',{% endfor %}]
+            var lec_select_trainerNameArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.trainer_info.name }}',{% endfor %}]
 
-             function closeNav(){
-              $(".sidebar_icon,.sidebar_upper img").css('opacity','0')
-              $("#outer_Sidenav").css("width","0");
-              $("#inner_Sidenav").css("width","0");
-              $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"})
-              $('body').css('overflow-y','')
-              $('#shade').css({'background-color':'transparent','z-index':'-1'});
-             }; 
+            var lec_select_modifyDateArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.mod_dt }}',{% endfor %}]
+            var lec_select_emailArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.user.email }}',{% endfor %}]
+
+            var lec_select_availCountArray = [{% for lecture in lecture_data %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
+            var lec_select_emailActiveArray = [{% for lecture in lecture_data %}'{{ lecture.user_info.is_active }}',{% endfor %}]
+            */
+
+            var regCountArray = ['30','20',]
+            var countArray = ['30','20',]
+            var startArray = ['2018년 3월 14일','2018년 3월 14일',]
+            var endArray = ['2019년 3월 14일','2018년 5월 14일',]
+            var trainerNameArray = ['김선겸','김선겸',]
+
+            var modifyDateArray = ['','',]
+            var emailArray = ['','',]
+
+            //처리 필요 - hk.kim 180110
+            var availCountArray = ['6','20',]
+
+            var emailActiveArray = ['','',]
+
+            '<div class="pters_table">'
+              '<div class="pters_table_cell"></div>'
+
+            function open_lecture_select_popup(){
+                $('#popup_lecture_select').fadeIn('fast')
+                $('#shade2').show()
+
+
+                var len = trainerNameArray.length;
+                var list_table_to_join = []
+                for(var i=0; i<len; i++){
+                  var table = '<div class="pters_table" style="margin-top:0;">'
+                  var lectureName = '<div class="pters_table_cell table_lecture_name">'+trainerNameArray[i]+'</div>'
+                  var trainerName = '<div class="pters_table_cell table_trainer_name">'+trainerNameArray[i]+'</div>'
+                  var selection = '<div class="pters_table_cell table_selection"><a>선택</a></div>'
+                  var sum = table + lectureName + trainerName + selection + '</div>'
+                  list_table_to_join.push(sum)
+                }
+                console.log(list_table_to_join)
+                var list_table = list_table_to_join.join('')
+
+                $('#popup_lecture_select').append(list_table)
+            }
+
+
+
+
+            function lecture_check(lecture_id, check){
+              $('#id_check_lecture_id').val(lecture_id);
+              $('#id_check').val(check);
+              if(check=='2'){
+                  $('#id_next_page').val('{% url 'trainee:cal_month'%}');
+              }
+              else{
+                  $('#id_next_page').val('{% url 'trainee:index' %}');
+              }
+              document.getElementById('lecture-check-form').submit();
+            }
+
+            ///********************* 강의 선택*************************************///
+            ///********************* 강의 선택*************************************///
+
+
+              function openNav(){
+                $("#outer_Sidenav").animate({"width":"100%"},1);
+                $("#inner_Sidenav").css("width","80%");
+                $(".sidebar_text").css({'font-size':"15px",'opacity':"1"})
+                $("#user_name,#welcome").css({'font-size':"14px",'opacity':"1"})
+                $(".sidebar_icon,.sidebar_upper img").css('opacity','1')
+                $('body').css('overflow-y','hidden')
+                $('#shade').css({'background-color':'black','z-index':'50'});
+              }
+
+              function closeNav(){
+                $(".sidebar_icon,.sidebar_upper img").css('opacity','0')
+                $("#outer_Sidenav").css("width","0");
+                $("#inner_Sidenav").css("width","0");
+                $(".sidebar_text,#user_name,#welcome").css({'font-size':"0px",'opacity':"0"})
+                $('body').css('overflow-y','')
+                $('#shade').css({'background-color':'transparent','z-index':'-1'});
+              }; 
 
     </script>
      <script type="text/javascript" src={% static "user/js/pters.base.set.js" %}></script>

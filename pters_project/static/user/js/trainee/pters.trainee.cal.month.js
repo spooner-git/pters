@@ -599,7 +599,10 @@ $(document).ready(function(){
           	offTimeArray_start_date = jsondata.offTimeArray_start_date
           	offTimeArray_end_date = jsondata.offTimeArray_end_date
 
+          	console.log(data)
+
           	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
+          	classDates()
           },
 
           complete:function(){

@@ -434,6 +434,7 @@ a:focus, a:hover{
     font-size: 13.5px;
     font-weight: 600;
     color: #282828;
+    cursor: pointer;
 }
 
 .centermenu_text:hover,.centermenu_text:focus{
