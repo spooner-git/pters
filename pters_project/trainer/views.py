@@ -46,6 +46,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         today_schedule_num = 0
         new_member_num = 0
+        total_member_num = 0
+        to_be_end_member_num = 0
+        np_member_num = 0
+
         context['total_member_num'] = 0
         context['to_be_end_member_num'] = 0
         context['today_schedule_num'] = 0
@@ -56,25 +60,52 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         except ObjectDoesNotExist:
             error = '강사 정보가 존재하지 않습니다'
 
+        all_member = MemberTb.objects.filter(use=1).order_by('name')
+
+        for member_info in all_member:
+            member_data = member_info
+
+            member_lecture_reg_count = 0
+            member_lecture_rem_count = 0
+            member_lecture_avail_count = 0
+            # 강좌에 해당하는 수강/회원 정보 가져오기
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
+                                                    lecture_rem_count__gt=0, use=1).order_by('-start_date')
+            if len(lecture_list) > 0:
+                total_member_num += 1
+                if len(lecture_list) == 1:
+                    if month_first_day < lecture_list[0].start_date < next_month_first_day:
+                        new_member_num += 1
+
+                for lecture_info in lecture_list:
+                    if lecture_info.state_cd == 'NP':
+                        np_member_num += 1
+                    member_lecture_reg_count += lecture_info.lecture_reg_count
+                    member_lecture_rem_count += lecture_info.lecture_rem_count
+                    member_lecture_avail_count += lecture_info.lecture_avail_count
+
+                if 0 < member_lecture_rem_count < 4:
+                    to_be_end_member_num += 1
+                    break
+
         if error is None :
-            #남은 횟수 1개 이상인 경우 - 180215 hk.kim
-            context['total_member_num'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                   lecture_rem_count__gte=1, use=1).count()
-            #남은 횟수 1개 이상 3개 미만인 경우 - 180215 hk.kim
-            context['to_be_end_member_num'] = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                       lecture_rem_count__gte=1,
-                                                                       lecture_rem_count__lte=3, use=1).count()
+            #남은 횟수 1개 이상인 경우 - 180314 hk.kim
+            context['total_member_num'] = total_member_num
+            #남은 횟수 1개 이상 3개 미만인 경우 - 180314 hk.kim
+            context['to_be_end_member_num'] = to_be_end_member_num
+            context['np_member_num'] = np_member_num
+            context['new_member_num'] = new_member_num
 
         if error is None:
             today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                            start_dt__gte=today, start_dt__lt=one_day_after,
                                                            en_dis_type='1').count()
-            new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                      start_date__gte=month_first_day,
-                                                      start_date__lt=next_month_first_day, use=1).count()
+            #new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+            #                                          start_date__gte=month_first_day,
+            #                                          start_date__lt=next_month_first_day, use=1).count()
 
         context['today_schedule_num'] = today_schedule_num
-        context['new_member_num'] = new_member_num
+        # context['new_member_num'] = new_member_num
 
         context = get_trainer_setting_data(context, self.request.user.id)
 
