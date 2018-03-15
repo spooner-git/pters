@@ -600,7 +600,7 @@ $(document).ready(function(){
           	classDateArray = []
           	classStartArray = []
           	
-            
+
             classTimeArray_start_date = jsondata.classTimeArray_start_date
             classTimeArray_end_date = jsondata.classTimeArray_end_date
             classTimeArray_start_date = jsondata.classTimeArray_start_date
@@ -610,8 +610,6 @@ $(document).ready(function(){
           	classTimeArray_member_name = jsondata.classTimeArray_member_name
           	offTimeArray_start_date = jsondata.offTimeArray_start_date
           	offTimeArray_end_date = jsondata.offTimeArray_end_date
-
-          	console.log(data)
 
           	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
           	classDates()
