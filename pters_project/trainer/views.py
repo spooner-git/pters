@@ -730,7 +730,7 @@ def add_member_info_logic_test(request):
                                           birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
                                           user_id=user.id)
                     member.save()
-                    state_cd = 'IP'
+                    # state_cd = 'IP'
 
                 add_lecture_info_logic_func(class_info.class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
 
