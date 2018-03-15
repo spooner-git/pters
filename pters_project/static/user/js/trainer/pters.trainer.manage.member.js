@@ -556,6 +556,8 @@ function DataFormatting(type){
         var regCountInfoArray = regCountArray
         var phoneInfoArray = phoneArray
         var contentInfoArray = contentsArray
+        var npCountInfoArray = npLectureCountsArray
+        var rjCountInfoArray = rjLectureCountsArray
         var len = startArray.length; 
       break;
 
@@ -577,6 +579,8 @@ function DataFormatting(type){
         var regCountInfoArray = finishRegCountArray
         var phoneInfoArray = finishphoneArray
         var contentInfoArray = finishContentsArray
+        var npCountInfoArray = finishNpLectureCountsArray
+        var rjCountInfoArray = finishRjLectureCountsArray
         var len = finishstartArray.length; 
       break;
     }
@@ -592,9 +596,9 @@ function DataFormatting(type){
       var regcountOri = regCountInfoArray[i]
       var regcountFix = count_format_to_nnnn(regCountInfoArray[i])
 
-      countListResult[i]=countFix+'/'+regcountFix+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+date+'/'+enddate+'/'+emailInfoArray[i]
-      nameListResult[i]=nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+date+'/'+enddate+'/'+emailInfoArray[i]
-      dateListResult[i]=date+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+enddate+'/'+emailInfoArray[i]
+      countListResult[i]=countFix+'/'+regcountFix+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]
+      nameListResult[i]=nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]
+      dateListResult[i]=date+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]
     }
 }
 
@@ -722,6 +726,8 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             if(name.length>5){
               var name = array[2].substr(0,5)+'..'
             }
+            var npCounts = array[9]
+            var rjCounts = array[10]
         }else if(option == "name"){
             var array = nameLists[i].split('/');
             var email = array[8];
@@ -736,6 +742,8 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             if(name.length>5){
               var name = array[0].substr(0,5)+'..'
             }
+            var npCounts = array[9]
+            var rjCounts = array[10]
         }else if(option == "date"){
             var array = dateLists[i].split('/');
             var arrayforemail = dateLists[i].split('/')
@@ -751,6 +759,8 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             if(name.length>5){
               var name = array[1].substr(0,5)+'..'
             }
+            var npCounts = array[9]
+            var rjCounts = array[10]
         }
         
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
@@ -765,10 +775,10 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
         }
 
         var npCountImg = ""
-        if(npLectureCountsArray[i] > 0){
+        if(npCounts > 0){
           var npCountImg = '<img src="/static/user/res/member/icon-np-wait.png" title="수락 대기중" class="npCountImg_wait">'
         }
-        if(rjLectureCountsArray[i] > 0){
+        if(rjCounts > 0){
           var npCountImg = '<img src="/static/user/res/member/icon-x-red.png" title="수락 거절" class="npCountImg_x">'
         }
         
@@ -876,7 +886,6 @@ function fill_member_info_by_ID_search(){
     $('#memberPhone_add').val(id_search_memberPhone); 
     $('#memberEmail_add').val(id_search_memberEmail);
     $('#id_user_id').val(id_search_memberId);
-    console.log(id_search_memberSex)
     $('.selectboxopt[value='+id_search_memberSex+']').addClass('selectbox_checked')
     var dropdown_year_selected = $('#birth_year option[data-year="'+id_search_memberBirth.split(' ')[0]+'"]');
     var dropdown_month_selected = $('#birth_month option[data-month="'+id_search_memberBirth.split(' ')[1]+'"]');
