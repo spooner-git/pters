@@ -259,6 +259,15 @@ $(document).ready(function(){
         if(Data[userID].rjCount > 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-x-red.png" style="width:11px;margin:0 0 5px 3px" title="수락 거절"> (수락 거절)</span>'
         }
+
+        var yetReg = ""
+        var yet = ""
+        if(Data[userID].yetRegCount > 0){
+          var yetReg = ' ('+Data[userID].yetRegCount+'회 추가 예정)'
+        }
+        if(Data[userID].yetCount > 0){
+          var yet = ' ('+Data[userID].yetCount+'회 추가 예정)'
+        }
         
 
         if(Data[userID].sex == "M"){
@@ -300,8 +309,8 @@ $(document).ready(function(){
         $('#memberId').val(userID)
         $('#memberId_info_PC').text(userID);
         $('#memberPhone_info, #memberPhone_info_PC').val(Data[userID].phone);
-        $('#memberRegCount_info_PC').val(Data[userID].regcount)
-        $('#memberRemainCount_info_PC').val(Data[userID].count)
+        $('#memberRegCount_info_PC').val(Data[userID].regcount + yetReg)
+        $('#memberRemainCount_info_PC').val(Data[userID].count + yet)
         $('#memberEmail_info, #memberEmail_info_PC').val(email)
         $('#memberStart_info_PC').val(Data[userID].start.replace(/년 |월 /gi,"-").replace(/일/gi,""))
         var end = Data[userID].end
@@ -558,6 +567,8 @@ function DataFormatting(type){
         var contentInfoArray = contentsArray
         var npCountInfoArray = npLectureCountsArray
         var rjCountInfoArray = rjLectureCountsArray
+        var yetRegCountInfoArray = yetRegCountArray
+        var yetCountInfoArray = yetCountArray
         var len = startArray.length; 
       break;
 
@@ -581,6 +592,8 @@ function DataFormatting(type){
         var contentInfoArray = finishContentsArray
         var npCountInfoArray = finishNpLectureCountsArray
         var rjCountInfoArray = finishRjLectureCountsArray
+        var yetRegCountInfoArray = finishYetRegCountArray
+        var yetCountInfoArray = finishYetCountArray
         var len = finishstartArray.length; 
       break;
     }
@@ -596,9 +609,9 @@ function DataFormatting(type){
       var regcountOri = regCountInfoArray[i]
       var regcountFix = count_format_to_nnnn(regCountInfoArray[i])
 
-      countListResult[i]=countFix+'/'+regcountFix+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]
-      nameListResult[i]=nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]
-      dateListResult[i]=date+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]
+      countListResult[i]=countFix+'/'+regcountFix+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]
+      nameListResult[i]=nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]
+      dateListResult[i]=date+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]
     }
 }
 
@@ -619,7 +632,9 @@ function DataFormattingDict(Option){
                                 'birth':birthdayArray[i], 
                                 'sex':sexArray[i],
                                 'npCount':npLectureCountsArray[i],
-                                'rjCount':rjLectureCountsArray[i]
+                                'rjCount':rjLectureCountsArray[i],
+                                'yetRegCount':yetRegCountArray[i],
+                                'yetCount':yetCountArray[i]
                               };
           }
           var DBendlength = finishnameArray.length;
@@ -653,7 +668,9 @@ function DataFormattingDict(Option){
                               'birth':birthdayArray[i], 
                               'sex':sexArray[i],
                               'npCount':npLectureCountsArray[i],
-                              'rjCount':rjLectureCountsArray[i]
+                              'rjCount':rjLectureCountsArray[i],
+                              'yetRegCount':yetRegCountArray[i],
+                              'yetCount':yetCountArray[i]
                             };
           }
           var DBendlength = finishIdArray.length;
@@ -713,6 +730,7 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
     var arrayResult = []
     for(var i=0; i<len; i++){
         if(option == "count"){
+            console.log(countLists)
             var array = countLists[i].split('/');
             var email = array[8];
             var name = array[2];
@@ -728,6 +746,8 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             }
             var npCounts = array[9]
             var rjCounts = array[10]
+            var yetRegCounts = array[11]
+            var yetCounts = array[12]
         }else if(option == "name"){
             var array = nameLists[i].split('/');
             var email = array[8];
@@ -744,6 +764,8 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             }
             var npCounts = array[9]
             var rjCounts = array[10]
+            var yetRegCounts = array[11]
+            var yetCounts = array[12]
         }else if(option == "date"){
             var array = dateLists[i].split('/');
             var arrayforemail = dateLists[i].split('/')
@@ -761,6 +783,8 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             }
             var npCounts = array[9]
             var rjCounts = array[10]
+            var yetRegCounts = array[11]
+            var yetCounts = array[12]
         }
         
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2)
@@ -781,6 +805,15 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
         if(rjCounts > 0){
           var npCountImg = '<img src="/static/user/res/member/icon-x-red.png" title="수락 거절" class="npCountImg_x">'
         }
+
+        var yetReg = ""
+        var yet = ""
+        if(yetRegCounts > 0){
+          var yetReg = '(+'+yetRegCounts+')'
+        }
+        if(yetCounts > 0){
+          var yet = '(+'+yetCounts+')'
+        }
         
 
         var count = remove_front_zeros(count)
@@ -798,8 +831,8 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
         var nametd = '<td class="_tdname" data-name="'+name+'">'+name+npCountImg+'</td>'
         var idtd = '<td class="_id" data-name="'+id+'">'+id+'</td>'
         var emailtd = '<td class="_email">'+email+'</td>'
-        var regcounttd = '<td class="_regcount">'+regcount+'</td>'
-        var remaincounttd = '<td class="_remaincount">'+count+'</td>'
+        var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>'
+        var remaincounttd = '<td class="_remaincount">'+count+yet+'</td>'
         var startdatetd = '<td class="_startdate">'+start+'</td>'
         var enddatetd = '<td class="_finday">'+end+'</td>'
         var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>'
@@ -1320,12 +1353,9 @@ function limit_char(e){
 
 
 $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
-    //var $form = $('#member-add-form-new');
     var test = $('#id_search_confirm').val();
-
     var $form2 = $('#add-member-id-form');
     var url2 = '/accounts/register/';
-    console.log(test)
      if(select_all_check==true){
          if(test==0){
              $.ajax({
@@ -1617,6 +1647,8 @@ function ajax_received_json_data(data){
     lectureCountsArray = [];
     npLectureCountsArray = [];
     rjLectureCountsArray = [];
+    yetCountArray = []
+    yetRegCountArray = []
 
     finishIdArray = [];
     finishnameArray =[];
@@ -1630,6 +1662,8 @@ function ajax_received_json_data(data){
     finishLectureCountsArray = [];
     finishNpLectureCountsArray = [];
     finishRjLectureCountsArray = [];
+    finishYetCountArray = []
+    finishYetRegCountArray = []
 
     finishRegCountArray = [];
     finishAvailCountArray = [];
@@ -1654,6 +1688,8 @@ function ajax_received_json_data(data){
     lectureCountsArray = jsondata.lectureCountsArray;
     npLectureCountsArray = jsondata.npLectureCountsArray;
     rjLectureCountsArray = jsondata.rjLectureCountsArray;
+    yetCountArray = jsondata.yetCountArray
+    yetRegCountArray = jsondata.yetRegCountArray
 
     finishIdArray = jsondata.finishIdArray;
     finishnameArray = jsondata.finishnameArray;
@@ -1667,6 +1703,8 @@ function ajax_received_json_data(data){
     finishLectureCountsArray = jsondata.finishLectureCountsArray;
     finishNpLectureCountsArray = jsondata.finishNpLectureCountsArray;
     finishRjLectureCountsArray = jsondata.finishRjLectureCountsArray;
+    finishYetCountArray = jsondata.finishYetCountArray;
+    finishYetRegCountArray = jsondata.finishYetRegCountArray;
 
     finishRegCountArray = jsondata.finishRegCountArray;
     finishAvailCountArray = jsondata.finishAvailCountArray;
