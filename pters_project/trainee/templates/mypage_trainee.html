@@ -152,7 +152,8 @@
         <script>
 
             $('#uptext').text("마이페이지")
-            $('#upbutton-alarm').html("")
+            $('#upbutton').attr('onclick',"location.href='{% url 'trainee:cal_month'%}'")
+            $('#upbutton img').attr('src','/static/user/res/icon-setting-arrow.png').css({'transform':'rotate(180deg)','height':'20px','width':'unset'})
 
             $('._GRAPH_OPEN').click(function(){
               if($('#mygraph').attr('data-open') == '0'){

@@ -259,7 +259,7 @@ a:focus, a:hover{
     cursor: pointer;
 }
 
-#upbutton-alarm, #upbutton-check , #upbutton-modify{
+#upbutton-right, #upbutton-alarm, #upbutton-check , #upbutton-modify{
     float:right;
     right: 2%;
     border: 0px;
@@ -268,7 +268,7 @@ a:focus, a:hover{
     width: 40px;
 }
 
-#upbutton-alarm:active, #upbutton-check:active, #upbutton-modify:active{
+#upbutton-right:active ,#upbutton-alarm:active, #upbutton-check:active, #upbutton-modify:active{
     background: #4e4c4c;
 }
 
