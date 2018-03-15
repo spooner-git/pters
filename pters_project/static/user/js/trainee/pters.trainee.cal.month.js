@@ -97,7 +97,7 @@ $(document).ready(function(){
 				//timeGraphSet("class","grey");  //시간 테이블 채우기
 		        //timeGraphSet("off","grey")
 		        //startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
-		        ajaxTimeGraphSet()
+		        ajaxTimeGraphSet($(this))
 				$('#id_training_date').val(yy+'-'+mm+'-'+dd);
 			}
 		}else if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
@@ -616,9 +616,8 @@ $(document).ready(function(){
         })    
     }
 
-    function ajaxTimeGraphSet(){
-            var today_form = $('#datepicker').val()
-
+    function ajaxTimeGraphSet(clicked){
+            var today_form = date_format_to_yyyymmdd(clicked.attr('data-date'),'-')
             $.ajax({
               url: '/trainee/read_trainee_schedule_ajax/',
               type : 'POST',
@@ -630,6 +629,7 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
+                console.log(data)
                 /*팝업의 timegraph 업데이트*/
                 var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
                 var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
