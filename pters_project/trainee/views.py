@@ -121,7 +121,7 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 try:
                     pt_type_name = CommonCdTb.objects.get(common_cd=class_info.class_type_cd)
                 except ObjectDoesNotExist:
-                    error = '강좌 type 없음'
+                    error = '강좌 type을 불러오지 못했습니다.'
 
             if error is None:
                 class_info.trainer_info = trainer_info
@@ -238,8 +238,74 @@ class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVi
 
         context['class_data'] = class_data
 
-
         return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'trainee_schedule_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
+        class_id = request.GET.get('class_id', '')
+
+        error = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
+
+        if error is not None:
+            messages.error(self.request, error)
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
+        class_id = request.POST.get('class_id', '')
+
+        error = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
+        if error is not None:
+            messages.error(self.request, error)
+
+        return render(request, self.template_name, context)
+
+
+def get_lecture_list_by_class_member_id(context, class_id, member_id):
+    error = None
+    class_data = None
+    context['error'] = None
+
+    if class_id is None or '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if member_id is None or '':
+        error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_data = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_data.trainer_info = MemberTb.objects.get(member_id=class_data.member_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.class_type_cd)
+        except ObjectDoesNotExist:
+            error = '강좌 type을 불러오지 못했습니다.'
+
+    if error is None:
+        lecture_data = LectureTb.objecsts.filter(class_tb_id=class_id, member_id=member_id).order_by('-start_date')
+
+    context['class_data'] = class_data
+    context['lecture_data'] = lecture_data
+
+    if error is not None:
+        context['error'] = error
+
+    return context
 
 
 @csrf_exempt
@@ -273,6 +339,8 @@ def lecture_processing(request):
             lecture_info.delete()
 
         elif check == '0':
+            request.session['class_id'] = class_id
+            request.session['lecture_id'] = lecture_id
             lecture_info.state_cd = 'IP'
             lecture_info.save()
         elif check == '2':

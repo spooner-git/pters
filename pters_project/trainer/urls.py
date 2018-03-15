@@ -27,6 +27,8 @@ urlpatterns = [
     url(r'^delete_member_info/$', views.delete_member_info_logic, name='delete_member_info'),
     url(r'^get_member_info/$', views.GetMemberInfoView.as_view(), name='get_member_info'),
 
+    url(r'^read_lecture_by_class_member_ajax/$', views.ReadLectureByClassMemberAjax.as_view(), name='read_lecture_by_class_member_ajax'),
+
     # url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
 
     # 일정 조회 관련
