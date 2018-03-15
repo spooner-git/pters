@@ -109,18 +109,18 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
             if error is not None:
                 break
 
-    if error is not None:
-        add_schedule_info.delete()
-        if en_dis_type == '1':
-            lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id))
-            if member_lecture_info.lecture_reg_count >= len(lecture_schedule_data):
-                member_lecture_info.lecture_avail_count = member_lecture_info.lecture_reg_count \
-                                                          - len(lecture_schedule_data)
-                member_lecture_info.mod_dt = timezone.now()
-                member_lecture_info.save()
+        if error is not None:
+            add_schedule_info.delete()
+            if en_dis_type == '1':
+                lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id))
+                if member_lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                    member_lecture_info.lecture_avail_count = member_lecture_info.lecture_reg_count \
+                                                              - len(lecture_schedule_data)
+                    member_lecture_info.mod_dt = timezone.now()
+                    member_lecture_info.save()
 
-            else:
-                error = '예약 가능한 횟수를 확인해주세요.'
+                else:
+                    error = '예약 가능한 횟수를 확인해주세요.'
 
     return error
 
@@ -556,14 +556,14 @@ def finish_schedule_logic(request):
         try:
             class_info = ClassTb.objects.get(member_id=request.user.id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
 
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
-            error = '스케쥴 정보가 존재하지 않습니다'
+            error = '스케쥴 정보를 불러오지 못했습니다.'
 
     if error is None:
         start_date = schedule_info.start_dt
@@ -575,18 +575,13 @@ def finish_schedule_logic(request):
         try:
             lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
         except ObjectDoesNotExist:
-            error = '회원 PT 정보가 존재하지 않습니다'
+            error = '회원 PT 정보를 불러오지 못했습니다.'
 
     if error is None:
         if lecture_info.state_cd == 'NP':
             error = '회원이 수락하지 않은 스케쥴입니다.'
-
-    if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(class_id=schedule_info.class_tb_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
+        if lecture_info.state_cd == 'RJ':
+            error = '회원이 수락하지 않은 스케쥴입니다.'
 
     if error is None:
         try:

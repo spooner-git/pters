@@ -667,6 +667,7 @@
           var emailActiveArray = [{% for member_info in member_data %}'{{ member_info.user.is_active }}',{% endfor %}];
           var lectureCountsArray = [{% for member_info in member_data %}'{{ member_info.lecture_counts }}',{% endfor %}];
           var npLectureCountsArray = [{% for member_info in member_data %}'{{ member_info.np_lecture_counts }}',{% endfor %}];
+          var rjLectureCountsArray = [{% for member_info in member_data %}'{{ member_info.rj_lecture_counts }}',{% endfor %}];
 
           var countArray = [{% for member_info in member_data %} '{{ member_info.lecture_info.lecture_rem_count }}',{% endfor %}];
           var startArray = [{% for member_info in member_data %} '{{ member_info.lecture_info.start_date }}',{% endfor %}];
@@ -686,6 +687,7 @@
           var finishEmailActiveArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user.is_active }}',{% endfor %}];
           var finishLectureCountsArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_counts }}',{% endfor %}];
           var finishNpLectureCountsArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.np_lecture_counts }}',{% endfor %}];
+          var finishRjLectureCountsArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.rj_lecture_counts }}',{% endfor %}];
 
           var finishcountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.lecture_rem_count }}',{% endfor %}];
           var finishstartArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.start_date }}',{% endfor %}];
