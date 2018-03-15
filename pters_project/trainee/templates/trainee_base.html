@@ -81,6 +81,7 @@
             <form action="{% url 'trainee:lecture_processing' %}" id="lecture-check-form" method="post">
                 <input type="hidden" name="lecture_id" id="id_check_lecture_id">
                 <input type="hidden" name="check" id="id_check">
+                <input type="hidden" name="class_id" id="id_class_id">
                 <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
             </form>
             <label>달력 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
@@ -210,6 +211,7 @@
             var lec_select_lectureIdArray = []
             var lec_select_trainerNameArray = []
             var lec_select_availCountArray = []
+            var lec_select_classIdArray = []
 
 
             function ajax_read_lecture_info_from_db(){
@@ -223,15 +225,16 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
-                        lec_select_regCountArray = jsondata.regCountArray
-                        lec_select_countArray = jsondata.countArray
-                        lec_select_startArray = jsondata.startArray
-                        lec_select_endArray = jsondata.endArray
-                        lec_select_lectureIdArray = jsondata.lectureIdArray
-                        lec_select_trainerNameArray = jsondata.trainerNameArray
-                        lec_select_availCountArray = jsondata.availCountArray
-                        lec_select_npLectureCountsArray = jsondata.npLectureCountsArray
-                        lec_select_classInfoArray = jsondata.classInfoArray
+                        lec_select_regCountArray = jsondata.regCountArray;
+                        lec_select_countArray = jsondata.countArray;
+                        lec_select_startArray = jsondata.startArray;
+                        lec_select_endArray = jsondata.endArray;
+                        lec_select_lectureIdArray = jsondata.lectureIdArray;
+                        lec_select_trainerNameArray = jsondata.trainerNameArray;
+                        lec_select_availCountArray = jsondata.availCountArray;
+                        lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
+                        lec_select_classInfoArray = jsondata.classInfoArray;
+                        lec_select_classIdArray = jsondata.classIdArray;
 
                         fill_lecture_select_popup()
                       },
@@ -260,7 +263,7 @@
                       var table = '<div class="pters_table" style="margin-top:0;">'
                       var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>'
                       var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
-                      var selection = '<div class="pters_table_cell table_selection"><a data="" '+'onclick="lecture_check('+lec_select_lectureIdArray[i]+',2)"'+'">선택</a></div>'
+                      var selection = '<div class="pters_table_cell table_selection"><a data="" '+'onclick="lecture_check('+lec_select_lectureIdArray[i]+',2, '+lec_select_classIdArray[i]+')"'+'">선택</a></div>'
                       var sum = table + lectureName + trainerName + selection + '</div>'
                       list_table_to_join.push(sum)
                   }else{
@@ -275,8 +278,8 @@
                           var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
                           var trainerName = '<div class="pters_table_cell table_trainer_name">'+'등록요청 전송'+'</div>'
                           var selection = '<div class="pters_table_cell table_selection"><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',0)">수락/</a><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',1)">거절</a></div>'
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',0, '+lec_select_classIdArray[i]+')">수락/</a><a data="" '
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',1, '+lec_select_classIdArray[i]+')">거절</a></div>'
                           var sum = table + lectureName + trainerName + selection + '</div>'
                           list_table_to_join.push(sum)
                       }
@@ -303,9 +306,10 @@
                 $('#shade2').hide()
             })
 
-            function lecture_check(lecture_id, check){
+            function lecture_check(lecture_id, check, class_id){
               $('#id_check_lecture_id').val(lecture_id);
               $('#id_check').val(check);
+              $('#id_class_id').val(class_id);
               if(check=='2'){
                   $('#id_next_page').val('{% url 'trainee:cal_month'%}');
               }else if(check=='0'){
