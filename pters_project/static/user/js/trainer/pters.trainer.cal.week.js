@@ -143,9 +143,7 @@ $(document).ready(function(){
   	})
   //모바일 스타일
 
-  	$('body').click(function(){
-  		console.log(addTypeSelect)
-  	})
+
 
   //PC 스타일
   	$('.cancelBtn').click(function(){
@@ -313,6 +311,11 @@ $(document).ready(function(){
 
 	//Off 일정 클릭시 팝업 Start
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
+		$('#popup_btn_complete').css({'color':'#333','background':'#ffffff'}).val('')
+        $('#canvas').hide().css({'border-color':'#282828'})
+		$('#canvasWrap').css({'height':'0px'})
+		$('#canvasWrap span').hide();
+
 		$('#page-addplan-pc').hide()
 		//$('.td00').css('background','transparent')
 		$("#cal_popup_planinfo").fadeIn('fast');
