@@ -954,6 +954,8 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
                                                              self.request.user.first_name, class_id, start_date,
                                                              end_date)
+        if context['error'] is not None:
+            messages.error(self.request, context['error'])
         #context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
         return render(request, self.template_name, context)
@@ -968,7 +970,6 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
         if day == '':
             day = 18
-
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day)+1)
 
@@ -977,6 +978,8 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
                                                              self.request.user.first_name, class_id, start_date,
                                                              end_date)
+        if context['error'] is not None:
+            messages.error(self.request, context['error'])
         #context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
         return render(request, self.template_name, context)
@@ -1119,6 +1122,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     error = None
 
     context['lecture_info'] = None
+    context['error'] = None
     off_schedule_start_datetime = []
     off_schedule_end_datetime = []
     pt_schedule_id = []
@@ -1150,17 +1154,21 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     pt_start_date = ''
     pt_end_date = ''
 
-    # 강사 정보 가져오기
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '강사 정보가 존재하지 않습니다'
+    if class_id is None or '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        # 강사 정보 가져오기
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 불러오지 못했습니다'
 
     if error is None:
         try:
             class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다.'
+            error = '강사 정보가 불러오지 못했습니다.'
 
 
     if error is None:
@@ -1246,6 +1254,9 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
             off_schedule_end_datetime.append(off_schedule_datum.end_dt)
 
     holiday = HolidayTb.objects.filter(use=1)
+
+    if error is not None:
+        context['error'] = error
 
     context['off_schedule_start_datetime'] = off_schedule_start_datetime
     context['off_schedule_end_datetime'] = off_schedule_end_datetime
