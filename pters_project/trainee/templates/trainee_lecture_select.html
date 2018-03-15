@@ -8,67 +8,6 @@
 
 {% block content %}
 
-<form action="{% url 'trainee:lecture_processing' %}" id="lecture-check-form" method="post">
-    <input type="hidden" name="lecture_id" id="id_check_lecture_id">
-    <input type="hidden" name="check" id="id_check">
-    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
-</form>
-
-<div id="page_managemember">
-    <table id="tableThead" class="table table-bordered">
-            <thead>
-              <tr style="border-bottom:0;">
-                <th class="_countnum">순번</th>
-                <th class="_regcount">등록 횟수</th>
-                <th class="_remaincount">남은 횟수</th>
-                <th class="_startdate">시작일</th>
-                <th class="_finday">종료일</th>
-                <th class="_contact">강사</th>
-                <th class="_manage">관리</th>
-                <th class="forscroll"></th>
-              </tr>
-            </thead>
-        </table>
-    <div id="currentMemberList" class="centeralign">
-          <table id="currentMember" class="table table-bordered">
-              <tbody>
-                {% for class_info in class_data %}
-                  <tr class="memberline">
-                      <td class="_countnum">{{ forloop.counter }}</td>
-                      <td class="_regcount">{{ class_info.lecture_info.lecture_reg_count }}</td>
-                      <td class="_remaincount">{{ class_info.lecture_info.lecture_rem_count }}</td>
-                      <td class="_startdate">{{ class_info.lecture_info.start_date }}</td>
-                      <td class="_finday">{{ class_info.lecture_info.end_date }}</td>
-                      <td class="_contact">
-                          {{ class_info.trainer_info.name }} 트레이너
-                          <a href="tel:{{ class_info.trainer_info.phone }}"><img src="/static/user/res/memberadd/phone.png" class="phonesms"></a>
-                          <a class="phonenum" href="tel:{{ class_info.trainer_info.phone }}">
-                            <script type="text/javascript">
-                              telnumber = function(){
-                                var dbnum = '{{ class_info.trainer_info.phone }}'
-                                return dbnum.substr(0,3)+'.'+dbnum.substr(3,4)+'.'+dbnum.substr(7,4)
-                              }
-                              document.write(telnumber())
-                            </script>
-                          </a>
-                          <a href="sms:{{ class_info.trainer_info.phone }}"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>
-                      </td>
-                      <td class="_manage">
-                          {% if lecture_info.state_cd == "NP" %}
-                          <a href="javascript:lecture_check('{{ class_info.lecture_info.lecture_id }}', '0')">수락</a> /
-                          <a href="javascript:lecture_check('{{ class_info.lecture_info.lecture_id }}', '1')">거절</a>
-                          {% else %}
-                          <a href="javascript:lecture_check('{{ class_info.lecture_info.lecture_id }}', '2')">선택</a>
-
-                          {% endif %}
-                      </td>
-                      <td class="forscroll"></td>
-                  </tr>
-              {% endfor %}
-              </tbody>
-          </table>
-    </div>
-</div>
 
 
 {% endblock %}
@@ -76,59 +15,11 @@
 {% block local_js_footer %}
         <!-- for db by hk.kim 170805-->
         <script>
+          $('#popup_lecture_select').show().css('top','40%')
+          ajax_read_lecture_info_from_db()
 
-          /*
-          var regCountArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_reg_count }}',{% endfor %}];
-          var countArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_rem_count }}',{% endfor %}];
-          var startArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.start_date }}',{% endfor %}];
-          var endArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.end_date }}',{% endfor %}];
-          var trainerNameArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.trainer_info.name }}',{% endfor %}];
-          var availCountArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_avail_count }}',{% endfor %}];
-          var lectureIdArray = [{% for lecture_info in lecture_data %}'{{ lecture_info.lecture_id }}',{% endfor %}];
-          */
-          var regCountArray = [{% for class_info in class_data %}'{{ class_info.lecture_info.lecture_reg_count }}',{% endfor %}];
-          var countArray = [{% for class_info in class_data %}'{{ class_info.lecture_info.lecture_rem_count }}',{% endfor %}];
-          var startArray = [{% for class_info in class_data %}'{{ class_info.lecture_info.start_date }}',{% endfor %}];
-          var endArray = [{% for class_info in class_data %}'{{ class_info.lecture_info.end_date }}',{% endfor %}];
-          var trainerNameArray = [{% for class_info in class_data %}'{{ class_info.trainer_info.name }}',{% endfor %}];
-          var availCountArray = [{% for class_info in class_data %}'{{ class_info.lecture_info.lecture_avail_count }}',{% endfor %}];
-          var lectureIdArray = [{% for class_info in class_data %}'{{ class_info.lecture_info.lecture_id }}',{% endfor %}];
-          var classInfoArray = [{% for class_info in class_data %}'{{ class_info.class_type_name }}',{% endfor %}];
-          var classIdArray = [{% for class_info in class_data %}'{{ class_info.class_id }}',{% endfor %}];
-          var npLectureCountsArray = [{% for class_info in class_data %}'{{ class_info.np_lecture_counts }}',{% endfor %}];
-
-
-         // var modifyDateArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.mod_dt }}',{% endfor %}];
-         // var emailArray = [{% for lecture in lecture_data %}'{{ lecture.member_info.user.email }}',{% endfor %}];
-
-          //처리 필요 - hk.kim 180110
-
-         // var emailActiveArray = [{% for lecture in lecture_data %}'{{ lecture.user_info.is_active }}',{% endfor %}];
-
-            ///********************* 회원 월간 달력 옵션*************************************///
-            ///********************* 회원 월간 달력 옵션*************************************///
-            var Options = {
-                        "reserve":"enable", //회원 일정 기능을 enable/disable
-                        "stoptimeStart":21, //강사가 설정한 예약불가 시간 (시작)
-                        "stoptimeEnd":8,    //강사가 설정한 예약불가 시간 (종료)
-                        "limit":4,          // 현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
-            }
-            ///********************* 회원 월간 달력 옵션*************************************///
-            ///********************* 회원 월간 달력 옵션*************************************///
-
-
-            function lecture_check(lecture_id, check){
-                $('#id_check_lecture_id').val(lecture_id);
-                $('#id_check').val(check);
-                if(check=='2'){
-                    $('#id_next_page').val('{% url 'trainee:cal_month'%}');
-                }
-                else{
-                    $('#id_next_page').val('{% url 'trainee:index' %}');
-                }
-                document.getElementById('lecture-check-form').submit();
-            }
-
+          $('#pcver').css('background','#e2e2e2')
+          $('.centermenu_text').css('color','#b1b1b1').attr('onclick','')
 
         </script>
 
