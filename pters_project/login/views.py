@@ -37,6 +37,7 @@ def login_trainer(request):
     #login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
+    auto_login_check = request.POST.get('auto_login_check', '0')
     next_page = request.POST.get('next_page')
     error = None
     if next_page == '':
@@ -53,6 +54,9 @@ def login_trainer(request):
         user = authenticate(username=username, password=password)
         if user is not None and user.is_active:
             login(request, user)
+            if auto_login_check=='0':
+                request.session.set_expiry(0)
+            # print(str(request.session.get_expiry_age()))
             #member_detail = MemberTb.objects.get(user_id=user_data.id)
             # request.session['is_first_login'] = True
             #request.session['member_id'] = member_detail.member_id
