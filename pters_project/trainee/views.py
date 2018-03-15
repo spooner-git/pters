@@ -1122,6 +1122,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     error = None
 
     context['lecture_info'] = None
+    context['error'] = None
     off_schedule_start_datetime = []
     off_schedule_end_datetime = []
     pt_schedule_id = []
