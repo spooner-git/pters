@@ -34,6 +34,7 @@ urlpatterns = [
 
     url(r'^read_trainee_lecture_ajax/$', views.ReadTraineeLectureViewAjax.as_view(), name='read_trainee_lecture_ajax'),
     url(r'^read_trainee_schedule_ajax/$', views.ReadTraineeScheduleViewAjax.as_view(), name='read_trainee_schedule_ajax'),
+    url(r'^read_trainee_lecture_by_class_ajax/$', views.ReadLectureByClassAjax.as_view(), name='read_trainee_lecture_by_class_ajax'),
 
 
 ]
