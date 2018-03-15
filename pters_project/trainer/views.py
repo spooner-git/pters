@@ -1402,7 +1402,7 @@ def get_trainer_setting_data(context, user_id):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'trainee_schedule_ajax.html'
+    template_name = 'member_class_lecture_data_ajax.html'
 
     def get(self, request, *args, **kwargs):
         context = super(ReadLectureByClassMemberAjax, self).get_context_data(**kwargs)

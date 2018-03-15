@@ -243,7 +243,7 @@ class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVi
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'trainee_schedule_ajax.html'
+    template_name = 'class_lecture_data_ajax.html'
 
     def get(self, request, *args, **kwargs):
         context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
