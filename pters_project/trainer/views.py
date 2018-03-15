@@ -20,7 +20,7 @@ from config.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
 from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
-from trainee.views import get_trainee_repeat_schedule_data_func
+from trainee.views import get_trainee_repeat_schedule_data_func, get_lecture_list_by_class_member_id
 from trainer.models import ClassTb, SettingTb
 from schedule.models import ScheduleTb
 
@@ -1033,6 +1033,11 @@ def update_setting_push_logic(request):
 
     if error is None:
 
+        request.session.setting_trainee_schedule_confirm = setting_trainee_schedule_confirm1+'/'+setting_trainee_schedule_confirm2
+        request.session.setting_trainee_no_schedule_confirm = setting_trainee_no_schedule_confirm
+        request.session.setting_trainer_schedule_confirm = setting_trainer_schedule_confirm
+        request.session.setting_trainer_no_schedule_confirm1 = setting_trainer_no_schedule_confirm1 + '/' + setting_trainer_no_schedule_confirm2
+
         log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
                        + 'PUSH 설정</span> 정보를 <span class="status">수정</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
@@ -1107,7 +1112,9 @@ def update_setting_reserve_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-
+        request.session.setting_member_reserve_time_available = setting_member_reserve_time_available
+        request.session.setting_member_reserve_time_prohibition = setting_member_reserve_time_prohibition
+        request.session.setting_member_reserve_prohibition = setting_member_reserve_prohibition
         log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
                       + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
@@ -1391,4 +1398,32 @@ def get_trainer_setting_data(context, user_id):
     context['lt_pus_06'] = lt_pus_06
 
     return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'trainee_schedule_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(ReadLectureByClassMemberAjax, self).get_context_data(**kwargs)
+        class_id = request.POST.get('class_id', '')
+        member_id = request.POST.get('member_id', '')
+
+        error = get_lecture_list_by_class_member_id(context, class_id, member_id)
+
+        if error is not None:
+            messages.error(self.request, error)
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(ReadLectureByClassMemberAjax, self).get_context_data(**kwargs)
+        class_id = request.POST.get('class_id', '')
+        member_id = request.POST.get('member_id', '')
+
+        error = get_lecture_list_by_class_member_id(context, class_id, member_id)
+        if error is not None:
+            messages.error(self.request, error)
+
+        return render(request, self.template_name, context)
 
