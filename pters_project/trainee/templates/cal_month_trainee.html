@@ -162,7 +162,7 @@
         </div>
         <div id="ymdTextWrap">
              <div id="countRemain"><div style="position: absolute;width: 100%;height: 100%;background: #ffffff;opacity: 0.16;"></div>
-                <span id="countRemainData"> 예약 가능 횟수 <span style="color:#fe4e65;font-weight: bold;font-size: 16px;">{{lecture_info.lecture_avail_count}} </span>회</span>
+                <span id="countRemainData"> 예약 가능 횟수 <span style="color:#fe4e65;font-weight: bold;font-size: 16px;">{{lecture_avail_count}} </span>회</span>
              </div>
             <div id="yearText"></div>
             <div id="monthText"></div>
@@ -236,13 +236,17 @@
             var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
 
             //여기를 가져다 써야함 - hkkim 171021;
-            var classTimeArray_start_date = [{% for daily_data_start_date in daily_lecture_data_start_date %}'{{ daily_data_start_date }}',{% endfor %}];
-        	var classTimeArray_end_date = [{% for daily_data_end_date in daily_lecture_data_end_date %}'{{ daily_data_end_date }}',{% endfor %}];
-            var scheduleIdArray = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
+            var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}',{% endfor %}];
+        	var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}',{% endfor %}];
+            var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}',{% endfor %}];
             var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}', {% endfor %}];
-            var classTimeArray_member_name = [{% for daily_lecture_schedule_id in daily_lecture_schedule_id %}'{{ daily_lecture_schedule_id }}',{% endfor %}];
-            var offTimeArray_start_date = [{% for daily_off_start_date in daily_off_data_start_date %}'{{ daily_off_start_date }}',{% endfor %}];
-            var offTimeArray_end_date = [{% for daily_off_end_date in daily_off_data_end_date %}'{{ daily_off_end_date }}',{% endfor %}];
+            var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}',{% endfor %}];
+
+
+            var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}',{% endfor %}];
+            var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}',{% endfor %}];
+
+
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
             var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
