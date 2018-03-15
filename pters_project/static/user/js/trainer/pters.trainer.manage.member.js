@@ -1551,6 +1551,7 @@ function ajax_received_json_data(data){
     emailActiveArray = [];
     lectureCountsArray = [];
     npLectureCountsArray = [];
+    rjLectureCountsArray = [];
 
     finishIdArray = [];
     finishnameArray =[];
@@ -1563,6 +1564,7 @@ function ajax_received_json_data(data){
     finishendArray = [];
     finishLectureCountsArray = [];
     finishNpLectureCountsArray = [];
+    finishRjLectureCountsArray = [];
 
     finishRegCountArray = [];
     finishAvailCountArray = [];
@@ -1586,6 +1588,7 @@ function ajax_received_json_data(data){
     emailActiveArray = jsondata.emailActiveArray;
     lectureCountsArray = jsondata.lectureCountsArray;
     npLectureCountsArray = jsondata.npLectureCountsArray;
+    rjLectureCountsArray = jsondata.rjLectureCountsArray;
 
     finishIdArray = jsondata.finishIdArray;
     finishnameArray = jsondata.finishnameArray;
@@ -1598,6 +1601,7 @@ function ajax_received_json_data(data){
     finishendArray = jsondata.finishendArray;
     finishLectureCountsArray = jsondata.finishLectureCountsArray;
     finishNpLectureCountsArray = jsondata.finishNpLectureCountsArray;
+    finishRjLectureCountsArray = jsondata.finishRjLectureCountsArray;
 
     finishRegCountArray = jsondata.finishRegCountArray;
     finishAvailCountArray = jsondata.finishAvailCountArray;

@@ -15,6 +15,7 @@
     <input type="hidden" name="next_page" value = '{% url 'trainee:cal_month' %}'>
 </form>
 <form action="{% url 'trainee:pt_add_logic' %}" id="pt-add-form" method="post">
+    <input type="hidden" name="class_id" id="id_class_id" value="{{ request.session.class_id }}">
     <input type="hidden" name="lecture_id" id="id_lecture_id" value="{{ request.session.lecture_id }}">
     <input type="hidden" name="training_date" id="id_training_date">
     <input type="hidden" name="time_duration" id="id_time_duration">

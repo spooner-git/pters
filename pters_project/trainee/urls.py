@@ -28,7 +28,6 @@ urlpatterns = [
     url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
 
     url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
-    url(r'^lecture_check/$', views.LectureCheckView.as_view(), name='lecture_check'),
 
     url(r'^lecture_processing/$', views.lecture_processing, name='lecture_processing'),
 

@@ -22,7 +22,7 @@ from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
 from trainee.views import get_trainee_repeat_schedule_data_func, get_lecture_list_by_class_member_id
 from trainer.models import ClassTb, SettingTb
-from schedule.models import ScheduleTb
+from schedule.models import ScheduleTb, RepeatScheduleTb
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -282,10 +282,13 @@ def get_member_data(context, trainer_id, member_id):
             lecture_finish_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
                                                            lecture_rem_count=0, use=1).order_by('-start_date')
             if len(lecture_list) > 0:
+                member_data.rj_lecture_counts = 0
                 member_data.np_lecture_counts = 0
                 member_data.lecture_counts = len(lecture_list)
                 input_lecture_info = lecture_list[0]
                 for idx, lecture_info in enumerate(lecture_list):
+                    if lecture_info.state_cd == 'RJ':
+                        member_data.rj_lecture_counts += 1
                     if lecture_info.state_cd == 'NP':
                         member_data.np_lecture_counts += 1
                     if idx != 0:
@@ -297,9 +300,13 @@ def get_member_data(context, trainer_id, member_id):
                 member_list.append(member_data)
 
             if len(lecture_finish_list) > 0:
+                member_data.rj_lecture_counts = 0
+                member_data.np_lecture_counts = 0
                 member_data.lecture_counts = len(lecture_finish_list)
                 input_lecture_info = lecture_finish_list[0]
                 for idx, lecture_info in enumerate(lecture_finish_list):
+                    if lecture_info.state_cd == 'RJ':
+                        member_data.rj_lecture_counts += 1
                     if lecture_info.state_cd == 'NP':
                         member_data.np_lecture_counts += 1
                     if idx != 0:
@@ -839,8 +846,10 @@ def delete_member_info_logic(request):
                     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                               lecture_tb_id=lecture_info.lecture_id,
                                                               state_cd='NP')
+                    repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                           lecture_tb_id=lecture_info.lecture_id)
                     schedule_data.delete()
-                    lecture_info.state_cd = 'CC'
+                    repeat_schedule_data.delete()
                     lecture_info.use = 0
                     lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                     lecture_info.mod_dt = timezone.now()
@@ -862,6 +871,82 @@ def delete_member_info_logic(request):
         log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
                        + member.name + ' 회원님의</span> 수강정보를 <span class="status">삭제</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB02', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+@csrf_exempt
+def resend_member_lecture_info_logic(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    member_name = request.POST.get('member_name', '')
+    next_page = request.POST.get('next_page', '')
+    error = None
+
+    if lecture_id is None or '':
+        error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        lecture_info.state_cd = 'NP'
+        lecture_info.mod_dt = timezone.now()
+
+        lecture_info.save()
+
+    if error is None:
+        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                       + member_name + ' 회원님의</span> 수강정보를 <span class="status">재요청</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+@csrf_exempt
+def delete_member_lecture_info_logic(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    member_name = request.POST.get('member_name', '')
+    next_page = request.POST.get('next_page', '')
+    error = None
+
+    if lecture_id is None or '':
+        error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                  state_cd='NP')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+        schedule_data.delete()
+        repeat_schedule_data.delete()
+        lecture_info.delete()
+
+    if error is None:
+        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+                       + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
         log_data.save()
 

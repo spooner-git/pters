@@ -18,6 +18,7 @@ from django.views.generic.base import ContextMixin
 
 from config.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
+from schedule.views import get_member_schedule_input_lecture
 from trainee.models import LectureTb
 from trainer.models import ClassTb, SettingTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb
@@ -29,8 +30,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     # url = '/trainee/cal_month/'
     def get(self, request, **kwargs):
 
-        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
+        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(state_cd='RJ').order_by('-start_date')
         self.url = '/trainee/cal_month/'
+
+        class_counter = 0
 
         if len(lecture_data) == 0:
             self.url = '/trainee/blank/'
@@ -39,9 +42,25 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 if lecture_info.state_cd == 'NP':
                     self.url = '/trainee/lecture_select/'
                 else:
+                    self.request.session['class_id'] = lecture_info.class_tb_id
                     self.request.session['lecture_id'] = lecture_info.lecture_id
         else:
-            self.url = '/trainee/lecture_select/'
+            class_id_comp = ''
+            lecture_id_select = ''
+            for lecture_info in lecture_data:
+                if class_id_comp != lecture_info.class_tb_id:
+                    class_id_comp = lecture_info.class_tb_id
+                    if lecture_info.lecture_avail_count > 0:
+                        lecture_id_select = lecture_info.lecture_id
+
+                    class_counter += 1
+
+            if class_counter > 1:
+                self.url = '/trainee/lecture_select/'
+            else:
+                self.request.session['class_id'] = class_id_comp
+                self.request.session['lecture_id'] = lecture_id_select
+                self.url = '/trainee/cal_month/'
 
         return super(IndexView, self).get(request, **kwargs)
 
@@ -57,40 +76,6 @@ class BlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class LectureCheckView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'trainee_lecture_check.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(LectureCheckView, self).get_context_data(**kwargs)
-        error = None
-
-        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
-
-        for lecture_info in lecture_data:
-            class_info = None
-            trainer_info = None
-            try:
-                class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
-            except ObjectDoesNotExist:
-                error = '강사 정보가 없습니다.'
-
-            if error is None:
-                try:
-                    trainer_info = MemberTb.objects.get(member_id=class_info.member_id)
-                except ObjectDoesNotExist:
-                    error = '강사 회원정보가 없습니다.'
-
-            if error is None:
-                lecture_info.class_info = class_info
-                lecture_info.trainer_info = trainer_info
-
-        messages.error(self.request, error)
-
-        context['lecture_data'] = lecture_data
-
-        return context
-
-
 class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_lecture_select.html'
 
@@ -100,7 +85,7 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_list = []
         class_data = []
         # lecture_data2 = []
-        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
+        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(state_cd='RJ')
 
         for lecture_info in lecture_data:
             class_info = None
@@ -143,8 +128,8 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['lecture_data'] = lecture_data
 
         for class_info in class_list:
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=self.request.user.id,
-                                                    lecture_rem_count__gt=0, use=1).order_by('-start_date')
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                    member_id=self.request.user.id).exclude(state_cd='RJ').order_by('-start_date')
             lecture_class = class_info
             if len(lecture_list) > 0:
                 lecture_class.np_lecture_counts = 0
@@ -175,7 +160,7 @@ class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVi
         class_list = []
         class_data = []
         # lecture_data2 = []
-        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
+        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(state_cd='RJ')
 
         for lecture_info in lecture_data:
             class_info = None
@@ -218,8 +203,8 @@ class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVi
         context['lecture_data'] = lecture_data
 
         for class_info in class_list:
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=self.request.user.id,
-                                                    lecture_rem_count__gt=0, use=1).order_by('-start_date')
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                    member_id=self.request.user.id).order_by('-start_date').exclude(state_cd='RJ')
             lecture_class = class_info
             if len(lecture_list) > 0:
                 lecture_class.np_lecture_counts = 0
@@ -297,7 +282,7 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             error = '강좌 type을 불러오지 못했습니다.'
 
     if error is None:
-        lecture_data = LectureTb.objecsts.filter(class_tb_id=class_id, member_id=member_id).order_by('-start_date')
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id).exclude(state_cd='RJ').order_by('-start_date')
 
     context['class_data'] = class_data
     context['lecture_data'] = lecture_data
@@ -326,18 +311,19 @@ def lecture_processing(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             error = '수강정보가 존재하지 않습니다.'
 
     if error is None:
         if check == '1':
-            repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
-            schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id)
-            repeat_schedule_data.delete()
-            schedule_data.delete()
-            lecture_info.delete()
-
+            #repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
+            #schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id)
+            #repeat_schedule_data.delete()
+            #schedule_data.delete()
+            #lecture_info.delete()
+            lecture_info.state_cd = 'RJ'
+            lecture_info.save()
         elif check == '0':
             request.session['class_id'] = class_id
             request.session['lecture_id'] = lecture_id
@@ -631,7 +617,8 @@ def pt_delete_logic(request):
 # pt 일정 추가
 @csrf_exempt
 def pt_add_logic(request):
-    lecture_id = request.POST.get('lecture_id', '')
+    class_id = request.POST.get('class_id', '')
+    # lecture_id = request.POST.get('lecture_id', '')
     training_date = request.POST.get('training_date', '')
     time_duration = request.POST.get('time_duration', '')
     training_time = request.POST.get('training_time', '')
@@ -647,9 +634,9 @@ def pt_add_logic(request):
     disable_time = timezone.now()
     nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
 
-    if lecture_id == '':
-        error = '수강정보를 확인해주세요.'
-    elif training_date == '':
+    if class_id is None or '':
+        error = '강좌 정보를 불러오지 못했습니다.'
+    if training_date == '':
         error = '날짜를 선택해 주세요.'
     elif time_duration == '':
         error = '진행 시간을 선택해 주세요.'
@@ -667,15 +654,9 @@ def pt_add_logic(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(member_id=request.user.id, lecture_id=lecture_id, use=1)
+            class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = 'lecture가 존재하지 않습니다.'
-
-    if error is None:
-        try:
-            class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
-        except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -699,21 +680,17 @@ def pt_add_logic(request):
             lt_res_03 = '0'
         reserve_stop = lt_res_03
 
-    if error is None:
-        if lecture_info.member_id != str(request.user.id):
-            error = '회원 정보가 일치하지 않습니다.'
+        if reserve_prohibition_time != '':
+            disable_time = disable_time + datetime.timedelta(hours=int(reserve_prohibition_time))
 
-    if reserve_prohibition_time != '':
-        disable_time = disable_time + datetime.timedelta(hours=int(reserve_prohibition_time))
+        if reserve_stop == '1':
+            error = '강사 설정에 의해 현재 예약이 일시 정지 되어있습니다.'
 
-    if reserve_stop == '1':
-        error = '강사 설정에 의해 현재 예약이 일시 정지 되어있습니다.'
-
-    if error is None:
-        if nowtime < reserve_avail_start_time:
-            error = '현재는 입력할수 없는 시간입니다.'
-        if nowtime > reserve_avail_end_time:
-            error = '현재는 입력할수 없는 시간입니다.'
+        if error is None:
+            if nowtime < reserve_avail_start_time:
+                error = '현재는 입력할수 없는 시간입니다.'
+            if nowtime > reserve_avail_end_time:
+                error = '현재는 입력할수 없는 시간입니다.'
 
     if error is None:
         if start_date >= fifteen_days_after:
@@ -724,6 +701,7 @@ def pt_add_logic(request):
             error = '입력할 수 없는 일정입니다.'
 
     if error is None:
+        lecture_id = get_member_schedule_input_lecture(class_id, request.user.id)
         error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name, lecture_id)
 
     if error is None:
@@ -738,7 +716,8 @@ def pt_add_logic(request):
 # pt 일정 추가
 @csrf_exempt
 def pt_add_array_logic(request):
-    lecture_id = request.POST.get('lecture_id')
+    class_id = request.POST.get('class_id', '')
+    # lecture_id = request.POST.get('lecture_id')
     add_pt_size = request.POST.get('add_pt_size')
     training_date = request.POST.getlist('training_date[]')
     time_duration = request.POST.getlist('time_duration[]')
@@ -747,10 +726,15 @@ def pt_add_array_logic(request):
 
     error = None
 
+    if class_id is None or '':
+        error = '강좌 정보를 불러오지 못했습니다.'
+
     if int(add_pt_size) == 0:
         error = 'pt 일정을 선택하세요.'
 
     for i in range(0, int(add_pt_size)):
+
+        lecture_id = get_member_schedule_input_lecture(class_id, request.user.id)
         error = pt_add_logic_func(training_date[i], time_duration[i], training_time[i],
                                   request.user.id, request.user.first_name, lecture_id)
 
@@ -769,24 +753,31 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     class_info = None
     today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
-
-
-    if pt_schedule_date == '':
+    lecture_schedule_data = None
+    if lecture_id is None or '':
+        error = '수강정보를 불러오지 못했습니다.'
+    elif pt_schedule_date == '':
         error = '날짜를 선택해 주세요.'
     elif pt_schedule_time_duration == '':
         error = '진행 시간을 선택해 주세요.'
     elif pt_schedule_time == '':
         error = '시작 시간을 선택해 주세요.'
 
+    print(str(lecture_id))
     if error is None:
 
         start_date = datetime.datetime.strptime(pt_schedule_date+' '+pt_schedule_time, '%Y-%m-%d %H:%M:%S.%f')
         end_date = start_date + datetime.timedelta(hours=int(pt_schedule_time_duration))
 
         try:
-            lecture_info = LectureTb.objects.get(member_id=user_id,lecture_id=lecture_id, use=1)
+            lecture_info = LectureTb.objects.get(member_id=user_id, lecture_id=lecture_id, use=1)
         except ObjectDoesNotExist:
-            error = 'lecture가 존재하지 않습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        print(lecture_info.state_cd)
+        if lecture_info.state_cd != 'IP':
+            error = '등록할수 있는 수강 정보가 없습니다.'
 
     seven_days_ago = start_date - datetime.timedelta(days=7)
     seven_days_after = end_date + datetime.timedelta(days=7)
@@ -853,18 +844,19 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
                                     schedule_datum.start_dt, schedule_datum.end_dt)
             if error is not None:
                 break
-    if error is not None:
-        lecture_schedule_data.delete()
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id))
-        if lecture_info.lecture_reg_count >= len(schedule_data):
-            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
-                                                      - len(schedule_data)
-            lecture_info.mod_dt = timezone.now()
-            lecture_info.save()
 
-        else:
-            error = '예약 가능한 횟수를 확인해주세요.'
+        if error is not None:
+            lecture_schedule_data.delete()
+            schedule_data = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id))
+            if lecture_info.lecture_reg_count >= len(schedule_data):
+                lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
+                                                          - len(schedule_data)
+                lecture_info.mod_dt = timezone.now()
+                lecture_info.save()
 
+            else:
+                error = '예약 가능한 횟수를 확인해주세요.'
+    print(error)
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -919,17 +911,13 @@ def get_trainee_repeat_schedule_data_func(context, trainer_id, member_id):
     # 수강 정보 불러 오기
     if error is None:
         if member_id is None or '':
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP',
-                                                    lecture_rem_count__gt=0, use=1)
-            lecture_list |= LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='NP',
-                                                    lecture_rem_count__gt=0, use=1)
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
+            lecture_list.filter(state_cd='IP')
+            lecture_list.filter(state_cd='NP')
         else:
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_id,
-                                                    lecture_rem_count__gt=0,
-                                                    state_cd='IP', use=1)
-            lecture_list |= LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_id,
-                                                     state_cd='NP',
-                                                    lecture_rem_count__gt=0, use=1)
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_id, use=1)
+            lecture_list.filter(state_cd='IP')
+            lecture_list.filter(state_cd='NP')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
@@ -1091,7 +1079,7 @@ def get_trainee_schedule_data_func(context, user_id, lecture_id, start_date, end
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(member_id=user_id, lecture_id=lecture_id)
+            lecture_info = LectureTb.objects.get(member_id=user_id, lecture_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             error = 'lecture가 존재하지 않습니다.'
 
@@ -1241,7 +1229,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=user_id)
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=user_id).exclude(state_cd='RJ')
 
     # 강사 setting 값 로드
     if error is None:
@@ -1257,8 +1245,10 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                                                              start_dt__lt=end_date)
                 pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                           en_dis_type='1')
-                pt_start_date = lecture_info.start_date
-                pt_end_date = lecture_info.end_date
+                if lecture_info.use != 0:
+                    if lecture_info.state_cd == 'IP':
+                        pt_start_date = lecture_info.start_date
+                        pt_end_date = lecture_info.end_date
             else:
                 pt_schedule_data |= ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id,
                                                               en_dis_type='1',
@@ -1266,11 +1256,15 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                                                               start_dt__lt=end_date)
                 pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                            en_dis_type='1')
-                pt_end_date = lecture_info.end_date
+                if lecture_info.use != 0:
+                    if lecture_info.state_cd == 'IP':
+                        pt_end_date = lecture_info.end_date
 
-            lecture_reg_count_sum += lecture_info.lecture_reg_count
-            lecture_rem_count_sum += lecture_info.lecture_rem_count
-            lecture_avail_count_sum += lecture_info.lecture_avail_count
+            if lecture_info.use != 0:
+                if lecture_info.state_cd == 'IP':
+                    lecture_reg_count_sum += lecture_info.lecture_reg_count
+                    lecture_rem_count_sum += lecture_info.lecture_rem_count
+                    lecture_avail_count_sum += lecture_info.lecture_avail_count
             lecture_info.schedule_check = 0
             lecture_info.save()
 

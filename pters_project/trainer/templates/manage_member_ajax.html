@@ -19,6 +19,8 @@
     [{% for member_info in member_data %}"{{ member_info.lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "npLectureCountsArray" :
     [{% for member_info in member_data %}"{{ member_info.np_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "rjLectureCountsArray" :
+    [{% for member_info in member_data %}"{{ member_info.rj_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
 
     "countArray" :
@@ -33,8 +35,6 @@
     [{% for member_info in member_data %}"{{ member_info.lecture_info.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "availCountArray" :
     [{% for member_info in member_data %}"{{ member_info.lecture_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "npLectureArray" :
-    [{% for member_info in member_data %}"{{ member_info.np_lecture_counter }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
     "finishIdArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.user }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -56,6 +56,8 @@
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "finishNpLectureCountsArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.np_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "finishRjLectureCountsArray" :
+    [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.rj_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
     "finishcountArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.lecture_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
