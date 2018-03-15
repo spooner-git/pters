@@ -111,7 +111,7 @@ function date_format_to_hangul(yyyymmdd){
 
 //2018년 8월 23일 --->> 20180823 , 2018-08-23 등 특수문자 Split형식으로
 function date_format_to_yyyymmdd(hanguldate, resultSplit){  
-  var replaced =  hanguldate.replace(/년 |월 |일|:|-| /gi,'-').split('-')
+  var replaced =  hanguldate.replace(/년 |월 |일|:|_| /gi,'-').split('-')
   var yyyy = String(replaced[0])
   var mm   = String(replaced[1])
   var dd   = String(replaced[2])
