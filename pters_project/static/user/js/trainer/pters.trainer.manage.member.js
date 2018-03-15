@@ -246,16 +246,24 @@ $(document).ready(function(){
         $('#memberInfoPopup_PC').fadeIn('fast')
         $('#shade3').fadeIn('fast');
 
+        var npCountImg = ""
+        if(Data[userID].npCount == "1"){
+          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-np-wait.png" style="width:18px;margin:0 0 5px 3px" title="수락 대기중"> (요청 수락 대기중)</span>'
+        }else if(Data[userID].npCount == "2"){
+          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-x-red.png" style="width:11px;margin:0 0 5px 3px" title="수락 거절"> (수락 거절)</span>'
+        }
+        
+
         if(Data[userID].sex == "M"){
-          var html = '<img src="/static/user/res/member/icon-male-blue.png">'+Data[userID].name+' 회원님<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">'
+          var html = '<img src="/static/user/res/member/icon-male-blue.png">'+Data[userID].name+' 회원님<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">'+npCountImg
           $('#memberInfoPopup_PC_label').html(html)
           $('#form_sex_modify').val('M')
         }else if(Data[userID].sex == "W"){
-          var html = '<img src="/static/user/res/member/icon-female-pink.png">'+Data[userID].name+' 회원님<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">'
+          var html = '<img src="/static/user/res/member/icon-female-pink.png">'+Data[userID].name+' 회원님<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">'+npCountImg
           $('#memberInfoPopup_PC_label').html(html)
           $('#form_sex_modify').val('W')
         }else{
-          var html = '<img src="/static/user/res/member/icon-user.png">'+Data[userID].name+' 회원님<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">'
+          var html = '<img src="/static/user/res/member/icon-user.png">'+Data[userID].name+' 회원님<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">'+npCountImg
           $('#memberInfoPopup_PC_label').html(html)
           $('#form_sex_modify').val('')
         }
@@ -330,6 +338,14 @@ $(document).ready(function(){
         dropdown_year_selected.prop('selected',true)
         dropdown_month_selected.prop('selected',true)
         dropdown_date_selected.prop('selected',true)
+
+        var npCountImg = ""
+        if(Data[userID].npCount == "1"){
+          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-np-wait.png" style="width:18px;margin:0 0 5px 3px" title="수락 대기중"> (요청 수락 대기중)</span>'
+        }else if(Data[userID].npCount == "2"){
+          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-x-red.png" style="width:11px;margin:0 0 5px 3px" title="수락 거절"> (수락 거절)</span>'
+        }
+        $('#npSituationPresent').html(npCountImg)
 
         $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked');
         if(Data[userID].sex == "M"){
@@ -589,7 +605,9 @@ function DataFormattingDict(Option){
                                 'start':startArray[i],
                                 'end':endArray[i], 
                                 'birth':birthdayArray[i], 
-                                'sex':sexArray[i]};
+                                'sex':sexArray[i],
+                                'npCount':npLectureCountsArray[i],
+                              };
           }
           var DBendlength = finishnameArray.length;
           for(var j=0; j<DBendlength;j++){
@@ -620,7 +638,9 @@ function DataFormattingDict(Option){
                               'start':startArray[i],
                               'end':endArray[i], 
                               'birth':birthdayArray[i], 
-                              'sex':sexArray[i]};
+                              'sex':sexArray[i],
+                              'npCount':npLectureCountsArray[i],
+                            };
           }
           var DBendlength = finishIdArray.length;
           for(var j=0; j<DBendlength;j++){
@@ -736,6 +756,14 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4)
         }
 
+        var npCountImg = ""
+        if(npLectureCountsArray[i] == '1'){
+          var npCountImg = '<img src="/static/user/res/member/icon-np-wait.png" title="수락 대기중" class="npCountImg_wait">'
+        }else if(npLectureCountsArray[i] == '2'){
+          var npCountImg = '<img src="/static/user/res/member/icon-x-red.png" title="수락 거절" class="npCountImg_x">'
+        }
+        
+
         var count = remove_front_zeros(count)
         var regcount = remove_front_zeros(regcount)
         
@@ -747,7 +775,8 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">'
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">'
 
-        var nametd = '<td class="_tdname" data-name="'+name+'">'+name+nameimage+'</td>'
+        //var nametd = '<td class="_tdname" data-name="'+name+'">'+name+nameimage+npCountImg+'</td>'
+        var nametd = '<td class="_tdname" data-name="'+name+'">'+name+npCountImg+'</td>'
         var idtd = '<td class="_id" data-name="'+id+'">'+id+'</td>'
         var emailtd = '<td class="_email">'+email+'</td>'
         var regcounttd = '<td class="_regcount">'+regcount+'</td>'

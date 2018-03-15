@@ -36,6 +36,7 @@ li a{
 
 .settingBox{
 	position: relative;
+	height: 65px;
 }
 
 .settingText{

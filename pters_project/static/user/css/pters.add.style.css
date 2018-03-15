@@ -541,6 +541,14 @@ ul a{
 	margin-right: 10px;
 }
 
+._button_Prev{
+	background:#ffffff !important;
+	color: #282828 !important;
+}
+._button_Next{
+
+}
+
 /* 신규 회원 등록  */
 
 .selectbox{
@@ -815,12 +823,11 @@ option{
 	}
 
 	.submitBtn{
-		display:block;
+		display:inline-block;
 		height: 50px;
 		background: #ffffff;
 		color: #f4f4f4;
-		border-top: 0.5px solid #cccccc;
-		border-bottom: 0.5px solid #cccccc;
+		border:0.5px solid #cccccc;
 	}
 	
 	.popupBtn_mini .submitBtn{

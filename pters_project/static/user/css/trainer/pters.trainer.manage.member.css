@@ -489,6 +489,21 @@ th{
 	display: none;
 }
 
+.npCountImg_wait{
+	width:14px;
+	position:absolute;
+	margin-top:2px;
+	margin-left:0px;
+}
+
+.npCountImg_x{
+	width:10px;
+	position:absolute;
+	margin-top:3px;
+	margin-left:2px;
+}
+
+
 .phonesms{
 	display: inline;
 	width: 16px;
@@ -691,6 +706,20 @@ th{
 		width: 1080px;
 		height: 600px;
 		overflow-y: overlay;
+	}
+
+	.npCountImg_wait{
+		width:17px;
+		position:absolute;
+		margin-top:3px;
+		margin-left:3px;
+	}
+
+	.npCountImg_x{
+		width:12px;
+		position:absolute;
+		margin-top:5px;
+		margin-left:5px;
 	}
 
 	._countnum,._id,._email,._finday,._manage{
