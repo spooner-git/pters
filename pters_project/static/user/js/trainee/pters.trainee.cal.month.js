@@ -549,7 +549,18 @@ $(document).ready(function(){
     		}else if(option=="member"){
     			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);		
     			result2.push(startSplitArray[3]+":"+startSplitArray[4]);
-    		}	
+    		}else if(option=="graph"){
+              var mm = startSplitArray[1]
+              var dd = startSplitArray[2]
+              if(mm.length<2){
+                var mm = '0'+startSplitArray[1]
+              }
+              if(dd.length<2){
+                var dd = '0'+startSplitArray[2]
+              }
+              result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
+              result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
+          }	
   	    }
 	}
 
@@ -820,6 +831,9 @@ $(document).ready(function(){
         for(var i=0;i<Arraylength;i++){
           var splitTimeArray = TimeDataArray[i].split("_")
           var targetTime = splitTimeArray[0]
+          if(targetTime == 24){
+          	var targetTime = 0
+          }
           var durTime = splitTimeArray[2]
           if(DateDataArray[i] == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
               for(var j=0; j<durTime; j++){
