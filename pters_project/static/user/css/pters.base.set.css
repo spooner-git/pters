@@ -23,6 +23,13 @@ a:focus, a:hover{
     transform: translateX(-50%);
 }
 
+.wrap800{
+    width: 100%;
+    max-width: 800px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+
 .wrapunlimit{
     width: 100%;
     left: 50% !important;
