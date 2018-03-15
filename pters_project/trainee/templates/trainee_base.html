@@ -27,6 +27,8 @@
     {% block navbar %}
     <div id="shade">
     </div>
+    <div id="shade2">
+    </div>
     <nav class="navbar navbar-fixed-top navbar-default wrap">
         <div class="">
             <div class="navbar-header">
@@ -45,7 +47,7 @@
 
      <nav class="navbar navbar-fixed-top" id="pcver">
             <div class="centermenu">
-                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
+                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'trainee:cal_month'%}'" style="cursor: pointer;">
                 <div class="centermenu_box" style="margin-left: 97px;text-align: left;">
                     <div class="centermenu_div">
                         <a href="{% url 'trainee:mypage_trainee' %}" class="centermenu_text"></a>
@@ -54,10 +56,10 @@
                         <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month'%}'">달력</a>
                     </div>
                     <div class="centermenu_div">
-                        <a class="centermenu_text" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">마이페이지</a>
+                        <a class="centermenu_text" onclick="open_lecture_select_popup()">달력 선택</a>
                     </div>
                     <div class="centermenu_div">
-                        <a class="centermenu_text" onclick="open_lecture_select_popup()">강의 선택</a>
+                        <a class="centermenu_text" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">마이페이지</a>
                     </div>
                     <div class="centermenu_div">
                         <a href="#" class="centermenu_text"></a>
@@ -75,14 +77,22 @@
             </div>
         </nav>
 
-        <div id="popup_lecture_select">
-            <label>강의 선택</label>
-            <p>관리하고자 하는 강의를 선택해 주세요.</p>
+        <div id="popup_lecture_select" class="_popup">
+            <form action="{% url 'trainee:lecture_processing' %}" id="lecture-check-form" method="post">
+                <input type="hidden" name="lecture_id" id="id_check_lecture_id">
+                <input type="hidden" name="check" id="id_check">
+                <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
+            </form>
+            <label>달력 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
+            <p>일정 확인을 원하는 항목을 선택해 주세요.</p>
             <div class="pters_table">
               <div class="pters_table_cell_head table_lecture_name">강의명</div>
               <div class="pters_table_cell_head table_trainer_name">트레이너</div>
               <!--<div class="pters_table_cell">연락처</div>-->
               <div class="pters_table_cell_head table_selection">선택</div>
+            </div>
+            <div class="lecture_select_table_list">
+              
             </div>
         </div>
         
@@ -142,7 +152,7 @@
                               "planChangePush":'-',
                               "regErgentPush":'-',
 
-                              "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
+                              "language" : "KOR",             //Korea, Japan, English, Chinese, Spanish
                               "location" : "Japan",           //Korea, Japan, English, Chinese
             }
             if(Options.language=="JPN"){
@@ -170,7 +180,6 @@
             var lec_select_trainerNameArray = []
             var lec_select_availCountArray = []
 
-            ajax_read_lecture_info_from_db()
 
             function ajax_read_lecture_info_from_db(){
                 $.ajax({
@@ -182,7 +191,6 @@
                       },
 
                       success:function(data){
-                        console.log('ajax')
                         var jsondata = JSON.parse(data);
                         lec_select_regCountArray = jsondata.regCountArray
                         lec_select_countArray = jsondata.countArray
@@ -192,6 +200,9 @@
                         lec_select_trainerNameArray = jsondata.trainerNameArray
                         lec_select_availCountArray = jsondata.availCountArray
                         lec_select_npLectureCountsArray = jsondata.npLectureCountsArray
+                        lec_select_classInfoArray = jsondata.classInfoArray
+
+                        fill_lecture_select_popup()
                       },
 
                       complete:function(){
@@ -207,19 +218,23 @@
             function open_lecture_select_popup(){
                 $('#popup_lecture_select').fadeIn('fast')
                 $('#shade2').show()
+                ajax_read_lecture_info_from_db()
+            }
+
+            function fill_lecture_select_popup(){
                 var len = lec_select_trainerNameArray.length;
                 var list_table_to_join = []
                 for(var i=0; i<len; i++){
                   if(lec_select_npLectureCountsArray[i] == '0'){
                       var table = '<div class="pters_table" style="margin-top:0;">'
-                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_trainerNameArray[i]+'</div>'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>'
                       var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
-                      var selection = '<div class="pters_table_cell table_selection"><a data="'+lec_select_lectureIdArray[i]+'">선택</a></div>'
+                      var selection = '<div class="pters_table_cell table_selection"><a data="" '+'onclick="lecture_check('+lec_select_lectureIdArray[i]+',2)"'+'">선택</a></div>'
                       var sum = table + lectureName + trainerName + selection + '</div>'
                       list_table_to_join.push(sum)
                   }else{
                       var table = '<div class="pters_table" style="margin-top:0;">'
-                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_trainerNameArray[i]+'</div>'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>'
                       var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
                       var selection = '<div class="pters_table_cell table_selection _npOpen">New<img src="/static/user/res/daycal_arrow_pink.png" style="transform:rotate(-90deg); width:5px;margin-left:7px;"></div>'
                       var sum = table + lectureName + trainerName + selection + '</div>'
@@ -228,17 +243,16 @@
                           var table = '<div class="pters_table displayNone" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[i]+'">'
                           var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
                           var trainerName = '<div class="pters_table_cell table_trainer_name">'+'등록요청 전송'+'</div>'
-                          var selection = '<div class="pters_table_cell table_selection"><a data="'
-                                          +lec_select_lectureIdArray[i]+'">수락/</a><a data="'
-                                          +lec_select_lectureIdArray[i]+'">거절</a></div>'
+                          var selection = '<div class="pters_table_cell table_selection"><a data="" '
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',0)">수락/</a><a data="" '
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',1)">거절</a></div>'
                           var sum = table + lectureName + trainerName + selection + '</div>'
                           list_table_to_join.push(sum)
                       }
                   }
                 }
                 var list_table = list_table_to_join.join('')
-
-                $('#popup_lecture_select').append(list_table)
+                $('.lecture_select_table_list').html(list_table)
             }
 
             $(document).on('click','div._npOpen',function(){
@@ -250,9 +264,12 @@
                 }else{
                     $hiddenElement.addClass('displayNone')
                     $(this).find('img').css('transform','rotate(-90deg)')
-                }
-                
-                
+                }  
+            })
+
+            $('.button_close_popup').click(function(){
+                $(this).parents('div._popup').fadeOut('fast')
+                $('#shade2').hide()
             })
 
             function lecture_check(lecture_id, check){
@@ -260,8 +277,9 @@
               $('#id_check').val(check);
               if(check=='2'){
                   $('#id_next_page').val('{% url 'trainee:cal_month'%}');
-              }
-              else{
+              }else if(check=='0'){
+                  $('#id_next_page').val('{% url 'trainee:cal_month'%}');
+              }else{
                   $('#id_next_page').val('{% url 'trainee:index' %}');
               }
               document.getElementById('lecture-check-form').submit();

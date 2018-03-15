@@ -12,9 +12,13 @@
 }
 	#popup_lecture_select label{
 		margin:10px 0 0 12px;
+		width: 100%;
 	}
 	#popup_lecture_select p{
 		margin-left: 15px;
+	}
+	#popup_lecture_select a{
+		cursor: pointer;
 	}
 	.pters_table{
 		display: table;
@@ -49,4 +53,11 @@
 
 .displayNone{
 	display: none;
+}
+
+.button_close_popup{
+	width: 15px;
+	float: right;
+	margin-right: 20px;
+	cursor: pointer;
 }
