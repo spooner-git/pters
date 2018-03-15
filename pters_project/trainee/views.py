@@ -763,7 +763,6 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     elif pt_schedule_time == '':
         error = '시작 시간을 선택해 주세요.'
 
-    print(str(lecture_id))
     if error is None:
 
         start_date = datetime.datetime.strptime(pt_schedule_date+' '+pt_schedule_time, '%Y-%m-%d %H:%M:%S.%f')
@@ -775,7 +774,6 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        print(lecture_info.state_cd)
         if lecture_info.state_cd != 'IP':
             error = '등록할수 있는 수강 정보가 없습니다.'
 
@@ -856,7 +854,6 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
 
             else:
                 error = '예약 가능한 횟수를 확인해주세요.'
-    print(error)
     if error is None:
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -1258,6 +1255,8 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                                                                            en_dis_type='1')
                 if lecture_info.use != 0:
                     if lecture_info.state_cd == 'IP':
+                        if pt_start_date == '':
+                            pt_start_date = lecture_info.start_date
                         pt_end_date = lecture_info.end_date
 
             if lecture_info.use != 0:
