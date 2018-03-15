@@ -57,6 +57,9 @@ body{
 	display: none;
 }
 
+
+
+
 @media(min-width: 600px){
 	#logout{
 		position: relative;
