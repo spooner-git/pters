@@ -618,45 +618,6 @@
          <script>
           $('#uptext').text("회원 관리")
           $('footer').hide()
-/*
-          var idArray =[{% for lecture in lecture_info %}'{{ lecture.member_info.user.id }}',{% endfor %}]
-          var nameArray =[{% for lecture in lecture_info %}'{{ lecture.member_info.name }}',{% endfor %}]
-          var phoneArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.phone }}',{% endfor %}]
-          var contentsArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.contents }}',{% endfor %}]
-          var birthdayArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.birthday_dt }}',{% endfor %}]
-          var sexArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.sex }}',{% endfor %}]
-
-          var countArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_rem_count }}',{% endfor %}]
-          var startArray = [{% for lecture in lecture_info %}'{{ lecture.start_date }}',{% endfor %}]
-          var modifyDateArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.mod_dt }}',{% endfor %}]
-          var emailArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.user.email }}',{% endfor %}]
-          var endArray = [{% for lecture in lecture_info %}'{{ lecture.end_date }}',{% endfor %}]
-
-          //처리 필요 - hk.kim 180110
-          var regCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_reg_count }}',{% endfor %}]
-          var availCountArray = [{% for lecture in lecture_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
-
-          var emailActiveArray = [{% for lecture in lecture_info %}'{{ lecture.member_info.user.is_active }}',{% endfor %}]
-
-          var finishIdArray =[{% for lecture in lecture_finish_info %}'{{ lecture.member_info.user }}',{% endfor %}]
-          var finishnameArray =[{% for lecture in lecture_finish_info %}'{{ lecture.member_info.name }}',{% endfor %}]
-          var finishphoneArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.phone }}',{% endfor %}]
-          var finishContentsArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.contents }}',{% endfor %}]
-          var finishbirthdayArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.birthday_dt }}',{% endfor %}]
-          var finishsexArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.sex }}',{% endfor %}]
-
-          var finishcountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_rem_count }}',{% endfor %}]
-          var finishstartArray = [{% for lecture in lecture_finish_info %}'{{ lecture.start_date }}',{% endfor %}]
-          var finishmodifyDateArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.mod_dt }}',{% endfor %}]
-          var finishemailArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.user.email }}',{% endfor %}]
-          var finishendArray = [{% for lecture in lecture_finish_info %}'{{ lecture.end_date }}',{% endfor %}]
-
-          //처리 필요 - hk.kim 180110
-          var finishRegCountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_reg_count }}',{% endfor %}]
-          var finishAvailCountArray = [{% for lecture in lecture_finish_info %}'{{ lecture.lecture_avail_count }}',{% endfor %}]
-
-          var finishEmailActiveArray = [{% for lecture in lecture_finish_info %}'{{ lecture.member_info.user.is_active }}',{% endfor %}]
-*/
 
           var idArray =[{% for member_info in member_data %}'{{ member_info.user }}',{% endfor %}];
           var emailArray = [{% for member_info in member_data %}'{{ member_info.user.email }}',{% endfor %}];
@@ -670,13 +631,16 @@
           var npLectureCountsArray = [{% for member_info in member_data %}'{{ member_info.np_lecture_counts }}',{% endfor %}];
           var rjLectureCountsArray = [{% for member_info in member_data %}'{{ member_info.rj_lecture_counts }}',{% endfor %}];
 
-          var countArray = [{% for member_info in member_data %} '{{ member_info.lecture_info.lecture_rem_count }}',{% endfor %}];
-          var startArray = [{% for member_info in member_data %} '{{ member_info.lecture_info.start_date }}',{% endfor %}];
-          var endArray = [{% for member_info in member_data %} '{{ member_info.lecture_info.end_date }}',{% endfor %}];
-          var modifyDateArray = [{% for member_info in member_data %} '{{ member_info.lecture_info.member_info.mod_dt }}',{% endfor %}];
-          var regCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_info.lecture_reg_count }}',{% endfor %}];
-          var availCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_info.lecture_avail_count }}',{% endfor %}];
+          var countArray = [{% for member_info in member_data %} '{{ member_info.lecture_rem_count }}',{% endfor %}];
+          var startArray = [{% for member_info in member_data %} '{{ member_info.start_date }}',{% endfor %}];
+          var endArray = [{% for member_info in member_data %} '{{ member_info.end_date }}',{% endfor %}];
+          var modifyDateArray = [{% for member_info in member_data %} '{{ member_info.mod_dt }}',{% endfor %}];
+          var regCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_reg_count }}',{% endfor %}];
+          var availCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_avail_count }}',{% endfor %}];
 
+          var yetCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_rem_count_yet}}',{% endfor %}];
+          var yetRegCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_reg_count_yet }}',{% endfor %}];
+          var yetAvailCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_avail_count_yet }}',{% endfor %}];
 
           var finishIdArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user }}',{% endfor %}];
           var finishemailArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user.email }}',{% endfor %}];
@@ -692,10 +656,14 @@
 
           var finishcountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.lecture_rem_count }}',{% endfor %}];
           var finishstartArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.start_date }}',{% endfor %}];
-          var finishmodifyDateArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.member_info.mod_dt }}',{% endfor %}];
+          var finishmodifyDateArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.mod_dt }}',{% endfor %}];
           var finishendArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.end_date }}',{% endfor %}];
           var finishRegCountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.lecture_reg_count }}',{% endfor %}];
           var finishAvailCountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.lecture_avail_count }}',{% endfor %}];
+
+          var finishYetCountArray = [{% for member_finish_info in member_finish_data %} '{{ member_finish_info.lecture_rem_count_yet}}',{% endfor %}];
+          var finishYetRegCountArray = [{% for member_finish_info in member_finish_data %} '{{ member_finish_info.lecture_reg_count_yet }}',{% endfor %}];
+          var finishYetAvailCountArray = [{% for member_finish_info in member_finish_data %} '{{ member_finish_info.lecture_avail_count_yet }}',{% endfor %}];
 
           var messageArray = [{% for message in messages %}'{{ message }}',{% endfor %}]
 
