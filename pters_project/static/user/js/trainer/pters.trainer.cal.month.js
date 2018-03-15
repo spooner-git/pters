@@ -89,7 +89,7 @@ $(document).ready(function(){
 			$('#pcaddpopup_off').hide()
 	    }
 	    if($(this).hasClass('ymdText-pc-add-pt')){
-	    	$('#shade').fadeIn('fast')
+	    	$('#shade3').fadeIn('fast')
 	    }
 	})
 
@@ -120,7 +120,7 @@ $(document).ready(function(){
 	    }
 
 	    if($(this).hasClass('ymdText-pc-add-off')){
-	    	$('#shade').fadeIn('fast')
+	    	$('#shade3').fadeIn('fast')
 	    }
 	})
 
@@ -168,6 +168,7 @@ $(document).ready(function(){
 
   	//PC 스타일
   	$('.cancelBtn').click(function(){
+  		$('#shade3').fadeOut();
 	    $('#shade').hide();
 	    $('#page-addplan').fadeOut('fast','swing');
 	    if($('body').width()<600){
