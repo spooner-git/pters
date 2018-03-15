@@ -47,10 +47,12 @@
   <div id="popup_info" class="popup_info_text"></div>
   <div id="popup_info2" class="popup_info_text"></div>
   <div id="popup_btn_complete" class="popup_inner popup_inner_finish">
-    <span class="KRtext">일정 완료</span><span class="JPtext">日程완료</span><span class="ENtext">Finish Schedule</span>
+    <span class="KRtext">일정 완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
   </div>
   <div id="canvasWrap">
-    <span>회원님 완료 서명을 입력해주세요.</span>
+    <span class="KRtext">회원님 완료 서명을 입력해주세요.</span>
+    <span class="JPtext">完了署名を入力して下さい</span>
+    <span class="ENtext">Enter Completion Signature</span>
     <canvas id="canvas"></canvas>
   </div>
   <div id="popup_btn_delete" class="popup_inner popup_inner_delete">
@@ -124,36 +126,57 @@
     </div>
     <div id="monthText">
     </div>
-    <div id="menuName">주간 일정
+    <div id="menuName">
+      <span class="KRtext">주간 일정</span>
+      <span class="JPtext">週間日程</span>
+      <span class="ENtext">Weekly Schedule</span>
     </div>
-    <div id="menuDescription">일정을 확인하고 등록 할 수 있습니다.
+    <div id="menuDescription">
+      <span class="KRtext">일정을 확인하고 등록 할 수 있습니다.</span>
+      <span class="JPtext">スケジュールの登録・確認ができます。</span>
+      <span class="ENtext">Manage schedule by week calendar</span>
     </div>
 </div>
 
 <div id="hidetoggle" class="wrap" data-type = '0'>
-  <img src="/static/user/res/daycal_arrow_pink.png" style="-webkit-transform:rotate(90deg)"><span>일정 넓게 보기</span>
+  <img src="/static/user/res/daycal_arrow_pink.png" style="-webkit-transform:rotate(90deg)">
+  <span class="KRtext">일정 넓게 보기</span>
+  <span class="JPtext">隠す</span>
+  <span class="ENtext">Hide</span>
 </div>
 
 <div id="ymdText-pc" class="wrap">
     <div class="ymdText-pc-refresh">
-      <div class="ymdText-pc-add-refresh">새로고침</div>
+      <div class="ymdText-pc-add-refresh">
+        <span class="KRtext">새로고침</span>
+        <span class="JPtext">Refresh</span>
+        <span class="ENtext">Refresh</span>
+      </div>
     </div>
 
     <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
     <div class="ymdText-pc-fulldate">
-      <span id="ymdText-pc-month-start" class="ymdText-pc-month">1월</span>
-      <span id="ymdText-pc-date-start" class="ymdText-pc-date">17일</span>
+      <span id="ymdText-pc-month-start" class="ymdText-pc-month">mm</span>
+      <span id="ymdText-pc-date-start" class="ymdText-pc-date">dd</span>
     </div>
     <span style="font-size: 20px;margin-left:10px;">- </span>
     <div class="ymdText-pc-fulldate">
-      <span id="ymdText-pc-month-end" class="ymdText-pc-month"></span>
-      <span id="ymdText-pc-date-end" class="ymdText-pc-date">23일</span>
+      <span id="ymdText-pc-month-end" class="ymdText-pc-month">mm</span>
+      <span id="ymdText-pc-date-end" class="ymdText-pc-date">dd</span>
     </div>
     <img src="/static/user/res/icon-cal-btn.png"  id="ymdText-pc-next-btn" style="-webkit-transform:rotate(180deg)">
 
     <div class="ymdText-pc-add">
-      <div class="ymdText-pc-add-off">+ OFF 일정추가</div>
-      <div class="ymdText-pc-add-pt">+ PT 일정추가</div>
+      <div class="ymdText-pc-add-off">
+        <span class="KRtext">+ OFF 일정추가</span>
+        <span class="JPtext">+ OFF 追加</span>
+        <span class="ENtext">+ Add OFF</span>
+      </div>
+      <div class="ymdText-pc-add-pt">
+        <span class="KRtext">+ PT 일정추가</span>
+        <span class="JPtext">+ プラン 追加</span>
+        <span class="ENtext">+ Add plan</span>
+      </div>
     </div>
 
 </div>
@@ -162,13 +185,42 @@
     
 <div id="week" class="time-row">
         <div class="slidegap"><span></span><span></span></div>
-        <div id="weekNum_1" class="weekNum"><span class="weekToday-style"></span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span><span class="weekToday-style" style="color: #d21245;">일</span></div>
-        <div id="weekNum_2" class="weekNum"><span class="weekToday-style"></span><span id="monDate" class="weekToday-style"></span><span class="weekToday-style">월</span></div>
-        <div id="weekNum_3" class="weekNum"><span class="weekToday-style"></span><span id="tueDate" class="weekToday-style"></span><span class="weekToday-style">화</span></div>
-        <div id="weekNum_4" class="weekNum"><span class="weekToday-style"></span><span id="wedDate" class="weekToday-style"></span><span class="weekToday-style">수</span></div>
-        <div id="weekNum_5" class="weekNum"><span class="weekToday-style"></span><span id="thrDate" class="weekToday-style"></span><span class="weekToday-style">목</span></div>
-        <div id="weekNum_6" class="weekNum"><span class="weekToday-style"></span><span id="friDate" class="weekToday-style"></span><span class="weekToday-style">금</span></div>
-        <div id="weekNum_7" class="weekNum"><span class="weekToday-style"></span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span><span class="weekToday-style" style="color: #115a8e;">토</span></div>
+        <div id="weekNum_1" class="weekNum">
+          <span class="weekToday-style"></span><span id="sunDate" class="weekToday-style" style="color:#d21245;"></span>
+          <span class="weekToday-style KRtext" style="color: #d21245;">일</span>
+          <span class="weekToday-style JPtext" style="color: #d21245;">日</span>
+          <span class="weekToday-style ENtext" style="color: #d21245;">Sun</span>
+        </div>
+        <div id="weekNum_2" class="weekNum"><span class="weekToday-style"></span><span id="monDate" class="weekToday-style"></span>
+          <span class="weekToday-style KRtext">월</span>
+          <span class="weekToday-style JPtext">月</span>
+          <span class="weekToday-style ENtext">Mon</span>
+        </div>
+        <div id="weekNum_3" class="weekNum"><span class="weekToday-style"></span><span id="tueDate" class="weekToday-style"></span>
+          <span class="weekToday-style KRtext">화</span>
+          <span class="weekToday-style JPtext">火</span>
+          <span class="weekToday-style ENtext">Tue</span>
+        </div>
+        <div id="weekNum_4" class="weekNum"><span class="weekToday-style"></span><span id="wedDate" class="weekToday-style"></span>
+          <span class="weekToday-style KRtext">수</span>
+          <span class="weekToday-style JPtext">水</span>
+          <span class="weekToday-style ENtext">Wed</span>
+        </div>
+        <div id="weekNum_5" class="weekNum"><span class="weekToday-style"></span><span id="thrDate" class="weekToday-style"></span>
+          <span class="weekToday-style KRtext">목</span>
+          <span class="weekToday-style JPtext">木</span>
+          <span class="weekToday-style ENtext">Thu</span>
+        </div>
+        <div id="weekNum_6" class="weekNum"><span class="weekToday-style"></span><span id="friDate" class="weekToday-style"></span>
+          <span class="weekToday-style KRtext">금</span>
+          <span class="weekToday-style JPtext">金</span>
+          <span class="weekToday-style ENtext">Fri</span>
+        </div>
+        <div id="weekNum_7" class="weekNum"><span class="weekToday-style"></span><span id="satDate" class="weekToday-style" style="color: #115a8e;"></span>
+          <span class="weekToday-style KRtext" style="color: #115a8e;">토</span>
+          <span class="weekToday-style JPtext" style="color: #115a8e;">土</span>
+          <span class="weekToday-style ENtext" style="color: #115a8e;">Sat</span>
+        </div>
 </div>
     
 
@@ -176,7 +228,7 @@
       <div class="swiper-container">
         <div id="timeIndicatorBar"></div>
           <div class="timeindex">
-              <div class="hour" id="hour0"><span class="morningtext">오전</span><span class="timeindex_time">00:00</span></div>
+              <div class="hour" id="hour0"><span class="morningtext"><span class="KRtext">오전</span><span class="JPtext">午前</span><span class="ENtext">AM</span></span><span class="timeindex_time">00:00</span></div>
               <div class="hour" id="hour1"><span class="timeindex_time">01:00</span></div>
               <div class="hour" id="hour2"><span class="timeindex_time">02:00</span></div>
               <div class="hour" id="hour3"><span class="timeindex_time">03:00</span></div>
@@ -188,7 +240,7 @@
               <div class="hour" id="hour9"><span class="timeindex_time">09:00</span></div>
               <div class="hour" id="hour10"><span class="timeindex_time">10:00</span></div>
               <div class="hour" id="hour11"><span class="timeindex_time">11:00</span></div>
-              <div class="hour" id="hour12"><span class="morningtext">오후</span><span class="timeindex_time">12:00</span></div>
+              <div class="hour" id="hour12"><span class="morningtext"><span class="KRtext">오후</span><span class="JPtext">午後</span><span class="ENtext">PM</span></span><span class="timeindex_time">12:00</span></div>
               <div class="hour" id="hour13"><span class="timeindex_time">13:00</span></div>
               <div class="hour" id="hour14"><span class="timeindex_time">14:00</span></div>
               <div class="hour" id="hour15"><span class="timeindex_time">15:00</span></div>
@@ -306,7 +358,7 @@
     </div>
 
     <div id="remainCount" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약 가능 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Remain Counts</span></div>
+      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약 가능 횟수</span><span class="JPtext">予約可能回数</span><span class="ENtext">Available Reserv. Counts</span></div>
       <!-- 남은 횟수 DB연동 필요 -->
             <div id="countsSelected" class="dropdown" placeholder="ー"></div>
     </div>
@@ -318,7 +370,7 @@
     </div>
 
     <div id="timeGraph" class="ptaddbox _NORMAL_ADD_timegraph" style="display: none;">
-      <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">등록 가능 시간 <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
+      <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;"><span class="KRtext"> 등록 가능 시간 </span><span class="JPtext"> 登録可能時間</span><span class="ENtext">Available Time</span><div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
       <table class="timegraphtext">
         <tbody>
           <tr>
@@ -419,14 +471,16 @@
     <div id="repeatSchedule" class="ptaddbox repeatbox">
         <div id="repeatScheduleText" class="ptaddboxtext repeattext">
           <img src={% static "user/res/icon-cal-mini.png" %} class="icons">
-           <span>반복일정</span>
-           <img class="icons-next-button" src={% static "user/res/icon-setting-arrow.png" %}>
-         </div>
+          <span class="KRtext"> 반복 일정</span>
+          <span class="JPtext"> 繰り返し</span>
+          <span class="ENtext"> Repeat Schedule</span>
+          <img class="icons-next-button" src={% static "user/res/icon-setting-arrow.png" %}>
+        </div>
     </div>
     <!--반복 일정 개요 박스-->
 
     <div id="offRepeatSummary" class="ptaddbox _REPEAT_ADD">
-        <span id="summaryText">일정요약</span>
+        <span id="summaryText KRtext">일정요약</span><span id="summaryText JPtext">現在登録現況</span><span id="summaryText ENtext">Repeat Summary</span>
         <div class="summaryInnerBox">
           <span class="summaryInnerBoxText">매주 월요일 오전 11시</span>
           <span class="summaryInnerBoxText2">반복종료 : 계속반복</span>
