@@ -1,6 +1,14 @@
     {
       "lectureIdArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lectureTypeArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "priceArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "optionArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.option_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "noteArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "startArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "endArray":
@@ -11,6 +19,11 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "availCountArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "regDateTimeArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "modDateTimeArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "classInfoArray":
       [{% for class_info in class_data %}"{{ class_info.class_type_name}}"{%if forloop.last == False%},{% endif %}{% endfor %}],
