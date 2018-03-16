@@ -84,17 +84,21 @@
       <img src="/static/user/res/member/icon-user.png" alt=""><span>내 정보 개요</span>
   </div>
 
-  <div id="countBoardWrap">
+  <div id="regCountBoardWrap" class="boardWrap">
+      <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">등록 횟수</p><p><span>{{lecture_reg_count}} </span>회</p></div>
+  </div>
+
+  <div id="countBoardWrap" class="boardWrap">
       <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">예약 가능 횟수</p><p><span>{{lecture_avail_count}} </span>회</p></div>
       <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">PT 완료 횟수</p><p><span>{{lecture_finish_count}} </span>회</p></div>
   </div>
 
-  <div id="planBoardWrap">
+  <div id="planBoardWrap" class="boardWrap">
       <div class="planBoard _Next_Info"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 PT 일정</p><p></p></div>
       <div class="planBoard _Repeat_Info"><p><img src="/static/user/res/member/icon-repeat.png" alt="">PT 반복 일정</p><p style="margin:0;"></p><span></span></div> 
   </div>
 
-  <div id="dateBoardWrap">
+  <div id="dateBoardWrap" class="boardWrap">
       <div class="dateBoard"><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 시작일</p><p>{{ pt_start_date }}</p></div>
       <div class="dateBoard"><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 종료일</p><p>{{ pt_end_date }}</p></div>
   </div>
@@ -102,7 +106,7 @@
   <div class="mypage_label">
       <img src="/static/user/res/member/icon-user.png" alt=""><span>담당 트레이너 정보</span>
   </div>
-  <div id="trainerInfoWrap">
+  <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo"><span>{{ class_info.mem_info.name }} 트레이너</span><img src="/static/user/res/member/icon-call.png" alt=""><img src="/static/user/res/member/icon-message.png" alt=""></div>
   </div>
 </div>
@@ -162,7 +166,7 @@
                   
               }else if($('#mygraph').attr('data-open') == "1"){
                   $('#mygraph').css('transform','translateY(-200%)').attr('data-open','0')
-                  $('#summary_wrap').css('transform','translateY(-60%)')
+                  $('#summary_wrap').css('transform','translateY(-48%)')
 
               }
             })
