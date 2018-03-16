@@ -1378,14 +1378,15 @@ $('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
 
 
 function check_dropdown_selected(){ //모든 입력란을 채웠을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-    //var emailInput = $("#memberEmail_add").parent("div");
+    var emailInput = $("#memberEmail_add");
     var lastnameInput = $("#memberLastName_add");
     var firstnameInput = $("#memberFirstName_add");
     var phoneInput = $("#memberPhone_add");
     var countInput = $("#memberCount_add");
     var startInput = $("#datepicker_add");
     var endInput = $("#datepicker2_add");
-    var sexInput = $('#form_sex').val();
+    //var sexInput = $('#form_sex').val();
+    var sexInput = "임시"
 
     var countInput_fast = $("#memberCount_add_fast");
     var dateInput_fast = $("#datepicker_fast");
