@@ -86,7 +86,7 @@ button:focus{
 	position: absolute;
 	top: 50px;
 	width:100%;
-	max-width: 700px !important;
+	max-width: 450px !important;
 	background: #f4f4f4;
 	z-index: 105;
 }
@@ -583,6 +583,10 @@ th{
 }
 
 @media(min-width: 600px){
+	#page_addmember{
+		
+	}
+
 	#float_btn_wrap{
 		display: none !important;
 	}
