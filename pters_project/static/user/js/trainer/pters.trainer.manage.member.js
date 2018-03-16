@@ -229,6 +229,8 @@ $(document).ready(function(){
       }else if($(this).attr('data-type')=="modify"){
         console.log('수정송신')
         send_member_modified_data_pc()
+      }else if($(this).attr('data-type')=="resend"){
+
       }
     })
 
@@ -248,11 +250,15 @@ $(document).ready(function(){
     $('#select_info_shift_base').click(function(){
         $('#info_shift_base').show()
         $('#info_shift_lecture').hide()
+        $(this).css('color','#fe4e65')
+        $(this).siblings('.button_shift_info').css('color','#282828')
     })
 
     $('#select_info_shift_lecture').click(function(){
         $('#info_shift_base').hide()
         $('#info_shift_lecture').show()
+        $(this).css('color','#fe4e65')
+        $(this).siblings('.button_shift_info').css('color','#282828')
     })
 
 
@@ -465,6 +471,54 @@ $(document).ready(function(){
           })
     }
 
+    function resend_member_reg_data_pc(){
+      var userID = $('#memberId_info_PC').text()
+      var lectureId = DB[userID].lectureId
+           $.ajax({
+              url:'/trainer/resend_member_lecture_info/', 
+              type:'POST',
+              data:{'lecture_id':'','member_name':DB[userID].name},
+              dataType : 'html',
+
+              beforeSend:function(){
+                beforeSend()
+              },
+
+              //보내기후 팝업창 닫기
+              complete:function(){
+                
+              },
+
+              //통신성공시 처리
+              success:function(data){
+                  ajax_received_json_data(data);
+
+                  if(messageArray.length>0){
+                      completeSend()
+                      $('#inputError_info_PC').fadeIn()
+                      setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
+                      $('#errorMsg_info_PC p').text(messageArray)
+                  }
+                  else{
+                      completeSend()
+                      DataFormattingDict('ID');
+                      DataFormatting('current');
+                      DataFormatting('finished');
+                      memberListSet('current','date','yes');
+                      memberListSet('finished','date','yes');
+                      $('#startR').attr('selected','selected')
+                      open_member_info_popup_pc($('#memberId_info_PC').text())
+                      console.log('success');
+                  }
+              },
+
+              //통신 실패시 처리
+              error:function(){
+                alert("서버 통신 : error")
+              },
+          })
+    }
+
 //#####################회원정보 팝업 //#####################
 
 
@@ -503,22 +557,6 @@ memberListSet('current','name')
 memberListSet('finished','name')
 //#####################페이지 들어오면 초기 시작 함수//#####################
 
-
-/*
-function date_format_to_yyyymmdd(rawData){
-  var replaced =  rawData.replace(/년 |월 |일|:|-| /gi,'_').split('_')
-  var yyyy = replaced[0]
-  var mm   = replaced[1]
-  var dd   = replaced[2]
-  if(mm.length<2){
-    var mm = '0' + replaced[1]
-  }
-  if(dd.length<2){
-    var dd = '0' + replaced[2]
-  }
-  return yyyy+mm+dd
-}
-*/
 
 function count_format_to_nnnn(rawData){
   if(rawData == '0'){
@@ -633,7 +671,6 @@ function DataFormatting(type){
     }
 }
 
-
 function DataFormattingDict(Option){
     switch(Option){
       case 'name':
@@ -712,7 +749,6 @@ function DataFormattingDict(Option){
           $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
       break;
     }
-    
 }
 
 function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
@@ -1652,6 +1688,7 @@ function deleteMemberAjax(){
 
 function ajax_received_json_data(data){
     var jsondata = JSON.parse(data);
+    console.log(jsondata)
     idArray = [];
     nameArray =[];
     phoneArray = [];
