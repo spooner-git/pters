@@ -23,7 +23,7 @@ button:focus{
 	z-index: 100;
 }
 
-.confirmPopup{
+.confirmPopup,.resendPopup{
 	display: none;
 	position: fixed;
 	background: #ffffff;
@@ -76,7 +76,7 @@ button:focus{
 	text-align: center;
 }
 
-.popup_inner_delete{
+.popup_inner_delete, .popup_inner_resend{
 	text-align: center;
 	color: #fe4e65;
 }
@@ -461,6 +461,15 @@ th{
 			#memberRegHistory_info_PC_wrap > label{
 				display: inline;
 			}
+			.lectureType_NP{
+				color: orange !important;
+			}
+			.lectureType_RJ{
+				color: red !important;
+				text-decoration: underline;
+				cursor: pointer !important;
+			}
+
 
 	.member_info_PC_buttons_wrap button{
 		display: inline-block;

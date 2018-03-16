@@ -178,6 +178,7 @@ $(document).ready(function(){
             open_member_info_popup_mobile(userID)
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID)
+            set_member_lecture_list()
             $('#info_shift_base').show()
             $('#info_shift_lecture').hide()
             $('#select_info_shift_base').css('color','#fe4e65')
@@ -191,6 +192,7 @@ $(document).ready(function(){
             open_member_info_popup_mobile(userID)
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID)
+            set_member_lecture_list()
             $('#info_shift_base').show()
             $('#info_shift_lecture').hide()
             $('#select_info_shift_base').css('color','#fe4e65')
@@ -223,6 +225,7 @@ $(document).ready(function(){
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID)
             modify_member_info_pc(userID)
+            set_member_lecture_list()
             $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('readonly',false);
             $('button._info_modify').text('완료').attr('data-type',"modify")
             $('#info_shift_base').show()
@@ -267,7 +270,6 @@ $(document).ready(function(){
     })
 
     $('#select_info_shift_lecture').click(function(){
-        set_member_lecture_list()
         $('#info_shift_base').hide()
         $('#info_shift_lecture').show()
         $(this).css('color','#fe4e65')
@@ -363,6 +365,25 @@ $(document).ready(function(){
 
         $('#inputError_info_PC').css('display','none')
     }
+
+    $(document).on('click','div.lectureType_RJ',function(){
+        $('.resendPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        $('#shade').fadeIn('fast');
+    })
+
+    $('._btn_close_resend_PC').click(function(){
+       $(this).parents('.popups').fadeOut('fast')
+       $('#shade').hide()
+    })
+
+    $('span.resend').click(function(){
+        resend_member_reg_data_pc()
+    })
+
+    $('span.delete_resend').click(function(){
+      
+    })
+      
 
     function open_member_info_popup_mobile(userID){
         if($('#currentMemberList').css('display') == "block"){
@@ -485,12 +506,13 @@ $(document).ready(function(){
     }
 
     function resend_member_reg_data_pc(){
-      var userID = $('#memberId_info_PC').text()
-      var lectureId = DB[userID].lectureId
+      var userID = $('#memberId_info_PC').text();
+      var lectureID = $('.resendPopup').attr('data-leid');
+      console.log(userID,lectureID,DB[userID].name)
            $.ajax({
               url:'/trainer/resend_member_lecture_info/', 
               type:'POST',
-              data:{'lecture_id':'','member_name':DB[userID].name},
+              data:{"lecture_id":lectureID,"member_name":DB[userID].name},
               dataType : 'html',
 
               beforeSend:function(){
@@ -499,7 +521,7 @@ $(document).ready(function(){
 
               //보내기후 팝업창 닫기
               complete:function(){
-                
+                completeSend()
               },
 
               //통신성공시 처리
@@ -507,13 +529,11 @@ $(document).ready(function(){
                   ajax_received_json_data(data);
 
                   if(messageArray.length>0){
-                      completeSend()
                       $('#inputError_info_PC').fadeIn()
                       setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
                       $('#errorMsg_info_PC p').text(messageArray)
                   }
                   else{
-                      completeSend()
                       DataFormattingDict('ID');
                       DataFormatting('current');
                       DataFormatting('finished');
@@ -521,6 +541,7 @@ $(document).ready(function(){
                       memberListSet('finished','date','yes');
                       $('#startR').attr('selected','selected')
                       open_member_info_popup_pc($('#memberId_info_PC').text())
+                      set_member_lecture_list()
                       console.log('success');
                   }
               },
@@ -553,19 +574,24 @@ $(document).ready(function(){
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
-                    console.log(jsondata.availCountArray[0])
+                    console.log(jsondata)
                     var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>상태</div></div>']
                     for(var i=0; i<jsondata.lectureIdArray.length; i++){
                       var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
                       var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
                       var lectureType = '<div>'+jsondata.lectureTypeArray[i]+'</div>'
-                      var lectureTypeName = '<div>'+jsondata.lectureTypeNameArray[i]+'</div>'
+                      var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
                       var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
                       var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
                       var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
                       var remcount =    '<div>'+jsondata.remCountArray[i]+'</div>'
                       var start = '<div>'+jsondata.startArray[i]+'</div>'
                       var end = '<div>'+jsondata.endArray[i]+'</div>' 
+                      if(jsondata.lectureTypeArray[i] == "NP"){
+                        var lectureTypeName = '<div class="lectureType_NP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
+                      }else if(jsondata.lectureTypeArray[i] == "RJ"){
+                        var lectureTypeName = '<div class="lectureType_RJ" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
+                      }
                       result_history_html.push('<div>'+start+end+regcount+remcount+lectureTypeName+'</div>')
                     }
                     var result_history = result_history_html.join('')
