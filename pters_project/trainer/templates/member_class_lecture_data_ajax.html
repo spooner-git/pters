@@ -3,6 +3,8 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lectureTypeArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lectureTypeNameArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.state_type.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "priceArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "optionArray":
@@ -26,11 +28,11 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "classInfoArray":
-      [{% for class_info in class_data %}"{{ class_info.class_type_name}}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      ["{{ class_data.class_type_name.common_cd_nm}}"],
       "classIdArray":
-      [{% for class_info in class_data %}"{{ class_info.class_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      ["{{ class_data.class_id }}"],
       "trainerNameArray":
-      [{% for class_info in class_data %}"{{ class_info.trainer_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      ["{{ class_data.trainer_info.name }}"],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
