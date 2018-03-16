@@ -327,8 +327,8 @@ $(document).ready(function(){
         
         $('#deleteMemberId').val(userID);
         $('#memberName_info').val(Data[userID].name)
-        $('#memberId').val(userID)
-        $('#memberId_info_PC').text(userID);
+        $('#memberId').val(userID).attr('data-dbid',Data[userID].dbId);
+        $('#memberId_info_PC').text(userID).attr('data-dbid',Data[userID].dbId);
         $('#memberPhone_info, #memberPhone_info_PC').val(Data[userID].phone);
         $('#memberRegCount_info_PC').val(Data[userID].regcount + yetReg)
         $('#memberRemainCount_info_PC').val(Data[userID].count + yet)
@@ -362,8 +362,8 @@ $(document).ready(function(){
         $('#page-base').fadeOut('fast');
         $('#page-base-modifystyle').fadeIn('fast');
         $('#memberName_info').val(Data[userID].name)
-        $('#memberId').val(userID);
-        $('#deleteMemberId').val(userID);
+        $('#memberId').val(userID).attr('data-dbid',Data[userID].dbId)
+        $('#deleteMemberId').val(userID).attr('data-dbid',Data[userID].dbId)
         $('#memberPhone_info').val(Data[userID].phone);
         $('#comment_info').val(Data[userID].contents);
         $('#memberRegCount_info').val(Data[userID].regcount);
@@ -519,6 +519,66 @@ $(document).ready(function(){
           })
     }
 
+    $('#memberInfoPopup_PC_label').click(function(){
+        get_member_lecture_list()
+    })
+
+    function get_member_lecture_list(){
+        var userID = $('#memberId_info_PC').text()
+        var dbId = DB[userID].dbId
+             $.ajax({
+                url:'/trainer/read_lecture_by_class_member_ajax/', 
+                type:'POST',
+                data:{"member_id":dbId},
+                dataType : 'html',
+
+                beforeSend:function(){
+                  beforeSend()
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                  
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata)
+
+                    /*
+                    ajax_received_json_data(data);
+                    if(messageArray.length>0){
+                        completeSend()
+                        $('#inputError_info_PC').fadeIn()
+                        setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
+                        $('#errorMsg_info_PC p').text(messageArray)
+                    }
+                    else{
+                        completeSend()
+                        DataFormattingDict('ID');
+                        DataFormatting('current');
+                        DataFormatting('finished');
+                        memberListSet('current','date','yes');
+                        memberListSet('finished','date','yes');
+                        $('#startR').attr('selected','selected')
+                        open_member_info_popup_pc($('#memberId_info_PC').text())
+                        console.log('success');
+                    }
+                    */
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                  alert("서버 통신 : error")
+                },
+            })
+    }
+
+    function fill_member_lecture_list(){
+
+    }
+
 //#####################회원정보 팝업 //#####################
 
 
@@ -613,6 +673,7 @@ function DataFormatting(type){
         var dateListResult = currentDateList
 
         var nameInfoArray = nameArray
+        var dbIdInfoArray = dIdArray
         var idInfoArray = idArray
         var emailInfoArray =emailArray
         var startDateArray = startArray
@@ -639,6 +700,7 @@ function DataFormatting(type){
 
         var nameInfoArray = finishnameArray
         var idInfoArray = finishIdArray
+        var dbIdInfoArray = finishDidArray
         var emailInfoArray = finishemailArray
         var startDateArray = finishstartArray
         var endDateArray = finishendArray
@@ -665,9 +727,9 @@ function DataFormatting(type){
       var regcountOri = regCountInfoArray[i]
       var regcountFix = count_format_to_nnnn(regCountInfoArray[i])
 
-      countListResult[i]=countFix+'/'+regcountFix+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]
-      nameListResult[i]=nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]
-      dateListResult[i]=date+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]
+      countListResult[i]=countFix+'/'+regcountFix+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i]
+      nameListResult[i]=nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i]
+      dateListResult[i]=date+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i]
     }
 }
 
@@ -677,6 +739,7 @@ function DataFormattingDict(Option){
           var DBlength = nameArray.length;
           for(var i=0; i<DBlength;i++){
             DB[nameArray[i]] = {'id':idArray[i],
+                                'dbId':dIdArray[i],
                                 'email':emailArray[i],
                                 'count':countArray[i],
                                 'regcount':regCountArray[i],
@@ -695,7 +758,8 @@ function DataFormattingDict(Option){
           }
           var DBendlength = finishnameArray.length;
           for(var j=0; j<DBendlength;j++){
-            DBe[finishnameArray[j]] = {'id':finishIdArray[j], 
+            DBe[finishnameArray[j]] = {'id':finishIdArray[j],
+                                        'dbId':finishDidArray[i], 
                                         'email':finishemailArray[j],
                                         'count':finishcountArray[j],
                                         'regcount':regCountArray[j],
@@ -715,6 +779,7 @@ function DataFormattingDict(Option){
           var DBlength = idArray.length;
           for(var i=0; i<DBlength;i++){
             DB[idArray[i]] = {'name':nameArray[i],
+                              'dbId':dIdArray[i],
                               'email':emailArray[i],
                               'count':countArray[i],
                               'regcount':regCountArray[i],
@@ -734,6 +799,7 @@ function DataFormattingDict(Option){
           var DBendlength = finishIdArray.length;
           for(var j=0; j<DBendlength;j++){
             DBe[finishIdArray[j]] = {'id':finishnameArray[j], 
+                                    'dbId':finishDidArray[i],
                                     'email':finishemailArray[j],
                                     'count':finishcountArray[j],
                                     'regcount':regCountArray[j],
@@ -788,11 +854,11 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
     var arrayResult = []
     for(var i=0; i<len; i++){
         if(option == "count"){
-            console.log(countLists)
             var array = countLists[i].split('/');
             var email = array[8];
             var name = array[2];
             var id = array[3];
+            var dbId = array[13];
             var contents = array[5];
             var count = array[0];
             var regcount = array[1]
@@ -811,6 +877,7 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             var email = array[8];
             var name = array[0];
             var id = array[1];
+            var dbId = array[13];
             var contents = array[3];
             var count = array[4];
             var regcount = array[5]
@@ -830,6 +897,7 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
             var email = array[8];
             var name = array[1];
             var id = array[2];
+            var dbId = array[13];
             var contents = array[4];
             var count = array[5];
             var regcount = array[6];
@@ -887,7 +955,7 @@ function memberListSet (type,option,Reverse){  //멤버 리스트 뿌리기
 
         //var nametd = '<td class="_tdname" data-name="'+name+'">'+name+nameimage+npCountImg+'</td>'
         var nametd = '<td class="_tdname" data-name="'+name+'">'+name+npCountImg+'</td>'
-        var idtd = '<td class="_id" data-name="'+id+'">'+id+'</td>'
+        var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>'
         var emailtd = '<td class="_email">'+email+'</td>'
         var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>'
         var remaincounttd = '<td class="_remaincount">'+count+yet+'</td>'
