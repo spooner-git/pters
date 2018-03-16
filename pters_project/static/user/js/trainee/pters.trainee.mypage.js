@@ -94,4 +94,55 @@ $(document).ready(function(){
 		}
 	}
 
+	 var repeat_info_dict= { 'KOR':
+                                  {'DD':'매일', 'WW':'매주', '2W':'격주',
+                                   'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+                                  'JAP':
+                                  {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                                   'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+                                  'JAP':
+                                  {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                                   'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+                                 }
+
+    if(ptRepeatScheduleTypeArray.length>0){
+    	for(var i=0; i<ptRepeatScheduleTypeArray.length; i++){
+    		var trainee_repeat_type = repeat_info_dict[Options.language][ptRepeatScheduleTypeArray[i]]
+	        var trainee_repeat_days = function(){
+	                                  var repeat_day_info_raw = ptRepeatScheduleWeekInfoArray[i].split('/')
+	                                  var repeat_day_info = ""
+	                                  if(repeat_day_info_raw.length>1){
+	                                      for(var j=0; j<repeat_day_info_raw.length; j++){
+	                                          var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+	                                      }
+	                                  }else if(repeat_day_info_raw.length == 1){
+	                                      var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+	                                  }
+	                                  if(repeat_day_info.substr(0,1) == '/'){
+	                                      var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+	                                  }
+	                                    return repeat_day_info
+	                                };
+	        var trainee_repeat_time = time_format_to_hangul(ptRepeatScheduleStartTimeArray[i])
+	        var trainee_repeat_end = '반복종료 : '+ date_format_to_hangul(ptRepeatScheduleEndDateArray[i])
+	        var trainee_repeat_day = trainee_repeat_days()
+	        $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
+		    $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_type+' '
+		                                          +trainee_repeat_day + ' '
+		                                          +trainee_repeat_time)
+		    $('._Repeat_Info span').text(trainee_repeat_end)
+    	}
+        
+    }else{
+        var trainee_repeat_type = ''
+        var trainee_repeat_day = '설정된 반복일정이 없습니다.'
+        var trainee_repeat_time = ''
+        var trainee_repeat_end = ''
+        $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
+	    $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_type+' '
+	                                          +trainee_repeat_day + ' '
+	                                          +trainee_repeat_time)
+	    $('._Repeat_Info span').text(trainee_repeat_end)
+    }
+
 });//document(ready)
