@@ -395,34 +395,6 @@ $(document).ready(function(){
 			send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
 			// image upload test - hk.kim 180313
 			if(schedule_on_off==1){
-				console.log(drawCanvas.toDataURL('image/png'))
-				//PT 일정 완료 처리시
-				$.ajax({
-                    url:'/schedule/upload_test/',
-                    type:'POST',
-                    data:send_data,
-
-                    beforeSend:function(){
-                    	//AjaxBeforeSend();
-						console.log('image_upload_test1')
-                    },
-
-                    //통신성공시 처리
-                    success:function(){
-						console.log('image_upload_test2')
-                      },
-
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-
-                      },
-
-                    //통신 실패시 처리
-                    error:function(){
-                    },
-                 })
-
-
 				//PT 일정 완료 처리시
 				$.ajax({
                     url:'/schedule/finish_schedule/',
@@ -435,7 +407,7 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(){
-
+                      signImageSend(send_data);
                       closeDeletePopup();
                       AjaxCompleteSend();
                       ajaxClassTime();
@@ -457,6 +429,33 @@ $(document).ready(function(){
 			}
 		}
 	})
+
+	function signImageSend(send_data){
+		$.ajax({
+                    url:'/schedule/upload_test/',
+                    type:'POST',
+                    data:send_data,
+
+                    beforeSend:function(){
+                    	//AjaxBeforeSend();
+                    },
+
+                    //통신성공시 처리
+                    success:function(){
+                    	console.log('sign_image_save_success')
+                      },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+
+                      },
+
+                    //통신 실패시 처리
+                    error:function(){
+                    	console.log('sign_image_save_fail')
+                    },
+                 })
+	}
 
 	//PC버전 새로고침 버튼
 	$('.ymdText-pc-add-refresh').click(function(){ 
