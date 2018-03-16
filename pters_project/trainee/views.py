@@ -284,6 +284,13 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
     if error is None:
         lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, use=1).order_by('-start_date')
 
+        for lecture_info in lecture_data:
+            lecture_info.start_date = str(lecture_info.start_date)
+            lecture_info.end_date = str(lecture_info.end_date)
+            lecture_info.mod_dt = str(lecture_info.mod_dt)
+            lecture_info.reg_dt = str(lecture_info.reg_dt)
+            lecture_info.state_type = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
+
     context['class_data'] = class_data
     context['lecture_data'] = lecture_data
 

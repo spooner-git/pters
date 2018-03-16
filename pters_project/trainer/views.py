@@ -1565,10 +1565,10 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         class_id = self.request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
 
-        error = get_lecture_list_by_class_member_id(context, class_id, member_id)
+        context = get_lecture_list_by_class_member_id(context, class_id, member_id)
 
-        if error is not None:
-            messages.error(self.request, error)
+        if context['error'] is not None:
+            messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
 
@@ -1577,9 +1577,9 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         class_id = self.request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
 
-        error = get_lecture_list_by_class_member_id(context, class_id, member_id)
-        if error is not None:
-            messages.error(self.request, error)
+        context = get_lecture_list_by_class_member_id(context, class_id, member_id)
+        if context['error'] is not None:
+            messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
 
