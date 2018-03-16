@@ -96,7 +96,7 @@ DATABASES = {
     'default': {
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        #'ENGINE': 'django.db.backends.postgresql_psycopg2',    
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'ENGINE' : 'django.db.backends.mysql',
         'NAME': 'pters',
         'USER': 'bebep',
@@ -185,11 +185,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #AWS_SECRET_ACCESS_KEY = 'cPoQXvQRxJw2DFhgC/VYw5Y/qKj2vifzuXcZ8ACn'
 #AWS_STORAGE_BUCKET_NAME = 'pters-image'
 #AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-#AWS_S3_OBJECT_PARAMETERS = {
-#    'CacheControl': 'max-age=86400',
-#}
-#AWS_LOCATION = 'static'
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'static'
 
 ## STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-#DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
+DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'

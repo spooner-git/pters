@@ -1688,7 +1688,7 @@ function deleteMemberAjax(){
 
 function ajax_received_json_data(data){
     var jsondata = JSON.parse(data);
-    console.log(jsondata)
+    dIdArray = [];
     idArray = [];
     nameArray =[];
     phoneArray = [];
@@ -1732,6 +1732,7 @@ function ajax_received_json_data(data){
     finishEmailActiveArray = [];
     messageArray = [];
 
+    dIdArray = jsondata.dIdArray;
     idArray = jsondata.idArray;
     nameArray =jsondata.nameArray;
     phoneArray = jsondata.phoneArray;

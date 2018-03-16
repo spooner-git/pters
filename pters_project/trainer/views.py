@@ -60,34 +60,35 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             class_info = ClassTb.objects.get(member=self.request.user.id)
         except ObjectDoesNotExist:
             error = '강사 정보가 존재하지 않습니다'
+        if error is None:
+            self.request.session['class_id'] = class_info.class_id
+            all_member = MemberTb.objects.filter(use=1).order_by('name')
 
-        all_member = MemberTb.objects.filter(use=1).order_by('name')
+            for member_info in all_member:
+                member_data = member_info
 
-        for member_info in all_member:
-            member_data = member_info
+                member_lecture_reg_count = 0
+                member_lecture_rem_count = 0
+                member_lecture_avail_count = 0
+                # 강좌에 해당하는 수강/회원 정보 가져오기
+                lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
+                                                        lecture_rem_count__gt=0, use=1).order_by('-start_date')
+                if len(lecture_list) > 0:
+                    total_member_num += 1
+                    if len(lecture_list) == 1:
+                        if month_first_day < lecture_list[0].start_date < next_month_first_day:
+                            new_member_num += 1
 
-            member_lecture_reg_count = 0
-            member_lecture_rem_count = 0
-            member_lecture_avail_count = 0
-            # 강좌에 해당하는 수강/회원 정보 가져오기
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
-                                                    lecture_rem_count__gt=0, use=1).order_by('-start_date')
-            if len(lecture_list) > 0:
-                total_member_num += 1
-                if len(lecture_list) == 1:
-                    if month_first_day < lecture_list[0].start_date < next_month_first_day:
-                        new_member_num += 1
+                    for lecture_info in lecture_list:
+                        if lecture_info.state_cd == 'NP':
+                            np_member_num += 1
+                        member_lecture_reg_count += lecture_info.lecture_reg_count
+                        member_lecture_rem_count += lecture_info.lecture_rem_count
+                        member_lecture_avail_count += lecture_info.lecture_avail_count
 
-                for lecture_info in lecture_list:
-                    if lecture_info.state_cd == 'NP':
-                        np_member_num += 1
-                    member_lecture_reg_count += lecture_info.lecture_reg_count
-                    member_lecture_rem_count += lecture_info.lecture_rem_count
-                    member_lecture_avail_count += lecture_info.lecture_avail_count
-
-                if 0 < member_lecture_rem_count < 4:
-                    to_be_end_member_num += 1
-                    break
+                    if 0 < member_lecture_rem_count < 4:
+                        to_be_end_member_num += 1
+                        break
 
         if error is None :
             #남은 횟수 1개 이상인 경우 - 180314 hk.kim
@@ -1561,7 +1562,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
 
     def get(self, request, *args, **kwargs):
         context = super(ReadLectureByClassMemberAjax, self).get_context_data(**kwargs)
-        class_id = request.POST.get('class_id', '')
+        class_id = self.request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
 
         error = get_lecture_list_by_class_member_id(context, class_id, member_id)
@@ -1573,7 +1574,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
 
     def post(self, request, *args, **kwargs):
         context = super(ReadLectureByClassMemberAjax, self).get_context_data(**kwargs)
-        class_id = request.POST.get('class_id', '')
+        class_id = self.request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
 
         error = get_lecture_list_by_class_member_id(context, class_id, member_id)
