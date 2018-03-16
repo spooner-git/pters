@@ -86,7 +86,7 @@ button:focus{
 	position: absolute;
 	top: 50px;
 	width:100%;
-	max-width: 700px !important;
+	max-width: 450px !important;
 	background: #f4f4f4;
 	z-index: 105;
 }
@@ -462,6 +462,27 @@ th{
 	border-color: #282828 !important;
 }
 
+.button_shift_info{
+	background:#f1f1f1;
+	border:1px solid #cccccc;
+	border-bottom: 0;
+	height: 22px;
+}
+	.button_shift_info:active{
+		color: #fe4e65;
+	}
+
+.info_shift_wrap{
+	border:1px solid #cccccc;
+	padding-left: 10px;
+	min-height: 275px;
+	overflow:auto;
+}
+
+#info_shift_lecture{
+	display: none;
+}
+
 
 /*-----------------PC 회원정보 팝업-----------------------*/
 
@@ -583,6 +604,10 @@ th{
 }
 
 @media(min-width: 600px){
+	#page_addmember{
+
+	}
+
 	#float_btn_wrap{
 		display: none !important;
 	}

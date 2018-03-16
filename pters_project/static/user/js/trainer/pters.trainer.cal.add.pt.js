@@ -243,6 +243,7 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
+                console.log(jsondata)
                 ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
                 ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
                 ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
