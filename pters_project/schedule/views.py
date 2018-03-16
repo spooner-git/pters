@@ -1,6 +1,10 @@
 import datetime
 import logging
 
+import boto
+import boto3
+import botocore
+from boto3.dynamodb.conditions import Key
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -11,13 +15,17 @@ from django.db import transaction
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.urls import reverse_lazy
 from django.utils import timezone
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import CreateView
 from django.views.generic import TemplateView
+from s3transfer import upload
 
 from config.views import date_check_func
 from login.models import LogTb, MemberTb
-from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
+from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb, Document
 from trainee.models import LectureTb
 from trainer.models import ClassTb
 import base64
@@ -533,7 +541,7 @@ def finish_schedule_logic(request):
     member_name = request.POST.get('member_name')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
-    #imgUpload = request.POST.get('imgUpload')
+    #imgUpload = request.POST.get('upload')
     next_page = request.POST.get('next_page')
 
     # image upload test - hk.kim 180313
@@ -1174,3 +1182,46 @@ def get_member_schedule_input_lecture(class_id, member_id):
 
     return lecture_id
 
+
+class DocumentCreateView(CreateView):
+    model = Document
+    fields = ['upload', ]
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # documents = Document.objects.all()
+        # context['documents'] = documents
+        return context
+
+
+@csrf_exempt
+def upload_test_func(request):
+
+    user_id = request.POST.get('user_id', '')
+    schedule_id = request.POST.get('schedule_id', '')
+    image_test = request.POST.get('upload_file', '')
+    next_page = '/trainer/cal_day_ajax/'
+    # s3 = boto3.resource('s3')
+    s3 = boto3.resource('s3', aws_access_key_id='AKIAJ7EQVIQLCJNIKS7Q',
+                        aws_secret_access_key='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')
+    bucket = s3.Bucket('pters-image')
+    exists = True
+    try:
+        s3.meta.client.head_bucket(Bucket='pters-image')
+    except botocore.exceptions.ClientError as e:
+        # If a client error is thrown, then check that it was a 404 error.
+        # If it was a 404 error, then the bucket does not exist.
+        error_code = int(e.response['Error']['Code'])
+        if error_code == 404:
+            exists = False
+
+    format, imgstr = image_test.split(';base64,')
+    ext = format.split('/')[-1]
+
+    data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+
+    bucket.put_object(Key=schedule_id+'.png', Body=data, ContentType='image/png',
+                      ACL='public-read')
+
+    return redirect(next_page)

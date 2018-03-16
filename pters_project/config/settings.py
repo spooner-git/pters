@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'trainer',
     'trainee',
     'schedule',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -178,3 +179,17 @@ MEDIA_URL = '/media/'
 
 # 업로드된 파일을 저장할 디렉토리 경로
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+#AWS_ACCESS_KEY_ID = 'AKIAJ7EQVIQLCJNIKS7Q'
+#AWS_SECRET_ACCESS_KEY = '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'
+#AWS_STORAGE_BUCKET_NAME = 'pters-image'
+#AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+#AWS_S3_OBJECT_PARAMETERS = {
+#    'CacheControl': 'max-age=86400',
+#}
+#AWS_LOCATION = 'static'
+
+## STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'

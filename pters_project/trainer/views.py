@@ -1,4 +1,5 @@
 # Create your views here.
+import copy
 import datetime
 
 from django.contrib import messages
@@ -273,7 +274,8 @@ def get_member_data(context, trainer_id, member_id):
             all_member = MemberTb.objects.filter(member_id=member_id, use=1).order_by('name')
 
         for member_info in all_member:
-            member_data = member_info
+            member_data = copy.copy(member_info)
+            member_data_finish = copy.copy(member_info)
             # 강좌에 해당하는 수강/회원 정보 가져오기
             lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
                                                     lecture_rem_count__gt=0, use=1).order_by('start_date')
@@ -292,6 +294,11 @@ def get_member_data(context, trainer_id, member_id):
                 member_data.lecture_reg_count = 0
                 member_data.lecture_rem_count = 0
                 member_data.lecture_avail_count = 0
+
+                member_data.lecture_reg_count_total = 0
+                member_data.lecture_rem_count_total = 0
+                member_data.lecture_avail_count_total = 0
+
                 member_data.start_date = None
                 member_data.end_date = None
                 member_data.mod_dt = None
@@ -322,52 +329,63 @@ def get_member_data(context, trainer_id, member_id):
                         else:
                             if member_data.mod_dt > lecture_info.mod_dt:
                                 member_data.mod_dt = lecture_info.mod_dt
+                        member_data.lecture_reg_count_total += lecture_info.lecture_reg_count
+                        member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
+                        member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
 
                 member_list.append(member_data)
 
             if len(lecture_finish_list) > 0:
-                member_data.rj_lecture_counts = 0
-                member_data.np_lecture_counts = 0
+                member_data_finish.rj_lecture_counts = 0
+                member_data_finish.np_lecture_counts = 0
 
-                member_data.lecture_reg_count_yet = 0
-                member_data.lecture_rem_count_yet = 0
-                member_data.lecture_avail_count_yet = 0
+                member_data_finish.lecture_reg_count_yet = 0
+                member_data_finish.lecture_rem_count_yet = 0
+                member_data_finish.lecture_avail_count_yet = 0
 
-                member_data.lecture_counts = len(lecture_finish_list)
-                member_data.lecture_reg_count = 0
-                member_data.lecture_rem_count = 0
-                member_data.lecture_avail_count = 0
-                member_data.start_date = None
-                member_data.end_date = None
-                member_data.mod_dt = None
+                member_data_finish.lecture_reg_count_total = 0
+                member_data_finish.lecture_rem_count_total = 0
+                member_data_finish.lecture_avail_count_total = 0
+
+                member_data_finish.lecture_counts = len(lecture_finish_list)
+                member_data_finish.lecture_reg_count = 0
+                member_data_finish.lecture_rem_count = 0
+                member_data_finish.lecture_avail_count = 0
+                member_data_finish.start_date = None
+                member_data_finish.end_date = None
+                member_data_finish.mod_dt = None
                 for idx, lecture_info in enumerate(lecture_finish_list):
                     if lecture_info.state_cd == 'RJ':
-                        member_data.rj_lecture_counts += 1
+                        member_data_finish.rj_lecture_counts += 1
                     if lecture_info.state_cd == 'NP':
-                        member_data.np_lecture_counts += 1
+                        member_data_finish.np_lecture_counts += 1
 
                     if lecture_info.use != 0:
                         if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
-                            member_data.lecture_reg_count += lecture_info.lecture_reg_count
-                            member_data.lecture_rem_count += lecture_info.lecture_rem_count
-                            member_data.lecture_avail_count += lecture_info.lecture_avail_count
-                            member_data.end_date = lecture_info.end_date
-                            if member_data.start_date is None or '':
-                                member_data.start_date = lecture_info.start_date
-                            member_data.end_date = lecture_info.end_date
+                            member_data_finish.lecture_reg_count += lecture_info.lecture_reg_count
+                            member_data_finish.lecture_rem_count += lecture_info.lecture_rem_count
+                            member_data_finish.lecture_avail_count += lecture_info.lecture_avail_count
+                            member_data_finish.end_date = lecture_info.end_date
+                            if member_data_finish.start_date is None or '':
+                                member_data_finish.start_date = lecture_info.start_date
+                                member_data_finish.end_date = lecture_info.end_date
 
                         if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
-                            member_data.lecture_reg_count_yet += lecture_info.lecture_reg_count
-                            member_data.lecture_rem_count_yet += lecture_info.lecture_rem_count
-                            member_data.lecture_avail_count_yet += lecture_info.lecture_avail_count
+                            member_data_finish.lecture_reg_count_yet += lecture_info.lecture_reg_count
+                            member_data_finish.lecture_rem_count_yet += lecture_info.lecture_rem_count
+                            member_data_finish.lecture_avail_count_yet += lecture_info.lecture_avail_count
 
-                        if member_data.mod_dt is None or '':
-                            member_data.mod_dt = lecture_info.mod_dt
+                        if member_data_finish.mod_dt is None or '':
+                            member_data_finish.mod_dt = lecture_info.mod_dt
                         else:
-                            if member_data.mod_dt > lecture_info.mod_dt:
-                                member_data.mod_dt = lecture_info.mod_dt
+                            if member_data_finish.mod_dt > lecture_info.mod_dt:
+                                member_data_finish.mod_dt = lecture_info.mod_dt
 
-                member_finish_list.append(member_data)
+                        member_data_finish.lecture_reg_count_total += lecture_info.lecture_reg_count
+                        member_data_finish.lecture_rem_count_total += lecture_info.lecture_rem_count
+                        member_data_finish.lecture_avail_count_total += lecture_info.lecture_avail_count
+
+                member_finish_list.append(member_data_finish)
 
         context['member_data'] = member_list
         context['member_finish_data'] = member_finish_list

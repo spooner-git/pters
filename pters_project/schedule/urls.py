@@ -28,5 +28,7 @@ urlpatterns = [
     url(r'^delete_repeat_schedule/$', views.delete_repeat_schedule_logic, name='delete_repeat_schedule'),
 
     url(r'^check_schedule_update/$', views.CheckScheduleUpdateViewAjax.as_view(), name='check_schedule_update'),
+    url(r'^document/$', views.DocumentCreateView.as_view(), name='document'),
+    url(r'^upload_test/$', views.upload_test_func, name='upload_test'),
 
 ]

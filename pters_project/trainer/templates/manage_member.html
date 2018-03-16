@@ -654,12 +654,12 @@
           var finishNpLectureCountsArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.np_lecture_counts }}',{% endfor %}];
           var finishRjLectureCountsArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.rj_lecture_counts }}',{% endfor %}];
 
-          var finishcountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.lecture_rem_count }}',{% endfor %}];
-          var finishstartArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.start_date }}',{% endfor %}];
+          var finishcountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_rem_count }}',{% endfor %}];
+          var finishstartArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.start_date }}',{% endfor %}];
           var finishmodifyDateArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.mod_dt }}',{% endfor %}];
-          var finishendArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.end_date }}',{% endfor %}];
-          var finishRegCountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.lecture_reg_count }}',{% endfor %}];
-          var finishAvailCountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_info.lecture_avail_count }}',{% endfor %}];
+          var finishendArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.end_date }}',{% endfor %}];
+          var finishRegCountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_reg_count }}',{% endfor %}];
+          var finishAvailCountArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.lecture_avail_count }}',{% endfor %}];
 
           var finishYetCountArray = [{% for member_finish_info in member_finish_data %} '{{ member_finish_info.lecture_rem_count_yet}}',{% endfor %}];
           var finishYetRegCountArray = [{% for member_finish_info in member_finish_data %} '{{ member_finish_info.lecture_reg_count_yet }}',{% endfor %}];

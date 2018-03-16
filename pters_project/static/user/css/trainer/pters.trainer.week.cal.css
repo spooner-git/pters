@@ -225,6 +225,17 @@ img,a,div,span,p{
 	padding-bottom: 22.5px;
 }
 
+#popup_sign_img{
+	position: relative;
+	background: #ffffff;
+}
+
+#id_sign_img{
+	width: 100px;
+	margin-right: 14.845px;
+	margin-left: 14.845px;
+}
+
 
 #img_cal{
 	position: absolute;
