@@ -178,6 +178,10 @@ $(document).ready(function(){
             open_member_info_popup_mobile(userID)
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID)
+            $('#info_shift_base').show()
+            $('#info_shift_lecture').hide()
+            $('#select_info_shift_base').css('color','#fe4e65')
+            $('#select_info_shift_lecture').css('color','#282828')
         }
     });
 
@@ -187,6 +191,10 @@ $(document).ready(function(){
             open_member_info_popup_mobile(userID)
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID)
+            $('#info_shift_base').show()
+            $('#info_shift_lecture').hide()
+            $('#select_info_shift_base').css('color','#fe4e65')
+            $('#select_info_shift_lecture').css('color','#282828')
         }
     })
 
@@ -217,6 +225,10 @@ $(document).ready(function(){
             modify_member_info_pc(userID)
             $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('readonly',false);
             $('button._info_modify').text('완료').attr('data-type',"modify")
+            $('#info_shift_base').show()
+            $('#info_shift_lecture').hide()
+            $('#select_info_shift_base').css('color','#fe4e65')
+            $('#select_info_shift_lecture').css('color','#282828')
         }
     })
 
@@ -255,6 +267,7 @@ $(document).ready(function(){
     })
 
     $('#select_info_shift_lecture').click(function(){
+        set_member_lecture_list()
         $('#info_shift_base').hide()
         $('#info_shift_lecture').show()
         $(this).css('color','#fe4e65')
@@ -519,11 +532,7 @@ $(document).ready(function(){
           })
     }
 
-    $('#memberInfoPopup_PC_label').click(function(){
-        get_member_lecture_list()
-    })
-
-    function get_member_lecture_list(){
+    function set_member_lecture_list(){
         var userID = $('#memberId_info_PC').text()
         var dbId = DB[userID].dbId
              $.ajax({
@@ -538,34 +547,30 @@ $(document).ready(function(){
 
                 //보내기후 팝업창 닫기
                 complete:function(){
-                  
+                  completeSend()
                 },
 
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
-                    console.log(jsondata)
-
-                    /*
-                    ajax_received_json_data(data);
-                    if(messageArray.length>0){
-                        completeSend()
-                        $('#inputError_info_PC').fadeIn()
-                        setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
-                        $('#errorMsg_info_PC p').text(messageArray)
+                    console.log(jsondata.availCountArray[0])
+                    var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>상태</div></div>']
+                    for(var i=0; i<jsondata.lectureIdArray.length; i++){
+                      var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
+                      var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
+                      var lectureType = '<div>'+jsondata.lectureTypeArray[i]+'</div>'
+                      var lectureTypeName = '<div>'+jsondata.lectureTypeNameArray[i]+'</div>'
+                      var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
+                      var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
+                      var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
+                      var remcount =    '<div>'+jsondata.remCountArray[i]+'</div>'
+                      var start = '<div>'+jsondata.startArray[i]+'</div>'
+                      var end = '<div>'+jsondata.endArray[i]+'</div>' 
+                      result_history_html.push('<div>'+start+end+regcount+remcount+lectureTypeName+'</div>')
                     }
-                    else{
-                        completeSend()
-                        DataFormattingDict('ID');
-                        DataFormatting('current');
-                        DataFormatting('finished');
-                        memberListSet('current','date','yes');
-                        memberListSet('finished','date','yes');
-                        $('#startR').attr('selected','selected')
-                        open_member_info_popup_pc($('#memberId_info_PC').text())
-                        console.log('success');
-                    }
-                    */
+                    var result_history = result_history_html.join('')
+                    $('#memberRegHistory_info_PC').html(result_history)
+                    
                 },
 
                 //통신 실패시 처리
@@ -575,9 +580,6 @@ $(document).ready(function(){
             })
     }
 
-    function fill_member_lecture_list(){
-
-    }
 
 //#####################회원정보 팝업 //#####################
 
