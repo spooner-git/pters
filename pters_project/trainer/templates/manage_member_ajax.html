@@ -1,4 +1,6 @@
 {
+    "dIdArray" :
+    [{% for member_info in member_data %}"{{ member_info.user.id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "idArray" :
     [{% for member_info in member_data %}"{{ member_info.user }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "emailArray" :
@@ -43,6 +45,8 @@
     "yetAvailCountArray" :
     [{% for member_info in member_data %}"{{ member_info.lecture_avail_count_yet }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+    "finishDidArray" :
+    [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.user.id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "finishIdArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.user }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "finishemailArray" :
