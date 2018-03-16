@@ -1342,6 +1342,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     context['next_schedule_end_dt'] = next_schedule_end_dt
     context['lecture_info'] = lecture_data
     context['class_info'] = class_info
+    context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
     context['lecture_avail_count'] = lecture_avail_count_sum
     context['pt_start_date'] = pt_start_date
