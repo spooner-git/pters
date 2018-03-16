@@ -300,10 +300,13 @@ $(document).ready(function(){
 		if(schedule_finish_check=="0"){
 			$("#popup_btn_complete").css("display","block")
 			$("#popup_text1").css("display","block")
+			$("#popup_sign_img").css("display","none")
         }
         else{
 			$("#popup_btn_complete").css("display","none")
 			$("#popup_text1").css("display","none")
+			$("#popup_sign_img").css("display","block")
+			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
 		}
 		schedule_on_off = 1;
 	})
@@ -389,9 +392,37 @@ $(document).ready(function(){
 			var $pt_finish_form = $('#pt-finish-form');
 			var drawCanvas = document.getElementById('canvas');
 			var send_data = $pt_finish_form.serializeArray();
-			send_data.push({"name":"imgUpload", "value":drawCanvas.toDataURL('image/png')})
+			send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
 			// image upload test - hk.kim 180313
 			if(schedule_on_off==1){
+				console.log(drawCanvas.toDataURL('image/png'))
+				//PT 일정 완료 처리시
+				$.ajax({
+                    url:'/schedule/upload_test/',
+                    type:'POST',
+                    data:send_data,
+
+                    beforeSend:function(){
+                    	//AjaxBeforeSend();
+						console.log('image_upload_test1')
+                    },
+
+                    //통신성공시 처리
+                    success:function(){
+						console.log('image_upload_test2')
+                      },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+
+                      },
+
+                    //통신 실패시 처리
+                    error:function(){
+                    },
+                 })
+
+
 				//PT 일정 완료 처리시
 				$.ajax({
                     url:'/schedule/finish_schedule/',

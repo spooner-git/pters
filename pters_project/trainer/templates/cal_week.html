@@ -55,13 +55,14 @@
     <span class="ENtext">Enter Completion Signature</span>
     <canvas id="canvas"></canvas>
   </div>
+
+  <div id="popup_sign_img">
+      <img src="" id="id_sign_img">
+  </div>
   <div id="popup_btn_delete" class="popup_inner popup_inner_delete">
     <span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
   </div>
 </div>
-
-
-
 
   <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
 <!--팝업메뉴-->
@@ -806,8 +807,8 @@
           //PT 일정 등록시 필요한 정보
           var memberIdArray =[{% for member_info in member_data %}'{{ member_info.user.id }}',{% endfor %}];
           var memberNameArray = [{% for member_info in member_data %}'{{ member_info.name }}',{% endfor %}];
-          var memberAvailCountArray = [{% for member_info in member_data %}'{{ member_info.lecture_info.lecture_avail_count }}',{% endfor %}];
-          var memberLectureIdArray = [{% for member_info in member_data %}'{{ member_info.lecture_info.lecture_id }}',{% endfor %}];
+          var memberAvailCountArray = [{% for member_info in member_data %}'{{ member_info.lecture_avail_count_total }}',{% endfor %}];
+          var memberLectureIdArray = [{% for member_info in member_data %}'{{ member_info.lecture_id }}',{% endfor %}];
 
           //OFF 일정 관련 정보
           var offScheduleIdArray = [{% for off_schedule_id_info in off_schedule_id %}'{{ off_schedule_id_info }}', {% endfor %}];
