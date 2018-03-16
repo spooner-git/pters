@@ -42,6 +42,7 @@
     <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
     <input type="hidden" name="id" id="deleteMemberId">
 </form>
+
 <div class="confirmPopup">
     <div style="height: 40px;"><img src={% static "user/res/stopmark.png" %} style="width:35px;margin-top:6px;"></div>
     <div class="KRtext confirmText">정말 회원을 삭제하시겠습니까?<br>되돌릴 수 없습니다.</div>
@@ -56,6 +57,26 @@
         <span class="KRtext confirmNo">아니오</span>
         <span class="JPtext confirmNo">いいえ</span>
         <span class="ENtext confirmNo">No</span>
+    </div>
+</div>
+
+<div class="resendPopup popups">
+    <div style="height: 40px;">
+        <img src={% static "user/res/rejected.png" %} style="width:35px;margin-top:5px;">
+        <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_resend_PC" class="_btn_close_resend_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
+    </div>
+    <div class="KRtext confirmText">회원님께서 수락요청을 거절하셨습니다.<br>원하는 추가 작업을 선택해주세요.</div>
+    <div class="JPtext confirmText">日程を削除しますか</div>
+    <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
+    <div class="popup_inner popup_inner_resend">
+        <span style="color:#282828;" class="KRtext resend">재전송</span>
+        <span style="color:#282828;" class="JPtext resend">はい</span>
+        <span style="color:#282828;" class="ENtext resend">Yes</span>
+    </div>
+    <div class="popup_inner popup_inner_resend">
+        <span class="KRtext delete_resend">이력 삭제</span>
+        <span class="JPtext delete_resend">いいえ</span>
+        <span class="ENtext delete_resend">No</span>
     </div>
 </div>
 
