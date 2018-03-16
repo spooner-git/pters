@@ -652,6 +652,7 @@
           $('#uptext').text("회원 관리")
           $('footer').hide()
 
+          var dIdArray =[{% for member_info in member_data %}'{{ member_info.user.id }}',{% endfor %}];
           var idArray =[{% for member_info in member_data %}'{{ member_info.user }}',{% endfor %}];
           var emailArray = [{% for member_info in member_data %}'{{ member_info.user.email }}',{% endfor %}];
           var nameArray =[{% for member_info in member_data %}'{{ member_info.name }}',{% endfor %}];
@@ -675,6 +676,7 @@
           var yetRegCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_reg_count_yet }}',{% endfor %}];
           var yetAvailCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_avail_count_yet }}',{% endfor %}];
 
+          var finishDidArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user.id }}',{% endfor %}];
           var finishIdArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user }}',{% endfor %}];
           var finishemailArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user.email }}',{% endfor %}];
           var finishnameArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.name }}',{% endfor %}];
