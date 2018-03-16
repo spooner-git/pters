@@ -26,11 +26,11 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "classInfoArray":
-      [{% for class_info in class_data %}"{{ class_info.class_type_name}}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      ["{{ class_data.class_type_name.common_cd_nm}}"],
       "classIdArray":
-      [{% for class_info in class_data %}"{{ class_info.class_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      ["{{ class_data.class_id }}"],
       "trainerNameArray":
-      [{% for class_info in class_data %}"{{ class_info.trainer_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      ["{{ class_data.trainer_info.name }}"],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
