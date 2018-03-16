@@ -29,7 +29,7 @@ body{
 }
 
 #summary_wrap{
-	transform:translateY(-60%);
+	transform:translateY(-48%);
 	transition: 1s;
 }
 
@@ -211,7 +211,7 @@ body{
 	color: #fe4e65;
 }
 
-#countBoardWrap,#dateBoardWrap,#planBoardWrap,#trainerInfoWrap{
+.boardWrap{
 	display: table;
 	text-align: center;
 	padding-left:15px;
