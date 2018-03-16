@@ -299,37 +299,70 @@
         <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">
     </label>
 
+    <div id="member_info_type_select">
+        <button class="button_shift_info" id="select_info_shift_base">기본 정보</button>
+        <button class="button_shift_info" id="select_info_shift_lecture">수강 정보</button>
+    </div>
 
-    <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-user.png">아이디</label><div id="memberId_info_PC"></div>
+    <div id="info_shift_base" class="info_shift_wrap">
+        <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-user.png">아이디</label><div id="memberId_info_PC"></div>
+        </div>
+        <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
+            <input id="memberBirth_Year_info_PC" readonly>
+            <input id="memberBirth_Month_info_PC" readonly>
+            <input id="memberBirth_Date_info_PC" readonly>
+        </div>
+        <div id="memberPhone_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label><input id="memberPhone_info_PC" readonly>
+        </div>
+        <!--
+        <div id="memberRegCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록횟수</label><input id="memberRegCount_info_PC" readonly>
+        </div>
+        <div id="memberRemainCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">남은횟수</label><input id="memberRemainCount_info_PC" readonly>
+        </div>
+        -->
+        <div id="memberEmail_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-mail-grey.png">E-mail</label><input id="memberEmail_info_PC" readonly>
+        </div>
+        <div id="memberStart_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-cal-grey.png">시작일자</label><input id="memberStart_info_PC" disabled>
+        </div>
+        <div id="memberEnd_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-cal-grey.png">종료일자</label><input id="memberEnd_info_PC" disabled>
+        </div>
+        <div id="memberComment_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-info.png">특이사항</label><input id="memberComment_info_PC" readonly>
+        </div>
+    </div> 
+
+    <div id="info_shift_lecture" class="info_shift_wrap">
+
+        <div id="memberRegCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록횟수</label><input id="memberRegCount_info_PC" readonly>
+        </div>
+        <div id="memberRemainCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">남은횟수</label><input id="memberRemainCount_info_PC" readonly>
+        </div>
+
+        <div id="memberAvailCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">예약 가능 횟수</label><input id="memberAvailCount_info_PC" readonly>
+        </div>
+        <div id="memberFinishCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">완료 횟수</label><input id="memberFinishCount_info_PC" readonly>
+        </div>
+        <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력</label><input id="memberRegHistory_info_PC" readonly>
+        </div>
+        <div id="memberLectureHistory_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">최근 활동</label><input id="memberLectureHistory_info_PC" readonly>
+        </div>
+
     </div>
-    <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
-        <input id="memberBirth_Year_info_PC" readonly>
-        <input id="memberBirth_Month_info_PC" readonly>
-        <input id="memberBirth_Date_info_PC" readonly>
-    </div>
-    <div id="memberPhone_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label><input id="memberPhone_info_PC" readonly>
-    </div>
-    <div id="memberRegCount_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록횟수</label><input id="memberRegCount_info_PC" readonly>
-    </div>
-    <div id="memberRemainCount_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">남은횟수</label><input id="memberRemainCount_info_PC" readonly>
-    </div>
-    <div id="memberEmail_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-mail-grey.png">E-mail</label><input id="memberEmail_info_PC" readonly>
-    </div>
-    <div id="memberStart_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-cal-grey.png">시작일자</label><input id="memberStart_info_PC" disabled>
-    </div>
-    <div id="memberEnd_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-cal-grey.png">종료일자</label><input id="memberEnd_info_PC" disabled>
-    </div>
-    <div id="memberComment_info_PC_wrap" class="member_info_PC_wrap">
-        <label><img src="/static/user/res/member/icon-info.png">특이사항</label><input id="memberComment_info_PC" readonly>
-    </div>
+
     <div class="member_info_PC_buttons_wrap popupBtn_mini">
         <button class="submitBtn _info_delete">삭제</button>
         <button class="submitBtn _info_modify" data-type="view">수정</button>
