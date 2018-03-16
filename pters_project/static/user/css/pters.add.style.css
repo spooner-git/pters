@@ -778,14 +778,31 @@ option{
 
 @media(min-width: 600px){
 
+	.ptaddboxtext{
+		display: inline;
+	}
+
+	.dropdown{
+		display: inline-block;
+		position: absolute;
+		left: 35%;
+		width: 53%;
+		height: 26px;
+		margin-left: 15px;
+		margin-top: 0;
+		border:1px solid #282828 !important;
+		box-shadow: unset !important;
+	}
+
 	.ptaddbox{
 		margin-top: 2%;
+		margin-bottom: 10px;
 	}
 	
 	#page-addplan{
 		position: absolute;
 		top: 150px;
-		width: 500px;
+		width: 400px;
 		margin-bottom: 50px;
 	}
 	
