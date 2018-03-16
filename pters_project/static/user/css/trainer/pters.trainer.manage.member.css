@@ -440,6 +440,27 @@ th{
 				width: 15px;
 				margin:0 5px 4px 0;
 			}
+			#memberRegHistory_info_PC{
+				display: block;
+				font-size:12px;
+				width: 100%;
+				padding: 0;
+			}
+			#memberRegHistory_info_PC > div{
+				display: block;
+				width: 100%;
+				padding: 0;
+			}
+				#memberRegHistory_info_PC > div > div{
+					display: table-cell;
+					width: 67px;
+					padding: 0;
+					text-align: center;
+					border-right:1px solid #cccccc;
+				}
+			#memberRegHistory_info_PC_wrap > label{
+				display: inline;
+			}
 
 	.member_info_PC_buttons_wrap button{
 		display: inline-block;
