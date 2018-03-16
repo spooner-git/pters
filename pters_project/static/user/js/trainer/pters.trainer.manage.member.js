@@ -243,6 +243,21 @@ $(document).ready(function(){
       $('#shade').fadeOut('fast');
     });
 
+
+
+    $('#select_info_shift_base').click(function(){
+        $('#info_shift_base').show()
+        $('#info_shift_lecture').hide()
+    })
+
+    $('#select_info_shift_lecture').click(function(){
+        $('#info_shift_base').hide()
+        $('#info_shift_lecture').show()
+    })
+
+
+
+
     function open_member_info_popup_pc(userID){
         if($('#currentMemberList').css('display') == "block"){
           var Data = DB
@@ -311,6 +326,9 @@ $(document).ready(function(){
         $('#memberPhone_info, #memberPhone_info_PC').val(Data[userID].phone);
         $('#memberRegCount_info_PC').val(Data[userID].regcount + yetReg)
         $('#memberRemainCount_info_PC').val(Data[userID].count + yet)
+        //$('#memberRemainCount_info_PC').val(Data[userID].count + yet)
+        $('#memberAvailCount_info_PC').val(Data[userID].availCount)
+        $('#memberFinishCount_info_PC').val(Data[userID].regcount-Data[userID].count)
         $('#memberEmail_info, #memberEmail_info_PC').val(email)
         $('#memberStart_info_PC').val(Data[userID].start.replace(/년 |월 /gi,"-").replace(/일/gi,""))
         var end = Data[userID].end
@@ -624,7 +642,8 @@ function DataFormattingDict(Option){
             DB[nameArray[i]] = {'id':idArray[i],
                                 'email':emailArray[i],
                                 'count':countArray[i],
-                                'regcount':regCountArray[i], 
+                                'regcount':regCountArray[i],
+                                'availCount':availCountArray[i], 
                                 'phone':phoneArray[i],
                                 'contents':contentsArray[i],
                                 'start':startArray[i],
@@ -643,6 +662,7 @@ function DataFormattingDict(Option){
                                         'email':finishemailArray[j],
                                         'count':finishcountArray[j],
                                         'regcount':regCountArray[j],
+                                        'availCount':finishAvailCountArray[i], 
                                         'phone':finishphoneArray[j],
                                         'contents':finishContentsArray[j],
                                         'start':finishstartArray[j],
@@ -660,7 +680,8 @@ function DataFormattingDict(Option){
             DB[idArray[i]] = {'name':nameArray[i],
                               'email':emailArray[i],
                               'count':countArray[i],
-                              'regcount':regCountArray[i], 
+                              'regcount':regCountArray[i],
+                              'availCount':availCountArray[i], 
                               'phone':phoneArray[i],
                               'contents':contentsArray[i],
                               'start':startArray[i],
@@ -679,6 +700,7 @@ function DataFormattingDict(Option){
                                     'email':finishemailArray[j],
                                     'count':finishcountArray[j],
                                     'regcount':regCountArray[j],
+                                    'availCount':finishAvailCountArray[i],
                                     'phone':finishphoneArray[j],
                                     'contents':finishContentsArray[j],
                                     'start':finishstartArray[j],
