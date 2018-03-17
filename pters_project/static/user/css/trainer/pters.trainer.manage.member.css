@@ -440,25 +440,36 @@ th{
 				width: 15px;
 				margin:0 5px 4px 0;
 			}
-			#memberRegHistory_info_PC{
+			#memberRegHistory_info_PC, #memberRegHistory_info{
 				display: block;
 				font-size:12px;
 				width: 100%;
 				padding: 0;
 			}
-			#memberRegHistory_info_PC > div{
-				display: block;
+			#memberRegHistory_info_PC > div, #memberRegHistory_info > div{
+				display: table;
 				width: 100%;
 				padding: 0;
+				margin: 0;
+				border: 0;
 			}
 				#memberRegHistory_info_PC > div > div{
 					display: table-cell;
 					width: 67px;
+					height: 20px;
+					padding: 0;
+					text-align: center;
+					border: 0;
+					border-right:1px solid #cccccc;
+				}
+				#memberRegHistory_info > div > div{
+					display: table-cell;
+					width: 20%;
 					padding: 0;
 					text-align: center;
 					border-right:1px solid #cccccc;
 				}
-			#memberRegHistory_info_PC_wrap > label{
+			#memberRegHistory_info_PC_wrap > label, #memberRegHistory_info_wrap > label{
 				display: inline;
 			}
 			.lectureType_NP{
