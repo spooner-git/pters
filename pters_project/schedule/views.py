@@ -1,10 +1,8 @@
 import datetime
-import logging
 
-import boto
 import boto3
 import botocore
-from boto3.dynamodb.conditions import Key
+import base64
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -12,25 +10,21 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 
 # Create your views here.
-from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView
 from django.views.generic import TemplateView
-from s3transfer import upload
 
 from config.views import date_check_func
 from login.models import LogTb, MemberTb
-from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb, Document
+from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
 from trainee.models import LectureTb
 from trainer.models import ClassTb
-import base64
 
 from django.core.files.base import ContentFile
+
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -55,17 +49,17 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
         try:
             class_info = ClassTb.objects.get(member_id=user_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강사 정보를 불러오지 못했습니다.'
 
     if en_dis_type == '1':
         if error is None:
             try:
                 member_lecture_info = LectureTb.objects.get(lecture_id=int(lecture_id), use=1)
             except ObjectDoesNotExist:
-                error = '회원 PT 정보가 존재하지 않습니다'
+                error = '회원 수강 정보를 불러오지 못했습니다.'
         if error is None:
             if member_lecture_info.lecture_avail_count == 0:
-                error = '예약 가능한 횟수가 없습니다'
+                error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
         try:
@@ -94,7 +88,7 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
 
                     else:
                         error = '예약 가능한 횟수를 확인해주세요.'
-                        #add_schedule_info.delete()
+                        # add_schedule_info.delete()
                         raise ValidationError()
 
         except TypeError as e:
@@ -106,7 +100,7 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError as e:
-            error = '예약 가능 횟수를 확인해주세요.'
+            error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
@@ -644,7 +638,7 @@ def finish_schedule_logic(request):
 @csrf_exempt
 def add_repeat_schedule_logic(request):
     member_id = request.POST.get('member_id')
-    lecture_id = request.POST.get('lecture_id')
+    lecture_id = request.POST.get('lecture_id', '')
     member_name = request.POST.get('member_name')
     repeat_type = request.POST.get('repeat_freq')
     repeat_schedule_start_date = request.POST.get('repeat_start_date')
@@ -658,9 +652,10 @@ def add_repeat_schedule_logic(request):
     next_page = request.POST.get('next_page')
 
     error = None
-    error_date = None
-    error_message = None
+    # error_message = None
+    error_date_message = None
     class_info = None
+    # lecture_id = ''
     repeat_week_type_data = []
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
@@ -672,36 +667,44 @@ def add_repeat_schedule_logic(request):
 
     if repeat_type == '':
         error = '반복 빈도를 선택해주세요.'
-    else:
+
+    if error is None:
         if repeat_week_type == '':
             error = '반복 요일을 설정해주세요.'
-        else:
-            temp_data = repeat_week_type.split('/')
-            for week_type_info in temp_data:
-                for idx, week_info_detail in enumerate(week_info):
-                    if week_info_detail == week_type_info:
-                        repeat_week_type_data.append(idx)
-                        break
 
-    if repeat_schedule_start_date == '':
-        error = '반복일정 시작 날짜를 선택해 주세요.'
-    else:
+    if error is None:
+        temp_data = repeat_week_type.split('/')
+        for week_type_info in temp_data:
+            for idx, week_info_detail in enumerate(week_info):
+                if week_info_detail == week_type_info:
+                    repeat_week_type_data.append(idx)
+                    break
+
+    if error is None:
+        if repeat_schedule_start_date == '':
+            error = '반복일정 시작 날짜를 선택해 주세요.'
+
+    if error is None:
         repeat_schedule_start_date_info = datetime.datetime.strptime(repeat_schedule_start_date, '%Y-%m-%d')
         if repeat_schedule_end_date == '':
             repeat_schedule_end_date_info = repeat_schedule_start_date_info + datetime.timedelta(days=365)
         else:
             repeat_schedule_end_date_info = datetime.datetime.strptime(repeat_schedule_end_date, '%Y-%m-%d')
 
-    if repeat_schedule_time == '':
-        error = '시작 시간을 선택해 주세요.'
-    elif repeat_schedule_time_duration == '':
-        error = '진행 시간을 선택해 주세요.'
+    if error is None:
+        if repeat_schedule_time == '':
+            error = '시작 시간을 선택해 주세요.'
+        elif repeat_schedule_time_duration == '':
+            error = '진행 시간을 선택해 주세요.'
 
-    if en_dis_type == '1':
-        # if lecture_id == '':
-        #     error = '회원을 선택해 주세요.'
-        if member_name == '':
-            error = '회원을 선택해 주세요.'
+    if error is None:
+        if en_dis_type == '1':
+            # if lecture_id == '':
+            #     error = '회원을 선택해 주세요.'
+            if member_name == '':
+                error = '회원을 선택해 주세요.'
+        else:
+            lecture_id = ''
 
     if error is None:
         # 강사 정보 가져오기
@@ -727,25 +730,39 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
 
+        # 반복일정 처음 날짜 설정
         check_date = repeat_schedule_start_date_info
+
+        # 반복일정 종료 날짜 보다 크면 종료
         while check_date <= repeat_schedule_end_date_info:
-            input_datetime_list = []
+
+            # 반복일정 등록해야하는 첫번째 요일 검색 -> 자신보다 뒤에있는 요일중에 가장 가까운것
             week_idx = -1
             for week_type_info in repeat_week_type_data:
                 if week_type_info >= int(check_date.strftime('%w')):
                     week_idx = week_type_info
                     break
+            # 가장 가까운 요일이 뒤에 없다면 다음주중에 가장 가까운 요일 선택
             if week_idx == -1:
                 week_idx = repeat_week_type_data[0]
 
+            # 현재 요일에서 가야하는 요일 빼기 -> 더해야 하는 날짜 계산
             week_idx -= int(check_date.strftime('%w'))
+
+            # 만약 요일을 뺐는데 음수라면 +7 or +14 더하기
             if week_idx < 0:
                 if repeat_type == '2W':
                     week_idx += 14
                 else:
                     week_idx += 7
 
+            # 요일 계산된 값을 더하기
             check_date = check_date + datetime.timedelta(days=week_idx)
+
+            # 날짜 계산을 했는데 일정 넘어가면 멈추기
+            if check_date > repeat_schedule_end_date_info:
+                break
+            # 데이터 넣을 날짜 setting
             try:
                 schedule_start_datetime = datetime.datetime.strptime(str(check_date).split(' ')[0]
                                                                      + ' ' + repeat_schedule_time,
@@ -784,7 +801,10 @@ def add_repeat_schedule_logic(request):
 
                 try:
                     with transaction.atomic():
-                        lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
+                        # PT 일정 추가라면 일정 추가해야할 lecture id 찾기
+                        if en_dis_type == '1':
+                            lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
+
                         error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
                                                         schedule_end_datetime, request.user.id,
                                                         lecture_id, '', en_dis_type,
@@ -814,37 +834,33 @@ def add_repeat_schedule_logic(request):
                 except InternalError as e:
                     error = error
 
-                if error == '예약 가능한 횟수가 없습니다':
-                    check_date = repeat_schedule_end_date_info + datetime.timedelta(days=1)
-                elif error == '예약 가능한 횟수를 확인해주세요.':
-                    check_date = repeat_schedule_end_date_info + datetime.timedelta(days=1)
-
-                # 한번 더 확인 필요 - 등록시간 겹치는 경우 고려 필요
-                if error is not None:
-                    if error_message is None:
-                        error_message = error
+                if error == '예약 가능한 횟수를 확인해주세요.' or error == '날짜가 중복됐습니다.' or error == '등록 값에 문제가 있습니다.':
+                    messages.error(request, error)
+                elif error == '등록 값의 형태에 문제가 있습니다.' or error == '회원 수강 정보를 불러오지 못했습니다.' or error == '강사 정보를 불러오지 못했습니다.':
+                    messages.error(request, error)
+                elif error is not None:
+                    if error_date_message is None:
+                        error_date_message = error
                     else:
-                        error_message = error_message + '/' + error
+                        error_date_message = error_date_message + '/' + error
+
             else:
-                error_message = error
+                messages.error(request, error)
 
             error = None
 
+            # 날짜값 입력후 날짜 증가
             check_date = check_date + datetime.timedelta(days=1)
 
+            # 날짜값 입력후 날짜 증가했는데 일요일이고 격주인경우 일주일 더하기
             if int(check_date.strftime('%w')) == 0:
                 if repeat_type == '2W':
                     check_date = check_date + datetime.timedelta(days=7)
 
-    print(error)
-    if error is None:
-        if error_message is not None:
-            messages.info(request, error_message)
-            return redirect(next_page)
-        return redirect(next_page)
-    else:
-        messages.error(request, error)
-        return redirect(next_page)
+    if error_date_message is not None:
+        messages.info(request, error_date_message)
+
+    return redirect(next_page)
 
 
 @csrf_exempt
@@ -1184,30 +1200,19 @@ def get_member_schedule_input_lecture(class_id, member_id):
     return lecture_id
 
 
-class DocumentCreateView(CreateView):
-    model = Document
-    fields = ['upload', ]
-    success_url = reverse_lazy('home')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # documents = Document.objects.all()
-        # context['documents'] = documents
-        return context
-
-
 @csrf_exempt
 def upload_test_func(request):
 
-    user_id = request.POST.get('user_id', '')
+    # user_id = request.POST.get('user_id', '')
     schedule_id = request.POST.get('schedule_id', '')
     image_test = request.POST.get('upload_file', '')
     next_page = '/trainer/cal_day_ajax/'
-    # s3 = boto3.resource('s3')
+
     s3 = boto3.resource('s3', aws_access_key_id='AKIAJ7EQVIQLCJNIKS7Q',
                         aws_secret_access_key='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')
     bucket = s3.Bucket('pters-image')
     exists = True
+
     try:
         s3.meta.client.head_bucket(Bucket='pters-image')
     except botocore.exceptions.ClientError as e:
@@ -1217,12 +1222,13 @@ def upload_test_func(request):
         if error_code == 404:
             exists = False
 
-    format, imgstr = image_test.split(';base64,')
-    ext = format.split('/')[-1]
+    if exists is True:
+        format, imgstr = image_test.split(';base64,')
+        ext = format.split('/')[-1]
 
-    data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
 
-    bucket.put_object(Key=schedule_id+'.png', Body=data, ContentType='image/png',
-                      ACL='public-read')
+        bucket.put_object(Key=schedule_id+'.png', Body=data, ContentType='image/png',
+                          ACL='public-read')
 
     return redirect(next_page)
