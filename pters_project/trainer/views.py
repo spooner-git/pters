@@ -634,7 +634,7 @@ def add_member_info_logic(request):
             error = '이미 가입된 회원입니다.'
 
     if error is None:
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 '\
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 '\
                        + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),use=1)
         log_data.save()
@@ -661,8 +661,6 @@ def add_member_info_logic_test(request):
     price_fast = request.POST.get('price_fast')
     start_date_fast = request.POST.get('start_date_fast')
     end_date_fast = request.POST.get('end_date_fast')
-    sex = request.POST.get('sex')
-    birthday_dt = request.POST.get('birthday')
     search_confirm = request.POST.get('search_confirm', '0')
     next_page = request.POST.get('next_page')
 
@@ -751,19 +749,8 @@ def add_member_info_logic_test(request):
 
                 state_cd = 'NP'
                 if search_confirm == '0':
-                    group = Group.objects.get(name='trainee')
-                    user.groups.add(group)
                     user.set_password(password)
-                    user.first_name = name
                     user.save()
-                    if birthday_dt == '':
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
-                                          mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
-                    else:
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
-                                          birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                          user_id=user.id)
-                    member.save()
                     # state_cd = 'IP'
 
                 add_lecture_info_logic_func(class_info.class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
@@ -780,7 +767,7 @@ def add_member_info_logic_test(request):
             error = '이미 가입된 회원입니다.'
 
     if error is None:
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
@@ -814,6 +801,8 @@ def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, st
 def update_member_info_logic(request):
     member_id = request.POST.get('id')
     email = request.POST.get('email')
+    first_name = request.POST.get('first_name')
+    last_name = request.POST.get('last_name')
     name = request.POST.get('name')
     phone = request.POST.get('phone')
     contents = request.POST.get('contents')
@@ -849,7 +838,8 @@ def update_member_info_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                user.first_name = name
+                user.first_name = first_name
+                user.last_name = last_name
                 user.email = email
                 user.save()
                 member.name = name
@@ -875,7 +865,7 @@ def update_member_info_logic(request):
 
     if error is None:
 
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + name + ' 회원님의</span> 정보를 <span class="status">수정</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
@@ -954,7 +944,7 @@ def delete_member_info_logic(request):
 
     if error is None:
 
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + member.name + ' 회원님의</span> 수강정보를 <span class="status">삭제</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB02', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
@@ -992,7 +982,7 @@ def resend_member_lecture_info_logic(request):
         lecture_info.save()
 
     if error is None:
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + member_name + ' 회원님의</span> 수강정보를 <span class="status">재요청</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
@@ -1031,7 +1021,7 @@ def delete_member_lecture_info_logic(request):
         lecture_info.delete()
 
     if error is None:
-        log_contents = '<span>' + request.user.first_name + ' 강사님께서 ' \
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
@@ -1210,7 +1200,7 @@ def update_setting_push_logic(request):
         request.session.setting_trainer_schedule_confirm = setting_trainer_schedule_confirm
         request.session.setting_trainer_no_schedule_confirm1 = setting_trainer_no_schedule_confirm1 + '/' + setting_trainer_no_schedule_confirm2
 
-        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
                        + 'PUSH 설정</span> 정보를 <span class="status">수정</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
@@ -1287,7 +1277,7 @@ def update_setting_reserve_logic(request):
         request.session.setting_member_reserve_time_available = setting_member_reserve_time_available
         request.session.setting_member_reserve_time_prohibition = setting_member_reserve_time_prohibition
         request.session.setting_member_reserve_prohibition = setting_member_reserve_prohibition
-        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
                       + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
@@ -1427,7 +1417,7 @@ def update_setting_sales_logic(request):
 
     if error is None:
 
-        log_contents = '<span>' + request.user.first_name + ' 님께서 ' \
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
                        + '강의금액 설정</span> 정보를 <span class="status">수정</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)
@@ -1478,7 +1468,7 @@ def update_setting_language_logic(request):
 
     if error is None:
         request.session.setting_language = setting_member_language
-        log_contents = '<span>' + request.user.first_name + ' 님께서 '\
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
                        + '언어 설정</span> 정보를 <span class="status">수정</span>했습니다.'
         log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
                          use=1)

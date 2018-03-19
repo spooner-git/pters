@@ -599,7 +599,6 @@ $(document).ready(function(){
             var $regHistory = $('#memberRegHistory_info_PC')
         }else if($('#memberInfoPopup').css('display')=="block"){
             var userID = $('#memberId').val()
-            console.log(userID)
             var $regHistory = $('#memberRegHistory_info')
         }   
         
@@ -622,7 +621,6 @@ $(document).ready(function(){
             //통신성공시 처리
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
                 var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>상태</div></div>']
                 for(var i=0; i<jsondata.lectureIdArray.length; i++){
                     var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
@@ -1081,15 +1079,14 @@ $(document).ready(function(){
 
             //통신성공시 처리
             success:function(data){
-                console.log(data)
                 var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
                   $('#inputError').fadeIn()
                   setTimeout(function(){$('#inputError').fadeOut()},10000)
                   $('#errorMsg p').text('검색된 아이디가 없습니다')
                 }else{
-                  id_search_memberLastName = jsondata.nameInfo;
-                  id_search_memberFirstName = jsondata.nameInfo;
+                  id_search_memberLastName = jsondata.lastnameInfo;
+                  id_search_memberFirstName = jsondata.firstnameInfo;
                   id_search_memberPhone = jsondata.phoneInfo;
                   id_search_memberBirth = jsondata.birthdayInfo + ''; //형식 1999년 02월 08일
                   id_search_memberEmail = jsondata.emailInfo;
@@ -1191,6 +1188,9 @@ $(document).ready(function(){
             check_dropdown_selected();
         }
         $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val())
+        $('#add_member_form_first_name').val($('#memberLastName_add').val())
+        $('#add_member_form_last_name').val($('#memberFirstName_add').val())
+        $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val())
     })
 
     $(document).on('click','#memberSex .selectboxopt',function(){
@@ -1549,11 +1549,11 @@ $(document).ready(function(){
     $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
         var test = $('#id_search_confirm').val();
         var $form2 = $('#add-member-id-form');
-        var url2 = '/accounts/register/';
+        var url2 = '/login/add_member_info/';
         if(select_all_check==true){
             if(test==0){
                 $.ajax({
-                    url:'/accounts/register/',
+                    url:'/login/add_member_info/',
                     type:'POST',
                     data:$form2.serialize(),
                     dataType : 'html',
