@@ -44,7 +44,7 @@
                     <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
                 </div>
                 <div class="innerbox">
-                    <div id="registerButton" onclick="goPage()">회원 가입</div><div class="seperate_bar"></div><div id="findIDPW">ID/PW 찾기</div>
+                    <div id="registerButton" onclick="goPage(0)">회원 가입</div><div class="seperate_bar"></div><div id="findIDPW" onclick="goPage(1)">ID/PW 찾기</div>
                 </div>
                 <input type="hidden" name="next_page" value = '{% url 'home' %}'>
             </form>
@@ -94,8 +94,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src={% static "user/js/login/pters.trainer.login.js" %}></script>
 <script>
-    function goPage(){
-        location.href="/accounts/register/";
+    function goPage(option){
+        if(option == 0){
+            location.href="/accounts/register/";
+        }else if(option == 1){
+            location.href="/accounts/password/reset/";
+        }
     }
 </script>
 {% endblock %}
