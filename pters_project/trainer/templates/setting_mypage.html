@@ -1,8 +1,8 @@
-{% extends "trainee_base.html" %}
+{% extends "trainer_base.html" %}
 {% load static %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static "user/css/trainee/pters.trainee.mypage.css" %}>
+        <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.mypage.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
 {% endblock %}
 
@@ -74,11 +74,41 @@
       <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 종료일</p><p style="margin:0;">{{ pt_end_date }}</p></div></div>
   </div>
   -->
-  
+
+  <div class="mypage_label">
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>가입 정보</span>
+  </div>
+  <div id="trainerInfoWrap" class="boardWrap">
+      <div class="trainerInfo">
+        <span class="menuName">ID(이메일)</span><span>ppkyum@naver.com</span>
+      </div>
+  </div>
+  <div id="trainerInfoWrap" class="boardWrap">
+      <div class="trainerInfo">
+        <span class="menuName">비밀번호 변경</span><button onclick="goPage(2)">변경</button>
+      </div>
+  </div>
+  <div id="trainerInfoWrap" class="boardWrap">
+      <div class="trainerInfo">
+        <span class="menuName">생일</span><span>1990.10.10</span><button>변경</button>
+      </div>
+  </div>
+  <div id="trainerInfoWrap" class="boardWrap">
+      <div class="trainerInfo">
+        <span class="menuName">지역</span><span>대한민국 서울특별시</span><button>변경</button>
+      </div>
+  </div>
+  <div id="trainerInfoWrap" class="boardWrap">
+      <div class="trainerInfo">
+        <span class="menuName">가입일</span><span>2018.03.19</span>
+      </div>
+  </div>
+
+
   <div class="mypage_label">
       <img src="/static/user/res/member/icon-user.png" alt=""><span>소속 기관</span>
   </div>
-  <div id="trainerInfoWrap" class="boardWrap">
+  <div id="trainerGymInfoWrap" class="boardWrap">
       <div class="trainerInfo"><span>{{ class_info.mem_info.name }} 트레이너</span><img src="/static/user/res/member/icon-call.png" alt=""><img src="/static/user/res/member/icon-message.png" alt=""></div>
   </div>
 </div>
@@ -179,6 +209,12 @@
               var trainee_next_schedule = db_datatimehangul_format_realign('{{next_schedule_start_dt }}')
             }else{
               var trainee_next_schedule = "일정이 없습니다."
+            }
+
+            function goPage(option){
+              if(option == 2){
+                location.href= "/accounts/password/change/"
+              }
             }
             
             /*

@@ -92,8 +92,8 @@ body{
 .menuName{
 	display: block;
 	font-size:14px;
-	font-weight: bold;
-	color: #fe4e65;
+	font-weight: bold !important;
+	color: #282828;
 }
 
 #menuDescription{
@@ -226,7 +226,7 @@ body{
 	width: 100%;
 	max-width: 600px;
 	margin:0 auto;
-	border-bottom:15px solid #f4f4f4;
+	border-bottom: 10px solid #f4f4f4;
 }
 
 .countBoard{
@@ -266,13 +266,36 @@ body{
 
 .trainerInfo{
 	width: 100%;
-	height: 40px;
+	height: 60px;
 	text-align: center;
 	background:#ffffff;
 	color: #282828;
 	border-right:5px solid #f4f4f4;
 	border-left:5px solid #f4f4f4;
 }
+	.trainerInfo img{
+		width: 15px;
+		margin-bottom: 4px;
+		margin-right: 10px;
+		margin-left: 10px;
+	}
+	.trainerInfo span{
+		line-height: 30px;
+		margin-right: 10px;
+		font-weight: 400;
+	}
+
+	.trainerInfo button{
+		background: #ffffff;
+		border:1px solid #282828;
+		color: #282828;
+		font-size: 10px;
+		height: 16px;
+		width: 25px;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
 
 .countBoard:first-child,.dateBoard:first-child{
 	margin-right: 5px;
@@ -303,12 +326,7 @@ body{
 	margin-right: 3px;
 }
 
-.trainerInfo img{
-	width: 15px;
-	margin-bottom: 4px;
-	margin-right: 10px;
-	margin-left: 10px;
-}
+
 
 .countBoard p:first-child{
 	margin-top: 18px;
@@ -343,12 +361,6 @@ body{
 .planBoard span{
 	font-size:12px;
 	color: #666666;
-}
-
-.trainerInfo span{
-	line-height: 40px;
-	margin-right: 10px;
-	font-weight: 500;
 }
 
 .mypage_label{
@@ -407,7 +419,7 @@ body{
 		display:none;
 	}
 
-	#menuName,{
+	#menuName{
 		display: block;
 		color : #fe4e65;
 		font-size: 24px;
