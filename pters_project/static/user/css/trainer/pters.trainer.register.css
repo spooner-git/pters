@@ -162,8 +162,8 @@ div._step1_label, div._step2_label, div._step3_label{
 		margin-top: 15px;
 	}
 		.outerbox input{
-			line-height: 21px;
-			width: 170px;
+			line-height: 25px;
+			width: 110px;
 		}
 	.outerbox_horizontal{
 		position: absolute;
@@ -172,14 +172,14 @@ div._step1_label, div._step2_label, div._step3_label{
 		-webkit-transform:translateX(-50%);
 		display: inline-block;
 		width: 90%;
-		margin:150px 0 10px 0;
+		margin:125px 0 10px 0;
 		text-align:center;
 		background:#00000099;
 		transition: 1s;
 		-webkit-transition: 1s;
 	}
 		.outerbox_horizontal button{
-			position: absolute;
+			position: relative;
 			background-color: transparent;
 			bottom: 0;
 			width: 90%;
@@ -193,9 +193,6 @@ div._step1_label, div._step2_label, div._step3_label{
 			cursor: pointer;
 			opacity: 1;
 			margin-bottom: 10px;
-			left: 50%;
-			transform: translateX(-50%);
-			-webkit-transform: translateX(-50%);
 		}
 		.outerbox_horizontal button:hover{
 			opacity: 1;
@@ -228,7 +225,10 @@ div._step1_label, div._step2_label, div._step3_label{
 
 	.register_button{
 		margin-left: 5px;
-		line-height: 21px;
+		line-height: 27px;
+		background: #fe4e65;
+		color: #ffffff;
+		border:1px solid #ffffff;
 	}
 
 	.login_dropdown{
@@ -238,7 +238,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	.registerbox_smalllabel{
 		margin:0 auto;
 		width: 100%;
-		margin-top: 25px;
+		margin-top: 0px;
 		margin-bottom: 5px;
 	}
 
@@ -260,7 +260,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	width: 100%;
 	word-break: break-all;
 }
-	.explainbox p{
+	.explainbox > p{
 		color: #ffffff;
 		line-height: 22px;
 		font-weight: 500;
@@ -280,6 +280,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 	.explaintype{
 		height: 0px;
+		overflow-y:hidden;
 		transition: 1s;
 		-webkit-transition: 1s;
 	}
@@ -287,6 +288,21 @@ div._step1_label, div._step2_label, div._step3_label{
 		visibility: hidden;
 		transition: 0.5s;
 		-webkit-transition: 0.5s;
+	}
+	.explaintype p{
+		text-align: center;
+		color: #ffffff;
+	}
+	.explain_subject{
+		font-weight: bold;
+		font-size: 17px;
+		padding-left: 10px;
+	}
+	.explain_descript{
+		font-size: 13px;
+		font-weight: 400;
+		margin-top: 0;
+		padding-left: 13px;
 	}
 
 
@@ -361,7 +377,7 @@ div._step1_label, div._step2_label, div._step3_label{
 		.explaintype button{
 			visibility: visible;
 		}
-		.explainbox p{
+		.explainbox > p{
 			line-height: 30px;
 			margin-top : 13px;
 		}
@@ -369,10 +385,34 @@ div._step1_label, div._step2_label, div._step3_label{
 			display: block;
 			margin-top: 15px;
 		}
+		.explaintype p{
+		text-align: left;
+		color: #ffffff;
+		}
+		.explain_subject{
+			font-weight: bold;
+			font-size: 16px;
+			margin-bottom: 5px;
+			margin-top: 30px;
+		}
+		.explain_descript{
+			font-size: 13px;
+			font-weight: 400;
+			margin-top: 0;
+		}
 
 	.registerbox_add{
 		margin-top: 250px;
 	}
+		.outerbox{
+			margin-top: 15px;
+		}
+			.outerbox input{
+				line-height: 28px;
+				width: 140px;
+				font-size: 15px;
+				border-radius: 3px;
+			}
 
 	.promise_wrap{
 		margin-top: 180px;
