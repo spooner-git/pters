@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
-from config.views import AccessTestMixin
+from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb
 from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
