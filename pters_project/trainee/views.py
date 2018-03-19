@@ -46,8 +46,11 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     self.request.session['lecture_id'] = lecture_info.lecture_id
         else:
             class_id_comp = ''
+            lecture_np_counter = 0
             lecture_id_select = ''
             for lecture_info in lecture_data:
+                if lecture_info.state_cd == 'NP':
+                    lecture_np_counter += 1
                 if class_id_comp != lecture_info.class_tb_id:
                     class_id_comp = lecture_info.class_tb_id
                     if lecture_info.lecture_avail_count > 0:
@@ -55,7 +58,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
                     class_counter += 1
 
-            if class_counter > 1:
+            if class_counter > 1 or lecture_np_counter > 0:
                 self.url = '/trainee/lecture_select/'
             else:
                 self.request.session['class_id'] = class_id_comp
