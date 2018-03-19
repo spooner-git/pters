@@ -338,6 +338,7 @@ def get_member_data(context, trainer_id, member_id):
                         member_data.lecture_reg_count_total += lecture_info.lecture_reg_count
                         member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
                         member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
+                        member_data.lecture_id = lecture_info.lecture_id
 
                 member_list.append(member_data)
 
@@ -390,6 +391,7 @@ def get_member_data(context, trainer_id, member_id):
                         member_data_finish.lecture_reg_count_total += lecture_info.lecture_reg_count
                         member_data_finish.lecture_rem_count_total += lecture_info.lecture_rem_count
                         member_data_finish.lecture_avail_count_total += lecture_info.lecture_avail_count
+                        member_data_finish.lecture_id = lecture_info.lecture_id
 
                 member_finish_list.append(member_data_finish)
 

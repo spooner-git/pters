@@ -428,55 +428,23 @@
 
     </div>
 
-
-
-
-
-
     <form action="." id="add-member-id-form" method="post">
         {% csrf_token %}
         <div style="display: none">
           {{ form.as_p }}
         </div>
-    </form>
-    
-    <form action="{% url 'login:add_member_info_email' %}" id="add-member-trainee-form" method="post">
         <input type="hidden" name="id" id="newid2" value="" >
+        <input type="hidden" name="first_name" id="first_name" value="" >
+        <input type="hidden" name="last_name" id="last_name" value="" >
         <input type="hidden" name="name" id="newname" value="" >
         <input type="hidden" name="sex" id="newsex" value="" >
         <input type="hidden" name="birthday" id="newbirth" value="" >
         <input type="hidden" name="address" id="newregion" value="" >
         <input type="hidden" id="id_duplicate_check" value="none" >
-        <input type="hidden" name="group_type" value="trainee">
-        <input type="hidden" name="next_page" value="/login/register_error_ajax/" >
+        <input type="hidden" name="group_type" id="id_group_type" value="trainee">
     </form>
 
-    <form action="{% url 'login:add_member_info_email' %}" id="add-member-trainer-form" method="post">
-        <input type="hidden" name="id" id="newid2" value="" >
-        <input type="hidden" name="name" id="newname" value="" >
-        <input type="hidden" name="sex" id="newsex" value="" >
-        <input type="hidden" name="birthday" id="newbirth" value="" >
-        <input type="hidden" name="address" id="newregion" value="" >
-        <input type="hidden" id="id_duplicate_check" value="none" >
-        <input type="hidden" name="group_type" value="trainer">
-        <input type="hidden" name="next_page" value="/login/register_error_ajax/" >
-    </form>
 
-    <form action="{% url 'login:add_member_info_email' %}" id="add-member-business-form" method="post">
-        <input type="hidden" name="id" id="newid2" value="" >
-        <input type="hidden" name="name" id="newname" value="" >
-        <input type="hidden" name="sex" id="newsex" value="" >
-        <input type="hidden" name="birthday" id="newbirth" value="" >
-        <input type="hidden" name="address" id="newregion" value="" >
-        <input type="hidden" id="id_duplicate_check" value="none" >
-        <input type="hidden" name="group_type" value="business">
-        <input type="hidden" name="next_page" value="/login/register_error_ajax/" >
-    </form>
-
-    
-
-
-    
     <footer class="fixfooter bottomzero">
         <div class="bottomfooter1">
             <span>English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
@@ -523,14 +491,15 @@
       $('._step2_label span').text($(this).text())
       if($(this).text() == "일반 회원 가입"){
         group_type = 'trainee'
-        $form = $('#add-member-trainee-form')
+        $form = $('#add-member-id-form')
       }else if($(this).text() == "트레이너 가입"){
         group_type = 'trainer'
-        $form = $('#add-member-trainer-form')
+        $form = $('#add-member-id-form')
       }else if($(this).text() == "센터사업자 가입"){
         group_type = 'business'
-        $form = $('#add-member-business-form')
+        $form = $('#add-member-id-form')
       }
+      $('#id_group_type').val(group_type)
       input_birth_to_form()
   })
 
@@ -664,16 +633,18 @@
     })
 
     $('#familyname_input').keyup(function(){
-        if($(this).val().length>0 && $('#lastname_input').val().length>0){
+        if($(this).val().length>0){
             $form.find('#newname').attr('value', $(this).val() + '' + $('#lastname_input').val())
+            $form.find('#last_name').attr('value', $(this).val())
         }else{
             $form.find('#newname').attr('value',"")
         }
     })
     
     $('#lastname_input').keyup(function(){
-        if($(this).val().length>0 && $('#familyname_input').val().length>0){
+        if($(this).val().length>0){
             $form.find('#newname').attr('value', $('#familyname_input').val() + '' + $(this).val())
+            $form.find('#first_name').attr('value', $(this).val())
         }else{
             $form.find('#newname').attr('value',"")
         }
@@ -729,7 +700,8 @@
               var $form = $('#add-member-id-form')
               var serializeArray = $form.serializeArray();
               $.ajax({
-                  url:'/accounts/register/',
+                  //url:'/accounts/register/',
+                  url:'/login/add_member_info/',
                   type:'POST',
                   data:serializeArray,
                   dataType : 'html',
@@ -739,7 +711,8 @@
 
                   //통신성공시 처리
                   success:function(data){
-                      memberInfo_add();
+                      console.log(data)
+                      memberInfo_add(data);
                     },
 
                   //보내기후 팝업창 닫기
@@ -764,18 +737,7 @@
         $form.find('#newbirth').attr('value',birthdata)
     }
 
-    function memberInfo_add(){
-        $.ajax({
-                url:'/login/add_member_info_email/',
-                type:'POST',
-                data: $form.serialize(),
-                dataType : 'html',
-
-                beforeSend:function(){
-                },
-
-                //통신성공시 처리
-                success:function(data){
+    function memberInfo_add(data){
                     var jsondata = JSON.parse(data);
                     if(jsondata.messageArray.length > 0){
                       $('#global_error_msg').show().html(jsondata.messageArray)
@@ -792,21 +754,6 @@
                       alert('이메일 인증후 로그인 해주세요')
                       goHome()
                     }
-                  },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-
-                  },
-
-                //통신 실패시 처리
-                error:function(){
-                    
-
-
-
-                },
-            })
     }
 
     function goHome(){

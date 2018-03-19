@@ -12,12 +12,15 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-
+from registration.backends.hmac.views import RegistrationView
 
 # Create your views here.
 from django.views.generic import TemplateView
 
 #from login.forms import ProfileForm
+from django.views.generic.base import ContextMixin
+from registration.forms import RegistrationForm
+
 from login.models import MemberTb
 from trainer.models import ClassTb
 
@@ -119,77 +122,37 @@ def logout_trainer(request):
 
 # 회원가입 api
 @csrf_exempt
-def add_member_info_logic(request):
-    user_id = request.POST.get('id', '')
-    password = request.POST.get('password', '')
-    email = request.POST.get('email', '')
-    name = request.POST.get('name', '')
-    phone = request.POST.get('phone', '')
-    sex = request.POST.get('sex', '')
-    group_type = request.POST.get('group_type', 'trainee')
-    birthday_dt = request.POST.get('birthday', '')
-    next_page = request.POST.get('next_page', '')
+class ResendEmailAuthenticationView(RegistrationView, View):
+    template_name = 'index.html'
 
-    error = None
+    def get(self, request, *args, **kwargs):
+        error = None
 
-    if user_id == '':
-        error = 'ID를 입력해 주세요.'
-    elif User.objects.filter(username=user_id).exists():
-        error = '이미 가입된 회원 입니다.'
-    # elif User.objects.filter(email=email).exists():
-    #    error = '이미 가입된 회원 입니다.'
-    # elif email == '':
-    #    error = 'e-mail 정보를 입력해 주세요.'
-    elif password == '':
-        error = '비밀번호를 입력해 주세요.'
-    elif name == '':
-        error = '이름을 입력해 주세요.'
-    #elif phone == '':
-    #    error = '연락처를 입력해 주세요.'
-    #elif len(phone) != 11 and len(phone) != 10:
-    #    error = '연락처를 확인해 주세요.'
-    #elif not phone.isdigit():
-    #    error = '연락처를 확인해 주세요.'
+        return render(request, self.template_name, {'error': error})
 
-    if error is None:
-        try:
-            with transaction.atomic():
-                user = User.objects.create_user(username=user_id, email=email, first_name=name, password=password)
-                group = Group.objects.get(name=group_type)
-                user.groups.add(group)
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        error = None
 
-                if birthday_dt == '':
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+        if username is None or username == '':
+            error = 'ID를 입력해주세요.'
+
+        if error is None:
+            if password is None or password == '':
+                error = '비밀번호를를 입력해주세요'
+
+        if error is None:
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    error = '이미 인증된 ID 입니다.'
                 else:
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, birthday_dt=birthday_dt,
-                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
-                member.save()
-                if group_type == 'trainer':
-                    class_info = ClassTb(member_id=user.id, class_type_cd='PT',
-                                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
-                                         class_hour=1, start_hour_unit=1, class_member_num=100,
-                                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                    self.send_activation_email(user)
+            else:
+                error = 'ID가 존재하지 않습니다.'
 
-                    class_info.save()
-
-        except ValueError as e:
-            error = '이미 가입된 회원입니다.'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.1'
-        except ValidationError as e:
-            error = '등록 값의 형태가 문제 있습니다.2'
-        except InternalError:
-            error = '이미 가입된 회원입니다.'
-
-    if error is None:
-        messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
-        return redirect(next_page)
-    else:
-        messages.error(request, error)
-        return redirect(next_page)
+        return render(request, self.template_name, {'error': error})
 
 
 # 회원가입 api
@@ -257,6 +220,72 @@ def add_member_info_logic_test(request):
     else:
         messages.error(request, error)
         return redirect(next_page)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AddMemberView(RegistrationView, View):
+    template_name = 'registration_error_ajax.html'
+
+    def post(self, request, *args, **kwargs):
+
+        form = RegistrationForm(request.POST, request.FILES)
+
+        first_name = request.POST.get('first_name', '')
+        last_name = request.POST.get('last_name', '')
+        name = request.POST.get('name', '')
+        phone = request.POST.get('phone', '')
+        sex = request.POST.get('sex', '')
+        group_type = request.POST.get('group_type', 'trainee')
+        birthday_dt = request.POST.get('birthday', '')
+
+        error = None
+
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    user = self.register(form)
+                    group = Group.objects.get(name=group_type)
+                    user.groups.add(group)
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.save()
+                    if birthday_dt == '':
+                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
+                                          mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+                    else:
+                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
+                                          birthday_dt=birthday_dt,user_id=user.id, use=1)
+                    member.save()
+                    if group_type == 'trainer':
+                        class_info = ClassTb(member_id=user.id, class_type_cd='PT',
+                                             start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
+                                             class_hour=1, start_hour_unit=1, class_member_num=100,
+                                             state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+
+                        class_info.save()
+            except ValueError as e:
+                error = '이미 가입된 회원입니다.'
+            except IntegrityError as e:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError as e:
+                error = '등록 값의 형태가 문제 있습니다.1'
+            except ValidationError as e:
+                error = '등록 값의 형태가 문제 있습니다.2'
+            except InternalError:
+                error = '이미 가입된 회원입니다.'
+        else:
+            for field in form:
+                if field.errors:
+                    for err in field.errors:
+                        if error is None:
+                            error = err
+                        else:
+                            error += err
+
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
