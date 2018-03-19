@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 
 # Create your views here.
-from django.shortcuts import redirect
 from django.views.generic import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
@@ -47,12 +46,12 @@ def date_check_func(pt_schedule_date, add_start_dt, add_end_dt, origin_start_dt,
 
     if origin_start_dt >= add_start_dt:
         if origin_start_dt < add_end_dt:
-            error = str(pt_schedule_date)+'등록 시간이 겹칩니다.'
+            error = str(pt_schedule_date)+' 등록 시간이 겹칩니다.'
     if origin_end_dt > add_start_dt:
         if origin_end_dt < add_end_dt:
-            error = str(pt_schedule_date)+'등록 시간이 겹칩니다.'
+            error = str(pt_schedule_date)+' 등록 시간이 겹칩니다.'
     if origin_start_dt <= add_start_dt:
         if origin_end_dt >= add_end_dt:
-            error = str(pt_schedule_date)+'등록 시간이 겹칩니다.'
+            error = str(pt_schedule_date)+' 등록 시간이 겹칩니다.'
 
     return error
