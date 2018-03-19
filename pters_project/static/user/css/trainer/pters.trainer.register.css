@@ -363,6 +363,10 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 		.outerbox_horizontal button{
 			height: 40px;
+			position: absolute;
+			bottom: 0;
+			left: 50%;
+			transform:translateX(-50%);
 		}
 
 	.explainbox{
