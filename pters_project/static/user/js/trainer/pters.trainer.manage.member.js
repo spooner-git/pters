@@ -371,6 +371,8 @@ $(document).ready(function(){
 
     $('span.resend').click(function(){
         resend_member_reg_data_pc()
+        $('.resendPopup').hide()
+        $('#shade').hide()
     })
 
     $('span.delete_resend').click(function(){
@@ -465,7 +467,7 @@ $(document).ready(function(){
 
               //보내기후 팝업창 닫기
               complete:function(){
-                
+                completeSend()
               },
 
               //통신성공시 처리
@@ -473,13 +475,11 @@ $(document).ready(function(){
                   ajax_received_json_data(data);
 
                   if(messageArray.length>0){
-                      completeSend()
                       $('#inputError_info_PC').fadeIn()
                       setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
                       $('#errorMsg_info_PC p').text(messageArray)
                   }
                   else{
-                      completeSend()
                       DataFormattingDict('ID');
                       DataFormatting('current');
                       DataFormatting('finished');
