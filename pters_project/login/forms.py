@@ -1,6 +1,7 @@
 from django import forms
-from django.contrib.auth.models import User, Group
-from login.models import MemberTb, Profile
+from django.contrib.auth.models import User
+
+from login.models import MemberTb
 
 
 class AuthUserForm(forms.ModelForm):

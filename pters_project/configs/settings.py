@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'trainer',
     'trainee',
     'schedule',
-    'storages',
 ]
 
 MIDDLEWARE = [
