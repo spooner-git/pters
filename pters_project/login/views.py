@@ -230,7 +230,7 @@ def add_member_info_logic_test(request):
                                       mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
                 else:
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                      birthday_dt=birthday_dt, user_id=user.id, use=1)
+                                      birthday_dt=birthday_dt,user_id=user.id, use=1)
                 member.save()
                 if group_type == 'trainer':
                     class_info = ClassTb(member_id=user.id, class_type_cd='PT',
@@ -251,7 +251,6 @@ def add_member_info_logic_test(request):
         except InternalError:
             error = '이미 가입된 회원입니다.'
 
-    # print(error)
     if error is None:
         messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
         return redirect(next_page)

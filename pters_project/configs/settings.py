@@ -94,14 +94,15 @@ WSGI_APPLICATION = 'configs.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'ENGINE': 'django.db.backends.mysql',
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE' : 'django.db.backends.mysql',
         'NAME': 'pters',
-        'USER': os.environ.get("PTERS_DB_USER", ''),
-        'PASSWORD': os.environ.get("PTERS_DB_PASSWORD", ''),
-        'HOST': os.environ.get("PTERS_DB_HOST", ''),
+        'USER': 'bebep',
+        'PASSWORD': 'bebep123',
+        #'HOST': 'bebepdb.cadl82fap4pj.ap-northeast-2.rds.amazonaws.com',
+        'HOST': 'pters-db.cbyipuqwoq7d.ap-northeast-2.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
@@ -167,8 +168,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.environ.get("PTERS_EMAIL_HOST_USER", '')
-EMAIL_HOST_PASSWORD = os.environ.get("PTERS_EMAIL_HOST_PASSWORD", '')
+EMAIL_HOST_USER = 'savekhg@gmail.com'
+EMAIL_HOST_PASSWORD = 'ausrl1032'
+#SERVER_EMAIL = 'hkkim@spooner.co.kr'
 #DEFAULT_FROM_MAIL = 'Spooner_Developer'
 
 # 각 media 파일에 대한 URL Prefix
@@ -178,10 +180,11 @@ MEDIA_URL = '/media/'
 # 업로드된 파일을 저장할 디렉토리 경로
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-PTERS_AWS_ACCESS_KEY_ID = os.environ.get("PTERS_AWS_ACCESS_KEY_ID", '')
-PTERS_AWS_SECRET_ACCESS_KEY = os.environ.get("PTERS_AWS_SECRET_ACCESS_KEY", '')
-PTERS_AWS_S3_BUCKET_NAME = os.environ.get("PTERS_AWS_S3_BUCKET_NAME", '')
 
+#AWS_ACCESS_KEY_ID = 'AKIAJ7EQVIQLCJNIKS7Q'
+#AWS_SECRET_ACCESS_KEY = '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'
+#AWS_STORAGE_BUCKET_NAME = 'pters-image'
+#AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }

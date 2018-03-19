@@ -1204,9 +1204,9 @@ def upload_test_func(request):
     image_test = request.POST.get('upload_file', '')
     next_page = '/trainer/cal_day_ajax/'
 
-    s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
-                        aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
-    bucket = s3.Bucket(getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
+    s3 = boto3.resource('s3', aws_access_key_id='AKIAJ7EQVIQLCJNIKS7Q',
+                        aws_secret_access_key='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')
+    bucket = s3.Bucket('pters-image')
     exists = True
 
     try:
