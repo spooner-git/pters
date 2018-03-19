@@ -272,6 +272,30 @@ $(document).ready(function(){
         $(this).siblings('.button_shift_info').css('color','#282828')
     })
 
+    
+
+    $(document).on('click','div.lectureType_RJ',function(){
+        $('.resendPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        $('#shade').fadeIn('fast');
+    })
+
+    $('._btn_close_resend_PC').click(function(){
+       $(this).parents('.popups').fadeOut('fast')
+       $('#shade').hide()
+    })
+
+    $('span.resend').click(function(){
+        resend_member_reg_data_pc()
+        $('.resendPopup').hide()
+        $('#shade').hide()
+    })
+
+    $('span.delete_resend').click(function(){
+        delete_member_reg_data_pc()
+        $('.resendPopup').hide()
+        $('#shade').hide()
+    })
+      
     function open_member_info_popup_pc(userID){
         if($('#currentMemberList').css('display') == "block"){
           var Data = DB
@@ -358,30 +382,7 @@ $(document).ready(function(){
 
         $('#inputError_info_PC').css('display','none')
     }
-
-    $(document).on('click','div.lectureType_RJ',function(){
-        $('.resendPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        $('#shade').fadeIn('fast');
-    })
-
-    $('._btn_close_resend_PC').click(function(){
-       $(this).parents('.popups').fadeOut('fast')
-       $('#shade').hide()
-    })
-
-    $('span.resend').click(function(){
-        resend_member_reg_data_pc()
-        $('.resendPopup').hide()
-        $('#shade').hide()
-    })
-
-    $('span.delete_resend').click(function(){
-        delete_member_reg_data_pc()
-        $('.resendPopup').hide()
-        $('#shade').hide()
-    })
-      
-
+    
     function open_member_info_popup_mobile(userID){
         if($('#currentMemberList').css('display') == "block"){
           var Data = DB
