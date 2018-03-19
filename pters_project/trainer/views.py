@@ -741,7 +741,7 @@ def add_member_info_logic_test(request):
             user = User.objects.get(username=user_id)
 
         except ObjectDoesNotExist:
-            error = '필수 입력 사항을 확인해주세요.'
+            error = '가입되지 않은 회원입니다.'
 
     if error is None:
         try:

@@ -1576,13 +1576,25 @@ $(document).ready(function(){
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-                      completeSend()
+                        completeSend()
+                        //
                     },
 
                     //통신성공시 처리
                     success:function(data){
                         //var jsondata = JSON.parse(data);
-                        add_member_form_func();
+                        var jsondata = JSON.parse(data);
+                        ajax_received_json_data(data);
+                        if(messageArray.length>0){
+                            $('html').css("cursor","auto")
+                            $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                            scrollToIndicator($('#page_addmember'))
+                            $('#inputError').fadeIn()
+                            setTimeout(function(){$('#inputError').fadeOut()},10000)
+                            $('#errorMsg p').text(messageArray)
+                        }else {
+                            add_member_form_func();
+                        }
                     },
 
                     //통신 실패시 처리
