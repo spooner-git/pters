@@ -16,7 +16,7 @@ from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
-from config.views import date_check_func, AccessTestMixin
+from configs.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_member_schedule_input_lecture
 from trainee.models import LectureTb

@@ -17,8 +17,8 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from config import settings
-from config.views import date_check_func
+from configs import settings
+from configs.views import date_check_func
 from login.models import LogTb, MemberTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
 from trainee.models import LectureTb
