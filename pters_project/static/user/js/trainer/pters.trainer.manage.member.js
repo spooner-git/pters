@@ -553,7 +553,7 @@ $(document).ready(function(){
         $.ajax({
             url:'/trainer/delete_member_lecture_info/', 
             type:'POST',
-            data:{"lecture_id":lectureID,"member_name":DB[userID].name},
+            data:{"lecture_id":lectureID,"member_name":DB[userID].name, "next_page":'/trainer/member_manage_ajax/'},
             dataType : 'html',
 
             beforeSend:function(){
