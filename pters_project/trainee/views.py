@@ -46,8 +46,11 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     self.request.session['lecture_id'] = lecture_info.lecture_id
         else:
             class_id_comp = ''
+            lecture_np_counter = 0
             lecture_id_select = ''
             for lecture_info in lecture_data:
+                if lecture_info.state_cd == 'NP':
+                    lecture_np_counter += 1
                 if class_id_comp != lecture_info.class_tb_id:
                     class_id_comp = lecture_info.class_tb_id
                     if lecture_info.lecture_avail_count > 0:
@@ -55,7 +58,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
                     class_counter += 1
 
-            if class_counter > 1:
+            if class_counter > 1 or lecture_np_counter > 0:
                 self.url = '/trainee/lecture_select/'
             else:
                 self.request.session['class_id'] = class_id_comp
@@ -587,8 +590,13 @@ def pt_delete_logic(request):
 
     # print(error)
     if error is None:
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
+        for member_lecture_info in member_lecture_data:
+            member_lecture_info.schedule_check = 1
+            member_lecture_info.save()
         class_info.schedule_check = 1
         class_info.save()
+
         week_info = ['일', '월', '화', '수', '목', '금', '토']
 
         log_start_date = start_date.strftime('%Y')+'년 ' \
@@ -712,6 +720,10 @@ def pt_add_logic(request):
         error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name, lecture_id)
 
     if error is None:
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
+        for member_lecture_info in member_lecture_data:
+            member_lecture_info.schedule_check = 1
+            member_lecture_info.save()
         class_info.schedule_check = 1
         class_info.save()
         return redirect(next_page)

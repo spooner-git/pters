@@ -507,7 +507,7 @@ $(document).ready(function(){
         $.ajax({
             url:'/trainer/resend_member_lecture_info/', 
             type:'POST',
-            data:{"lecture_id":lectureID,"member_name":DB[userID].name},
+            data:{"lecture_id":lectureID,"member_name":DB[userID].name, "next_page":'/trainer/member_manage_ajax/'},
             dataType : 'html',
 
             beforeSend:function(){
@@ -1465,6 +1465,14 @@ $(document).ready(function(){
             }
         }
         else{
+            /*
+            console.log('lastnameInput::'+(lastnameInput).hasClass("dropdown_selected"))
+            console.log('firstnameInput::'+(firstnameInput).hasClass("dropdown_selected"))
+            console.log('phoneInput::'+(phoneInput).hasClass("dropdown_selected"))
+            console.log('countInput_fast::'+(countInput_fast).hasClass("dropdown_selected"))
+            console.log('dateInput_fast::'+(dateInput_fast).hasClass("dropdown_selected"))
+            console.log('sexInput::'+sexInput.length)
+            */
             if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput_fast).hasClass("dropdown_selected")==true&&(dateInput_fast).hasClass("dropdown_selected")==true && sexInput.length>0){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 $('.submitBtn').addClass('submitBtnActivated')
