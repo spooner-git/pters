@@ -453,7 +453,7 @@ def add_schedule_logic(request):
 
     if error is None:
 
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
@@ -515,7 +515,7 @@ def delete_schedule_logic(request):
 
     if error is None:
 
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
@@ -620,11 +620,6 @@ def finish_schedule_logic(request):
     # print(error)
 
     if error is None:
-
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
-        for member_lecture_info in member_lecture_data:
-            member_lecture_info.schedule_check = 1
-            member_lecture_info.save()
         save_log_data(start_date, end_date, request.user.id, request.user.first_name,
                       member_name, '1', 'LS03')
 
@@ -953,7 +948,7 @@ def add_repeat_schedule_confirm(request):
             if error is None:
                 information = '반복일정 등록이 취소됐습니다.'
         else:
-            member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
+            member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             for member_lecture_info in member_lecture_data:
                 member_lecture_info.schedule_check = 1
                 member_lecture_info.save()
@@ -1071,7 +1066,7 @@ def delete_repeat_schedule_logic(request):
     # print(error)
 
     if error is None:
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()

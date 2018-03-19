@@ -963,6 +963,7 @@ def resend_member_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     member_name = request.POST.get('member_name', '')
     next_page = request.POST.get('next_page', '')
+
     error = None
 
     if lecture_id is None or '':
