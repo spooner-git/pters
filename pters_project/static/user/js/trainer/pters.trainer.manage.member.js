@@ -376,7 +376,9 @@ $(document).ready(function(){
     })
 
     $('span.delete_resend').click(function(){
-      
+        delete_member_reg_data_pc()
+        $('.resendPopup').hide()
+        $('#shade').hide()
     })
       
 
@@ -501,9 +503,54 @@ $(document).ready(function(){
     function resend_member_reg_data_pc(){
         var userID = $('#memberId_info_PC').text();
         var lectureID = $('.resendPopup').attr('data-leid');
-        console.log(userID,lectureID,DB[userID].name)
         $.ajax({
             url:'/trainer/resend_member_lecture_info/', 
+            type:'POST',
+            data:{"lecture_id":lectureID,"member_name":DB[userID].name},
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend()
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend()
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                ajax_received_json_data(data);
+                if(messageArray.length>0){
+                  $('#inputError_info_PC').fadeIn()
+                  setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
+                  $('#errorMsg_info_PC p').text(messageArray)
+                }
+                else{
+                  DataFormattingDict('ID');
+                  DataFormatting('current');
+                  DataFormatting('finished');
+                  memberListSet('current','date','yes');
+                  memberListSet('finished','date','yes');
+                  $('#startR').attr('selected','selected')
+                  open_member_info_popup_pc($('#memberId_info_PC').text())
+                  set_member_lecture_list()
+                  console.log('success');
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                alert("서버 통신 : error")
+            },
+        })
+    }
+
+    function delete_member_reg_data_pc(){
+        var userID = $('#memberId_info_PC').text();
+        var lectureID = $('.resendPopup').attr('data-leid');
+        $.ajax({
+            url:'/trainer/delete_member_lecture_info/', 
             type:'POST',
             data:{"lecture_id":lectureID,"member_name":DB[userID].name},
             dataType : 'html',
