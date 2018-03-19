@@ -51,6 +51,7 @@ urlpatterns = [
 
     # 기타 setting 관련
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
+    url(r'^trainer_mypage/$', views.MyPageView.as_view(), name='trainer_mypage'),
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
     url(r'^sales_setting/$', views.SalesSettingView.as_view(), name='sales_setting'),
