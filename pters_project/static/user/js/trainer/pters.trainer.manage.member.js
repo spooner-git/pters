@@ -174,14 +174,16 @@ $(document).ready(function(){
         var userID = $(this).siblings('._id').attr('data-name');
         if($('body').width()<600){
             open_member_info_popup_mobile(userID)
+            get_indiv_repeat_info(userID)
             set_member_lecture_list()
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID)
+            get_indiv_repeat_info(userID)
             set_member_lecture_list()
             $('#info_shift_base').show()
-            $('#info_shift_lecture').hide()
+            $('#info_shift_lecture, #info_shift_schedule').hide()
             $('#select_info_shift_base').css('color','#fe4e65')
-            $('#select_info_shift_lecture').css('color','#282828')
+            $('#select_info_shift_lecture,#select_info_shift_schedule').css('color','#282828')
         }
     });
 
@@ -191,11 +193,12 @@ $(document).ready(function(){
             open_member_info_popup_mobile(userID)
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID)
+            get_indiv_repeat_info(userID)
             set_member_lecture_list()
             $('#info_shift_base').show()
-            $('#info_shift_lecture').hide()
+            $('#info_shift_lecture, #info_shift_schedule').hide()
             $('#select_info_shift_base').css('color','#fe4e65')
-            $('#select_info_shift_lecture').css('color','#282828')
+            $('#select_info_shift_lecture,#select_info_shift_schedule').css('color','#282828')
         }
     })
 
@@ -223,13 +226,14 @@ $(document).ready(function(){
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID)
             modify_member_info_pc(userID)
+            get_indiv_repeat_info(userID)
             set_member_lecture_list()
             $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('readonly',false);
             $('button._info_modify').text('완료').attr('data-type',"modify")
             $('#info_shift_base').show()
-            $('#info_shift_lecture').hide()
+            $('#info_shift_lecture, #info_shift_schedule').hide()
             $('#select_info_shift_base').css('color','#fe4e65')
-            $('#select_info_shift_lecture').css('color','#282828')
+            $('#select_info_shift_lecture,#select_info_shift_schedule').css('color','#282828')
         }
     })
 
@@ -260,14 +264,21 @@ $(document).ready(function(){
 
     $('#select_info_shift_base').click(function(){
         $('#info_shift_base').show()
-        $('#info_shift_lecture').hide()
+        $('#info_shift_lecture, #info_shift_schedule').hide()
         $(this).css('color','#fe4e65')
         $(this).siblings('.button_shift_info').css('color','#282828')
     })
 
     $('#select_info_shift_lecture').click(function(){
-        $('#info_shift_base').hide()
+        $('#info_shift_base,#info_shift_schedule').hide()
         $('#info_shift_lecture').show()
+        $(this).css('color','#fe4e65')
+        $(this).siblings('.button_shift_info').css('color','#282828')
+    })
+
+    $('#select_info_shift_schedule').click(function(){
+        $('#info_shift_base,#info_shift_lecture').hide()
+        $('#info_shift_schedule').show()
         $(this).css('color','#fe4e65')
         $(this).siblings('.button_shift_info').css('color','#282828')
     })
@@ -601,8 +612,8 @@ $(document).ready(function(){
             var userID = $('#memberId').val()
             var $regHistory = $('#memberRegHistory_info')
         }   
-        
         var dbId = DB[userID].dbId
+        
         $.ajax({
             url:'/trainer/read_lecture_by_class_member_ajax/', 
             type:'POST',
@@ -622,6 +633,7 @@ $(document).ready(function(){
             success:function(data){
                 var jsondata = JSON.parse(data);
                 var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>상태</div></div>']
+                console.log(jsondata)
                 for(var i=0; i<jsondata.lectureIdArray.length; i++){
                     var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
                     var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
@@ -1988,6 +2000,104 @@ $(document).ready(function(){
         $('#memberSex div').removeClass('selectbox_checked')
         $('.submitBtnActivated').removeClass('submitBtnActivated')
     };
+
+    function get_indiv_repeat_info(userID){
+        if($('#currentMemberList').css('display') == "block"){
+          var Data = DB
+        }else if($('#finishedMemberList').css('display') == "block"){
+           var Data = DBe
+        }
+        var dbId = Data[userID].dbId
+        $.ajax({
+                  url: '/trainer/read_member_lecture_data/',
+                  type:'POST',
+                  data: {"member_id": dbId},
+                  dataType : 'html',
+
+                  beforeSend:function(){
+                      //beforeSend(); //ajax 로딩이미지 출력
+                  },
+
+                  success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata)
+                    ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+                    ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+                    ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+                    ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+                    ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+                    ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+                    ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
+                    selectedMemberIdArray = jsondata.memberIdArray;
+                    selectedMemberAvailCountArray = jsondata.memberAvailCountArray;
+                    selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
+                    selectedMemberNameArray = jsondata.memberNameArray
+                    set_indiv_repeat_info()
+                  },
+
+                  complete:function(){
+                    //completeSend(); //ajax 로딩이미지 숨기기
+                  },
+
+                  error:function(){
+                    console.log('server error')
+                  }
+            })
+    }
+
+    function set_indiv_repeat_info(){
+        var repeat_info_dict= { 'KOR':
+                                  {'DD':'매일', 'WW':'매주', '2W':'격주',
+                                   'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+                                  'JAP':
+                                  {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                                   'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+                                  'JAP':
+                                  {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                                   'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+                                 }
+        var len = ptRepeatScheduleIdArray.length
+        var repeat_id_array = ptRepeatScheduleIdArray
+        var repeat_type_array = ptRepeatScheduleTypeArray
+        var repeat_day_info_raw_array = ptRepeatScheduleWeekInfoArray
+        var repeat_start_array = ptRepeatScheduleStartDateArray
+        var repeat_end_array = ptRepeatScheduleEndDateArray
+        var repeat_time_array = ptRepeatScheduleStartTimeArray
+        var repeat_dur_array = ptRepeatScheduleTimeDurationArray
+
+        var schedulesHTML = []
+        for(var i=0; i<ptRepeatScheduleIdArray.length; i++){
+            var repeat_id = repeat_id_array[i]
+            var repeat_type = repeat_info_dict['KOR'][repeat_type_array[i]]
+            var repeat_start = repeat_start_array[i].replace(/-/gi,".");
+            var repeat_start_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복시작 : </span>"
+            var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
+            var repeat_end = repeat_end_array[i].replace(/-/gi,".");
+            var repeat_time = Number(repeat_time_array[i].split(':')[0])+0
+            var repeat_dur = repeat_dur_array[i]
+            var repeat_sum = Number(repeat_time) + Number(repeat_dur)
+            var repeat_day =  function(){
+                                var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
+                                var repeat_day_info = ""
+                                if(repeat_day_info_raw.length>1){
+                                    for(var j=0; j<repeat_day_info_raw.length; j++){
+                                        var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+                                    }
+                                }else if(repeat_day_info_raw.length == 1){
+                                    var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+                                }
+                                if(repeat_day_info.substr(0,1) == '/'){
+                                    var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+                                }
+                                  return repeat_day_info
+                              };
+            var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)'+'</p>'
+            var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
+            //var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+            schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+'</div>'
+        }
+        $('#memberRepeat_info_PC').html(schedulesHTML.join(''))
+    }
  
 
  //작은달력 설정
