@@ -2,6 +2,7 @@
 import copy
 import datetime
 
+import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
@@ -24,6 +25,8 @@ from trainee.models import LectureTb
 from trainee.views import get_trainee_repeat_schedule_data_func, get_lecture_list_by_class_member_id
 from trainer.models import ClassTb, SettingTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -125,6 +128,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         if error is not None:
                 messages.error(self.request, error)
+        else:
+            logger.error(class_info.member.name+'['+str(class_info.class_id)+'] : login success')
 
         return context
 
