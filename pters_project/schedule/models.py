@@ -98,9 +98,3 @@ class ScheduleTb(models.Model):
     class Meta:
         managed = False
         db_table = 'SCHEDULE_TB'
-
-
-class Document(models.Model):
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    upload = models.FileField()
-
