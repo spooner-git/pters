@@ -248,10 +248,10 @@
                       for(var j=0; j<lec_select_npLectureCountsArray[i]; j++){
                           var table = '<div class="pters_table displayNone" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[i]+'">'
                           var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
-                          var trainerName = '<div class="pters_table_cell table_trainer_name">'+'등록요청 전송'+'</div>'
+                          var trainerName = '<div class="pters_table_cell table_trainer_name">'+'달력 연동'+'</div>'
                           var selection = '<div class="pters_table_cell table_selection"><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',0, '+lec_select_classIdArray[i]+')">수락/</a><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',1, '+lec_select_classIdArray[i]+')">거절</a></div>'
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',0, '+lec_select_classIdArray[i]+')">연결/</a><a data="" '
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[i]+',1, '+lec_select_classIdArray[i]+')">취소</a></div>'
                           var sum = table + lectureName + trainerName + selection + '</div>'
                           list_table_to_join.push(sum)
                       }
