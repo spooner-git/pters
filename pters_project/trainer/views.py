@@ -463,6 +463,14 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
 
         return context
 
+class MyPageView(AccessTestMixin, TemplateView):
+    template_name = 'setting_mypage.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MyPageView, self).get_context_data(**kwargs)
+        context = get_trainer_setting_data(context, self.request.user.id)
+
+        return context
 
 class PushSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_push.html'
