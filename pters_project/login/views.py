@@ -241,46 +241,57 @@ class AddMemberView(RegistrationView, View):
         error = None
 
         if form.is_valid():
-            try:
-                with transaction.atomic():
-                    user = self.register(form)
-                    group = Group.objects.get(name=group_type)
-                    user.groups.add(group)
-                    user.first_name = first_name
-                    user.last_name = last_name
-                    user.save()
-                    if birthday_dt == '':
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                          mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
-                    else:
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                          birthday_dt=birthday_dt,user_id=user.id, use=1)
-                    member.save()
-                    if group_type == 'trainer':
-                        class_info = ClassTb(member_id=user.id, class_type_cd='PT',
-                                             start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
-                                             class_hour=1, start_hour_unit=1, class_member_num=100,
-                                             state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
-                        class_info.save()
-            except ValueError as e:
+            try:
+                user = User.objects.get(username=form.cleaned_data['username'])
+            except ObjectDoesNotExist:
                 error = '이미 가입된 회원입니다.'
-            except IntegrityError as e:
-                error = '등록 값에 문제가 있습니다.'
-            except TypeError as e:
-                error = '등록 값의 형태가 문제 있습니다.1'
-            except ValidationError as e:
-                error = '등록 값의 형태가 문제 있습니다.2'
-            except InternalError:
-                error = '이미 가입된 회원입니다.'
+
+            if error is None:
+                try:
+                    with transaction.atomic():
+                        user = self.register(form)
+                        group = Group.objects.get(name=group_type)
+                        user.groups.add(group)
+                        user.first_name = first_name
+                        user.last_name = last_name
+                        user.save()
+                        if birthday_dt == '':
+                            member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
+                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+                        else:
+                            member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
+                                              birthday_dt=birthday_dt,user_id=user.id, use=1)
+                        member.save()
+                        if group_type == 'trainer':
+                            class_info = ClassTb(member_id=user.id, class_type_cd='PT',
+                                                 start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
+                                                 class_hour=1, start_hour_unit=1, class_member_num=100,
+                                                 state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+
+                            class_info.save()
+                except ValueError as e:
+                    error = '이미 가입된 회원입니다.'
+                except IntegrityError as e:
+                    error = '등록 값에 문제가 있습니다.'
+                except TypeError as e:
+                    error = '등록 값의 형태가 문제 있습니다.1'
+                except ValidationError as e:
+                    error = '등록 값의 형태가 문제 있습니다.2'
+                except InternalError:
+                    error = '이미 가입된 회원입니다.'
         else:
             for field in form:
                 if field.errors:
                     for err in field.errors:
                         if error is None:
-                            error = err
+                            if field.name == 'username':
+                                error = '사용할수 없는 ID 입니다.'
+                            else:
+                                error = err
                         else:
-                            error += err
+                            if field.name != 'username':
+                                error += err
 
         if error is not None:
             messages.error(request, error)

@@ -1065,8 +1065,6 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
 
-        #context['user'] = user
-
         context['member_info'] = member
         messages.error(request, error)
 
