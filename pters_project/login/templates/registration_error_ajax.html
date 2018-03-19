@@ -1,13 +1,4 @@
     {
       "messageArray" :
-      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "idErrorArray" :
-      [{{ form.username.errors }}],
-      "password1Array" :
-      [{{ form.password1.errors }}],
-      "password2Array" :
-      [{{ form.password2.errors }}],
-      "otherArray" :
-      [{{ form.non_field_errors }}]
-
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }

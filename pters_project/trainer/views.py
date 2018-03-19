@@ -741,7 +741,7 @@ def add_member_info_logic_test(request):
             user = User.objects.get(username=user_id)
 
         except ObjectDoesNotExist:
-            error = '필수 입력 사항을 확인해주세요.'
+            error = '가입되지 않은 회원입니다.'
 
     if error is None:
         try:
@@ -1064,8 +1064,6 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 member = MemberTb.objects.get(user_id=user.id, use=1)
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
-
-        #context['user'] = user
 
         context['member_info'] = member
         messages.error(request, error)
