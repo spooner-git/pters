@@ -997,7 +997,7 @@ def resend_member_lecture_info_logic(request):
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+            error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
         lecture_info.state_cd = 'NP'
@@ -1032,13 +1032,13 @@ def delete_member_lecture_info_logic(request):
     error = None
 
     if lecture_id is None or '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+            error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
@@ -1084,7 +1084,7 @@ def update_member_lecture_info_logic(request):
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+            error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
 

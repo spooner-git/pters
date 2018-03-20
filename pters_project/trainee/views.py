@@ -321,7 +321,7 @@ def lecture_processing(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=1)
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보가 존재하지 않습니다.'
 
@@ -463,7 +463,7 @@ def pt_delete_logic(request):
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
-            error = '스케쥴 정보가 정보가 존재하지 않습니다.'
+            error = '스케쥴 정보를 불러오지 못했습니다.'
 
     if error is None:
         start_date = schedule_info.start_dt
@@ -483,7 +483,7 @@ def pt_delete_logic(request):
         try:
             lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
         except ObjectDoesNotExist:
-            error = '회원 PT 정보가 존재하지 않습니다.'
+            error = '회원 수강 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -793,7 +793,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         end_date = start_date + datetime.timedelta(hours=int(pt_schedule_time_duration))
 
         try:
-            lecture_info = LectureTb.objects.get(member_id=user_id, lecture_id=lecture_id, use=1)
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
 
@@ -1105,21 +1105,21 @@ def get_trainee_schedule_data_func(context, user_id, lecture_id, start_date, end
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(member_id=user_id, lecture_id=lecture_id, use=1)
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=1)
         except ObjectDoesNotExist:
-            error = 'lecture가 존재하지 않습니다.'
+            error = '회원 수강 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강사 강좌 정보를 불러오지 못했습니다'
 
     if error is None:
         try:
             class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다.'
+            error = '강사 정보를 불러오지 못했습니다.'
 
     # 강사 setting 값 로드
     if error is None:
