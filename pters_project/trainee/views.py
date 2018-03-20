@@ -1349,11 +1349,18 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AlarmViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+        # class_id = self.request.session.get('class_id', '')
+
         error = None
 
         if error is None:
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
+            lecture_data = LectureTb.objects.filter(member_id=self.request.user.id)
+
+            for idx, lecture_info in enumerate(lecture_data):
+                if idx == 0:
+                    log_data = LogTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=1).order_by('-reg_dt')
+                else:
+                    log_data |= LogTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=1).order_by('-reg_dt')
             log_data.order_by('-reg_dt')
 
         if error is None:
