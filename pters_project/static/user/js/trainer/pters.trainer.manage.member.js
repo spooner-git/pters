@@ -312,13 +312,13 @@ $(document).ready(function(){
     $('span.resend').click(function(){
         resend_member_reg_data_pc()
         $('.resendPopup').css('display','none')
-        $('#shade').css('display','none')
+        $('#shade3').css('display','none')
     })
 
     $('span.delete_resend').click(function(){
         delete_member_reg_data_pc()
         $('.resendPopup').css('display','none')
-        $('#shade').css('display','none')
+        $('#shade3').css('display','none')
     })
 
     //회원 정보팝업의 일정정보내 반복일정 삭제버튼
