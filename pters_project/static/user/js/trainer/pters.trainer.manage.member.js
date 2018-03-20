@@ -4,8 +4,6 @@ $(document).ready(function(){
    	 		$(this).addClass("active").siblings().removeClass("active");
 		});
 
-
-
     var ts;
     $("body").bind("touchstart",function(e){
     ts = e.originalEvent.touches[0].clientY;
@@ -254,12 +252,6 @@ $(document).ready(function(){
       }
     })
 
-    $('#popup_btn_delete_yes').click(function(){
-      //$('.confirmPopup').fadeOut('fast');
-      $('#cal_popup_plandelete').fadeOut('fast');
-      $('#shade3').fadeOut('fast');
-      deleteMemberAjax();
-    });
 
     $('#popup_btn_delete_no, #cal_popup_plandelete .popup_close_x_button').click(function(){
       //$('.confirmPopup').fadeOut('fast');
@@ -336,8 +328,10 @@ $(document).ready(function(){
     $(document).on('click','div.deleteBtnBin',function(){
         var id_info = $(this).parents('div.summaryInnerBox').attr('data-id')
         $('#id_repeat_schedule_id_confirm').val(id_info)
-        $('#cal_popup_plandelete').fadeIn()
+        var repeat_schedule_id = $(this).parents('.summaryInnerBox').attr('data-id')
+        $('#cal_popup_plandelete').fadeIn().attr('data-id',repeat_schedule_id)
         $('#shade').show()
+        deleteTypeSelect = 'repeatinfodelete'
     })
 
     $(document).on('click','.summaryInnerBoxText, .summaryInnerBoxText2',function(){ //반복일정 텍스트 누르면 휴지통 닫힘
@@ -345,6 +339,55 @@ $(document).ready(function(){
           $btn.animate({'width':'0px'},230)
           $btn.find('img').css({'display':'none'})
     })
+
+    $('#popup_btn_delete_yes').click(function(){
+        if(deleteTypeSelect == "repeatinfodelete"){
+            var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
+            $.ajax({
+                url:'/schedule/delete_repeat_schedule/',
+                type:'POST',
+                data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/cal_day_ajax/'},
+                dataType:'html',
+
+                beforeSend:function(){
+                    beforeSend()
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                  //var jsondata = JSON.parse(data);
+                  //ajax_received_json_data(jsondata)
+                  //closeDeletePopup();
+                  //AjaxCompleteSend();
+                  var userID = $('#memberId_info_PC').text()
+                  get_indiv_repeat_info(userID)
+                  $('#cal_popup_plandelete').css('display','none')
+                  deleteTypeSelect = "memberinfodelete"
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                    completeSend()
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                  alert("에러: 서버 통신 실패")
+                  //closeDeletePopup();
+                  //AjaxCompleteSend();
+                },
+            })
+        }else{
+            //$('.confirmPopup').fadeOut('fast');
+            $('#cal_popup_plandelete').fadeOut('fast');
+            $('#shade3').fadeOut('fast');
+            deleteMemberAjax();
+        }       
+    })
+
+
+
+
     //회원 정보팝업의 일정정보내 반복일정 삭제버튼
 
       
@@ -2172,5 +2215,6 @@ $(document).ready(function(){
     function numberWithCommas(x) { //천단위 콤마 찍기
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+
 
 });
