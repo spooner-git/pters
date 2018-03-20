@@ -10,12 +10,15 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 # Create your views here.
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.views.generic.base import ContextMixin
 
 from configs import settings
 from configs.views import date_check_func, get_client_ip
@@ -376,6 +379,9 @@ def add_schedule_logic(request):
         error = '시작 시간을 선택해 주세요.'
     elif schedule_time_duration == '':
         error = '진행 시간을 선택해 주세요.'
+
+    if note is None:
+        note = ''
 
     if error is None:
         # 강사 정보 가져오기
@@ -1234,3 +1240,52 @@ def upload_test_func(request):
                           ACL='public-read')
 
     return redirect(next_page)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
+    template_name = 'finish_schedule_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
+
+        lecture_id = request.GET.get('lecture_id', '')
+        member_id = request.GET.get('member_id', '')
+
+        finish_schedule_list = None
+        if lecture_id is None or lecture_id == '':
+            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
+
+            for idx, lecture_info in enumerate(lecture_list):
+                if idx == 0:
+                    finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                else:
+                    finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+        else:
+            finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
+
+        context['finish_schedule_list'] = finish_schedule_list
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
+
+        lecture_id = request.POST.get('lecture_id', '')
+        member_id = request.POST.get('member_id', '')
+
+        finish_schedule_list = None
+        if lecture_id is None or lecture_id == '':
+            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
+
+            for idx, lecture_info in enumerate(lecture_list):
+                if idx == 0:
+                    finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                else:
+                    finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+        else:
+            finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
+
+        context['finish_schedule_list'] = finish_schedule_list
+
+        return render(request, self.template_name, context)
