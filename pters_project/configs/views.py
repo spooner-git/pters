@@ -55,3 +55,12 @@ def date_check_func(pt_schedule_date, add_start_dt, add_end_dt, origin_start_dt,
             error = str(pt_schedule_date)+' 등록 시간이 겹칩니다.'
 
     return error
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip

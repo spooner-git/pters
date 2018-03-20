@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
-from configs.views import AccessTestMixin
+from configs.views import AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb
 from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
@@ -636,7 +636,8 @@ def add_member_info_logic(request):
     if error is None:
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 '\
                        + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents,
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
         return redirect(next_page)
     else:
@@ -769,8 +770,8 @@ def add_member_info_logic_test(request):
     if error is None:
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LB01', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
         return redirect(next_page)
     else:
@@ -867,8 +868,8 @@ def update_member_info_logic(request):
 
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + name + ' 회원님의</span> 정보를 <span class="status">수정</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -946,8 +947,8 @@ def delete_member_info_logic(request):
 
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + member.name + ' 회원님의</span> 수강정보를 <span class="status">삭제</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB02', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LB02', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -984,8 +985,8 @@ def resend_member_lecture_info_logic(request):
     if error is None:
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + member_name + ' 회원님의</span> 수강정보를 <span class="status">재요청</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -1023,8 +1024,75 @@ def delete_member_lecture_info_logic(request):
     if error is None:
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
                        + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+@csrf_exempt
+def update_member_lecture_info_logic(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    price = request.POST.get('price', '')
+    lecture_reg_count = request.POST.get('lecture_reg_count', '')
+    note = request.POST.get('note', '')
+    member_name = request.POST.get('member_name', '')
+    next_page = request.POST.get('next_page', '')
+
+    error = None
+
+    if lecture_id is None or '':
+        error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+
+        if start_date is None or start_date == '':
+            start_date = lecture_info.start_date
+        if end_date is None or end_date == '':
+            end_date = lecture_info.end_date
+        if price is None or price == '':
+            price = lecture_info.price
+        if lecture_reg_count is None or lecture_reg_count == '':
+            lecture_reg_count = lecture_info.lecture_reg_count
+        if note is None or note == '':
+            note = lecture_info.note
+
+    if error is None:
+        if lecture_reg_count < lecture_info.lecture_rem_count:
+            error = '등록 횟수가 남은 횟수보다 작습니다.'
+
+    if error is None:
+        if lecture_reg_count < lecture_info.lecture_reg_count-lecture_info.lecture_avail_count:
+            error = '등록횟수가이미 등록한 스케쥴보다 작습니다.'
+
+    if error is None:
+        lecture_info.start_date = start_date
+        lecture_info.end_date = end_date
+        lecture_info.price = price
+        lecture_info.note = note
+        lecture_info.lecture_reg_count = lecture_reg_count
+        lecture_info.mod_dt = timezone.now()
+        lecture_info.save()
+
+    if error is None:
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
+                       + member_name + ' 회원님의</span> 수강정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -1200,8 +1268,8 @@ def update_setting_push_logic(request):
 
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
                        + 'PUSH 설정</span> 정보를 <span class="status">수정</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -1277,8 +1345,8 @@ def update_setting_reserve_logic(request):
         request.session.setting_member_reserve_prohibition = setting_member_reserve_prohibition
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
                       + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -1417,8 +1485,8 @@ def update_setting_sales_logic(request):
 
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
                        + '강의금액 설정</span> 정보를 <span class="status">수정</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -1468,8 +1536,8 @@ def update_setting_language_logic(request):
         request.session.setting_language = setting_member_language
         log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
                        + '언어 설정</span> 정보를 <span class="status">수정</span>했습니다.'
-        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LT03', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
