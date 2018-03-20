@@ -1034,6 +1034,73 @@ def delete_member_lecture_info_logic(request):
         return redirect(next_page)
 
 
+@csrf_exempt
+def update_member_lecture_info_logic(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    price = request.POST.get('price', '')
+    lecture_reg_count = request.POST.get('lecture_reg_count', '')
+    note = request.POST.get('note', '')
+    member_name = request.POST.get('member_name', '')
+    next_page = request.POST.get('next_page', '')
+
+    error = None
+
+    if lecture_id is None or '':
+        error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+
+        if start_date is None or start_date == '':
+            start_date = lecture_info.start_date
+        if end_date is None or end_date == '':
+            end_date = lecture_info.end_date
+        if price is None or price == '':
+            price = lecture_info.price
+        if lecture_reg_count is None or lecture_reg_count == '':
+            lecture_reg_count = lecture_info.lecture_reg_count
+        if note is None or note == '':
+            note = lecture_info.note
+
+    if error is None:
+        if lecture_reg_count < lecture_info.lecture_rem_count:
+            error = '등록 횟수가 남은 횟수보다 작습니다.'
+
+    if error is None:
+        if lecture_reg_count < lecture_info.lecture_reg_count-lecture_info.lecture_avail_count:
+            error = '등록횟수가이미 등록한 스케쥴보다 작습니다.'
+
+    if error is None:
+        lecture_info.start_date = start_date
+        lecture_info.end_date = end_date
+        lecture_info.price = price
+        lecture_info.note = note
+        lecture_info.lecture_reg_count = lecture_reg_count
+        lecture_info.mod_dt = timezone.now()
+        lecture_info.save()
+
+    if error is None:
+        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
+                       + member_name + ' 회원님의</span> 수강정보를 <span class="status">수정</span>했습니다.'
+        log_data = LogTb(external_id=request.user.id, log_type='LB03', contents=log_contents, reg_dt=timezone.now(),
+                         use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'search_member_id_ajax.html'
