@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^check_schedule_update/$', views.CheckScheduleUpdateViewAjax.as_view(), name='check_schedule_update'),
     url(r'^upload_test/$', views.upload_test_func, name='upload_test'),
 
+    url(r'^get_finish_schedule/$', views.GetFinishScheduleViewAjax.as_view(), name='get_finish_schedule')
+
 ]
