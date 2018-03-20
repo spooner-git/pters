@@ -31,6 +31,5 @@ urlpatterns = [
     url(r'^resend_email_authentication/$', views.ResendEmailAuthenticationView,
         name='resend_email_authentication'),
     url(r'^register_error_ajax/$', views.RegisterErrorView.as_view(), name='register_error_ajax'),
-    # url(r'^login_page/$', views.login_trainer_view, name='login_page'),
 
 ]

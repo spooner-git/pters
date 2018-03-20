@@ -11,7 +11,7 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
-	setInterval(function(){ajaxCheckSchedule()}, 1000)// 자동 ajax 새로고침(일정가져오기)
+	setInterval(function(){ajaxCheckSchedule()}, 60000)// 자동 ajax 새로고침(일정가져오기)
 
 
 	function ajaxCheckSchedule(){

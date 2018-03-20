@@ -241,10 +241,13 @@ class AddMemberView(RegistrationView, View):
         error = None
 
         if form.is_valid():
-
+            user = None
             try:
                 user = User.objects.get(username=form.cleaned_data['username'])
             except ObjectDoesNotExist:
+                error = None
+
+            if user is not None:
                 error = '이미 가입된 회원입니다.'
 
             if error is None:
@@ -279,7 +282,7 @@ class AddMemberView(RegistrationView, View):
                 except ValidationError as e:
                     error = '등록 값의 형태가 문제 있습니다.2'
                 except InternalError:
-                    error = '이미 가입된 회원입니다.'
+                    error = '이미 가입된 회원입니다.2'
         else:
             for field in form:
                 if field.errors:
@@ -325,3 +328,4 @@ class RegisterErrorView(TemplateView):
         context = super(RegisterErrorView, self).get_context_data(**kwargs)
 
         return context
+
