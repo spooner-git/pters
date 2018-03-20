@@ -48,6 +48,7 @@ urlpatterns = [
 
     # log 관련
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
+    url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),
     url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),
 
     # 기타 setting 관련

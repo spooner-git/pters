@@ -86,4 +86,19 @@
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.alarm.js" %}></script>
+
+    <script>
+      var logIdArray = [{% for log_info in log_data %}"{{ log_data.log_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logTypeArray = [{% for log_info in log_data %}"{{ log_data.log_type }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logAuthMemberIdArray = [{% for log_info in log_data %}"{{ log_data.auth_member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logFromMemberNameArray = [{% for log_info in log_data %}"{{ log_data.from_member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logToMemberNameArray = [{% for log_info in log_data %}"{{ log_data.to_member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logClassTbIdArray = [{% for log_info in log_data %}"{{ log_data.class_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logLectureTbIdArray = [{% for log_info in log_data %}"{{ log_data.lecture_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logInfoArray = [{% for log_info in log_data %}"{{ log_data.log_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logHowArray = [{% for log_info in log_data %}"{{ log_data.log_how }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logDetailArray = [{% for log_info in log_data %}"{{ log_data.log_detail }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logRegDtArray = [{% for log_info in log_data %}"{{ log_data.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var logReadArray = [{% for log_info in log_data %}"{{ log_data.read }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    </script>
 {% endblock %}

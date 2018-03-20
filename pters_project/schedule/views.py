@@ -456,8 +456,6 @@ def add_schedule_logic(request):
         except InternalError as e:
             error = error
 
-    # print(error)
-
     if error is None:
 
         member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
@@ -1130,28 +1128,20 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
 def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_name, en_dis_type, log_type, request):
 
     # 일정 등록
-    week_info = ['일', '월', '화', '수', '목', '금', '토']
     log_type_name = ''
     log_type_detail = ''
 
-    log_start_date = start_date.strftime('%Y') + '년 '\
-                     + start_date.strftime('%m') + '월 ' \
-                     + start_date.strftime('%d') + '일 '
-
     if log_type == 'LS01':
-        log_type_name = 'PT 일정'
+        log_type_name = '일정'
         log_type_detail = '등록'
-        log_start_date += week_info[int(start_date.strftime('%w'))] + '요일 '
 
     if log_type == 'LS02':
-        log_type_name = 'PT 일정'
+        log_type_name = '일정'
         log_type_detail = '삭제'
-        log_start_date += week_info[int(start_date.strftime('%w'))] + '요일 '
 
     if log_type == 'LS03':
-        log_type_name = 'PT 일정'
+        log_type_name = '일정'
         log_type_detail = '완료'
-        log_start_date += week_info[int(start_date.strftime('%w'))] + '요일 '
     if log_type == 'LR01':
         log_type_name = '반복 일정'
         log_type_detail = '등록'
@@ -1160,40 +1150,36 @@ def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_
         log_type_name = '반복 일정'
         log_type_detail = '삭제'
 
-    if start_date.strftime('%p') == 'AM':
-        log_start_date = str(log_start_date) + '오전'
-    elif start_date.strftime('%p') == 'PM':
-        log_start_date = str(log_start_date) + '오후'
-    log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
-
-    if end_date.strftime('%p') == 'AM':
-        log_end_date = '오전'
-    elif end_date.strftime('%p') == 'PM':
-        log_end_date = '오후'
-
-    log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
     if en_dis_type == '1':
-        log_contents = '<span>' + user_name + ' 강사님께서 ' + member_name \
-                       + ' 회원님의</span> '+log_type_name \
-                       + ' 을 <span class="status">'+log_type_detail\
-                       + '</span>했습니다.@' \
-                       + log_start_date \
-                       + ' - ' + log_end_date
+        # log_contents = '<span>' + user_name + ' 강사님께서 ' + member_name \
+        #               + ' 회원님의</span> '+log_type_name \
+        #               + ' 을 <span class="status">'+log_type_detail\
+        #               + '</span>했습니다.@' \
+        #               + log_start_date \
+        #               + ' - ' + log_end_date
 
-        log_data_lecture = LogTb(external_id=lecture_id, log_type=log_type, contents=log_contents,
-                                 ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
-        log_data_lecture.save()
+        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                         from_member_name=user_name, to_member_name=member_name,
+                         class_tb_id=class_id, lecture_tb_id=lecture_id,
+                         log_info='PT '+log_type_name, log_how=log_type_detail,
+                         log_detail=str(start_date) + '/' + str(end_date),
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+        log_data.save()
     else:
-        log_contents = '<span>' + user_name + ' 강사님께서 ' \
-                       + ' OFF </span> '+log_type_name\
-                       + '을 <span class="status">'+log_type_detail\
-                       + '</span>했습니다.@' \
-                       + log_start_date \
-                       + ' - ' + log_end_date
+        # log_contents = '<span>' + user_name + ' 강사님께서 ' \
+        #               + ' OFF </span> '+log_type_name\
+        #               + '을 <span class="status">'+log_type_detail\
+        #               + '</span>했습니다.@' \
+        #               + log_start_date \
+        #               + ' - ' + log_end_date
 
-    log_data_class = LogTb(external_id=class_id, log_type=log_type, contents=log_contents,
-                           ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
-    log_data_class.save()
+        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                         from_member_name=user_name,
+                         class_tb_id=class_id,
+                         log_info='OFF '+log_type_name, log_how=log_type_detail,
+                         log_detail=str(start_date) + '/' + str(end_date),
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+        log_data.save()
 
 
 def get_member_schedule_input_lecture(class_id, member_id):

@@ -1209,6 +1209,7 @@ $(document).ready(function(){
         $('#id_search_confirm').val('1');
         $('#memberLastName_add').val(id_search_memberLastName);
         $('#memberFirstName_add').val(id_search_memberFirstName);
+        $('#form_name').val(id_search_memberLastName+id_search_memberFirstName);
         $('#memberPhone_add').val(id_search_memberPhone); 
         $('#memberEmail_add').val(id_search_memberEmail);
         $('#id_user_id').val(id_search_memberId);

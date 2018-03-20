@@ -52,16 +52,22 @@ class CommonCdTb(models.Model):
 
 class LogTb(models.Model):
     log_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    external_id = models.CharField(db_column='EXTERNAL_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    log_type = models.CharField(db_column='LOG_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    log_type = models.CharField(db_column='LOG_TYPE', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    auth_member_id = models.CharField(db_column='AUTH_MEMBER_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    from_member_name = models.CharField(db_column='FROM_MEMBER_NAME', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    to_member_name = models.CharField(db_column='TO_MEMBER_NAME', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    class_tb_id = models.CharField(db_column='CLASS_TB_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    lecture_tb_id = models.CharField(db_column='LECTURE_TB_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    log_info = models.CharField(db_column='LOG_INFO', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    log_how = models.CharField(db_column='LOG_HOW', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    log_detail = models.CharField(db_column='LOG_DETAIL', max_length=255, blank=True, null=True)  # Field name made lowercase.
     ip = models.CharField(db_column='IP', max_length=255, blank=True, null=True)
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     read = models.IntegerField(db_column='READ', blank=True, null=True, default='0')  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'LOG_TB'
 
 

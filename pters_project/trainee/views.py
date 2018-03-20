@@ -600,36 +600,16 @@ def pt_delete_logic(request):
         class_info.schedule_check = 1
         class_info.save()
 
-        week_info = ['일', '월', '화', '수', '목', '금', '토']
+        # log_contents = '<span>' + request.user.first_name \
+        #               + ' 회원님께서</span> 일정을 <span class="status">삭제</span>했습니다.@'\
+        #               + log_start_date\
+        #               + ' - '+log_end_date
+        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
+                         log_info='PT 일정', log_how='삭제', log_detail=str(start_date) + '/' + str(end_date),
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+        log_data.save()
 
-        log_start_date = start_date.strftime('%Y')+'년 ' \
-                         + start_date.strftime('%m')+'월 ' \
-                         + start_date.strftime('%d')+'일 ' \
-                         + week_info[int(start_date.strftime('%w'))] + '요일 '
-        if start_date.strftime('%p') == 'AM':
-            log_start_date = str(log_start_date) + '오전'
-        elif start_date.strftime('%p') == 'PM':
-            log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
-
-        if end_date.strftime('%p') == 'AM':
-            log_end_date = '오전'
-        elif end_date.strftime('%p') == 'PM':
-            log_end_date = '오후'
-
-        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        log_contents = '<span>' + request.user.first_name \
-                       + ' 회원님께서</span> 일정을 <span class="status">삭제</span>했습니다.@'\
-                       + log_start_date\
-                       + ' - '+log_end_date
-
-        log_data_lecture = LogTb(external_id=lecture_info.lecture_id, log_type='LS02', contents=log_contents,
-                                 ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
-        log_data_lecture.save()
-
-        log_data_class = LogTb(external_id=class_info.class_id, log_type='LS02', contents=log_contents,
-                               ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
-        log_data_class.save()
         return redirect(next_page)
     else:
         messages.error(request, error)
@@ -882,36 +862,17 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             else:
                 error = '예약 가능한 횟수를 확인해주세요.'
     if error is None:
-        week_info = ['일', '월', '화', '수', '목', '금', '토']
 
-        log_start_date = start_date.strftime('%Y')+'년 ' \
-                         + start_date.strftime('%m')+'월 ' \
-                         + start_date.strftime('%d')+'일 ' \
-                         + week_info[int(start_date.strftime('%w'))] + '요일 '
-        if start_date.strftime('%p') == 'AM':
-            log_start_date = str(log_start_date) + '오전'
-        elif start_date.strftime('%p') == 'PM':
-            log_start_date = str(log_start_date) + '오후'
-        log_start_date = str(log_start_date) + start_date.strftime(' %I:%M')
+        # log_contents = '<span>'+user_name + ' 회원님께서 ' \
+        #               + '</span> 일정을 <span class="status">등록</span>했습니다.@'\
+        #               + log_start_date\
+        #               + ' - '+log_end_date
 
-        if end_date.strftime('%p') == 'AM':
-            log_end_date = '오전'
-        elif end_date.strftime('%p') == 'PM':
-            log_end_date = '오후'
-
-        log_end_date = str(log_end_date) + end_date.strftime(' %I:%M')
-        log_contents = '<span>'+user_name + ' 회원님께서 ' \
-                       + '</span> 일정을 <span class="status">등록</span>했습니다.@'\
-                       + log_start_date\
-                       + ' - '+log_end_date
-
-        log_data_lecture = LogTb(external_id=lecture_info.lecture_id, log_type='LS01', contents=log_contents,
-                                 ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
-        log_data_lecture.save()
-
-        log_data_class = LogTb(external_id=class_info.class_id, log_type='LS01', contents=log_contents,
-                               ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
-        log_data_class.save()
+        log_data = LogTb(log_type='LS01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
+                         log_info='PT 일정', log_how='등록', log_detail=str(start_date) + '/' + str(end_date),
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+        log_data.save()
 
     else:
         return error
@@ -1382,4 +1343,31 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
 
     return context
 
+
+class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'alarm_data_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AlarmViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+
+        if error is None:
+            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
+            log_data.order_by('-reg_dt')
+
+        if error is None:
+            for log_info in log_data:
+                if log_info.read == 0:
+                    log_info.log_read = 0
+                    log_info.read = 1
+                    log_info.save()
+                elif log_info.read == 1:
+                    log_info.log_read = 1
+                else:
+                    log_info.log_read = 2
+
+            context['log_data'] = log_data
+
+        return context
 
