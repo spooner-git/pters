@@ -17,7 +17,7 @@
 	height: 100%;
 	background-color: #f4f4f4;
 	display: none;
-	z-index: 117;
+	z-index: 115;
 }
 
 
@@ -69,6 +69,15 @@
 	padding-bottom: 22.5px;
 }
 
+#img_cal{
+	position: absolute;
+	top: 41%;
+	left:41.5%;
+	width: 25px;
+	margin-right: 14.845px;
+	margin-left: 14.845px;
+}
+
 #popup_sign_img{
 	display: none;
 	position: relative;
@@ -118,7 +127,6 @@
 
 
 /*월간달력 팝업*/
-
 #cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
 	display: none;
 	position: fixed;
@@ -191,25 +199,51 @@
 	top: 50%;
 	transform: translateY(-50%);
 }
-
-
 /*월간달력 팝업*/
 
+
+#canvasWrap{
+	position: relative;
+	width: 100%;
+	height: 0px;
+}
+#canvasWrap span{
+	position: absolute;
+	display: none;
+	width: 100%;
+	left:50%;
+	top:10px;
+	transform: translateX(-50%);
+	color: #e6e6e6;
+	z-index: 1500;
+}
+
+#canvas{
+	display: none;
+	position: relative;
+	background:#ffffff;
+	z-index: 1400;
+	border: 3px solid #282828;
+}
+
+#ng_popup{
+	display: none;
+	position: fixed;
+	background: #ffffff;
+	top: 35%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80%;
+	max-width: 330px;
+	border: 1px solid #a2a2a2;
+	z-index: 103;
+	text-align: center;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+
 @media(min-width:418px){
-
-
-	/*
-	#popup_info,#popup_info2,#popup_info3{
-		background: #ffffff;
-		position: relative;
-		margin : 0 auto;
-		width: 330px;
-		text-align: center;
-		color: #3b3d3d;
-		font-size: 14px;
-		font-weight: bold;
-	}
-	*/
 
 	#popup_img{
 		position: relative;
@@ -272,25 +306,12 @@
 		font-size: 15px;
 	}
 	/*팝업 css*/
-	#ng_popup{
-		display: none;
-		position: fixed;
-		background: #ffffff;
-		top: 35%;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 80%;
-		max-width: 330px;
-		border: 1px solid #a2a2a2;
-		z-index: 103;
-		text-align: center;
-		font-weight: 500;
-		font-size: 14px;
-	}
+	
 	/*월간 달력 팝업*/
 
 	#shade3{
 		background: black;
 		opacity: 0.8;
+		z-index: 117;
 	}
 }

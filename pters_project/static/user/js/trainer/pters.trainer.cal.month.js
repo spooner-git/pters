@@ -248,7 +248,9 @@ $(document).ready(function(){
 		var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
 		var selectedPerson = $(this).find('.plancheckname').text()
 		$("#cal_popup_planinfo").fadeIn('fast')
-		$('#shade3').show()
+		if($('body').width()>600){
+			$('#shade3').show()
+		}
 		$('#popup_info').text(selectedDate);
 		$('#popup_info2').text(selectedPerson+'의 '+ selectedTime + '시 일정');
 
