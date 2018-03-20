@@ -10,27 +10,14 @@ button:focus{
 	outline: 0;
 }
 
-#shade{
-	z-index: 106;
-}
-
-#shade3{
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	background-color: #f4f4f4;
-	display: none;
-	z-index: 100;
-}
-
-.confirmPopup,.resendPopup{
+.resendPopup{
 	display: none;
 	position: fixed;
 	background: #ffffff;
 	border-color: transparent;
 	width: 80%;
-	max-width: 300px;
-	z-index: 110;
+	max-width: 330px;
+	z-index: 120;
 	text-align: center;
 	top: 50%;
 	left: 50%;
@@ -49,37 +36,6 @@ button:focus{
 	padding-top: 5px;
 }
 
-.popup_inner{
-	background: #ffffff;
-	position: relative;
-	height: 50px;
-	border-top: 1px solid #a2a2a2;
-}
-
-.popup_inner:hover{
-	background: #a2a2a2;
-	-webkit-background:#a2a2a2;
-}
-
-.popup_inner span{
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 100%;
-	line-height: 50px;
-	font-size: 14px;
-	font-weight: bold;
-	cursor: pointer;
-}
-
-.popup_inner_change{
-	text-align: center;
-}
-
-.popup_inner_delete, .popup_inner_resend{
-	text-align: center;
-	color: #fe4e65;
-}
 
 #page_addmember{
 	display: none;
@@ -88,7 +44,7 @@ button:focus{
 	width:100%;
 	max-width: 450px !important;
 	background: #f4f4f4;
-	z-index: 105;
+	z-index: 115;
 }
 
 #selectBox{
@@ -366,7 +322,7 @@ th{
 	position: absolute;
 	background: #f4f4f4;
 	width: 100%;
-	z-index: 105;
+	z-index: 115;
 	max-width: 700px !important;
 	top: 50px;
 	left: 5%;
@@ -381,7 +337,7 @@ th{
 	background: #ffffff;
 	padding: 20px;
 	width: 400px;
-	z-index:105;
+	z-index:115;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%,-50%);
@@ -423,7 +379,7 @@ th{
 				width: 20%;
 				margin-left: 1px;
 			}
-			.member_info_PC_wrap input, .member_info_PC_wrap div{
+			.member_info_PC_wrap input, .member_info_PC_wrap > div{
 				display: table-cell;
 				width: 98%;
 				border:1px solid #ffffff;
@@ -436,7 +392,7 @@ th{
 				cursor: initial;
 				padding-left: 10px;
 			}
-			.member_info_PC_wrap img{
+			.member_info_PC_wrap >label img{
 				width: 15px;
 				margin:0 5px 4px 0;
 			}
@@ -454,6 +410,7 @@ th{
 				border: 0;
 			}
 			#memberRepeat_info_PC > div{
+				position: relative;
 				display: block;
 				color: #282828;
 				border-bottom:1px solid #cccccc;
@@ -465,6 +422,32 @@ th{
 			#memberRepeat_info_PC p:nth-child(2){
 				color: #444444;
 				margin: 0;
+			}
+			.deleteBtn{
+				position: absolute;
+				line-height: 35px;
+				width: 15px;
+				margin-left: 15px;
+				top: 0;
+				right: 0;
+				text-align: center;
+				background: #cccccc;
+				cursor: pointer;
+			}
+
+			.deleteBtnBin img{
+				display: none;
+				margin: 9px 10px 10px 13px;
+			}
+
+			.deleteBtnBin{
+				position: absolute;
+				top: 0;
+				right: 0px;
+				width: 0px;
+				height: 35px;
+				background:#fe4e65;
+				z-index: 100;
 			}
 
 
@@ -681,10 +664,6 @@ th{
 		display:none;
 	}
 	
-	#shade3{
-		background-color: #282828;
-		opacity: 0.8;
-	}
 
 	#pcBtn{
 		display:block;
