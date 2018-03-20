@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from configs import settings
-from configs.views import date_check_func
+from configs.views import date_check_func, get_client_ip
 from login.models import LogTb, MemberTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
 from trainee.models import LectureTb
@@ -460,7 +460,7 @@ def add_schedule_logic(request):
             member_lecture_info.save()
         save_log_data(schedule_start_datetime, schedule_end_datetime,
                       request.user.id, request.user.first_name,
-                      member_name, en_dis_type, 'LS01')
+                      member_name, en_dis_type, 'LS01', request)
 
         return redirect(next_page)
     else:
@@ -521,7 +521,7 @@ def delete_schedule_logic(request):
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
         save_log_data(start_date, end_date, request.user.id, request.user.first_name,
-                      member_name, en_dis_type, 'LS02')
+                      member_name, en_dis_type, 'LS02', request)
 
         return redirect(next_page)
     else:
@@ -622,7 +622,7 @@ def finish_schedule_logic(request):
 
     if error is None:
         save_log_data(start_date, end_date, request.user.id, request.user.first_name,
-                      member_name, '1', 'LS03')
+                      member_name, '1', 'LS03', request)
 
         return redirect(next_page)
     else:
@@ -954,7 +954,7 @@ def add_repeat_schedule_confirm(request):
                 member_lecture_info.schedule_check = 1
                 member_lecture_info.save()
             save_log_data(start_date, end_date, request.user.id, request.user.first_name,
-                          member_name, en_dis_type, 'LR01')
+                          member_name, en_dis_type, 'LR01', request)
 
             information = '반복일정 등록이 완료됐습니다.'
 
@@ -1072,7 +1072,7 @@ def delete_repeat_schedule_logic(request):
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
         save_log_data(start_date, end_date, request.user.id, request.user.first_name,
-                      member_name, en_dis_type, 'LR02')
+                      member_name, en_dis_type, 'LR02', request)
 
         return redirect(next_page)
     else:
@@ -1119,7 +1119,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
         return context
 
 
-def save_log_data(start_date, end_date, user_id, user_name, member_name, en_dis_type, log_type):
+def save_log_data(start_date, end_date, user_id, user_name, member_name, en_dis_type, log_type, request):
 
     # 일정 등록
     week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -1179,8 +1179,8 @@ def save_log_data(start_date, end_date, user_id, user_name, member_name, en_dis_
                        + log_start_date \
                        + ' - ' + log_end_date
 
-    log_data = LogTb(external_id=user_id, log_type=log_type, contents=log_contents, reg_dt=timezone.now(),
-                     use=1)
+    log_data = LogTb(external_id=user_id, log_type=log_type, contents=log_contents,
+                     ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
     log_data.save()
 
 

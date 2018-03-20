@@ -15,7 +15,7 @@ class CommonCdTbAdmin(admin.ModelAdmin):
 
 @admin.register(LogTb)
 class LogTbAdmin(admin.ModelAdmin):
-    list_display = ('log_id', 'external_id', 'log_type', 'contents',
+    list_display = ('log_id', 'external_id', 'log_type', 'contents', 'ip',
                     'reg_dt', 'use')
 
 

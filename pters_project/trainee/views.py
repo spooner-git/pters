@@ -16,7 +16,7 @@ from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
-from configs.views import date_check_func, AccessTestMixin
+from configs.views import date_check_func, AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_member_schedule_input_lecture
 from trainee.models import LectureTb
@@ -619,8 +619,8 @@ def pt_delete_logic(request):
                        + ' 회원님께서</span> 일정을 <span class="status">삭제</span>했습니다.@'\
                        + log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
         return redirect(next_page)
     else:
@@ -717,7 +717,7 @@ def pt_add_logic(request):
 
     if error is None:
         lecture_id = get_member_schedule_input_lecture(class_id, request.user.id)
-        error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name, lecture_id)
+        error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.first_name, lecture_id, request)
 
     if error is None:
         member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
@@ -755,7 +755,7 @@ def pt_add_array_logic(request):
 
         lecture_id = get_member_schedule_input_lecture(class_id, request.user.id)
         error = pt_add_logic_func(training_date[i], time_duration[i], training_time[i],
-                                  request.user.id, request.user.first_name, lecture_id)
+                                  request.user.id, request.user.first_name, lecture_id, request)
 
     if error is None:
 
@@ -765,7 +765,7 @@ def pt_add_array_logic(request):
         return redirect(next_page)
 
 
-def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_time, user_id, user_name, lecture_id):
+def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_time, user_id, user_name, lecture_id, request):
 
     error = None
     lecture_info = None
@@ -896,8 +896,8 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
                        + '</span> 일정을 <span class="status">등록</span>했습니다.@'\
                        + log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=user_id, log_type='LS01', contents=log_contents, reg_dt=timezone.now(),
-                         use=1)
+        log_data = LogTb(external_id=user_id, log_type='LS01', contents=log_contents,
+                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
         log_data.save()
 
     else:
