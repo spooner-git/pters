@@ -454,19 +454,7 @@ img,a,div,span,p{
 	margin-left: auto;
 }
 
-#countNum{
-	position: absolute;
-	font-size: 9px;
-	background:#fe4e65;
-	color: #ffffff;
-	width: 13px;
-	line-height: 13px;
-	border-radius: 50%;
-	text-align: center;
-	font-weight: 500;
-	top: 6px;
-	left: 155px;
-}
+
 
 .popup_ymdText{
 	margin-top:9px;
@@ -895,10 +883,6 @@ img,a,div,span,p{
 	.today{
 		color: transparent;
 		border-width: 5px;
-	}
-
-	#countNum{
-		left: 205px;
 	}
 
 

@@ -98,7 +98,7 @@ $(document).ready(function(){
 
     $('.ymdText-pc-add').click(function(){
         $('#page_addmember').fadeIn('fast')
-        $('#shade3').fadeIn('fast');
+        $('#shade').fadeIn('fast');
         $('#uptext2').text('신규 회원 등록')
         $('#page-base').fadeOut();
         $('#page-base-addstyle').fadeIn();
@@ -205,18 +205,21 @@ $(document).ready(function(){
     $(document).on('click','img._info_delete',function(){
       var selectedUserId = $(this).parent('td').siblings('._id').text()
       $('#deleteMemberId').val(selectedUserId)
-      $('.confirmPopup').fadeIn('fast');
-      $('#shade').fadeIn('fast');
+      //$('.confirmPopup').fadeIn('fast');
+      $('#cal_popup_plandelete').fadeIn('fast');
+      $('#shade3').fadeIn('fast');
     })
 
     $('#infoMemberDelete').click(function(){
-      $('.confirmPopup').fadeIn('fast');
-      $('#shade').fadeIn('fast');
+      //$('.confirmPopup').fadeIn('fast');
+      $('#cal_popup_plandelete').fadeIn('fast');
+      $('#shade3').fadeIn('fast');
     });
 
     $(document).on('click','button._info_delete',function(){
-      $('.confirmPopup').fadeIn('fast');
-      $('#shade').fadeIn('fast');
+      //$('.confirmPopup').fadeIn('fast');
+      $('#cal_popup_plandelete').fadeIn('fast');
+      $('#shade3').fadeIn('fast');
     })
 
     $(document).on('click','img._info_modify',function(){
@@ -251,15 +254,17 @@ $(document).ready(function(){
       }
     })
 
-    $('.confirmYes').click(function(){
-      $('.confirmPopup').fadeOut('fast');
-      $('#shade').fadeOut('fast');
+    $('#popup_btn_delete_yes').click(function(){
+      //$('.confirmPopup').fadeOut('fast');
+      $('#cal_popup_plandelete').fadeOut('fast');
+      $('#shade3').fadeOut('fast');
       deleteMemberAjax();
     });
 
-    $('.confirmNo').click(function(){
-      $('.confirmPopup').fadeOut('fast');
-      $('#shade').fadeOut('fast');
+    $('#popup_btn_delete_no, #cal_popup_plandelete .popup_close_x_button').click(function(){
+      //$('.confirmPopup').fadeOut('fast');
+      $('#cal_popup_plandelete').fadeOut('fast');
+      $('#shade3').fadeOut('fast');
     });
 
     $('#select_info_shift_base').click(function(){
@@ -287,24 +292,33 @@ $(document).ready(function(){
 
     $(document).on('click','div.lectureType_RJ',function(){
         $('.resendPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        $('#shade').fadeIn('fast');
+        if($('body').width()>600){
+            $('#shade3').fadeIn('fast');
+        }else{
+            $('#shade').fadeIn('fast');
+        }
+        
     })
 
     $('._btn_close_resend_PC').click(function(){
        $(this).parents('.popups').fadeOut('fast')
-       $('#shade').hide()
+       if($('body').width()>600){
+            $('#shade3').css('display','none');
+        }else{
+            $('#shade').css('display','none');
+        }
     })
 
     $('span.resend').click(function(){
         resend_member_reg_data_pc()
-        $('.resendPopup').hide()
-        $('#shade').hide()
+        $('.resendPopup').css('display','none')
+        $('#shade').css('display','none')
     })
 
     $('span.delete_resend').click(function(){
         delete_member_reg_data_pc()
-        $('.resendPopup').hide()
-        $('#shade').hide()
+        $('.resendPopup').css('display','none')
+        $('#shade').css('display','none')
     })
 
     //회원 정보팝업의 일정정보내 반복일정 삭제버튼
@@ -341,7 +355,7 @@ $(document).ready(function(){
            var Data = DBe
         }
         $('#memberInfoPopup_PC').fadeIn('fast')
-        $('#shade3').fadeIn('fast');
+        $('#shade').fadeIn('fast');
 
         var npCountImg = ""
         if(Data[userID].npCount > 0){
@@ -1971,7 +1985,7 @@ $(document).ready(function(){
         $('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade').hide();
+        //$('#shade').hide();
         //$('#calendar').show();
         //alert('complete: 일정 정상 등록')
     }
@@ -2002,11 +2016,12 @@ $(document).ready(function(){
             //$('#memberCount_info').attr('readonly',true);
             //$('#datepicker_info').attr('disabled',true).addClass('input_disabled_color');
             //$('#datepicker2_info').attr('disabled',true).addClass('input_disabled_color');
-            $('.confirmPopup').fadeOut('fast');
+            //$('.confirmPopup').fadeOut('fast');
+            $('#cal_popup_plandelete').fadeOut('fast')
             $('#shade3').fadeOut('fast');
         }else if($('#memberInfoPopup_PC').css('display')=="block"){             //회원정보팝업 PC버전 띄웠을때 x눌렀을 경우
             $('#memberInfoPopup_PC').fadeOut('fast')
-             $('#shade3').fadeOut('fast');
+             $('#shade').fadeOut('fast');
         }else{                                          //회원등록팝업 띄웠을때 x눌렀을 경우
             if($('body').width()<600){
                 $('#page_managemember').show();
@@ -2015,6 +2030,7 @@ $(document).ready(function(){
             }
             $('#page_addmember').fadeOut('fast');
             $('#shade3').fadeOut('fast');
+            $('#shade').fadeOut('fast');
             $('#float_btn').fadeIn('fast');
             $('#page-base').fadeIn();
             $('#page-base-addstyle').fadeOut();
