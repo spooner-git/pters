@@ -619,9 +619,14 @@ def pt_delete_logic(request):
                        + ' 회원님께서</span> 일정을 <span class="status">삭제</span>했습니다.@'\
                        + log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=request.user.id, log_type='LS02', contents=log_contents,
-                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
-        log_data.save()
+
+        log_data_lecture = LogTb(external_id=lecture_info.lecture_id, log_type='LS02', contents=log_contents,
+                                 ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
+        log_data_lecture.save()
+
+        log_data_class = LogTb(external_id=class_info.class_id, log_type='LS02', contents=log_contents,
+                               ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
+        log_data_class.save()
         return redirect(next_page)
     else:
         messages.error(request, error)
@@ -896,15 +901,20 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
                        + '</span> 일정을 <span class="status">등록</span>했습니다.@'\
                        + log_start_date\
                        + ' - '+log_end_date
-        log_data = LogTb(external_id=user_id, log_type='LS01', contents=log_contents,
-                         ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
-        log_data.save()
+
+        log_data_lecture = LogTb(external_id=lecture_info.lecture_id, log_type='LS01', contents=log_contents,
+                                 ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
+        log_data_lecture.save()
+
+        log_data_class = LogTb(external_id=class_info.class_id, log_type='LS01', contents=log_contents,
+                               ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
+        log_data_class.save()
 
     else:
         return error
 
 
-def get_trainee_repeat_schedule_data_func(context, trainer_id, member_id):
+def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
 
     error = None
     class_info = None
@@ -920,7 +930,7 @@ def get_trainee_repeat_schedule_data_func(context, trainer_id, member_id):
 
     # 강좌 정보 가져오기
     try:
-        class_info = ClassTb.objects.get(member_id=trainer_id)
+        class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
         error = '강사 정보가 존재하지 않습니다'
 
@@ -1241,7 +1251,6 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
             class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
         except ObjectDoesNotExist:
             error = '강사 정보가 불러오지 못했습니다.'
-
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기

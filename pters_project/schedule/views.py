@@ -203,7 +203,7 @@ def delete_schedule_logic_func(schedule_info):
     return error
 
 
-def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
+def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
 
     error = None
     class_info = None
@@ -240,7 +240,7 @@ def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
 
     # 강사 정보 가져오기
     try:
-        class_info = ClassTb.objects.get(member_id=trainer_id)
+        class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
         error = '강사 정보가 존재하지 않습니다'
 
@@ -281,7 +281,7 @@ def get_trainer_schedule_data_func(context, trainer_id, start_date, end_date):
     # PT 일정 조회
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
         for lecture_datum in lecture_data:
             # 강좌별로 연결되어있는 회원 리스트 불러오기
             member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
@@ -459,7 +459,7 @@ def add_schedule_logic(request):
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
         save_log_data(schedule_start_datetime, schedule_end_datetime,
-                      request.user.id, request.user.first_name,
+                      class_info.class_id, lecture_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LS01', request)
 
         return redirect(next_page)
@@ -482,6 +482,7 @@ def delete_schedule_logic(request):
     error = None
     request.session['date'] = date
     request.session['day'] = day
+    lecture_id = ''
 
     if en_dis_type == '1':
         schedule_id = pt_schedule_id
@@ -505,6 +506,7 @@ def delete_schedule_logic(request):
             error = '스케쥴 정보가 존재하지 않습니다'
 
     if error is None:
+        lecture_id = schedule_info.lecture_tb_id
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
         en_dis_type = schedule_info.en_dis_type
@@ -520,7 +522,7 @@ def delete_schedule_logic(request):
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
-        save_log_data(start_date, end_date, request.user.id, request.user.first_name,
+        save_log_data(start_date, end_date, class_info.class_id, lecture_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LS02', request)
 
         return redirect(next_page)
@@ -621,7 +623,7 @@ def finish_schedule_logic(request):
     # print(error)
 
     if error is None:
-        save_log_data(start_date, end_date, request.user.id, request.user.first_name,
+        save_log_data(start_date, end_date, class_info.class_id, lecture_info.lecture_id, request.user.last_name+request.user.first_name,
                       member_name, '1', 'LS03', request)
 
         return redirect(next_page)
@@ -953,7 +955,7 @@ def add_repeat_schedule_confirm(request):
             for member_lecture_info in member_lecture_data:
                 member_lecture_info.schedule_check = 1
                 member_lecture_info.save()
-            save_log_data(start_date, end_date, request.user.id, request.user.first_name,
+            save_log_data(start_date, end_date, class_info.class_id, lecture_info.lecture_id, request.user.last_name+request.user.first_name,
                           member_name, en_dis_type, 'LR01', request)
 
             information = '반복일정 등록이 완료됐습니다.'
@@ -1071,7 +1073,7 @@ def delete_repeat_schedule_logic(request):
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
-        save_log_data(start_date, end_date, request.user.id, request.user.first_name,
+        save_log_data(start_date, end_date, class_info.class_id, delete_repeat_schedule.lecture_tb_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LR02', request)
 
         return redirect(next_page)
@@ -1119,7 +1121,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
         return context
 
 
-def save_log_data(start_date, end_date, user_id, user_name, member_name, en_dis_type, log_type, request):
+def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_name, en_dis_type, log_type, request):
 
     # 일정 등록
     week_info = ['일', '월', '화', '수', '목', '금', '토']
@@ -1171,6 +1173,10 @@ def save_log_data(start_date, end_date, user_id, user_name, member_name, en_dis_
                        + '</span>했습니다.@' \
                        + log_start_date \
                        + ' - ' + log_end_date
+
+        log_data_lecture = LogTb(external_id=lecture_id, log_type=log_type, contents=log_contents,
+                                 ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
+        log_data_lecture.save()
     else:
         log_contents = '<span>' + user_name + ' 강사님께서 ' \
                        + ' OFF </span> '+log_type_name\
@@ -1179,9 +1185,9 @@ def save_log_data(start_date, end_date, user_id, user_name, member_name, en_dis_
                        + log_start_date \
                        + ' - ' + log_end_date
 
-    log_data = LogTb(external_id=user_id, log_type=log_type, contents=log_contents,
-                     ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
-    log_data.save()
+    log_data_class = LogTb(external_id=class_id, log_type=log_type, contents=log_contents,
+                           ip=get_client_ip(request), reg_dt=timezone.now(), use=1)
+    log_data_class.save()
 
 
 def get_member_schedule_input_lecture(class_id, member_id):
