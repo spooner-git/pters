@@ -37,13 +37,19 @@
         <!--일정 눌렀을때 팝업메뉴-->
         <div id="cal_popup_planinfo">
             <div id="popup_img">
+                <span id="popup_planinfo_title" class="popup_title"></span>
                 <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
                 <img src="/static/user/res/ptadd/btn-x.png" id="btn_close" class="popup_close_x_button">
             </div>
-            <div id="popup_info" class="popup_info_text"></div>
-            <div id="popup_info2" class="popup_info_text"></div>
+            <div class="popup_info_text">
+                <p id="popup_info"></p>
+                <p id="popup_info2"></p>
+            </div>
             <div id="popup_btn_complete" class="popup_inner popup_inner_finish">
                 <span class="KRtext">일정 완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
+            </div>
+            <div id="popup_btn_delete" class="popup_inner popup_inner_delete">
+                <span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
             </div>
             <div id="canvasWrap">
                 <span class="KRtext">회원님 완료 서명을 입력해주세요.</span>
@@ -54,27 +60,25 @@
             <div id="popup_sign_img">
                 <img src="" id="id_sign_img">
             </div>
-            <div id="popup_btn_delete" class="popup_inner popup_inner_delete">
-                <span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
-            </div>
         </div>
         <!--일정 눌렀을때 팝업메뉴-->
 
         <!--삭제 확인 팝업메뉴-->
         <div id="cal_popup_plandelete">
             <div id="popup_img">
+                <span id="popup_delete_title" class="popup_title"></span>
                 <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
                 <img src="/static/user/res/ptadd/btn-x.png" id="btn_close3" class="popup_close_x_button">
             </div>
-            <div id="popup_info3" class="KRtext popup_info_text">정말 일정을 삭제하시겠습니까?</div>
-            <div id="popup_info3" class="JPtext popup_info_text">日程を削除しますか</div>
-            <div id="popup_info3" class="ENtext popup_info_text">Are you sure to delete the schedule?</div>
-            <div id="popup_btn_delete_yes" class="popup_inner popup_inner_delete">
-                <span style="color:#282828;" class="KRtext">예</span>
-                <span style="color:#282828;" class="JPtext">はい</span>
-                <span style="color:#282828;" class="ENtext">Yes</span>
+            <div id="popup_delete_question" class="KRtext popup_info_text">정말 일정을 삭제하시겠습니까?</div>
+            <div id="popup_delete_question" class="JPtext popup_info_text">日程を削除しますか</div>
+            <div id="popup_delete_question" class="ENtext popup_info_text">Are you sure to delete the schedule?</div>
+            <div id="popup_delete_btn_yes" class="popup_inner popup_inner_delete">
+                <span class="KRtext">예</span>
+                <span class="JPtext">はい</span>
+                <span class="ENtext">Yes</span>
             </div>
-            <div id="popup_btn_delete_no" class="popup_inner popup_inner_delete">
+            <div id="popup_delete_btn_no" class="popup_inner popup_inner_delete">
                 <span class="KRtext">아니오</span>
                 <span class="JPtext">いいえ</span>
                 <span class="ENtext">No</span>
@@ -88,11 +92,11 @@
                 <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
                 <img src="/static/user/res/ptadd/btn-x.png" id="btn_close_repeatconfirm" class="popup_close_x_button">
             </div>
-            <div class="KRtext popup_info_text _repeatconfirmQuestion">이 일정으로 반복 등록하시겠습니까?</div>
-            <div class="JPtext popup_info_text _repeatconfirmQuestion">下記の通り繰り返し登録しますか。</div>
-            <div class="ENtext popup_info_text _repeatconfirmQuestion">Adding repeat schedule as below.</div>
-            <div id="repeat_confirm_day" class="popup_info_text"></div>
-            <div id="repeat_confirm_dur" class="popup_info_text"></div>
+            <div class="popup_info_text">
+                <p class="_repeatconfirmQuestion"></p>
+                <p id="repeat_confirm_day"></p>
+                <p id="repeat_confirm_dur"></p>
+            </div>
             <div id="popup_btn_repeatconfirm_yes" class="popup_inner popup_inner_delete">
                 <span style="color:#282828;" class="KRtext">예</span>
                 <span style="color:#282828;" class="JPtext">はい</span>

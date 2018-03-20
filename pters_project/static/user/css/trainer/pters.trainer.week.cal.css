@@ -155,14 +155,6 @@ img,a,div,span,p{
 	z-index: 101;
 }
 
-#shade3{
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	background-color: #f4f4f4;
-	display: none;
-	z-index: 100;
-}
 
 #filterPopup_mini{
 	position:fixed;
@@ -712,12 +704,6 @@ img,a,div,span,p{
 		height: 46px;
 	}
 
-
-
-	#shade3{
-		background: black;
-		opacity: 0.8;
-	}
 
 	.arrowButton{
 		display:none;

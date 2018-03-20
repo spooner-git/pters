@@ -517,7 +517,6 @@ $(document).ready(function(){
       $('#btn_close_repeatconfirm, #popup_btn_repeatconfim_no').click(function(){
         $('#id_repeat_confirm').val(0);
         $('#cal_popup_repeatconfirm').fadeOut('fast');
-        $('shade').hide();
         ajaxRepeatConfirmSend();
       })
       
@@ -555,6 +554,7 @@ $(document).ready(function(){
 
               complete:function(){
                 completeSend(); //ajax 로딩이미지 숨기기
+                $('shade3').hide();
               },
 
               error:function(){
@@ -1038,7 +1038,7 @@ $(document).ready(function(){
       }
 
       function beforeSend(){
-        $('#shade').show();
+        $('#shade3').show();
         $('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
@@ -1048,7 +1048,7 @@ $(document).ready(function(){
         $('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        $('#shade').hide();
+        $('#shade3').hide();
       }
 
 
