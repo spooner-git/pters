@@ -68,7 +68,7 @@ $(document).ready(function(){
         var id_info = $(this).parents('div.summaryInnerBox').attr('data-id')
         $('#id_repeat_schedule_id_confirm').val(id_info)
         $('#cal_popup_plandelete').fadeIn()
-        $('#shade').show()
+        $('#shade3').show()
       })
       
 

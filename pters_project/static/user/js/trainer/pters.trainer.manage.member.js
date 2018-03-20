@@ -201,11 +201,16 @@ $(document).ready(function(){
     })
 
     $(document).on('click','img._info_delete',function(){
-      var selectedUserId = $(this).parent('td').siblings('._id').text()
-      $('#deleteMemberId').val(selectedUserId)
-      //$('.confirmPopup').fadeIn('fast');
-      $('#cal_popup_plandelete').fadeIn('fast');
-      $('#shade3').fadeIn('fast');
+        var selectedUserId = $(this).parent('td').siblings('._id').text()
+        var selectedUserName = $(this).parent('td').siblings('._tdname').text()
+        $('#popup_delete_title').text('회원 삭제')
+        $('#popup_delete_question').html('<p>정말 '+selectedUserName+' 회원님을 삭제하시겠습니까?<br>삭제하면 복구할 수 없습니다.</p>')
+
+        
+        $('#deleteMemberId').val(selectedUserId)
+        //$('.confirmPopup').fadeIn('fast');
+        $('#cal_popup_plandelete').fadeIn('fast');
+        $('#shade3').fadeIn('fast');
     })
 
     $('#infoMemberDelete').click(function(){
@@ -253,7 +258,7 @@ $(document).ready(function(){
     })
 
 
-    $('#popup_btn_delete_no, #cal_popup_plandelete .popup_close_x_button').click(function(){
+    $('#popup_delete_btn_no, #cal_popup_plandelete .popup_close_x_button').click(function(){
       //$('.confirmPopup').fadeOut('fast');
       $('#cal_popup_plandelete').fadeOut('fast');
       $('#shade3').fadeOut('fast');
@@ -330,7 +335,7 @@ $(document).ready(function(){
         $('#id_repeat_schedule_id_confirm').val(id_info)
         var repeat_schedule_id = $(this).parents('.summaryInnerBox').attr('data-id')
         $('#cal_popup_plandelete').fadeIn().attr('data-id',repeat_schedule_id)
-        $('#shade').show()
+        $('#shade3').show()
         deleteTypeSelect = 'repeatinfodelete'
     })
 
@@ -340,7 +345,7 @@ $(document).ready(function(){
           $btn.find('img').css({'display':'none'})
     })
 
-    $('#popup_btn_delete_yes').click(function(){
+    $('#popup_delete_btn_yes').click(function(){
         if(deleteTypeSelect == "repeatinfodelete"){
             var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
             $.ajax({
@@ -363,6 +368,7 @@ $(document).ready(function(){
                   get_indiv_repeat_info(userID)
                   $('#cal_popup_plandelete').css('display','none')
                   deleteTypeSelect = "memberinfodelete"
+                  $('#shade3').hide()
                   },
 
                 //보내기후 팝업창 닫기

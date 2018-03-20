@@ -58,7 +58,7 @@
 	color: #3b3d3d;
 	font-size: 14px;
 	font-weight: bold;
-	height: 32px;
+	height: 62px;
 }
 
 #popup_img{
@@ -256,6 +256,12 @@
 	font-size: 14px;
 }
 
+/*plandelete 팝업 PC버전*/
+.popup_title{
+	display: none;
+}
+/**/
+
 
 @media(min-width:600px){
 
@@ -263,25 +269,35 @@
 		position: relative;
 		margin :0 auto;
 		background: #ffffff;
-		height: 70px;
-		padding-top: 22.5px;
-		padding-bottom: 22.5px;
+		height: 50px;
+		padding:13px 13px 13px 24px;
 		width: 330px;
+		text-align: left;
+	}
+
+	.popup_info_text{
+		height: auto;
+		min-height: 62px;
+		border-bottom: 1px solid #cccccc;
+		margin-bottom: 10px;
 	}
 
 
 	#img_cal{
+		display: none;
+		/*
 		position: absolute;
 		top: 30%;
 		left:41.5%;
 		width: 25px;
 		margin-right: 14.845px;
 		margin-left: 14.845px;
+		*/
 	}
 
 	.popup_close_x_button{
 		position: absolute;
-		top: 22%;
+		top: 13%;
 		left: 85%;
 		padding: 10px;
 		width: 35px;
@@ -289,13 +305,45 @@
 	}
 
 	.popup_inner{
+		display: inline-block;
 		background: #ffffff;
 		margin: 0 auto;
+		margin-bottom: 10px;
 		position: relative;
-		height: 50px;
-		border-top: 1px solid #a2a2a2;
-		width: 330px;
+		height: 30px;
+		border: 1px solid #a2a2a2;
+		width: 100px;
+		cursor: pointer;
 	}
+		.popup_inner span{
+			position: relative;
+			left: unset;
+			transform: unset;
+			top: unset;
+			font-size: 13px;
+			font-weight: 400;
+			line-height: 30px;
+		}
+		#popup_delete_btn_yes{
+			background: #fe4e65;
+			border-color: #fe4e65;
+			color: #ffffff;
+			margin-right: 10px;
+		}
+		#popup_delete_btn_no{
+			background: #282828;
+			border-color: #282828;
+			color: #ffffff;
+			margin-left: 10px;
+		}
+		#popup_btn_complete{
+			margin-right: 10px;
+		}
+		#popup_btn_delete{
+			margin-left: 10px;
+		}
+
+
 
 	.popup_inner_month{
 		background: #ffffff;
@@ -336,4 +384,16 @@
 		opacity: 0.8;
 		z-index: 117;
 	}
+
+
+
+	/*plandelete 팝업 PC버전*/
+	.popup_title{
+		display: inline;
+		font-size: 19px;
+		font-weight: 500;
+		color: #282828;
+	}
+	/**/
+
 }

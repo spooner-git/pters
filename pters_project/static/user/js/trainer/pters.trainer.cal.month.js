@@ -243,7 +243,8 @@ $(document).ready(function(){
 	})
 
 	$(document).on('click','.plan_raw',function(){
-		$('#popup_btn_complete').css({'color':'#333','background':'#ffffff'}).val('')
+		$('#popup_planinfo_title').text('PT 일정')
+		$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
 		var selectedDate = $('.popup_ymdText').text()
 		var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
 		var selectedPerson = $(this).find('.plancheckname').text()
@@ -267,10 +268,10 @@ $(document).ready(function(){
 
 		var schedule_finish_check = $(this).attr('data-schedule-check')
 		if(schedule_finish_check=="0"){
-			$("#popup_btn_complete").css("display","block")
+			$("#popup_btn_complete").show()
         }
         else{
-			$("#popup_btn_complete").css("display","none")
+			$("#popup_btn_complete").hide()
 		}
 		schedule_on_off = 1;
 	})
@@ -314,7 +315,7 @@ $(document).ready(function(){
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-             			$('#popup_btn_complete').css({'color':'#333','background':'#ffffff'}).val('')
+             			$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
                     	$('#canvas').hide().css({'border-color':'#282828'})
                     	$('#canvasWrap span').hide();
 						$('#canvasWrap').css({'height':'0px'})
