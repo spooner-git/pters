@@ -24,7 +24,7 @@
 #cal_popup_planinfo{
 	display: none;
 	position: fixed;
-	background: transparent;
+	background: #ffffff;
 	border-color: transparent;
 	top: 50%;
 	width: 	100%;
@@ -38,7 +38,7 @@
 #cal_popup_plandelete, #cal_popup_repeatconfirm{
 	display: none;
 	position: fixed;
-	background: transparent;
+	background: #ffffff;
 	border-color: transparent;
 	top: 50%;
 	width: 	100%;
