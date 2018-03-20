@@ -17,118 +17,21 @@
         <!-- Bootstrap core CSS -->
         <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
         <link rel="stylesheet" href={% static "user/css/pters.base.set.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.base.popup.css" %}>
         <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
         
         
         {% block local_css %}
         {% endblock %}
+    
     </head>
     <body>
     {% block navbar %}
         <div id="shade"></div>
-        <div id="shade3"></div>
 
         <div id="commonPopup" style="position:absolute;display:none;width: 110px;height: 50px;background: transparent;z-index: 200;">
             <div style="display:inline-block;width: 30px;height: 30px;border-radius: 50%;background: #fe4e65;color: #ffffff">추가</div>
             <div style="display:inline-block;width: 30px;height: 30px;border-radius: 50%;background: #282828;color: #ffffff">변경</div>
         </div>
-
-        <!--일정 눌렀을때 팝업메뉴-->
-        <div id="cal_popup_planinfo">
-            <div id="popup_img">
-                <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
-                <img src="/static/user/res/ptadd/btn-x.png" id="btn_close" class="popup_close_x_button">
-            </div>
-            <div id="popup_info" class="popup_info_text"></div>
-            <div id="popup_info2" class="popup_info_text"></div>
-            <div id="popup_btn_complete" class="popup_inner popup_inner_finish">
-                <span class="KRtext">일정 완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
-            </div>
-            <div id="canvasWrap">
-                <span class="KRtext">회원님 완료 서명을 입력해주세요.</span>
-                <span class="JPtext">完了署名を入力して下さい</span>
-                <span class="ENtext">Enter Completion Signature</span>
-                <canvas id="canvas"></canvas>
-            </div>
-            <div id="popup_sign_img">
-                <img src="" id="id_sign_img">
-            </div>
-            <div id="popup_btn_delete" class="popup_inner popup_inner_delete">
-                <span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
-            </div>
-        </div>
-        <!--일정 눌렀을때 팝업메뉴-->
-
-        <!--삭제 확인 팝업메뉴-->
-        <div id="cal_popup_plandelete">
-            <div id="popup_img">
-                <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
-                <img src="/static/user/res/ptadd/btn-x.png" id="btn_close3" class="popup_close_x_button">
-            </div>
-            <div id="popup_info3" class="KRtext popup_info_text">정말 일정을 삭제하시겠습니까?</div>
-            <div id="popup_info3" class="JPtext popup_info_text">日程を削除しますか</div>
-            <div id="popup_info3" class="ENtext popup_info_text">Are you sure to delete the schedule?</div>
-            <div id="popup_btn_delete_yes" class="popup_inner popup_inner_delete">
-                <span style="color:#282828;" class="KRtext">예</span>
-                <span style="color:#282828;" class="JPtext">はい</span>
-                <span style="color:#282828;" class="ENtext">Yes</span>
-            </div>
-            <div id="popup_btn_delete_no" class="popup_inner popup_inner_delete">
-                <span class="KRtext">아니오</span>
-                <span class="JPtext">いいえ</span>
-                <span class="ENtext">No</span>
-            </div>
-        </div>
-        <!--삭제 확인 팝업메뉴-->
-
-        <!--반복일정 등록 확인 팝업메뉴-->
-        <div id="cal_popup_repeatconfirm">
-            <div id="popup_img">
-                <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
-                <img src="/static/user/res/ptadd/btn-x.png" id="btn_close_repeatconfirm" class="popup_close_x_button">
-            </div>
-            <div class="KRtext popup_info_text _repeatconfirmQuestion">이 일정으로 반복 등록하시겠습니까?</div>
-            <div class="JPtext popup_info_text _repeatconfirmQuestion">下記の通り繰り返し登録しますか。</div>
-            <div class="ENtext popup_info_text _repeatconfirmQuestion">Adding repeat schedule as below.</div>
-            <div id="repeat_confirm_day" class="popup_info_text"></div>
-            <div id="repeat_confirm_dur" class="popup_info_text"></div>
-            <div id="popup_btn_repeatconfirm_yes" class="popup_inner popup_inner_delete">
-                <span style="color:#282828;" class="KRtext">예</span>
-                <span style="color:#282828;" class="JPtext">はい</span>
-                <span style="color:#282828;" class="ENtext">Yes</span>
-            </div>
-            <div id="popup_btn_repeatconfim_no" class="popup_inner popup_inner_delete">
-                <span class="KRtext">아니오</span>
-                <span class="JPtext">いいえ</span>
-                <span class="ENtext">No</span>
-            </div>
-        </div>
-        <!--반복일정 등록 확인 팝업메뉴-->
-
-        <!--[월간전용] 일정조회(강사)팝업 -->
-        <div id="cal_popup_plancheck">
-          <div style="position: relative;">
-            <div>
-              <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
-              <span id="countNum">0</span>
-            </div>
-            <img src="/static/user/res/ptadd/btn-x.png" alt="" id="btn_close5" class="btn_close_popup">
-            <p class="popup_ymdText">yy년,mm월,dd일,O요일</p></div>
-            <p style="font-size: 11px;color:#fe4e65;"></p>
-          <div class="popup_inner_month" style="height: auto;"></div>
-        </div>
-        <!--[월간전용] 일정조회(강사)팝업 -->
-
-        <!--[월간전용] 알림 팝업 -->
-        <div id="ng_popup">
-           <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
-            <div id="ng_popup_text" style="margin-bottom: 20px;">
-              <p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>
-            </div>
-        </div>
-        <!--[월간전용] 알림 팝업 -->
-
 
         <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
             <div id="navshade"></div>
@@ -372,6 +275,7 @@
                 $(".ENtext, .JPtext").remove();
                 $(".KRtext").show();
               }
+
     </script>
 
     {% block local_js_footer %}

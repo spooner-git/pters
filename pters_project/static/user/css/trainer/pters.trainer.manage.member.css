@@ -423,7 +423,7 @@ th{
 				width: 20%;
 				margin-left: 1px;
 			}
-			.member_info_PC_wrap input, .member_info_PC_wrap div{
+			.member_info_PC_wrap input, .member_info_PC_wrap > div{
 				display: table-cell;
 				width: 98%;
 				border:1px solid #ffffff;
@@ -436,7 +436,7 @@ th{
 				cursor: initial;
 				padding-left: 10px;
 			}
-			.member_info_PC_wrap img{
+			.member_info_PC_wrap >label img{
 				width: 15px;
 				margin:0 5px 4px 0;
 			}
@@ -454,6 +454,7 @@ th{
 				border: 0;
 			}
 			#memberRepeat_info_PC > div{
+				position: relative;
 				display: block;
 				color: #282828;
 				border-bottom:1px solid #cccccc;
@@ -465,6 +466,32 @@ th{
 			#memberRepeat_info_PC p:nth-child(2){
 				color: #444444;
 				margin: 0;
+			}
+			.deleteBtn{
+				position: absolute;
+				line-height: 35px;
+				width: 15px;
+				margin-left: 15px;
+				top: 0;
+				right: 0;
+				text-align: center;
+				background: #cccccc;
+				cursor: pointer;
+			}
+
+			.deleteBtnBin img{
+				display: none;
+				margin: 9px 10px 10px 13px;
+			}
+
+			.deleteBtnBin{
+				position: absolute;
+				top: 0;
+				right: 0px;
+				width: 0px;
+				height: 35px;
+				background:#fe4e65;
+				z-index: 100;
 			}
 
 

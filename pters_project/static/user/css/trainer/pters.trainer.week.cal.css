@@ -177,58 +177,7 @@ img,a,div,span,p{
 	text-align:  center;
 }
 
-#cal_popup_planinfo{
-	display: none;
-	position: fixed;
-	background: transparent;
-	border-color: transparent;
-	top: 50%;
-	width: 	100%;
-	max-width: 	330px;
-	left: 50%;
-	transform:translate(-50%,-50%);
-	z-index: 120;
-	text-align: center;
-}
 
-#cal_popup_plandelete, #cal_popup_repeatconfirm{
-	display: none;
-	position: fixed;
-	background: transparent;
-	border-color: transparent;
-	top: 50%;
-	width: 	100%;
-	max-width: 	330px;
-	left: 50%;
-	transform:translate(-50%,-50%);
-	z-index: 120;
-	text-align: center;
-}
-
-.popup_info_text{
-	background: #ffffff;
-	position: relative;
-	margin : 0 auto;
-	width: 330px;
-	text-align: center;
-	color: #3b3d3d;
-	font-size: 14px;
-	font-weight: bold;
-	height: 32px;
-}
-
-#popup_img{
-	position: relative;
-	background: #ffffff;
-	height: 56px;
-	padding-top: 22.5px;
-	padding-bottom: 22.5px;
-}
-
-#popup_sign_img{
-	position: relative;
-	background: #ffffff;
-}
 
 #id_sign_img{
 	width: 100px;
@@ -246,46 +195,6 @@ img,a,div,span,p{
 	margin-left: 14.845px;
 }
 
-.popup_close_x_button{
-	position: absolute;
-	top: 31%;
-	left: 85%;
-	padding: 10px;
-	width: 35px;
-	float: right;
-	cursor: pointer;
-}
-
-.popup_inner{
-	background: #ffffff;
-	position: relative;
-	height: 50px;
-	border-top: 1px solid #a2a2a2;
-}
-
-.popup_inner:hover{
-	background: #a2a2a2;
-	-webkit-background:#a2a2a2;
-}
-
-.popup_inner span{
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	top: 30%;
-	font-size: 14px;
-	font-weight: bold;
-	cursor: pointer;
-}
-
-.popup_inner_change{
-	text-align: center;
-}
-
-.popup_inner_delete{
-	text-align: center;
-	color: #fe4e65;
-}
 
 
 #float_btn{  /*2017.10.2*/
@@ -679,28 +588,6 @@ img,a,div,span,p{
 @media(min-width:418px){
 
 
-	/*
-	#popup_info,#popup_info2,#popup_info3{
-		background: #ffffff;
-		position: relative;
-		margin : 0 auto;
-		width: 330px;
-		text-align: center;
-		color: #3b3d3d;
-		font-size: 14px;
-		font-weight: bold;
-	}
-	*/
-
-	#popup_img{
-		position: relative;
-		margin :0 auto;
-		background: #ffffff;
-		height: 70px;
-		padding-top: 22.5px;
-		padding-bottom: 22.5px;
-		width: 330px;
-	}
 
 
 	#img_cal{
@@ -710,29 +597,6 @@ img,a,div,span,p{
 		width: 25px;
 		margin-right: 14.845px;
 		margin-left: 14.845px;
-	}
-
-	.popup_close_x_button{
-		position: absolute;
-		top: 22%;
-		left: 85%;
-		padding: 10px;
-		width: 35px;
-		float: right;
-	}
-
-	.popup_inner{
-		background: #ffffff;
-		margin: 0 auto;
-		position: relative;
-		height: 50px;
-		border-top: 1px solid #a2a2a2;
-		width: 330px;
-	}
-
-	.popup_inner:hover{
-		background: #a2a2a2;
-		-webkit-background:#a2a2a2;
 	}
 }
 

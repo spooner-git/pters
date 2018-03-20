@@ -436,19 +436,7 @@ img,a,div,span,p{
 }
 
 
-#cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
-	display: none;
-	position: fixed;
-	width: 300px;
-	background-color: #ffffff;
-	border: 1px solid #a2a2a2;
-	z-index: -2;
-	text-align: center;
-	top: 50%;
-	left:50%;
-	transform: translate(-50%,-50%);
-	z-index: 150;
-}
+
 
 #img_cal{
 	position: absolute;
@@ -533,19 +521,6 @@ img,a,div,span,p{
 }
 
 
-#cal_popup_planinfo{
-	display: none;
-	position: fixed;
-	background: transparent;
-	border-color: transparent;
-	top: 50%;
-	width: 	100%;
-	max-width: 	330px;
-	left: 50%;
-	transform:translate(-50%, -50%);
-	z-index: 160;
-	text-align: center;
-}
 
 #cal_popup_plandelete, #cal_popup_repeatconfirm{
 	display: none;
@@ -616,104 +591,6 @@ img,a,div,span,p{
 	cursor: pointer;
 }
 
-.popup_inner{
-	background: #ffffff;
-	position: relative;
-	height: 50px;
-	border-top: 1px solid #a2a2a2;
-
-	/*강사달력에서 일정 조회 팝업에서만 사용*/
-	max-height: 300px;
-	overflow-y: overlay;
-
-}
-
-.popup_inner:hover{
-	background: #a2a2a2;
-	-webkit-background:#a2a2a2;
-}
-
-.popup_inner div{
-	height: 45px;
-	vertical-align: middle;
-	border-bottom: 1px solid #a2a2a2;
-}
-
-.popup_inner span{
-	line-height: 45px;
-	font-size: 14px;
-	font-weight: bold;
-	cursor: pointer;
-}
-
-.popup_inner_change{
-	text-align: center;
-}
-
-.popup_inner_delete{
-	text-align: center;
-	color: #fe4e65;
-}
-
-.plan_raw_blank{
-	line-height: 45px;
-	font-size: 13px;
-	font-weight: bold;
-}
-
-.planchecktime,.plancheckname{
-	display: inline-grid;
-	width: 40%;
-	text-align: left;
-}
-
-.plancheckname{
-	position: relative;
-	font-weight: bold;
-}
-
-.plancheckmorningday{
-	display: inline-grid;
-	width: 20%;
-	font-weight: bold;
-}
-
-.plancheckname img{
-	width: 12px;
-	position: absolute;
-	right: 10px;
-	top: 50%;
-	transform: translateY(-50%);
-}
-
-
-.popup_inner_change{
-	text-align: center;
-}
-
-.popup_inner_delete{
-	text-align: center;
-	color: #fe4e65;
-}
-
-#shade2{
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	background-color: black;
-	opacity: 0.7;
-	display: none;
-	z-index: 101;
-}
-
-#shade3{
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	background-color: #f4f4f4;
-	display: none;
-	z-index: 100;
-}
 
 .available{
 	background:  #ffebee;
@@ -788,11 +665,6 @@ img,a,div,span,p{
 	#calendar td:hover{
 		background : #ffebee54;
 		opacity: 1;
-	}
-
-	#shade3{
-		background: black;
-		opacity: 0.8;
 	}
 
 	#hidetoggle{
@@ -1123,21 +995,10 @@ img,a,div,span,p{
 		border-width: 5px;
 	}
 
-	#cal_popup_plancheck{
-		width: 400px;
-	}
-
-	#cal_popup_plancheck div{
-		font-size: 15px;
-	}
-
 	#countNum{
 		left: 205px;
 	}
 
-	.popup_inner{
-		max-height: 500px;
-	}
 
 	.popup_close_x_button{
 		position: absolute;

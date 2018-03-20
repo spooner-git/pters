@@ -89,7 +89,7 @@ $(document).ready(function(){
 			$('#pcaddpopup_off').hide()
 	    }
 	    if($(this).hasClass('ymdText-pc-add-pt')){
-	    	$('#shade3').fadeIn('fast')
+	    	$('#shade').fadeIn('fast')
 	    }
 	})
 
@@ -120,7 +120,7 @@ $(document).ready(function(){
 	    }
 
 	    if($(this).hasClass('ymdText-pc-add-off')){
-	    	$('#shade3').fadeIn('fast')
+	    	$('#shade').fadeIn('fast')
 	    }
 	})
 
@@ -248,7 +248,7 @@ $(document).ready(function(){
 		var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
 		var selectedPerson = $(this).find('.plancheckname').text()
 		$("#cal_popup_planinfo").fadeIn('fast')
-		$('#shade').css('z-index','155') //원래는 z-index가 100
+		$('#shade3').show()
 		$('#popup_info').text(selectedDate);
 		$('#popup_info2').text(selectedPerson+'의 '+ selectedTime + '시 일정');
 
@@ -276,7 +276,8 @@ $(document).ready(function(){
 	$("#btn_close").click(function(){  //plan_raw 클릭해서 나오는 개별일정 [일정완료][일정삭제] 팝업의 X버튼
 			if($('#cal_popup_planinfo').css('display')=='block'){
 				$("#cal_popup_planinfo").css({'display':'none'})
-				$('#shade').css({'z-index':'100'});
+				//$('#shade').css({'z-index':'100'});
+				$('#shade3').hide()
 			}
 	})
 
@@ -445,7 +446,8 @@ $(document).ready(function(){
 	$('#btn_close3, #popup_btn_delete_no').click(function(){ //일정삭제 확인 팝업 아니오 버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup_plandelete').css('display')=='block'){
 				$("#cal_popup_plandelete").css({'display':'none'})
-				$('#shade').css({'z-index':'100'});
+				//$('#shade').css({'z-index':'100'});
+				$('#shade3').hide()
 			}
 	})
 
@@ -472,7 +474,8 @@ $(document).ready(function(){
 
 	function closeDeletePopup(){
 		$("#cal_popup_plandelete, #cal_popup_planinfo").css({'display':'none'})
-		$("#shade").css({'z-index':'100'})
+		//$("#shade").css({'z-index':'100'})
+		$('#shade3').hide()
 	}
 
 	function AjaxBeforeSend(){
@@ -1128,7 +1131,7 @@ $(document).ready(function(){
 
 		}
 		
-		$('#cal_popup_plancheck .popup_inner').html(htmltojoin.join(''))
+		$('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
 	}
 
     function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
