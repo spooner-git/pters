@@ -74,4 +74,3 @@ class HolidayTb(models.Model):
     class Meta:
         managed = True
         db_table = 'HOLIDAY_TB'
-

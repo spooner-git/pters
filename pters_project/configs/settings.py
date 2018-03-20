@@ -12,13 +12,13 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 import pymysql
+
 pymysql.install_as_MySQLdb()
 #except ImportError:
 #    pass
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -149,8 +149,8 @@ STATICFILES_DIRS = (
   'static/',
 )
 
-#LOGIN URL
-#AUTH_USER_MODEL = 'core.User'
+# LOGIN URL
+# AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/trainer/index/'
 
@@ -168,7 +168,7 @@ EMAIL_PORT = 587
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get("PTERS_EMAIL_HOST_USER", '')
 EMAIL_HOST_PASSWORD = os.environ.get("PTERS_EMAIL_HOST_PASSWORD", '')
-#DEFAULT_FROM_MAIL = 'Spooner_Developer'
+# DEFAULT_FROM_MAIL = 'Spooner_Developer'
 
 # 각 media 파일에 대한 URL Prefix
 MEDIA_URL = '/media/'
@@ -186,9 +186,9 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 AWS_LOCATION = 'static'
 
-## STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
+# DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
 '''
 LOGGING = {
     'version': 1,

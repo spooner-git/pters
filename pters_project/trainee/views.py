@@ -20,8 +20,8 @@ from configs.views import date_check_func, AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_member_schedule_input_lecture
 from trainee.models import LectureTb
-from trainer.models import ClassTb, SettingTb
-from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb
+from trainer.models import ClassTb
+from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
 
 from django.utils import timezone
 
@@ -497,17 +497,20 @@ def pt_delete_logic(request):
 
     if error is None:
         try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_01', use=1)
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
+                                                      setting_type_cd='LT_RES_01', use=1)
             lt_res_01 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_01 = '00:00-23:59'
         try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_02', use=1)
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
+                                                      setting_type_cd='LT_RES_02', use=1)
             lt_res_02 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_02 = '0'
         try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_03', use=1)
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
+                                                      setting_type_cd='LT_RES_03', use=1)
             lt_res_03 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_03 = '0'
@@ -680,7 +683,7 @@ def pt_add_logic(request):
 
     if error is None:
         try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_01', use=1)
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id, setting_type_cd='LT_RES_01', use=1)
             lt_res_01 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_01 = '00:00-23:59'
@@ -688,13 +691,13 @@ def pt_add_logic(request):
         reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
         reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
         try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_02', use=1)
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id, setting_type_cd='LT_RES_02', use=1)
             lt_res_02 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_02 = '0'
         reserve_prohibition_time = lt_res_02
         try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, setting_type_cd='LT_RES_03', use=1)
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id, setting_type_cd='LT_RES_03', use=1)
             lt_res_03 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_03 = '0'
@@ -976,22 +979,22 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     return context
 
 
-def get_trainer_setting_data(context, user_id):
+def get_trainer_setting_data(context, user_id, class_id):
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_01')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_01')
         lt_res_01 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_01 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_02')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_02')
         lt_res_02 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_02 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_03')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_03')
         lt_res_03 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_03 = ''
@@ -1123,7 +1126,7 @@ def get_trainee_schedule_data_func(context, user_id, lecture_id, start_date, end
 
     # 강사 setting 값 로드
     if error is None:
-        context = get_trainer_setting_data(context, class_info.member_id)
+        context = get_trainer_setting_data(context, class_info.member_id, class_info.class_id)
 
     if error is None:
         member_data = MemberTb.objects.get(member_id=lecture_info.member_id)
@@ -1258,7 +1261,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
 
     # 강사 setting 값 로드
     if error is None:
-        context = get_trainer_setting_data(context, class_info.member_id)
+        context = get_trainer_setting_data(context, class_info.member_id, class_info.class_id)
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기

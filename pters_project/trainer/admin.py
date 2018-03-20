@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from trainer.models import ClassTb, CompanyTb, SettingTb, ShopEmployeeTb
+from trainer.models import ClassTb, CompanyTb, ShopEmployeeTb
 
 
 @admin.register(ClassTb)
@@ -16,13 +16,6 @@ class ClassTbAdmin(admin.ModelAdmin):
 class CompanyTbAdmin(admin.ModelAdmin):
     list_display = ('company_id', 'name', 'phone', 'address',
                     'info', 'img_url', 'reg_dt', 'mod_dt', 'use')
-
-
-@admin.register(SettingTb)
-class SettingTbAdmin(admin.ModelAdmin):
-    list_display = ('setting_id', 'member', 'setting_type_cd', 'setting_info',
-                    'reg_dt', 'mod_dt', 'use')
-
 
 @admin.register(ShopEmployeeTb)
 class ShopEmployeeTbAdmin(admin.ModelAdmin):

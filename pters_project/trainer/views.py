@@ -23,8 +23,8 @@ from login.models import MemberTb, LogTb, HolidayTb
 from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
 from trainee.views import get_trainee_repeat_schedule_data_func, get_lecture_list_by_class_member_id
-from trainer.models import ClassTb, SettingTb
-from schedule.models import ScheduleTb, RepeatScheduleTb
+from trainer.models import ClassTb
+from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
 logger = logging.getLogger(__name__)
 
@@ -112,7 +112,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['today_schedule_num'] = today_schedule_num
         # context['new_member_num'] = new_member_num
 
-        context = get_trainer_setting_data(context, self.request.user.id)
+        context = get_trainer_setting_data(context, self.request.user.id, class_info.class_id)
 
         self.request.session['setting_member_reserve_time_available'] = context['lt_res_01']
         self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
@@ -139,7 +139,7 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CalDayView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
+        class_id = self.request.session.get('class_id', '')
         today = datetime.date.today()
         start_date = today
         end_date = today + datetime.timedelta(days=1)
@@ -474,7 +474,8 @@ class MyPageView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MyPageView, self).get_context_data(**kwargs)
-        context = get_trainer_setting_data(context, self.request.user.id)
+        class_id = self.request.session.get('class_id', '')
+        context = get_trainer_setting_data(context, self.request.user.id, class_id)
 
         return context
 
@@ -484,7 +485,8 @@ class PushSettingView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PushSettingView, self).get_context_data(**kwargs)
-        context = get_trainer_setting_data(context, self.request.user.id)
+        class_id = self.request.session.get('class_id', '')
+        context = get_trainer_setting_data(context, self.request.user.id, class_id)
 
         return context
 
@@ -494,7 +496,8 @@ class ReserveSettingView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReserveSettingView, self).get_context_data(**kwargs)
-        context = get_trainer_setting_data(context, self.request.user.id)
+        class_id = self.request.session.get('class_id', '')
+        context = get_trainer_setting_data(context, self.request.user.id, class_id)
 
         return context
 
@@ -1244,24 +1247,24 @@ def update_setting_push_logic(request):
 
     if error is None:
         try:
-            lt_pus_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_01')
+            lt_pus_01 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_PUS_01')
         except ObjectDoesNotExist:
-            lt_pus_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_01', reg_dt=timezone.now(),
+            lt_pus_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_PUS_01', reg_dt=timezone.now(),
                                   use=1)
         try:
-            lt_pus_02 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_02')
+            lt_pus_02 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_PUS_02')
         except ObjectDoesNotExist:
-            lt_pus_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_02', reg_dt=timezone.now(),
+            lt_pus_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_PUS_02', reg_dt=timezone.now(),
                                   use=1)
         try:
-            lt_pus_03 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_03')
+            lt_pus_03 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_PUS_03')
         except ObjectDoesNotExist:
-            lt_pus_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_03', reg_dt=timezone.now(),
+            lt_pus_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_PUS_03', reg_dt=timezone.now(),
                                   use=1)
         try:
-            lt_pus_04 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_PUS_04')
+            lt_pus_04 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_PUS_04')
         except ObjectDoesNotExist:
-            lt_pus_04 = SettingTb(member_id=request.user.id, setting_type_cd='LT_PUS_04', reg_dt=timezone.now(),
+            lt_pus_04 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_PUS_04', reg_dt=timezone.now(),
                                   use=1)
 
     if error is None:
@@ -1339,17 +1342,17 @@ def update_setting_reserve_logic(request):
 
     if error is None:
         try:
-            lt_res_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_RES_01')
+            lt_res_01 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_01')
         except ObjectDoesNotExist:
-            lt_res_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_01', reg_dt=timezone.now(), use=1)
+            lt_res_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_01', reg_dt=timezone.now(), use=1)
         try:
-            lt_res_02 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_RES_02')
+            lt_res_02 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_02')
         except ObjectDoesNotExist:
-            lt_res_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_02', reg_dt=timezone.now(), use=1)
+            lt_res_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_02', reg_dt=timezone.now(), use=1)
         try:
-            lt_res_03 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_RES_03')
+            lt_res_03 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_03')
         except ObjectDoesNotExist:
-            lt_res_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_RES_03', reg_dt=timezone.now(), use=1)
+            lt_res_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_03', reg_dt=timezone.now(), use=1)
 
     if error is None:
         try:
@@ -1427,34 +1430,34 @@ def update_setting_sales_logic(request):
 
     if error is None:
             try:
-                lt_sal_01 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_01')
+                lt_sal_01 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_01', use=1)
             except ObjectDoesNotExist:
-                lt_sal_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_01', reg_dt=timezone.now(),
+                lt_sal_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_01', reg_dt=timezone.now(),
                                       use=1)
             try:
-                lt_sal_02 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_02')
+                lt_sal_02 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_02', use=1)
             except ObjectDoesNotExist:
-                lt_sal_02 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_02', reg_dt=timezone.now(),
+                lt_sal_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_02', reg_dt=timezone.now(),
                                       use=1)
             try:
-                lt_sal_03 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_03')
+                lt_sal_03 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_03', use=1)
             except ObjectDoesNotExist:
-                lt_sal_03 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_03', reg_dt=timezone.now(),
+                lt_sal_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_03', reg_dt=timezone.now(),
                                       use=1)
             try:
-                lt_sal_04 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_04')
+                lt_sal_04 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_04', use=1)
             except ObjectDoesNotExist:
-                lt_sal_04 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_04', reg_dt=timezone.now(),
+                lt_sal_04 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_04', reg_dt=timezone.now(),
                                       use=1)
             try:
-                lt_sal_05 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_05')
+                lt_sal_05 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_05', use=1)
             except ObjectDoesNotExist:
-                lt_sal_05 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_05', reg_dt=timezone.now(),
+                lt_sal_05 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_05', reg_dt=timezone.now(),
                                       use=1)
             try:
-                lt_sal_00 = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_SAL_00')
+                lt_sal_00 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_00', use=1)
             except ObjectDoesNotExist:
-                lt_sal_00 = SettingTb(member_id=request.user.id, setting_type_cd='LT_SAL_00', reg_dt=timezone.now(),
+                lt_sal_00 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_SAL_00', reg_dt=timezone.now(),
                                       use=1)
 
     if error is None:
@@ -1591,39 +1594,40 @@ class TrainerSettingViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainerSettingViewAjax, self).get_context_data(**kwargs)
-        context = get_trainer_setting_data(context, self.request.user.id)
+        class_id = self.request.session.get('class_id', '')
+        context = get_trainer_setting_data(context, self.request.user.id, class_id)
         return context
 
 
-def get_trainer_setting_data(context, user_id):
+def get_trainer_setting_data(context, user_id, class_id):
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_01')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_01', use=1)
         lt_res_01 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_01 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_02')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_02', use=1)
         lt_res_02 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_02 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_RES_03')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_03', use=1)
         lt_res_03 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_03 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_LAN_01')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_LAN_01', use=1)
         lt_lan_01 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_lan_01 = 'KOR'
 
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_01')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_01', use=1)
         lt_pus_data = setting_data.setting_info.split('/')
         lt_pus_01 = lt_pus_data[0]
         lt_pus_02 = lt_pus_data[1]
@@ -1632,19 +1636,19 @@ def get_trainer_setting_data(context, user_id):
         lt_pus_02 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_02')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_02', use=1)
         lt_pus_03 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_pus_03 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_03')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_03', use=1)
         lt_pus_04 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_pus_04 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, setting_type_cd='LT_PUS_04')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_04', use=1)
         lt_pus_data = setting_data.setting_info.split('/')
         lt_pus_05 = lt_pus_data[0]
         lt_pus_06 = lt_pus_data[1]
