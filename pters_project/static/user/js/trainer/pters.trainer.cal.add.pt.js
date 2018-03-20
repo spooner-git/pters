@@ -475,7 +475,7 @@ $(document).ready(function(){
                           $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
                           $('#id_repeat_schedule_id_confirm').val(repeatArray)
                           completeSend(); //ajax 로딩 이미지 숨기기
-                          $('#shade').show()
+                          //$('#shade').show()
 
                         }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
                           var repeat_info = popup_repeat_confirm()
@@ -485,13 +485,17 @@ $(document).ready(function(){
                           $('#repeat_confirm_dur').text(dur_info)
                           $('#id_repeat_schedule_id_confirm').val(repeatArray)
                           completeSend(); //ajax 로딩 이미지 숨기기
-                          $('#shade').show()
+                          //$('#shade').show()
                         }else{
                           ajax_received_json_data(jsondata)
                           $('#calendar').show().css('height','100%')
+                          if($('body').width()>=600){
+                              $('#calendar').css('position','relative')
+                          }
                           closeAddPopup()
                           closeAddPopup_mini()
                           completeSend()
+                          $('#shade').hide()
                         }
 
                     },

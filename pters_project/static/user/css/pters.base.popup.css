@@ -362,11 +362,11 @@
 	/*월간 달력 팝업*/
 
 	#countNum{
-		left: 205px;
+		left: 170px;
 	}
 	
 	#cal_popup_plancheck{
-		width: 400px;
+		width: 330px;
 	}
 
 	#cal_popup_plancheck div{
