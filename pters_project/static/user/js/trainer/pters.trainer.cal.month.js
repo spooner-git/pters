@@ -244,7 +244,12 @@ $(document).ready(function(){
 
 	$(document).on('click','.plan_raw',function(){
 		$('#popup_planinfo_title').text('PT 일정')
-		$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
+		if($('body').width()>600){
+			$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
+		}else{
+			$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
+		}
+		
 		var selectedDate = $('.popup_ymdText').text()
 		var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
 		var selectedPerson = $(this).find('.plancheckname').text()
@@ -315,7 +320,11 @@ $(document).ready(function(){
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-             			$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
+             			if($('body').width()>600){
+							$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
+						}else{
+							$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
+						}
                     	$('#canvas').hide().css({'border-color':'#282828'})
                     	$('#canvasWrap span').hide();
 						$('#canvasWrap').css({'height':'0px'})
@@ -344,7 +353,7 @@ $(document).ready(function(){
 	})
 
 
-	$('#popup_btn_delete_yes').click(function(){
+	$('#popup_delete_btn_yes').click(function(){
 		if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd"){
 			$.ajax({
                 url:'/schedule/delete_repeat_schedule/',
@@ -446,7 +455,7 @@ $(document).ready(function(){
 	})
 
 
-	$('#btn_close3, #popup_btn_delete_no').click(function(){ //일정삭제 확인 팝업 아니오 버튼 눌렀을때 팝업 닫기
+	$('#btn_close3, #popup_delete_btn_no').click(function(){ //일정삭제 확인 팝업 아니오 버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup_plandelete').css('display')=='block'){
 				$("#cal_popup_plandelete").css({'display':'none'})
 				//$('#shade').css({'z-index':'100'});

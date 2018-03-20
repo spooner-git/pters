@@ -904,6 +904,7 @@ img,a,div,span,p{
 		line-height: 50px;
 		position: absolute;
 		right: 0;
+		min-width: 220px;
 	}
 	
 
