@@ -369,6 +369,7 @@ $(document).ready(function(){
 		$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#popup_btn_complete").hide()
+		$("#popup_sign_img").css("display","none")
 		schedule_on_off = 0;
 	})
 
