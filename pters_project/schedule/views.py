@@ -586,11 +586,11 @@ def finish_schedule_logic(request):
         except ObjectDoesNotExist:
             error = '회원 PT 정보를 불러오지 못했습니다.'
 
-    if error is None:
-        if lecture_info.state_cd == 'NP':
-            error = '회원이 수락하지 않은 스케쥴입니다.'
-        if lecture_info.state_cd == 'RJ':
-            error = '회원이 수락하지 않은 스케쥴입니다.'
+    # if error is None:
+    #    if lecture_info.state_cd == 'NP':
+    #        error = '회원이 수락하지 않은 스케쥴입니다.'
+    #    if lecture_info.state_cd == 'RJ':
+    #        error = '회원이 수락하지 않은 스케쥴입니다.'
 
     if error is None:
         try:
