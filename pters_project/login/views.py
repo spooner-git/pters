@@ -154,9 +154,11 @@ class ResendEmailAuthenticationView(RegistrationView, View):
                 try:
                     User.objects.get(username=email)
                 except ObjectDoesNotExist:
-                    error = None
+                    error = '존재 하지 않음'
                 if error is None:
                     error = '이미 가입된 email 입니다.'
+                else:
+                    error = None
 
         if error is None:
             try:
