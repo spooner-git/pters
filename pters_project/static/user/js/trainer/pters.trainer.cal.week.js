@@ -137,8 +137,8 @@ $(document).ready(function(){
         //$('#page-addplan form input').val('')
         selectedDayGroup = []
 
-        $('._NORMAL_ADD').css('display','block')
-        $('._REPEAT_ADD').css('display','none')
+        $('._NORMAL_ADD_wrap').css('display','block')
+        $('._REPEAT_ADD_wrap').css('display','none')
         $('#timeGraph').css('display','none')
   	})
   //모바일 스타일
@@ -185,8 +185,8 @@ $(document).ready(function(){
         selectedDayGroup = []
 
         addTypeSelect = "ptadd"
-        $('._NORMAL_ADD').css('display','block')
-        $('._REPEAT_ADD').css('display','none')
+        $('._NORMAL_ADD_wrap').css('display','block')
+        $('._REPEAT_ADD_wrap').css('display','none')
         $('#timeGraph').css('display','none')
   	})
 
@@ -195,7 +195,14 @@ $(document).ready(function(){
   	})
   //PC 스타일
 
-   function closeMiniPopup(){
+  	function closeAddPlanPopup(){
+  	  	$('#page-addplan').fadeOut('fast','swing')
+      	$('._NORMAL_ADD_wrap').css('display','block')
+      	$('._REPEAT_ADD_wrap').css('display','none')
+      	$('#timeGraph').css('display','none')
+  	}
+
+   	function closeMiniPopup(){
    		$("#id_time_duration_off").val("")
 	    $('#page-addplan-pc').fadeOut();
 	    $('.td00').find('div').removeClass('blankSelected blankSelected_addview')
@@ -220,7 +227,7 @@ $(document).ready(function(){
         $("#starttimes").empty();
         $("#durations").empty();
         $('.tdgraph').removeClass('graphindicator')
-   }
+   	}
 
 
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
@@ -509,24 +516,28 @@ $(document).ready(function(){
                 success:function(data){
                   var jsondata = JSON.parse(data);
                   closeDeletePopup();
+                  closeAddPlanPopup();
                   ajax_received_json_data(jsondata)
                   AjaxCompleteSend();
                   },
 
                 //보내기후 팝업창 닫기
                 complete:function(){
+                	/*
                 	$('#id_repeat_schedule_id_confirm').val('')
                 	if(addTypeSelect=='repeatptadd'){
                 		fill_repeat_info('class')
                 	}else if(addTypeSelect == "repeatoffadd"){
                 		fill_repeat_info('off')
                 	}
+                	*/
                   },
 
                 //통신 실패시 처리
                 error:function(){
                   alert("에러: 서버 통신 실패")
                   closeDeletePopup();
+                  closeAddPlanPopup()
                   AjaxCompleteSend();
                 },
             })

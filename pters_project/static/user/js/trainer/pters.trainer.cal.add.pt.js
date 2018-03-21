@@ -226,9 +226,8 @@ $(document).ready(function(){
 
       $(document).on('click',"#members_mobile li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
-          var serverURL = '/trainer/read_member_lecture_data/'
           $.ajax({
-              url: serverURL,
+              url: '/trainer/read_member_lecture_data/',
               type:'POST',
               data: {"lecture_id": $(this).attr('data-lectureid'), "member_id": $(this).attr('data-memberid')},
               dataType : 'html',
@@ -278,6 +277,7 @@ $(document).ready(function(){
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
       function fill_repeat_info(option){ //반복일정 요약 채우기
+        console.log('fill')
           switch(option){
               case 'class':
                 var len = ptRepeatScheduleIdArray.length
@@ -554,7 +554,7 @@ $(document).ready(function(){
 
               complete:function(){
                 completeSend(); //ajax 로딩이미지 숨기기
-                $('shade3').hide();
+                $('#shade').hide();
               },
 
               error:function(){
@@ -1097,8 +1097,8 @@ $(document).ready(function(){
         //$('#page-addplan form input').val('')
         selectedDayGroup = []
 
-        $('._NORMAL_ADD').css('display','block')
-        $('._REPEAT_ADD').css('display','none')
+        $('._NORMAL_ADD_wrap').css('display','block')
+        $('._REPEAT_ADD_wrap').css('display','none')
         $('#timeGraph').css('display','none')
       }
 
