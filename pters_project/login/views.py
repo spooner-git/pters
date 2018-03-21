@@ -49,11 +49,6 @@ def login_trainer(request):
     if next_page is None:
         next_page = '/trainer/'
 
-    try:
-        user2 = User.objects.get(username=username)
-    except ObjectDoesNotExist:
-        error = '아이디가 존재하지 않습니다.'
-
     if not error:
         user = authenticate(username=username, password=password)
 
@@ -61,14 +56,14 @@ def login_trainer(request):
             login(request, user)
             if auto_login_check == '0':
                 request.session.set_expiry(0)
-            # print(str(request.session.get_expiry_age()))
             #member_detail = MemberTb.objects.get(user_id=user_data.id)
             # request.session['is_first_login'] = True
             #request.session['member_id'] = member_detail.member_id
 
             return redirect(next_page)
-        elif user2 is not None and user2.is_active == 0:
-            if user2.email is None or user2.email == '':
+        elif user is not None and user.is_active == 0:
+            request.session['username'] = user.username
+            if user.email is None or user.email == '':
                 next_page = '/login/send_email_member/'
             else:
                 next_page = '/login/resend_email_member/'
@@ -129,7 +124,7 @@ def logout_trainer(request):
 
 
 # 회원가입 api
-@csrf_exempt
+@method_decorator(csrf_exempt, name='dispatch')
 class ResendEmailAuthenticationView(RegistrationView, View):
     template_name = 'index.html'
 
@@ -139,29 +134,31 @@ class ResendEmailAuthenticationView(RegistrationView, View):
         password = request.POST.get('password', '')
         member_type = request.POST.get('member_type', '')
         error = None
+        user = None
 
         if username is None or username == '':
             error = 'ID를 입력해주세요.'
 
         if error is None:
-            if password is None or password == '':
-                error = '비밀번호를를 입력해주세요'
+            if member_type == 'new':
+                if password is None or password == '':
+                    error = '비밀번호를를 입력해주세요'
 
         try:
-            user_new = User.objects.get(username=username)
+            user = User.objects.get(username=username)
         except ObjectDoesNotExist:
             error = '가입되지 않은 회원입니다.'
 
         if error is None:
             if member_type == 'new':
                 if error is None:
-                    user_new.username = email
-                    user_new.email = email
-                    user_new.set_password(password)
-                    user_new.save()
+                    user.username = email
+                    user.email = email
+                    user.set_password(password)
+                    user.save()
 
         if error is None:
-            user = authenticate(username=username, password=password)
+            # user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
                     error = '이미 인증된 ID 입니다.'
