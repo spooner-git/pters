@@ -417,7 +417,7 @@ $(document).ready(function(){
         if(Data[userID].npCount == 0 && Data[userID].rjCount == 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:18px;margin:0 0 5px 3px" title="연결됨"> (연결됨)</span>'
         }else if(Data[userID].rjCount > 0){
-          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 실패"> (연결 실패)</span>'
+          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 취소"> (연결 취소)</span>'
         }
 
         var yetReg = ""
@@ -524,10 +524,10 @@ $(document).ready(function(){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-np-wait.png" style="width:18px;margin:0 0 5px 3px" title="연결 대기중"> (연결 대기중)</span>'
         }*/
         if(Data[userID].npCount == 0 && Data[userID].npCount == 0){
-          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:11px;margin:0 0 5px 3px" title="연결 실패"> (연결 실패)</span>'
+          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:11px;margin:0 0 5px 3px" title="연결됨"> (연결됨)</span>'
         }
         else if(Data[userID].npCount > 0){
-          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 실패"> (연결 실패)</span>'
+          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 취소"> (연결 취소)</span>'
         }
 
 
@@ -1128,7 +1128,7 @@ $(document).ready(function(){
             if(npCounts == 0 && rjCounts == 0){
                 var npCountImg = '<img src="/static/user/res/icon-link.png" title="연결됨" class="npCountImg_wait">'
             }else if(rjCounts > 0){
-                var npCountImg = '<img src="/static/user/res/icon-alert.png" title="연결 실패" class="npCountImg_x">'
+                var npCountImg = '<img src="/static/user/res/icon-alert.png" title="연결 취소" class="npCountImg_x">'
             }
 
             var yetReg = ""
