@@ -154,6 +154,14 @@ function time_format_to_hangul(timedata){
    return hangul_time = hourText + ' ' + hour + '시'
 }
 
+function time_h_format_to_hh(time){
+  var result = String(time)
+  if(String(time).length<2){
+    var result = '0' + String(time)
+  }
+  return result
+}
+
 function db_datatimehangul_format_realign(dbhangul){
    var data = dbhangul.split(' ')
    var len = data.length
