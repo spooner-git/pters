@@ -706,8 +706,13 @@ $(document).ready(function(){
         }else if($('#memberInfoPopup').css('display')=="block"){
             var userID = $('#memberId').val()
             var $regHistory = $('#memberRegHistory_info')
-        }   
-        var dbId = DB[userID].dbId
+        }
+        if($('#currentMemberList').css('display') == "block"){
+          var Data = DB
+        }else if($('#finishedMemberList').css('display') == "block"){
+           var Data = DBe
+        }
+        var dbId = Data[userID].dbId
         
         $.ajax({
             url:'/trainer/read_lecture_by_class_member_ajax/', 
@@ -726,6 +731,7 @@ $(document).ready(function(){
 
             //통신성공시 처리
             success:function(data){
+                console.log(data)
                 var jsondata = JSON.parse(data);
                 var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>상태</div></div>']
                 console.log(jsondata)
@@ -740,9 +746,9 @@ $(document).ready(function(){
                     var remcount =    '<div>'+jsondata.remCountArray[i]+'</div>'
                     var start = '<div>'+jsondata.startArray[i]+'</div>'
                     var end = '<div>'+jsondata.endArray[i]+'</div>' 
-                    if(jsondata.lectureTypeArray[i] == "NP"){
+                    if(jsondata.lectureTypeArray[i] == "WAIT"){
                         var lectureTypeName = '<div class="lectureType_NP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
-                    }else if(jsondata.lectureTypeArray[i] == "RJ"){
+                    }else if(jsondata.lectureTypeArray[i] == "DELETE"){
                         var lectureTypeName = '<div class="lectureType_RJ" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
                     }
                     result_history_html.push('<div>'+start+end+regcount+remcount+lectureTypeName+'</div>')
@@ -937,11 +943,11 @@ $(document).ready(function(){
                 var DBendlength = finishnameArray.length;
                 for(var j=0; j<DBendlength;j++){
                 DBe[finishnameArray[j]] = {'id':finishIdArray[j],
-                                            'dbId':finishDidArray[i], 
+                                            'dbId':finishDidArray[j],
                                             'email':finishemailArray[j],
                                             'count':finishcountArray[j],
                                             'regcount':regCountArray[j],
-                                            'availCount':finishAvailCountArray[i], 
+                                            'availCount':finishAvailCountArray[j],
                                             'phone':finishphoneArray[j],
                                             'contents':finishContentsArray[j],
                                             'start':finishstartArray[j],
@@ -978,11 +984,11 @@ $(document).ready(function(){
                 var DBendlength = finishIdArray.length;
                 for(var j=0; j<DBendlength;j++){
                 DBe[finishIdArray[j]] = {'id':finishnameArray[j], 
-                                        'dbId':finishDidArray[i],
+                                        'dbId':finishDidArray[j],
                                         'email':finishemailArray[j],
                                         'count':finishcountArray[j],
                                         'regcount':regCountArray[j],
-                                        'availCount':finishAvailCountArray[i],
+                                        'availCount':finishAvailCountArray[j],
                                         'phone':finishphoneArray[j],
                                         'contents':finishContentsArray[j],
                                         'start':finishstartArray[j],
@@ -1967,6 +1973,7 @@ $(document).ready(function(){
         yetCountArray = []
         yetRegCountArray = []
 
+        finishDidArray = [];
         finishIdArray = [];
         finishnameArray =[];
         finishphoneArray = [];
@@ -2009,6 +2016,7 @@ $(document).ready(function(){
         yetCountArray = jsondata.yetCountArray
         yetRegCountArray = jsondata.yetRegCountArray
 
+        finishDidArray = jsondata.finishDidArray;
         finishIdArray = jsondata.finishIdArray;
         finishnameArray = jsondata.finishnameArray;
         finishphoneArray = jsondata.finishphoneArray;

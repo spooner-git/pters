@@ -10,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -83,7 +84,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                             new_member_num += 1
 
                     for lecture_info in lecture_list:
-                        if lecture_info.state_cd == 'NP':
+                        # if lecture_info.state_cd == 'NP':
+                        if lecture_info.member_view_state_cd == 'WAIT':
                             np_member_num += 1
                         member_lecture_reg_count += lecture_info.lecture_reg_count
                         member_lecture_rem_count += lecture_info.lecture_rem_count
@@ -290,13 +292,21 @@ def get_member_data(context, class_id, member_id):
         for member_info in all_member:
             member_data = copy.copy(member_info)
             member_data_finish = copy.copy(member_info)
+            lecture_finish_check = 0
             # 강좌에 해당하는 수강/회원 정보 가져오기
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
-                                                    lecture_rem_count__gt=0, use=1).order_by('start_date')
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id, state_cd='IP',
+                                                    use=1).order_by('start_date')
+
             lecture_finish_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
-                                                           lecture_rem_count=0, use=1).order_by('start_date')
+                                                           use=1).exclude(state_cd='IP').order_by('start_date')
+
+            if len(lecture_list) == 0:
+                if len(lecture_finish_list) > 0:
+                    lecture_finish_check = 1
 
             if len(lecture_list) > 0:
+                lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
+                                                        use=1).order_by('start_date')
                 member_data.rj_lecture_counts = 0
                 member_data.np_lecture_counts = 0
 
@@ -318,9 +328,11 @@ def get_member_data(context, class_id, member_id):
                 member_data.mod_dt = None
 
                 for idx, lecture_info in enumerate(lecture_list):
-                    if lecture_info.state_cd == 'RJ':
+                    # if lecture_info.state_cd == 'RJ':
+                    if lecture_info.member_view_state_cd == 'DELETE':
                         member_data.rj_lecture_counts += 1
-                    if lecture_info.state_cd == 'NP':
+                    # if lecture_info.state_cd == 'NP':
+                    if lecture_info.member_view_state_cd == 'WAIT':
                         member_data.np_lecture_counts += 1
 
                     if lecture_info.use != 0:
@@ -333,10 +345,10 @@ def get_member_data(context, class_id, member_id):
                                 member_data.start_date = lecture_info.start_date
                             member_data.end_date = lecture_info.end_date
 
-                        if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
-                            member_data.lecture_reg_count_yet += lecture_info.lecture_reg_count
-                            member_data.lecture_rem_count_yet += lecture_info.lecture_rem_count
-                            member_data.lecture_avail_count_yet += lecture_info.lecture_avail_count
+                        # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
+                        #    member_data.lecture_reg_count_yet += lecture_info.lecture_reg_count
+                        #    member_data.lecture_rem_count_yet += lecture_info.lecture_rem_count
+                        #    member_data.lecture_avail_count_yet += lecture_info.lecture_avail_count
 
                         if member_data.mod_dt is None or '':
                             member_data.mod_dt = lecture_info.mod_dt
@@ -350,7 +362,7 @@ def get_member_data(context, class_id, member_id):
 
                 member_list.append(member_data)
 
-            if len(lecture_finish_list) > 0:
+            if lecture_finish_check > 0:
                 member_data_finish.rj_lecture_counts = 0
                 member_data_finish.np_lecture_counts = 0
 
@@ -358,21 +370,23 @@ def get_member_data(context, class_id, member_id):
                 member_data_finish.lecture_rem_count_yet = 0
                 member_data_finish.lecture_avail_count_yet = 0
 
-                member_data_finish.lecture_reg_count_total = 0
-                member_data_finish.lecture_rem_count_total = 0
-                member_data_finish.lecture_avail_count_total = 0
-
                 member_data_finish.lecture_counts = len(lecture_finish_list)
                 member_data_finish.lecture_reg_count = 0
                 member_data_finish.lecture_rem_count = 0
                 member_data_finish.lecture_avail_count = 0
+
+                member_data_finish.lecture_reg_count_total = 0
+                member_data_finish.lecture_rem_count_total = 0
+                member_data_finish.lecture_avail_count_total = 0
                 member_data_finish.start_date = None
                 member_data_finish.end_date = None
                 member_data_finish.mod_dt = None
                 for idx, lecture_info in enumerate(lecture_finish_list):
-                    if lecture_info.state_cd == 'RJ':
+                    # if lecture_info.state_cd == 'RJ':
+                    if lecture_info.member_view_state_cd == 'DELETE':
                         member_data_finish.rj_lecture_counts += 1
-                    if lecture_info.state_cd == 'NP':
+                    # if lecture_info.state_cd == 'NP':
+                    if lecture_info.member_view_state_cd == 'WAIT':
                         member_data_finish.np_lecture_counts += 1
 
                     if lecture_info.use != 0:
@@ -385,10 +399,10 @@ def get_member_data(context, class_id, member_id):
                                 member_data_finish.start_date = lecture_info.start_date
                                 member_data_finish.end_date = lecture_info.end_date
 
-                        if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
-                            member_data_finish.lecture_reg_count_yet += lecture_info.lecture_reg_count
-                            member_data_finish.lecture_rem_count_yet += lecture_info.lecture_rem_count
-                            member_data_finish.lecture_avail_count_yet += lecture_info.lecture_avail_count
+                        # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
+                        #    member_data_finish.lecture_reg_count_yet += lecture_info.lecture_reg_count
+                        #    member_data_finish.lecture_rem_count_yet += lecture_info.lecture_rem_count
+                        #    member_data_finish.lecture_avail_count_yet += lecture_info.lecture_avail_count
 
                         if member_data_finish.mod_dt is None or '':
                             member_data_finish.mod_dt = lecture_info.mod_dt
@@ -768,7 +782,7 @@ def add_member_info_logic_test(request):
         try:
             with transaction.atomic():
 
-                state_cd = 'NP'
+                state_cd = 'IP'
                 if search_confirm == '0':
                     user.set_password(password)
                     user.save()
@@ -1009,7 +1023,8 @@ def resend_member_lecture_info_logic(request):
             error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        lecture_info.state_cd = 'NP'
+        # lecture_info.state_cd = 'NP'
+        lecture_info.member_view_state_cd = 'WAIT'
         lecture_info.mod_dt = timezone.now()
 
         lecture_info.save()
