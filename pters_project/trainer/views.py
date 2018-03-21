@@ -20,10 +20,10 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
 from configs.views import AccessTestMixin, get_client_ip
-from login.models import MemberTb, LogTb, HolidayTb
+from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_trainer_schedule_data_func
 from trainee.models import LectureTb
-from trainee.views import get_trainee_repeat_schedule_data_func, get_lecture_list_by_class_member_id
+from trainee.views import get_trainee_repeat_schedule_data_func
 from trainer.models import ClassTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
@@ -1731,3 +1731,57 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
 
         return render(request, self.template_name, context)
 
+
+def get_lecture_list_by_class_member_id(context, class_id, member_id):
+    error = None
+    class_data = None
+    context['error'] = None
+    lecture_counts = 0
+    np_lecture_counts = 0
+    if class_id is None or '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if member_id is None or '':
+        error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_data = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_data.trainer_info = MemberTb.objects.get(member_id=class_data.member_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.class_type_cd)
+        except ObjectDoesNotExist:
+            error = '강좌 type을 불러오지 못했습니다.'
+
+    if error is None:
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, use=1).order_by('-start_date')
+
+        for lecture_info in lecture_data:
+            lecture_info.start_date = str(lecture_info.start_date)
+            lecture_info.end_date = str(lecture_info.end_date)
+            lecture_info.mod_dt = str(lecture_info.mod_dt)
+            lecture_info.reg_dt = str(lecture_info.reg_dt)
+            lecture_info.state_type = CommonCdTb.objects.get(common_cd=lecture_info.member_view_state_cd)
+            if lecture_info.member_view_state_cd == 'WAIT':
+                np_lecture_counts += 1
+            lecture_counts += 1
+
+    class_data.lecture_counts = lecture_counts
+    class_data.np_lecture_counts = np_lecture_counts
+    context['class_data'] = class_data
+    context['lecture_data'] = lecture_data
+
+    # print(error)
+    if error is not None:
+        context['error'] = error
+
+    return context
