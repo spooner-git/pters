@@ -126,7 +126,7 @@ def logout_trainer(request):
 # 회원가입 api
 @method_decorator(csrf_exempt, name='dispatch')
 class ResendEmailAuthenticationView(RegistrationView, View):
-    template_name = 'index.html'
+    template_name = 'registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
         username = request.POST.get('username', '')
@@ -142,12 +142,27 @@ class ResendEmailAuthenticationView(RegistrationView, View):
         if error is None:
             if member_type == 'new':
                 if password is None or password == '':
-                    error = '비밀번호를를 입력해주세요'
+                    error = '비밀번호를 입력해주세요'
 
-        try:
-            user = User.objects.get(username=username)
-        except ObjectDoesNotExist:
-            error = '가입되지 않은 회원입니다.'
+        if error is None:
+            if member_type == 'new':
+                if email is None or email == '':
+                    error = 'email을 입력해주세요'
+
+        if error is None:
+            if member_type == 'new':
+                try:
+                    User.objects.get(username=email)
+                except ObjectDoesNotExist:
+                    error = None
+                if error is None:
+                    error = '이미 가입된 email 입니다.'
+
+        if error is None:
+            try:
+                user = User.objects.get(username=username)
+            except ObjectDoesNotExist:
+                error = '가입되지 않은 회원입니다.'
 
         if error is None:
             if member_type == 'new':
@@ -167,7 +182,10 @@ class ResendEmailAuthenticationView(RegistrationView, View):
             else:
                 error = 'ID가 존재하지 않습니다.'
 
-        return render(request, self.template_name, {'error': error})
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name)
 
 
 # 회원가입 api

@@ -890,6 +890,7 @@ def add_repeat_schedule_confirm(request):
     information = None
     request.session['date'] = date
     request.session['day'] = day
+    lecture_id = ''
 
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
@@ -927,6 +928,7 @@ def add_repeat_schedule_confirm(request):
                 except ObjectDoesNotExist:
                     error = '회원 정보가 존재하지 않습니다'
             if error is None:
+                lecture_id = lecture_info.lecture_id
                 member_name = member_info.name
 
     if error is None:
@@ -969,7 +971,8 @@ def add_repeat_schedule_confirm(request):
             for member_lecture_info in member_lecture_data:
                 member_lecture_info.schedule_check = 1
                 member_lecture_info.save()
-            save_log_data(start_date, end_date, class_info.class_id, lecture_info.lecture_id, request.user.last_name+request.user.first_name,
+
+            save_log_data(start_date, end_date, class_info.class_id, lecture_id, request.user.last_name+request.user.first_name,
                           member_name, en_dis_type, 'LR01', request)
 
             information = '반복일정 등록이 완료됐습니다.'
