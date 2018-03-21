@@ -7,10 +7,6 @@ $(document).ready(function(){
       })
       //유저가 터치인지 마우스 사용인지 알아낸다
 
-      var Options = {
-                        "limit": 1, // 현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
-                    }
-
       DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
       DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
 
@@ -354,7 +350,7 @@ $(document).ready(function(){
 
 
 
-      $(document).on('click','#starttimes li a, #repeatstarttimes li a',function(){
+      $(document).on('click','#starttimes li a',function(){
           $('.tdgraph').removeClass('graphindicator')
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
           if(addTypeSelect == "ptadd"){
@@ -594,7 +590,6 @@ $(document).ready(function(){
 
       function ajaxTimeGraphSet(){
             var today_form = $('#datepicker').val()
-
             $.ajax({
               url: '/trainer/cal_day_ajax/',
               type : 'POST',
@@ -1191,7 +1186,7 @@ $(document).ready(function(){
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
       }
-      
+
       function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우기
 
         //1. option인자 : "class", "off"
@@ -1247,6 +1242,16 @@ $(document).ready(function(){
               $('#'+targetTime+'g'+option).addClass(cssClass)
           }
         }
+        
+        /*업무시간 설정*/
+        for(var j=0; j<Options.workStartTime; j++){
+          $('#'+j+'g'+option).addClass('greytimegraph')
+        }
+        for(var t=Options.workEndTime; t<24; t++){
+          $('#'+t+'g'+option).addClass('greytimegraph')
+        }
+        /*업무시간 설정*/
+
         //timeGraphLimitSet(Options.limit)
       }
 
