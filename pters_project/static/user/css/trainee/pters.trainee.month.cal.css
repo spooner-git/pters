@@ -915,7 +915,8 @@ img,a,div,span,p{
 	}
 
 	.prevDates,.nextDates{
-		opacity: 0.2;
+		opacity: 0;
+		/*opacity: 0.2;*/
 		background:grey;
 	}
 	
