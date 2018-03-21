@@ -775,10 +775,10 @@ th{
 	}
 
 	.npCountImg_x{
-		width:12px;
+		width:14px;
 		position:absolute;
-		margin-top:5px;
-		margin-left:5px;
+		margin-top:4px;
+		margin-left:6px;
 	}
 
 	._countnum,._id,._email,._finday,._manage{
