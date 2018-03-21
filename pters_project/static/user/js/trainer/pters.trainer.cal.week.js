@@ -185,8 +185,8 @@ $(document).ready(function(){
         selectedDayGroup = []
 
         addTypeSelect = "ptadd"
-        $('._NORMAL_ADD').css('display','block')
-        $('._REPEAT_ADD').css('display','none')
+        $('._NORMAL_ADD_wrap').css('display','block')
+        $('._REPEAT_ADD_wrap').css('display','none')
         $('#timeGraph').css('display','none')
   	})
 

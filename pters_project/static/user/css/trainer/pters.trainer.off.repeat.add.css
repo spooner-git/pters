@@ -2,7 +2,14 @@ body{
 	padding-top: 50px;
 }
 
-._REPEAT_ADD{
+._NORMAL_ADD_wrap{
+	position: relative;
+	transition: 1s;
+}
+
+._REPEAT_ADD_wrap{
+	position: relative;
+	transition: 1s;
 	display: none;
 }
 

@@ -4,8 +4,11 @@ $(document).ready(function(){
           
           if(addTypeSelect == "ptadd"){
             repeatStartTimeSet()
-            $('._NORMAL_ADD, ._NORMAL_ADD_timegraph').hide('slow')
-            $('._REPEAT_ADD').show('slow')
+            /*애니메이션*/
+            $('._NORMAL_ADD_wrap').css('display','none')
+            $('._REPEAT_ADD_wrap').css('display','block')
+            $('._NORMAL_ADD_timegraph').hide()
+            /*애니메이션*/
             $('#uptext2').text('PT 반복 일정 등록')
             addTypeSelect = "repeatptadd"
             $("#id_repeat_member_id").val($('#id_member_id').val());
@@ -17,8 +20,11 @@ $(document).ready(function(){
             console.log(addTypeSelect)
           }else if(addTypeSelect == "offadd"){
             repeatStartTimeSet()
-            $('._NORMAL_ADD, ._NORMAL_ADD_timegraph').hide('slow')
-            $('._REPEAT_ADD').show('slow')
+            /*애니메이션*/
+            $('._NORMAL_ADD_wrap').css('display','none')
+            $('._REPEAT_ADD_wrap').css('display','block')
+            $('._NORMAL_ADD_timegraph').hide()
+            /*애니메이션*/
             $('#uptext2').text('OFF 반복 일정 등록')
             addTypeSelect = "repeatoffadd"
             check_dropdown_selected()
@@ -26,23 +32,26 @@ $(document).ready(function(){
             fill_repeat_info('off')
             console.log(addTypeSelect)
           }else if(addTypeSelect == "repeatptadd"){
-            
-            $('._NORMAL_ADD').show('slow')
-            $('._REPEAT_ADD').hide('slow')
+            /*애니메이션*/
+            $('._NORMAL_ADD_wrap').css('display','block')
+            $('._REPEAT_ADD_wrap').css('display','none')
+
             if($('#datepicker').val().length>0){
                 $('._NORMAL_ADD_timegraph').show('slow')
             }
+            /*애니메이션*/
             $(this).find('.icons-next-button').removeClass('rotate_90')
             addTypeSelect = "ptadd"
             check_dropdown_selected()
             console.log(addTypeSelect)
           }else if(addTypeSelect == "repeatoffadd"){
-            
-            $('._NORMAL_ADD').show('slow')
-            $('._REPEAT_ADD').hide('slow')
+            /*애니메이션*/
+            $('._NORMAL_ADD_wrap').css('display','block')
+            $('._REPEAT_ADD_wrap').css('display','none')
             if($('#datepicker').val().length>0){
                 $('._NORMAL_ADD_timegraph').show('slow')
             }
+            /*애니메이션*/
             $(this).find('.icons-next-button').removeClass('rotate_90')
             addTypeSelect = "offadd"
             check_dropdown_selected()
