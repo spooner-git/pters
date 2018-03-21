@@ -12,7 +12,7 @@
       "availCountArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "stateArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.member_view_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "classInfoArray":
       ["{{ class_data.class_type_name.common_cd_nm}}"],

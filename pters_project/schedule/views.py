@@ -187,6 +187,9 @@ def delete_schedule_logic_func(schedule_info):
                         else:
                             error = '예약 가능한 횟수를 확인해주세요.'
                             raise ValidationError()
+
+                    if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
+                        lecture_info.state_cd = 'IP'
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.schedule_check = 1
                     lecture_info.save()
@@ -610,6 +613,8 @@ def finish_schedule_logic(request):
                         error = '예약 가능한 횟수를 확인해주세요.'
                         raise ValidationError()
 
+                if lecture_info.lecture_rem_count == 0:
+                    lecture_info.state_cd = 'PE'
                 lecture_info.mod_dt = timezone.now()
                 lecture_info.schedule_check = 1
                 lecture_info.save()
@@ -1186,7 +1191,7 @@ def get_member_schedule_input_lecture(class_id, member_id):
 
     lecture_id = None
     # 강좌에 해당하는 수강/회원 정보 가져오기
-    lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id,
+    lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, state_cd='IP',
                                             lecture_avail_count__gt=0, use=1).order_by('start_date')
     if len(lecture_list) > 0:
         lecture_id = lecture_list[0].lecture_id

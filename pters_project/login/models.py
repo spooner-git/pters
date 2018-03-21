@@ -21,7 +21,7 @@ class MemberTb(models.Model):
     birthday_dt = models.DateField(db_column='BIRTHDAY_DT', blank=True, null=True)  # Field name made lowercase.
     address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, null=True)  # Field name made lowercase.
     job = models.CharField(db_column='JOB', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
@@ -58,9 +58,9 @@ class LogTb(models.Model):
     to_member_name = models.CharField(db_column='TO_MEMBER_NAME', max_length=20, blank=True, null=True)  # Field name made lowercase.
     class_tb_id = models.CharField(db_column='CLASS_TB_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
     lecture_tb_id = models.CharField(db_column='LECTURE_TB_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    log_info = models.CharField(db_column='LOG_INFO', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    log_how = models.CharField(db_column='LOG_HOW', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    log_detail = models.CharField(db_column='LOG_DETAIL', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    log_info = models.CharField(db_column='LOG_INFO', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
+    log_how = models.CharField(db_column='LOG_HOW', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
+    log_detail = models.CharField(db_column='LOG_DETAIL', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
     ip = models.CharField(db_column='IP', max_length=255, blank=True, null=True)
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     read = models.IntegerField(db_column='READ', blank=True, null=True, default='0')  # Field name made lowercase.
