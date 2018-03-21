@@ -13,7 +13,7 @@ $(document).ready(function(){
             $("#id_repeat_member_name").val($('#id_member_name').val());
             $(this).find('.icons-next-button').addClass('rotate_90')
             check_dropdown_selected()
-            fill_repeat_info('class')
+            $('#offRepeatSummary').html('')
             console.log(addTypeSelect)
           }else if(addTypeSelect == "offadd"){
             repeatStartTimeSet()
