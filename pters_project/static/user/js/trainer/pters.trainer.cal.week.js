@@ -1002,7 +1002,7 @@ $(document).ready(function(){
 		},
 	};
 
-
+	
 
 	function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성 
 		//Week 선택자 2E, 1E, 0W, 1L, 2L
@@ -1025,7 +1025,8 @@ $(document).ready(function(){
 		}
 
 		var fakeElementForBlankPage = '<div class="fake_for_blankpage"><span>등록된 일정이 없습니다.</span></div>'
-		for(var i=0; i<=23; i++){
+		//for(var i=0; i<=23; i++){
+		for(var i=Options.workStartTime; i<=Options.workEndTime; i++){
 			var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="time-row">'
 			var divToAppend = $(textToAppend)
 
@@ -1218,7 +1219,37 @@ $(document).ready(function(){
 		};
 		slideIndex.append(fakeElementForBlankPage);
 		weekNum_Set(Index)
+		time_index_set()
 	}; //calTable_Set
+
+	function time_index_set(){
+		var start = Options.workStartTime;
+		var end = Options.workEndTime;
+		var timelist = []
+
+		if(Options.language=="JPN"){
+	        var morning = '<span class="JPtext">午前</span>'
+	        var afternoon = '<span class="JPtext">午後</span>'
+	    }else if(Options.language=="KOR"){
+	        var morning = '<span class="KRtext">오전</span>'
+	        var afternoon = '<span class="KRtext">오후</span>'
+	    }else if(Options.language=="ENG"){
+	       	var morning = '<span class="ENtext">AM</span>'
+	       	var afternoon = '<span class="ENtext">PM</span>'
+	    }	
+
+		for(var i=start; i<=end; i++){
+			if(i<12 && i == start){
+				timelist.push('<div class="hour" id="hour'+i+'"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>')
+			}else if(i==12){
+				timelist.push('<div class="hour" id="hour'+i+'"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>')
+			}else{
+				timelist.push('<div class="hour" id="hour'+i+'"><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>')
+			}
+		}
+		$('div.timeindex').html(timelist.join(''))
+	}
+
 
 	function dateText(){
 		var yymm = {}

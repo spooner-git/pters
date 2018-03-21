@@ -874,7 +874,7 @@ img,a,div,span,p{
 	}
 }
 
-@media(min-width:900px){
+@media(min-width:1030px){
 	.morningtext{
 		display:inline;
 		position: absolute;
