@@ -83,8 +83,10 @@
 		<div class="explaintype" id="submit_input">
 			<form method="post" action="." style="text-align: center!important;padding-left: 20px;">
 			  	{% csrf_token %}
-                <input type="hidden" name="username">
-                <input type="hidden" name="password">
+                <input type="hidden" name="username" value="{{ request.session.username }}">
+                <input type="hidden" name="password" id="id_password">
+                <input type="hidden" name="email" id="id_email">
+                <input type="hidden" name="member_type" value="new">
 
 			  	<!--<input type="submit" value="{% trans 'Submit' %}" />-->
 
@@ -185,10 +187,12 @@
             }else if($(this).val() != $('#pw_input').val()){
                 $('.pw_confirm').text('비밀번호 불일치').css({'display':'inline','color':'#fe4e65'})
                 $('.pw_confirm').attr('data-check',0)
+                $('#id_password').attr('value',"")
 
             }else{
                 $('.pw_confirm').text('비밀번호 일치').css({'display':'inline','color':'green'})
                 $('.pw_confirm').attr('data-check',1)
+                $('#id_password').attr('value',$(this).val())
             }
         }else{
             $('.pw_confirm').text('영문 대소문자/숫자/특수문자를 포함한 8자이상').css('color','#ffffff')
@@ -197,5 +201,36 @@
       })
   }
 
+    $('#email_input').keyup(function(){
+        if($('#email_input_re').val().length>0){
+            $('#id_email').attr('value', $(this).val()+'@'+$('#email_input_re').val())
+        }else{
+            $('#id_email').attr('value',"")
+        }
+    })
+
+    $('#email_option').change(function(){
+        if($(this).val() =="직접 입력"){
+            $('#email_input_re').attr('readonly',false).val("")
+            $('#email_input_re').keyup(function(){
+                if($('#email_input').val().length>0){
+                    $('#id_email').attr('value', $('#email_input').val()+'@'+$('#email_input_re').val())
+                }else{
+                    $('#id_email').attr('value',"")
+                }
+            })
+        }else if($(this).val()!="선택"){
+            $('#email_input_re').val($(this).val())
+            $('#email_input_re').attr('readonly',true)
+        }else{
+            $('#email_input_re').attr('readonly',true).val("")
+        }
+
+        if($('#email_input').val().length>0){
+            $('#id_email').attr('value', $('#email_input').val()+'@'+$('#email_input_re').val())
+        }else{
+            $('#id_email').attr('value',"")
+        }
+    })
 
 </script>

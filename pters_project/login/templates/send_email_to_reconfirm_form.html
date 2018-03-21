@@ -83,7 +83,9 @@
 		<div class="explaintype" id="submit_input">
 			<form method="post" action="../../templates/registration" style="text-align: center!important;padding-left: 20px;">
 			  	{% csrf_token %} 
-			  	{{ form.as_p }}
+
+                <input type="hidden" name="username" value="{{ request.session.username }}">
+                <input type="hidden" name="member_type" value="re">
 
 			  	<!--<input type="submit" value="{% trans 'Submit' %}" />-->
           <p>인증 메일은 1일간 유효합니다.</p>
@@ -107,7 +109,7 @@
 <script>
 
 	$('button.submit_email_reconfirm').click(function(){
-    if($('.pw_confirm').attr('data-check') == 1){
+    //if($('.pw_confirm').attr('data-check') == 1){
       $form = $('#submit_input form')
       $.ajax({
                 url:'/login/resend_email_authentication/',
@@ -135,9 +137,9 @@
                   alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요")
                 },
             })
-    }else{
-      alert('비밀번호를 다시 확인해주세요')
-    }
+    //}else{
+    //  alert('비밀번호를 다시 확인해주세요')
+    //}
 		
 	})
 
