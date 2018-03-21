@@ -306,7 +306,7 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             error = '강좌 type을 불러오지 못했습니다.'
 
     if error is None:
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, use=1).order_by('-start_date')
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id).order_by('-start_date')
 
         for lecture_info in lecture_data:
             lecture_info.start_date = str(lecture_info.start_date)
