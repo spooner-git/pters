@@ -28,8 +28,14 @@ urlpatterns = [
     url(r'^check_member_id/$', views.CheckMemberIdView.as_view(), name='check_member_id'),
 
     url(r'^add_member_info/$', views.AddMemberView.as_view(), name='add_member_info'),
+    url(r'^add_member_info_no_email/$', views.AddMemberNoEmailView.as_view(), name='add_member_info_no_email'),
+
+
     url(r'^resend_email_authentication/$', views.ResendEmailAuthenticationView,
         name='resend_email_authentication'),
     url(r'^register_error_ajax/$', views.RegisterErrorView.as_view(), name='register_error_ajax'),
+
+    url(r'^send_email_member/$', views.NewMemberSendEmailView.as_view(), name='send_email_member'),
+    url(r'^resend_email_member/$', views.NewMemberReSendEmailView.as_view(), name='resend_email_member'),
 
 ]

@@ -1678,11 +1678,11 @@ $(document).ready(function(){
     $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
         var test = $('#id_search_confirm').val();
         var $form2 = $('#add-member-id-form');
-        var url2 = '/login/add_member_info/';
+        var url2 = '/login/add_member_info_no_email/';
         if(select_all_check==true){
             if(test==0){
                 $.ajax({
-                    url:'/login/add_member_info/',
+                    url:'/login/add_member_info_no_email/',
                     type:'POST',
                     data:$form2.serialize(),
                     dataType : 'html',
