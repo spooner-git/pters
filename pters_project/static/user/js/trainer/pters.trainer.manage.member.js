@@ -407,11 +407,16 @@ $(document).ready(function(){
         $('#shade').fadeIn('fast');
 
         var npCountImg = ""
+        /*
         if(Data[userID].npCount > 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-np-wait.png" style="width:18px;margin:0 0 5px 3px" title="연결 대기중"> (연결 대기중)</span>'
         }
         if(Data[userID].rjCount > 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-x-red.png" style="width:11px;margin:0 0 5px 3px" title="연결 실패"> (연결 실패)</span>'
+        }
+        */
+        if(Data[userID].npCount == 0 && Data[userID].rjCount == 0){
+          var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:18px;margin:0 0 5px 3px" title="연결 대기중"> (연결됨)</span>'
         }
 
         var yetReg = ""
@@ -1099,11 +1104,16 @@ $(document).ready(function(){
             }
 
             var npCountImg = ""
+            /*
             if(npCounts > 0){
                 var npCountImg = '<img src="/static/user/res/member/icon-np-wait.png" title="연결 대기중" class="npCountImg_wait">'
             }
             if(rjCounts > 0){
                 var npCountImg = '<img src="/static/user/res/member/icon-x-red.png" title="연결 실패" class="npCountImg_x">'
+            }
+            */
+            if(npCounts == 0 && rjCounts == 0){
+                var npCountImg = '<img src="/static/user/res/icon-link.png" title="연결됨" class="npCountImg_wait">'
             }
 
             var yetReg = ""
@@ -1182,6 +1192,7 @@ $(document).ready(function(){
             //통신성공시 처리
             success:function(data){
                 var jsondata = JSON.parse(data);
+                console.log(jsondata)
                 if(jsondata.messageArray.length>0){
                   $('#inputError').fadeIn()
                   setTimeout(function(){$('#inputError').fadeOut()},10000)
