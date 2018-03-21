@@ -944,6 +944,11 @@ def add_repeat_schedule_confirm(request):
                         else:
                             error = '예약 가능한 횟수를 확인해주세요.'
                             raise ValidationError()
+
+                        if lecture_info.lecture_rem_count > 0:
+                            lecture_info.state_cd = 'IP'
+                        else:
+                            lecture_info.state_cd = 'PE'
                         lecture_info.mod_dt = timezone.now()
                         lecture_info.save()
 

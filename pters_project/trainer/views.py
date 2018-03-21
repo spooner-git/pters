@@ -757,13 +757,6 @@ def add_member_info_logic_test(request):
                 else:
                     input_end_date = end_date
 
-    if search_confirm == '0':
-        if error is None:
-            if len(phone) == 11:
-                password = phone[7:]
-            elif len(phone) == 10:
-                password = phone[6:]
-
     if error is None:
 
         try:
@@ -783,10 +776,6 @@ def add_member_info_logic_test(request):
             with transaction.atomic():
 
                 state_cd = 'IP'
-                if search_confirm == '0':
-                    user.set_password(password)
-                    user.save()
-                    # state_cd = 'IP'
 
                 lecture_info = add_lecture_info_logic_func(class_info.class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
 

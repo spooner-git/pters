@@ -40,11 +40,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             self.url = '/trainee/blank/'
         elif len(lecture_data) == 1:
             for lecture_info in lecture_data:
+                self.request.session['class_id'] = lecture_info.class_tb_id
+                self.request.session['lecture_id'] = lecture_info.lecture_id
                 if lecture_info.member_view_state_cd == 'WAIT':
                     self.url = '/trainee/lecture_select/'
-                else:
-                    self.request.session['class_id'] = lecture_info.class_tb_id
-                    self.request.session['lecture_id'] = lecture_info.lecture_id
         else:
             class_id_comp = ''
             lecture_np_counter = 0
@@ -915,12 +914,12 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     # 수강 정보 불러 오기
     if error is None:
         if member_id is None or '':
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_view_state_cd='VIEW', use=1)
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
             # lecture_list = lecture_list.filter()
         else:
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_view_state_cd='VIEW', member_id=member_id, use=1)
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
             # lecture_list = lecture_list.filter()
