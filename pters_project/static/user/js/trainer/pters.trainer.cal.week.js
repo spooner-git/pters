@@ -243,7 +243,7 @@ $(document).ready(function(){
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 		$('#popup_planinfo_title').text('PT 일정')
-		$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
+		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
         $('#canvas').hide().css({'border-color':'#282828'})
 		$('#canvasWrap').css({'height':'0px'})
 		$('#canvasWrap span').hide();
@@ -319,7 +319,7 @@ $(document).ready(function(){
 	//Off 일정 클릭시 팝업 Start
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 		$('#popup_planinfo_title').text('OFF 일정')
-		$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
+		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
         $('#canvas').hide().css({'border-color':'#282828'})
 		$('#canvasWrap').css({'height':'0px'})
 		$('#canvasWrap span').hide();
@@ -425,7 +425,7 @@ $(document).ready(function(){
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-             			$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
+             			$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
                     	$('#canvas').hide().css({'border-color':'#282828'})
                     	$('#canvasWrap span').hide();
 						$('#canvasWrap').css({'height':'0px'})
