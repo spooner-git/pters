@@ -350,7 +350,7 @@ $(document).ready(function(){
 
 
 
-      $(document).on('click','#starttimes li a, #repeatstarttimes li a',function(){
+      $(document).on('click','#starttimes li a',function(){
           $('.tdgraph').removeClass('graphindicator')
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
           if(addTypeSelect == "ptadd"){
@@ -1251,7 +1251,7 @@ $(document).ready(function(){
           $('#'+t+'g'+option).addClass('greytimegraph')
         }
         /*업무시간 설정*/
-        
+
         //timeGraphLimitSet(Options.limit)
       }
 

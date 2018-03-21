@@ -3,7 +3,7 @@ $(document).ready(function(){
       $('#repeatSchedule').click(function(){ //일정추가 팝업에서 반복일정을 누르면 반복일정 관련 메뉴 나타남
           
           if(addTypeSelect == "ptadd"){
-            
+            repeatStartTimeSet()
             $('._NORMAL_ADD, ._NORMAL_ADD_timegraph').hide('slow')
             $('._REPEAT_ADD').show('slow')
             $('#uptext2').text('PT 반복 일정 등록')
@@ -16,7 +16,7 @@ $(document).ready(function(){
             fill_repeat_info('class')
             console.log(addTypeSelect)
           }else if(addTypeSelect == "offadd"){
-            
+            repeatStartTimeSet()
             $('._NORMAL_ADD, ._NORMAL_ADD_timegraph').hide('slow')
             $('._REPEAT_ADD').show('slow')
             $('#uptext2').text('OFF 반복 일정 등록')
@@ -91,6 +91,51 @@ $(document).ready(function(){
           
           check_dropdown_selected();
       }); 
+
+      $(document).on('click', '#repeatstarttimes li a',function(){
+          $('.tdgraph').removeClass('graphindicator')
+          $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-trainingtime'));
+          if(addTypeSelect == "repeatptadd"){
+            $("#id_repeat_start_time").val($(this).attr('data-trainingtime'));
+          }else if(addTypeSelect == "repeatoffadd"){
+            $("#id_repeat_start_time_off").val($(this).attr('data-trainingtime'));
+          }
+          var time = $(this).attr('data-trainingtime').split(':')
+          //durTimeSet(time[0],"class");
+          $("#durationsSelected button").removeClass("dropdown_selected");
+          $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+          $("#durationsSelected .btn:first-child").val("");
+          check_dropdown_selected();
+          repeatDurationTimeSet()
+      })
+
+      function repeatStartTimeSet(){
+          var start = Options.workStartTime;
+          var end   = Options.workEndTime;
+          var startTimeList = []
+          for(var i=start; i<=end; i++){
+            if(i == 24){
+              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li>')
+            }else if(i<12){
+              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li>')
+            }else if(i>=12){
+              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+i+'시</a></li>')
+            }
+          }
+          $('#repeatstarttimes').html(startTimeList.join(''))
+          $('#repeatdurations').html('')
+      }
+
+      function repeatDurationTimeSet(){
+          var start = Options.workStartTime;
+          var end   = Options.workEndTime;
+          var selectedTime = $('#repeatstarttimesSelected button').val().split(':')[0]
+          var durTimeList = []
+          for(var i=1; i<=end-(selectedTime-1); i++){
+              durTimeList.push('<li><a data-dur="'+i+'">'+i+'시간</a></li>')
+          }
+          $('#repeatdurations').html(durTimeList.join(''))
+      }
 
 
       $('.dateButton').click(function(){ // 반복일정 요일선택 (월/화/수/목/금/토/일)
