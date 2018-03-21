@@ -977,19 +977,19 @@ def get_trainer_setting_data(context, user_id, class_id):
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_01')
         lt_res_01 = setting_data.setting_info
     except ObjectDoesNotExist:
-        lt_res_01 = ''
+        lt_res_01 = '00:00-23:59'
 
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_02')
         lt_res_02 = setting_data.setting_info
     except ObjectDoesNotExist:
-        lt_res_02 = ''
+        lt_res_02 = '0'
 
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_03')
         lt_res_03 = setting_data.setting_info
     except ObjectDoesNotExist:
-        lt_res_03 = ''
+        lt_res_03 = '0'
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
@@ -1253,7 +1253,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
 
     # 강사 setting 값 로드
     if error is None:
-        context = get_trainer_setting_data(context, class_info.member_id, class_info.class_id)
+        context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
