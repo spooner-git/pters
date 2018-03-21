@@ -188,9 +188,12 @@
 
             function ajax_read_lecture_info_from_db(){
                 $.ajax({
+
                       //url: '/trainee/read_trainee_lecture_by_class_ajax/',
                       url: '/trainee/read_trainee_lecture_ajax/',
                       dataType : 'html',
+                      type:'POST',
+
 
                       beforeSend:function(){
                         
@@ -287,7 +290,7 @@
                       var sum = table + lectureName + trainerName + selection + '</div>'
                       list_table_to_join.push(sum)
                       for(var j=0; j<lec_select_lectureCountsArray[i]; j++){
-                          if(lec_select_stateArray[j] == 'WAIT'){
+                          if(lec_select_stateArray[j] == 'NP'){
                               var table = '<div class="pters_table displayNone" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[i]+'">'
                               var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
                               var trainerName = '<div class="pters_table_cell table_trainer_name">'+'달력 연동'+'</div>'

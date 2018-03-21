@@ -954,10 +954,16 @@ def delete_member_info_logic(request):
                     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                               lecture_tb_id=lecture_info.lecture_id,
                                                               state_cd='NP')
+
+                    schedule_data_finish = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                     lecture_tb_id=lecture_info.lecture_id,
+                                                                     state_cd='PE').update(class_tb_id='')
                     repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                                            lecture_tb_id=lecture_info.lecture_id)
                     schedule_data.delete()
                     repeat_schedule_data.delete()
+                    # schedule_data_finish.class_tb_id = ''
+                    # schedule_data_finish.save()
                     lecture_info.use = 0
                     lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                     lecture_info.mod_dt = timezone.now()
@@ -1704,6 +1710,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         context = super(ReadLectureByClassMemberAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
+        context['error'] = None
 
         context = get_lecture_list_by_class_member_id(context, class_id, member_id)
 
@@ -1716,6 +1723,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         context = super(ReadLectureByClassMemberAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
+        context['error'] = None
 
         context = get_lecture_list_by_class_member_id(context, class_id, member_id)
         if context['error'] is not None:

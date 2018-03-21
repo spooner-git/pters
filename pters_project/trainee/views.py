@@ -129,7 +129,8 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 lecture_info.class_info = class_info
                 lecture_info.trainer_info = trainer_info
 
-        messages.error(self.request, error)
+        if error is not None:
+            messages.error(self.request, error)
 
         context['lecture_data'] = lecture_data
 
@@ -162,73 +163,11 @@ class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVi
 
     def get_context_data(self, **kwargs):
         context = super(ReadTraineeLectureViewAjax, self).get_context_data(**kwargs)
-        error = None
-        class_list = []
-        class_data = []
-        # lecture_data2 = []
-        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE')
 
-        for lecture_info in lecture_data:
-            class_info = None
-            trainer_info = None
-            pt_type_name = None
-            try:
-                class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
-            except ObjectDoesNotExist:
-                error = '강사 정보가 없습니다.'
-
-            if error is None:
-                try:
-                    trainer_info = MemberTb.objects.get(member_id=class_info.member_id)
-                except ObjectDoesNotExist:
-                    error = '강사 회원정보가 없습니다.'
-
-            if error is None:
-                try:
-                    pt_type_name = CommonCdTb.objects.get(common_cd=class_info.class_type_cd)
-                except ObjectDoesNotExist:
-                    error = '강좌 type 없음'
-
-            if error is None:
-                class_info.trainer_info = trainer_info
-                class_info.class_type_name = pt_type_name.common_cd_nm
-
-                class_duplicate_check = 0
-                for idx, class_test in enumerate(class_list):
-                    if class_test.class_id == class_info.class_id:
-                        class_duplicate_check = 1
-                        break
-                if class_duplicate_check == 0:
-                    class_list.append(class_info)
-
-                lecture_info.class_info = class_info
-                lecture_info.trainer_info = trainer_info
-
-        if error is not None:
-            messages.error(self.request, error)
-
-        context['lecture_data'] = lecture_data
-
-        for class_info in class_list:
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                    member_id=self.request.user.id).order_by('-start_date').exclude(member_view_state_cd='DELETE')
-            lecture_class = class_info
-            if len(lecture_list) > 0:
-                lecture_class.np_lecture_counts = 0
-                lecture_class.lecture_counts = len(lecture_list)
-                input_lecture_info = lecture_list[0]
-                for idx, lecture_info in enumerate(lecture_list):
-                    if lecture_info.member_view_state_cd == 'WAIT':
-                        lecture_class.np_lecture_counts += 1
-                    if idx != 0:
-                        input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
-                        input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
-                        input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
-
-                lecture_class.lecture_info = input_lecture_info
-                class_data.append(lecture_class)
-
-        context['class_data'] = class_data
+        context['error'] = None
+        context = get_lecture_list_by_member_id(context, self.request.user.id)
+        if context['error'] is not None:
+            messages.error(self.request, context['error'])
 
         return context
 
@@ -239,8 +178,9 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
     def get(self, request, *args, **kwargs):
         context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
+        class_id = request.GET.get('class_id', '')
 
+        context['error'] = None
         context = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
 
         if context['error'] is not None:
@@ -250,13 +190,89 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
     def post(self, request, *args, **kwargs):
         context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
+        class_id = request.POST.get('class_id', '')
 
-        error = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
-        if error is not None:
-            messages.error(self.request, error)
+        context['error'] = None
+        context = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
+
+        if context['error'] is not None:
+            messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
+
+
+def get_lecture_list_by_member_id(context, member_id):
+    class_list = []
+    class_data = []
+    error = None
+    lecture_data = LectureTb.objects.filter(member_id=member_id).exclude(member_view_state_cd='DELETE')
+
+    for lecture_info in lecture_data:
+        class_info = None
+        trainer_info = None
+        pt_type_name = None
+        try:
+            class_info = ClassTb.objects.get(class_id=lecture_info.class_tb_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 없습니다.'
+
+        if error is None:
+            try:
+                trainer_info = MemberTb.objects.get(member_id=class_info.member_id)
+            except ObjectDoesNotExist:
+                error = '강사 회원정보가 없습니다.'
+
+        if error is None:
+            try:
+                pt_type_name = CommonCdTb.objects.get(common_cd=class_info.class_type_cd)
+            except ObjectDoesNotExist:
+                error = '강좌 type 없음'
+
+        if error is None:
+            class_info.trainer_info = trainer_info
+            class_info.class_type_name = pt_type_name.common_cd_nm
+
+            class_duplicate_check = 0
+            for idx, class_test in enumerate(class_list):
+                if class_test.class_id == class_info.class_id:
+                    class_duplicate_check = 1
+                    break
+            if class_duplicate_check == 0:
+                class_list.append(class_info)
+
+            lecture_info.class_info = class_info
+            lecture_info.trainer_info = trainer_info
+
+    context['lecture_data'] = lecture_data
+
+    if error is None:
+        for class_info in class_list:
+            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                    member_id=member_id).order_by('-start_date').exclude(
+                member_view_state_cd='DELETE')
+            lecture_class = class_info
+            if len(lecture_list) > 0:
+                lecture_class.lecture_counts = 0
+                lecture_class.np_lecture_counts = 0
+                lecture_class.lecture_counts = len(lecture_list)
+                input_lecture_info = lecture_list[0]
+                for idx, lecture_info in enumerate(lecture_list):
+                    if lecture_info.member_view_state_cd == 'WAIT':
+                        lecture_class.np_lecture_counts += 1
+                    if idx != 0:
+                        input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
+                        input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
+                        input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+                    lecture_class.lecture_counts += 1
+
+                lecture_class.lecture_info = input_lecture_info
+                class_data.append(lecture_class)
+
+    context['class_data'] = class_data
+    if error is not None:
+        context['error'] = error
+
+    return context
 
 
 def get_lecture_list_by_class_member_id(context, class_id, member_id):
@@ -1249,10 +1265,10 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                                                              start_dt__lt=end_date)
                 pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                           en_dis_type='1')
-                if lecture_info.use != 0:
-                    if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
-                        pt_start_date = lecture_info.start_date
-                        pt_end_date = lecture_info.end_date
+                # if lecture_info.use != 0:
+                if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                    pt_start_date = lecture_info.start_date
+                    pt_end_date = lecture_info.end_date
             else:
                 pt_schedule_data |= ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id,
                                                               en_dis_type='1',
@@ -1260,17 +1276,17 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                                                               start_dt__lt=end_date)
                 pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                            en_dis_type='1')
-                if lecture_info.use != 0:
-                    if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
-                        if pt_start_date == '':
-                            pt_start_date = lecture_info.start_date
-                        pt_end_date = lecture_info.end_date
-
-            if lecture_info.use != 0:
+                # if lecture_info.use != 0:
                 if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
-                    lecture_reg_count_sum += lecture_info.lecture_reg_count
-                    lecture_rem_count_sum += lecture_info.lecture_rem_count
-                    lecture_avail_count_sum += lecture_info.lecture_avail_count
+                    if pt_start_date == '':
+                        pt_start_date = lecture_info.start_date
+                    pt_end_date = lecture_info.end_date
+
+            # if lecture_info.use != 0:
+            if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                lecture_reg_count_sum += lecture_info.lecture_reg_count
+                lecture_rem_count_sum += lecture_info.lecture_rem_count
+                lecture_avail_count_sum += lecture_info.lecture_avail_count
             lecture_info.schedule_check = 0
             lecture_info.save()
 
