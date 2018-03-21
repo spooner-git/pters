@@ -58,12 +58,15 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
                     class_counter += 1
 
-            if class_counter > 1 or lecture_np_counter > 0:
+            if class_counter > 1:
                 self.url = '/trainee/lecture_select/'
             else:
                 self.request.session['class_id'] = class_id_comp
                 self.request.session['lecture_id'] = lecture_id_select
-                self.url = '/trainee/cal_month/'
+                if lecture_np_counter > 0:
+                    self.url = '/trainee/lecture_select/'
+                else:
+                    self.url = '/trainee/cal_month/'
 
         return super(IndexView, self).get(request, **kwargs)
 
@@ -235,18 +238,18 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
     def get(self, request, *args, **kwargs):
         context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
-        class_id = request.GET.get('class_id', '')
+        class_id = request.session.get('class_id', '')
 
-        error = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
+        context = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
 
-        if error is not None:
-            messages.error(self.request, error)
+        if context['error'] is not None:
+            messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
-        class_id = request.POST.get('class_id', '')
+        class_id = request.session.get('class_id', '')
 
         error = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
         if error is not None:
@@ -259,7 +262,8 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
     error = None
     class_data = None
     context['error'] = None
-
+    lecture_counts = 0
+    np_lecture_counts = 0
     if class_id is None or '':
         error = '강사 정보를 불러오지 못했습니다.'
 
@@ -293,10 +297,16 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             lecture_info.mod_dt = str(lecture_info.mod_dt)
             lecture_info.reg_dt = str(lecture_info.reg_dt)
             lecture_info.state_type = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
+            if lecture_info.state_cd == 'NP':
+                np_lecture_counts += 1
+            lecture_counts += 1
 
+    class_data.lecture_counts = lecture_counts
+    class_data.np_lecture_counts = np_lecture_counts
     context['class_data'] = class_data
     context['lecture_data'] = lecture_data
 
+    print(error)
     if error is not None:
         context['error'] = error
 

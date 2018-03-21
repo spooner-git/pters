@@ -1392,9 +1392,9 @@ def update_setting_reserve_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-        request.session.setting_member_reserve_time_available = setting_member_reserve_time_available
-        request.session.setting_member_reserve_time_prohibition = setting_member_reserve_time_prohibition
-        request.session.setting_member_reserve_prohibition = setting_member_reserve_prohibition
+        request.session['setting_member_reserve_time_available'] = setting_member_reserve_time_available
+        request.session['setting_member_reserve_time_prohibition'] = setting_member_reserve_time_prohibition
+        request.session['setting_member_reserve_prohibition'] = setting_member_reserve_prohibition
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
         #               + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
@@ -1594,7 +1594,7 @@ def update_setting_language_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-        request.session.setting_language = setting_member_language
+        request.session['setting_language'] = setting_member_language
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
         #               + '언어 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 

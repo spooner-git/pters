@@ -55,8 +55,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'middleware.mdetector.MobileDetectionMiddleware',
-    #'middleware.mdetector.LoginDetectionMiddleware',
 ]
 
 ROOT_URLCONF = 'configs.urls'
@@ -90,12 +88,8 @@ WSGI_APPLICATION = 'configs.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pters',
         'USER': os.environ.get("PTERS_DB_USER", ''),
@@ -141,7 +135,6 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
@@ -150,113 +143,26 @@ STATICFILES_DIRS = (
 )
 
 # LOGIN URL
-# AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/trainer/index/'
 
-
 # Registration
 # https://django-registration.readthedocs.io/en/2.1.2/index.html
-
-ACCOUNT_ACTIVATION_DAYS = 1
+ACCOUNT_ACTIVATION_DAYS = 7
 
 # Email Activation
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get("PTERS_EMAIL_HOST_USER", '')
 EMAIL_HOST_PASSWORD = os.environ.get("PTERS_EMAIL_HOST_PASSWORD", '')
-# DEFAULT_FROM_MAIL = 'Spooner_Developer'
+DEFAULT_FROM_MAIL = 'Spooner_Developer'
 
-# 각 media 파일에 대한 URL Prefix
-MEDIA_URL = '/media/'
-# 항상 / 로 끝나도록 설정
-
-# 업로드된 파일을 저장할 디렉토리 경로
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+# AWS S3 Upload
 PTERS_AWS_ACCESS_KEY_ID = os.environ.get("PTERS_AWS_ACCESS_KEY_ID", '')
 PTERS_AWS_SECRET_ACCESS_KEY = os.environ.get("PTERS_AWS_SECRET_ACCESS_KEY", '')
 PTERS_AWS_S3_BUCKET_NAME = os.environ.get("PTERS_AWS_S3_BUCKET_NAME", '')
-
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
-AWS_LOCATION = 'static'
-
-# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
-'''
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-    },
-    'filters': {
-        'special': {
-            '()': 'pters_develop.logging.SpecialFilter',
-            'foo': 'bar',
-        }
-    },
-    'handlers': {
-        'null': {
-            'level': 'DEBUG',
-            'class': 'logging.NullHandler',
-        },
-        'console':{
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'filters': ['special']
-        }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['null'],
-            'propagate': True,
-            'level': 'INFO',
-        },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'myproject.custom': {
-            'handlers': ['console', 'mail_admins'],
-            'level': 'INFO',
-            'filters': ['special']
-        }
-    }
-}
-'''
