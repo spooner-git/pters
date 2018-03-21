@@ -178,7 +178,7 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
     def get(self, request, *args, **kwargs):
         context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
+        class_id = request.GET.get('class_id', '')
 
         context['error'] = None
         context = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
@@ -190,7 +190,7 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
     def post(self, request, *args, **kwargs):
         context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
+        class_id = request.POST.get('class_id', '')
 
         context['error'] = None
         context = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
