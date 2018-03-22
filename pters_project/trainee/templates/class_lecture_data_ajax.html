@@ -11,8 +11,14 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "availCountArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "stateArray":
+      "lectureStateArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lectureStateNameArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberViewStateArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.member_view_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberViewStateNameArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.member_view_state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "classInfoArray":
       ["{{ class_data.class_type_name.common_cd_nm}}"],

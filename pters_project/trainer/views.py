@@ -1902,7 +1902,8 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             lecture_info.end_date = str(lecture_info.end_date)
             lecture_info.mod_dt = str(lecture_info.mod_dt)
             lecture_info.reg_dt = str(lecture_info.reg_dt)
-            lecture_info.state_type = CommonCdTb.objects.get(common_cd=lecture_info.member_view_state_cd)
+            lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
+            lecture_info.member_view_state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.member_view_state_cd)
             if lecture_info.member_view_state_cd == 'WAIT':
                 np_lecture_counts += 1
             lecture_counts += 1
