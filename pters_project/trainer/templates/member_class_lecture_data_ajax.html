@@ -1,6 +1,7 @@
     {
       "lectureIdArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      
       "memberViewStateArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.member_view_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberViewStateNameArray":

@@ -296,11 +296,22 @@ $(document).ready(function(){
             $('#shade3').fadeIn('fast');
         }else{
             $('#shade').fadeIn('fast');
-        }
-        
+        } 
     })
 
-    $('._btn_close_resend_PC').click(function(){
+    $(document).on('click','div.lecConnectType_IP',function(){
+        $('.lectureStateChangePopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        if($('body').width()>600){
+            $('#shade3').fadeIn('fast');
+        }else{
+            $('#shade').fadeIn('fast');
+        } 
+    })
+
+
+
+
+    $('._btn_close_resend_PC, ._btn_close_statechange_PC').click(function(){
        $(this).parents('.popups').fadeOut('fast')
        if($('body').width()>600){
             $('#shade3').css('display','none');
@@ -309,17 +320,29 @@ $(document).ready(function(){
         }
     })
 
-    $('span.resend').click(function(){
+    $('span.resend').parent('div').click(function(){
         resend_member_reg_data_pc()
         $('.resendPopup').css('display','none')
         $('#shade3').css('display','none')
     })
 
-    $('span.delete_resend').click(function(){
+    $('span.delete_resend').parent('div').click(function(){
         delete_member_reg_data_pc()
         $('.resendPopup').css('display','none')
         $('#shade3').css('display','none')
     })
+
+    $('span.refund').parent('div').click(function(){
+        refund_member_lecture_data()
+        $('.lectureStateChangePopup').css('display','none')
+        //$('#shade3').css('display','none')
+    })
+
+    $('span.cancel_refund').parent('div').click(function(){
+        $('.lectureStateChangePopup').css('display','none')
+        $('#shade3').css('display','none')
+    })
+
 
     //회원 정보팝업의 일정정보내 반복일정 삭제버튼
     $(document).on('click','.deleteBtn',function(){ //일정요약에서 반복일정 오른쪽 화살표 누르면 휴지통 열림
@@ -472,11 +495,10 @@ $(document).ready(function(){
         $('#memberId').val(userID).attr('data-dbid',Data[userID].dbId);
         $('#memberId_info_PC').text(userID).attr('data-dbid',Data[userID].dbId);
         $('#memberPhone_info, #memberPhone_info_PC').val(Data[userID].phone);
-        $('#memberRegCount_info_PC').val(Data[userID].regcount + yetReg)
-        $('#memberRemainCount_info_PC').val(Data[userID].count + yet)
-        //$('#memberRemainCount_info_PC').val(Data[userID].count + yet)
-        $('#memberAvailCount_info_PC').val(Data[userID].availCount)
-        $('#memberFinishCount_info_PC').val(Data[userID].regcount-Data[userID].count)
+        $('#memberRegCount_info_PC').val(Data[userID].regcount + yetReg + '회')
+        $('#memberRemainCount_info_PC').val(Data[userID].count + yet + '회')
+        $('#memberAvailCount_info_PC').val(Data[userID].availCount + '회')
+        $('#memberFinishCount_info_PC').val(Data[userID].regcount-Data[userID].count + '회')
         $('#memberEmail_info, #memberEmail_info_PC').val(email)
         $('#memberStart_info_PC').val(Data[userID].start.replace(/년 |월 /gi,"-").replace(/일/gi,""))
         var end = Data[userID].end
@@ -620,10 +642,11 @@ $(document).ready(function(){
     function resend_member_reg_data_pc(){
         var userID = $('#memberId_info_PC').text();
         var lectureID = $('.resendPopup').attr('data-leid');
+        var userName = DB[userID].name
         $.ajax({
             url:'/trainer/resend_member_lecture_info/', 
             type:'POST',
-            data:{"lecture_id":lectureID,"member_name":DB[userID].name, "next_page":'/trainer/member_manage_ajax/'},
+            data:{"lecture_id":lectureID,"member_name":userName, "next_page":'/trainer/member_manage_ajax/'},
             dataType : 'html',
 
             beforeSend:function(){
@@ -652,6 +675,7 @@ $(document).ready(function(){
                   $('#startR').attr('selected','selected')
                   open_member_info_popup_pc($('#memberId_info_PC').text())
                   set_member_lecture_list()
+                  alert(userName + '환불 처리 되었습니다.')
                   console.log('success');
                 }
             },
@@ -709,6 +733,64 @@ $(document).ready(function(){
         })
     }
 
+    function refund_member_lecture_data(){
+        var userID = $('#memberId_info_PC').text();
+        var lectureID = $('.lectureStateChangePopup').attr('data-leid');
+        var refund_price = $('div.lectureStateChangePopup.popups input[type="number"]').val()
+        if(refund_price.length>0){
+            $.ajax({
+                    url:'/trainer/refund_member_lecture_info/', 
+                    type:'POST',
+                    data:{"lecture_id":lectureID, "member_name":DB[userID].name, "refund_price": refund_price ,"next_page":'/trainer/member_manage_ajax/'},
+                    dataType : 'html',
+
+                    beforeSend:function(){
+                        beforeSend()
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                        completeSend()
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+                        ajax_received_json_data(data);
+                        if(messageArray.length>0){
+                          $('#inputError_info_PC').fadeIn()
+                          setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
+                          $('#errorMsg_info_PC p').text(messageArray)
+                        }
+                        else{
+                          DataFormattingDict('ID');
+                          DataFormatting('current');
+                          DataFormatting('finished');
+                          memberListSet('current','date','yes');
+                          memberListSet('finished','date','yes');
+                          $('#startR').attr('selected','selected')
+                          open_member_info_popup_pc($('#memberId_info_PC').text())
+                          set_member_lecture_list()
+
+                          $('#shade3').css('display','none')
+                          $('div.lectureStateChangePopup.popups input[type="number"]').val('')
+                          console.log('success');
+
+                        }
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+                        alert("서버 통신 : error")
+                    },
+                })
+        }else{
+            alert('환불 금액을 입력해주세요.')
+        }
+        
+    }
+
+
+
     function set_member_lecture_list(){
         if($('#memberInfoPopup_PC').css('display')=="block"){
             var userID = $('#memberId_info_PC').text()
@@ -743,29 +825,7 @@ $(document).ready(function(){
             success:function(data){
                 console.log(data)
                 var jsondata = JSON.parse(data);
-                var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>진행상태</div><div>연결상태</div></div>']
-                console.log(jsondata)
-                for(var i=0; i<jsondata.lectureIdArray.length; i++){
-                    var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
-                    var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
-                    var lectureType = '<div>'+jsondata.lectureTypeArray[i]+'</div>'
-                    var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
-                    var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
-                    var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
-                    var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
-                    var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
-                    var remcount =    '<div>'+jsondata.remCountArray[i]+'</div>'
-                    var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
-                    var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>' 
-                    if(jsondata.lectureTypeArray[i] == "WAIT"){
-                        var lectureTypeName = '<div class="lectureType_NP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
-                    }else if(jsondata.lectureTypeArray[i] == "DELETE"){
-                        var lectureTypeName = '<div class="lectureType_RJ" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
-                    }
-                    result_history_html.push('<div>'+start+end+regcount+remcount+lectureConnectType+lectureTypeName+'</div>')
-                }
-                var result_history = result_history_html.join('')
-                $regHistory.html(result_history)
+                draw_member_lecture_list_table(jsondata,$regHistory)
             },
 
             //통신 실패시 처리
@@ -773,6 +833,42 @@ $(document).ready(function(){
                 alert("서버 통신 : error")
             },
         })
+    }
+
+    function draw_member_lecture_list_table(jsondata, targetHTML){
+        var $regHistory = targetHTML
+        var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>진행상태</div><div>연결상태</div></div>']
+        for(var i=0; i<jsondata.lectureIdArray.length; i++){
+            var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
+            var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
+            var lectureType = '<div>'+jsondata.lectureStateArray[i]+'</div>'
+            var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateArray[i]+'</div>'
+            var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
+            var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
+            var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
+            var remcount =    '<div>'+jsondata.remCountArray[i]+'</div>'
+            var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
+            var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'  
+            if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
+                var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            }else if(jsondata.lectureStateArray[i] == "PE"){
+                var lectureTypeName = '<div class="lecConnectType_PE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            }else if(jsondata.lectureStateArray[i] == "RF"){
+                var lectureTypeName = '<div class="lecConnectType_RF" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            }
+            if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
+                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            }else if(jsondata.memberViewStateArray[i] == "DELETE"){
+                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            }else if(jsondata.memberViewStateArray[i] == "VIEW"){
+                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            }
+            result_history_html.push('<div>'+start+end+regcount+remcount+lectureTypeName+lectureConnectTypeName+'</div>')
+        }
+        var result_history = result_history_html.join('')
+        $regHistory.html(result_history)
     }
 
 
