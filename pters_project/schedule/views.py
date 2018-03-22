@@ -629,7 +629,7 @@ def finish_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
-    # print(error)
+    print(error)
 
     if error is None:
         save_log_data(start_date, end_date, class_info.class_id, lecture_info.lecture_id, request.user.last_name+request.user.first_name,
