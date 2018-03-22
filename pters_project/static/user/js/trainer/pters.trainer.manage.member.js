@@ -308,6 +308,15 @@ $(document).ready(function(){
         } 
     })
 
+    $(document).on('click','div.lectureType_WAIT, div.lectureType_VIEW',function(){
+        $('.lectureConnectStateChangePopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        if($('body').width()>600){
+            $('#shade3').fadeIn('fast');
+        }else{
+            $('#shade').fadeIn('fast');
+        } 
+    })
+
 
 
 
@@ -325,21 +334,32 @@ $(document).ready(function(){
         $('.resendPopup').css('display','none')
         $('#shade3').css('display','none')
     })
-
     $('span.delete_resend').parent('div').click(function(){
         delete_member_reg_data_pc()
         $('.resendPopup').css('display','none')
         $('#shade3').css('display','none')
     })
 
+
     $('span.refund').parent('div').click(function(){
         refund_member_lecture_data()
         $('.lectureStateChangePopup').css('display','none')
         //$('#shade3').css('display','none')
     })
-
     $('span.cancel_refund').parent('div').click(function(){
         $('.lectureStateChangePopup').css('display','none')
+        $('#shade3').css('display','none')
+    })
+
+
+    $('span.connectchange').parent('div').click(function(){
+        var stateCode =  $(this).attr('data-stat')
+        statechange_member_lecture_data(stateCode)
+        $('.lectureConnectStateChangePopup').css('display','none')
+        //$('#shade3').css('display','none')
+    })
+    $('span.cancel_connectchange').parent('div').click(function(){
+        $('.lectureConnectStateChangePopup').css('display','none')
         $('#shade3').css('display','none')
     })
 
@@ -786,9 +806,59 @@ $(document).ready(function(){
         }else{
             alert('환불 금액을 입력해주세요.')
         }
-        
     }
 
+    function statechange_member_lecture_data(stateCode){
+        var userID = $('#memberId_info_PC').text();
+        var lectureID = $('.lectureStateChangePopup').attr('data-leid');
+        var state = stateCode
+        console.log(state)
+            $.ajax({
+                    url:'/trainer/update_member_lecture_view_info/', 
+                    type:'POST',
+                    data:{"lecture_id":lectureID, "member_name":DB[userID].name, "member_view_state_cd": stateCode ,"next_page":'/trainer/member_manage_ajax/'},
+                    dataType : 'html',
+
+                    beforeSend:function(){
+                        beforeSend()
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                        completeSend()
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+                        ajax_received_json_data(data);
+                        if(messageArray.length>0){
+                          $('#inputError_info_PC').fadeIn()
+                          setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
+                          $('#errorMsg_info_PC p').text(messageArray)
+                        }
+                        else{
+                          DataFormattingDict('ID');
+                          DataFormatting('current');
+                          DataFormatting('finished');
+                          memberListSet('current','date','yes');
+                          memberListSet('finished','date','yes');
+                          $('#startR').attr('selected','selected')
+                          open_member_info_popup_pc($('#memberId_info_PC').text())
+                          set_member_lecture_list()
+
+                          $('#shade3').css('display','none')
+                          $('div.lectureStateChangePopup.popups input[type="number"]').val('')
+                          console.log('success');
+
+                        }
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+                        alert("서버 통신 : error")
+                    },
+                })
+    }
 
 
     function set_member_lecture_list(){
