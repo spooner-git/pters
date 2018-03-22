@@ -24,6 +24,20 @@ button:focus{
 	transform:translate(-50%,-50%);
 }
 
+.lectureStateChangePopup{
+	display: none;
+	position: fixed;
+	background: #ffffff;
+	border-color: transparent;
+	width: 80%;
+	max-width: 330px;
+	z-index: 120;
+	text-align: center;
+	top: 50%;
+	left: 50%;
+	transform:translate(-50%,-50%);
+}
+
 .confirmText{
 	background: #ffffff;
 	position: relative;
@@ -472,11 +486,33 @@ th{
 			#memberRegHistory_info_PC_wrap > label, #memberRegHistory_info_wrap > label, #memberRepeat_info_PC_wrap >label{
 				display: inline;
 			}
-			.lectureType_NP{
-				color: orange !important;
+			.lectureType_VIEW{
+				color: green !important;
+				
+				cursor: pointer !important;
 			}
-			.lectureType_RJ{
+			.lectureType_WAIT{
+				color: orange !important;
+				
+				cursor: pointer !important;
+			}
+			.lectureType_DELETE{
 				color: red !important;
+				text-decoration: underline;
+				cursor: pointer !important;
+			}
+			.lecConnectType_IP{
+				color: green !important;
+				text-decoration: underline;
+				cursor: pointer !important;
+			}
+			.lecConnectType_PE{
+				color: #282828 !important;
+				text-decoration: underline;
+				cursor: pointer !important;
+			}
+			.lecConnectType_RF{
+				color: orange !important;
 				text-decoration: underline;
 				cursor: pointer !important;
 			}

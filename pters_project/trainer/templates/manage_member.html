@@ -66,6 +66,30 @@
 </div>
 -->
 
+<div class="lectureStateChangePopup popups">
+    <div style="height: 50px;">
+        <img src={% static "user/res/rejected.png" %} style="width:35px;margin-top:10px;">
+        <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
+    </div>
+    <div class="KRtext confirmText">회원님 등록을 취소하시겠습니까?<br>환불 금액을 입력해 주세요.</div>
+    <div class="KRtext confirmText" style="font-size: 12px;height: 35px;color:#fe4e65;font-weight: normal">※환불 선택시 완료된 일정은 제외한 나머지만 환불처리 됩니다.</div>
+    <div class="JPtext confirmText">日程を削除しますか</div>
+    <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
+    <div style="text-align: center;margin-bottom: 10px;"><input type="number" name="refund_price" style="border:1px solid #fe4e65;"> 원</div>
+    <div class="popup_inner popup_inner_resend">
+        <span style="color:#fe4e65;" class="KRtext refund">환불</span>
+        <span style="color:#fe4e65;" class="JPtext refund">はい</span>
+        <span style="color:#fe4e65;" class="ENtext refund">Yes</span>
+    </div>
+    <div class="popup_inner popup_inner_resend">
+        <span class="KRtext cancel_refund">취소</span>
+        <span class="JPtext cancel_refund">いいえ</span>
+        <span class="ENtext cancel_refund">No</span>
+    </div>
+
+</div>
+
+
 <div class="resendPopup popups">
     <div style="height: 40px;">
         <img src={% static "user/res/rejected.png" %} style="width:35px;margin-top:5px;">
