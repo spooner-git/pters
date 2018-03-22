@@ -72,8 +72,26 @@ body{
 	width: 12.5%;
 }
 
+
 .weekNum span{
 	display: block;
+}
+
+
+.satDate{
+	color: #115a8e;
+}
+
+.sunDate{
+	color: #d21245;
+}
+
+.holiday{
+	color: #d21245 !important;
+}
+
+.holidayName{
+	font-size: 0px;
 }
 
 .today{
@@ -632,9 +650,15 @@ img,a,div,span,p{
 
 	.weekNum{
 		background:#ededed;
-		padding-bottom: 15px;
+		/*padding-bottom: 15px;*/
 		border-top: 1px solid #cccccc;
 		border-right: 1px solid #f7f7f7;
+	}
+
+	.holidayName{
+		display: inline;
+		font-size:10px;
+		height: 15px;
 	}
 
 	.timeindex_time{

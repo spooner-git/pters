@@ -126,7 +126,16 @@ function date_format_to_yyyymmdd(hanguldate, resultSplit){
   }else{
     var result = '.'
   }
-  
+  return result
+}
+
+function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
+  if(String(yyyymmdd).length==8){
+    var yyyy = yyyymmdd.substr(0,4)
+    var mm = yyyymmdd.substr(4,2)
+    var dd = yyyymmdd.substr(6,2)
+    var result = yyyy+resultSplit+mm+resultSplit+dd
+  }
   return result
 }
 

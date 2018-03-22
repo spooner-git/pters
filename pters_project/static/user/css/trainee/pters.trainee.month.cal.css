@@ -345,6 +345,11 @@ img,a,div,span,p{
 	color: #d21245 !important;
 }
 
+.holidayName{
+	font-size: 12px;
+	margin-right: 5px;
+}
+
 .balloon{
 	position: absolute;
 	background: transparent;

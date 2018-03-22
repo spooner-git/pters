@@ -222,10 +222,12 @@ th{
 }
 
 
-
+.memberline{
+	cursor: pointer;
+}
 
 .memberline:hover{
-	background:#eaeaea;
+	background:#fdfdfd;
 	color: #fe4e65 !important;
 	font-weight: bold;
 }
@@ -529,7 +531,6 @@ th{
 
 ._tdname,._tdnamee{
 	font-size: 105%;
-	cursor: pointer;
 }
 
 #memberDelete{
@@ -590,9 +591,9 @@ th{
 }
 
 .pcmanageicon{
-	height: 15px;
-	margin-left: 3px;
-	margin-right: 3px;
+	height: 18px;
+	margin-left: 8px;
+	margin-right: 8px;
 	cursor: pointer;
 }
 
@@ -783,6 +784,10 @@ th{
 
 	._countnum,._id,._email,._finday,._manage{
 		display: table-cell;
+	}
+
+	img._info_view{
+		display: none;
 	}
 
 	._countnum{

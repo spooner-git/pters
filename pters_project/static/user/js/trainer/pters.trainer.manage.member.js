@@ -167,7 +167,7 @@ $(document).ready(function(){
     })
 
 //#####################회원정보 팝업 //#####################
-
+    /*
     $(document).on('click','td._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
         var userID = $(this).siblings('._id').attr('data-name');
         if($('body').width()<600){
@@ -184,8 +184,27 @@ $(document).ready(function(){
             $('#select_info_shift_lecture,#select_info_shift_schedule').css('color','#282828')
         }
     });
+    */
 
-    $(document).on('click','img._info_view',function(){
+    $(document).on('click','tr.memberline',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+        var userID = $(this).find('._id').attr('data-name');
+        if($('body').width()<600){
+            open_member_info_popup_mobile(userID)
+            get_indiv_repeat_info(userID)
+            set_member_lecture_list()
+        }else if($('body').width()>=600){
+            open_member_info_popup_pc(userID)
+            get_indiv_repeat_info(userID)
+            set_member_lecture_list()
+            $('#info_shift_base').show()
+            $('#info_shift_lecture, #info_shift_schedule').hide()
+            $('#select_info_shift_base').css('color','#fe4e65')
+            $('#select_info_shift_lecture,#select_info_shift_schedule').css('color','#282828')
+        }
+    });
+
+    $(document).on('click','img._info_view',function(e){
+        e.stopPropagation()
         var userID = $(this).parent('td').siblings('._id').text()
         if($('body').width()<600){
             open_member_info_popup_mobile(userID)
@@ -200,7 +219,8 @@ $(document).ready(function(){
         }
     })
 
-    $(document).on('click','img._info_delete',function(){
+    $(document).on('click','img._info_delete',function(e){
+        e.stopPropagation()
         var selectedUserId = $(this).parent('td').siblings('._id').text()
         var selectedUserName = $(this).parent('td').siblings('._tdname').text()
         $('#popup_delete_title').text('회원 삭제')
@@ -225,7 +245,8 @@ $(document).ready(function(){
       $('#shade3').fadeIn('fast');
     })
 
-    $(document).on('click','img._info_modify',function(){
+    $(document).on('click','img._info_modify',function(e){
+        e.stopPropagation()
         var userID = $(this).parent('td').siblings('._id').text()
         if($('body').width()<600){
             open_member_info_popup_mobile(userID)
