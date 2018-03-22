@@ -36,7 +36,7 @@
                     <a><img src={% static "user/res/icon-user-setting.png" %} style="width:25px;"></a>
                  </button> 
                  {% block nav_center_img %}
-                 <a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.first_name }} 회원님 월간 PT 일정</a>
+                 <a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.last_name }}{{ user.first_name }} 회원님 월간 PT 일정</a>
                 {% endblock %}
                  <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">
                     <a><img src={% static "user/res/login/icon-unlock-pink.png" %} style="width:20px;"></a>
@@ -71,7 +71,7 @@
                 <div id="loginInfo" class="centermenu_div" style="float:right;cursor:pointer;"　
                 onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
                     <span class="pcwhere"></span>
-                    <span class="pcwho">{{user.first_name}} 회원<span></span></span>
+                    <span class="pcwho">{{ user.last_name }}{{user.first_name}} 회원<span></span></span>
                 </div>
                 <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
             </div>

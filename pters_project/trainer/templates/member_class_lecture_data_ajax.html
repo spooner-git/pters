@@ -1,13 +1,15 @@
     {
       "lectureIdArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "lectureTypeArray":
+      "memberViewStateArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.member_view_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "lectureTypeNameArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.state_type.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberViewStateNameArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.member_view_state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
-      "lectureStateTypeArray":
+      "lectureStateArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lectureStateNameArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "priceArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

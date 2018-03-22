@@ -32,10 +32,13 @@ urlpatterns = [
     url(r'^lecture_processing/$', views.lecture_processing, name='lecture_processing'),
 
     url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),
+    url(r'^delete_member_lecture_info/$', views.delete_member_lecture_info_logic, name='delete_member_lecture_info'),
 
 
     url(r'^read_trainee_lecture_ajax/$', views.ReadTraineeLectureViewAjax.as_view(), name='read_trainee_lecture_ajax'),
     url(r'^read_trainee_schedule_ajax/$', views.ReadTraineeScheduleViewAjax.as_view(), name='read_trainee_schedule_ajax'),
+
+    # 회원 수강 list 조회
     url(r'^read_trainee_lecture_by_class_ajax/$', views.ReadLectureByClassAjax.as_view(), name='read_trainee_lecture_by_class_ajax'),
 
 
