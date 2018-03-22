@@ -966,6 +966,8 @@ def delete_member_info_logic(request):
                     repeat_schedule_data.delete()
                     # schedule_data_finish.class_tb_id = ''
                     # schedule_data_finish.save()
+                    if lecture_info.state_cd == 'IP':
+                        lecture_info.state_cd = 'PE'
                     lecture_info.use = 0
                     lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                     lecture_info.mod_dt = timezone.now()
@@ -1067,7 +1069,12 @@ def delete_member_lecture_info_logic(request):
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         schedule_data.delete()
         repeat_schedule_data.delete()
-        lecture_info.delete()
+        lecture_info.use = 0
+        lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+        lecture_info.mod_dt = timezone.now()
+        if lecture_info.state_cd == 'IP':
+            lecture_info.state_cd = 'PE'
+        lecture_info.save()
 
     if error is None:
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
@@ -1088,12 +1095,122 @@ def delete_member_lecture_info_logic(request):
 
 
 @csrf_exempt
+def refund_member_lecture_info_logic(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    member_name = request.POST.get('member_name', '')
+    next_page = request.POST.get('next_page', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+
+    if lecture_id is None or '':
+        error = '회원 수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '회원 수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                  state_cd='NP')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+        schedule_data.delete()
+        repeat_schedule_data.delete()
+        lecture_info.use = 0
+        lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+        lecture_info.mod_dt = timezone.now()
+        lecture_info.state_cd = 'RF'
+        lecture_info.save()
+
+    if error is None:
+        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
+        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
+
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         log_info='수강 정보', log_how='환불 처리',
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+@csrf_exempt
+def refund_member_lecture_info_logic(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    member_name = request.POST.get('member_name', '')
+    refund_price = request.POST.get('refund_price', '')
+    next_page = request.POST.get('next_page', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    input_refund_price = 0
+
+    if lecture_id is None or '':
+        error = '회원 수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if refund_price is None or refund_price == 0:
+            error = '환불 금액을 입력해 주세요.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '회원 수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            input_refund_price = int(refund_price)
+        except ValueError:
+            error = '환불 금액은 숫자만 입력 가능합니다.'
+
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                  state_cd='NP')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+        schedule_data.delete()
+        repeat_schedule_data.delete()
+        # lecture_info.use = 0
+        lecture_info.refund_price = input_refund_price
+        lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+        lecture_info.mod_dt = timezone.now()
+        lecture_info.state_cd = 'RF'
+        lecture_info.save()
+
+    if error is None:
+        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
+        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
+
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         log_info='수강 정보', log_how='환불 처리',
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+@csrf_exempt
 def update_member_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     start_date = request.POST.get('start_date', '')
     end_date = request.POST.get('end_date', '')
     price = request.POST.get('price', '')
+    refund_price = request.POST.get('refund_price', '')
     lecture_reg_count = request.POST.get('lecture_reg_count', '')
     note = request.POST.get('note', '')
     member_name = request.POST.get('member_name', '')
@@ -1119,6 +1236,8 @@ def update_member_lecture_info_logic(request):
             end_date = lecture_info.end_date
         if price is None or price == '':
             price = lecture_info.price
+        if refund_price is None or refund_price == '':
+            refund_price = lecture_info.refund_price
         if lecture_reg_count is None or lecture_reg_count == '':
             lecture_reg_count = lecture_info.lecture_reg_count
         if note is None or note == '':
@@ -1136,6 +1255,7 @@ def update_member_lecture_info_logic(request):
         lecture_info.start_date = start_date
         lecture_info.end_date = end_date
         lecture_info.price = price
+        lecture_info.refund_price = refund_price
         lecture_info.note = note
         lecture_info.lecture_reg_count = lecture_reg_count
         lecture_info.mod_dt = timezone.now()

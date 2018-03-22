@@ -31,7 +31,8 @@ urlpatterns = [
 
     url(r'^resend_member_lecture_info/$', views.resend_member_lecture_info_logic, name='resend_member_lecture_info'),
     url(r'^delete_member_lecture_info/$', views.delete_member_lecture_info_logic, name='delete_member_lecture_info'),
-    url(r'^update_member_lecture_info', views.update_member_lecture_info_logic, name='update_member_lecture_info'),
+    url(r'^update_member_lecture_info/$', views.update_member_lecture_info_logic, name='update_member_lecture_info'),
+    url(r'^refund_member_lecture_info/$', views.refund_member_lecture_info_logic, name='refund_member_lecture_info'),
 
     # url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
 

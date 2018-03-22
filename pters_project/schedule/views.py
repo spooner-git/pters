@@ -61,6 +61,8 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
                 member_lecture_info = LectureTb.objects.get(lecture_id=int(lecture_id), use=1)
             except ObjectDoesNotExist:
                 error = '회원 수강 정보를 불러오지 못했습니다.'
+            except ValueError:
+                error = '회원 수강 정보를 불러오지 못했습니다.'
         if error is None:
             if member_lecture_info.lecture_avail_count == 0:
                 error = '예약 가능한 횟수를 확인해주세요.'
@@ -433,9 +435,12 @@ def add_schedule_logic(request):
         try:
             with transaction.atomic():
                 lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
-                error = add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
-                                                request.user.id, lecture_id, note,
-                                                en_dis_type, None)
+                if lecture_id is None:
+                    error = '등록할수 있는 일정이 없습니다.'
+                if error is None:
+                    error = add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
+                                                    request.user.id, lecture_id, note,
+                                                    en_dis_type, None)
                 '''
                 for input_datetime in input_datetime_list:
                     lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
