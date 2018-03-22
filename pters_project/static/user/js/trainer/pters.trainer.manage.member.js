@@ -743,25 +743,26 @@ $(document).ready(function(){
             success:function(data){
                 console.log(data)
                 var jsondata = JSON.parse(data);
-                var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>상태</div></div>']
+                var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>진행상태</div><div>연결상태</div></div>']
                 console.log(jsondata)
                 for(var i=0; i<jsondata.lectureIdArray.length; i++){
                     var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
                     var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
                     var lectureType = '<div>'+jsondata.lectureTypeArray[i]+'</div>'
                     var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
+                    var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
                     var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
                     var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
                     var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
                     var remcount =    '<div>'+jsondata.remCountArray[i]+'</div>'
-                    var start = '<div>'+jsondata.startArray[i]+'</div>'
-                    var end = '<div>'+jsondata.endArray[i]+'</div>' 
+                    var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
+                    var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>' 
                     if(jsondata.lectureTypeArray[i] == "WAIT"){
                         var lectureTypeName = '<div class="lectureType_NP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
                     }else if(jsondata.lectureTypeArray[i] == "DELETE"){
                         var lectureTypeName = '<div class="lectureType_RJ" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureTypeNameArray[i]+'</div>'
                     }
-                    result_history_html.push('<div>'+start+end+regcount+remcount+lectureTypeName+'</div>')
+                    result_history_html.push('<div>'+start+end+regcount+remcount+lectureConnectType+lectureTypeName+'</div>')
                 }
                 var result_history = result_history_html.join('')
                 $regHistory.html(result_history)
