@@ -1177,9 +1177,19 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
 
         if error is None:
             try:
-                user = User.objects.get(username=user_id, is_active=1)
+                user = User.objects.get(username=user_id)
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
+
+        if error is None:
+            try:
+                group = user.groups.get(user=user.id)
+            except ObjectDoesNotExist:
+                error = '회원 ID를 확인해 주세요.'
+
+            if error is None:
+                if group.name != 'trainee':
+                    error = '회원 ID를 확인해 주세요.'
 
         if error is None:
             try:
