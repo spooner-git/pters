@@ -369,6 +369,11 @@ img,a,div,span,p{
 	color: #d21245 !important;
 }
 
+.holidayName{
+	font-size:12px;
+	margin-right: 5px;
+}
+
 .balloon{
 	position: absolute;
 	background: #e4e4e4;
@@ -531,12 +536,12 @@ img,a,div,span,p{
 
 .tdsaturday{
 	border-right-color:#f7f7f7 !important;
-	color: #115a8e !important;
+	color: #115a8e;
 }
 
 .tdsunday{
 	border-left-color: #f7f7f7 !important;
-	color: #d21245 !important;
+	color: #d21245;
 }
 
 
