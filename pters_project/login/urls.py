@@ -38,4 +38,8 @@ urlpatterns = [
     url(r'^send_email_member/$', views.NewMemberSendEmailView.as_view(), name='send_email_member'),
     url(r'^resend_email_member/$', views.NewMemberReSendEmailView.as_view(), name='resend_email_member'),
 
+    url(r'^reset_password/$', views.ResetPasswordView.as_view(),
+        name='reset_password'),
+
+
 ]

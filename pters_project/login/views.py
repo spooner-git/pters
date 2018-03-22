@@ -2,12 +2,17 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.views import password_reset, password_reset_done
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth import authenticate, logout, login
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render, resolve_url
+from django.template.response import TemplateResponse
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.views import View
@@ -21,6 +26,7 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 from registration.forms import RegistrationForm
 
+from login.forms import MyPasswordResetForm
 from login.models import MemberTb
 from trainer.models import ClassTb
 
@@ -188,6 +194,79 @@ class ResendEmailAuthenticationView(RegistrationView, View):
             messages.error(request, error)
 
         return render(request, self.template_name)
+
+
+# 회원가입 api
+@method_decorator(csrf_exempt, name='dispatch')
+class ResetPasswordView(View):
+    template_name = 'registration_error_ajax.html'
+
+    def post(self, request, *args, **kwargs):
+        email = request.POST.get('email', '')
+        error = None
+        post_reset_redirect = None
+        from_email = None
+        extra_context = None
+        html_email_template_name = None
+        extra_email_context = None
+        password_reset_form = MyPasswordResetForm
+        token_generator = default_token_generator
+        template_name = 'registration/password_reset_form.html'
+        email_template_name = 'registration/password_reset_email.txt'
+        subject_template_name = 'registration/password_reset_subject.txt'
+        context = None
+        if email is None or email == '':
+            error = 'email 정보를 입력해주세요.'
+
+        if error is None:
+            try:
+                User.objects.get(email=email)
+            except ObjectDoesNotExist:
+                error = '가입되지 않은 회원입니다.'
+
+        if error is None:
+            if post_reset_redirect is None:
+                post_reset_redirect = reverse(password_reset_done)
+            else:
+                post_reset_redirect = resolve_url(post_reset_redirect)
+            if request.method == "POST":
+                form = password_reset_form(request.POST)
+                if form.is_valid():
+                    opts = {
+                        'use_https': request.is_secure(),
+                        'token_generator': token_generator,
+                        'from_email': from_email,
+                        'email_template_name': email_template_name,
+                        'subject_template_name': subject_template_name,
+                        'request': request,
+                        'html_email_template_name': html_email_template_name,
+                        'extra_email_context': extra_email_context,
+                    }
+                    form.save(**opts)
+                    return HttpResponseRedirect(post_reset_redirect)
+                else:
+                    for field in form:
+                        if field.errors:
+                            for err in field.errors:
+                                if error is None:
+                                    error = err
+                                else:
+                                    error += err
+            else:
+                form = password_reset_form()
+
+        if error is None:
+            context = {
+                'form': form,
+                'title': _('Password reset'),
+            }
+            if extra_context is not None:
+                context.update(extra_context)
+
+            return TemplateResponse(request, template_name, context)
+        else:
+            messages.error(request, error)
+            return render(request, self.template_name)
 
 
 # 회원가입 api
