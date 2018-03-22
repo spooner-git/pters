@@ -967,7 +967,6 @@ $(document).ready(function(){
 			$("td[data-date="+krHolidayList[i]+"]").addClass('holiday');
 			$("td[data-date="+krHolidayList[i]+"]").find('.holidayName').text(krHolidayNameList[i])
 		};
-
 	};
 
 	function monthText(){

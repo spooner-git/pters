@@ -916,6 +916,7 @@ $(document).ready(function(){
 	//DBrepeatdata(offrepeatData,'off')
 	weekNum_Set_fixed()
 	dateText();
+	krHoliday()
 	reserveAvailable()
 	toDay();
 	addcurrentTimeIndicator_blackbox()
@@ -934,7 +935,8 @@ $(document).ready(function(){
 			addcurrentTimeIndicator_blackbox()	
 			dateText();
 			reserveAvailable()
-			todayFinderArrow();	
+			todayFinderArrow();
+			krHoliday()
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
@@ -945,7 +947,8 @@ $(document).ready(function(){
 			addcurrentTimeIndicator_blackbox()
 			dateText();
 			reserveAvailable()
-			todayFinderArrow();			
+			todayFinderArrow();	
+			krHoliday()		
 	});
 
 	
@@ -1311,9 +1314,31 @@ $(document).ready(function(){
 		}
 		$('#ymdText-pc-date-start').text(dd_weekstart+'일')
 		$('#ymdText-pc-date-end').text(dd_weekend+'일')
-
 	}
 
+	function krHoliday(){
+		$('.holiday').removeClass('holiday')
+		$('.holidayName').text('')
+		for(var i=0; i<krHolidayList.length; i++){
+			var date_data = date_format_yyyy_m_d_to_yyyymmdd(krHolidayList[i])
+			console.log(date_data)
+			$("div[data-date="+date_data+"]").addClass('holiday');
+			$("div[data-date="+date_data+"]").find('.holidayName').text(krHolidayNameList[i])
+		};
+	}
+
+	function date_format_yyyy_m_d_to_yyyymmdd(yyyy_m_d){
+		var yyyy = String(yyyy_m_d.split('_')[0])
+		var mm = String(yyyy_m_d.split('_')[1])
+		var dd = String(yyyy_m_d.split('_')[2])
+		if(mm.length<2){
+			var mm = '0' + String(yyyy_m_d.split('_')[1])
+		}
+		if(dd.length<2){
+			var dd = '0' + String(yyyy_m_d.split('_')[2])
+		}
+		return yyyy+mm+dd
+	}
 	
 	function weekNum_Set(Index){
 		var index = Number(myswiper.activeIndex+1);
