@@ -336,7 +336,8 @@ def get_member_data(context, class_id, member_id):
                         member_data.np_lecture_counts += 1
 
                     if lecture_info.use != 0:
-                        if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                        # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                        if lecture_info.state_cd == 'IP':
                             member_data.lecture_reg_count += lecture_info.lecture_reg_count
                             member_data.lecture_rem_count += lecture_info.lecture_rem_count
                             member_data.lecture_avail_count += lecture_info.lecture_avail_count
@@ -390,7 +391,8 @@ def get_member_data(context, class_id, member_id):
                         member_data_finish.np_lecture_counts += 1
 
                     if lecture_info.use != 0:
-                        if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                        # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                        if lecture_info.state_cd == 'IP':
                             member_data_finish.lecture_reg_count += lecture_info.lecture_reg_count
                             member_data_finish.lecture_rem_count += lecture_info.lecture_rem_count
                             member_data_finish.lecture_avail_count += lecture_info.lecture_avail_count
