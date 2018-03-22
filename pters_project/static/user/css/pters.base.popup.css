@@ -25,7 +25,7 @@
 	display: none;
 	position: fixed;
 	background: #ffffff;
-	border-color: transparent;
+	border:1px solid #cccccc;
 	top: 50%;
 	width: 	100%;
 	max-width: 	330px;
@@ -53,7 +53,8 @@
 	background: #ffffff;
 	position: relative;
 	margin : 0 auto;
-	width: 330px;
+	width: 100%;
+	max-width: 330px;
 	text-align: center;
 	color: #3b3d3d;
 	font-size: 14px;
@@ -271,7 +272,8 @@
 		background: #ffffff;
 		height: 50px;
 		padding:13px 13px 13px 24px;
-		width: 330px;
+		width: 100%;
+		max-width: 330px;
 		text-align: left;
 	}
 
@@ -382,7 +384,7 @@
 	#shade3{
 		background: black;
 		opacity: 0.8;
-		z-index: 117;
+		z-index: 118;
 	}
 
 

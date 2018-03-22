@@ -161,8 +161,8 @@ $(document).ready(function(){
         //$('#page-addplan form input').val('')
         selectedDayGroup = []
 
-        $('._NORMAL_ADD').css('display','block')
-        $('._REPEAT_ADD').css('display','none')
+        $('._NORMAL_ADD_wrap').css('display','block')
+        $('._REPEAT_ADD_wrap').css('display','none')
         $('#timeGraph').css('display','none')
   	})
 
@@ -206,10 +206,17 @@ $(document).ready(function(){
         //$('#page-addplan form input').val('')
         selectedDayGroup = []
 
-        $('._NORMAL_ADD').css('display','block')
-        $('._REPEAT_ADD').css('display','none')
+        $('._NORMAL_ADD_wrap').css('display','block')
+        $('._REPEAT_ADD_wrap').css('display','none')
         $('#timeGraph').css('display','none')
   	})
+
+  	function closeAddPlanPopup(){
+  	  	$('#page-addplan').fadeOut('fast','swing')
+      	$('._NORMAL_ADD_wrap').css('display','block')
+      	$('._REPEAT_ADD_wrap').css('display','none')
+      	$('#timeGraph').css('display','none')
+  	}
 
 	$(document).on('click','.admonth',function(){
 		alert('까꿍~')
@@ -369,6 +376,7 @@ $(document).ready(function(){
                 success:function(data){
                   var jsondata = JSON.parse(data);
                   closeDeletePopup();
+                  closeAddPlanPopup();
                   ajax_received_json_data(jsondata)
                   AjaxCompleteSend();
                   },
@@ -383,6 +391,7 @@ $(document).ready(function(){
                 error:function(){
                   alert("에러: 서버 통신 실패")
                   closeDeletePopup();
+                  closeAddPlanPopup();
                   AjaxCompleteSend();
                 },
             })

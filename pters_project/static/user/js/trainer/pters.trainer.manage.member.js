@@ -167,24 +167,6 @@ $(document).ready(function(){
     })
 
 //#####################회원정보 팝업 //#####################
-    /*
-    $(document).on('click','td._tdname',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
-        var userID = $(this).siblings('._id').attr('data-name');
-        if($('body').width()<600){
-            open_member_info_popup_mobile(userID)
-            get_indiv_repeat_info(userID)
-            set_member_lecture_list()
-        }else if($('body').width()>=600){
-            open_member_info_popup_pc(userID)
-            get_indiv_repeat_info(userID)
-            set_member_lecture_list()
-            $('#info_shift_base').show()
-            $('#info_shift_lecture, #info_shift_schedule').hide()
-            $('#select_info_shift_base').css('color','#fe4e65')
-            $('#select_info_shift_lecture,#select_info_shift_schedule').css('color','#282828')
-        }
-    });
-    */
 
     $(document).on('click','tr.memberline',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
         var userID = $(this).find('._id').attr('data-name');
@@ -1131,6 +1113,13 @@ $(document).ready(function(){
             if(end == "9999.12.31"){
                 var end = "소진시까지"
             }
+
+            var newReg = ""
+            if(starts.substr(0,4) == currentYear && Number(starts.substr(4,2)) == currentMonth+1){
+                var newReg = '<img src="/static/user/res/icon-new.png" title="이번달 신규회원" class="newRegImg">'
+            }
+
+
             if(phoneToEdit.substr(0,2)=="02"){
                 var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4)
             }else{
@@ -1138,14 +1127,6 @@ $(document).ready(function(){
             }
 
             var npCountImg = ""
-            /*
-            if(npCounts > 0){
-                var npCountImg = '<img src="/static/user/res/member/icon-np-wait.png" title="연결 대기중" class="npCountImg_wait">'
-            }
-            if(rjCounts > 0){
-                var npCountImg = '<img src="/static/user/res/member/icon-x-red.png" title="연결 실패" class="npCountImg_x">'
-            }
-            */
             if(npCounts == 0 && rjCounts == 0){
                 var npCountImg = '<img src="/static/user/res/icon-link.png" title="연결됨" class="npCountImg_wait">'
             }else if(rjCounts > 0){
@@ -1160,6 +1141,7 @@ $(document).ready(function(){
             if(yetCounts > 0){
                 var yet = '(+'+yetCounts+')'
             }
+
             
 
             var count = remove_front_zeros(count)
@@ -1174,7 +1156,7 @@ $(document).ready(function(){
             var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">'
 
             //var nametd = '<td class="_tdname" data-name="'+name+'">'+name+nameimage+npCountImg+'</td>'
-            var nametd = '<td class="_tdname" data-name="'+name+'">'+name+npCountImg+'</td>'
+            var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+npCountImg+'</td>'
             var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>'
             var emailtd = '<td class="_email">'+email+'</td>'
             var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>'

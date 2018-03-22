@@ -64,6 +64,10 @@ $(document).ready(function(){
    }
 });
 
+var date = new Date();
+var currentYear = date.getFullYear(); //현재 년도
+var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
+
 
 //데이트가 2018-08-23 혹은 20180823 혹은 2018_08_23 혹은 2018-8-23 으로 들어왔을때 2018년 8월 23일 로 출력
 function date_format_to_hangul(yyyymmdd){   

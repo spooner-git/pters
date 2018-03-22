@@ -517,6 +517,7 @@ $(document).ready(function(){
       $('#btn_close_repeatconfirm, #popup_btn_repeatconfim_no').click(function(){
         $('#id_repeat_confirm').val(0);
         $('#cal_popup_repeatconfirm').fadeOut('fast');
+        $('#shade3').hide()
         ajaxRepeatConfirmSend();
       })
       
@@ -528,6 +529,7 @@ $(document).ready(function(){
         }
         $('#id_repeat_confirm').val(1);
         $('#cal_popup_repeatconfirm').fadeOut('fast');
+        $('#shade3').hide()
         $('#calendar').show().css('height','100%');
         ajaxRepeatConfirmSend();
         closeAddPopup();
@@ -806,7 +808,7 @@ $(document).ready(function(){
                                  'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
                                }
           $('#cal_popup_repeatconfirm').fadeIn('fast')
-          $('#shade').show()
+          $('#shade3').show()
           if(addTypeSelect == "repeatoffadd"){
             var $id_repeat_freq = $('#id_repeat_freq_off')
             var $id_repeat_start_date = $('#id_repeat_start_date_off')

@@ -158,6 +158,7 @@ th{
 }
 
 ._tdname, ._tdnamee{
+	position: relative;
 	width: 23%;
 	line-height: 19px;
 	vertical-align: middle !important;
@@ -563,6 +564,14 @@ th{
 	margin-left:2px;
 }
 
+.newRegImg{
+	display: none;
+	width: 35px;
+	position: absolute;
+	left: 0;
+	margin-left: 5px;
+}
+
 
 .phonesms{
 	display: inline;
@@ -643,6 +652,10 @@ th{
 }
 
 @media(min-width: 600px){
+	.newRegImg{
+		display: block;
+	}
+
 	#page_addmember{
 
 	}
