@@ -299,6 +299,15 @@ $(document).ready(function(){
         } 
     })
 
+    $(document).on('click','div.lectureType_DELETE',function(){
+        $('.resendPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        if($('body').width()>600){
+            $('#shade3').fadeIn('fast');
+        }else{
+            $('#shade').fadeIn('fast');
+        } 
+    })
+
     $(document).on('click','div.lecConnectType_IP',function(){
         $('.lectureStateChangePopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
         if($('body').width()>600){
@@ -695,7 +704,6 @@ $(document).ready(function(){
                   $('#startR').attr('selected','selected')
                   open_member_info_popup_pc($('#memberId_info_PC').text())
                   set_member_lecture_list()
-                  alert(userName + '환불 처리 되었습니다.')
                   console.log('success');
                 }
             },
@@ -757,11 +765,12 @@ $(document).ready(function(){
         var userID = $('#memberId_info_PC').text();
         var lectureID = $('.lectureStateChangePopup').attr('data-leid');
         var refund_price = $('div.lectureStateChangePopup.popups input[type="number"]').val()
+        var userName = DB[userID].name
         if(refund_price.length>0){
             $.ajax({
                     url:'/trainer/refund_member_lecture_info/', 
                     type:'POST',
-                    data:{"lecture_id":lectureID, "member_name":DB[userID].name, "refund_price": refund_price ,"next_page":'/trainer/member_manage_ajax/'},
+                    data:{"lecture_id":lectureID, "member_name":userName, "refund_price": refund_price ,"next_page":'/trainer/member_manage_ajax/'},
                     dataType : 'html',
 
                     beforeSend:function(){
@@ -795,6 +804,7 @@ $(document).ready(function(){
                           $('div.lectureStateChangePopup.popups input[type="number"]').val('')
                           console.log('success');
 
+                          alert(userName + ' 회원님 환불 처리 되었습니다.')
                         }
                     },
 
@@ -810,9 +820,9 @@ $(document).ready(function(){
 
     function statechange_member_lecture_data(stateCode){
         var userID = $('#memberId_info_PC').text();
-        var lectureID = $('.lectureStateChangePopup').attr('data-leid');
+        var lectureID = $('.lectureConnectStateChangePopup').attr('data-leid');
         var state = stateCode
-        console.log(state)
+        console.log(stateCode, lectureID, DB[userID].name)
             $.ajax({
                     url:'/trainer/update_member_lecture_view_info/', 
                     type:'POST',
@@ -859,7 +869,6 @@ $(document).ready(function(){
                     },
                 })
     }
-
 
     function set_member_lecture_list(){
         if($('#memberInfoPopup_PC').css('display')=="block"){
