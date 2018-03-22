@@ -35,6 +35,9 @@ urlpatterns = [
     url(r'^update_member_lecture_info/$', views.update_member_lecture_info_logic, name='update_member_lecture_info'),
     url(r'^refund_member_lecture_info/$', views.refund_member_lecture_info_logic, name='refund_member_lecture_info'),
 
+    # 회원 연동 상태 변경
+    url(r'^update_member_lecture_view_info/$', views.update_member_lecture_view_info_logic, name='update_member_lecture_view_info'),
+
     # url(r'^add_lecture_info/$', views.add_lecture_info_logic, name='add_lecture_info'),
 
     # 일정 조회 관련

@@ -13,9 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import django
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from configs import settings
 from configs import views
 
 urlpatterns = [
@@ -26,4 +28,5 @@ urlpatterns = [
     url(r'^trainee/', include('trainee.urls', namespace='trainee')),
     url(r'^schedule/', include('schedule.urls', namespace='schedule')),
     url(r'^admin/', admin.site.urls),
+    # url(r'^static/(?P<path>.*)$', django.views.static.serve, {'document_root': settings.STATIC_URL}),
 ]

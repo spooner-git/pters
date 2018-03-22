@@ -3,9 +3,12 @@ import copy
 import datetime
 
 import logging
+import os
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
@@ -41,6 +44,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         today = datetime.date.today()
         one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
+        # print("modified : "+str(datetime.datetime.fromtimestamp(os.path.getmtime(str(os.path.dirname(os.path.abspath(__file__)))+"/"+(str(os.path.basename(__file__)))))))
+        # print("Last modified : "+str(datetime.datetime.fromtimestamp(os.path.getmtime(str(os.path.dirname(os.path.abspath(__file__)))+"/templates/main_trainer.html"))))
 
         next_year = int(month_first_day.strftime('%Y')) + 1
         next_month = int(month_first_day.strftime('%m')) % 12 + 1
@@ -1131,6 +1136,52 @@ def refund_member_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='환불 처리',
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+@csrf_exempt
+def update_member_lecture_view_info_logic(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    member_name = request.POST.get('member_name', '')
+    member_view_state_cd = request.POST.get('member_view_state_cd', '')
+    next_page = request.POST.get('next_page', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+
+    if lecture_id is None or '':
+        error = '회원 수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_view_state_cd != 'VIEW' and member_view_state_cd != 'WAIT' and member_view_state_cd != 'DELETE':
+            error = '회원 상태 코드가 맞지 않습니다.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '회원 수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        lecture_info.member_view_state_cd = member_view_state_cd
+        lecture_info.mod_dt = timezone.now()
+        lecture_info.save()
+
+    if error is None:
+        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
+        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
+
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         log_info='회원 연동', log_how='수정',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
 
         log_data.save()
