@@ -370,6 +370,7 @@ img,a,div,span,p{
 }
 
 .holidayName{
+	display: none;
 	font-size:12px;
 	margin-right: 5px;
 }
@@ -736,6 +737,12 @@ img,a,div,span,p{
 
 	.prevDates,.nextDates{
 		opacity: 0;
+	}
+
+	.holidayName{
+		display: inline;
+		font-size:12px;
+		margin-right: 5px;
 	}
 	
 	.greydateMytime,.dateMytime{
