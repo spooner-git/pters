@@ -26,6 +26,7 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 from registration.forms import RegistrationForm
 
+from configs import settings
 from login.forms import MyPasswordResetForm
 from login.models import MemberTb
 from trainer.models import ClassTb
@@ -525,6 +526,21 @@ class NewMemberReSendEmailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(NewMemberReSendEmailView, self).get_context_data(**kwargs)
+        user_name = self.request.session.get('username','')
+        error = None
+        user = None
+        if user_name is None or user_name == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+        if error is None:
+            try:
+                user = User.objects.get(username=user_name)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            context['user_email'] = user.email
+
+        context['activation_days'] = getattr(settings, "ACCOUNT_ACTIVATION_DAYS", '')
 
         return context
 
