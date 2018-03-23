@@ -1797,7 +1797,7 @@ $(document).ready(function(){
 	})
 
 	function addcurrentTimeIndicator_blackbox(){ //현재 시간에 밑줄 긋기
-		if($('.today').length){
+		if($('.today').length && currentHour < Options.workEndTime && currentHour >= Options.workStartTime){
 			$('#hour'+currentHour).addClass('currentTimeBlackBox');
 			var indicator_Location = $('#hour'+currentHour).position().top
 			var minute_adjust = 45*(currentMinute/60)
