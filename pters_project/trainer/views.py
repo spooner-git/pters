@@ -10,17 +10,22 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, render_to_response
+from django.template import RequestContext
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
+from el_pagination.decorators import page_template
+from el_pagination.views import AjaxListView
 
 from configs.views import AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
@@ -458,6 +463,123 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         return context
 
+
+class AlarmTestView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
+    context_object_name = "log_data"
+    template_name = "alarm_test.html"
+    page_template = 'alarm_test_page.html'
+
+    def get_queryset(self):
+        # context = super(AlarmTestView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        # page_template =
+        log_data = None
+        if error is None:
+            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
+            # log_data.order_by('-reg_dt')
+
+        if error is None:
+            for log_info in log_data:
+                if log_info.read == 0:
+                    log_info.log_read = 0
+                    log_info.read = 1
+                    log_info.save()
+                elif log_info.read == 1:
+                    log_info.log_read = 1
+                else:
+                    log_info.log_read = 2
+
+        # context['log_data'] = log_data
+
+        return log_data
+
+
+@page_template('alarm_test_page.html')  # just add this decorator
+def entry_index(
+        request, template='alarm_test.html', extra_context=None):
+
+    class_id = request.session.get('class_id', '')
+    error = None
+    log_data = None
+    if error is None:
+        # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
+        log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
+        log_data.order_by('-reg_dt')
+
+    context = {
+        'log_data': log_data,
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+    return render(request, template, context)
+
+'''
+def entry_index(
+        request,
+        template='alarm_test.html',
+        page_template='alarm_test_page.html'):
+    class_id = request.session.get('class_id', '')
+    error = None
+    log_data = None
+    if error is None:
+        # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
+        log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
+        log_data.order_by('-reg_dt')
+
+    if error is None:
+        for log_info in log_data:
+            if log_info.read == 0:
+                log_info.log_read = 0
+                log_info.read = 1
+                log_info.save()
+            elif log_info.read == 1:
+                log_info.log_read = 1
+            else:
+                log_info.log_read = 2
+
+    context = {
+        'request': request,
+        'entry_list': log_data,
+        'page_template': page_template,
+    }
+    if request.is_ajax():
+        template = page_template
+
+    return render(request, template, context)
+'''
+
+'''
+@page_template('alarm_test_page.html')  # just add this decorator
+def entry_index(request, template='alarm_test.html', extra_context=None):
+    class_id = request.session.get('class_id', '')
+    error = None
+
+    if error is None:
+        # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
+        log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
+        log_data.order_by('-reg_dt')
+
+    if error is None:
+        for log_info in log_data:
+            if log_info.read == 0:
+                log_info.log_read = 0
+                log_info.read = 1
+                log_info.save()
+            elif log_info.read == 1:
+                log_info.log_read = 1
+            else:
+                log_info.log_read = 2
+
+    context = {
+        'entries': log_data,
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+    return render_to_response(
+        template, context, context_instance=RequestContext(request))
+'''
 
 class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'alarm_data_ajax.html'

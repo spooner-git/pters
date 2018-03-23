@@ -434,9 +434,11 @@ def add_schedule_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
-                if lecture_id is None:
-                    error = '등록할수 있는 일정이 없습니다.'
+                if en_dis_type == '1':
+                    lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
+                    if lecture_id is None:
+                        error = '등록할수 있는 일정이 없습니다.'
+
                 if error is None:
                     error = add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
                                                     request.user.id, lecture_id, note,
