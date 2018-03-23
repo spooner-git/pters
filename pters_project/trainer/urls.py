@@ -72,4 +72,7 @@ urlpatterns = [
     url(r'^update_setting_sales/$', views.update_setting_sales_logic, name='update_setting_sales'),
     url(r'^update_setting_language/$', views.update_setting_language_logic, name='update_setting_language'),
 
+    # 회원 탈퇴 기능
+    url(r'^out_member/$', views.out_member_logic, name='out_member'),
+
 ]

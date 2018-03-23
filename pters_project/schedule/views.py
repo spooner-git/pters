@@ -287,10 +287,10 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             off_schedule_id.append(off_schedule_datum.schedule_id)
             off_schedule_start_datetime.append(off_schedule_datum.start_dt)
             off_schedule_end_datetime.append(off_schedule_datum.end_dt)
-            if off_schedule_dataum.note is None:
+            if off_schedule_datum.note is None:
                 off_schedule_note.append('')
             else:
-                off_schedule_note.append(off_schedule_dataum.note)
+                off_schedule_note.append(off_schedule_datum.note)
 
     # PT 일정 조회
     if error is None:
@@ -1129,7 +1129,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
         if group.name == 'trainer':
             # 강사 정보 가져오기
             try:
-                class_info = ClassTb.objects.get(member_id=self.request.user.id, use=1)
+                class_info = ClassTb.objects.get(member_id=self.request.user.id)
             except ObjectDoesNotExist:
                 error = '강사 정보가 존재하지 않습니다'
 

@@ -582,6 +582,7 @@ def entry_index(request, template='alarm_test.html', extra_context=None):
         template, context, context_instance=RequestContext(request))
 '''
 
+
 class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'alarm_data_ajax.html'
 
@@ -2113,3 +2114,95 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
         context['error'] = error
 
     return context
+
+
+# 회워탈퇴 api
+@csrf_exempt
+def out_member_logic(request):
+    member_id = request.POST.get('id')
+    class_id = request.session.get('class_id', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+
+    if member_id == '':
+        error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 강좌 정보가 없습니다.'
+
+    if error is None:
+
+        try:
+            user = User.objects.get(username=member_id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+        try:
+            member = MemberTb.objects.get(user_id=user.id, use=1)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                member_id=user.id, use=1)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                # user.is_active = 0
+                # user.save()
+                # member.use = 0
+                # member.mod_dt = timezone.now()
+                # member.save()
+                for lecture_info in lecture_data:
+                    schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                              lecture_tb_id=lecture_info.lecture_id,
+                                                              state_cd='NP')
+
+                    schedule_data_finish = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                     lecture_tb_id=lecture_info.lecture_id,
+                                                                     state_cd='PE').update(class_tb_id='')
+                    repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                           lecture_tb_id=lecture_info.lecture_id)
+                    schedule_data.delete()
+                    repeat_schedule_data.delete()
+                    # schedule_data_finish.class_tb_id = ''
+                    # schedule_data_finish.save()
+                    if lecture_info.state_cd == 'IP':
+                        lecture_info.state_cd = 'PE'
+                    lecture_info.use = 0
+                    lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+                    lecture_info.mod_dt = timezone.now()
+                    lecture_info.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
+        #               + member.name + ' 회원님의</span> 수강정보를 <span class="status">삭제</span>했습니다.'
+
+        log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         to_member_name=member.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         log_info='수강 정보', log_how='삭제',
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
+
