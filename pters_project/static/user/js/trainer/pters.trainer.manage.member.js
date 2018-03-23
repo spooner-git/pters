@@ -1169,7 +1169,7 @@ $(document).ready(function(){
                 }
                 var DBendlength = finishIdArray.length;
                 for(var j=0; j<DBendlength;j++){
-                DBe[finishIdArray[j]] = {'id':finishnameArray[j], 
+                DBe[finishIdArray[j]] = {'name':finishnameArray[j], 
                                         'dbId':finishDidArray[j],
                                         'email':finishemailArray[j],
                                         'count':finishcountArray[j],
