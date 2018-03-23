@@ -55,12 +55,14 @@ $(document).ready(function(){
       });
 
       /*   PC버전 미니 팝업        */
+      /*
       $(document).on('click','.classTime, .offTime',function(){ //일정을 클릭했을때 팝업 표시
               //$('#page-addplan-pc').fadeOut()
               var toploc = $(this).offset().top;
               var leftloc = $(this).offset().left;
               //$('#commonPopup').fadeIn('fast').css({'top':toploc-10,'left':leftloc+150})
       })
+      */
 
       $(document).on('click','.td00',function(){ //주간달력 미니 팝업
             var toploc = $(this).offset().top;
@@ -347,9 +349,6 @@ $(document).ready(function(){
           $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
         }
 
-
-
-
       $(document).on('click','#starttimes li a',function(){
           $('.tdgraph').removeClass('graphindicator')
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
@@ -459,6 +458,7 @@ $(document).ready(function(){
                     success:function(data){
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
+                        console.log(jsondata)
                         //messageArray = jsondata.messageArray;
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
@@ -565,7 +565,6 @@ $(document).ready(function(){
             })    
       }
 
-      
       function ajaxClassTime(){
             $.ajax({
               url: '/trainer/cal_day_ajax',
@@ -916,6 +915,7 @@ $(document).ready(function(){
             //$('#calendar').css('display','none');
             for(var i=0; i<classlen; i++){
               var indexArray = classTimeArray[i]
+              var memoArray = scheduleNoteArray[i]
               var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
               var classYear = datasplit[0]
               var classMonth = datasplit[1]
@@ -946,7 +946,7 @@ $(document).ready(function(){
               
               //tdClassStart.attr('schedule-id',scheduleIdArray[i]).attr('schedule-id',scheduleIdArray[i]).attr('data-lectureId',classArray_lecture_id[i]).attr('data-memberName',memberName).attr('class-time',indexArray).addClass('classTime').css({'height':Number(classDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+classHour+':'+classMinute+'</span>');
               if(scheduleFinishArray[i]=="0") {
-                 tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+                 tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
               }else {
                  tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' +classHour + ':' + classMinute + '</span>');
               }
@@ -1388,68 +1388,6 @@ $(document).ready(function(){
       }
 
 
-      function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
-      //DB데이터 가공
-        var classTimeLength = startarray.length
-        var startlength = startarray.length;
-        var endlength = endarray.length;
-        var resultarray = []
-
-        for(i=0;i<classTimeLength; i++){
-          var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
-          var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
-          var startSplitArray= start.split("_"); 
-          var endSplitArray = end.split("_");
-          //["2017", "10", "7", "6", "00", "오전"]
-     
-         if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
-            startSplitArray[3] = String(Number(startSplitArray[3])+12);
-          }
-
-          if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
-            endSplitArray[3] = String(Number(endSplitArray[3])+12); 
-          }
-
-          if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
-            startSplitArray[3] = String(Number(startSplitArray[3])+12); 
-          }
-
-          if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
-            endSplitArray[3] = String(Number(endSplitArray[3])+12); 
-          }
-          
-          var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
-          if(dura>0){
-            startSplitArray[5] = String(dura) 
-          }else{
-            startSplitArray[5] = String(dura+24)
-          }
-
-          if(option=="class"){
-            startSplitArray.push(classTimeArray_member_name[i]) 
-            result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
-          }else if(option=="off"){
-            startSplitArray.push(classTimeArray_member_name[i]) 
-            result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);   
-          }else if(option=="member"){
-            result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);    
-            result2.push(startSplitArray[3]+":"+startSplitArray[4]);
-          }else if(option=="graph"){
-              var mm = startSplitArray[1]
-              var dd = startSplitArray[2]
-              if(mm.length<2){
-                var mm = '0'+startSplitArray[1]
-              }
-              if(dd.length<2){
-                var dd = '0'+startSplitArray[2]
-              }
-              result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
-              result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
-          }
-        }
-      }
-
-
       function DBdataProcessMonthTrainer(){
           var len = classDateArray.length;
           var summaryArray ={}
@@ -1520,58 +1458,6 @@ $(document).ready(function(){
       }
 
 
-      function plancheck(dateinfo){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
-        var len = classNameArray.length;
-        var dateplans = []
-        for(var i=0; i<len; i++){
-          var splited = classNameArray[i].split('_');
-          var scheduleID = scheduleIdArray[i]
-          var classLectureID = classArray_lecture_id[i]
-          var scheduleFinish = scheduleFinishArray[i]
-          var yy = splited[0]
-          var mm = splited[1]
-          var dd = splited[2]
-          var stime1 = splited[3]
-          if(stime1.length<2){
-            var stime1 = '0'+stime1
-          }else if(stime1 == '24'){
-            var stime1 = '00'
-          }
-          var stime = stime1+'_'+splited[4]
-          var etime = splited[7]+'_'+splited[8]
-          var name = splited[6]
-          var ymd = yy+'_'+mm+'_'+dd
-          if(ymd==dateinfo){
-            dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish)
-          }
-        }
-        dateplans.sort();
-        var htmltojoin = []
-        for(var i=1;i<=dateplans.length;i++){
-          var splited = dateplans[i-1].split('_')
-          var stime = splited[0]
-          if(stime.substr(0,1)=='0'){
-            var stime = stime.substr(1,1)
-          }
-          var etime = splited[2]
-          var name = splited[4]+" 회원님"
-          var morningday = ""
-          if(stime==0 & dateplans[i-2]==undefined){
-            var morningday = "오전"
-          }else if(stime<12 & dateplans[i-2]==undefined){
-            var morningday = "오전"
-          }else if(stime>=12 && dateplans[i-2]!=undefined){
-            var splitedprev = dateplans[i-2].split('_')
-            if(splitedprev[0]<12){
-              var morningday = "오후" 
-            }
-          }else if(stime>=12 && dateplans[i-2]==undefined){
-            var morningday = "오후"
-          }
-          htmltojoin.push('<div class="plan_raw" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'</span></div>')
-        }
-        $('#cal_popup_plancheck .popup_inner').html(htmltojoin.join(''))
-      }
 
       //작은달력 설정
        $.datepicker.setDefaults({
@@ -1587,32 +1473,8 @@ $(document).ready(function(){
           yearSuffix: '년'
       });
 
-		//회원 정보 ajax 연동을 위해 구현 - hk.kim 180110
-      function addPtMemberListSet(){
-        var memberMobileList = $('#members_mobile');
-        var memberPcList = $('#members_pc');
-        var memberSize = memberIdArray.length;
-        var member_array_mobile = [];
-        var member_array_pc = [];
-        memberMobileList.empty();
-        memberPcList.empty();
-        for(var i=0; i<memberSize; i++){
-        	//member_array[i] = '<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
-			    member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'" data-memberid="'+memberIdArray[i]+'" data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
-        	member_array_pc[i] = '<li><a id="member_pc_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'" data-memberid="'+memberIdArray[i]+'" data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
-        	//memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
-			//memberMobileList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
-
-        }
-        var member_arraySum_mobile = member_array_mobile.join('');
-		    var member_arraySum_pc = member_array_pc.join('');
-        memberMobileList.html(member_arraySum_mobile);
-        memberPcList.html(member_arraySum_pc);
-	  }
 
   //일정완료 사인용 캔버스
-      
-
       var pos = {
         drawable : false,
         x: -1,
@@ -1715,3 +1577,26 @@ $(document).ready(function(){
       }
 
 });
+
+//회원 정보 ajax 연동을 위해 구현 - hk.kim 180110
+      function addPtMemberListSet(){
+        var memberMobileList = $('#members_mobile');
+        var memberPcList = $('#members_pc');
+        var memberSize = memberIdArray.length;
+        var member_array_mobile = [];
+        var member_array_pc = [];
+        memberMobileList.empty();
+        memberPcList.empty();
+        for(var i=0; i<memberSize; i++){
+          //member_array[i] = '<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+          member_array_mobile[i] = '<li><a id="member_mobile_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'" data-memberid="'+memberIdArray[i]+'" data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+          member_array_pc[i] = '<li><a id="member_pc_'+memberLectureIdArray[i]+'" data-lecturecount="'+memberAvailCountArray[i]+'" data-memberid="'+memberIdArray[i]+'" data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>';
+          //memberPcList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
+      //memberMobileList.append('<li><a data-lecturecount="'+memberAvailCountArray[i]+'"data-lectureid='+memberLectureIdArray[i]+'>'+memberNameArray[i]+'</a></li>');
+
+        }
+        var member_arraySum_mobile = member_array_mobile.join('');
+        var member_arraySum_pc = member_array_pc.join('');
+        memberMobileList.html(member_arraySum_mobile);
+        memberPcList.html(member_arraySum_pc);
+    }

@@ -35,7 +35,7 @@
         </div>
 
         <!--일정 눌렀을때 팝업메뉴-->
-        <div id="cal_popup_planinfo">
+        <div id="cal_popup_planinfo" class="popups">
             <div id="popup_img">
                 <span id="popup_planinfo_title" class="popup_title"></span>
                 <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
@@ -44,6 +44,7 @@
             <div class="popup_info_text">
                 <p id="popup_info"></p>
                 <p id="popup_info2"></p>
+                <p id="popup_info3_memo" style="color:#fe4e65;font-size:13px;"></p>
             </div>
             <div id="popup_btn_complete" class="popup_inner popup_inner_finish">
                 <span class="KRtext">일정 완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
@@ -64,7 +65,7 @@
         <!--일정 눌렀을때 팝업메뉴-->
 
         <!--삭제 확인 팝업메뉴-->
-        <div id="cal_popup_plandelete">
+        <div id="cal_popup_plandelete" class="popups">
             <div id="popup_img">
                 <span id="popup_delete_title" class="popup_title"></span>
                 <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
@@ -87,7 +88,7 @@
         <!--삭제 확인 팝업메뉴-->
 
         <!--반복일정 등록 확인 팝업메뉴-->
-        <div id="cal_popup_repeatconfirm">
+        <div id="cal_popup_repeatconfirm" class="popups">
             <div id="popup_img">
                 <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
                 <img src="/static/user/res/ptadd/btn-x.png" id="btn_close_repeatconfirm" class="popup_close_x_button">
@@ -111,7 +112,7 @@
         <!--반복일정 등록 확인 팝업메뉴-->
 
         <!--[월간전용] 일정조회(강사)팝업 -->
-        <div id="cal_popup_plancheck">
+        <div id="cal_popup_plancheck" class="popups">
           <div style="position: relative;">
             <div>
               <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
@@ -125,7 +126,7 @@
         <!--[월간전용] 일정조회(강사)팝업 -->
 
         <!--[월간전용] 알림 팝업 -->
-        <div id="ng_popup">
+        <div id="ng_popup" class="popups">
            <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
             <div id="ng_popup_text" style="margin-bottom: 20px;">
               <p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>
@@ -325,7 +326,15 @@
     <script type="text/javascript" src={% static "common/js/jquery.touch.js" %}></script>
     <script type="text/javascript" src={% static "common/js/swiper.jquery.min.js" %}></script>
     <script type="text/javascript" src={% static "user/js/pters.base.set.js" %}></script>
-    <script>
+    <script>    
+
+            $('#shade, #shade3').click(function(){
+                $('.popups').css('display','none')
+                $('#shade, #shade3').css('display','none')
+                $('#calendar').css('position','relative')
+            })
+
+
              function openNav(){
                $("#outer_Sidenav").show();
                $("#inner_Sidenav").css({'width':'250px'});
