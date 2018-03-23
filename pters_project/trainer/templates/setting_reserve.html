@@ -254,12 +254,18 @@
             $('#switch2').find('.switchback').removeClass('switchon-back')
           }
 
+
+
+          
+
           /*업무 시간 설정 DB저장값으로 초기셋팅*/
           if(Options.workStartTime>12){
             var worktimestart = Number(Options.workStartTime)-12
             $("#workTimehourSelect button").addClass("dropdown_selected").text('오후'+worktimestart+"시").val(Options.workStartTime);
+            fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'))
           }else{
             $("#workTimehourSelect button").addClass("dropdown_selected").text('오전'+Options.workStartTime+"시").val(Options.workStartTime);
+            fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'))
           }
 
           if(Options.workEndTime>12){
@@ -274,8 +280,10 @@
           if(Options.stoptimeStart>12){
             var stoptimestart = Number(Options.stoptimeStart)-12
             $("#hourSelect button").addClass("dropdown_selected").text('오후'+stoptimestart+"시").val(Options.stoptimeStart);
+            fill_dropdown_reserve_endtime($('#hourSelect button').val(),$('#ulTimes2'))
           }else{
             $("#hourSelect button").addClass("dropdown_selected").text('오전'+Options.stoptimeStart+"시").val(Options.stoptimeStart);
+            fill_dropdown_reserve_endtime($('#hourSelect button').val(),$('#ulTimes2'))
           }
 
           if(Options.stoptimeEnd>12){
@@ -341,6 +349,8 @@
               return availableTime
           }
 
+          
+
           /*업무 시간 설정*/
           $("#ulWorkTimes li a").click(function(){
                 $("#workTimehourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
@@ -388,6 +398,8 @@
                 array.push('<li><a data-time="'+i+'">오전 12시</a></li>')   
               }else if(i<12){
                 array.push('<li><a data-time="'+i+'">오전 '+i+'시</a></li>')   
+              }else if(i==12){
+                array.push('<li><a data-time="'+i+'">오후 '+i+'시</a></li>')   
               }else if(i>=12){
                 array.push('<li><a data-time="'+i+'">오후 '+(i-12)+'시</a></li>')   
               }
@@ -414,9 +426,10 @@
             var availableTime = $('#id_setting_member_available_time').val()
             var limit = $('#id_setting_member_reserve_time_prohibition').val()
             var reservedisable =  $('#id_setting_member_reserve_prohibition').val()
+            var workTime = $('#id_setting_trainer_work_time').val()
             console.log(availableTime, limit, reservedisable)
             console.log(stoptime, Options.limit, Options.reserve)
-            if(availableTime == stoptime && limit == Options.limit && reservedisable == Options.reserve){
+            if(availableTime == stoptime && limit == Options.limit && reservedisable == Options.reserve && workTime == worktime){
               $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
               select_all_check=false;
               console.log('false')
@@ -432,6 +445,5 @@
               var lt_res_02 =  ['{{ lt_res_02 }}'];
               var lt_res_03 =  ['{{ lt_res_03 }}'];
         </script>
-        <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.setting.reserve.js" %}></script>
         
 {% endblock %}

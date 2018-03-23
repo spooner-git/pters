@@ -34,7 +34,7 @@ $(document).ready(function(){
       $('.pcwhere').text("PTERSトレーニングセンター")
       $('.pclogout').text("ログアウト")
       $('#uptext span').text("様のスケジュール")
-
+      $('.__alarm').text("お知らせ")
       $('.__mypage').text("マイページ")
    }else if(Options.language == "ENG"){
       $('.__todayplan').text("Daily")
@@ -47,7 +47,7 @@ $(document).ready(function(){
       $('.pcwhere').text("PTERS Traning Center")
       $('.pclogout').text("Logout")
       $('#uptext span').text("'s schedule")
-
+      $('.__alarm').text("Alarm")
       $('.__mypage').text("My page")
    }else if(Options.language == "KOR"){
       $('.__todayplan').text("오늘 일정")
@@ -60,8 +60,25 @@ $(document).ready(function(){
       $('.pcwhere').text("PTERS 트레이닝센터")
       $('.pclogout').text("로그아웃")
       $('#uptext span').text("코치님 일정")
+      $('.__alarm').text("알림")
       $('.__mypage').text("마이페이지")
    }
+
+
+   $('.__alarm').click(function(){
+      $('#alarm').css('transform','translate(-50%,0%)')
+      $('#shade3').css('display','block')
+   })
+
+   $('#alarm button').click(function(){
+      $('#alarm').css('transform','translate(-50%,-200%)')
+      $('#shade3').css('display','none')
+   })
+
+
+
+
+
 });
 
 var date = new Date();

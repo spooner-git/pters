@@ -125,6 +125,7 @@ $(document).ready(function(){
               $("#id_time_duration").val(1)
               $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
               $("#id_training_time_off").val(hh+':00:00.000000');
+              console.log(hh)
               durTimeSet(hh,"mini");
             }
       })
@@ -1187,6 +1188,7 @@ $(document).ready(function(){
         timeArray[offOkLen]='<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>'
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
+        console.log(startTimeList)
       }
 
       function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우기
@@ -1249,7 +1251,7 @@ $(document).ready(function(){
         for(var j=0; j<Options.workStartTime; j++){
           $('#'+j+'g'+option).addClass('greytimegraph')
         }
-        for(var t=Options.workEndTime; t<24; t++){
+        for(var t=Options.workEndTime+1; t<24; t++){
           $('#'+t+'g'+option).addClass('greytimegraph')
         }
         /*업무시간 설정*/
@@ -1272,6 +1274,7 @@ $(document).ready(function(){
         var len = offAddOkArray.length;
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
+        console.log(offAddOkArray,'offAddOkArray')
        if(substr>1){
           var fininfo = Number(selectedTime)+1
           if(fininfo>12){
