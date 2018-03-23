@@ -212,7 +212,7 @@ class ResetPasswordView(View):
         extra_email_context = None
         password_reset_form = MyPasswordResetForm
         token_generator = default_token_generator
-        template_name = 'registration/password_reset_form.html'
+        # template_name = 'registration_error_ajax.html'
         email_template_name = 'registration/password_reset_email.txt'
         subject_template_name = 'registration/password_reset_subject.txt'
         context = None
@@ -220,9 +220,7 @@ class ResetPasswordView(View):
             error = 'email 정보를 입력해주세요.'
 
         if error is None:
-            try:
-                User.objects.get(email=email)
-            except ObjectDoesNotExist:
+            if User.objects.filter(email=email).exists() is not True:
                 error = '가입되지 않은 회원입니다.'
 
         if error is None:
@@ -264,7 +262,7 @@ class ResetPasswordView(View):
             if extra_context is not None:
                 context.update(extra_context)
 
-            return TemplateResponse(request, template_name, context)
+            return render(request, self.template_name, context)
         else:
             messages.error(request, error)
             return render(request, self.template_name)
