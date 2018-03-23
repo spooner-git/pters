@@ -239,8 +239,75 @@ function remove_front_zeros(rawData){
     }
 }
 
+/*/////////////////////일정 관련 공통 함수////////////////////////////////*/
 
 
+function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
+      //DB데이터 가공
+    var classTimeLength = startarray.length
+    var startlength = startarray.length;
+    var endlength = endarray.length;
+    var resultarray = []
+
+    for(i=0;i<classTimeLength; i++){
+      var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
+      var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
+      var startSplitArray= start.split("_"); 
+      var endSplitArray = end.split("_");
+      //["2017", "10", "7", "6", "00", "오전"]
+ 
+     if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
+        startSplitArray[3] = String(Number(startSplitArray[3])+12);
+      }
+
+      if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
+        endSplitArray[3] = String(Number(endSplitArray[3])+12); 
+      }
+
+      if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
+        startSplitArray[3] = String(Number(startSplitArray[3])+12); 
+      }
+
+      if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
+        endSplitArray[3] = String(Number(endSplitArray[3])+12); 
+      }
+      
+      var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+      if(dura>0){
+        startSplitArray[5] = String(dura) 
+      }else{
+        startSplitArray[5] = String(dura+24)
+      }
+
+      if(option=="class"){
+        startSplitArray.push(classTimeArray_member_name[i]) 
+        result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
+      }else if(option=="off"){
+        startSplitArray.push(classTimeArray_member_name[i]) 
+        result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);   
+      }else if(option=="member"){
+        result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);    
+        result2.push(startSplitArray[3]+":"+startSplitArray[4]);
+      }else if(option=="graph"){
+          var mm = startSplitArray[1]
+          var dd = startSplitArray[2]
+          if(mm.length<2){
+            var mm = '0'+startSplitArray[1]
+          }
+          if(dd.length<2){
+            var dd = '0'+startSplitArray[2]
+          }
+          result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
+          result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
+      }
+    }
+}
+
+
+function scrollToDom(dom){
+    var offset = dom.offset();
+    $('body, html').animate({scrollTop : offset.top-180},10)
+}
 
 
 
