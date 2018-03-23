@@ -488,12 +488,12 @@ th{
 			}
 			.lectureType_VIEW{
 				color: green !important;
-				
+				text-decoration: underline;
 				cursor: pointer !important;
 			}
 			.lectureType_WAIT{
 				color: orange !important;
-				
+				text-decoration: underline;
 				cursor: pointer !important;
 			}
 			.lectureType_DELETE{
@@ -513,7 +513,6 @@ th{
 			}
 			.lecConnectType_RF{
 				color: orange !important;
-				text-decoration: underline;
 				cursor: pointer !important;
 			}
 			.regHistoryDateInfo{

@@ -370,7 +370,15 @@ body{
 		font-weight: 500;
 	}
 
-
+.button_trainee_logout{
+	color: #fe4e65;
+	margin-top: 40px;
+	margin-bottom: 40px;
+	text-align: center;
+}
+	.button_trainee_logout span{
+		cursor: pointer;
+	}
 
 
 

@@ -260,12 +260,12 @@ img,a,div,span,p{
 
 .nextDates{
 	color : #282828;
-	opacity: 0.5;
+	opacity: 0;
 }
 
 .prevDates{
 	color : #282828;
-	opacity: 0.5;
+	opacity: 0;
 }
 
 .sunday{
@@ -346,6 +346,7 @@ img,a,div,span,p{
 }
 
 .holidayName{
+	display: none;
 	font-size: 12px;
 	margin-right: 5px;
 }
@@ -966,6 +967,10 @@ img,a,div,span,p{
 		left: 50%;
 		transform: translateX(-50%);
 		text-align: center;
+	}
+
+	.holidayName{
+		display: inline;
 	}
 
 	.dateMytime{
