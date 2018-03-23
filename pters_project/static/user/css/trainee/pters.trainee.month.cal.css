@@ -510,7 +510,7 @@ img,a,div,span,p{
 }
 
 #addpopup{
-	position: fixed;
+	position: absolute;
 	display: none;
 	left: 5%;
 	top: 30%;

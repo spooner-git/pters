@@ -46,6 +46,12 @@
 	text-align: center;
 }
 
+@media(max-height: 445px){
+	#cal_popup_planinfo{
+		position: absolute;
+	}
+}
+
 #cal_popup_plandelete, #cal_popup_repeatconfirm{
 	display: none;
 	position: fixed;
