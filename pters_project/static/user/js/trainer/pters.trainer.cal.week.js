@@ -1050,7 +1050,7 @@ $(document).ready(function(){
 
 		var fakeElementForBlankPage = '<div class="fake_for_blankpage"><span>등록된 일정이 없습니다.</span></div>'
 		//for(var i=0; i<=23; i++){
-		for(var i=Options.workStartTime; i<=Options.workEndTime; i++){
+		for(var i=Options.workStartTime; i<Options.workEndTime; i++){
 			var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="time-row">'
 			var divToAppend = $(textToAppend)
 

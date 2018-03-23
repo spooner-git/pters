@@ -1251,7 +1251,7 @@ $(document).ready(function(){
         for(var j=0; j<Options.workStartTime; j++){
           $('#'+j+'g'+option).addClass('greytimegraph')
         }
-        for(var t=Options.workEndTime+1; t<24; t++){
+        for(var t=Options.workEndTime; t<24; t++){
           $('#'+t+'g'+option).addClass('greytimegraph')
         }
         /*업무시간 설정*/

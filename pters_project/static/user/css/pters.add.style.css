@@ -246,6 +246,7 @@ ul a{
 	border-radius: 0px;
 	-webkit-border-radius: 0px;	
 	height: 100%;
+	font-size: 16px;
 }
 
 .pters_input_custom textarea{
