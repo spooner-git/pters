@@ -219,6 +219,8 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     off_schedule_id = []
     off_schedule_start_datetime = []
     off_schedule_end_datetime = []
+    off_schedule_note = []
+
     pt_schedule_id = []
     pt_schedule_lecture_id = []
     pt_schedule_start_datetime = []
@@ -285,6 +287,10 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             off_schedule_id.append(off_schedule_datum.schedule_id)
             off_schedule_start_datetime.append(off_schedule_datum.start_dt)
             off_schedule_end_datetime.append(off_schedule_datum.end_dt)
+            if off_schedule_dataum.note is None:
+                off_schedule_note.append('')
+            else:
+                off_schedule_note.append(off_schedule_dataum.note)
 
     # PT 일정 조회
     if error is None:
@@ -324,6 +330,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['off_schedule_id'] = off_schedule_id
     context['off_schedule_start_datetime'] = off_schedule_start_datetime
     context['off_schedule_end_datetime'] = off_schedule_end_datetime
+    context['off_schedule_note'] = off_schedule_note
     context['pt_schedule_id'] = pt_schedule_id
     context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
     context['pt_schedule_member_name'] = pt_schedule_member_name

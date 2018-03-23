@@ -504,6 +504,7 @@
           var offScheduleIdArray = [{% for off_schedule_id_info in off_schedule_id %}'{{ off_schedule_id_info }}', {% endfor %}];
           var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}',{% endfor %}];
           var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}',{% endfor %}];
+          var offScheduleNoteArray =  [{% for off_schedule_note_info in off_schedule_note %}'{{ off_schedule_note_info }}', {% endfor %}];
 
           //PT 일정 관련 정보
           //pt schedule id

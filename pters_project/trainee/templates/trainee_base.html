@@ -148,6 +148,16 @@
                 var stoptimeStart = ''
                 var stoptimeEnd = ''
              }
+
+            var worktime = '{{ lt_res_04 }}'
+             if(worktime.length>0){
+                var worktimeStart = Number('{{ lt_res_04 }}'.split(':')[0])
+                var worktimeEnd = Number('{{ lt_res_04 }}'.split('-')[1].split(':')[0])
+             }else{
+                var worktimeStart = ''
+                var worktimeEnd = ''
+             }
+
              var Options = {  "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
                               "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
                               "limit":Number('{{ lt_res_02 }}'),      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
@@ -160,8 +170,8 @@
                               "planChangePush":'-',
                               "regErgentPush":'-',
 
-                              "workStartTime":7,
-                              "workEndTime":23,
+                              "workStartTime":worktimeStart,
+                              "workEndTime":worktimeEnd,
 
                               "language" : "KOR",             //Korea, Japan, English, Chinese, Spanish
                               "location" : "Japan",           //Korea, Japan, English, Chinese

@@ -341,6 +341,7 @@
              }; 
 
 
+            var worktime = '{{ request.session.setting_trainer_work_time_available }}'
             var stoptime = '{{ request.session.setting_member_reserve_time_available }}'
              if(stoptime.length>0){
                 var stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0])
@@ -348,6 +349,13 @@
              }else{
                 var stoptimeStart = ''
                 var stoptimeEnd = ''
+             }
+             if(worktime.length>0){
+                var worktimeStart = Number('{{ request.session.setting_trainer_work_time_available }}'.split(':')[0])
+                var worktimeEnd = Number('{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[0])
+             }else{
+                var worktimeStart = ''
+                var worktimeEnd = ''
              }
 
              var Options = {  "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
@@ -361,8 +369,8 @@
                               "planChangePush":'-',
                               "regErgentPush":'-',
 
-                              "workStartTime":7,
-                              "workEndTime":23,
+                              "workStartTime":worktimeStart,
+                              "workEndTime":worktimeEnd,
 
 
                               "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
