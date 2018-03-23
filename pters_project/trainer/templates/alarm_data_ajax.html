@@ -8,7 +8,7 @@
       "logFromMemberNameArray":
       [{% for log_info in log_data %}"{{ log_data.from_member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "logToMemberNameArray":
-      [{% for log_info in log_data %}"{{ log_data.to_member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for log_info in log_data %}"{{ log_info.to_member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "logClassTbIdArray":
       [{% for log_info in log_data %}"{{ log_data.class_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "logLectureTbIdArray":

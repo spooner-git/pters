@@ -219,6 +219,8 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     off_schedule_id = []
     off_schedule_start_datetime = []
     off_schedule_end_datetime = []
+    off_schedule_note = []
+
     pt_schedule_id = []
     pt_schedule_lecture_id = []
     pt_schedule_start_datetime = []
@@ -285,6 +287,10 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             off_schedule_id.append(off_schedule_datum.schedule_id)
             off_schedule_start_datetime.append(off_schedule_datum.start_dt)
             off_schedule_end_datetime.append(off_schedule_datum.end_dt)
+            if off_schedule_dataum.note is None:
+                off_schedule_note.append('')
+            else:
+                off_schedule_note.append(off_schedule_dataum.note)
 
     # PT 일정 조회
     if error is None:
@@ -324,6 +330,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['off_schedule_id'] = off_schedule_id
     context['off_schedule_start_datetime'] = off_schedule_start_datetime
     context['off_schedule_end_datetime'] = off_schedule_end_datetime
+    context['off_schedule_note'] = off_schedule_note
     context['pt_schedule_id'] = pt_schedule_id
     context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
     context['pt_schedule_member_name'] = pt_schedule_member_name
@@ -434,9 +441,11 @@ def add_schedule_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
-                if lecture_id is None:
-                    error = '등록할수 있는 일정이 없습니다.'
+                if en_dis_type == '1':
+                    lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
+                    if lecture_id is None:
+                        error = '등록할수 있는 일정이 없습니다.'
+
                 if error is None:
                     error = add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
                                                     request.user.id, lecture_id, note,

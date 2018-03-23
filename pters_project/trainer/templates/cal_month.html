@@ -497,13 +497,14 @@
           //PT 일정 등록시 필요한 정보
           var memberIdArray =[{% for member_info in member_data %}'{{ member_info.user.id }}',{% endfor %}];
           var memberNameArray = [{% for member_info in member_data %}'{{ member_info.name }}',{% endfor %}];
-          var memberAvailCountArray = [{% for member_info in member_data %}'{{ member_info.lecture_avail_count_total }}',{% endfor %}];
+          var memberAvailCountArray = [{% for member_info in member_data %}'{{ member_info.lecture_avail_count }}',{% endfor %}];
           var memberLectureIdArray = [{% for member_info in member_data %}'{{ member_info.lecture_id }}',{% endfor %}];
 
           //OFF 일정 관련 정보
           var offScheduleIdArray = [{% for off_schedule_id_info in off_schedule_id %}'{{ off_schedule_id_info }}', {% endfor %}];
           var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}',{% endfor %}];
           var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}',{% endfor %}];
+          var offScheduleNoteArray =  [{% for off_schedule_note_info in off_schedule_note %}'{{ off_schedule_note_info }}', {% endfor %}];
 
           //PT 일정 관련 정보
           //pt schedule id

@@ -4,7 +4,7 @@
       "memberNameArray":
       [{% for member_info in member_data %}"{{ member_info.name  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberAvailCountArray":
-      [{% for member_info in member_data %}"{{ member_info.lecture_avail_count_total }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for member_info in member_data %}"{{ member_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberLectureIdArray":
       [{% for member_info in member_data %}"{{ member_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
@@ -14,6 +14,8 @@
       [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}"{{ off_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offTimeArray_end_date" :
       [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}"{{ off_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offScheduleNoteArray":
+      [{% for off_schedule_note_info in off_schedule_note %}"{{ off_schedule_note_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "scheduleIdArray" :
       [{% for pt_schedule_id_info in pt_schedule_id %}"{{ pt_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

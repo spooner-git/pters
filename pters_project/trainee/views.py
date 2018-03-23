@@ -390,6 +390,11 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id', '')
         lecture_id = self.request.session.get('lecture_id', '')
 
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+
         today = datetime.date.today()
         start_date = today - datetime.timedelta(days=46)
         end_date = today + datetime.timedelta(days=47)
@@ -398,7 +403,12 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
                                                                  self.request.user.last_name+self.request.user.first_name, class_id, start_date, end_date)
-            # context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
+
+        # 강사 setting 값 로드
+        if error is None:
+            context = get_trainer_setting_data(context, class_info.member_id, class_id)
+
+                # context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
         return context
 
@@ -422,6 +432,11 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id', '')
         lecture_id = self.request.session.get('lecture_id', '')
 
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+
         today = datetime.date.today()
         start_date = today - datetime.timedelta(days=46)
         end_date = today + datetime.timedelta(days=47)
@@ -434,9 +449,13 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                                                                  self.request.user.last_name+self.request.user.first_name, class_id, start_date, end_date)
             # context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
-            # 강사 setting 값 로드
+            # 회원 setting 값 로드
             context = get_trainee_setting_data(context, self.request.user.id)
             self.request.session['setting_language'] = context['lt_lan_01']
+
+        # 강사 setting 값 로드
+        if error is None:
+            context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
         return context
 
@@ -544,6 +563,13 @@ def pt_delete_logic(request):
             lt_res_03 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_03 = '0'
+
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
+                                                      setting_type_cd='LT_RES_04', use=1)
+            lt_res_04 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_04 = '00:00-23:59'
 
         reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
         reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
@@ -1000,10 +1026,16 @@ def get_trainer_setting_data(context, user_id, class_id):
         lt_res_03 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_03 = '0'
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_04')
+        lt_res_04 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_04 = '00:00-23:59'
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
+    context['lt_res_04'] = lt_res_04
     return context
 
 
@@ -1125,10 +1157,6 @@ def get_trainee_schedule_data_func(context, user_id, lecture_id, start_date, end
             class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
         except ObjectDoesNotExist:
             error = '강사 정보를 불러오지 못했습니다.'
-
-    # 강사 setting 값 로드
-    if error is None:
-        context = get_trainer_setting_data(context, class_info.member_id, class_info.class_id)
 
     if error is None:
         member_data = MemberTb.objects.get(member_id=lecture_info.member_id)
@@ -1260,10 +1288,6 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
         lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=user_id, member_view_state_cd='VIEW')
-
-    # 강사 setting 값 로드
-    if error is None:
-        context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기

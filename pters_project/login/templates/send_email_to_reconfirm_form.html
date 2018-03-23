@@ -88,7 +88,8 @@
                 <input type="hidden" name="member_type" value="re">
 
 			  	<!--<input type="submit" value="{% trans 'Submit' %}" />-->
-          <p>인증 메일은 1일간 유효합니다.</p>
+                <p>Email : {{ user_email }} </p>
+                <p>인증 메일은 {{ activation_days }}일간 유효합니다.</p>
 			</form>	
 			<button class="submit_email_reconfirm" >재인증 메일 보내기</button>
 			<button class="submit_go_home" onclick="goHome()">뒤로</button>
