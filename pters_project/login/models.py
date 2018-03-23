@@ -12,7 +12,7 @@ from django.db import models
 
 
 class MemberTb(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     name = models.CharField(db_column='NAME', max_length=20, blank=True, null=True)  # Field name made lowercase.
     phone = models.CharField(db_column='PHONE', max_length=20, blank=True, null=True)  # Field name made lowercase.
