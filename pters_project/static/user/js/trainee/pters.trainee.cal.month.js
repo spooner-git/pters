@@ -653,8 +653,8 @@ $(document).ready(function(){
                 durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
                 DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
                 DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
-                timeGraphSet("class","grey");  //시간 테이블 채우기
-		        timeGraphSet("off","grey")
+                timeGraphSet("class","grey", "AddClass");  //시간 테이블 채우기
+		        timeGraphSet("off","grey", "AddClass")
                 startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
               },
 
@@ -790,7 +790,7 @@ $(document).ready(function(){
       }
     }
 
-    function timeGraphSet(option,CSStheme){ //가능 시간 그래프 채우기
+    function timeGraphSet(option, CSStheme, Page){ //가능 시간 그래프 채우기
         //1. option인자 : "class", "off"
         //2. CSS테마인자 : "grey", "pink"
 
@@ -812,6 +812,17 @@ $(document).ready(function(){
           break;
           case "pink" :
           var cssClass= "pinktimegraph"
+          break;
+        }
+
+        switch(Page){
+          case "mini" :
+            var datepicker = $('#datetext_mini')
+            var option = "_mini"
+          break;
+          case "AddClass" :
+            var datepicker = $("#datepicker")
+            var option = "" 
           break;
         }
         //var date = $("#datepicker").val(); 공용
@@ -843,6 +854,17 @@ $(document).ready(function(){
               $('#'+targetTime+'g').addClass(cssClass)
           }
         }
+
+        /*업무시간 설정*/
+        for(var j=0; j<Options.workStartTime; j++){
+          $('#'+j+'g'+option).addClass('greytimegraph')
+        }
+        for(var t=Options.workEndTime; t<24; t++){
+          $('#'+t+'g'+option).addClass('greytimegraph')
+        }
+        /*업무시간 설정*/
+
+
         timeGraphLimitSet(Options.limit)
     }
 
