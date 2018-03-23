@@ -11,11 +11,89 @@
 {% block content %}
 
 <form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
-  <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59  -->
+  <input type="hidden" name="setting_trainer_work_time_available" id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
+  <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
   <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->
   <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
   <input type="hidden" name="next_page" value = '{% url 'trainer:reserve_setting' %}'>
 </form>
+
+
+<div id="trainerWorkTimeSettingText" class="settingMenu wrap800">
+  <p class="settingText">업무 시간 설정</p>
+  <p class="settingText2">설정된 업무 시간만 일정표에 노출됩니다.</p>
+</div>
+<div id="trainerWorkTimeSetting" class="settingBox wrap800" style="z-index: 10;">
+    <div class="iconText">
+        <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 시작 시간</span>
+      <div id="workTimehourSelect" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+            <ul id="ulWorkTimes" class="dropdown-menu pters_dropdown_custom ulTimes">
+              <li><a data-time="0">오전 0시</a></li>
+              <li><a data-time="1">오전 1시</a></li>
+              <li><a data-time="2">오전 2시</a></li>
+              <li><a data-time="3">오전 3시</a></li>
+              <li><a data-time="4">오전 4시</a></li>
+              <li><a data-time="5">오전 5시</a></li>
+              <li><a data-time="6">오전 6시</a></li>
+              <li><a data-time="7">오전 7시</a></li>
+              <li><a data-time="8">오전 8시</a></li>
+              <li><a data-time="9">오전 9시</a></li>
+              <li><a data-time="10">오전 10시</a></li>
+              <li><a data-time="11">오전 11시</a></li>
+              <li><a data-time="12">오후 12시</a></li>
+              <li><a data-time="13">오후 1시</a></li>
+              <li><a data-time="14">오후 2시</a></li>
+              <li><a data-time="15">오후 3시</a></li>
+              <li><a data-time="16">오후 4시</a></li>
+              <li><a data-time="17">오후 5시</a></li>
+              <li><a data-time="18">오후 6시</a></li>
+              <li><a data-time="19">오후 7시</a></li>
+              <li><a data-time="20">오후 8시</a></li>
+              <li><a data-time="21">오후 9시</a></li>
+              <li><a data-time="22">오후 10시</a></li>
+              <li><a data-time="23">오후 11시</a></li>
+            </ul>
+      </div>
+    </div>
+
+
+    <div class="iconText">
+          <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 종료 시간</span>
+          <div id="workTimehourSelect2" class="dropdown">
+                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                <ul id="ulWorkTimes2" class="dropdown-menu pters_dropdown_custom ulTimes">
+                  <!--
+                  <li><a data-time="0">오전 0시</a></li>
+                  <li><a data-time="1">오전 1시</a></li>
+                  <li><a data-time="2">오전 2시</a></li>
+                  <li><a data-time="3">오전 3시</a></li>
+                  <li><a data-time="4">오전 4시</a></li>
+                  <li><a data-time="5">오전 5시</a></li>
+                  <li><a data-time="6">오전 6시</a></li>
+                  <li><a data-time="7">오전 7시</a></li>
+                  <li><a data-time="8">오전 8시</a></li>
+                  <li><a data-time="9">오전 9시</a></li>
+                  <li><a data-time="10">오전 10시</a></li>
+                  <li><a data-time="11">오전 11시</a></li>
+                  <li><a data-time="12">오후 12시</a></li>
+                  <li><a data-time="13">오후 1시</a></li>
+                  <li><a data-time="14">오후 2시</a></li>
+                  <li><a data-time="15">오후 3시</a></li>
+                  <li><a data-time="16">오후 4시</a></li>
+                  <li><a data-time="17">오후 5시</a></li>
+                  <li><a data-time="18">오후 6시</a></li>
+                  <li><a data-time="19">오후 7시</a></li>
+                  <li><a data-time="20">오후 8시</a></li>
+                  <li><a data-time="21">오후 9시</a></li>
+                  <li><a data-time="22">오후 10시</a></li>
+                  <li><a data-time="23">오후 11시</a></li>
+                  <li><a data-time="24">오전 12시</a></li>
+                  -->
+                </ul>
+          </div>
+    </div>  
+</div>
 
 <div id="memberReserveSettingText" class="settingMenu wrap800">
   <p class="settingText">회원 예약 허용 시간대 설정</p>
@@ -51,7 +129,6 @@
               <li><a data-time="21">오후 9시</a></li>
               <li><a data-time="22">오후 10시</a></li>
               <li><a data-time="23">오후 11시</a></li>
-              <li><a data-time="24">오전 12시</a></li>
             </ul>
       </div>
     </div>
@@ -177,6 +254,23 @@
             $('#switch2').find('.switchback').removeClass('switchon-back')
           }
 
+          /*업무 시간 설정 DB저장값으로 초기셋팅*/
+          if(Options.workStartTime>12){
+            var worktimestart = Number(Options.workStartTime)-12
+            $("#workTimehourSelect button").addClass("dropdown_selected").text('오후'+worktimestart+"시").val(Options.workStartTime);
+          }else{
+            $("#workTimehourSelect button").addClass("dropdown_selected").text('오전'+Options.workStartTime+"시").val(Options.workStartTime);
+          }
+
+          if(Options.workEndTime>12){
+            var worktimeend = Number(Options.workEndTime)-12
+            $("#workTimehourSelect2 button").addClass("dropdown_selected").text('오후'+worktimeend+"시").val(Options.workEndTime);
+          }else{
+            $("#workTimehourSelect2 button").addClass("dropdown_selected").text('오전'+Options.workEndTime+"시").val(Options.workEndTime);
+          }
+          /*업무 시간 설정 DB저장값으로 초기셋팅*/
+
+          /*회원 예약 허용 시간대 설정 DB저장값으로 초기셋팅*/
           if(Options.stoptimeStart>12){
             var stoptimestart = Number(Options.stoptimeStart)-12
             $("#hourSelect button").addClass("dropdown_selected").text('오후'+stoptimestart+"시").val(Options.stoptimeStart);
@@ -190,6 +284,7 @@
           }else{
             $("#hourSelect2 button").addClass("dropdown_selected").text('오전'+Options.stoptimeEnd+"시").val(Options.stoptimeEnd);
           }
+          /*회원 예약 허용 시간대 설정 DB저장값으로 초기셋팅*/
 
 
           $('#uptext2').text("예약 허용 시간대 설정")
@@ -226,39 +321,59 @@
 
           
 
-          function make_available_date_format(){
-              var starthour = $('#hourSelect button').val()
-              var endhour = $('#hourSelect2 button').val()
+
+          function make_available_date_format(hourselect, hourselect2){
+              var $hourselect = hourselect
+              var $hourselect2 = hourselect2
+              var starthour = $hourselect.find('button').val() 
+              var endhour = $hourselect2.find('button').val() 
               if(starthour == "24"){
                 var starthour = "23:59"
               }else{
-                var starthour = $('#hourSelect button').val() + ':00'
+                var starthour = $hourselect.find('button').val() + ':00'
               }
               if(endhour == "24"){
                 var endhour = "23:59"
               }else{
-                var endhour = $('#hourSelect2 button').val() + ':00'
+                var endhour = $hourselect2.find('button').val() + ':00'
               }
               var availableTime = starthour+'-'+endhour
               return availableTime
           }
 
+          /*업무 시간 설정*/
+          $("#ulWorkTimes li a").click(function(){
+                $("#workTimehourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+                var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'))
+                $('#id_setting_trainer_work_time').val(availableTime)
+                fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#ulWorkTimes2'))
 
+                check_dropdown_selected();
+          });
+          $(document).on('click',"#ulWorkTimes2 li a",function(){
+                $("#workTimehourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+                var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'))
+                $('#id_setting_trainer_work_time').val(availableTime)
+                check_dropdown_selected();
+          });
+          /*업무 시간 설정*/
+
+          /*회원 예약 허용 시간대 설정*/
           $("#ulTimes li a").click(function(){
                 $("#hourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
-                var availableTime = make_available_date_format()
+                var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
                 $('#id_setting_member_available_time').val(availableTime)
-                fill_dropdown_reserve_endtime($(this).attr('data-time'))
+                fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#ulTimes2'))
 
                 check_dropdown_selected();
           });
-
           $(document).on('click',"#ulTimes2 li a",function(){
                 $("#hourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
-                var availableTime = make_available_date_format()
+                var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
                 $('#id_setting_member_available_time').val(availableTime)
                 check_dropdown_selected();
           });
+          /*회원 예약 허용 시간대 설정*/
 
           $("#ulTimes3 li a").click(function(){
                 $("#timeSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
@@ -266,7 +381,7 @@
                 check_dropdown_selected();
           });
 
-          function fill_dropdown_reserve_endtime(starttime){
+          function fill_dropdown_reserve_endtime(starttime, target){
             var array = []
             for(var i=Number(starttime)+1; i<=24; i++){
               if(i==24){
@@ -277,9 +392,9 @@
                 array.push('<li><a data-time="'+i+'">오후 '+(i-12)+'시</a></li>')   
               }
             }
-            $('#ulTimes2').html(array.join(''))
+            target.siblings('button').val('').text('')
+            target.html(array.join(''))
           }
-
 
 
 

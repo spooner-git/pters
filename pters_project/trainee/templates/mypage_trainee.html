@@ -75,7 +75,14 @@
       <img src="/static/user/res/member/icon-user.png" alt=""><span>담당 트레이너 정보</span>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
-      <div class="trainerInfo"><span>{{ class_info.mem_info.name }} 트레이너</span><img src="/static/user/res/member/icon-call.png" alt=""><img src="/static/user/res/member/icon-message.png" alt=""></div>
+      <div class="trainerInfo">
+        <span>{{ class_info.mem_info.name }} 트레이너</span>
+        <img src="/static/user/res/member/icon-call.png" alt="">
+        <img src="/static/user/res/member/icon-message.png" alt="">
+      </div>
+      <div class="trainerWorkTimeInfo">
+        <span>업무 시간</span><span></span>
+      </div>
   </div>
 </div>
 
@@ -124,6 +131,9 @@
     </div> 
 </div>
 
+<div class="mypage_label button_trainee_logout">
+  <span onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
+</div>
 
 {% endblock %}
 
@@ -176,6 +186,7 @@
             }else{
               var trainee_next_schedule = "일정이 없습니다."
             }
+            $('.trainerWorkTimeInfo span:nth-child(2)').text(Options.workStartTime+'시 ~ '+Options.workEndTime+'시')
             
             /*
             $('._GRAPH_OPEN').click(function(){

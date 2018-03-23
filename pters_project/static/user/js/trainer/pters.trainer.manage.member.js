@@ -292,38 +292,22 @@ $(document).ready(function(){
 
     $(document).on('click','div.lectureType_RJ',function(){
         $('.resendPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        if($('body').width()>600){
-            $('#shade3').fadeIn('fast');
-        }else{
-            $('#shade').fadeIn('fast');
-        } 
+        show_shadow_reponsively()
     })
 
     $(document).on('click','div.lectureType_DELETE',function(){
         $('.resendPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        if($('body').width()>600){
-            $('#shade3').fadeIn('fast');
-        }else{
-            $('#shade').fadeIn('fast');
-        } 
+        show_shadow_reponsively()
     })
 
     $(document).on('click','div.lecConnectType_IP',function(){
         $('.lectureStateChangePopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        if($('body').width()>600){
-            $('#shade3').fadeIn('fast');
-        }else{
-            $('#shade').fadeIn('fast');
-        } 
+        show_shadow_reponsively()
     })
 
     $(document).on('click','div.lectureType_WAIT, div.lectureType_VIEW',function(){
         $('.lectureConnectStateChangePopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        if($('body').width()>600){
-            $('#shade3').fadeIn('fast');
-        }else{
-            $('#shade').fadeIn('fast');
-        } 
+        show_shadow_reponsively()
     })
 
 
@@ -331,11 +315,7 @@ $(document).ready(function(){
 
     $('._btn_close_resend_PC, ._btn_close_statechange_PC').click(function(){
        $(this).parents('.popups').fadeOut('fast')
-       if($('body').width()>600){
-            $('#shade3').css('display','none');
-        }else{
-            $('#shade').css('display','none');
-        }
+       hide_shadow_responsively()
     })
 
     $('span.resend').parent('div').click(function(){
@@ -346,7 +326,7 @@ $(document).ready(function(){
     $('span.delete_resend').parent('div').click(function(){
         delete_member_reg_data_pc()
         $('.resendPopup').css('display','none')
-        $('#shade3').css('display','none')
+        hide_shadow_responsively()
     })
 
 
@@ -357,7 +337,7 @@ $(document).ready(function(){
     })
     $('span.cancel_refund').parent('div').click(function(){
         $('.lectureStateChangePopup').css('display','none')
-        $('#shade3').css('display','none')
+        hide_shadow_responsively()
     })
 
 
@@ -369,8 +349,25 @@ $(document).ready(function(){
     })
     $('span.cancel_connectchange').parent('div').click(function(){
         $('.lectureConnectStateChangePopup').css('display','none')
-        $('#shade3').css('display','none')
+        hide_shadow_responsively()
     })
+
+
+    function hide_shadow_responsively(){
+        if($('body').width()>600){
+            $('#shade3').css('display','none');
+        }else{
+            $('#shade').css('display','none');
+        }
+    }
+
+    function show_shadow_reponsively(){
+        if($('body').width()>600){
+            $('#shade3').fadeIn('fast');
+        }else{
+            $('#shade').fadeIn('fast');
+        } 
+    }
 
 
     //회원 정보팝업의 일정정보내 반복일정 삭제버튼
@@ -1169,7 +1166,7 @@ $(document).ready(function(){
                 }
                 var DBendlength = finishIdArray.length;
                 for(var j=0; j<DBendlength;j++){
-                DBe[finishIdArray[j]] = {'id':finishnameArray[j], 
+                DBe[finishIdArray[j]] = {'name':finishnameArray[j], 
                                         'dbId':finishDidArray[j],
                                         'email':finishemailArray[j],
                                         'count':finishcountArray[j],
