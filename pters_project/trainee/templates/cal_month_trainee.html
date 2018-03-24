@@ -241,6 +241,7 @@
             var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}', {% endfor %}];
             var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}',{% endfor %}];
 
+            var scheduleNoteArray =  [{% for pt_schedule_note_info in pt_schedule_note %}'{{ pt_schedule_note_info }}', {% endfor %}];
 
             var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}',{% endfor %}];
             var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}',{% endfor %}];

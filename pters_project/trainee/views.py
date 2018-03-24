@@ -281,10 +281,10 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
     context['error'] = None
     lecture_counts = 0
     np_lecture_counts = 0
-    if class_id is None or '':
+    if class_id is None or class_id == '':
         error = '강사 정보를 불러오지 못했습니다.'
 
-    if member_id is None or '':
+    if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
@@ -398,7 +398,7 @@ class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         today = datetime.date.today()
         start_date = today - datetime.timedelta(days=46)
         end_date = today + datetime.timedelta(days=47)
-        if lecture_id is None or '':
+        if lecture_id is None or lecture_id == '':
             error = '수강정보를 확인해 주세요.'
         if error is None:
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
@@ -441,7 +441,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=46)
         end_date = today + datetime.timedelta(days=47)
 
-        if lecture_id is None or '':
+        if lecture_id is None or lecture_id == '':
             error = '수강정보를 확인해 주세요.'
 
         if error is None:
@@ -473,7 +473,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=46)
         end_date = today + datetime.timedelta(days=47)
 
-        if lecture_id is None or '':
+        if lecture_id is None or lecture_id == '':
             error = '수강정보를 확인해 주세요.'
 
         if error is None:
@@ -693,7 +693,7 @@ def pt_add_logic(request):
     disable_time = timezone.now()
     nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
 
-    if class_id is None or '':
+    if class_id is None or class_id == '':
         error = '강좌 정보를 불러오지 못했습니다.'
     if training_date == '':
         error = '날짜를 선택해 주세요.'
@@ -792,7 +792,7 @@ def pt_add_array_logic(request):
 
     error = None
 
-    if class_id is None or '':
+    if class_id is None or class_id == '':
         error = '강좌 정보를 불러오지 못했습니다.'
 
     if int(add_pt_size) == 0:
@@ -824,7 +824,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
     lecture_schedule_data = None
-    if lecture_id is None or '':
+    if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
     elif pt_schedule_date == '':
         error = '날짜를 선택해 주세요.'
@@ -965,7 +965,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
 
     # 수강 정보 불러 오기
     if error is None:
-        if member_id is None or '':
+        if member_id is None or member_id == '':
             lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
@@ -1137,7 +1137,7 @@ def get_trainee_schedule_data_func(context, user_id, lecture_id, start_date, end
     next_schedule_start_dt = ''
     next_schedule_end_dt = ''
 
-    if lecture_id is None or '':
+    if lecture_id is None or lecture_id == '':
         error = '수강 정보가 없습니다.'
 
     if error is None:
@@ -1269,7 +1269,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     pt_start_date = ''
     pt_end_date = ''
 
-    if class_id is None or '':
+    if class_id is None or class_id == '':
         error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
@@ -1316,7 +1316,14 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                 if lecture_info.state_cd == 'IP':
                     if pt_start_date == '':
                         pt_start_date = lecture_info.start_date
-                    pt_end_date = lecture_info.end_date
+                    else:
+                        if pt_start_date > lecture_info.start_date:
+                            pt_start_date = lecture_info.start_date
+                    if pt_end_date == '':
+                        pt_end_date = lecture_info.end_date
+                    else:
+                        if pt_end_date < lecture_info.end_date:
+                            pt_end_date = lecture_info.end_date
 
             # if lecture_info.use != 0:
             # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
@@ -1366,13 +1373,13 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
 
     # OFF 일정
     if error is None:
-
-        off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                      start_dt__gte=start_date,
-                                                      start_dt__lt=end_date)
-        for off_schedule_datum in off_schedule_data:
-            off_schedule_start_datetime.append(off_schedule_datum.start_dt)
-            off_schedule_end_datetime.append(off_schedule_datum.end_dt)
+        if pt_start_date != '':
+            off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                          start_dt__gte=start_date,
+                                                          start_dt__lt=end_date)
+            for off_schedule_datum in off_schedule_data:
+                off_schedule_start_datetime.append(off_schedule_datum.start_dt)
+                off_schedule_end_datetime.append(off_schedule_datum.end_dt)
 
     holiday = HolidayTb.objects.filter(use=1)
 
@@ -1456,7 +1463,7 @@ def delete_member_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
 
-    if lecture_id is None or '':
+    if lecture_id is None or lecture_id == '':
         error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:

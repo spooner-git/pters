@@ -459,7 +459,7 @@ $(document).ready(function(){
 
 	function signImageSend(send_data){
 		$.ajax({
-                    url:'/schedule/upload_test/',
+                    url:'/schedule/upload_sign_image/',
                     type:'POST',
                     data:send_data,
 

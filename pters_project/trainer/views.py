@@ -295,7 +295,7 @@ def get_member_data(context, class_id, member_id):
         error = '강사 정보가 존재하지 않습니다'
 
     if error is None:
-        if member_id is None or '':
+        if member_id is None or member_id == '':
             all_member = MemberTb.objects.filter(use=1).order_by('name')
         else:
             all_member = MemberTb.objects.filter(member_id=member_id, use=1).order_by('name')
@@ -353,16 +353,23 @@ def get_member_data(context, class_id, member_id):
                             member_data.lecture_rem_count += lecture_info.lecture_rem_count
                             member_data.lecture_avail_count += lecture_info.lecture_avail_count
                             member_data.end_date = lecture_info.end_date
-                            if member_data.start_date is None or '':
+                            if member_data.start_date is None or member_data.start_date == '':
                                 member_data.start_date = lecture_info.start_date
-                            member_data.end_date = lecture_info.end_date
+                            else:
+                                if member_data.start_data > lecture_info.start_date:
+                                    member_data.start_date = lecture_info.start_date
+                            if member_data.end_date is None or member_data.start_date == '':
+                                member_data.end_date = lecture_info.end_date
+                            else:
+                                if member_data.end_date < lecture_info.end_date:
+                                    member_data.end_date = lecture_info.end_date
 
                         # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
                         #    member_data.lecture_reg_count_yet += lecture_info.lecture_reg_count
                         #    member_data.lecture_rem_count_yet += lecture_info.lecture_rem_count
                         #    member_data.lecture_avail_count_yet += lecture_info.lecture_avail_count
 
-                        if member_data.mod_dt is None or '':
+                        if member_data.mod_dt is None or member_data.mod_dt == '':
                             member_data.mod_dt = lecture_info.mod_dt
                         else:
                             if member_data.mod_dt > lecture_info.mod_dt:
@@ -408,16 +415,24 @@ def get_member_data(context, class_id, member_id):
                             member_data_finish.lecture_rem_count += lecture_info.lecture_rem_count
                             member_data_finish.lecture_avail_count += lecture_info.lecture_avail_count
                             member_data_finish.end_date = lecture_info.end_date
-                            if member_data_finish.start_date is None or '':
+                            if member_data_finish.start_date is None or member_data_finish.start_date == '':
                                 member_data_finish.start_date = lecture_info.start_date
+                            else:
+                                if member_data_finish.start_date > lecture_info.start_date:
+                                    member_data_finish.start_date = lecture_info.start_date
+
+                            if member_data_finish.end_date is None or member_data_finish.end_date == '':
                                 member_data_finish.end_date = lecture_info.end_date
+                            else:
+                                if member_data_finish.end_date < lecture_info.end_date:
+                                    member_data_finish.end_date = lecture_info.end_date
 
                         # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
                         #    member_data_finish.lecture_reg_count_yet += lecture_info.lecture_reg_count
                         #    member_data_finish.lecture_rem_count_yet += lecture_info.lecture_rem_count
                         #    member_data_finish.lecture_avail_count_yet += lecture_info.lecture_avail_count
 
-                        if member_data_finish.mod_dt is None or '':
+                        if member_data_finish.mod_dt is None or member_data_finish.mod_dt == '':
                             member_data_finish.mod_dt = lecture_info.mod_dt
                         else:
                             if member_data_finish.mod_dt > lecture_info.mod_dt:
@@ -1141,7 +1156,7 @@ def resend_member_lecture_info_logic(request):
 
     error = None
 
-    if lecture_id is None or '':
+    if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
@@ -1183,7 +1198,7 @@ def delete_member_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
 
-    if lecture_id is None or '':
+    if lecture_id is None or lecture_id == '':
         error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
@@ -1232,7 +1247,7 @@ def refund_member_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
 
-    if lecture_id is None or '':
+    if lecture_id is None or lecture_id == '':
         error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
@@ -1281,7 +1296,7 @@ def update_member_lecture_view_info_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
 
-    if lecture_id is None or '':
+    if lecture_id is None or lecture_id == '':
         error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
@@ -1328,7 +1343,7 @@ def refund_member_lecture_info_logic(request):
     error = None
     input_refund_price = 0
 
-    if lecture_id is None or '':
+    if lecture_id is None or lecture_id == '':
         error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
@@ -1394,7 +1409,7 @@ def update_member_lecture_info_logic(request):
 
     error = None
 
-    if lecture_id is None or '':
+    if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
@@ -2066,10 +2081,10 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
     context['error'] = None
     lecture_counts = 0
     np_lecture_counts = 0
-    if class_id is None or '':
+    if class_id is None or class_id == '':
         error = '강사 정보를 불러오지 못했습니다.'
 
-    if member_id is None or '':
+    if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:

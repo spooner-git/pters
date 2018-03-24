@@ -1222,7 +1222,7 @@ def get_member_schedule_input_lecture(class_id, member_id):
 
 
 @csrf_exempt
-def upload_test_func(request):
+def upload_sign_image_logic(request):
 
     # user_id = request.POST.get('user_id', '')
     schedule_id = request.POST.get('schedule_id', '')
@@ -1244,10 +1244,10 @@ def upload_test_func(request):
             exists = False
 
     if exists is True:
-        format, imgstr = image_test.split(';base64,')
+        format, img_str = image_test.split(';base64,')
         ext = format.split('/')[-1]
 
-        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        data = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
 
         bucket.put_object(Key=schedule_id+'.png', Body=data, ContentType='image/png',
                           ACL='public-read')

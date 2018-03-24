@@ -63,6 +63,7 @@ ROOT_URLCONF = 'configs.urls'
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
+    # If is_active is 0, login will be ok
     'django.contrib.auth.backends.AllowAllUsersModelBackend'
     # `allauth` specific authentication methods, such as login by e-mail
     # "allauth.account.auth_backends.AuthenticationBackend",
