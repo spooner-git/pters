@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'trainer',
     'trainee',
     'schedule',
+    'center',
     'el_pagination',
 ]
 
@@ -68,6 +69,7 @@ AUTHENTICATION_BACKENDS = (
     # `allauth` specific authentication methods, such as login by e-mail
     # "allauth.account.auth_backends.AuthenticationBackend",
 )
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -142,6 +144,7 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, "static"),
   'static/',
 )
+STATIC_ROOT = '/static/'
 
 # LOGIN URL
 LOGIN_URL = '/login/'

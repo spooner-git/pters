@@ -1,6 +1,7 @@
 from django.db import models
 
 # Create your models here.
+from center.models import CenterTb
 from login.models import MemberTb
 
 
@@ -36,6 +37,7 @@ class CompanyTb(models.Model):
 class ClassTb(models.Model):
     class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    center_tb = models.ForeignKey(CenterTb, on_delete=models.CASCADE)
     class_type_cd = models.CharField(db_column='CLASS_TYPE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     subject_cd = models.CharField(db_column='SUBJECT_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     subject_detail_nm = models.CharField(db_column='SUBJECT_DETAIL_NM', max_length=20, blank=True, null=True)  # Field name made lowercase.
@@ -51,7 +53,7 @@ class ClassTb(models.Model):
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'CLASS_TB'
 
     def __str__(self):

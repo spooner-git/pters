@@ -356,7 +356,7 @@ def get_member_data(context, class_id, member_id):
                             if member_data.start_date is None or member_data.start_date == '':
                                 member_data.start_date = lecture_info.start_date
                             else:
-                                if member_data.start_data > lecture_info.start_date:
+                                if member_data.start_date > lecture_info.start_date:
                                     member_data.start_date = lecture_info.start_date
                             if member_data.end_date is None or member_data.start_date == '':
                                 member_data.end_date = lecture_info.end_date

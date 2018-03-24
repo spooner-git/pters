@@ -16,6 +16,8 @@ class HomeView(LoginRequiredMixin, RedirectView):
             self.url = '/trainer/'
         elif group.name == 'admin':
             self.url = '/trainer/'
+        elif group.name == 'center':
+            self.url = '/center/'
         else:
             self.url = ''
         return super(HomeView, self).get(request, **kwargs)
@@ -36,6 +38,9 @@ class AccessTestMixin(UserPassesTestMixin):
                 test_result = True
         if url[1] == 'trainer':
             if group.name == 'trainer':
+                test_result = True
+        if url[1] == 'center':
+            if group.name == 'center':
                 test_result = True
 
         return test_result
