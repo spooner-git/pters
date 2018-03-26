@@ -87,4 +87,6 @@ urlpatterns = [
     url(r'^delete_class_info/$', views.DeleteClassInfoView.as_view(), name='delete_class_info'),
 
 
+    url(r'^trainer_error_info/$', views.TrainerErrorInfoView.as_view(), name='trainer_error_info'),
+
 ]

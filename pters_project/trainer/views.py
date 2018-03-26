@@ -2544,3 +2544,10 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         return render(request, self.template_name)
 
+
+class TrainerErrorInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainer_error_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TrainerErrorInfoView, self).get_context_data(**kwargs)
+        return context
