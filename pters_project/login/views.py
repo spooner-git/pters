@@ -379,13 +379,13 @@ class AddMemberView(RegistrationView, View):
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
                                               birthday_dt=birthday_dt,user_id=user.id, use=1)
                         member.save()
-                        if group_type == 'trainer':
-                            class_info = ClassTb(member_id=user.id, subject_cd='WP',
-                                                 start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
-                                                 class_hour=1, start_hour_unit=1, class_member_num=100,
-                                                 state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                        # if group_type == 'trainer':
+                        #    class_info = ClassTb(member_id=user.id, subject_cd='WP',
+                        #                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
+                        #                         class_hour=1, start_hour_unit=1, class_member_num=100,
+                        #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
-                            class_info.save()
+                        #    class_info.save()
                 except ValueError as e:
                     error = '이미 가입된 회원입니다.'
                 except IntegrityError as e:

@@ -44,7 +44,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         class_id = request.session.get('class_id', '')
         class_counter = 0
 
-        if class_id is None or class_id =='':
+        if class_id is None or class_id == '':
             if len(class_data) == 0:
                 self.url = '/trainer/add_class/'
             elif len(class_data) == 1:
