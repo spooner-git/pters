@@ -22,7 +22,6 @@ class BlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(BlankView, self).get_context_data(**kwargs)
-        print('center_test123')
         context['test'] = 'test'
         return context
 
