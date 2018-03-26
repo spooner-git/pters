@@ -20,6 +20,9 @@
 	#popup_lecture_select a{
 		cursor: pointer;
 	}
+	.pters_table_at_setting_page{
+		border:1px solid #cccccc;
+	}
 	.pters_table{
 		display: table;
 		width: 100%;
@@ -36,6 +39,7 @@
 			display: table-cell;
 			background:#ffffff;
 			border-bottom: 1px solid #f4f4f4;
+			line-height: 30px;
 		}
 		.table_center_name{
 			width: 20%;
@@ -71,15 +75,8 @@
 	cursor: pointer;
 }
 
-
-
-
-
-
-
-
-
 /*강의 셋팅 페이지*/
+
 .settingMenu{
 	position: relative;
 	height: 60.5px;
@@ -91,7 +88,6 @@
 }
 	.settingText{
 		margin: 0;
-		margin-left: 14.5px;
 	}
 	.settingText2{
 		margin: 0;
@@ -105,3 +101,15 @@
 		line-height: 60.5px;
 		vertical-align: middle;
 	}
+
+.settingBox{
+	position: relative;
+	margin-top: 20px;
+}
+
+.pcmanageicon{
+	height: 18px;
+	margin-left: 8px;
+	margin-right: 8px;
+	cursor: pointer;
+}
