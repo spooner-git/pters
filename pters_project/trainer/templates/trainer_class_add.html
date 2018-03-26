@@ -110,6 +110,7 @@
         <div class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
             <ul id="center_list" class="dropdown-menu">
+                  <li><a data-time="">선택 안함</a></li>
                 {% for center_info in center_list %}
                   <li><a data-time="{{ center_info.center_id }}">{{ center_info.center.center_name }}</a></li>
                 {% endfor %}
@@ -391,7 +392,7 @@
 
           function goNext(option){
               if(option == "0"){
-                if($('#center_id').val().length>0 && $('#subject_cd').val().length>0){
+                if($('#subject_cd').val().length>0){
                   $('#myClassCreate').css('display','none')
                   $('#myClassSetting').css('display','block')
                 }

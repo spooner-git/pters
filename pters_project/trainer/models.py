@@ -24,7 +24,7 @@ class CompanyTb(models.Model):
 class ClassTb(models.Model):
     class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-    center_tb = models.ForeignKey(CenterTb, on_delete=models.CASCADE)
+    center_tb = models.ForeignKey(CenterTb, on_delete=models.CASCADE, null=True)
     subject_cd = models.CharField(db_column='SUBJECT_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     subject_detail_nm = models.CharField(db_column='SUBJECT_DETAIL_NM', max_length=20, blank=True, null=True)  # Field name made lowercase.
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.

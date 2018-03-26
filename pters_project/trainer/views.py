@@ -44,7 +44,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         class_id = request.session.get('class_id', '')
         class_counter = 0
 
-        if class_id is None or class_id =='':
+        if class_id is None or class_id == '':
             if len(class_data) == 0:
                 self.url = '/trainer/add_class/'
             elif len(class_data) == 1:
@@ -1713,13 +1713,13 @@ def update_setting_reserve_logic(request):
 
     if error is None:
         if setting_member_reserve_time_available == '':
-            setting_member_reserve_time_available = '00:00-24:00'
+            setting_member_reserve_time_available = '00:00-23:59'
         if setting_member_reserve_time_prohibition == '':
             setting_member_reserve_time_prohibition = '0'
         if setting_member_reserve_prohibition == '':
             setting_member_reserve_prohibition = '0'
         if setting_trainer_work_time_available == '':
-            setting_trainer_work_time_available = '07:00-23:00'
+            setting_trainer_work_time_available = '00:00-23:59'
 
     if error is None:
         try:
