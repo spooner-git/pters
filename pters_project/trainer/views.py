@@ -2446,7 +2446,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'trainer_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
-        class_id = request.session.get('class_id', '')
+        class_id = request.POST.get('class_id', '')
         error = None
 
         if class_id is None or class_id == '':

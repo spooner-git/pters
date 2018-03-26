@@ -26,6 +26,10 @@
         "regDtArray":
       [{% for class_info in class_data %}"{{ class_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+        "currentClassId":
+      ["{{ request.session.class_id }}"],
+
+
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }
