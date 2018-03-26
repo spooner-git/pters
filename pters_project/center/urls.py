@@ -19,6 +19,9 @@ from center import views
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^blank/$', views.BlankView.as_view(), name='blank'),
+
+    url(r'^get_class_data/$', views.GetClassDataViewAjax.as_view(), name='get_class_data'),
+    url(r'^get_trainer_data/$', views.GetTrainerDataViewAjax.as_view(), name='get_trainer_data'),
 ]
 
 
