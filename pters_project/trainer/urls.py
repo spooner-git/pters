@@ -18,6 +18,7 @@ from trainer import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^trainer_main/$', views.TrainerMainView.as_view(), name='trainer_main'),
 
     # 강사 - 회원정보 등록 관련
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
