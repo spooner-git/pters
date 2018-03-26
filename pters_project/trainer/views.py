@@ -1713,13 +1713,13 @@ def update_setting_reserve_logic(request):
 
     if error is None:
         if setting_member_reserve_time_available == '':
-            setting_member_reserve_time_available = '00:00-24:00'
+            setting_member_reserve_time_available = '00:00-23:59'
         if setting_member_reserve_time_prohibition == '':
             setting_member_reserve_time_prohibition = '0'
         if setting_member_reserve_prohibition == '':
             setting_member_reserve_prohibition = '0'
         if setting_trainer_work_time_available == '':
-            setting_trainer_work_time_available = '07:00-23:00'
+            setting_trainer_work_time_available = '00:00-23:59'
 
     if error is None:
         try:
