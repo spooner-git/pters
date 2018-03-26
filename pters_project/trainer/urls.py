@@ -18,6 +18,7 @@ from trainer import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^trainer_main/$', views.TrainerMainView.as_view(), name='trainer_main'),
 
     # 강사 - 회원정보 등록 관련
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
@@ -77,6 +78,7 @@ urlpatterns = [
 
 
     # 강좌 개설 기능
+    url(r'^add_class/$', views.AddClassView.as_view(), name='add_class'),
     url(r'^class_select/$', views.ClassSelectView.as_view(), name='class_select'),
     url(r'^class_processing/$', views.class_processing_logic, name='class_processing'),
     url(r'^add_class_info/$', views.add_class_info_logic, name='add_class_info'),
