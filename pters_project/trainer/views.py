@@ -688,6 +688,7 @@ class ReserveSettingView(AccessTestMixin, TemplateView):
 
         return context
 
+
 class ClassSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_class.html'
 
@@ -695,6 +696,7 @@ class ClassSettingView(AccessTestMixin, TemplateView):
         context = super(ClassSettingView, self).get_context_data(**kwargs)
 
         return context
+
 
 class SalesSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_sales.html'
@@ -2263,6 +2265,7 @@ def add_class_info_logic(request):
     class_member_num = request.POST.get('class_member_num', '')
 
     next_page = request.POST.get('next_page', '')
+    next_page = '/trainer/trainer_main/'
 
     error = None
 
@@ -2270,9 +2273,10 @@ def add_class_info_logic(request):
         error = '스케쥴 타입을 설정해주세요.'
 
     if class_hour is None or class_hour == '':
-        class_hour = 1
+        class_hour = 1.0
+
     if start_hour_unit is None or start_hour_unit == '':
-        start_hour_unit = 1
+        start_hour_unit = 1.0
 
     if start_date is None or start_date == '':
         start_date = datetime.date.today()
@@ -2286,25 +2290,27 @@ def add_class_info_logic(request):
         try:
             with transaction.atomic():
 
-                class_info = ClassTb(member_id=request.user.id, center_id=center_id,
+                class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
                                      subject_cd=subject_cd, start_date=start_date, end_date=end_date,
-                                     class_hour=class_hour, start_hour_unit=start_hour_unit,
-                                     class_member_num=class_member_num, state_cd='IP',
+                                     class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
+                                     member_view_state_cd='VIEW',
+                                     class_member_num=int(class_member_num), state_cd='IP',
                                      reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
                 class_info.save()
 
         except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.1'
         except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.2'
         except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값의 형태가 문제 있습니다.1'
         except ValidationError as e:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값의 형태가 문제 있습니다.2'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
+    print(error)
     if error is None:
         request.session['class_id'] = class_info.class_id
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -2360,7 +2366,7 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            class_data = ClassTb.objects.filter(member_id=self.request.user.id, use=1).order_by('-reg_dt')
+            class_data = ClassTb.objects.filter(member_id=self.request.user.id, member_view_state_cd='VIEW', use=1).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:

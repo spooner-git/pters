@@ -81,8 +81,8 @@
   <input type="hidden" name="subject_cd" id="subject_cd" value=""> <!--강좌 코드-->
   <input type="hidden" name="start_date" id="start_date" value=""> <!--강좌 시작 일자-->
   <input type="hidden" name="end_date" id="end_date" value=""> <!--강좌 종료 일자-->
-  <input type="hidden" name="class_hour" id="class_hour" value=1> <!--강좌 진행 시간-->
-  <input type="hidden" name="start_hour_unit" id="start_hour_unit" value="1"> <!--강좌 시작 시간(1: 정시, 0.5: 30분단위-->
+  <input type="hidden" name="class_hour" id="class_hour" value=1.0> <!--강좌 진행 시간-->
+  <input type="hidden" name="start_hour_unit" id="start_hour_unit" value="1.0"> <!--강좌 시작 시간(1: 정시, 0.5: 30분단위-->
   <input type="hidden" name="class_member_num" id="class_member_num" value="1"> <!--강좌 수업별 최대 허용 인원-->
 </form>
 
@@ -405,9 +405,10 @@
 
           function ajax_send_centercode_subjectcode(){
               $.ajax({
-                  url: '/trainer/get_class_data/',
+                  url: '/trainer/add_class_info/',
                   data: $('#add-class-info-form').serialize(),
                   dataType : 'html',
+                  type : 'post',
 
                   beforeSend:function(){
                     $('html').css("cursor","wait");
