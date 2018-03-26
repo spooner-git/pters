@@ -66,9 +66,9 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainerMainView, self).get_context_data(**kwargs)
-
+        class_id = self.request.session.get('class_id', '')
         error = None
-        class_info = None
+        # class_info = None
         today = datetime.date.today()
         one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
@@ -93,12 +93,10 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['today_schedule_num'] = 0
         context['new_member_num'] = 0
 
-        try:
-            class_info = ClassTb.objects.get(member=self.request.user.id)
-        except ObjectDoesNotExist:
+        if class_id is None or class_id == '':
             error = '강사 정보가 존재하지 않습니다'
+
         if error is None:
-            self.request.session['class_id'] = class_info.class_id
             all_member = MemberTb.objects.filter(use=1).order_by('name')
 
             for member_info in all_member:
@@ -108,8 +106,8 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 member_lecture_rem_count = 0
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
-                                                        lecture_rem_count__gt=0, use=1).order_by('-start_date')
+                lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_data.member_id,
+                                                        lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
                 if len(lecture_list) > 0:
                     total_member_num += 1
                     if len(lecture_list) == 1:
@@ -137,7 +135,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             context['new_member_num'] = new_member_num
 
         if error is None:
-            today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+            today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                            start_dt__gte=today, start_dt__lt=one_day_after,
                                                            en_dis_type='1').count()
             #new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
@@ -147,7 +145,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['today_schedule_num'] = today_schedule_num
         # context['new_member_num'] = new_member_num
 
-        context = get_trainer_setting_data(context, self.request.user.id, class_info.class_id)
+        context = get_trainer_setting_data(context, self.request.user.id, class_id)
 
         self.request.session['setting_member_reserve_time_available'] = context['lt_res_01']
         self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
@@ -164,8 +162,8 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         if error is not None:
                 messages.error(self.request, error)
-        else:
-            logger.error(class_info.member.name+'['+str(class_info.class_id)+'] : login success')
+        # else:
+            # logger.error(class_info.member.name+'['+str(class_info.class_id)+'] : login success')
 
         return context
 
@@ -2327,24 +2325,11 @@ class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ClassSelectView, self).get_context_data(**kwargs)
-
-        error = None
-
-        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=1)
-
-        for class_type_cd_info in class_type_cd_data:
-            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd, use=1)
-
-        center_list = CenterTrainerTb.objects.filter(member_id=self.request.user.id, use=1)
-
-        context['center_list'] = center_list
-        context['class_type_cd_data'] = class_type_cd_data
-
         return context
 
 
 class AddClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'trainer_class_select.html'
+    template_name = 'trainer_class_add.html'
 
     def get_context_data(self, **kwargs):
         context = super(AddClassView, self).get_context_data(**kwargs)
@@ -2362,21 +2347,6 @@ class AddClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['class_type_cd_data'] = class_type_cd_data
 
         return context
-
-
-def get_class_data(request):
-    center_id = request.POST.get('center_id', '')
-    subject_cd = request.POST.get('subject_cd', '')
-    subject_detail_nm = request.POST.get('subject_detail_nm', '')
-    start_date = request.POST.get('start_date', '')
-    end_date = request.POST.get('end_date', '')
-    class_hour = request.POST.get('class_hour', '')
-    start_hour_unit = request.POST.get('start_hour_unit', '')
-    class_member_num = request.POST.get('class_member_num', '')
-
-    next_page = request.POST.get('next_page', '')
-
-    return redirect(next_page)
 
 
 class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):

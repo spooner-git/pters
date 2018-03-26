@@ -1505,8 +1505,8 @@ def delete_member_lecture_info_logic(request):
 
 class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
     context_object_name = "log_data"
-    template_name = "alarm.html"
-    page_template = 'alarm_page.html'
+    template_name = "trainee_alarm.html"
+    page_template = 'trainee_alarm_page.html'
 
     def get_queryset(self):
         # context = super(AlarmTestView, self).get_context_data(**kwargs)
@@ -1518,6 +1518,9 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
 
         if lecture_id is None or lecture_id == '':
             error = '수강 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            lecture_data = LectureTb.objects.filter(lecture_id=lecture_id)
 
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
