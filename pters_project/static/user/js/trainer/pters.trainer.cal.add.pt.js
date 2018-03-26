@@ -104,6 +104,15 @@ $(document).ready(function(){
               closeMiniPopupByChange()
               $(this).find('div').addClass('blankSelected')
               $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
+              $('.typeSelected').removeClass('typeSelected')
+              $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
+              if(addTypeSelect == "ptadd"){
+                $('._MINI_ptadd').show()
+                $('._MINI_offadd').hide()
+              }else if(addTypeSelect == "offadd"){
+                $('._MINI_offadd').show()
+                $('._MINI_ptadd').hide()
+              }
               var tdinfo = $(this).attr('id').split('_');
               var yy = tdinfo[0];
               var mm = tdinfo[1];
@@ -134,10 +143,34 @@ $(document).ready(function(){
           $(document).off('click','.td00')
       }
 
-      $('#typeSelector_1').click(function(){
+      $('#typeSelector .toggleBtnWrap').click(function(){
+          $('.blankSelected_addview').removeClass('blankSelected blankSelected_addview')
+          $(this).addClass('typeSelected')
+          $(this).siblings('.toggleBtnWrap').removeClass('typeSelected')
+          if($(this).attr('id').split('_')[1]=="ptadd"){
+              $('#classDuration_mini').hide('fast',function(){
+                  $('#memberName_mini').css('display','inline')
+                  $('#remainCount_mini').show('fast')
+              })
+              planAddView($("#id_time_duration").val())
+          }else if($(this).attr('id').split('_')[1]=="offadd"){
+              $('#memberName_mini').hide('fast')
+              $('#remainCount_mini').hide('fast',function(){
+                  $('#classDuration_mini').show('fast')
+              })
+              planAddView($("#id_time_duration_off").val())  
+          }
+          addTypeSelect = $(this).attr('id').split('_')[1]
+          check_dropdown_selected();
+          planAddView($("#id_time_duration").val())
+      })
+
+
+      /*
+      $('#typeSelector_ptadd').click(function(){
         $('.blankSelected_addview').removeClass('blankSelected blankSelected_addview')
-          $(this).css({'background':'#fe4e65','color':'#ffffff','border-color':'#fe4e65'})
-          $('#typeSelector_2').css({'background':'#ffffff','color':'#cccccc','border-color':'#cccccc'})
+          $(this).addClass('typeSelected')
+          $('#typeSelector_offadd').removeClass('typeSelected')
           $('#classDuration_mini').hide('fast',function(){
               $('#memberName_mini').css('display','inline')
               $('#remainCount_mini').show('fast')
@@ -147,9 +180,9 @@ $(document).ready(function(){
           planAddView($("#id_time_duration").val())
       })
 
-      $('#typeSelector_2').click(function(){
-          $(this).css({'background':'#fe4e65','color':'#ffffff','border-color':'#fe4e65'})
-          $('#typeSelector_1').css({'background':'#ffffff','color':'#cccccc','border-color':'#cccccc'})
+      $('#typeSelector_offadd').click(function(){
+          $(this).addClass('typeSelected')
+          $('#typeSelector_ptadd').removeClass('typeSelected')
           $('#memberName_mini').hide('fast')
           $('#remainCount_mini').hide('fast',function(){
               $('#classDuration_mini').show('fast')
@@ -158,6 +191,7 @@ $(document).ready(function(){
           check_dropdown_selected();
           planAddView($("#id_time_duration_off").val())
       })
+      */
 
       $(document).on('click',"#durations_mini li a",function(){
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected");
