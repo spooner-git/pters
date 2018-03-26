@@ -48,13 +48,13 @@ $(document).ready(function(){
 		alert('까꿍~')
 	})
 
+
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
 		if($(this).hasClass('available')){
 			$('.cancellimit_time').text(Options.cancellimit+"시간 전")
 			if($(this).find('div').hasClass('dateMytime')){
 				$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 				$('#shade2').css({'display':'block'});
-				console.log($(this).attr('schedule-id'));
 				var info = $(this).attr('data-date').split('_')
 				var info2 = $(this).find(".blackballoon").text().split(':')
 				var yy=info[0]
@@ -77,6 +77,7 @@ $(document).ready(function(){
 					var infoText2 = info2[0]+"시 예약 취소 하시겠습니까?"
 					$('#popup_info').text(infoText)
 					$('#popup_info2').text(infoText2)
+					$('#popup_info3_memo').text($(this).find('.memo').text())
 					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 					console.log('else디버깅:',info2[0],currentHour,Options.cancellimit)
 				}
@@ -135,6 +136,25 @@ $(document).ready(function(){
 				$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 				console.log('else디버깅:',info2[0],currentHour,Options.cancellimit)
 			}
+		}else if($(this).find('div').hasClass('greydateMytime')){
+			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
+			$('#shade2').css({'display':'block'});
+			var info = $(this).attr('data-date').split('_')
+			var info2 = $(this).find(".blackballoon").text().split(':')
+			var yy=info[0]
+			var mm=info[1]
+			var dd=info[2]
+			var dayobj = new Date(yy,mm-1,dd)
+			var dayraw = dayobj.getDay();
+			var dayarry = ['일','월','화','수','목','금','토']
+			var day = dayarry[dayraw];
+			var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+			var infoText2 = '지난 일정'
+			var infoText3 = $(this).find('.memo').text()
+			$('#popup_info').text(infoText)
+			$('#popup_info2').text(infoText2)
+			$('#popup_info3_memo').text(infoText3)
+			$('#popup_text1 span').addClass("limited")
 		}else{
 			$('#shade2').css({'display':'block'});
 			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>')
@@ -142,6 +162,41 @@ $(document).ready(function(){
 			//$(this).fadeOut(2800)
 			})
 		}
+	})
+
+
+	/*
+	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
+		var toploc = $(this).offset().top;
+        var leftloc = $(this).offset().left;
+        var tdwidth = $(this).width();
+        var tdheight = $(this).height();
+		$('#cal_popup_mini_selector').fadeIn().css({'top':toploc-25,'left':leftloc+5})
+
+		$('#cal_popup_mini_selector div').show()
+		if($(this).hasClass('available') && !$(this).find('div').hasClass('dateMytime')){
+			$('#mini_selector_del').hide()
+		}else if($(this).hasClass('available') && $(this).find('div').hasClass('dateMytime')){
+			$('#mini_selector_add').hide()
+		}else if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
+			$('#mini_selector_add').hide()
+			$('#mini_selector_del').hide()
+		}else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
+			$('#mini_selector_add').hide()
+			$('#mini_selector_del').hide()
+		}else if($(this).find('div').hasClass('greydateMytime')){
+			$('#mini_selector_add').hide()
+			$('#mini_selector_del').hide()
+		}else{
+			$('#mini_selector_add').hide()
+			$('#mini_selector_del').hide()
+			$('#mini_selector_view').hide()
+		}
+	})
+	*/
+
+	$('.button_close_popup').click(function(){
+		$(this).parents('.popups').fadeOut('fast')
 	})
 
 	$("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
@@ -364,20 +419,20 @@ $(document).ready(function(){
 		//1. 현재달에 전달 마지막 부분 채우기
 		if(Month>1){ //2~12월
 			for(var j=lastDay[Month-2]-firstDayCurrentPage+1; j<=lastDay[Month-2] ;j++){
-				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>');
 			};
 		}else if(Month==1){ //1월
 			for(var j=31-firstDayCurrentPage+1; j<=31 ;j++){
-				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+(Year-1)+'_'+(Month+11)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+				$('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+(Year-1)+'_'+(Month+11)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>');
 			};
 		}
 		
 		//2. 첫번째 주 채우기
 		for(var i=1; i<=7-firstDayCurrentPage; i++){
 			if(i==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표시하기
-				$('#week1'+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>');
+				$('#week1'+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'<span class="today">TODAY</span>'+'</td>');
 			}else{
-				$('#week1'+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+				$('#week1'+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>');
 			}
 		};
 
@@ -386,9 +441,9 @@ $(document).ready(function(){
 		for(var i=lastOfweek1+1; i<=lastOfweek1+7; i++){
 			for(var j=0;j<=4;j++){
 				if(Number(i+j*7)==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표기
-					$('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+Number(i+j*7) +'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>')
+					$('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+Number(i+j*7) +'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'<span class="today">TODAY</span>'+'</td>')
 				}else if(Number(i+j*7<=lastDay[Month-1])){ //둘째주부터 날짜 모두
-					$('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+Number(i+j*7)+'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+					$('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td'+' data-date='+Year+'_'+Month+'_'+Number(i+j*7)+'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
 				}
 			}
 		};
@@ -400,18 +455,18 @@ $(document).ready(function(){
 		if(howmanyWeek5<=7 && howmanyWeek6==0){
 			for (var i=1; i<=7-howmanyWeek5;i++){
 				if(Month<12){
-					$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+					$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
 				}else if(Month==12){
-					$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+					$('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
 				}
 			};
 			ad_month($('#week6'+Year+Month+'child tbody tr')) //2017.11.08추가 달력이 5주일때, 비어있는 6주차에 광고 입력
 		}else if(howmanyWeek6<7 && howmanyWeek6>0){
 			for (var i=1; i<=7-howmanyWeek6;i++){
 				if(Month<12){
-					$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+					$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
 				}else if(Month==12){
-					$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+					$('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
 				}
 			};
 		}
@@ -434,6 +489,7 @@ $(document).ready(function(){
 	function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
 		for(var i=0; i<classDateArray.length; i++){
 			var finish = scheduleFinishArray[i]
+			var memo = scheduleNoteArray[i]
 			var arr = classDateArray[i].split('_')
 			var yy = arr[0]
 			var mm = arr[1]
@@ -468,10 +524,12 @@ $(document).ready(function(){
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
 				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').html(finishImg)
+				$("td[data-date="+classDateArray[i]+"] div.memo").addClass('greymemo').text(memo)
 			}else{
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
 				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').html(finishImg)
+				$("td[data-date="+classDateArray[i]+"] div.memo").text(memo)
 			}
 		};
 	};
@@ -584,7 +642,6 @@ $(document).ready(function(){
 			var mm = '0' + mm
 		}
 		var today_form = yyyy+'-'+ mm +'-'+"01"
-		console.log(today_form)
 
         $.ajax({
           url: '/trainee/read_trainee_schedule_ajax/',
@@ -598,10 +655,12 @@ $(document).ready(function(){
 
           success:function(data){
           	var jsondata = JSON.parse(data);
+          	console.log(jsondata)
           	classTimeArray_start_date = []
           	classTimeArray_end_date = []
           	scheduleIdArray = []
           	scheduleFinishArray = []
+          	scheduleNoteArray = []
           	classTimeArray_member_name = []
           	offTimeArray_start_date = []
           	offTimeArray_end_date = []
@@ -615,6 +674,7 @@ $(document).ready(function(){
           	classTimeArray_end_date = jsondata.classTimeArray_end_date
           	scheduleIdArray = jsondata.scheduleIdArray
           	scheduleFinishArray = jsondata.scheduleFinishArray
+          	scheduleNoteArray = jsondata.scheduleNoteArray
           	classTimeArray_member_name = jsondata.classTimeArray_member_name
           	offTimeArray_start_date = jsondata.offTimeArray_start_date
           	offTimeArray_end_date = jsondata.offTimeArray_end_date
