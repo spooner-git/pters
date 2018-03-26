@@ -16,6 +16,7 @@
 {% block content %}
 
 <form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
+  <input type="hidden" name="setting_trainer_lecture_create" id="id_setting_lecture_create" value=""> <!--신규 강의 이름-->
   <input type="hidden" name="setting_trainer_work_time_available" id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
   <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
   <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->
@@ -149,7 +150,17 @@
           $('#upbutton img').css('opacity','0.2')
 
 
+
+
+
           //시간 설정 관련 드랍다운 채우기
+
+          /*강의 이름 입력*/
+          $('#myClassCreate input').keyup(function(){
+            $('#id_setting_lecture_create').val($(this).val())
+          })
+          /*강의 이름 입력*/
+
 
           /*업무 시간 설정*/
           $("#myWorkTimeStart li a").click(function(){
