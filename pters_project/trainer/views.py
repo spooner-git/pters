@@ -107,7 +107,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
                 lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_data.member_id,
-                                                        lecture_rem_count__gt=0, use=1).order_by('-start_date')
+                                                        lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
                 if len(lecture_list) > 0:
                     total_member_num += 1
                     if len(lecture_list) == 1:
