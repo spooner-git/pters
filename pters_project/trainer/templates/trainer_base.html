@@ -451,7 +451,7 @@
                       dataType : 'html',
 
                       beforeSend:function(){
-                        
+                        $('html').css("cursor","wait");
                       },
 
                       success:function(data){
@@ -461,16 +461,18 @@
                         lec_select_subjectNameArray = jsondata.subjectNameArray;
                         lec_select_startDateArray = jsondata.startDateArray;
                         lec_select_stateNameArray = jsondata.stateNameArray;
+                        lec_select_classMemberNumArray = jsondata.classMemberNumArray;
 
                         lec_select_classHourArray = jsondata.classHourArray;
                         lec_select_classHourUnitArray = jsondata.classHourUnitArray;
                         lec_select_stateCodeArray = jsondata.stateCodeArray;
                         lec_select_subjectCodeArray= jsondata.subjectCodeArray;
+
                         fill_lecture_select_popup()
                       },
 
                       complete:function(){
-                        
+                        $('html').css("cursor","auto");
                       },
 
                       error:function(){
