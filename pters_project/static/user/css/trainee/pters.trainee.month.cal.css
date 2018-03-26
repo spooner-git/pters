@@ -18,6 +18,53 @@ img,a,div,span,p{
    	user-select: none;
 }
 
+#cal_popup_mini_selector{
+	position: absolute;
+	display: none;
+	border: 1px solid #fe4e65;
+	background: #282828;
+	z-index: 100;
+}
+#cal_popup_mini_selector:after{
+	content: '';
+    position: absolute;
+    border-top: 10px solid #282828;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    bottom: -9px;
+    left: 5px;
+}
+#cal_popup_mini_selector:before{
+	content: '';
+    position: absolute;
+    border-top: 10px solid #fe4e65;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    bottom: -11px;
+    left: 5px;
+}
+	#cal_popup_mini_selector div{
+		display: table-cell;
+		border:2px solid #282828;
+		width: 40px;
+		height: 25px;
+		font-size: 18px;
+		font-weight: bold;
+		text-align: center;
+		color: #ffffff;
+		cursor: pointer;
+	}
+	#cal_popup_mini_selector img{
+		float: unset;
+		width: 11px;
+		margin: 0;
+		margin-bottom: 2px;
+	}
+	#mini_selector_close{
+		float: unset;
+		margin-left: 0;
+	}
+
 
 #shade{
 	position: fixed;
@@ -351,6 +398,10 @@ img,a,div,span,p{
 	margin-right: 5px;
 }
 
+.memo{
+	display: none;
+}
+
 .balloon{
 	position: absolute;
 	background: transparent;
@@ -525,7 +576,7 @@ img,a,div,span,p{
 	z-index: 105;
 }
 
-#popup_info,#popup_info2,#popup_info3,#popup_info4{
+#popup_info,#popup_info2,#popup_info3,#popup_info4,#popup_info3_memo{
 	background: #ffffff;
 	position: relative;
 	width: 100%;
@@ -534,6 +585,12 @@ img,a,div,span,p{
 	font-size: 14px;
 	font-weight: bold;
 	height: 32px;
+}
+
+#popup_info3_memo{
+	color: #fe4e65 !important;
+	height: auto;
+	padding-bottom: 10px;
 }
 
 
@@ -706,7 +763,7 @@ img,a,div,span,p{
 		width: 450px;
 	}
 
-	#popup_info,#popup_info2,#popup_info3,#popup_info4{
+	#popup_info,#popup_info2,#popup_info3,#popup_info4, #popup_info3_memo{
 		background: #ffffff;
 		position: relative;
 		margin : 0 auto;
@@ -942,6 +999,22 @@ img,a,div,span,p{
 		margin-top: 25px;
 	}
 
+	.memo{
+		display: block;
+		position: absolute;
+		top: 75px;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100%;
+		text-align: center;
+		color: #282828;
+		font-size: 13px;
+	}
+
+	.greymemo{
+		color: #868686 !important;
+	}
+
 	.balloon{
 		position: absolute;
 		background: #e4e4e4;
@@ -1060,6 +1133,9 @@ img,a,div,span,p{
 		width: 15px;
 		margin-left: 5px;
 		margin-top: 3px;
+		left: unset;
+		top: unset;
+		height: unset;
 	}
 
 	.calendar-style{
