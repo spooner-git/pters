@@ -14,10 +14,8 @@
     <input type="hidden" name="lecture_id" id="id_check_lecture_id">
     <input type="hidden" name="check" id="id_check">
     <input type="hidden" name="class_id" id="id_class_id">
-    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
+    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
 </form>
-
-            
             
 <div id="defaultFeeSettingText" class="settingMenu wrap800">
   <p class="settingText">강의 관리</p>
@@ -37,13 +35,6 @@
   </div>
 </div>
 
-<!--
-<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon ">
-<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon ">
--->
-
-
-
 {% endblock %}
 
 
@@ -51,14 +42,7 @@
     <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script>
-          var Options = { "stoptimeStart":21,     //강사가 설정한 예약불가 시간 (시작)
-                          "stoptimeEnd":8,        //강사가 설정한 예약불가 시간 (종료)
-                          "rsvDisableSet" : 'on', //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅 on/off
-                          "limit":4,              //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
-                          "reserve":"disable",     //회원 일정 기능을 enable/disable
-          }
-        </script>
+
         <script>
               var lt_sal_01 =  ['{{ lt_sal_01 }}'];
               var lt_sal_02 =  ['{{ lt_sal_02 }}'];
@@ -66,7 +50,6 @@
               var lt_sal_04 =  ['{{ lt_sal_04 }}'];
               var lt_sal_05 =  ['{{ lt_sal_05 }}'];
               var lt_sal_00 =  ['{{ lt_sal_00 }}'];
-        
 
               ajax_read_lecture_info_from_db()
 
@@ -77,14 +60,14 @@
                   var class_id = $(this).parent('div').attr('data-classid')
 
                   $('#popup_delete_btn_yes').click(function(){
-                    console.log('?')
                       ajax_del_lecture_info(class_id)
                   })
 
-                  $('#popup_delete_btn_no').click(function(){
+                  $('#popup_delete_btn_no, .popup_close_x_button').click(function(){
                       $(this).parents('.popups').hide()
                       $('#shade').hide()
                   })
+
               })
               
 
@@ -182,7 +165,6 @@
 
 
             function ajax_del_lecture_info(class_id){
-              console.log(class_id)
                   $.ajax({
                       url: '/trainer/delete_class_info/',
                       data:{"class_id":class_id},
@@ -330,6 +312,5 @@
             ///********************* 강의 선택*************************************///
 
         </script>
-        <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.setting.sales.js" %}></script>
         
 {% endblock %}
