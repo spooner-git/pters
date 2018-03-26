@@ -1273,3 +1273,41 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
         context['finish_schedule_list'] = finish_schedule_list
 
         return render(request, self.template_name, context)
+
+
+# 일정 삭제
+@csrf_exempt
+def update_memo_schedule_logic(request):
+    schedule_id = request.POST.get('schedule_id')
+    note = request.POST.get('add_memo', '')
+    class_id = request.session.get('class_id', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    if schedule_id == '':
+        error = '스케쥴을 선택하세요.'
+
+    if error is None:
+        try:
+            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+        except ObjectDoesNotExist:
+            error = '스케쥴 정보가 존재하지 않습니다'
+
+    if error is None:
+        schedule_info.note = note
+        schedule_info.mod_dt = timezone.now()
+        schedule_info.save()
+
+    if error is None:
+        log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info='일정 메모', log_how='수정',
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+        return redirect(next_page)
