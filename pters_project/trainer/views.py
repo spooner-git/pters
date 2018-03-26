@@ -852,7 +852,7 @@ def add_member_info_logic_test(request):
     class_info = None
     lecture_info = None
 
-    #if User.objects.filter(username=phone).exists():
+    # if User.objects.filter(username=phone).exists():
     #    error = '이미 가입된 회원 입니다.'
     # elif User.objects.filter(email=email).exists():
     #    error = '이미 가입된 회원 입니다.'
@@ -2101,7 +2101,7 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
 
     if error is None:
         try:
-            class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.class_type_cd)
+            class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.subject_cd)
         except ObjectDoesNotExist:
             error = '강좌 type을 불러오지 못했습니다.'
 
@@ -2221,3 +2221,71 @@ def out_member_logic(request):
 
         return redirect(next_page)
 
+
+# 회원가입 api
+@csrf_exempt
+def add_class_info_logic(request):
+    center_id = request.POST.get('center_id', '')
+    subject_cd = request.POST.get('subject_cd', '')
+    subject_detail_nm = request.POST.get('subject_detail_nm', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    class_hour = request.POST.get('class_hour', '')
+    start_hour_unit = request.POST.get('start_hour_unit', '')
+    class_member_num = request.POST.get('class_member_num', '')
+
+    next_page = request.POST.get('next_page', '')
+
+    error = None
+
+    if subject_cd is None or subject_cd == '':
+        error = '스케쥴 타입을 설정해주세요.'
+
+    if class_hour is None or class_hour == '':
+        class_hour = 1
+    if start_hour_unit is None or start_hour_unit == '':
+        start_hour_unit = 1
+
+    if start_date is None or start_date == '':
+        start_date = datetime.date.today()
+    if end_date is None or end_date == '':
+        end_date = start_date + timezone.timedelta(days=3650)
+
+    if class_member_num is None or class_member_num == '':
+        error = '수업당 최대 허용 인원을 설정해 주세요.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+
+                class_info = ClassTb(member_id=request.user.id, center_id=center_id,
+                                     subject_cd=subject_cd, start_date=start_date, end_date=end_date,
+                                     class_hour=class_hour, start_hour_unit=start_hour_unit,
+                                     class_member_num=class_member_num, state_cd='IP',
+                                     reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+
+                class_info.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         log_info='강좌 정보', log_how='등록',
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)

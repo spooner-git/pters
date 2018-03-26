@@ -76,7 +76,7 @@
                 <div id="loginInfo" class="centermenu_div" style="float:right;cursor:pointer;"　
                 onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
                     <span class="pcwhere"></span>
-                    <span class="pcwho">{{ user.last_name }}{{user.first_name}} 회원<span></span></span>
+                    <span class="pcwho">{{ user.last_name }} {{user.first_name}} 회원<span></span></span>
                 </div>
                 <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
             </div>

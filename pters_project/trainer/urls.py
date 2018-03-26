@@ -75,4 +75,8 @@ urlpatterns = [
     # 회원 탈퇴 기능
     url(r'^out_member/$', views.out_member_logic, name='out_member'),
 
+
+    # 강좌 개설 기능
+    url(r'^add_class_info/$', views.add_class_info_logic, name='add_class_info'),
+
 ]

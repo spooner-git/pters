@@ -110,7 +110,7 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
             if error is None:
                 try:
-                    pt_type_name = CommonCdTb.objects.get(common_cd=class_info.class_type_cd)
+                    pt_type_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
                 except ObjectDoesNotExist:
                     error = '강좌 type을 불러오지 못했습니다.'
 
@@ -224,7 +224,7 @@ def get_lecture_list_by_member_id(context, member_id):
 
         if error is None:
             try:
-                pt_type_name = CommonCdTb.objects.get(common_cd=class_info.class_type_cd)
+                pt_type_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
             except ObjectDoesNotExist:
                 error = '강좌 type 없음'
 
@@ -301,7 +301,7 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
 
     if error is None:
         try:
-            class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.class_type_cd)
+            class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.subject_cd)
         except ObjectDoesNotExist:
             error = '강좌 type을 불러오지 못했습니다.'
 
@@ -473,6 +473,11 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=46)
         end_date = today + datetime.timedelta(days=47)
 
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+
         if lecture_id is None or lecture_id == '':
             error = '수강정보를 확인해 주세요.'
 
@@ -484,6 +489,10 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             # 강사 setting 값 로드
             context = get_trainee_setting_data(context, self.request.user.id)
             self.request.session['setting_language'] = context['lt_lan_01']
+
+        # 강사 setting 값 로드
+        if error is None:
+            context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
         return context
 
