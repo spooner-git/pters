@@ -58,20 +58,6 @@ ul a{
 	display: inline-block;
 	width: 40px;
 	height: 20px;
-	border: 1px solid #fe4e65;
-	background: #fe4e65;
-	color: white;
-	font-size: 13px;
-	margin-left: 15px;
-	margin-bottom: 3px;
-	text-align: center;
-	cursor: pointer;
-}
-
-.toggleBtnWrap_off{
-	display: inline-block;
-	width: 40px;
-	height: 20px;
 	border: 1px solid #cccccc;
 	background: #ffffff;
 	color: #cccccc;
@@ -80,6 +66,12 @@ ul a{
 	margin-bottom: 3px;
 	text-align: center;
 	cursor: pointer;
+}
+
+.typeSelected{
+	background:#fe4e65;
+	color:#ffffff;
+	border-color:#fe4e65;
 }
 
 #datetext_mini{

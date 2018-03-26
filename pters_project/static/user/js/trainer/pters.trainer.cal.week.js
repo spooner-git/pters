@@ -533,6 +533,9 @@ $(document).ready(function(){
 
                 //보내기후 팝업창 닫기
                 complete:function(){
+                	if($('body').width()>=600){
+                		$('#calendar').css('position','relative')	
+                	}
                 	/*
                 	$('#id_repeat_schedule_id_confirm').val('')
                 	if(addTypeSelect=='repeatptadd'){
@@ -1331,7 +1334,6 @@ $(document).ready(function(){
 		$('.holidayName').text('')
 		for(var i=0; i<krHolidayList.length; i++){
 			var date_data = date_format_yyyy_m_d_to_yyyymmdd(krHolidayList[i])
-			console.log(date_data)
 			$("div[data-date="+date_data+"]").addClass('holiday');
 			$("div[data-date="+date_data+"]").find('.holidayName').text(krHolidayNameList[i])
 		};
