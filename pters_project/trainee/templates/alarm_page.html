@@ -1,0 +1,9 @@
+{% load el_pagination_tags %}
+{% paginate log_data %}
+{% for log_info in log_data %}
+    {# your code to show the entry #}
+      {{ log_info.from_member_name }}가 {{ log_info.to_member_name }}의
+     {{ log_info.log_info }}를 {{ log_info.log_how }} 했습니다. {{ log_info.reg_dt }}
+    <br/>
+{% endfor %}
+{% show_more %}

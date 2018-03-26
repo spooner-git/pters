@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
+from el_pagination.views import AjaxListView
 
 from configs.views import date_check_func, AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
@@ -775,6 +776,7 @@ def pt_add_logic(request):
         if error is None:
             error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.last_name+request.user.first_name, lecture_id, request)
 
+    # print(error)
     if error is None:
         member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
         for member_lecture_info in member_lecture_data:
@@ -1500,3 +1502,39 @@ def delete_member_lecture_info_logic(request):
 
         return redirect(next_page)
 
+
+class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
+    context_object_name = "log_data"
+    template_name = "alarm.html"
+    page_template = 'alarm_page.html'
+
+    def get_queryset(self):
+        # context = super(AlarmTestView, self).get_context_data(**kwargs)
+        lecture_id = self.request.session.get('lecture_id', '')
+        # print(lecture_id)
+        error = None
+        # page_template =
+        log_data = None
+
+        if lecture_id is None or lecture_id == '':
+            error = '수강 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(lecture_tb_id=lecture_id, use=1).order_by('-reg_dt')
+            # log_data.order_by('-reg_dt')
+
+        if error is None:
+            for log_info in log_data:
+                if log_info.read == 0:
+                    log_info.log_read = 0
+                    log_info.read = 1
+                    log_info.save()
+                elif log_info.read == 1:
+                    log_info.log_read = 1
+                else:
+                    log_info.log_read = 2
+
+        # context['log_data'] = log_data
+
+        return log_data

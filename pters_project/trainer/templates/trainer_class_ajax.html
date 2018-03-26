@@ -1,4 +1,6 @@
     {
+        "classIdArray":
+      [{% for class_info in class_data %}"{{ class_info.class_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "centerNameArray":
       [{% for class_info in class_data %}"{{ class_info.center_tb.center_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "subjectCodeArray":
