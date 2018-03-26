@@ -420,7 +420,7 @@
                     if(jsondata.messageArray.length>0){
                       alert(jsondata.messageArray)
                     }else{
-                      document.getElementById('update-setting-reserve-form').submit()
+                      ajax_send_reserve_initial_setting()
                     }
                   },
                   complete:function(){
@@ -433,7 +433,35 @@
               })
           }
 
+          function ajax_send_reserve_initial_setting(){
+              $.ajax({
+                  url: '/trainer/update_setting_reserve/',
+                  data: $('#update-setting-reserve-form').serialize(),
+                  dataType : 'html',
+                  type : 'post',
 
+                  beforeSend:function(){
+                    $('html').css("cursor","wait");
+                  },
+
+                  success:function(data){
+                    var jsondata = JSON.parse(data)
+                    if(jsondata.messageArray.length>0){
+                      alert(jsondata.messageArray)
+                    }else{
+                      alert('새로운 강의가 등록 되었습니다.')
+                      location.href="{% url 'trainer:class_setting' %}"
+                    }
+                  },
+                  complete:function(){
+                    $('html').css("cursor","auto");
+                  },
+
+                  error:function(){
+                    console.log('server error')
+                  }
+              })
+          }
 
         </script>
 

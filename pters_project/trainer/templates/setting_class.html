@@ -59,6 +59,8 @@
 
                   $('#popup_delete_btn_yes').click(function(){
                       ajax_del_lecture_info(class_id)
+                      $(this).parents('.popups').hide()
+                      $('#shade').hide()
                   })
 
                   $('#popup_delete_btn_no, .popup_close_x_button').click(function(){
@@ -82,7 +84,7 @@
             var lec_select_availCountArray = []
             var lec_select_classIdArray = []
 
-
+            /*
             function ajax_read_lecture_info_from_db(){
                 $.ajax({
 
@@ -160,6 +162,7 @@
                       }
                     })
             }
+            */
 
 
             function ajax_del_lecture_info(class_id){
@@ -175,18 +178,12 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
-                        lec_select_classIdArray = jsondata.classIdArray
-                        lec_select_centerNameArray = jsondata.centerNameArray;
-                        lec_select_subjectNameArray = jsondata.subjectNameArray;
-                        lec_select_startDateArray = jsondata.startDateArray;
-                        lec_select_stateNameArray = jsondata.stateNameArray;
-                        lec_select_classMemberNumArray = jsondata.classMemberNumArray;
-
-                        lec_select_classHourArray = jsondata.classHourArray;
-                        lec_select_classHourUnitArray = jsondata.classHourUnitArray;
-                        lec_select_stateCodeArray = jsondata.stateCodeArray;
-                        lec_select_subjectCodeArray= jsondata.subjectCodeArray;
-                        fill_lecture_select_popup()
+                        if(jsondata.messageArray.length==0){
+                            ajax_read_lecture_info_from_db()
+                        }else if(jsondata.messageArray.length>0){
+                            alert(jsondata.messageArray)
+                        }
+                        
                       },
 
                       complete:function(){
