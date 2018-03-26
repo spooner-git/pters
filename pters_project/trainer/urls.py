@@ -78,6 +78,7 @@ urlpatterns = [
 
 
     # 강좌 개설 기능
+    url(r'^add_class/$', views.AddClassView.as_view(), name='add_class'),
     url(r'^class_select/$', views.ClassSelectView.as_view(), name='class_select'),
     url(r'^class_processing/$', views.class_processing_logic, name='class_processing'),
     url(r'^add_class_info/$', views.add_class_info_logic, name='add_class_info'),

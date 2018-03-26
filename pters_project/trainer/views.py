@@ -45,12 +45,13 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         class_counter = 0
 
         if len(class_data) == 0:
-            self.url = '/trainer/class_select/'
+            self.url = '/trainer/add_class/'
         elif len(class_data) == 1:
             self.url = '/trainer/trainer_main/'
             for class_info in class_data:
                 self.request.session['class_id'] = class_info.class_id
         else:
+            self.url = '/trainer/class_select/'
             class_id_comp = ''
             class_np_counter = 0
 
@@ -2319,6 +2320,27 @@ class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ClassSelectView, self).get_context_data(**kwargs)
+
+        error = None
+
+        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=1)
+
+        for class_type_cd_info in class_type_cd_data:
+            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd, use=1)
+
+        center_list = CenterTrainerTb.objects.filter(member_id=self.request.user.id, use=1)
+
+        context['center_list'] = center_list
+        context['class_type_cd_data'] = class_type_cd_data
+
+        return context
+
+
+class AddClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainer_class_select.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AddClassView, self).get_context_data(**kwargs)
 
         error = None
 
