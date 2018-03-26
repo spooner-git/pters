@@ -344,6 +344,10 @@ a:focus, a:hover{
     margin-right: 70px;
 }
 
+.pclogout{
+    display: none;
+}
+
 
 /*미디어 쿼리*/
 @media(min-width:415px){
@@ -522,13 +526,14 @@ a:focus, a:hover{
     }
 }
 
-@media(min-width:900px){
+@media(min-width:970px){
     #loginInfo{
         display: inline-block;
     }
 
     .pclogout{
         position: absolute;
+        display: inline;
         right: 0px;
         top: 20px;
         font-size: 9.5px;
