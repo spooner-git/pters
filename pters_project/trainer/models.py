@@ -5,19 +5,6 @@ from center.models import CenterTb
 from login.models import MemberTb
 
 
-class ShopEmployeeTb(models.Model):
-    shop_employee_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.CharField(db_column='MEMBER_ID', null=False, default='', max_length=20)  # Field name made lowercase.
-    company = models.CharField(db_column='COMPANY_ID', null=False, default='', max_length=20)  # Field name made lowercase.
-    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
-    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
-    use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = 'SHOP_EMPLOYEE_TB'
-
-
 class CompanyTb(models.Model):
     company_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     name = models.CharField(db_column='NAME', max_length=20, blank=True, null=True)  # Field name made lowercase.

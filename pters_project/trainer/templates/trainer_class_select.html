@@ -30,7 +30,7 @@
   <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
   <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->
   <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
-  <input type="hidden" name="next_page" value = '{% url 'trainer' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:index' %}'>
 </form>
 
 <div id="myClassCreate">
@@ -45,9 +45,17 @@
         <label>만들고 하는 클래스명을 입력해주세요.</label>
         <input type="" name="new_class_name" placeholder="클래스명(최대 10자)" maxlength="10">
     </div>
-<<<<<<< HEAD:pters_project/trainer/templates/trainer_lecture_select.html
-    <button onclick="goNext('0')">다음</button>
-=======
+
+    {% if center_list %}
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+            <ul id="center_list" class="dropdown-menu">
+                {% for center_info in center_list %}
+                  <li><a data-time="{{ center_info.center_id }}">{{ center_info.center.center_name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
@@ -69,7 +77,6 @@
         </div>
     {% endfor %}
     <button  onclick="goNext('0')">다음</button>
->>>>>>> b96cac681ffbcf922774344a879acb10e898a1af:pters_project/trainer/templates/trainer_class_select.html
 </div>
 
 <div id="myClassSetting">

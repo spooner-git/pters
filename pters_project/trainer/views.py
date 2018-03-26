@@ -23,6 +23,7 @@ from django.views.generic.base import ContextMixin
 from el_pagination.decorators import page_template
 from el_pagination.views import AjaxListView
 
+from center.models import CenterTrainerTb
 from configs.views import AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_trainer_schedule_data_func
@@ -2293,13 +2294,16 @@ class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ClassSelectView, self).get_context_data(**kwargs)
 
-        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02')
-
-        for class_type_cd_info in class_type_cd_data:
-            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd)
-
         error = None
 
+        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=1)
+
+        for class_type_cd_info in class_type_cd_data:
+            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd, use=1)
+
+        center_list = CenterTrainerTb.objects.filter(member_id=self.request.user.id, use=1)
+
+        context['center_list'] = center_list
         context['class_type_cd_data'] = class_type_cd_data
 
         return context
@@ -2348,7 +2352,7 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
 
 @csrf_exempt
-def class_processing(request):
+def class_processing_logic(request):
 
     class_id = request.POST.get('class_id', '')
     next_page = request.POST.get('next_page')

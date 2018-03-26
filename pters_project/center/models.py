@@ -20,5 +20,17 @@ class CenterTb(models.Model):
         db_table = 'CENTER_TB'
 
     def __str__(self):
-        return self.member.__str__()+'_center'
+        return self.center_name.__str__()+'_center'
 
+
+class CenterTrainerTb(models.Model):
+    center_trainer_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    center = models.ForeignKey(CenterTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
+    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'CENTER_TRAINER_TB'
