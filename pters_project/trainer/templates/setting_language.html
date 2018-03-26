@@ -11,34 +11,34 @@
 {% block content %}
 
 
-<form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
-  <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
-  <input type="hidden" name = "next_page" value="/trainer/">
-</form>
+  <form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
+    <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
+    <input type="hidden" name = "next_page" value="/trainer/">
+  </form>
 
 
-<div id="language_setting_label" class="settingMenu wrap800">
-  <p class="settingText">언어 설정</p>
-  <p class="settingText2">PTERS 언어설정</p>
-</div>
-<div id="language_setting" class="settingBox wrap800">
-    <div class="iconText">
-        <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 언어/Language/言語</span>
-        <div id="languageSelect" class="dropdown pters_dropdown_setting_custom" style="margin-left:62px;">
-              <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-              <ul id="language_list" class="dropdown-menu pters_dropdown_custom ulTimes">
-                <li><a data-lang="KOR">한국어</a></li>
-                <li><a data-lang="ENG">English</a></li>
-                <li><a data-lang="JPN">日本語</a></li>
-              </ul>
-        </div>
-    </div> 
-</div>
+  <div id="language_setting_label" class="settingMenu wrap800">
+    <p class="settingText">언어 설정</p>
+    <p class="settingText2">PTERS 언어설정</p>
+  </div>
+  <div id="language_setting" class="settingBox wrap800">
+      <div class="iconText">
+          <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 언어/Language/言語</span>
+          <div id="languageSelect" class="dropdown pters_dropdown_setting_custom" style="margin-left:62px;">
+                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                <ul id="language_list" class="dropdown-menu pters_dropdown_custom ulTimes">
+                  <li><a data-lang="KOR">한국어</a></li>
+                  <li><a data-lang="ENG">English</a></li>
+                  <li><a data-lang="JPN">日本語</a></li>
+                </ul>
+          </div>
+      </div> 
+  </div>
 
-<div class="popupBtn_mini">
-  <button class="submitBtn _button_Prev">이전</button>
-  <button class="submitBtn _button_Next">등록</button>
-</div>
+  <div class="popupBtn_mini">
+    <button class="submitBtn _button_Prev">이전</button>
+    <button class="submitBtn _button_Next">등록</button>
+  </div>
 
 
 {% endblock %}
