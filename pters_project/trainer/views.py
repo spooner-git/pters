@@ -2345,3 +2345,24 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             messages.error(self.request, error)
 
         return context
+
+
+@csrf_exempt
+def class_processing(request):
+
+    class_id = request.POST.get('class_id', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    if class_id == '':
+        error = '강좌를 선택해 주세요.'
+
+    if error is None:
+        request.session['class_id'] = class_id
+
+    if error is None:
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+    return redirect(next_page)
+
