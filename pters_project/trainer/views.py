@@ -2296,12 +2296,12 @@ class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         error = None
 
-        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02')
+        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=1)
 
         for class_type_cd_info in class_type_cd_data:
-            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd)
+            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd, use=1)
 
-        center_list = CenterTrainerTb.objects.filter(member_id=self.request.user.id)
+        center_list = CenterTrainerTb.objects.filter(member_id=self.request.user.id, use=1)
 
         context['center_list'] = center_list
         context['class_type_cd_data'] = class_type_cd_data

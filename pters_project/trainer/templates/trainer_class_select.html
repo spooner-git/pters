@@ -46,15 +46,16 @@
         <input type="" name="new_class_name" placeholder="클래스명(최대 10자)" maxlength="10">
     </div>
 
-
-    <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-        <ul id="center_list" class="dropdown-menu">
-            {% for center_info in center_list %}
-              <li><a data-time="{{ center_info.center_id }}">{{ center_info.center.center_name }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
+    {% if center_list %}
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+            <ul id="center_list" class="dropdown-menu">
+                {% for center_info in center_list %}
+                  <li><a data-time="{{ center_info.center_id }}">{{ center_info.center.center_name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
