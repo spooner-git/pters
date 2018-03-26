@@ -15,13 +15,22 @@
 
 {% block content %}
 
-<form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
+<form action="{% url 'trainer:add_class_info' %}" id="add-class-info-form" method="post">
+  <input type="hidden" name="center_id" id="center_id" value=""> <!--강좌 센터 -->
+  <input type="hidden" name="subject_cd" id="subject_cd" value=""> <!--강좌 코드-->
+  <input type="hidden" name="start_date" id="start_date" value=""> <!--강좌 시작 일자-->
+  <input type="hidden" name="end_date" id="end_date" value=""> <!--강좌 종료 일자-->
+  <input type="hidden" name="class_hour" id="class_hour" value=1> <!--강좌 진행 시간-->
+  <input type="hidden" name="start_hour_unit" id="start_hour_unit" value="1"> <!--강좌 시작 시간(1: 정시, 0.5: 30분단위-->
+  <input type="hidden" name="class_member_num" id="class_member_num" value="1"> <!--강좌 수업별 최대 허용 인원-->
+
+
   <input type="hidden" name="setting_trainer_lecture_create" id="id_setting_lecture_create" value=""> <!--신규 강의 이름-->
   <input type="hidden" name="setting_trainer_work_time_available" id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
   <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
   <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->
   <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
-  <input type="hidden" name="next_page" value = '{% url 'trainer:reserve_setting' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer' %}'>
 </form>
 
 <div id="myClassCreate">
@@ -36,7 +45,27 @@
         <label>만들고 하는 클래스명을 입력해주세요.</label>
         <input type="" name="new_class_name" placeholder="클래스명(최대 10자)" maxlength="10">
     </div>
-    <button>다음</button>
+
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+        <ul id="class_type" class="dropdown-menu">
+            {% for class_type_cd_info in class_type_cd_data %}
+              <li><a data-time="{{ class_type_cd_info.common_cd }}">{{ class_type_cd_info.common_cd_nm }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% for class_type_cd_info in class_type_cd_data %}
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+            <ul id="subject_type_{{ forloop.counter }}" class="dropdown-menu" display="none">
+                {% for subject_type in class_type_cd_info.subject_type_cd %}
+                  <li><a data-time="{{ subject_type.common_cd }}">{{ subject_type.common_cd_nm }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+    <button  onclick="goNext('0')">다음</button>
 </div>
 
 <div id="myClassSetting">
@@ -128,7 +157,7 @@
             </ul>
         </div>
     </div>
-    <button>완료</button>
+    <button onclick="goNext('1')">완료</button>
 </div>
 
 
