@@ -54,7 +54,7 @@ urlpatterns = [
 
     # log 관련
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
-    url(r'^alarm_test/$', views.entry_index, name='alarm_test'),
+    url(r'^alarm_test/$', views.AlarmTestView.as_view(), name='alarm_test'),
     url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),
     url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),
 

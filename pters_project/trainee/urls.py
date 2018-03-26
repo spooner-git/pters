@@ -31,6 +31,8 @@ urlpatterns = [
 
     url(r'^lecture_processing/$', views.lecture_processing, name='lecture_processing'),
 
+    url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
+
     url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),
     url(r'^delete_member_lecture_info/$', views.delete_member_lecture_info_logic, name='delete_member_lecture_info'),
 
