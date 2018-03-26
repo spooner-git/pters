@@ -40,7 +40,7 @@ class IndexView(TemplateView):
 
 
 def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
-                            user_id, lecture_id, note, en_dis_type, repeat_id):
+                            user_id, lecture_id, note, en_dis_type, repeat_id, class_id):
 
     error = None
     class_info = None
@@ -51,7 +51,7 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
     if error is None:
         # 강사 정보 가져오기
         try:
-            class_info = ClassTb.objects.get(member_id=user_id)
+            class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
             error = '강사 정보를 불러오지 못했습니다.'
 
@@ -372,6 +372,7 @@ def add_schedule_logic(request):
     note = request.POST.get('add_memo', '')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
+    class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -398,7 +399,7 @@ def add_schedule_logic(request):
     if error is None:
         # 강사 정보 가져오기
         try:
-            class_info = ClassTb.objects.get(member_id=request.user.id)
+            class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
             error = '강사 정보가 존재하지 않습니다'
 
@@ -449,7 +450,7 @@ def add_schedule_logic(request):
                 if error is None:
                     error = add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
                                                     request.user.id, lecture_id, note,
-                                                    en_dis_type, None)
+                                                    en_dis_type, None, class_id)
                 '''
                 for input_datetime in input_datetime_list:
                     lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
@@ -498,6 +499,7 @@ def delete_schedule_logic(request):
     en_dis_type = request.POST.get('en_dis_type')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
+    class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -512,13 +514,6 @@ def delete_schedule_logic(request):
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
-
-    if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(member_id=request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
 
     if error is None:
         try:
@@ -539,11 +534,11 @@ def delete_schedule_logic(request):
 
     if error is None:
 
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=1)
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
-        save_log_data(start_date, end_date, class_info.class_id, lecture_id, request.user.last_name+request.user.first_name,
+        save_log_data(start_date, end_date, class_id, lecture_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LS02', request)
 
         return redirect(next_page)
@@ -560,6 +555,7 @@ def finish_schedule_logic(request):
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
     #imgUpload = request.POST.get('upload')
+    class_id = request.session.get('class_id','')
     next_page = request.POST.get('next_page')
 
     # image upload test - hk.kim 180313
@@ -576,13 +572,6 @@ def finish_schedule_logic(request):
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
-
-    if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(member_id=request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
 
@@ -646,7 +635,7 @@ def finish_schedule_logic(request):
     print(error)
 
     if error is None:
-        save_log_data(start_date, end_date, class_info.class_id, lecture_info.lecture_id, request.user.last_name+request.user.first_name,
+        save_log_data(start_date, end_date, class_id, lecture_info.lecture_id, request.user.last_name+request.user.first_name,
                       member_name, '1', 'LS03', request)
 
         return redirect(next_page)
@@ -669,7 +658,8 @@ def add_repeat_schedule_logic(request):
     repeat_schedule_time_duration = request.POST.get('repeat_dur')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
-    en_dis_type = request.POST.get('en_dis_type')
+    en_dis_type = request.POST.get('en_dis_type', '')
+    class_id = request.session.get('class_id','')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -728,15 +718,8 @@ def add_repeat_schedule_logic(request):
             lecture_id = ''
 
     if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(member_id=request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
-
-    if error is None:
         # 반복 일정 데이터 등록
-        repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
+        repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
                                                 repeat_type_cd=repeat_type,
                                                 week_info=repeat_week_type,
                                                 start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date_info,
@@ -824,7 +807,7 @@ def add_repeat_schedule_logic(request):
                     with transaction.atomic():
                         # PT 일정 추가라면 일정 추가해야할 lecture id 찾기
                         if en_dis_type == '1':
-                            lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
+                            lecture_id = get_member_schedule_input_lecture(class_id, member_id)
 
                         error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
                                                         schedule_end_datetime, request.user.id,
@@ -891,6 +874,7 @@ def add_repeat_schedule_confirm(request):
     repeat_confirm = request.POST.get('repeat_confirm')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
+    class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -910,13 +894,6 @@ def add_repeat_schedule_confirm(request):
         error = '확인할 반복일정을 선택해주세요.'
     if repeat_confirm == '':
         error = '확인할 반복일정에 대한 정보를 확인해주세요.'
-
-    if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(member_id=request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
 
     if error is None:
         try:
@@ -981,12 +958,12 @@ def add_repeat_schedule_confirm(request):
             if error is None:
                 information = '반복일정 등록이 취소됐습니다.'
         else:
-            member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
+            member_lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=1)
             for member_lecture_info in member_lecture_data:
                 member_lecture_info.schedule_check = 1
                 member_lecture_info.save()
 
-            save_log_data(start_date, end_date, class_info.class_id, lecture_id, request.user.last_name+request.user.first_name,
+            save_log_data(start_date, end_date, class_id, lecture_id, request.user.last_name+request.user.first_name,
                           member_name, en_dis_type, 'LR01', request)
 
             information = '반복일정 등록이 완료됐습니다.'
@@ -1009,6 +986,7 @@ def delete_repeat_schedule_logic(request):
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
+    class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -1025,13 +1003,6 @@ def delete_repeat_schedule_logic(request):
 
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
-
-    if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(member_id=request.user.id)
-        except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
 
     if error is None:
         try:
@@ -1100,11 +1071,11 @@ def delete_repeat_schedule_logic(request):
     # print(error)
 
     if error is None:
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
+        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=1)
         for member_lecture_info in member_lecture_data:
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
-        save_log_data(start_date, end_date, class_info.class_id, delete_repeat_schedule.lecture_tb_id, request.user.last_name+request.user.first_name,
+        save_log_data(start_date, end_date, class_id, delete_repeat_schedule.lecture_tb_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LR02', request)
 
         return redirect(next_page)
@@ -1118,7 +1089,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CheckScheduleUpdateViewAjax, self).get_context_data(**kwargs)
-
+        class_id = self.request.session.get('class_id', '')
         error = None
         user_for_group = User.objects.get(id=self.request.user.id)
         group = user_for_group.groups.get(user=self.request.user.id)
@@ -1129,7 +1100,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
         if group.name == 'trainer':
             # 강사 정보 가져오기
             try:
-                class_info = ClassTb.objects.get(member_id=self.request.user.id)
+                class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
                 error = '강사 정보가 존재하지 않습니다'
 

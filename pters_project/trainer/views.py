@@ -8,15 +8,11 @@ import os
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.db.models import Q
-from django.shortcuts import redirect, render, render_to_response
-from django.template import RequestContext
+from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -2308,3 +2304,44 @@ class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         return context
 
+
+def get_class_data(request):
+    center_id = request.POST.get('center_id', '')
+    subject_cd = request.POST.get('subject_cd', '')
+    subject_detail_nm = request.POST.get('subject_detail_nm', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    class_hour = request.POST.get('class_hour', '')
+    start_hour_unit = request.POST.get('start_hour_unit', '')
+    class_member_num = request.POST.get('class_member_num', '')
+
+    next_page = request.POST.get('next_page', '')
+
+    return redirect(next_page)
+
+
+class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = "trainer_class_ajax.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(GetClassDataViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        class_data = None
+
+        if error is None:
+            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
+            class_data = ClassTb.objects.filter(member_id=self.request.user.id, use=1).order_by('-reg_dt')
+            # log_data.order_by('-reg_dt')
+
+        if error is None:
+            for class_info in class_data:
+                class_info.subject_type_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
+
+        context['class_data'] = class_data
+
+        if error is not None:
+            messages.error(self.request, error)
+
+        return context
