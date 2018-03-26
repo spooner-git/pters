@@ -1100,7 +1100,7 @@ def delete_member_info_logic(request):
 
                     schedule_data_finish = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                                      lecture_tb_id=lecture_info.lecture_id,
-                                                                     state_cd='PE').update(class_tb_id='')
+                                                                     state_cd='PE')
                     repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                                            lecture_tb_id=lecture_info.lecture_id)
                     schedule_data.delete()
@@ -2275,6 +2275,7 @@ def add_class_info_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
+        request.session['class_id'] = class_info.class_id
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          log_info='강좌 정보', log_how='등록',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
@@ -2369,4 +2370,40 @@ def class_processing_logic(request):
     else:
         messages.error(request, error)
     return redirect(next_page)
+
+
+@csrf_exempt
+def delete_class_info_logic(request):
+
+    class_id = request.session.get('class_id', '')
+    next_page = request.POST.get('next_page', '')
+    error = None
+
+    if class_id is None or class_id == '':
+        error = '강좌 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        class_info.member_view_state_cd = 'DELETE'
+        class_info.mod_dt = timezone.now()
+        class_info.save()
+
+    if error is None:
+        log_data = LogTb(log_type='LC02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info='강좌 정보', log_how='연동 해제',
+                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
 
