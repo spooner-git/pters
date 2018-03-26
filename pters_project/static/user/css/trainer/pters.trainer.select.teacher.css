@@ -4,10 +4,10 @@
 	top: 50%;
 	transform:translate(-50%, -50%);
 	display: none;
-	width: 320px;
+	width: 450px;
 	border:1px solid #cccccc;
 	background:#ffffff;
-	z-index: 110;
+	z-index: 150;
 	padding:0 5px 10px 5px;
 }
 	#popup_lecture_select label{
@@ -37,15 +37,24 @@
 			background:#ffffff;
 			border-bottom: 1px solid #f4f4f4;
 		}
+		.table_center_name{
+			width: 20%;
+		}
 		.table_lecture_name{
 			width: 30%;
 		}
-		.table_trainer_name{
-			width: 30%;
+		.table_start_date{
+			width: 15%;
 		}
-		.table_selection{
-			width: 30%;
+		.table_lecture_status{
+			width: 10%;
 		}
+		.lecture_selection{
+			width: 10%;
+		}
+
+
+
 
 ._npOpen{
 	cursor: pointer;
