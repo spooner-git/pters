@@ -41,17 +41,20 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
         class_data = ClassTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
         self.url = '/trainer/class_select/'
-
+        class_id = request.session.get('class_id', '')
         class_counter = 0
 
-        if len(class_data) == 0:
-            self.url = '/trainer/add_class/'
-        elif len(class_data) == 1:
-            self.url = '/trainer/trainer_main/'
-            for class_info in class_data:
-                self.request.session['class_id'] = class_info.class_id
+        if class_id is None or class_id =='':
+            if len(class_data) == 0:
+                self.url = '/trainer/add_class/'
+            elif len(class_data) == 1:
+                self.url = '/trainer/trainer_main/'
+                for class_info in class_data:
+                    self.request.session['class_id'] = class_info.class_id
+            else:
+                self.url = '/trainer/class_select/'
         else:
-            self.url = '/trainer/class_select/'
+            self.url = '/trainer/trainer_main/'
             class_id_comp = ''
             class_np_counter = 0
 
@@ -2394,6 +2397,7 @@ def class_processing_logic(request):
     if error is None:
         request.session['class_id'] = class_id
 
+    # print(error)
     if error is None:
         return redirect(next_page)
     else:

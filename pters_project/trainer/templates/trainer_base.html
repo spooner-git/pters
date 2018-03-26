@@ -40,11 +40,9 @@
         </div>
 
         <div id="popup_lecture_select" class="popups">
-            <form action="{% url 'trainee:lecture_processing' %}" id="lecture-check-form" method="post">
-                <input type="hidden" name="lecture_id" id="id_check_lecture_id">
-                <input type="hidden" name="check" id="id_check">
+            <form action="{% url 'trainer:class_processing' %}" id="lecture-check-form" method="post">
                 <input type="hidden" name="class_id" id="id_class_id">
-                <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
+                <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
             </form>
             <label>달력 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
             <p>일정 확인을 원하는 항목을 선택해 주세요.</p>
@@ -539,7 +537,7 @@
                       var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_subjectNameArray[i]+'</div>'
                       var startDate = '<div class="pters_table_cell table_start_date">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
                       var status = '<div class="pters_table_cell table_lecture_status">'+lec_select_stateNameArray[i]+'</div>'
-                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+',2, '+lec_select_classIdArray[i]+')"'+'">선택</a></div>'
+                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a></div>'
                       var sum = table + centerName + lectureName + startDate + status + selection +'</div>'
                       list_table_to_join.push(sum)
                   /*
@@ -609,17 +607,11 @@
             })
 
 
-            function lecture_check(lecture_id, check, class_id){
-              $('#id_check_lecture_id').val(lecture_id);
-              $('#id_check').val(check);
+            function lecture_check(class_id){
+              //$('#id_check_lecture_id').val(lecture_id);
+              //$('#id_check').val(check);
               $('#id_class_id').val(class_id);
-              if(check=='2'){
-                  $('#id_next_page').val('{% url 'trainer:cal_month'%}');
-              }else if(check=='0'){
-                  $('#id_next_page').val('{% url 'trainer:cal_month'%}');
-              }else{
-                  $('#id_next_page').val('{% url 'trainer:cal_month' %}');
-              }
+              $('#id_next_page').val('{% url 'trainer:index'%}');
               document.getElementById('lecture-check-form').submit();
             }
 
