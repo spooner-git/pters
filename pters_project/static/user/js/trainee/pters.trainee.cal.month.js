@@ -433,6 +433,7 @@ $(document).ready(function(){
 
 	function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
 		for(var i=0; i<classDateArray.length; i++){
+			var finish = scheduleFinishArray[i]
 			var arr = classDateArray[i].split('_')
 			var yy = arr[0]
 			var mm = arr[1]
@@ -457,14 +458,20 @@ $(document).ready(function(){
 				var classTime = "00:00"
 			}
 
+			if(finish == '1'){
+				var finishImg = '<span>'+classTime+'</span><img src="/static/user/res/btn-pt-complete.png">'
+			}else if(finish == '0'){
+				var finishImg = '<span>'+classTime+'</span>'
+			}
+
 			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
-				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').text(classTime)
+				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').html(finishImg)
 			}else{
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
 				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
-				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').text(classTime)
+				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').html(finishImg)
 			}
 		};
 	};
