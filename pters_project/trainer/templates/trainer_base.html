@@ -39,7 +39,7 @@
             <div style="display:inline-block;width: 30px;height: 30px;border-radius: 50%;background: #282828;color: #ffffff">변경</div>
         </div>
 
-        <div id="popup_lecture_select" class="_popup">
+        <div id="popup_lecture_select" class="popups">
             <form action="{% url 'trainee:lecture_processing' %}" id="lecture-check-form" method="post">
                 <input type="hidden" name="lecture_id" id="id_check_lecture_id">
                 <input type="hidden" name="check" id="id_check">
@@ -49,10 +49,11 @@
             <label>달력 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
             <p>일정 확인을 원하는 항목을 선택해 주세요.</p>
             <div class="pters_table">
+              <div class="pters_table_cell_head table_center_name">센터명</div>
               <div class="pters_table_cell_head table_lecture_name">강의명</div>
-              <div class="pters_table_cell_head table_trainer_name">트레이너</div>
-              <!--<div class="pters_table_cell">연락처</div>-->
-              <div class="pters_table_cell_head table_selection">선택</div>
+              <div class="pters_table_cell_head table_start_date">시작일</div>
+              <div class="pters_table_cell_head table_lecture_status">상태</div>
+              <div class="pters_table_cell_head lecture_selection">선택</div>
             </div>
             <div class="lecture_select_table_list">
             </div>
@@ -448,29 +449,24 @@
             function ajax_read_lecture_info_from_db(){
                 $.ajax({
 
-                      //url: '/trainee/read_trainee_lecture_by_class_ajax/',
-                      url: '/trainee/read_trainee_lecture_ajax/',
+                      url: ' /trainer/get_class_data/',
                       dataType : 'html',
-                      //type:'POST',
-
 
                       beforeSend:function(){
                         
                       },
 
                       success:function(data){
-                        console.log(data)
                         var jsondata = JSON.parse(data);
-                        lec_select_regCountArray = jsondata.regCountArray;
-                        lec_select_countArray = jsondata.countArray;
-                        lec_select_startArray = jsondata.startArray;
-                        lec_select_endArray = jsondata.endArray;
-                        lec_select_lectureIdArray = jsondata.lectureIdArray;
-                        lec_select_trainerNameArray = jsondata.trainerNameArray;
-                        lec_select_availCountArray = jsondata.availCountArray;
-                        lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
-                        lec_select_classInfoArray = jsondata.classInfoArray;
-                        lec_select_classIdArray = jsondata.classIdArray;
+                        lec_select_centerNameArray = jsondata.centerNameArray;
+                        lec_select_subjectNameArray = jsondata.subjectNameArray;
+                        lec_select_startDateArray = jsondata.startDateArray;
+                        lec_select_stateNameArray = jsondata.stateNameArray;
+
+                        lec_select_classHourArray = jsondata.classHourArray;
+                        lec_select_classHourUnitArray = jsondata.classHourUnitArray;
+                        lec_select_stateCodeArray = jsondata.stateCodeArray;
+                        lec_select_subjectCodeArray= jsondata.subjectCodeArray;
                         fill_lecture_select_popup()
                       },
 
@@ -525,22 +521,26 @@
             }
 
             function open_lecture_select_popup(){
+                $('.popups').hide()
                 $('#popup_lecture_select').fadeIn('fast')
-                $('#shade2').show()
+                $('#shade3').show()
                 ajax_read_lecture_info_from_db()
             }
 
             function fill_lecture_select_popup(){
-                var len = lec_select_trainerNameArray.length;
+                var len = lec_select_subjectNameArray.length;
                 var list_table_to_join = []
                 for(var i=0; i<len; i++){
-                  if(lec_select_npLectureCountsArray[i] == '0'){
-                      var table = '<div class="pters_table" style="margin-top:0;" id="classid-"'+lec_select_classIdArray[i]+'>'
-                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>'
-                      var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
-                      var selection = '<div class="pters_table_cell table_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_lectureIdArray[i]+',2, '+lec_select_classIdArray[i]+')"'+'">선택</a></div>'
-                      var sum = table + lectureName + trainerName + selection + '</div>'
+                  //if(lec_select_npLectureCountsArray[i] == '0'){
+                      var table = '<div class="pters_table" style="margin-top:0;" id="classid-">'
+                      var centerName = '<div class="pters_table_cell table_center_name">'+lec_select_centerNameArray[i]+'</div>'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_subjectNameArray[i]+'</div>'
+                      var startDate = '<div class="pters_table_cell table_start_date">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
+                      var status = '<div class="pters_table_cell table_lecture_status">'+lec_select_stateNameArray[i]+'</div>'
+                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_lectureIdArray[i]+',2, '+lec_select_classIdArray[i]+')"'+'">선택</a></div>'
+                      var sum = table + centerName + lectureName + startDate + status + selection +'</div>'
                       list_table_to_join.push(sum)
+                  /*
                   }else{
                       var table = '<div class="pters_table" style="margin-top:0;" id="classid-'+lec_select_classIdArray[i]+'">'
                       var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>'
@@ -549,12 +549,13 @@
                       var sum = table + lectureName + trainerName + selection + '</div>'
                       list_table_to_join.push(sum)
                   }
+                  */
                 }
                 var list_table = list_table_to_join.join('')
                 $('.lecture_select_table_list').html(list_table)
             }
 
-
+            /*
             function fill_lecture_connect_select_popup(classid){
                 var len = lec_select_trainerNameArray.length;
                 var list_table_to_join = []
@@ -600,9 +601,10 @@
             })
 
             $('.button_close_popup').click(function(){
-                $(this).parents('div._popup').fadeOut('fast')
-                $('#shade2').hide()
+                $(this).parents('div.popups').fadeOut('fast')
+                $('#shade,#shade3').hide()
             })
+            */
 
             function lecture_check(lecture_id, check, class_id){
               $('#id_check_lecture_id').val(lecture_id);
