@@ -499,6 +499,7 @@
                         lec_select_startArray = jsondata.startArray;
                         lec_select_endArray = jsondata.endArray;
                         lec_select_lectureIdArray = jsondata.lectureIdArray;
+                        lec_select_classIdArray = jsondata.classIdArray
                         lec_select_trainerNameArray = jsondata.trainerNameArray;
                         lec_select_availCountArray = jsondata.availCountArray;
                         lec_select_stateArray = jsondata.memberViewStateArray;
@@ -538,7 +539,7 @@
                       var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_subjectNameArray[i]+'</div>'
                       var startDate = '<div class="pters_table_cell table_start_date">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
                       var status = '<div class="pters_table_cell table_lecture_status">'+lec_select_stateNameArray[i]+'</div>'
-                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_lectureIdArray[i]+',2, '+lec_select_classIdArray[i]+')"'+'">선택</a></div>'
+                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+',2, '+lec_select_classIdArray[i]+')"'+'">선택</a></div>'
                       var sum = table + centerName + lectureName + startDate + status + selection +'</div>'
                       list_table_to_join.push(sum)
                   /*
@@ -613,19 +614,17 @@
               $('#id_check').val(check);
               $('#id_class_id').val(class_id);
               if(check=='2'){
-                  $('#id_next_page').val('{% url 'trainee:cal_month'%}');
+                  $('#id_next_page').val('{% url 'trainer:cal_month'%}');
               }else if(check=='0'){
-                  $('#id_next_page').val('{% url 'trainee:cal_month'%}');
+                  $('#id_next_page').val('{% url 'trainer:cal_month'%}');
               }else{
-                  $('#id_next_page').val('{% url 'trainee:index' %}');
+                  $('#id_next_page').val('{% url 'trainer:cal_month' %}');
               }
               document.getElementById('lecture-check-form').submit();
             }
 
             ///********************* 강의 선택*************************************///
             ///********************* 강의 선택*************************************///
-
-
 
     </script>
 
