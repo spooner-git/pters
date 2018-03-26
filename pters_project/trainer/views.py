@@ -2289,3 +2289,22 @@ def add_class_info_logic(request):
         messages.error(request, error)
 
         return redirect(next_page)
+
+
+class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainer_class_select.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ClassSelectView, self).get_context_data(**kwargs)
+
+        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02')
+
+        for class_type_cd_info in class_type_cd_data:
+            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd)
+
+        error = None
+
+        context['class_type_cd_data'] = class_type_cd_data
+
+        return context
+
