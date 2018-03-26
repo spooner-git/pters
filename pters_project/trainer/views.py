@@ -690,6 +690,13 @@ class ReserveSettingView(AccessTestMixin, TemplateView):
 
         return context
 
+class ClassSettingView(AccessTestMixin, TemplateView):
+    template_name = 'setting_class.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ClassSettingView, self).get_context_data(**kwargs)
+
+        return context
 
 class SalesSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_sales.html'

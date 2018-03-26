@@ -1,0 +1,333 @@
+{% extends "trainer_base.html" %}
+{% load static %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.select.class.css" %}>
+        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+{% endblock %}
+
+
+
+{% block content %}
+
+<form action="{% url 'trainee:lecture_processing' %}" id="lecture-check-form" method="post">
+    <input type="hidden" name="lecture_id" id="id_check_lecture_id">
+    <input type="hidden" name="check" id="id_check">
+    <input type="hidden" name="class_id" id="id_class_id">
+    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
+</form>
+
+            
+            
+<div id="defaultFeeSettingText" class="settingMenu wrap800">
+  <p class="settingText">강의 관리</p>
+  <p class="settingText2">나의 전체 강의 리스트를 관리할 수 있습니다.</p>
+</div>
+<div id="defaultFeeSetting" class="settingBox wrap800">
+  <p>강의 리스트</p>
+  <div class="pters_table pters_table_at_setting_page">
+    <div class="pters_table_cell_head table_center_name">센터명</div>
+    <div class="pters_table_cell_head table_lecture_name">강의명</div>
+    <div class="pters_table_cell_head table_trainee_number">수강생</div>
+    <div class="pters_table_cell_head table_start_date">시작일</div>
+    <div class="pters_table_cell_head table_lecture_status">상태</div>
+    <div class="pters_table_cell_head lecture_selection">관리</div>
+  </div>
+  <div class="lecture_select_table_list">
+  </div>
+</div>
+
+<!--
+<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon ">
+<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon ">
+-->
+
+
+
+{% endblock %}
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script>
+          var Options = { "stoptimeStart":21,     //강사가 설정한 예약불가 시간 (시작)
+                          "stoptimeEnd":8,        //강사가 설정한 예약불가 시간 (종료)
+                          "rsvDisableSet" : 'on', //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅 on/off
+                          "limit":4,              //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+                          "reserve":"disable",     //회원 일정 기능을 enable/disable
+          }
+        </script>
+        <script>
+              var lt_sal_01 =  ['{{ lt_sal_01 }}'];
+              var lt_sal_02 =  ['{{ lt_sal_02 }}'];
+              var lt_sal_03 =  ['{{ lt_sal_03 }}'];
+              var lt_sal_04 =  ['{{ lt_sal_04 }}'];
+              var lt_sal_05 =  ['{{ lt_sal_05 }}'];
+              var lt_sal_00 =  ['{{ lt_sal_00 }}'];
+        
+
+              ajax_read_lecture_info_from_db()
+
+              $(document).on('click','._icon_del',function(){
+                  $('#cal_popup_plandelete').fadeIn('fast')
+                  $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
+                  $('#shade').show()
+                  var class_id = $(this).parent('div').attr('data-classid')
+
+                  $('#popup_delete_btn_yes').click(function(){
+                    console.log('?')
+                      ajax_del_lecture_info(class_id)
+                  })
+
+                  $('#popup_delete_btn_no').click(function(){
+                      $(this).parents('.popups').hide()
+                      $('#shade').hide()
+                  })
+              })
+              
+
+
+            ///********************* 강의 선택*************************************///
+            ///********************* 강의 선택*************************************///
+
+            var lec_select_regCountArray = []
+            var lec_select_countArray = []
+            var lec_select_startArray = []
+            var lec_select_endArray = []
+            var lec_select_lectureIdArray = []
+            var lec_select_trainerNameArray = []
+            var lec_select_availCountArray = []
+            var lec_select_classIdArray = []
+
+
+            function ajax_read_lecture_info_from_db(){
+                $.ajax({
+
+                      url: ' /trainer/get_class_data/',
+                      dataType : 'html',
+
+                      beforeSend:function(){
+                        
+                      },
+
+                      success:function(data){
+                        var jsondata = JSON.parse(data);
+                        console.log(jsondata)
+                        lec_select_classIdArray = jsondata.classIdArray
+                        lec_select_centerNameArray = jsondata.centerNameArray;
+                        lec_select_subjectNameArray = jsondata.subjectNameArray;
+                        lec_select_startDateArray = jsondata.startDateArray;
+                        lec_select_stateNameArray = jsondata.stateNameArray;
+                        lec_select_classMemberNumArray = jsondata.classMemberNumArray;
+
+                        lec_select_classHourArray = jsondata.classHourArray;
+                        lec_select_classHourUnitArray = jsondata.classHourUnitArray;
+                        lec_select_stateCodeArray = jsondata.stateCodeArray;
+                        lec_select_subjectCodeArray= jsondata.subjectCodeArray;
+                        fill_lecture_select_popup()
+                      },
+
+                      complete:function(){
+                        
+                      },
+
+                      error:function(){
+                        console.log('server error')
+                      }
+                    })
+            }
+
+            function ajax_read_lecture_detail_info_from_db(classid){
+                $.ajax({
+                      url: '/trainee/read_trainee_lecture_by_class_ajax/',
+                      data:{"class_id": classid},
+                      dataType : 'html',
+
+                      beforeSend:function(){
+                        
+                      },
+
+                      success:function(data){
+                        var jsondata = JSON.parse(data);
+                        console.log(jsondata)
+                        
+                        lec_select_regCountArray = jsondata.countArray;
+                        lec_select_startArray = jsondata.startArray;
+                        lec_select_endArray = jsondata.endArray;
+                        lec_select_lectureIdArray = jsondata.lectureIdArray;
+                        lec_select_trainerNameArray = jsondata.trainerNameArray;
+                        lec_select_availCountArray = jsondata.availCountArray;
+                        lec_select_stateArray = jsondata.memberViewStateArray;
+                        lec_select_lectureCountsArray = jsondata.lectureCountsArray;
+                        //lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
+                        lec_select_classInfoArray = jsondata.classInfoArray;
+                        lec_select_classIdArray = jsondata.classIdArray;
+                        
+                        fill_lecture_connect_select_popup(classid)
+                        
+                      },
+
+                      complete:function(){
+                        
+                      },
+
+                      error:function(){
+                        console.log('server error')
+                      }
+                    })
+            }
+
+
+            function ajax_del_lecture_info(class_id){
+              console.log(class_id)
+                  $.ajax({
+                      url: '/trainer/delete_class_info/',
+                      data:{"class_id":class_id},
+                      dataType : 'html',
+
+                      beforeSend:function(){
+                        
+                      },
+
+                      success:function(data){
+                        var jsondata = JSON.parse(data);
+                        lec_select_classIdArray = jsondata.classIdArray
+                        lec_select_centerNameArray = jsondata.centerNameArray;
+                        lec_select_subjectNameArray = jsondata.subjectNameArray;
+                        lec_select_startDateArray = jsondata.startDateArray;
+                        lec_select_stateNameArray = jsondata.stateNameArray;
+                        lec_select_classMemberNumArray = jsondata.classMemberNumArray;
+
+                        lec_select_classHourArray = jsondata.classHourArray;
+                        lec_select_classHourUnitArray = jsondata.classHourUnitArray;
+                        lec_select_stateCodeArray = jsondata.stateCodeArray;
+                        lec_select_subjectCodeArray= jsondata.subjectCodeArray;
+                        fill_lecture_select_popup()
+                      },
+
+                      complete:function(){
+                        
+                      },
+
+                      error:function(){
+                        console.log('server error')
+                      }
+                    })
+              }
+
+
+            /*
+            function open_lecture_select_popup(){
+                $('.popups').hide()
+                $('#popup_lecture_select').fadeIn('fast')
+                $('#shade3').show()
+                ajax_read_lecture_info_from_db()
+            }
+            */
+
+            function fill_lecture_select_popup(){
+                var len = lec_select_subjectNameArray.length;
+                var list_table_to_join = []
+                for(var i=0; i<len; i++){
+                  //if(lec_select_npLectureCountsArray[i] == '0'){
+                      var table = '<div class="pters_table pters_table_at_setting_page" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
+                      var centerName = '<div class="pters_table_cell table_center_name">'+lec_select_centerNameArray[i]+'</div>'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_subjectNameArray[i]+'</div>'
+                      var traineeNum = '<div class="pters_table_cell table_trainee_num">'+lec_select_classMemberNumArray[i]+'명</div>'
+                      var startDate = '<div class="pters_table_cell table_start_date">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
+                      var status = '<div class="pters_table_cell table_lecture_status">'+lec_select_stateNameArray[i]+'</div>'
+                      var manageIcon = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _icon_modify">'
+                      var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
+                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+manageIcon+manageIcon2+'</div>'
+                      var sum = table + centerName + lectureName + traineeNum + startDate + status + selection +'</div>'
+                      list_table_to_join.push(sum)
+                  /*
+                  }else{
+                      var table = '<div class="pters_table" style="margin-top:0;" id="classid-'+lec_select_classIdArray[i]+'">'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>'
+                      var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
+                      var selection = '<div class="pters_table_cell table_selection _npOpen" data-classid="'+lec_select_classIdArray[i]+'">New<img src="/static/user/res/daycal_arrow_pink.png" style="transform:rotate(-90deg); width:5px;margin-left:7px;"></div>'
+                      var sum = table + lectureName + trainerName + selection + '</div>'
+                      list_table_to_join.push(sum)
+                  }
+                  */
+                }
+                var list_table = list_table_to_join.join('')
+                $('.lecture_select_table_list').html(list_table)
+            }
+
+            /*
+            function fill_lecture_connect_select_popup(classid){
+                var len = lec_select_trainerNameArray.length;
+                var list_table_to_join = []
+                  for(var j=0; j<lec_select_stateArray.length; j++){
+                      if(lec_select_stateArray[j] == 'WAIT'){
+                          var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">'
+                          var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
+                          var trainerName = '<div class="pters_table_cell table_trainer_name">'+'달력 연동'+'</div>'
+                          var selection = '<div class="pters_table_cell table_selection"><a data="" '
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',0, '+lec_select_classIdArray[j]+')">연결/</a><a data="" '
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',1, '+lec_select_classIdArray[j]+')">취소</a></div>'
+                          var sum = table + lectureName + trainerName + selection + '</div>'
+                          list_table_to_join.push(sum)
+                      }else if(lec_select_stateArray[j] == 'VIEW'){
+                          var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">'
+                          var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
+                          var trainerName = '<div class="pters_table_cell table_trainer_name">'+'달력 연동'+'</div>'
+                          var selection = '<div class="pters_table_cell table_selection"><a data="" '
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',2, '+lec_select_classIdArray[0]+')">선택</a></div>'
+                          var sum = table + lectureName + trainerName + selection + '</div>'
+                          list_table_to_join.push(sum)
+                      }
+                  }
+                if( $('#classid-'+classid).attr('data-open') != 'open'){
+                    var list_table = list_table_to_join.join('')
+                }
+                $('#classid-'+classid).after(list_table).attr('data-open','open')
+            }
+
+
+            $(document).on('click','div._npOpen',function(){
+                var classid = $(this).attr('data-classid')
+                ajax_read_lecture_detail_info_from_db(classid)
+                var trainer = $(this).siblings('.table_trainer_name').text()
+                var $hiddenElement = $('.pters_table[data-pter='+trainer+']')
+                if($hiddenElement.hasClass('displayNone')){
+                    $hiddenElement.removeClass('displayNone')
+                    $(this).find('img').css('transform','rotate(90deg)')
+                }else{
+                    $hiddenElement.addClass('displayNone')
+                    $(this).find('img').css('transform','rotate(-90deg)')
+                }  
+            })
+            */
+
+            $('.button_close_popup').click(function(){
+                $(this).parents('div.popups').fadeOut('fast')
+                $('#shade,#shade3').hide()
+            })
+
+
+            function lecture_check(lecture_id, check, class_id){
+              $('#id_check_lecture_id').val(lecture_id);
+              $('#id_check').val(check);
+              $('#id_class_id').val(class_id);
+              if(check=='2'){
+                  $('#id_next_page').val('{% url 'trainee:cal_month'%}');
+              }else if(check=='0'){
+                  $('#id_next_page').val('{% url 'trainee:cal_month'%}');
+              }else{
+                  $('#id_next_page').val('{% url 'trainee:index' %}');
+              }
+              document.getElementById('lecture-check-form').submit();
+            }
+
+            ///********************* 강의 선택*************************************///
+            ///********************* 강의 선택*************************************///
+
+        </script>
+        <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.setting.sales.js" %}></script>
+        
+{% endblock %}

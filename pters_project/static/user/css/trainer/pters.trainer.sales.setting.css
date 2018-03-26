@@ -166,25 +166,22 @@ td input{
 	color: #282828;
 	padding-top: 15px;
 }
-
-.settingText{
-	margin: 0;
-	margin-left: 14.5px;
-}
-
-.settingText2{
-	margin: 0;
-	font-weight: 400;
-	font-size: 13px;
-	margin-left: 14.5px;
-	margin-top: 4px;
-}
-
-.settingText3{
-	margin-left: 14.5px;
-	line-height: 60.5px;
-	vertical-align: middle;
-}
+	.settingText{
+		margin: 0;
+		margin-left: 14.5px;
+	}
+	.settingText2{
+		margin: 0;
+		font-weight: 400;
+		font-size: 13px;
+		margin-left: 14.5px;
+		margin-top: 4px;
+	}
+	.settingText3{
+		margin-left: 14.5px;
+		line-height: 60.5px;
+		vertical-align: middle;
+	}
 
 
 .iconText{
