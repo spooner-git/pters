@@ -4,12 +4,69 @@
 {% block local_css %}
         <link rel="stylesheet" href={% static "user/css/trainee/pters.trainee.select.teacher.css" %}>
         <style type="text/css">
+          body{
+            background: #171717;
+          }
+
           #myClassCreate{
             display: block;
+            background: #f4f4f4;
+            border:3px solid #fe4e65;
+            border-radius: 9px;
+            padding: 20px;
           }
           #myClassSetting{
             display: none;
+            background: #f4f4f4;
+            border:3px solid #fe4e65;
+            border-radius: 9px;
+            padding: 20px;
           }
+          .classSettingBox{
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+          }
+            .detailSelectBox{
+              border:1px solid #cccccc;
+              padding: 5px;
+              margin-top: 10px;
+              margin-bottom: 20px;
+            }
+            .detailSelectBox label{
+              display: block;
+              margin-top: 20px;
+            }
+
+          .dropdown{
+            display: inline-block;
+          }
+            .dropdown button{
+              min-width: 80px;
+              height: 35px;
+            }
+            .dropdown ul{
+              max-height: 240px;
+              overflow-y: auto;
+            }
+            .dropdown li{
+              cursor: pointer;
+            }
+            #dropdown_subject_1, #dropdown_subject_2{
+              display: none;
+            }
+
+          button:focus{
+            outline: unset;
+          }
+          .selected{
+            background: #fe4e65;
+            color: #ffffff;
+            border-color:#fe4e65;
+          }
+
         </style>
 {% endblock %}
 
@@ -35,7 +92,7 @@
 
 </form>
 
-<div id="myClassCreate">
+<div id="myClassCreate" class="classSettingBox">
     <label>1. 나의 클래스 만들기</label>
     <div>
         <p>나의 클래스를 추가합니다. <br>
@@ -44,12 +101,8 @@
         <p>클래스는 설정에서 언제든지 추가가 할수 있습니다.</p>
     </div>
     <div>
-        <label>만들고 하는 클래스명을 입력해주세요.</label>
-        <input type="" name="new_class_name" placeholder="클래스명(최대 10자)" maxlength="10">
+        <label>만들고 하는 클래스를 입력해주세요.</label>
     </div>
-
-    <button onclick="goNext('0')">다음</button>
-
 
     {% if center_list %}
         <div class="dropdown">
@@ -63,7 +116,7 @@
     {% endif %}
 
 
-    <div class="dropdown">
+    <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
         <ul id="class_type" class="dropdown-menu">
             {% for class_type_cd_info in class_type_cd_data %}
@@ -73,7 +126,7 @@
     </div>
 
     {% for class_type_cd_info in class_type_cd_data %}
-        <div class="dropdown">
+        <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
             <ul id="subject_type_{{ forloop.counter }}" class="dropdown-menu" display="none">
                 {% for subject_type in class_type_cd_info.subject_type_cd %}
@@ -85,16 +138,15 @@
     <button  onclick="goNext('0')">다음</button>
 </div>
 
-<div id="myClassSetting">
+<div id="myClassSetting" class="classSettingBox">
     <label>2. 나의 클래스 설정</label>
     <div>
         <p>클래스 정보를 설정합니다. <br>
-          (나의 업무시간, 회원 예약 기능 켜고 끄기, 회원 예약 시간대 설정)
         </p>
         <p>클래스는 설정에서 언제든지 추가가 할수 있습니다.</p>
     </div>
-    <div>
-        <label>나의 업무시간 설정</label>
+    <div class="detailSelectBox">
+        <label>a) 나의 업무시간 설정</label>
         <div class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
             <ul id="myWorkTimeStart" class="dropdown-menu">
@@ -131,12 +183,12 @@
             </ul>
         </div>
 
-        <label>나의 회원님 예약 기능 여부</label>
-        <p>OFF로 설정시 나의 회원님은 본인의 스케쥴 확인만 가능하고, 예약 및 취소는 불가능 합니다.</p>
+        <label>b) 나의 회원님 예약 기능 여부</label>
+        <p>OFF로 설정시 나의 회원님은 스케쥴 확인만 가능하고,<br> 예약 및 취소는 불가능 합니다.</p>
         <button class="reserveOnOffToggle" data-onoff='1'>회원 예약 기능 켜기</button>
         <button class="reserveOnOffToggle" data-onoff='0'>회원 예약 기능 끄기</button>
 
-        <label>나의 회원님 예약 가능 시간대</label>
+        <label>c) 나의 회원님 예약 가능 시간대</label>
         <p>나의 회원님께서 일정을 예약하거나 취소할 수 있는 시간대를 설정합니다.</p>
         <div class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
@@ -174,6 +226,7 @@
             </ul>
         </div>
     </div>
+    <button  onclick="goNext('-1')">이전</button>
     <button onclick="goNext('1')">완료</button>
 </div>
 
@@ -196,16 +249,37 @@
           $('#upbutton img').css('opacity','0.2')
 
 
-
-
-
           //시간 설정 관련 드랍다운 채우기
 
-          /*강의 이름 입력*/
-          $('#myClassCreate input').keyup(function(){
-            $('#id_setting_lecture_create').val($(this).val())
+          /*드랍다운 설정*/
+          $(document).on('click','.dropdown li a',function(){
+              var selectedValue = $(this).attr('data-time')
+              var selectedName  = $(this).text()
+              $(this).parents('ul').siblings('button').val(selectedValue).text(selectedName)
           })
-          /*강의 이름 입력*/
+          /*드랍다운 설정*/
+
+          /*과목 선택*/
+          $(document).on('click','a[data-time=PL]',function(){
+            $('#dropdown_subject_1').css('display','inline-block')
+            $('#dropdown_subject_2').css('display','none')
+          })
+
+          $(document).on('click','a[data-time=TR]',function(){
+            $('#dropdown_subject_1').css('display','none')
+            $('#dropdown_subject_2').css('display','inline-block')
+          })
+
+          $(document).on('click','#subject_type_1 li a, #subject_type_2 li a',function(){
+              var classcode = $(this).attr('data-time')
+              $('#subject_cd').val(classcode)
+          })
+
+          $(document).on('click','#center_list',function(){
+              var centercode = $(this).attr('data-time')
+              $('#center_id').val(centercode)
+          })
+          /*과목 선택*/
 
 
           /*업무 시간 설정*/
@@ -214,13 +288,11 @@
                 var availableTime = make_available_date_format($('#myWorkTimeStart'),$('#myWorkTimeEnd'))
                 $('#id_setting_trainer_work_time').val(availableTime)
                 fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#myWorkTimeEnd'))
-                check_dropdown_selected();
           });
           $(document).on('click',"#myWorkTimeEnd li a",function(){
                 $("#myWorkTimeEnd").siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
                 var availableTime = make_available_date_format($('#myWorkTimeStart'),$('#myWorkTimeEnd'))
                 $('#id_setting_trainer_work_time').val(availableTime)
-                check_dropdown_selected();
           });
           /*업무 시간 설정*/
 
@@ -231,13 +303,12 @@
                 $('#id_setting_member_available_time').val(availableTime)
                 fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#myReserveTimeEnd'))
 
-                check_dropdown_selected();
           });
           $(document).on('click',"#myReserveTimeEnd li a",function(){
                 $("#myReserveTimeEnd").siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
                 var availableTime = make_available_date_format($('#myReserveTimeStart'),$('#myReserveTimeEnd'))
                 $('#id_setting_member_available_time').val(availableTime)
-                check_dropdown_selected();
+
           });
           /*회원 예약 허용 시간대 설정*/
 
@@ -281,18 +352,48 @@
                 array.push('<li><a data-time="'+i+'">오후 '+(i-12)+'시</a></li>')   
               }
             }
-            target.siblings('button').val('').text('')
-            target.html(array.join(''))
+            ultarget.siblings('button').val('').text('')
+            ultarget.html(array.join(''))
           }
 
           function goNext(option){
               if(option == "0"){
-                $('#myClassCreate').css('display','none')
-                $('#myClassSetting').css('display','block')
+                if($('#center_id').val().length>0 && $('#subject_cd').val().length>0){
+
+                }
+                
               }else if(option == "1"){
                 location.href="{% url 'home' %}"
+              }else if(option == "-1"){
+                $('#myClassCreate').css('display','block')
+                $('#myClassSetting').css('display','none')
               }
           }
+
+          function ajax_send_centercode_subjectcode(){
+              $.ajax({
+                  url: '/trainer/get_class_data/',
+                  data: $('#add-class-info-form').serialize()
+                  dataType : 'html',
+
+                  beforeSend:function(){
+                    $('html').css("cursor","wait");
+                  },
+
+                  success:function(data){
+                    $('#myClassCreate').css('display','none')
+                    $('#myClassSetting').css('display','block')
+                  },
+                  complete:function(){
+                    $('html').css("cursor","auto");
+                  },
+
+                  error:function(){
+                    console.log('server error')
+                  }
+              })
+          }
+
 
 
         </script>
