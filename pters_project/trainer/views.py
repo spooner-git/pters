@@ -2275,6 +2275,7 @@ def add_class_info_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
+        request.session['class_id'] = class_info.class_id
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          log_info='강좌 정보', log_how='등록',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
