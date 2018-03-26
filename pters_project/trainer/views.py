@@ -2282,6 +2282,7 @@ def add_class_info_logic(request):
                 class_info = ClassTb(member_id=request.user.id, center_id=center_id,
                                      subject_cd=subject_cd, start_date=start_date, end_date=end_date,
                                      class_hour=class_hour, start_hour_unit=start_hour_unit,
+                                     member_view_state_cd='VIEW',
                                      class_member_num=class_member_num, state_cd='IP',
                                      reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
@@ -2353,7 +2354,7 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            class_data = ClassTb.objects.filter(member_id=self.request.user.id, use=1).order_by('-reg_dt')
+            class_data = ClassTb.objects.filter(member_id=self.request.user.id, member_view_state_cd='VIEW', use=1).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
