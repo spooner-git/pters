@@ -37,6 +37,7 @@ $(document).ready(function(){
       $('.__alarm').text("アラーム")
       $('.__calSelect').text("カレンダー選択")
       $('.__mypage').text("マイページ")
+
    }else if(Options.language == "ENG"){
       $('.__todayplan').text("Daily")
       $('.__weekplan').text("Schedule")
@@ -51,6 +52,7 @@ $(document).ready(function(){
       $('.__alarm').text("Alarm")
       $('.__calSelect').text("Change Cal.")
       $('.__mypage').text("My page")
+
    }else if(Options.language == "KOR"){
       $('.__todayplan').text("오늘 일정")
       $('.__weekplan').text("주간 일정")
@@ -63,7 +65,7 @@ $(document).ready(function(){
       $('.pclogout').text("로그아웃")
       $('#uptext span').text("코치님 일정")
       $('.__alarm').text("알림")
-      $('.__calSelect').text("달력선택")
+      $('.__calSelect').text("강의관리")
       $('.__mypage').text("마이페이지")
    }
 

@@ -458,6 +458,7 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
+                        lec_select_classIdArray = jsondata.classIdArray
                         lec_select_centerNameArray = jsondata.centerNameArray;
                         lec_select_subjectNameArray = jsondata.subjectNameArray;
                         lec_select_startDateArray = jsondata.startDateArray;
@@ -532,7 +533,7 @@
                 var list_table_to_join = []
                 for(var i=0; i<len; i++){
                   //if(lec_select_npLectureCountsArray[i] == '0'){
-                      var table = '<div class="pters_table" style="margin-top:0;" id="classid-">'
+                      var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                       var centerName = '<div class="pters_table_cell table_center_name">'+lec_select_centerNameArray[i]+'</div>'
                       var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_subjectNameArray[i]+'</div>'
                       var startDate = '<div class="pters_table_cell table_start_date">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
@@ -599,12 +600,13 @@
                     $(this).find('img').css('transform','rotate(-90deg)')
                 }  
             })
+            */
 
             $('.button_close_popup').click(function(){
                 $(this).parents('div.popups').fadeOut('fast')
                 $('#shade,#shade3').hide()
             })
-            */
+
 
             function lecture_check(lecture_id, check, class_id){
               $('#id_check_lecture_id').val(lecture_id);
