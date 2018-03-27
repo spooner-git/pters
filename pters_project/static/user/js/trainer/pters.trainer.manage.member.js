@@ -1885,7 +1885,7 @@ $(document).ready(function(){
     };
 
 
-    $("#upbutton-check, button._info_modify").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
+    $("#upbutton-check, #pcBtn .submitBtn, button._info_modify").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
         var test = $('#id_search_confirm').val();
         var $form2 = $('#add-member-id-form');
         var url2 = '/login/add_member_info_no_email/';
