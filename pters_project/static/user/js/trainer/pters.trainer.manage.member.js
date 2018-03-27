@@ -413,6 +413,7 @@ $(document).ready(function(){
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data)
+                    console.log(jsondata.messageArray)
                     if(jsondata.messageArray.length>0){
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)
@@ -641,7 +642,7 @@ $(document).ready(function(){
               //통신성공시 처리
               success:function(data){
                   ajax_received_json_data(data);
-
+                  console.log(messageArray)
                   if(messageArray.length>0){
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(messageArray)
@@ -687,6 +688,7 @@ $(document).ready(function(){
             //통신성공시 처리
             success:function(data){
                 ajax_received_json_data(data);
+                console.log(messageArray)
                 if(messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(messageArray)
@@ -733,6 +735,7 @@ $(document).ready(function(){
             //통신성공시 처리
             success:function(data){
                 ajax_received_json_data(data);
+                console.log(messageArray)
                 if(messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(messageArray)
@@ -782,6 +785,7 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(data){
                         ajax_received_json_data(data);
+                        console.log(messageArray)
                         if(messageArray.length>0){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(messageArray)
@@ -838,6 +842,7 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(data){
                         ajax_received_json_data(data);
+                        console.log(messageArray)
                         if(messageArray.length>0){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(messageArray)
@@ -900,6 +905,7 @@ $(document).ready(function(){
             //통신성공시 처리
             success:function(data){
                 var jsondata = JSON.parse(data);
+                console.log(jsondata.messageArray)
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -1855,7 +1861,7 @@ $(document).ready(function(){
     };
 
 
-    $("#upbutton-check, .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
+    $("#upbutton-check, button._info_modify").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
         var test = $('#id_search_confirm').val();
         var $form2 = $('#add-member-id-form');
         var url2 = '/login/add_member_info_no_email/';
@@ -1882,6 +1888,7 @@ $(document).ready(function(){
                         //var jsondata = JSON.parse(data);
                         var jsondata = JSON.parse(data);
                         ajax_received_json_data(data);
+                        console.log(jsondata.messageArray)
                         if(messageArray.length>0){
                             $('html').css("cursor","auto")
                             $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -1905,8 +1912,8 @@ $(document).ready(function(){
             }
         }else{
             scrollToIndicator($('#page_addmember'))
-            $('#errorMessageBar').show();
-            $('#errorMessageText').text('모든 필수 정보를 입력해주세요')
+            //$('#errorMessageBar').show();
+            //$('#errorMessageText').text('모든 필수 정보를 입력해주세요')
             //입력값 확인 메시지 출력 가능
         }
     })
@@ -1934,6 +1941,7 @@ $(document).ready(function(){
             success:function(data){
                 var jsondata = JSON.parse(data);
                 ajax_received_json_data(data);
+                console.log(jsondata.messageArray)
                 if(messageArray.length>0){
                     $('html').css("cursor","auto")
                     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -2009,7 +2017,7 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(data){
                         ajax_received_json_data(data);
-
+                        console.log(messageArray)
                         if(messageArray.length>0){
                             $('html').css("cursor","auto")
                             $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -2068,6 +2076,7 @@ $(document).ready(function(){
             success:function(data){
                 var jsondata = JSON.parse(data);
                 ajax_received_json_data(data);
+                console.log(jsondata.messageArray)
                 if(messageArray.length>0){
                     $('html').css("cursor","auto")
                     $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -2329,19 +2338,26 @@ $(document).ready(function(){
 
                   success:function(data){
                     var jsondata = JSON.parse(data);
-                    console.log(jsondata)
-                    ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
-                    ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
-                    ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
-                    ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
-                    ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
-                    ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
-                    ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
-                    selectedMemberIdArray = jsondata.memberIdArray;
-                    selectedMemberAvailCountArray = jsondata.memberAvailCountArray;
-                    selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
-                    selectedMemberNameArray = jsondata.memberNameArray
-                    set_indiv_repeat_info()
+                    console.log(jsondata.messageArray)
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text(jsondata.messageArray)
+                    }else{
+                        ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+                        ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+                        ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+                        ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+                        ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+                        ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+                        ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
+                        selectedMemberIdArray = jsondata.memberIdArray;
+                        selectedMemberAvailCountArray = jsondata.memberAvailCountArray;
+                        selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
+                        selectedMemberNameArray = jsondata.memberNameArray
+                        set_indiv_repeat_info()
+                    }
+                    
+                    
                   },
 
                   complete:function(){
