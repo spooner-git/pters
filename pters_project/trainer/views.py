@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Create your views here.
 import copy
 import datetime
@@ -82,9 +81,6 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         today = datetime.date.today()
         one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
-        # print("modified : "+str(datetime.datetime.fromtimestamp(os.path.getmtime(str(os.path.dirname(os.path.abspath(__file__)))+"/"+(str(os.path.basename(__file__)))))))
-        # print("Last modified : "+str(datetime.datetime.fromtimestamp(os.path.getmtime(str(os.path.dirname(os.path.abspath(__file__)))+"/templates/main_trainer.html"))))
-
         next_year = int(month_first_day.strftime('%Y')) + 1
         next_month = int(month_first_day.strftime('%m')) % 12 + 1
         next_month_first_day = month_first_day.replace(month=next_month)
@@ -174,7 +170,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             logger.error(error)
             messages.error(self.request, error)
         else:
-            logger.info(self.request.user.last_name+self.request.user.first_name+'['+str(self.request.user.id)+'] : login success')
+            logger.info(u''+self.request.user.last_name+self.request.user.first_name+'['+str(self.request.user.id)+'] : login success')
 
         return context
 
