@@ -5,6 +5,7 @@ import datetime
 import logging
 import os
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
@@ -72,6 +73,8 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainerMainView, self).get_context_data(**kwargs)
+        for folder in settings.STATICFILES_DIRS:
+            print(str(folder))
         class_id = self.request.session.get('class_id', '')
         error = None
         # class_info = None
