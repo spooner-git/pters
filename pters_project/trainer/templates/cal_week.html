@@ -227,15 +227,6 @@
 
 
 <div id="page-addplan" class="wrap popups">
-  <!--
-    {% if messages %}
-        {% for message in messages %}
-            <div id="inputError">
-                    <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
-            </div>
-        {% endfor %}
-    {% endif %}
-  -->
     <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="member_id"    id="id_member_id">
@@ -332,7 +323,7 @@
       <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
       <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
     </div>
-
+    
     <div id="timeGraph" class="ptaddbox _NORMAL_ADD_timegraph" style="display: none;">
       <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;"><span class="KRtext"> 등록 가능 시간 </span><span class="JPtext"> 登録可能時間</span><span class="ENtext">Available Time</span><div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
       <table class="timegraphtext">
@@ -430,6 +421,17 @@
         </ul>
       </div>
     </div> 
+
+    <div id="scheduleMemo" class="ptaddbox">
+      <div class="ptaddboxtext">
+        <img class="icons" style="width:13px;" src={% static "user/res/icon-pencil.png" %}> 
+        <span class="KRtext"> 메모</span>
+        <span class="JPtext">メモ―</span>
+        <span class="ENtext">Memo</span>
+      </div>
+      <input type="text" name="add_memo" class="dropdown" maxlength="15">
+    </div>
+
   </div>
     <!--반복 일정 개요 박스-->
     <div id="repeatSchedule" class="ptaddbox repeatbox">

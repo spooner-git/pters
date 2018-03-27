@@ -50,6 +50,7 @@ $(document).ready(function(){
 
 
 	$('#float_inner1, .ymdText-pc-add-pt').click(function(){ //PT추가버튼
+		clear_pt_off_add_popup()
 		scrollToDom($('#calendar'))
 		addTypeSelect = "ptadd"
 		$('#memberName,#remainCount').css('display','block');
@@ -78,6 +79,7 @@ $(document).ready(function(){
 	})
 
 	$('#float_inner2, .ymdText-pc-add-off').click(function(){ //OFF추가버튼
+		clear_pt_off_add_popup()
 		scrollToDom($('#calendar'))
 		addTypeSelect = "offadd"
 		$('#memberName,#remainCount').css('display','none');
