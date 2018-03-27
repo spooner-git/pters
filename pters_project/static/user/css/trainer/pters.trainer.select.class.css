@@ -57,7 +57,9 @@
 		.lecture_selection{
 			width: 10%;
 		}
-
+.currentClass{
+	font-weight: bold;
+}
 
 
 

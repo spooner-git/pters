@@ -39,6 +39,7 @@
     <div class="pters_table_cell_head table_start_date">시작일</div>
     <div class="pters_table_cell_head table_lecture_status">상태</div>
     <div class="pters_table_cell_head lecture_selection">관리</div>
+    <div class="pters_table_cell_head lecture_selection">이동</div>
   </div>
   <div class="lecture_select_table_list">
   </div>
@@ -63,10 +64,14 @@
               ajax_read_lecture_info_from_db()
 
               $(document).on('click','._icon_del',function(){
-                  $('#cal_popup_plandelete').fadeIn('fast')
-                  $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
-                  $('#shade').show()
                   var class_id = $(this).parent('div').attr('data-classid')
+                  if(class_id!= lec_select_classIdArray[0]){
+                    $('#cal_popup_plandelete').fadeIn('fast')
+                    $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
+                    $('#shade').show()
+                  }else{
+                    alert('현재 활성화 되어있는 강의는 삭제 불가능합니다.\n 다른 강의로 이동후 현재 강의가 삭제 가능합니다.')
+                  }
 
                   $('#popup_delete_btn_yes').click(function(){
                       ajax_del_lecture_info(class_id)
@@ -78,7 +83,6 @@
                       $(this).parents('.popups').hide()
                       $('#shade').hide()
                   })
-
               })
               
 
@@ -86,14 +90,6 @@
             ///********************* 강의 선택*************************************///
             ///********************* 강의 선택*************************************///
 
-            var lec_select_regCountArray = []
-            var lec_select_countArray = []
-            var lec_select_startArray = []
-            var lec_select_endArray = []
-            var lec_select_lectureIdArray = []
-            var lec_select_trainerNameArray = []
-            var lec_select_availCountArray = []
-            var lec_select_classIdArray = []
 
 
             function ajax_del_lecture_info(class_id){
@@ -134,77 +130,35 @@
                 var list_table_to_join = []
                 for(var i=0; i<len; i++){
                   //if(lec_select_npLectureCountsArray[i] == '0'){
+                    console.log(lec_select_classIdArray, lec_select_classIdArray[0])
+                      if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
+                          var currentClass = 'currentClass'
+                          var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'
+                          var selectionText = '<a style="cursor:default;">-</a>'
+                      }else{
+                          var currentClass = ""
+                          var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
+                          var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'" style="cursor:pointer;">이동</a>'
+                      }
                       var table = '<div class="pters_table pters_table_at_setting_page" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
-                      var centerName = '<div class="pters_table_cell table_center_name">'+lec_select_centerNameArray[i]+'</div>'
-                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_subjectNameArray[i]+'</div>'
-                      var traineeNum = '<div class="pters_table_cell table_trainee_num">'+lec_select_classMemberNumArray[i]+'명</div>'
-                      var startDate = '<div class="pters_table_cell table_start_date">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
-                      var status = '<div class="pters_table_cell table_lecture_status">'+lec_select_stateNameArray[i]+'</div>'
+                      var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>'
+                      var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'">'+lec_select_classMemberNumArray[i]+'명</div>'
+                      var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
+                      var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>'
                       var manageIcon = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _icon_modify">'
-                      var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
-                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+manageIcon+manageIcon2+'</div>'
-                      var sum = table + centerName + lectureName + traineeNum + startDate + status + selection +'</div>'
+                      
+                      var del = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+manageIcon2+'</div>'
+                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
+                      var sum = table + centerName + lectureName + traineeNum + startDate + status + del + selection +'</div>'
                       list_table_to_join.push(sum)
-                  /*
-                  }else{
-                      var table = '<div class="pters_table" style="margin-top:0;" id="classid-'+lec_select_classIdArray[i]+'">'
-                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>'
-                      var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
-                      var selection = '<div class="pters_table_cell table_selection _npOpen" data-classid="'+lec_select_classIdArray[i]+'">New<img src="/static/user/res/daycal_arrow_pink.png" style="transform:rotate(-90deg); width:5px;margin-left:7px;"></div>'
-                      var sum = table + lectureName + trainerName + selection + '</div>'
-                      list_table_to_join.push(sum)
-                  }
-                  */
+
                 }
                 var list_table = list_table_to_join.join('')
                 $('.lecture_select_table_list').html(list_table)
             }
 
-            /*
-            function fill_lecture_connect_select_popup(classid){
-                var len = lec_select_trainerNameArray.length;
-                var list_table_to_join = []
-                  for(var j=0; j<lec_select_stateArray.length; j++){
-                      if(lec_select_stateArray[j] == 'WAIT'){
-                          var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">'
-                          var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
-                          var trainerName = '<div class="pters_table_cell table_trainer_name">'+'달력 연동'+'</div>'
-                          var selection = '<div class="pters_table_cell table_selection"><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',0, '+lec_select_classIdArray[j]+')">연결/</a><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',1, '+lec_select_classIdArray[j]+')">취소</a></div>'
-                          var sum = table + lectureName + trainerName + selection + '</div>'
-                          list_table_to_join.push(sum)
-                      }else if(lec_select_stateArray[j] == 'VIEW'){
-                          var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">'
-                          var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
-                          var trainerName = '<div class="pters_table_cell table_trainer_name">'+'달력 연동'+'</div>'
-                          var selection = '<div class="pters_table_cell table_selection"><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',2, '+lec_select_classIdArray[0]+')">선택</a></div>'
-                          var sum = table + lectureName + trainerName + selection + '</div>'
-                          list_table_to_join.push(sum)
-                      }
-                  }
-                if( $('#classid-'+classid).attr('data-open') != 'open'){
-                    var list_table = list_table_to_join.join('')
-                }
-                $('#classid-'+classid).after(list_table).attr('data-open','open')
-            }
-
-
-            $(document).on('click','div._npOpen',function(){
-                var classid = $(this).attr('data-classid')
-                ajax_read_lecture_detail_info_from_db(classid)
-                var trainer = $(this).siblings('.table_trainer_name').text()
-                var $hiddenElement = $('.pters_table[data-pter='+trainer+']')
-                if($hiddenElement.hasClass('displayNone')){
-                    $hiddenElement.removeClass('displayNone')
-                    $(this).find('img').css('transform','rotate(90deg)')
-                }else{
-                    $hiddenElement.addClass('displayNone')
-                    $(this).find('img').css('transform','rotate(-90deg)')
-                }  
-            })
-            */
+           
 
             $('.button_close_popup').click(function(){
                 $(this).parents('div.popups').fadeOut('fast')

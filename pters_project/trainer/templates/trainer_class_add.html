@@ -40,8 +40,7 @@
               margin-top: 20px;
             }
           .memberConnectSettingBox{
-            height: 0;
-            overflow-y: hidden;
+            display: none;
             transition: 1s;
           }
 
@@ -287,11 +286,11 @@
           $('#upbutton img').css('opacity','0.2')
 
           $('.reserveOnOffToggle[data-onoff=1]').click(function(){
-            $('.memberConnectSettingBox').css('height','320px')
+            $('.memberConnectSettingBox').show()
           })
 
           $('.reserveOnOffToggle[data-onoff=0]').click(function(){
-            $('.memberConnectSettingBox').css('height','0')
+            $('.memberConnectSettingBox').hide()
           })
 
 
@@ -426,6 +425,7 @@
           }
 
           function ajax_send_centercode_subjectcode(){
+            console.log($('#add-class-info-form').serialize())
               $.ajax({
                   url: '/trainer/add_class_info/',
                   data: $('#add-class-info-form').serialize(),
