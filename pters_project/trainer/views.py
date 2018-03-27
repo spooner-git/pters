@@ -3,9 +3,7 @@ import copy
 import datetime
 
 import logging
-import os
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
@@ -170,7 +168,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             logger.error(error)
             messages.error(self.request, error)
         else:
-            logger.info(u''+self.request.user.last_name+self.request.user.first_name+'['+str(self.request.user.id)+'] : login success')
+            logger.info(self.request.user.last_name+self.request.user.first_name+'['+str(self.request.user.id)+'] : login success')
 
         return context
 
