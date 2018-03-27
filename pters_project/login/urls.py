@@ -44,5 +44,7 @@ urlpatterns = [
     url(r'^reset_password/$', views.ResetPasswordView.as_view(),
         name='reset_password'),
 
+    # 회원 탈퇴 기능
+    url(r'^out_member/$', views.out_member_logic, name='out_member'),
 
 ]
