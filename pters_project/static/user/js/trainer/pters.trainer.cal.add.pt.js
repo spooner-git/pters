@@ -54,16 +54,6 @@ $(document).ready(function(){
               }
       });
 
-      /*   PC버전 미니 팝업        */
-      /*
-      $(document).on('click','.classTime, .offTime',function(){ //일정을 클릭했을때 팝업 표시
-              //$('#page-addplan-pc').fadeOut()
-              var toploc = $(this).offset().top;
-              var leftloc = $(this).offset().left;
-              //$('#commonPopup').fadeIn('fast').css({'top':toploc-10,'left':leftloc+150})
-      })
-      */
-
       $(document).on('click','.td00',function(){ //주간달력 미니 팝업
             var toploc = $(this).offset().top;
             var leftloc = $(this).offset().left;
@@ -165,34 +155,6 @@ $(document).ready(function(){
           planAddView($("#id_time_duration").val())
       })
 
-
-      /*
-      $('#typeSelector_ptadd').click(function(){
-        $('.blankSelected_addview').removeClass('blankSelected blankSelected_addview')
-          $(this).addClass('typeSelected')
-          $('#typeSelector_offadd').removeClass('typeSelected')
-          $('#classDuration_mini').hide('fast',function(){
-              $('#memberName_mini').css('display','inline')
-              $('#remainCount_mini').show('fast')
-          })  
-          addTypeSelect = "ptadd"
-          check_dropdown_selected();
-          planAddView($("#id_time_duration").val())
-      })
-
-      $('#typeSelector_offadd').click(function(){
-          $(this).addClass('typeSelected')
-          $('#typeSelector_ptadd').removeClass('typeSelected')
-          $('#memberName_mini').hide('fast')
-          $('#remainCount_mini').hide('fast',function(){
-              $('#classDuration_mini').show('fast')
-          })  
-          addTypeSelect = "offadd"
-          check_dropdown_selected();
-          planAddView($("#id_time_duration_off").val())
-      })
-      */
-
       $(document).on('click',"#durations_mini li a",function(){
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected");
           $("#durationsSelected .btn:first-child").text($(this).text()).val($(this).attr('data-dur'));
@@ -206,7 +168,7 @@ $(document).ready(function(){
           check_dropdown_selected();
       });
 
-      $('#memo_mini').keyup(function(){
+      $('#memo_mini, #scheduleMemo input').keyup(function(){
         $('#id_memo_mini, #id_memo_mini_off').val($(this).val())
       })
 
@@ -228,27 +190,10 @@ $(document).ready(function(){
         $("#id_time_duration_off").val("")
         $('#page-addplan-pc').fadeOut();
         $('.td00').find('div').removeClass('blankSelected blankSelected_addview')
-        $('.submitBtn').removeClass('submitBtnActivated')
-        $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
-        $('#submitBtn_mini').css('background','#282828')
-        $('#memo_mini').val("")
-
-        $("#membersSelected button").removeClass("dropdown_selected");
-        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
-        $("#membersSelected .btn:first-child").val("");
-        $("#countsSelected,.countsSelected").text("")
-        $('#remainCount_mini_text').hide()
-        $(".dropdown_mini button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected .btn:first-child").val("");
+        clear_pt_off_add_popup_mini()
       }
 
 
-      /*   PC버전 미니 팝업        */
-
-     
-      //달력 선택된 날짜
-      //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
 
       $(document).on('click',"#members_pc li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
@@ -574,7 +519,6 @@ $(document).ready(function(){
         $('#calendar').show().css('height','100%');
         ajaxRepeatConfirmSend();
         closeAddPopup();
-        closeAddPopup_mini();
       })
 
       function ajaxRepeatConfirmSend(){
@@ -1112,7 +1056,6 @@ $(document).ready(function(){
         $('#shade3').hide();
       }
 
-
       function closeAddPopup(){
         $('body').css('overflow-y','overlay');
         $('#shade3').hide();
@@ -1121,75 +1064,33 @@ $(document).ready(function(){
         $('#float_btn').removeClass('rotate_btn');
         $('#page-base').fadeIn();
         $('#page-base-addstyle').hide();
-        $('.submitBtn').removeClass('submitBtnActivated');
-
-        $("#membersSelected button").removeClass("dropdown_selected");
-        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
-        $("#membersSelected .btn:first-child").val("");
-        $("#countsSelected,.countsSelected").text("")
-        $('#remainCount_mini_text').hide()
-        $("#dateSelector p").removeClass("dropdown_selected");
-        $('#timeGraph').hide();
-        $("#starttimesSelected button").removeClass("dropdown_selected");
-        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#starttimesSelected .btn:first-child").val("");
-        $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected .btn:first-child").val("");
-        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-        $("#starttimes").empty();
-        $("#durations").empty();
-
-        $("#dateSelector_off p").removeClass("dropdown_selected");
-        $('#timeGraph_off').hide();
-        $("#starttimesSelected_off button").removeClass("dropdown_selected");
-        $("#starttimesSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#starttimesSelected_off .btn:first-child").val("");
-        $("#durationsSelected_off button").removeClass("dropdown_selected");
-        $("#durationsSelected_off .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected_off .btn:first-child").val("");
-        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-        $("#starttimes_off").empty();
-        $("#durations_off").empty();
-
-        $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
-        $('.dateButton').removeClass('dateButton_selected')
-        $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
-        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
-        //$('#page-addplan form input').val('')
-        selectedDayGroup = []
-
-        $('._NORMAL_ADD_wrap').css('display','block')
-        $('._REPEAT_ADD_wrap').css('display','none')
-        $('#timeGraph').css('display','none')
       }
 
       function closeAddPopup_mini(){
         $('#page-addplan-pc').fadeOut();
-        $('.submitBtn').removeClass('submitBtnActivated')
-        $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
+        clear_pt_off_add_popup_mini()
+      }
+
+      function clear_pt_off_add_popup_mini(){
+        //핑크 버튼 활성화 초기화
         $('#submitBtn_mini').css('background','#282828')
 
-        $("#membersSelected button").removeClass("dropdown_selected");
-        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
-        $("#membersSelected .btn:first-child").val("");
+        //진행시간 선택 핑크 하단선 초기화
+        $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected').html("<span style='color:#cccccc;'>선택</span>").val("");
+
+        //회원 선택 핑크 하단선 초기화
+        $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원명 선택</span>").val("");
+
+        //예약가능 횟수 내용 초기화
         $("#countsSelected,.countsSelected").text("")
         $('#remainCount_mini_text').hide()
-        $("#dateSelector p").removeClass("dropdown_selected");
-        $('#timeGraph').hide();
-        $("#starttimesSelected button").removeClass("dropdown_selected");
-        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#starttimesSelected .btn:first-child").val("");
-        $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected .btn:first-child").val("");
-        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-        $("#starttimes").empty();
-        $("#durations").empty();
+
+        //메모 초기화
+        $('#addmemo_mini input').val('').text('')
+
         $('.tdgraph').removeClass('graphindicator')
         select_all_check=false;
       }
-
 
       function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리스트 채우기
         switch(option){
@@ -1207,7 +1108,6 @@ $(document).ready(function(){
           }
         }
       }
-
 
       function startTimeSet(option){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
         startTimeArraySet(option); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
@@ -1521,6 +1421,7 @@ $(document).ready(function(){
 
 
 
+
       //작은달력 설정
        $.datepicker.setDefaults({
           dateFormat: 'yy-mm-dd',
@@ -1662,3 +1563,50 @@ $(document).ready(function(){
         memberMobileList.html(member_arraySum_mobile);
         memberPcList.html(member_arraySum_pc);
     }
+
+
+    //PT, OFF추가하는 모바일,PC팝업 선택사항을 초기화
+      function clear_pt_off_add_popup(){
+          console.log('clear popup')
+          //핑크체크를 원래대로 검정 체크로 돌린다(모바일)
+          $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+          //submitButton 초기화
+          $('#submitBtn_pt').removeClass('submitBtnActivated')
+
+          //회원명 비우기
+          $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원명 선택</span>").val("");
+
+          //예약가능 횟수 비우기
+          $("#countsSelected,.countsSelected").text("")
+          $('#remainCount_mini_text').hide()
+          
+          //날짜 비우기
+          $("#dateSelector p").removeClass("dropdown_selected");
+
+          //Time 그래프 숨기기
+          $('#timeGraph').css('display','none')
+
+          //시작시간, 진행시간 드랍다운 초기화
+          $("#starttimesSelected button, #durationsSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>선택</span>").val("");
+          $("#starttimes, #durations").empty();
+
+          //메모 지우기
+          $('#scheduleMemo input').val('').text('')
+
+          //모든 하단 핑크선 지우기
+          $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
+          
+          //반복일정 요일선택 버튼 초기화
+          selectedDayGroup = []
+          $('.dateButton').removeClass('dateButton_selected')
+
+          //반복일정 시작일자, 종료일자 초기화
+          $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
+
+          //반복빈도, 시작시간, 진행시간 드랍다운 초기화
+          $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
+
+          //반복일정 접기
+          $('._NORMAL_ADD_wrap').css('display','block')
+          $('._REPEAT_ADD_wrap').css('display','none')
+      }
