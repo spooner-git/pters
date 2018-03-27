@@ -215,6 +215,7 @@
        <button id="infoMemberDelete"><img src={% static "user/res/member/icon-delete-black.png" %}></button>
        <button id="infoMemberModify" data-type="view"><img src={% static "user/res/member/icon-edit.png" %}></button>
     </div>
+    
     <form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
         {% csrf_token %}
         <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
@@ -294,24 +295,24 @@
             </div>
         </div>
 
-                    <div class="ptaddbox form-group">
-                        <label for="memberCount_info" class="ptaddboxtext">
-                            <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록횟수
-                        </label>
-                        <div class="dropdown pters_input_custom">
-                            <input type="tel" class="dropdown form-control" id="memberRegCount_info" name="counts" readonly>
-                        </div>
-                    </div>
+        <div class="ptaddbox form-group">
+            <label for="memberCount_info" class="ptaddboxtext">
+                <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록횟수
+            </label>
+            <div class="dropdown pters_input_custom">
+                <input type="tel" class="dropdown form-control" id="memberRegCount_info" name="counts" readonly>
+            </div>
+        </div>
 
-            
-                    <div class="ptaddbox form-group">
-                        <label for="memberCount_info" class="ptaddboxtext">
-                            <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
-                        </label>
-                        <div class="dropdown pters_input_custom">
-                            <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
-                        </div>
-                    </div>
+
+        <div class="ptaddbox form-group">
+            <label for="memberCount_info" class="ptaddboxtext">
+                <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
+            </label>
+            <div class="dropdown pters_input_custom">
+                <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
+            </div>
+        </div>
             
 
         <div class="ptaddbox form-group">
@@ -324,14 +325,14 @@
         </div>
 
             
-                    <div id="dateSelector_info" class="ptaddbox">
-                        <label class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</label>
-                        <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
-                    </div>
-                    <div id="dateSelector2_info"  class="ptaddbox">
-                        <label class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</label>
-                        <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
-                    </div>
+        <div id="dateSelector_info" class="ptaddbox">
+            <label class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</label>
+            <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
+        </div>
+        <div id="dateSelector2_info"  class="ptaddbox">
+            <label class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</label>
+            <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
+        </div>
             
         <div class="ptaddbox form-group">
             <label for="comment_info" class="ptaddboxtext">
@@ -347,6 +348,7 @@
             <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
         </div>
     </form>
+
     <div id="memberRegHistory_info_wrap" class="member_info_wrap ptaddbox">
             <label class="ptaddboxtext">
                 <img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
