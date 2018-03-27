@@ -9,6 +9,7 @@
 
 {% block content %}
   <form action="{% url 'trainer:alarm_delete' %}" id="alarm-delete-form" method="post">
+    {% csrf_token %}
       <input type="hidden" name="log_id_size" value = "{{ log_data|length }}">
       {% for log_data_detail in log_data %}
           <input type="hidden" name="log_id_array[]" value ="{{ log_data_detail.log_id }}">

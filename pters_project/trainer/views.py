@@ -51,6 +51,9 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 self.url = '/trainer/trainer_main/'
                 for class_info in class_data:
                     self.request.session['class_id'] = class_info.class_id
+                    class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                    self.request.session['class_type_name'] = class_name.common_cd_nm
+                    self.request.session['class_center_name'] = class_info.center_tb.center_name
             else:
                 self.url = '/trainer/class_select/'
         else:
@@ -720,7 +723,6 @@ class LanguageSettingView(AccessTestMixin, TemplateView):
 
 
 # 회원가입 api
-@csrf_exempt
 def add_member_info_logic(request):
     fast_check = request.POST.get('fast_check')
     email = request.POST.get('email')
@@ -858,7 +860,6 @@ def add_member_info_logic(request):
 
 
 # 회원가입 api
-@csrf_exempt
 def add_member_info_logic_test(request):
     fast_check = request.POST.get('fast_check')
     user_id = request.POST.get('user_id')
@@ -1003,7 +1004,6 @@ def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, st
 
 
 # 회원수정 api
-@csrf_exempt
 def update_member_info_logic(request):
     member_id = request.POST.get('id')
     email = request.POST.get('email')
@@ -1089,7 +1089,6 @@ def update_member_info_logic(request):
 
 
 # 회원가입 api
-@csrf_exempt
 def delete_member_info_logic(request):
     member_id = request.POST.get('id')
     class_id = request.session.get('class_id', '')
@@ -1549,7 +1548,6 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
 
 
 # log 삭제
-@csrf_exempt
 def alarm_delete_logic(request):
     log_size = request.POST.get('log_id_size')
     delete_log_id = request.POST.getlist('log_id_array[]')
@@ -1602,7 +1600,6 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
 
 
 # 강사 예약허용시간 setting 업데이트 api
-@csrf_exempt
 def update_setting_push_logic(request):
     setting_trainee_schedule_confirm1 = request.POST.get('setting_trainee_schedule_confirm1', '')
     setting_trainee_schedule_confirm2 = request.POST.get('setting_trainee_schedule_confirm2', '')
@@ -1695,7 +1692,6 @@ def update_setting_push_logic(request):
 
 
 # 강사 예약허용시간 setting 업데이트 api
-@csrf_exempt
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
     setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '')
@@ -1791,7 +1787,6 @@ def update_setting_reserve_logic(request):
 
 
 # 강사 예약허용시간 setting 업데이트 api
-@csrf_exempt
 def update_setting_sales_logic(request):
     setting_sales_10 = request.POST.get('setting_sales_10', '')
     setting_sales_20 = request.POST.get('setting_sales_20', '')
@@ -1936,7 +1931,6 @@ def update_setting_sales_logic(request):
 
 
 # 강사 언어 setting 업데이트 api
-@csrf_exempt
 def update_setting_language_logic(request):
     setting_member_language = request.POST.get('setting_member_language', '')
     next_page = request.POST.get('next_page')
@@ -2165,7 +2159,6 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
 
 
 # 회워탈퇴 api
-@csrf_exempt
 def out_member_logic(request):
     member_id = request.POST.get('id')
     class_id = request.session.get('class_id', '')
@@ -2255,79 +2248,6 @@ def out_member_logic(request):
         return redirect(next_page)
 
 
-# 회원가입 api
-@csrf_exempt
-def add_class_info_logic(request):
-    center_id = request.POST.get('center_id', '')
-    subject_cd = request.POST.get('subject_cd', '')
-    subject_detail_nm = request.POST.get('subject_detail_nm', '')
-    start_date = request.POST.get('start_date', '')
-    end_date = request.POST.get('end_date', '')
-    class_hour = request.POST.get('class_hour', '')
-    start_hour_unit = request.POST.get('start_hour_unit', '')
-    class_member_num = request.POST.get('class_member_num', '')
-
-    next_page = request.POST.get('next_page', '')
-    next_page = '/trainer/trainer_main/'
-
-    error = None
-
-    if subject_cd is None or subject_cd == '':
-        error = '스케쥴 타입을 설정해주세요.'
-
-    if class_hour is None or class_hour == '':
-        class_hour = 1.0
-
-    if start_hour_unit is None or start_hour_unit == '':
-        start_hour_unit = 1.0
-
-    if start_date is None or start_date == '':
-        start_date = datetime.date.today()
-    if end_date is None or end_date == '':
-        end_date = start_date + timezone.timedelta(days=3650)
-
-    if class_member_num is None or class_member_num == '':
-        error = '수업당 최대 허용 인원을 설정해 주세요.'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-
-                class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
-                                     subject_cd=subject_cd, start_date=start_date, end_date=end_date,
-                                     class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
-                                     member_view_state_cd='VIEW',
-                                     class_member_num=int(class_member_num), state_cd='IP',
-                                     reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
-
-                class_info.save()
-
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.1'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.2'
-        except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.1'
-        except ValidationError as e:
-            error = '등록 값의 형태가 문제 있습니다.2'
-        except InternalError:
-            error = '등록 값에 문제가 있습니다.'
-
-    if error is None:
-        request.session['class_id'] = class_info.class_id
-        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         log_info='강좌 정보', log_how='등록',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
-
-        log_data.save()
-
-        return redirect(next_page)
-    else:
-        messages.error(request, error)
-
-        return redirect(next_page)
-
-
 class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainer_class_select.html'
 
@@ -2384,7 +2304,6 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-@csrf_exempt
 def class_processing_logic(request):
 
     class_id = request.POST.get('class_id', '')
@@ -2395,7 +2314,16 @@ def class_processing_logic(request):
         error = '강좌를 선택해 주세요.'
 
     if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+
+    if error is None:
         request.session['class_id'] = class_id
+        class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+        request.session['class_type_name'] = class_name.common_cd_nm
+        request.session['class_center_name'] = class_info.center_tb.center_name
 
     # print(error)
     if error is None:
@@ -2447,6 +2375,8 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request, *args, **kwargs):
         class_id = request.POST.get('class_id', '')
+        class_id_session = request.session.get('class_id', '')
+
         error = None
 
         if class_id is None or class_id == '':
@@ -2464,6 +2394,12 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             class_info.save()
 
         if error is None:
+            if class_id == class_id_session:
+                request.session['class_id'] = ''
+                request.session['class_type_name'] = ''
+                request.session['class_center_name'] = ''
+
+        if error is None:
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                              class_tb_id=class_id,
                              log_info='강좌 정보', log_how='연동 해제',
@@ -2477,7 +2413,6 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'trainer_error_ajax.html'
 
@@ -2536,6 +2471,11 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             request.session['class_id'] = class_info.class_id
+            class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+            request.session['class_type_name'] = class_name.common_cd_nm
+            request.session['class_center_name'] = class_info.center_tb.center_name
+
+        if error is None:
             log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              log_info='강좌 정보', log_how='등록',

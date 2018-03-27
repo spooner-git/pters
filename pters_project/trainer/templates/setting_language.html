@@ -12,6 +12,7 @@
 
 
   <form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
+    {% csrf_token %}
     <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
     <input type="hidden" name = "next_page" value="/trainer/">
   </form>

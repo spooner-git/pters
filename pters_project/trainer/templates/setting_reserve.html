@@ -11,6 +11,7 @@
 {% block content %}
 
 <form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
+    {% csrf_token %}
   <input type="hidden" name="setting_trainer_work_time_available" id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
   <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
   <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->

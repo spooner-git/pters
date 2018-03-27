@@ -12,6 +12,7 @@
 
 
   <form action="{% url 'trainer:update_setting_push' %}" id="update-setting-push-form" method="post">
+    {% csrf_token %}
     <input type="hidden" name="setting_trainee_schedule_confirm1" id="id_setting_trainee_schedule_confirm1" value="09:00"> <!--min 00:00 max 23:59  -->
     <input type="hidden" name="setting_trainee_schedule_confirm2" id="id_setting_trainee_schedule_confirm2" value="16:00"> <!--min 00:00 max 23:59  -->
     <input type="hidden" name="setting_trainee_no_schedule_confirm"   id="id_setting_trainee_no_schedule_confirm" value="7"> <!--시간 숫자-->

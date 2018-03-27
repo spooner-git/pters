@@ -13,6 +13,7 @@
 <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
 <form action="{% url 'schedule:delete_schedule' %}" id="daily-pt-delete-form" method="post">
+    {% csrf_token %}
   <input type="hidden" name="schedule_id" id="id_schedule_id">
   <input type="hidden" name="member_name"   id="id_member_name_delete">
   <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
@@ -20,12 +21,14 @@
 </form>
 
 <form action="{% url 'schedule:delete_schedule' %}" id="daily-off-delete-form" method="post">
+    {% csrf_token %}
   <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
   <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
   <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
 </form>
 
 <form action="{% url 'schedule:finish_schedule' %}" id="pt-finish-form" method="post" enctype='multipart/form-data'>
+    {% csrf_token %}
   <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
   <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
   <input type="hidden" name="member_name"   id="id_member_name_finish">
@@ -33,6 +36,7 @@
 </form>
 
 <form action="{% url 'schedule:add_repeat_schedule_confirm' %}" id="confirm-repeat-schedule-form" method="get">
+    {% csrf_token %}
   <input type="hidden" name="repeat_schedule_id" id="id_repeat_schedule_id_confirm"> <!--ajax로 받은 id-->
   <input type="hidden" name="repeat_confirm"   id="id_repeat_confirm">  <!--val 1, 0-->
   <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
@@ -233,6 +237,7 @@
     {% endif %}
   -->
     <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="member_id"    id="id_member_id">
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
@@ -245,6 +250,7 @@
     </form>
 
     <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="training_date" id="id_training_date_off">
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
@@ -254,6 +260,7 @@
     </form>
 
     <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="member_id"        id="id_repeat_member_id">
         <input type="hidden" name="lecture_id"        id="id_repeat_lecture_id">
         <input type="hidden" name="member_name"       id="id_repeat_member_name">
@@ -268,6 +275,7 @@
     </form>
 
     <form action="{% url 'schedule:add_repeat_schedule' %}"  id="add-off-repeat-schedule-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="repeat_freq"         id="id_repeat_freq_off">
         <input type="hidden" name="repeat_start_date"   id="id_repeat_start_date_off">
         <input type="hidden" name="repeat_end_date"     id="id_repeat_end_date_off">

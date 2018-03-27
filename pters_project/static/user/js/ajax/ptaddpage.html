@@ -6,6 +6,7 @@
         {% endfor %}
     {% endif %}
     <form action="{% url 'trainer:add_pt_logic' %}" id="pt-add-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
         <input type="hidden" name="training_date" id="id_training_date">
