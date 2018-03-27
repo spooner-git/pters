@@ -2386,13 +2386,21 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             try:
                 with transaction.atomic():
+                    if center_id is None or center_id == '':
+                        class_info = ClassTb(member_id=request.user.id,
+                                             subject_cd=subject_cd, start_date=start_date, end_date=end_date,
+                                             class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
+                                             member_view_state_cd='VIEW',
+                                             class_member_num=int(class_member_num), state_cd='IP',
+                                             reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
-                    class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
-                                         subject_cd=subject_cd, start_date=start_date, end_date=end_date,
-                                         class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
-                                         member_view_state_cd='VIEW',
-                                         class_member_num=int(class_member_num), state_cd='IP',
-                                         reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                    else:
+                        class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
+                                             subject_cd=subject_cd, start_date=start_date, end_date=end_date,
+                                             class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
+                                             member_view_state_cd='VIEW',
+                                             class_member_num=int(class_member_num), state_cd='IP',
+                                             reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
                     class_info.save()
 
@@ -2409,9 +2417,19 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             request.session['class_id'] = class_info.class_id
-            class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
-            request.session['class_type_name'] = class_name.common_cd_nm
-            request.session['class_center_name'] = class_info.center_tb.center_name
+            try:
+                class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+            except ObjectDoesNotExist:
+                error = '강좌 과목 정보를 불러오지 못했습니다.'
+            if error is None:
+                request.session['class_type_name'] = class_name.common_cd_nm
+            else:
+                request.session['class_type_name'] = ''
+
+            if center_id is None or center_id == '':
+                request.session['class_center_name'] = ''
+            else:
+                request.session['class_center_name'] = class_info.center_tb.center_name
 
         if error is None:
             log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
@@ -2424,7 +2442,6 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is not None:
             logger.error(error)
             messages.error(request, error)
-
         return render(request, self.template_name)
 
 
