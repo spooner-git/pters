@@ -542,3 +542,52 @@ class NewMemberReSendEmailView(TemplateView):
 
         return context
 
+
+# 회워탈퇴 api
+def out_member_logic(request):
+    member_id = request.POST.get('id')
+    next_page = request.POST.get('next_page')
+
+    error = None
+
+    if member_id == '':
+        error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+
+        try:
+            user = User.objects.get(username=member_id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+        try:
+            member = MemberTb.objects.get(user_id=user.id, use=1)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                user.is_active = 0
+                user.save()
+                member.use = 0
+                member.mod_dt = timezone.now()
+                member.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
+
+        return redirect(next_page)
