@@ -457,7 +457,7 @@ $(document).ready(function(){
                               $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
                               $('#id_repeat_schedule_id_confirm').val(repeatArray)
                               completeSend(); //ajax 로딩 이미지 숨기기
-                              //$('#shade').show()
+                              $('#shade3').show()
                             }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
                               var repeat_info = popup_repeat_confirm()
                               var day_info = repeat_info.day_info
@@ -466,7 +466,7 @@ $(document).ready(function(){
                               $('#repeat_confirm_dur').text(dur_info)
                               $('#id_repeat_schedule_id_confirm').val(repeatArray)
                               completeSend(); //ajax 로딩 이미지 숨기기
-                              //$('#shade').show()
+                              $('#shade3').show()
                             }else{
                               ajax_received_json_data(jsondata)
                               $('#calendar').show().css('height','100%')
@@ -799,7 +799,6 @@ $(document).ready(function(){
       }
 
       function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확인 팝업을 보여준다.
-          $('#shade3').show()
           var repeat_info_dict= { 'KOR':
                                 {'DD':'매일', 'WW':'매주', '2W':'격주',
                                  'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},

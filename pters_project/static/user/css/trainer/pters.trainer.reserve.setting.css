@@ -23,7 +23,7 @@ li a{
 }
 
 .dropdown button{
-	max-width: 130px;
+	
 }
 
 #memberReserveSetting{
@@ -36,7 +36,8 @@ li a{
 }
 
 #timeSelect{
-	width: auto;
+	left: 16%;
+	max-width: 170px;
 	display: inline-flex;
 }
 

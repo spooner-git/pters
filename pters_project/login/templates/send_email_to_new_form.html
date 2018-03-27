@@ -78,9 +78,29 @@
       }
 
 
-      #inputError_info{
-        display: none;
-      }
+      #errorMessageBar{
+          display: none;
+          width: 100%;
+          position: sticky;
+          top: 0;
+          left: 0;
+          height: 35px;
+          text-align: center;
+          background: red;
+          color: #ffffff;
+          font-size: 15px;
+          font-weight: bold;
+          z-index: 1500;
+      }   
+          #errorMessageBar span{
+              line-height: 35px;
+          }
+          #errorMessageBar span:nth-child(2){
+              position: absolute;
+              right: 0;
+              margin-right: 85px;
+              cursor: pointer;
+          }
 
     </style>
 
@@ -95,12 +115,12 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 {% block content %}
+
+<div id="errorMessageBar">
+    <span id="errorMessageText"></span><span>닫기</span>
+</div>
+
 <div class="outerbox_horizontal" data-view="init" style="width:auto;">
-  <div id="inputError_info">
-        <div id="errorMsg_info" class="inputErrorInner">
-            <p style="line-height: 35px;vertical-align: middle;margin:0;"></p>
-        </div>
-  </div>
 	<div class="explainbox _type_trainee" style="width: 315px;">
 		<img src="/static/user/res/login/icon-reg-user.png">
 		<p><span class="font-pink">이메일 인증</span></p>
@@ -172,10 +192,15 @@
 
                 //통신성공시 처리
                 success:function(data){
-                    console.log(data)
-                    $('#submit_complete').css('height','200px')
-                    $('#submit_input').css('height','0px')
-                    $('.pw_confirm').text('')
+                    var jsondata = JSON.parse(data)
+                    if(jsondata.messageArray.length>0){
+                      $('#errorMessageBar').show()
+                      $('#errorMessageText').text(jsondata.messageArray)
+                    }else{
+                      $('#submit_complete').css('height','200px')
+                      $('#submit_input').css('height','0px')
+                      $('.pw_confirm').text('')
+                    }
                 },
 
                 //통신 실패시 처리
@@ -188,6 +213,11 @@
     }
 		
 	})
+
+  $('#errorMessageBar span:nth-child(2)').click(function(){
+      $('#errorMessageBar').fadeOut()
+      $('#errorMessageText').text('')
+  })
 
 	function beforeSend(){
         $('html').css("cursor","wait");
