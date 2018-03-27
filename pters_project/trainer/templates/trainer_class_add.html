@@ -418,7 +418,8 @@
                   success:function(data){
                     var jsondata = JSON.parse(data)
                     if(jsondata.messageArray.length>0){
-                      alert(jsondata.messageArray)
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text(jsondata.messageArray)
                     }else{
                       ajax_send_reserve_initial_setting()
                     }
@@ -428,7 +429,8 @@
                   },
 
                   error:function(){
-                    console.log('server error')
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text('통신 에러: 관리자 문의')
                   }
               })
           }
@@ -447,7 +449,8 @@
                   success:function(data){
                     var jsondata = JSON.parse(data)
                     if(jsondata.messageArray.length>0){
-                      alert(jsondata.messageArray)
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text(jsondata.messageArray)
                     }else{
                       alert('새로운 강의가 등록 되었습니다.')
                       location.href="{% url 'trainer:trainer_main' %}"
@@ -458,7 +461,8 @@
                   },
 
                   error:function(){
-                    console.log('server error')
+                      $('#errorMessageBar').show()
+                      $('#errorMessageText').text('통신 에러: 관리자 문의')
                   }
               })
           }

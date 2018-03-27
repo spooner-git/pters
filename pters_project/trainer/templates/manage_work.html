@@ -120,9 +120,9 @@
               dataType : 'script',
               success:function(data){
                 var jsondata = JSON.parse(data)
-                if(messageArray.length>0){
-                            $('#errorMessageBar').show()
-                            $('#errorMessageText').text(messageArray)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text(jsondata.messageArray)
                 }else{
                     var salary = $('#salaryInput').val("");
                     var cost = $('#costInput').val("")

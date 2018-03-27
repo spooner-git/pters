@@ -657,7 +657,7 @@ $(document).ready(function(){
           	var jsondata = JSON.parse(data);
           	if(jsondata.messageArray.length>0){
           		$('#errorMessageBar').show()
-                $('#errorMessageText').text(messageArray)
+                $('#errorMessageText').text(jsondata.messageArray)
           	}else{
 				classTimeArray_start_date = []
 	          	classTimeArray_end_date = []
@@ -713,7 +713,7 @@ $(document).ready(function(){
                 var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
 	          		$('#errorMessageBar').show()
-	                $('#errorMessageText').text(messageArray)
+	                $('#errorMessageText').text(jsondata.messageArray)
 	          	}else{
 	          		/*팝업의 timegraph 업데이트*/
 	                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date

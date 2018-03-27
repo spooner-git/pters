@@ -463,9 +463,9 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
-                        if(messageArray.length>0){
+                        if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show()
-                            $('#errorMessageText').text(messageArray)
+                            $('#errorMessageText').text(jsondata.messageArray)
                         }else{
                             lec_select_classIdArray = jsondata.classIdArray
                             lec_select_centerNameArray = jsondata.centerNameArray;
@@ -508,9 +508,9 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
-                        if(messageArray.length>0){
+                        if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show()
-                            $('#errorMessageText').text(messageArray)
+                            $('#errorMessageText').text(jsondata.messageArray)
                         }else{
                             lec_select_regCountArray = jsondata.countArray;
                             lec_select_startArray = jsondata.startArray;

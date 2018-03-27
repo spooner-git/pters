@@ -230,7 +230,7 @@
                         var jsondata = JSON.parse(data);
                         if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show()
-                            $('#errorMessageText').text(messageArray)
+                            $('#errorMessageText').text(jsondata.messageArray)
                         }else{
                             lec_select_regCountArray = jsondata.regCountArray;
                             lec_select_countArray = jsondata.countArray;
@@ -272,7 +272,7 @@
                         var jsondata = JSON.parse(data);
                         if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show()
-                            $('#errorMessageText').text(messageArray)
+                            $('#errorMessageText').text(jsondata.messageArray)
                         }else{
                             lec_select_regCountArray = jsondata.countArray;
                             lec_select_startArray = jsondata.startArray;

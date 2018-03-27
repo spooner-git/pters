@@ -412,15 +412,17 @@ $(document).ready(function(){
 
                 //통신성공시 처리
                 success:function(data){
-                  //var jsondata = JSON.parse(data);
-                  //ajax_received_json_data(jsondata)
-                  //closeDeletePopup();
-                  //AjaxCompleteSend();
-                  var userID = $('#memberId_info_PC').text()
-                  get_indiv_repeat_info(userID)
-                  $('#cal_popup_plandelete').css('display','none')
-                  deleteTypeSelect = "memberinfodelete"
-                  $('#shade3').hide()
+                    var jsondata = JSON.parse(data)
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text(jsondata.messageArray)
+                    }else{
+                        var userID = $('#memberId_info_PC').text()
+                        get_indiv_repeat_info(userID)
+                        $('#cal_popup_plandelete').css('display','none')
+                        deleteTypeSelect = "memberinfodelete"
+                        $('#shade3').hide()
+                    }
                   },
 
                 //보내기후 팝업창 닫기
@@ -897,7 +899,6 @@ $(document).ready(function(){
 
             //통신성공시 처리
             success:function(data){
-                console.log(data)
                 var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
