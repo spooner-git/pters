@@ -1642,6 +1642,12 @@ $(document).ready(function(){
 			var offMinute = datasplit[4]
 			var offDura = datasplit[5];
 			var memberName = datasplit[6];
+
+			if(Options.workStartTime>offHour && offDura > Options.workStartTime - offHour){
+				var offHour = Options.workStartTime
+				var offDura = offDura - (Options.workStartTime - offHour)
+			} //만약 8시~23시까지 OFF로 설정해두고, 업무시간을 9~23시로 했을때 8시에 배치가 안되서 off일정이 안보이는 현상을 해결
+			
 			var offStartArr = [offYear,offMonth,offDate,offHour,offMinute]
 			var offStart = offStartArr.join("_")
 			//var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
