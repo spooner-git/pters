@@ -1,9 +1,9 @@
 {% extends "trainer_base.html" %}
-{% load static %}
+{% load static_url %}
 
 {% block local_css %}
     <meta name="upperText" content="main_trainer">
-    <link rel="stylesheet" href={% static "user/css/main/main_trainer.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/main/main_trainer.css" %}>
     <style>
       .KRtext,.JPtext,.ENtext{
         display: none;
@@ -55,6 +55,6 @@
 {% endblock %}
 
 {% block local_js_footer %}
-    <script type="text/javascript" src={% static "user/js/main/main_trainer.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/main/main_trainer.js" %}></script>
 
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends "trainer_base_setting_inner.html" %}
-{% load static %}
+{% load static_url %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.sales.setting.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.sales.setting.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
 {% endblock %}
 
 
@@ -83,6 +83,6 @@
               var lt_sal_05 =  ['{{ lt_sal_05 }}'];
               var lt_sal_00 =  ['{{ lt_sal_00 }}'];
         </script>
-        <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.setting.sales.js" %}></script>
+        <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.setting.sales.js" %}></script>
         
 {% endblock %}
