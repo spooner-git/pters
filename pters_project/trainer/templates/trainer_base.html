@@ -20,7 +20,6 @@
         <link rel="stylesheet" href={% static "user/css/pters.base.popup.css" %}>
         <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.select.class.css" %}>
         <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
-        
         {% block local_css %}
         {% endblock %}
     </head>
@@ -32,6 +31,10 @@
         <div id="alarm">
             <p>알림 팝업</p>
             <button>닫기</button>
+        </div>
+
+        <div id="errorMessageBar">
+            <span id="errorMessageText"></span><span>닫기</span>
         </div>
 
         <div id="commonPopup" style="position:absolute;display:none;width: 110px;height: 50px;background: transparent;z-index: 200;">
@@ -367,6 +370,10 @@
                 }
             })
 
+            $('#errorMessageBar span:nth-child(2)').click(function(){
+                $('#errorMessageBar').fadeOut()
+            })
+
 
              function openNav(){
                $("#outer_Sidenav").show();
@@ -456,23 +463,27 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
-                        lec_select_classIdArray = jsondata.classIdArray
-                        lec_select_centerNameArray = jsondata.centerNameArray;
-                        lec_select_subjectNameArray = jsondata.subjectNameArray;
-                        lec_select_startDateArray = jsondata.startDateArray;
-                        lec_select_stateNameArray = jsondata.stateNameArray;
-                        lec_select_classMemberNumArray = jsondata.classMemberNumArray;
-
-                        lec_select_classHourArray = jsondata.classHourArray;
-                        lec_select_classHourUnitArray = jsondata.classHourUnitArray;
-                        lec_select_stateCodeArray = jsondata.stateCodeArray;
-                        lec_select_subjectCodeArray= jsondata.subjectCodeArray;
-                        if(lec_select_classIdArray.length == 0){
-                            location.href="{% url 'trainer:add_class' %}"
+                        if(messageArray.length>0){
+                            $('#errorMessageBar').show()
+                            $('#errorMessageText').text(messageArray)
                         }else{
-                            fill_lecture_select_popup()
+                            lec_select_classIdArray = jsondata.classIdArray
+                            lec_select_centerNameArray = jsondata.centerNameArray;
+                            lec_select_subjectNameArray = jsondata.subjectNameArray;
+                            lec_select_startDateArray = jsondata.startDateArray;
+                            lec_select_stateNameArray = jsondata.stateNameArray;
+                            lec_select_classMemberNumArray = jsondata.classMemberNumArray;
+
+                            lec_select_classHourArray = jsondata.classHourArray;
+                            lec_select_classHourUnitArray = jsondata.classHourUnitArray;
+                            lec_select_stateCodeArray = jsondata.stateCodeArray;
+                            lec_select_subjectCodeArray= jsondata.subjectCodeArray;
+                            if(lec_select_classIdArray.length == 0){
+                                location.href="{% url 'trainer:add_class' %}"
+                            }else{
+                                fill_lecture_select_popup()
+                            } 
                         }
-                        
                       },
 
                       complete:function(){
@@ -497,23 +508,25 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
-                        console.log(jsondata)
-                        
-                        lec_select_regCountArray = jsondata.countArray;
-                        lec_select_startArray = jsondata.startArray;
-                        lec_select_endArray = jsondata.endArray;
-                        lec_select_lectureIdArray = jsondata.lectureIdArray;
-                        lec_select_classIdArray = jsondata.classIdArray
-                        lec_select_trainerNameArray = jsondata.trainerNameArray;
-                        lec_select_availCountArray = jsondata.availCountArray;
-                        lec_select_stateArray = jsondata.memberViewStateArray;
-                        lec_select_lectureCountsArray = jsondata.lectureCountsArray;
-                        //lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
-                        lec_select_classInfoArray = jsondata.classInfoArray;
-                        lec_select_classIdArray = jsondata.classIdArray;
-                        
-                        fill_lecture_connect_select_popup(classid)
-                        
+                        if(messageArray.length>0){
+                            $('#errorMessageBar').show()
+                            $('#errorMessageText').text(messageArray)
+                        }else{
+                            lec_select_regCountArray = jsondata.countArray;
+                            lec_select_startArray = jsondata.startArray;
+                            lec_select_endArray = jsondata.endArray;
+                            lec_select_lectureIdArray = jsondata.lectureIdArray;
+                            lec_select_classIdArray = jsondata.classIdArray
+                            lec_select_trainerNameArray = jsondata.trainerNameArray;
+                            lec_select_availCountArray = jsondata.availCountArray;
+                            lec_select_stateArray = jsondata.memberViewStateArray;
+                            lec_select_lectureCountsArray = jsondata.lectureCountsArray;
+                            //lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
+                            lec_select_classInfoArray = jsondata.classInfoArray;
+                            lec_select_classIdArray = jsondata.classIdArray;
+                            
+                            fill_lecture_connect_select_popup(classid) 
+                        }
                       },
 
                       complete:function(){
