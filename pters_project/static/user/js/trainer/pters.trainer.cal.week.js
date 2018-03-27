@@ -237,19 +237,6 @@ $(document).ready(function(){
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
 	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
 
-	/*
-	$('#ymdText').click(function(){
-		var memberName = $(".memberName");
-		var memberTime = $(".memberTime");
-		if(memberName.css('display')!='none'){
-			memberName.css('display','none')
-			memberTime.css('display','none')
-		}else{
-			memberName.css('display','block')
-			memberTime.css('display','block')
-		};
-	});
-	*/
 
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
@@ -413,7 +400,6 @@ $(document).ready(function(){
 				var drawCanvas = document.getElementById('canvas');
 				var send_data = $pt_finish_form.serializeArray();
 				send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
-				// image upload test - hk.kim 180313
 				if(schedule_on_off==1){
 					//PT 일정 완료 처리시
 					$.ajax({
