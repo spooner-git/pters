@@ -67,14 +67,22 @@ def login_trainer(request):
 
             return redirect(next_page)
         elif user is not None and user.is_active == 0:
-            request.session['username'] = user.username
-            if user.email is None or user.email == '':
-                next_page = '/login/send_email_member/'
-            else:
-                next_page = '/login/resend_email_member/'
-            return redirect(next_page)
+            try:
+                member = MemberTb.objects.get(member_id=user.id)
+            except ObjectDoesNotExist:
+                error = 'ID/비밀번호를 확인해주세요.'
+            if error is None:
+                if member.use == 1:
+                    request.session['username'] = user.username
+                    if user.email is None or user.email == '':
+                        next_page = '/login/send_email_member/'
+                    else:
+                        next_page = '/login/resend_email_member/'
+                    return redirect(next_page)
+                else:
+                    error = '이미 탈퇴한 회원입니다.'
         else:
-            error = '로그인에 실패하였습니다.'
+            error = 'ID/비밀번호를 확인해주세요.'
             # logger.error(error)
 
     if error is None:
