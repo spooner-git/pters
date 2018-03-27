@@ -418,6 +418,8 @@ $(document).ready(function(){
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)
                     }else{
+                        $('#errorMessageBar').hide()
+                        $('#errorMessageText').text('')
                         var userID = $('#memberId_info_PC').text()
                         get_indiv_repeat_info(userID)
                         $('#cal_popup_plandelete').css('display','none')
@@ -619,6 +621,11 @@ $(document).ready(function(){
         $('#memberEmail_info_PC').keyup(function(){
           $('#memberEmail_info').val($(this).val())
         })
+
+        $('#memberComment_info_PC').keyup(function(){
+            $('#comment_info').val($(this).val())
+        })
+
     }
 
     function send_member_modified_data_pc(){
@@ -647,6 +654,8 @@ $(document).ready(function(){
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(messageArray)
                   }else{
+                        $('#errorMessageBar').hide()
+                        $('#errorMessageText').text('')
                       DataFormattingDict('ID');
                       DataFormatting('current');
                       DataFormatting('finished');
@@ -694,6 +703,8 @@ $(document).ready(function(){
                     $('#errorMessageText').text(messageArray)
                 }
                 else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
                   DataFormattingDict('ID');
                   DataFormatting('current');
                   DataFormatting('finished');
@@ -741,6 +752,8 @@ $(document).ready(function(){
                     $('#errorMessageText').text(messageArray)
                 }
                 else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
                   DataFormattingDict('ID');
                   DataFormatting('current');
                   DataFormatting('finished');
@@ -791,6 +804,8 @@ $(document).ready(function(){
                             $('#errorMessageText').text(messageArray)
                         }
                         else{
+                            $('#errorMessageBar').hide()
+                            $('#errorMessageText').text('')
                           DataFormattingDict('ID');
                           DataFormatting('current');
                           DataFormatting('finished');
@@ -848,6 +863,8 @@ $(document).ready(function(){
                             $('#errorMessageText').text(messageArray)
                         }
                         else{
+                            $('#errorMessageBar').hide()
+                            $('#errorMessageText').text('')
                           DataFormattingDict('ID');
                           DataFormatting('current');
                           DataFormatting('finished');
@@ -910,6 +927,8 @@ $(document).ready(function(){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray)
                 }else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
                    draw_member_lecture_list_table(jsondata,$regHistory) 
                 }
                 
@@ -1400,6 +1419,8 @@ $(document).ready(function(){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray)
                 }else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
                   id_search_memberLastName = jsondata.lastnameInfo;
                   id_search_memberFirstName = jsondata.firstnameInfo;
                   id_search_memberPhone = jsondata.phoneInfo;
@@ -1477,6 +1498,9 @@ $(document).ready(function(){
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
             $("#memberEnd_info_PC").datepicker('option','minDate',$("#memberStart_info_PC").val())
             $("#memberStart_info_PC").datepicker('option','maxDate',$("#memberEnd_info_PC").val())
+            $('#datepicker_info').val($("#memberStart_info_PC").val())
+            $('#datepicker2_info').val($("#memberEnd_info_PC").val())
+            console.log($("#datepicker_info").val(),$("#datepicker2_info").val())
         }
     });
 
@@ -1897,6 +1921,8 @@ $(document).ready(function(){
                             $('#errorMessageText').text(messageArray)
                         }else{
                             add_member_form_func();
+                            $('#errorMessageBar').hide()
+                            $('#errorMessageText').text('')
                         }
                     },
 
@@ -1949,6 +1975,8 @@ $(document).ready(function(){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(messageArray)
                 }else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
                     closePopup()
                     if($('body').width()<600){
                         $('#page_managemember').show();
@@ -2026,6 +2054,8 @@ $(document).ready(function(){
                             $('#errorMessageText').text(messageArray)
                         }
                         else{
+                            $('#errorMessageBar').hide()
+                            $('#errorMessageText').text('')
                             closePopup()
 
                             if($('body').width()<600){
@@ -2085,6 +2115,8 @@ $(document).ready(function(){
                     $('#errorMessageText').text(messageArray)
                 }
                 else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
                     closePopup()
 
                     if($('body').width()<600){
@@ -2343,6 +2375,8 @@ $(document).ready(function(){
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)
                     }else{
+                        $('#errorMessageBar').hide()
+                        $('#errorMessageText').text('')
                         ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
                         ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
                         ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;

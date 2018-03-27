@@ -78,6 +78,13 @@
 	font-weight: bold;
 }
 
+#popup_info3_memo{
+	color:#fe4e65;
+	font-size:13px;
+	margin-bottom: 3px;
+	border:0;
+}
+
 #popup_img{
 	position: relative;
 	background: #ffffff;

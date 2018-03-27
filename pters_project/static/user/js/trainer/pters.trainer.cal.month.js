@@ -276,7 +276,7 @@ $(document).ready(function(){
 		}
 		$('#popup_info').text(selectedDate);
 		$('#popup_info2').text(selectedPerson+'의 '+ selectedTime + '시 일정');
-		$('#popup_info3_memo').text(selectedMemo)
+		$('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
 
 		$('#canvas').hide().css({'border-color':'#282828'})
 		$('#canvasWrap').css({'height':'0px'})
