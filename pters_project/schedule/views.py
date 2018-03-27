@@ -360,7 +360,6 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
 
 
 # 일정 추가
-@csrf_exempt
 def add_schedule_logic(request):
     lecture_id = request.POST.get('lecture_id')
     member_id = request.POST.get('member_id')
@@ -491,7 +490,6 @@ def add_schedule_logic(request):
 
 
 # 일정 삭제
-@csrf_exempt
 def delete_schedule_logic(request):
     pt_schedule_id = request.POST.get('schedule_id')
     off_schedule_id = request.POST.get('off_schedule_id')
@@ -548,7 +546,6 @@ def delete_schedule_logic(request):
 
 
 # 일정 완료
-@csrf_exempt
 def finish_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     member_name = request.POST.get('member_name')
@@ -641,7 +638,6 @@ def finish_schedule_logic(request):
 
 
 # 반복 일정 추가
-@csrf_exempt
 def add_repeat_schedule_logic(request):
     member_id = request.POST.get('member_id')
     lecture_id = request.POST.get('lecture_id', '')
@@ -863,7 +859,6 @@ def add_repeat_schedule_logic(request):
     return redirect(next_page)
 
 
-@csrf_exempt
 def add_repeat_schedule_confirm(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
@@ -1271,7 +1266,7 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
         return render(request, self.template_name, context)
 
 
-# 일정 삭제
+# 메모 수정
 @csrf_exempt
 def update_memo_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')

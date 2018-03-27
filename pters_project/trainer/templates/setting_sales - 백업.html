@@ -11,6 +11,7 @@
 {% block content %}
 
 <form action="{% url 'trainer:update_setting_sales' %}" id="update-setting-push-form" method="post">
+    {% csrf_token %}
   <input type="hidden" name="setting_sales_10" id="id_setting_sales_10" value="100000"> <!--min 00:00 max 23:59  -->
   <input type="hidden" name="setting_sales_20" id="id_setting_sales_20" value="200000"> <!--min 00:00 max 23:59  -->
   <input type="hidden" name="setting_sales_30" id="id_setting_sales_30" value="300000"> <!--min 00:00 max 23:59  -->

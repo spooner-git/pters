@@ -32,6 +32,7 @@
         </div>
         <div>
             <form action="{% url 'login:login' %}" id="login-form" method="post">
+                {% csrf_token %}
                 <div id="idinput">
                     <img src={% static "user/res/login/icon-user.png" %} id="idimg">
                     <input type="text" class="loginboxstyle form-control" name="username" placeholder="아이디" autofocus>

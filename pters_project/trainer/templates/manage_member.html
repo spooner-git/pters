@@ -43,6 +43,7 @@
 </form>
 
 <form action="{% url 'trainer:delete_member_info' %}" method="POST" class="member-form" id="member-delete-form">
+    {% csrf_token %}
     <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
     <input type="hidden" name="id" id="deleteMemberId">
 </form>
@@ -215,6 +216,7 @@
        <button id="infoMemberModify" data-type="view"><img src={% static "user/res/member/icon-edit.png" %}></button>
     </div>
     <form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
+        {% csrf_token %}
         <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
         <input type="hidden" name="sex" id="form_sex_modify">
         <input type="hidden" name="birthday" id="form_birth_modify">
@@ -477,6 +479,7 @@
     </div>
 
     <form action="{% url 'trainer:add_member_info' %}" method="POST" class="member-form" id="member-add-form-new">
+    {% csrf_token %}
         <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
         <input type="hidden" name="fast_check" id="fast_check" value="0">
         <input type="hidden" name="name" id="form_name" value="">

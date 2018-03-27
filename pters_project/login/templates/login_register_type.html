@@ -137,6 +137,7 @@
     </form>
     
     <form action="{% url 'login:add_member_info_email' %}" id="add-member-trainee-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="id" id="newid2" value="" >
         <input type="hidden" name="name" id="newname" value="" >
         <input type="hidden" name="sex" id="newsex" value="" >
@@ -148,6 +149,7 @@
     </form>
 
     <form action="{% url 'login:add_member_info_email' %}" id="add-member-trainer-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="id" id="newid2" value="" >
         <input type="hidden" name="name" id="newname" value="" >
         <input type="hidden" name="sex" id="newsex" value="" >
@@ -159,6 +161,7 @@
     </form>
 
     <form action="{% url 'login:add_member_info_email' %}" id="add-member-business-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="id" id="newid2" value="" >
         <input type="hidden" name="name" id="newname" value="" >
         <input type="hidden" name="sex" id="newsex" value="" >

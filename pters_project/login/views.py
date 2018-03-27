@@ -42,15 +42,13 @@ class IndexView(TemplateView):
         return context
 
 
-@csrf_exempt
 def login_trainer(request):
-    #login 완료시 main page로 이동
+    # login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
     auto_login_check = request.POST.get('auto_login_check', '0')
     next_page = request.POST.get('next_page')
     error = None
-    user2 = None
     if next_page == '':
         next_page = '/trainer/'
     if next_page is None:
@@ -63,9 +61,9 @@ def login_trainer(request):
             login(request, user)
             if auto_login_check == '0':
                 request.session.set_expiry(0)
-            #member_detail = MemberTb.objects.get(user_id=user_data.id)
+            # member_detail = MemberTb.objects.get(user_id=user_data.id)
             # request.session['is_first_login'] = True
-            #request.session['member_id'] = member_detail.member_id
+            # request.session['member_id'] = member_detail.member_id
 
             return redirect(next_page)
         elif user is not None and user.is_active == 0:
@@ -123,15 +121,13 @@ class RegisterTypeSelectView(TemplateView):
 
 
 # 로그아웃 api
-@csrf_exempt
 def logout_trainer(request):
-    #logout 끝나면 login page로 이동
+    # logout 끝나면 login page로 이동
     logout(request)
     return redirect('/login/')
 
 
 # 회원가입 api
-@method_decorator(csrf_exempt, name='dispatch')
 class ResendEmailAuthenticationView(RegistrationView, View):
     template_name = 'registration_error_ajax.html'
 
@@ -198,7 +194,6 @@ class ResendEmailAuthenticationView(RegistrationView, View):
 
 
 # 회원가입 api
-@method_decorator(csrf_exempt, name='dispatch')
 class ResetPasswordView(View):
     template_name = 'registration_error_ajax.html'
 
@@ -269,7 +264,6 @@ class ResetPasswordView(View):
 
 
 # 회원가입 api
-@csrf_exempt
 def add_member_info_logic_test(request):
     user_id = request.POST.get('id', '')
     name = request.POST.get('name', '')
@@ -335,7 +329,6 @@ def add_member_info_logic_test(request):
         return redirect(next_page)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class AddMemberView(RegistrationView, View):
     template_name = 'registration_error_ajax.html'
 
@@ -415,7 +408,6 @@ class AddMemberView(RegistrationView, View):
         return render(request, self.template_name)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class AddMemberNoEmailView(View):
     template_name = 'registration_error_ajax.html'
 

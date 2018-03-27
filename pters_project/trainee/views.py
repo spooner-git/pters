@@ -332,7 +332,6 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
     return context
 
 
-@csrf_exempt
 def lecture_processing(request):
 
     lecture_id = request.POST.get('lecture_id', '')
@@ -499,7 +498,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
 
 # pt 일정 삭제
-@csrf_exempt
 def pt_delete_logic(request):
     schedule_id = request.POST.get('schedule_id')
     next_page = request.POST.get('next_page')
@@ -684,7 +682,6 @@ def pt_delete_logic(request):
 
 
 # pt 일정 추가
-@csrf_exempt
 def pt_add_logic(request):
     class_id = request.POST.get('class_id', '')
     # lecture_id = request.POST.get('lecture_id', '')
@@ -791,7 +788,6 @@ def pt_add_logic(request):
 
 
 # pt 일정 추가
-@csrf_exempt
 def pt_add_array_logic(request):
     class_id = request.POST.get('class_id', '')
     # lecture_id = request.POST.get('lecture_id')

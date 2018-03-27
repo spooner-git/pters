@@ -14,17 +14,20 @@
 <img src="/static/user/res/loader.gif" alt="데이터 로딩중" style="width:100%;" class="loaders">
   -->
   <form action="{% url 'schedule:delete_schedule' %}" id="daily-pt-delete-form" method="post">
+    {% csrf_token %}
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="member_name"   id="id_member_name_delete">
     <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
   <form action="{% url 'schedule:delete_schedule' %}" id="daily-off-delete-form" method="post">
+    {% csrf_token %}
     <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
     <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
     <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
   </form>
   <form action="{% url 'schedule:finish_schedule' %}" id="pt-finish-form" method="get">
+    {% csrf_token %}
     <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
     <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
     <input type="hidden" name="member_name"   id="id_member_name_finish">
@@ -147,6 +150,7 @@
         {% endfor %}
     {% endif %}
     <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="member_id"    id="id_member_id">
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
@@ -158,6 +162,7 @@
     </form>
 
     <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="training_date" id="id_training_date_off">
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
@@ -323,6 +328,7 @@
 
  <div id="page-addplan-pc">
     <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="lecture_id"    id="id_lecture_id">
         <input type="hidden" name="member_name"   id="id_member_name">
         <input type="hidden" name="training_date" id="id_training_date">

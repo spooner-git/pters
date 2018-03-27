@@ -89,6 +89,7 @@
 
         <div id="popup_lecture_select" class="_popup">
             <form action="{% url 'trainee:lecture_processing' %}" id="lecture-check-form" method="post">
+                {% csrf_token %}
                 <input type="hidden" name="lecture_id" id="id_check_lecture_id">
                 <input type="hidden" name="check" id="id_check">
                 <input type="hidden" name="class_id" id="id_class_id">
