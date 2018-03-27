@@ -501,7 +501,7 @@ $(document).ready(function(){
         }
 
         if(Data[userID].email.length==0){
-          var email = '-'
+          var email = ''
         }else{
           var email = Data[userID].email
         }
