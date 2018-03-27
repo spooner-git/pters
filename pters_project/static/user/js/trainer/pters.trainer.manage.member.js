@@ -578,13 +578,12 @@ $(document).ready(function(){
         if(Data[userID].npCount > 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-np-wait.png" style="width:18px;margin:0 0 5px 3px" title="연결 대기중"> (연결 대기중)</span>'
         }*/
-        if(Data[userID].npCount == 0 && Data[userID].npCount == 0){
+        if(Data[userID].npCount == 0 && Data[userID].rjCount == 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:11px;margin:0 0 5px 3px" title="연결됨"> (연결됨)</span>'
         }
-        else if(Data[userID].npCount > 0){
+        else if(Data[userID].rjCount > 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 취소"> (연결 취소)</span>'
         }
-
 
         $('#npSituationPresent').html(npCountImg)
 
@@ -1885,7 +1884,7 @@ $(document).ready(function(){
     };
 
 
-    $("#upbutton-check, button._info_modify").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
+    $("#upbutton-check, #pcBtn .submitBtn, button._info_modify").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
         var test = $('#id_search_confirm').val();
         var $form2 = $('#add-member-id-form');
         var url2 = '/login/add_member_info_no_email/';

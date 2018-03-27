@@ -479,7 +479,7 @@
             var lec_select_classIdArray = []
 
 
-            function ajax_read_lecture_info_from_db(afterfunction){
+            function ajax_read_lecture_info_from_db(){
                 $.ajax({
 
                       url: ' /trainer/get_class_data/',
@@ -491,6 +491,7 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
+                        console.log(jsondata)
                         if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show()
                             $('#errorMessageText').text(jsondata.messageArray)
@@ -506,6 +507,7 @@
                             lec_select_classHourUnitArray = jsondata.classHourUnitArray;
                             lec_select_stateCodeArray = jsondata.stateCodeArray;
                             lec_select_subjectCodeArray= jsondata.subjectCodeArray;
+                            lec_select_currentClassId = jsondata.currentClassId;
                             if(lec_select_classIdArray.length == 0){
                                 location.href="{% url 'trainer:add_class' %}"
                             }else{
@@ -579,12 +581,19 @@
                 var list_table_to_join = []
                 for(var i=0; i<len; i++){
                   //if(lec_select_npLectureCountsArray[i] == '0'){
+                      if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
+                          var currentClass = 'currentClass'
+                          var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
+                      }else{
+                          var currentClass = ""
+                          var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
+                      }
                       var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
-                      var centerName = '<div class="pters_table_cell table_center_name">'+lec_select_centerNameArray[i]+'</div>'
-                      var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_subjectNameArray[i]+'</div>'
-                      var startDate = '<div class="pters_table_cell table_start_date">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
-                      var status = '<div class="pters_table_cell table_lecture_status">'+lec_select_stateNameArray[i]+'</div>'
-                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a></div>'
+                      var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>'
+                      var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
+                      var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>'
+                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
                       var sum = table + centerName + lectureName + startDate + status + selection +'</div>'
                       list_table_to_join.push(sum)
                 }
