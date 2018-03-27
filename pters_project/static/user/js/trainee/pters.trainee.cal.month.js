@@ -655,32 +655,37 @@ $(document).ready(function(){
 
           success:function(data){
           	var jsondata = JSON.parse(data);
-          	console.log(jsondata)
-          	classTimeArray_start_date = []
-          	classTimeArray_end_date = []
-          	scheduleIdArray = []
-          	scheduleFinishArray = []
-          	scheduleNoteArray = []
-          	classTimeArray_member_name = []
-          	offTimeArray_start_date = []
-          	offTimeArray_end_date = []
-          	classDateArray = []
-          	classStartArray = []
+          	if(jsondata.messageArray.length>0){
+          		$('#errorMessageBar').show()
+                $('#errorMessageText').text(messageArray)
+          	}else{
+				classTimeArray_start_date = []
+	          	classTimeArray_end_date = []
+	          	scheduleIdArray = []
+	          	scheduleFinishArray = []
+	          	scheduleNoteArray = []
+	          	classTimeArray_member_name = []
+	          	offTimeArray_start_date = []
+	          	offTimeArray_end_date = []
+	          	classDateArray = []
+	          	classStartArray = []
+	          	
+
+	            classTimeArray_start_date = jsondata.classTimeArray_start_date
+	            classTimeArray_end_date = jsondata.classTimeArray_end_date
+	            classTimeArray_start_date = jsondata.classTimeArray_start_date
+	          	classTimeArray_end_date = jsondata.classTimeArray_end_date
+	          	scheduleIdArray = jsondata.scheduleIdArray
+	          	scheduleFinishArray = jsondata.scheduleFinishArray
+	          	scheduleNoteArray = jsondata.scheduleNoteArray
+	          	classTimeArray_member_name = jsondata.classTimeArray_member_name
+	          	offTimeArray_start_date = jsondata.offTimeArray_start_date
+	          	offTimeArray_end_date = jsondata.offTimeArray_end_date
+
+	          	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
+	          	classDates()
+          	}
           	
-
-            classTimeArray_start_date = jsondata.classTimeArray_start_date
-            classTimeArray_end_date = jsondata.classTimeArray_end_date
-            classTimeArray_start_date = jsondata.classTimeArray_start_date
-          	classTimeArray_end_date = jsondata.classTimeArray_end_date
-          	scheduleIdArray = jsondata.scheduleIdArray
-          	scheduleFinishArray = jsondata.scheduleFinishArray
-          	scheduleNoteArray = jsondata.scheduleNoteArray
-          	classTimeArray_member_name = jsondata.classTimeArray_member_name
-          	offTimeArray_start_date = jsondata.offTimeArray_start_date
-          	offTimeArray_end_date = jsondata.offTimeArray_end_date
-
-          	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
-          	classDates()
           },
 
           complete:function(){
@@ -706,23 +711,28 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(data)
-                /*팝업의 timegraph 업데이트*/
-                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
-                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
-                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
-                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
-                classDateData = []
-                classTimeData = []
-                offDateData=[]
-                offTimeData = []
-                offAddOkArray = [] //OFF 등록 시작 시간 리스트
-                durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
-                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
-                timeGraphSet("class","grey", "AddClass");  //시간 테이블 채우기
-		        timeGraphSet("off","grey", "AddClass")
-                startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+                if(jsondata.messageArray.length>0){
+	          		$('#errorMessageBar').show()
+	                $('#errorMessageText').text(messageArray)
+	          	}else{
+	          		/*팝업의 timegraph 업데이트*/
+	                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+	                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+	                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+	                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+	                classDateData = []
+	                classTimeData = []
+	                offDateData=[]
+	                offTimeData = []
+	                offAddOkArray = [] //OFF 등록 시작 시간 리스트
+	                durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+	                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
+	                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+	                timeGraphSet("class","grey", "AddClass");  //시간 테이블 채우기
+			        timeGraphSet("off","grey", "AddClass")
+	                startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
+	          	}
+                
               },
 
               complete:function(){

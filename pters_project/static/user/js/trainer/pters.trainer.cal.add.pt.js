@@ -275,29 +275,32 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
-                ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
-                ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
-                ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
-                ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
-                ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
-                ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
-                ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
-                selectedMemberIdArray = jsondata.memberIdArray;
-                selectedMemberAvailCountArray = jsondata.memberAvailCountArray;
-                selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
-                selectedMemberNameArray = jsondata.memberNameArray
-
-                fill_repeat_info('class');
-                $("#countsSelected,.countsSelected").text(selectedMemberAvailCountArray[0]);
-                if(addTypeSelect == "ptadd"){
-                  $("#id_member_id").val(selectedMemberIdArray[0]);
-                  $("#id_lecture_id").val(selectedMemberLectureIdArray[0]);
-                  $("#id_member_name").val(selectedMemberNameArray[0]);
-                }else if(addTypeSelect == "repeatptadd"){
-                  $("#id_repeat_member_id").val(selectedMemberIdArray[0]);
-                  $("#id_repeat_lecture_id").val(selectedMemberLectureIdArray[0]);
-                  $("#id_repeat_member_name").val(selectedMemberNameArray[0]);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                  ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+                  ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+                  ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+                  ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+                  ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+                  ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+                  ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
+                  selectedMemberIdArray = jsondata.memberIdArray;
+                  selectedMemberAvailCountArray = jsondata.memberAvailCountArray;
+                  selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
+                  selectedMemberNameArray = jsondata.memberNameArray
+                  fill_repeat_info('class');
+                  $("#countsSelected,.countsSelected").text(selectedMemberAvailCountArray[0]);
+                  if(addTypeSelect == "ptadd"){
+                    $("#id_member_id").val(selectedMemberIdArray[0]);
+                    $("#id_lecture_id").val(selectedMemberLectureIdArray[0]);
+                    $("#id_member_name").val(selectedMemberNameArray[0]);
+                  }else if(addTypeSelect == "repeatptadd"){
+                    $("#id_repeat_member_id").val(selectedMemberIdArray[0]);
+                    $("#id_repeat_lecture_id").val(selectedMemberLectureIdArray[0]);
+                    $("#id_repeat_member_name").val(selectedMemberNameArray[0]);
+                  }
                 }
               },
 
@@ -306,7 +309,8 @@ $(document).ready(function(){
               },
 
               error:function(){
-                console.log('server error')
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
               }
             })  
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
@@ -493,42 +497,43 @@ $(document).ready(function(){
                     success:function(data){
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
-                        console.log(jsondata)
                         //messageArray = jsondata.messageArray;
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
-                        console.log(RepeatDuplicationDateArray)
-                        if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
-                          var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ")
-                          $('._repeatconfirmQuestion').text('선택한 일정 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.')
-                          var repeat_info = popup_repeat_confirm()
-                          $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
-                          $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
-                          $('#id_repeat_schedule_id_confirm').val(repeatArray)
-                          completeSend(); //ajax 로딩 이미지 숨기기
-                          //$('#shade').show()
-
-                        }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
-                          var repeat_info = popup_repeat_confirm()
-                          var day_info = repeat_info.day_info
-                          var dur_info = repeat_info.dur_info
-                          $('#repeat_confirm_day').text(day_info)
-                          $('#repeat_confirm_dur').text(dur_info)
-                          $('#id_repeat_schedule_id_confirm').val(repeatArray)
-                          completeSend(); //ajax 로딩 이미지 숨기기
-                          //$('#shade').show()
+                        if(jsondata.messageArray.length>0){
+                            $('#errorMessageBar').show();
+                            $('#errorMessageText').text(jsondata.messageArray)
                         }else{
-                          ajax_received_json_data(jsondata)
-                          $('#calendar').show().css('height','100%')
-                          if($('body').width()>=600){
-                              $('#calendar').css('position','relative')
-                          }
-                          closeAddPopup()
-                          closeAddPopup_mini()
-                          completeSend()
-                          $('#shade').hide()
+                            if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
+                              var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ")
+                              $('._repeatconfirmQuestion').text('선택한 일정 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.')
+                              var repeat_info = popup_repeat_confirm()
+                              $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
+                              $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
+                              $('#id_repeat_schedule_id_confirm').val(repeatArray)
+                              completeSend(); //ajax 로딩 이미지 숨기기
+                              //$('#shade').show()
+                            }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
+                              var repeat_info = popup_repeat_confirm()
+                              var day_info = repeat_info.day_info
+                              var dur_info = repeat_info.dur_info
+                              $('#repeat_confirm_day').text(day_info)
+                              $('#repeat_confirm_dur').text(dur_info)
+                              $('#id_repeat_schedule_id_confirm').val(repeatArray)
+                              completeSend(); //ajax 로딩 이미지 숨기기
+                              //$('#shade').show()
+                            }else{
+                              ajax_received_json_data(jsondata)
+                              $('#calendar').show().css('height','100%')
+                              if($('body').width()>=600){
+                                  $('#calendar').css('position','relative')
+                              }
+                              closeAddPopup()
+                              closeAddPopup_mini()
+                              completeSend()
+                              $('#shade').hide()
+                            }
                         }
-
                     },
 
                     //보내기후 팝업창 닫기
@@ -537,7 +542,8 @@ $(document).ready(function(){
 
                     //통신 실패시 처리
                     error:function(){
-                        alert("error : 서버와 통신 실패")
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text('통신 에러: 관리자 문의')
                     },
                  })
 
@@ -586,7 +592,12 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                ajax_received_json_data(jsondata)
+                if(jsondata.messageArray.length>0){
+                  $('#errorMessageBar').show()
+                  $('#errorMessageText').text('통신 에러: 관리자 문의')
+                }else{
+                  ajax_received_json_data(jsondata)
+                }
               },
 
               complete:function(){
@@ -595,7 +606,8 @@ $(document).ready(function(){
               },
 
               error:function(){
-                console.log('server error')
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text('통신 에러: 관리자 문의')
               }
             })    
       }
@@ -611,7 +623,12 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                ajax_received_json_data(jsondata)
+                if(jsondata.messageArray.length>0){
+                  $('#errorMessageBar').show()
+                  $('#errorMessageText').text('통신 에러: 관리자 문의')
+                }else{
+                  ajax_received_json_data(jsondata)
+                }
               },
 
               complete:function(){
@@ -619,7 +636,8 @@ $(document).ready(function(){
               },
 
               error:function(){
-                console.log('server error')
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
               }
             })    
       }
@@ -637,29 +655,36 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                /*팝업의 timegraph 업데이트*/
-                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
-                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
-                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
-                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
-                classDateData = []
-                classTimeData = []
-                offDateData=[]
-                offTimeData = []
-                offAddOkArray = [] //OFF 등록 시작 시간 리스트
-                durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
-                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
-                timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
-                timeGraphSet("off","grey","AddClass")
-                startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
+                if(jsondata.messageArray.length>0){
+                  $('#errorMessageBar').show()
+                  $('#errorMessageText').text('통신 에러: 관리자 문의')
+                }else{
+                  /*팝업의 timegraph 업데이트*/
+                  var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+                  var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+                  var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+                  var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+                  classDateData = []
+                  classTimeData = []
+                  offDateData=[]
+                  offTimeData = []
+                  offAddOkArray = [] //OFF 등록 시작 시간 리스트
+                  durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+                  DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
+                  DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+                  timeGraphSet("class","pink","AddClass");  //시간 테이블 채우기
+                  timeGraphSet("off","grey","AddClass")
+                  startTimeSet("class");  //일정등록 가능한 시작시간 리스트 채우기
+                }
+                
               },
 
               complete:function(){
               },
 
               error:function(){
-                console.log('server error')
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
               }
             }) 
       }

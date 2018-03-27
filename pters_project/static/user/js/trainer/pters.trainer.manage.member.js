@@ -430,9 +430,8 @@ $(document).ready(function(){
 
                 //통신 실패시 처리
                 error:function(){
-                  alert("에러: 서버 통신 실패")
-                  //closeDeletePopup();
-                  //AjaxCompleteSend();
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text('통신 에러: 관리자 문의')
                 },
             })
         }else{
@@ -642,11 +641,9 @@ $(document).ready(function(){
                   ajax_received_json_data(data);
 
                   if(messageArray.length>0){
-                      $('#inputError_info_PC').fadeIn()
-                      setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
-                      $('#errorMsg_info_PC p').text(messageArray)
-                  }
-                  else{
+                        $('#errorMessageBar').show();
+                        $('#errorMessageText').text(messageArray)
+                  }else{
                       DataFormattingDict('ID');
                       DataFormatting('current');
                       DataFormatting('finished');
@@ -660,7 +657,8 @@ $(document).ready(function(){
 
               //통신 실패시 처리
               error:function(){
-                alert("서버 통신 : error")
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
               },
           })
     }
@@ -688,9 +686,8 @@ $(document).ready(function(){
             success:function(data){
                 ajax_received_json_data(data);
                 if(messageArray.length>0){
-                  $('#inputError_info_PC').fadeIn()
-                  setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
-                  $('#errorMsg_info_PC p').text(messageArray)
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(messageArray)
                 }
                 else{
                   DataFormattingDict('ID');
@@ -707,7 +704,8 @@ $(document).ready(function(){
 
             //통신 실패시 처리
             error:function(){
-                alert("서버 통신 : error")
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
             },
         })
     }
@@ -734,9 +732,8 @@ $(document).ready(function(){
             success:function(data){
                 ajax_received_json_data(data);
                 if(messageArray.length>0){
-                  $('#inputError_info_PC').fadeIn()
-                  setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
-                  $('#errorMsg_info_PC p').text(messageArray)
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(messageArray)
                 }
                 else{
                   DataFormattingDict('ID');
@@ -753,7 +750,8 @@ $(document).ready(function(){
 
             //통신 실패시 처리
             error:function(){
-                alert("서버 통신 : error")
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
             },
         })
     }
@@ -783,9 +781,8 @@ $(document).ready(function(){
                     success:function(data){
                         ajax_received_json_data(data);
                         if(messageArray.length>0){
-                          $('#inputError_info_PC').fadeIn()
-                          setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
-                          $('#errorMsg_info_PC p').text(messageArray)
+                            $('#errorMessageBar').show();
+                            $('#errorMessageText').text(messageArray)
                         }
                         else{
                           DataFormattingDict('ID');
@@ -807,7 +804,8 @@ $(document).ready(function(){
 
                     //통신 실패시 처리
                     error:function(){
-                        alert("서버 통신 : error")
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text('통신 에러: 관리자 문의')
                     },
                 })
         }else{
@@ -839,9 +837,8 @@ $(document).ready(function(){
                     success:function(data){
                         ajax_received_json_data(data);
                         if(messageArray.length>0){
-                          $('#inputError_info_PC').fadeIn()
-                          setTimeout(function(){$('#inputError_info_PC').fadeOut()},10000)
-                          $('#errorMsg_info_PC p').text(messageArray)
+                            $('#errorMessageBar').show();
+                            $('#errorMessageText').text(messageArray)
                         }
                         else{
                           DataFormattingDict('ID');
@@ -862,7 +859,8 @@ $(document).ready(function(){
 
                     //통신 실패시 처리
                     error:function(){
-                        alert("서버 통신 : error")
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text('통신 에러: 관리자 문의')
                     },
                 })
     }
@@ -901,12 +899,19 @@ $(document).ready(function(){
             success:function(data){
                 console.log(data)
                 var jsondata = JSON.parse(data);
-                draw_member_lecture_list_table(jsondata,$regHistory)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                   draw_member_lecture_list_table(jsondata,$regHistory) 
+                }
+                
             },
 
             //통신 실패시 처리
             error:function(){
-                alert("서버 통신 : error")
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
             },
         })
     }
@@ -1385,9 +1390,8 @@ $(document).ready(function(){
                 var jsondata = JSON.parse(data);
                 console.log(jsondata)
                 if(jsondata.messageArray.length>0){
-                  $('#inputError').fadeIn()
-                  setTimeout(function(){$('#inputError').fadeOut()},10000)
-                  $('#errorMsg p').text('검색된 아이디가 없습니다')
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray)
                 }else{
                   id_search_memberLastName = jsondata.lastnameInfo;
                   id_search_memberFirstName = jsondata.firstnameInfo;
@@ -1406,9 +1410,8 @@ $(document).ready(function(){
 
             //통신 실패시 처리
             error:function(){
-                $('#inputError').fadeIn()
-                setTimeout(function(){$('#inputError').fadeOut()},10000)
-                $('#errorMsg p').text('아이디를 입력해주세요')
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('아이디를 입력해주세요')
             },
         })
     })
@@ -1882,17 +1885,17 @@ $(document).ready(function(){
                             $('html').css("cursor","auto")
                             $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                             scrollToIndicator($('#page_addmember'))
-                            $('#inputError').fadeIn()
-                            setTimeout(function(){$('#inputError').fadeOut()},10000)
-                            $('#errorMsg p').text(messageArray)
-                        }else {
+                            $('#errorMessageBar').show()
+                            $('#errorMessageText').text(messageArray)
+                        }else{
                             add_member_form_func();
                         }
                     },
 
                     //통신 실패시 처리
                     error:function(){
-                      alert("error")
+                      $('#errorMessageBar').show()
+                      $('#errorMessageText').text('통신 에러: 관리자 문의')
                     },
                 })
             }
@@ -1901,9 +1904,8 @@ $(document).ready(function(){
             }
         }else{
             scrollToIndicator($('#page_addmember'))
-            $('#inputError').fadeIn()
-            setTimeout(function(){$('#inputError').fadeOut()},10000)
-            $('#errorMsg p').text('모든 필수 정보를 입력해주세요')
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('모든 필수 정보를 입력해주세요')
             //입력값 확인 메시지 출력 가능
         }
     })
@@ -1935,9 +1937,8 @@ $(document).ready(function(){
                     $('html').css("cursor","auto")
                     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                     scrollToIndicator($('#page_addmember'))
-                    $('#inputError').fadeIn()
-                    setTimeout(function(){$('#inputError').fadeOut()},10000)
-                    $('#errorMsg p').text(messageArray)
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(messageArray)
                 }else{
                     closePopup()
                     if($('body').width()<600){
@@ -1958,7 +1959,8 @@ $(document).ready(function(){
 
             //통신 실패시 처리
             error:function(){
-                alert("error")
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
             },
          })
     }
@@ -2011,10 +2013,8 @@ $(document).ready(function(){
                             $('html').css("cursor","auto")
                             $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
                             scrollToIndicator($('#page_addmember'))
-                            $('#inputError_info').fadeIn()
-                            setTimeout(function(){$('#inputError_info').fadeOut()},10000)
-                            $('#errorMsg_info p').text(messageArray)
-
+                            $('#errorMessageBar').show();
+                            $('#errorMessageText').text(messageArray)
                         }
                         else{
                             closePopup()
@@ -2037,15 +2037,15 @@ $(document).ready(function(){
 
                     //통신 실패시 처리
                     error:function(){
-                        alert("error")
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text('통신 에러: 관리자 문의')
                     },
               })
             
             }else{
                 scrollToIndicator($('#memberInfoPopup'))
-                $('#inputError_info').fadeIn()
-                setTimeout(function(){$('#inputError_info').fadeOut()},10000)
-                $('#errorMsg_info p').text('모든 필수 정보를 입력해주세요')
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('모든 필수 정보를 입력해주세요')
                 //입력값 확인 메시지 출력 가능
             }
         }      
@@ -2071,10 +2071,8 @@ $(document).ready(function(){
                     $('html').css("cursor","auto")
                     $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
                     scrollToIndicator($('#page_addmember'))
-                    $('#inputError_info').fadeIn()
-                    setTimeout(function(){$('#inputError_info').fadeOut()},10000)
-                    $('#errorMsg_info p').text(messageArray)
-                    console.log('ajax delete')
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(messageArray)
                 }
                 else{
                     closePopup()
@@ -2130,7 +2128,8 @@ $(document).ready(function(){
             },
 
             error:function(){
-                console.log('server error')
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
             }
         })
     }
@@ -2349,7 +2348,8 @@ $(document).ready(function(){
                   },
 
                   error:function(){
-                    console.log('server error')
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text('통신 에러: 관리자 문의')
                   }
             })
     }

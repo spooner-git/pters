@@ -15,6 +15,30 @@ a:focus, a:hover{
     color: grey;
 }
 
+#errorMessageBar{
+    display: none;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    left: 0;
+    height: 35px;
+    text-align: center;
+    background: red;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    z-index: 1500;
+}   
+    #errorMessageBar span{
+        line-height: 35px;
+    }
+    #errorMessageBar span:nth-child(2){
+        position: absolute;
+        right: 0;
+        margin-right: 85px;
+        cursor: pointer;
+    }
+
 
 .wrap{
     width: 100%;

@@ -29,6 +29,11 @@
     </div>
     <div id="shade2">
     </div>
+
+    <div id="errorMessageBar">
+        <span id="errorMessageText"></span><span>닫기</span>
+    </div>
+
     <nav class="navbar navbar-fixed-top navbar-default wrap">
         <div class="">
             <div class="navbar-header">
@@ -136,6 +141,10 @@
     <script type="text/javascript" src={% static "common/js/swiper.jquery.min.js" %}></script>
     <script>
 
+            $('#errorMessageBar span:nth-child(2)').click(function(){
+                $('#errorMessageBar').fadeOut()
+            })
+
             ///********************* 회원 월간 달력 옵션*************************************///
             ///********************* 회원 월간 달력 옵션*************************************///
             
@@ -218,19 +227,24 @@
                       },
 
                       success:function(data){
-                        console.log(data)
                         var jsondata = JSON.parse(data);
-                        lec_select_regCountArray = jsondata.regCountArray;
-                        lec_select_countArray = jsondata.countArray;
-                        lec_select_startArray = jsondata.startArray;
-                        lec_select_endArray = jsondata.endArray;
-                        lec_select_lectureIdArray = jsondata.lectureIdArray;
-                        lec_select_trainerNameArray = jsondata.trainerNameArray;
-                        lec_select_availCountArray = jsondata.availCountArray;
-                        lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
-                        lec_select_classInfoArray = jsondata.classInfoArray;
-                        lec_select_classIdArray = jsondata.classIdArray;
-                        fill_lecture_select_popup()
+                        if(jsondata.messageArray.length>0){
+                            $('#errorMessageBar').show()
+                            $('#errorMessageText').text(messageArray)
+                        }else{
+                            lec_select_regCountArray = jsondata.regCountArray;
+                            lec_select_countArray = jsondata.countArray;
+                            lec_select_startArray = jsondata.startArray;
+                            lec_select_endArray = jsondata.endArray;
+                            lec_select_lectureIdArray = jsondata.lectureIdArray;
+                            lec_select_trainerNameArray = jsondata.trainerNameArray;
+                            lec_select_availCountArray = jsondata.availCountArray;
+                            lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
+                            lec_select_classInfoArray = jsondata.classInfoArray;
+                            lec_select_classIdArray = jsondata.classIdArray;
+                            fill_lecture_select_popup()
+                        }
+                        
                       },
 
                       complete:function(){
@@ -238,7 +252,8 @@
                       },
 
                       error:function(){
-                        console.log('server error')
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text('통신 에러: 관리자 문의')
                       }
                     })
             }
@@ -255,22 +270,24 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
-                        console.log(jsondata)
-                        
-                        lec_select_regCountArray = jsondata.countArray;
-                        lec_select_startArray = jsondata.startArray;
-                        lec_select_endArray = jsondata.endArray;
-                        lec_select_lectureIdArray = jsondata.lectureIdArray;
-                        lec_select_trainerNameArray = jsondata.trainerNameArray;
-                        lec_select_availCountArray = jsondata.availCountArray;
-                        lec_select_stateArray = jsondata.memberViewStateArray;
-                        lec_select_lectureCountsArray = jsondata.lectureCountsArray;
-                        //lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
-                        lec_select_classInfoArray = jsondata.classInfoArray;
-                        lec_select_classIdArray = jsondata.classIdArray;
-                        
-                        fill_lecture_connect_select_popup(classid)
-                        
+                        if(jsondata.messageArray.length>0){
+                            $('#errorMessageBar').show()
+                            $('#errorMessageText').text(messageArray)
+                        }else{
+                            lec_select_regCountArray = jsondata.countArray;
+                            lec_select_startArray = jsondata.startArray;
+                            lec_select_endArray = jsondata.endArray;
+                            lec_select_lectureIdArray = jsondata.lectureIdArray;
+                            lec_select_trainerNameArray = jsondata.trainerNameArray;
+                            lec_select_availCountArray = jsondata.availCountArray;
+                            lec_select_stateArray = jsondata.memberViewStateArray;
+                            lec_select_lectureCountsArray = jsondata.lectureCountsArray;
+                            //lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
+                            lec_select_classInfoArray = jsondata.classInfoArray;
+                            lec_select_classIdArray = jsondata.classIdArray;
+                            
+                            fill_lecture_connect_select_popup(classid)
+                        }
                       },
 
                       complete:function(){
@@ -278,7 +295,8 @@
                       },
 
                       error:function(){
-                        console.log('server error')
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text('통신 에러: 관리자 문의')
                       }
                     })
             }
