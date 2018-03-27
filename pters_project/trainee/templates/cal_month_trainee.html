@@ -1,10 +1,10 @@
 {% extends "trainee_base.html" %}
-{% load static %}
+{% load static_url %}
 
 {% block local_css %}
 
-        <link rel="stylesheet" href={% static "user/css/trainee/pters.trainee.month.cal.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.month.cal.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
 {% endblock %}
 
 {% block content %}
@@ -27,7 +27,7 @@
 
   <!--플로팅 버튼-->
     <div id="float_btn">
-      <img src={% static "user/res/floatbtn/btn-plus.png" %} alt=""  onclick="location.href='{% url 'trainee:add_pt' %}'"> <!--2017.10.2-->
+      <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt=""  onclick="location.href='{% url 'trainee:add_pt' %}'"> <!--2017.10.2-->
     </div>
 
   <!--플로팅 버튼-->
@@ -143,7 +143,7 @@
         </div>
 
         <div id="offStartTime" class="ptaddbox_nomargin addpopupinner" style="position:relative;">
-          <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+          <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
           <div id="starttimesSelected" class="dropdown_trainee_popup dropdown">
             <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
             <ul id="starttimes" class="dropdown-menu pters_dropdown_custom" style="max-height: 194px;">
@@ -153,7 +153,7 @@
         </div>
 
         <div id="offDuration" class="ptaddbox_nomargin addpopupinner" style="margin-bottom:40px;display:none">
-          <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+          <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
           <div id="durationsSelected" class="dropdown">
             <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
             <ul id="durations" class="dropdown-menu pters_dropdown_custom" style="max-height: 103px;">
@@ -167,8 +167,8 @@
   <!-- 월간 달력 -->
     <div id="ymdText">
         <div class='arrowButton'>
-         <a style="left: 6%;cursor: pointer;"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
-         <a style="right: 6%;cursor: pointer;"><img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+         <a style="left: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+         <a style="right: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
         </div>
         <div id="ymdTextWrap">
              <div id="countRemain"><div style="position: absolute;width: 100%;height: 100%;background: #ffffff;opacity: 0.16;"></div>
@@ -267,7 +267,7 @@
         </script>
 
         <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/javascript" src={% static "user/js/trainee/pters.trainee.cal.month.js" %}></script> <!--달력에 대한 JS-->
+        <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.cal.month.js" %}></script> <!--달력에 대한 JS-->
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 1,

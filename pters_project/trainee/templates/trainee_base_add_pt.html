@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        {% load static %}
+        {% load static_url %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -12,12 +12,12 @@
         <title>{% block title %}PTers-Trainer Mode {% endblock %}</title>
 
         <!-- Bootstrap core CSS -->
-        <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
+        <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
         <link rel="icon" href="/static/common/favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
-        <link rel="stylesheet" href={% static "user/css/pters.base.set.css" %}>
-        <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
+        <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
 
         {% block local_css %}
         {% endblock %}
@@ -31,13 +31,13 @@
             <div class="">
                 <div class="navbar-header">
                     <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="javascript:history.back()">
-                        <img src={% static "user/res/ptadd/btn-x.png" %} style="width:90%;">
+                        <img src={% static_url "user/res/ptadd/btn-x.png" %} style="width:90%;">
                     </button>
                     {% block nav_center_img %}
                         <a id="uptext" class="uptext navbar-brand">회원님 PT 일정등록</a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
-                        <img src={% static "user/res/ptadd/btn-complete.png" %} style="width:100%;">
+                        <img src={% static_url "user/res/ptadd/btn-complete.png" %} style="width:100%;">
                     </button>
                 </div>
             </div><!-- /.container -->
@@ -72,10 +72,10 @@
     {% endblock %}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src={% static "common/js/bootstrap.min.js" %}></script>
-    <script type="text/javascript" src={% static "common/js/jquery.swipe.js" %}></script>
-    <script type="text/javascript" src={% static "common/js/jquery.touch.js" %}></script>
-    <script type="text/javascript" src={% static "common/js/swiper.jquery.min.js" %}></script>
+    <script src={% static_url "common/js/bootstrap.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
     <script>
         ///********************* 회원 월간 달력 옵션*************************************///
             ///********************* 회원 월간 달력 옵션*************************************///
@@ -90,7 +90,7 @@
             ///********************* 회원 월간 달력 옵션*************************************///
             ///********************* 회원 월간 달력 옵션*************************************///
     </script>
-     <script type="text/javascript" src={% static "user/js/pters.base.set.js" %}></script>
+     <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
     {% block local_js_footer %}
     {% endblock %}
 

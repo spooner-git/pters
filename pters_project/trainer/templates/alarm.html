@@ -1,8 +1,8 @@
 {% extends "trainer_base_alarm.html" %}
-{% load static %}
+{% load static_url %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.alarm.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.alarm.css" %}>
 {% endblock %}
 
 
@@ -86,7 +86,7 @@
     <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.alarm.js" %}></script>
+        <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.alarm.js" %}></script>
 
     <script>
       var logIdArray = [{% for log_info in log_data %}"{{ log_data.log_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}];

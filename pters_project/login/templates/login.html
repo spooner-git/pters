@@ -17,7 +17,7 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
     <!-- End Google Tag Manager -->
-{% load static %}
+{% load static_url %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -25,8 +25,8 @@
 {% block local_css %}
 
     <meta name="login" content="trainer_login">
-    <link rel="stylesheet" href={% static "user/css/login/pters.trainer.login.css" %}>
-    <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
+    <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
+    <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
     <link rel="icon" href="/static/common/favicon.ico">
     <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
     <link rel="shortcut icon" href="/static/common/favicon-152.png">
@@ -56,11 +56,11 @@
             <form action="{% url 'login:login' %}" id="login-form" method="post">
                 {% csrf_token %}
                 <div id="idinput">
-                    <img src={% static "user/res/login/icon-user.png" %} id="idimg">
+                    <img src={% static_url "user/res/login/icon-user.png" %} id="idimg">
                     <input type="text" class="loginboxstyle form-control" name="username" placeholder="아이디" autofocus>
                 </div>
                 <div id="pwinput" style="margin-top:5%;">
-                    <img src={% static "user/res/login/icon-lock.png" %} id="pwimg">
+                    <img src={% static_url "user/res/login/icon-lock.png" %} id="pwimg">
                     <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
                 </div>
                 <div class="checkbox" style="margin-top:15px;margin-left:27px;">
@@ -118,7 +118,7 @@
 
 {% block local_js_footer %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script type="text/javascript" src={% static "user/js/login/pters.trainer.login.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
 <script>
     function goPage(option){
         if(option == 0){
