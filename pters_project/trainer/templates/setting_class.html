@@ -65,7 +65,7 @@
 
               $(document).on('click','._icon_del',function(){
                   var class_id = $(this).parent('div').attr('data-classid')
-                  if(class_id!= lec_select_classIdArray[0]){
+                  if(class_id != lec_select_currentClassId[0]){
                     $('#cal_popup_plandelete').fadeIn('fast')
                     $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
                     $('#shade').show()
