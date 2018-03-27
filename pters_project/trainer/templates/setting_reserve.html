@@ -200,9 +200,6 @@
                 <li><a data-time="72">3일 전</a></li>
               </ul>
         </div>
-        <div class="dropdown pters_dropdown_setting_custom">
-              예약 금지
-        </div>
     </div> 
 </div>
 
@@ -235,7 +232,7 @@
           $('#id_setting_member_reserve_time_prohibition').val(Options.limit)
           $('#id_setting_member_reserve_prohibition').val(Options.reserve)
 
-         
+          $('#id_setting_member_reserve_time_prohibition').val(Options.limit)
           if(Options.limit>0){ //근접시간 예약 금지 설정
             $('#switch1').find('.switchball').removeClass('switchoff').addClass('switchon')
             $('#switch1').find('.switchback').addClass('switchon-back')
@@ -246,7 +243,7 @@
             $('#switch1').find('.switchback').removeClass('switchon-back')
           }
 
-
+          $('#id_setting_member_reserve_prohibition').val(Options.reserve)
           if(Options.reserve==1){ //회원 예약 일시 정지
             $('#switch2').find('.switchball').removeClass('switchoff').addClass('switchon')
             $('#switch2').find('.switchback').addClass('switchon-back')
@@ -260,6 +257,7 @@
           
 
           /*업무 시간 설정 DB저장값으로 초기셋팅*/
+          $('#id_setting_trainer_work_time').val(worktime)
           if(Options.workStartTime>12){
             var worktimestart = Number(Options.workStartTime)-12
             $("#workTimehourSelect button").addClass("dropdown_selected").text('오후'+worktimestart+"시").val(Options.workStartTime);
@@ -278,6 +276,7 @@
           /*업무 시간 설정 DB저장값으로 초기셋팅*/
 
           /*회원 예약 허용 시간대 설정 DB저장값으로 초기셋팅*/
+          $('#id_setting_member_available_time').val(stoptime)
           if(Options.stoptimeStart>12){
             var stoptimestart = Number(Options.stoptimeStart)-12
             $("#hourSelect button").addClass("dropdown_selected").text('오후'+stoptimestart+"시").val(Options.stoptimeStart);
@@ -429,7 +428,8 @@
             var reservedisable =  $('#id_setting_member_reserve_prohibition').val()
             var workTime = $('#id_setting_trainer_work_time').val()
             console.log(availableTime, limit, reservedisable)
-            console.log(stoptime, Options.limit, Options.reserve)
+            console.log(worktime, stoptime, Options.limit, Options.reserve)
+            console.log($('#id_setting_trainer_work_time').val(),'asefasef')
             if(availableTime == stoptime && limit == Options.limit && reservedisable == Options.reserve && workTime == worktime){
               $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
               select_all_check=false;
