@@ -552,8 +552,6 @@ def delete_schedule_logic(request):
 def finish_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     member_name = request.POST.get('member_name')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
     #imgUpload = request.POST.get('upload')
     class_id = request.session.get('class_id','')
     next_page = request.POST.get('next_page')
@@ -567,8 +565,6 @@ def finish_schedule_logic(request):
     error = None
     schedule_info = None
     lecture_info = None
-    request.session['date'] = date
-    request.session['day'] = day
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
