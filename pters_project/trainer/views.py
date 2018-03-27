@@ -73,9 +73,10 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainerMainView, self).get_context_data(**kwargs)
-        for folder in settings.STATICFILES_DIRS:
-            print(str(folder))
+        # for folder in settings.STATICFILES_DIRS:
+        #     print(str(folder))
         class_id = self.request.session.get('class_id', '')
+        # print(class_id)
         error = None
         # class_info = None
         today = datetime.date.today()
@@ -109,13 +110,13 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             all_member = MemberTb.objects.filter(use=1).order_by('name')
 
             for member_info in all_member:
-                member_data = member_info
+                # member_data = member_info
 
                 member_lecture_reg_count = 0
                 member_lecture_rem_count = 0
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_data.member_id,
+                lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_info.member_id,
                                                         lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
                 if len(lecture_list) > 0:
                     total_member_num += 1
@@ -133,7 +134,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
                     if 0 < member_lecture_rem_count < 4:
                         to_be_end_member_num += 1
-                        break
+                        # break
 
         if error is None :
             #남은 횟수 1개 이상인 경우 - 180314 hk.kim
