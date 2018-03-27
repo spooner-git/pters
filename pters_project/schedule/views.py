@@ -655,10 +655,10 @@ def add_repeat_schedule_logic(request):
     repeat_week_type = request.POST.get('repeat_day', '')
     repeat_schedule_time = request.POST.get('repeat_start_time')
     repeat_schedule_time_duration = request.POST.get('repeat_dur')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
+    # date = request.POST.get('date', '')
+    # day = request.POST.get('day', '')
     en_dis_type = request.POST.get('en_dis_type', '')
-    class_id = request.session.get('class_id','')
+    class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -670,8 +670,8 @@ def add_repeat_schedule_logic(request):
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
     repeat_schedule_info = None
-    request.session['date'] = date
-    request.session['day'] = day
+    # request.session['date'] = date
+    # request.session['day'] = day
 
     week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
 
@@ -811,8 +811,9 @@ def add_repeat_schedule_logic(request):
                         error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
                                                         schedule_end_datetime, request.user.id,
                                                         lecture_id, '', en_dis_type,
-                                                        repeat_schedule_info.repeat_schedule_id)
+                                                        repeat_schedule_info.repeat_schedule_id, class_id)
                         '''
+
                         # 1시간 단위 날짜 값 셋팅
                         for input_datetime in input_datetime_list:
                             lecture_id = get_member_schedule_input_lecture(class_info.class_id, member_id)
