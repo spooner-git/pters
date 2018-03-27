@@ -1,5 +1,6 @@
 import datetime
 
+import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -26,6 +27,8 @@ from trainer.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
 
 from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
@@ -131,6 +134,7 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 lecture_info.trainer_info = trainer_info
 
         if error is not None:
+            logger.error(error)
             messages.error(self.request, error)
 
         context['lecture_data'] = lecture_data
@@ -168,6 +172,7 @@ class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVi
         context['error'] = None
         context = get_lecture_list_by_member_id(context, self.request.user.id)
         if context['error'] is not None:
+            logger.error(context['error'])
             messages.error(self.request, context['error'])
 
         return context
@@ -185,6 +190,7 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         context = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
 
         if context['error'] is not None:
+            logger.error(context['error'])
             messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
@@ -197,6 +203,7 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         context = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
 
         if context['error'] is not None:
+            logger.error(context['error'])
             messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
@@ -377,6 +384,7 @@ def lecture_processing(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
     return redirect(next_page)
 
@@ -676,6 +684,7 @@ def pt_delete_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         next_page = 'trainee:cal_month'
         return redirect(next_page)
@@ -783,6 +792,7 @@ def pt_add_logic(request):
         class_info.save()
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -819,6 +829,7 @@ def pt_add_array_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -1081,6 +1092,7 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
                                                              self.request.user.last_name+self.request.user.first_name, class_id, start_date,
                                                              end_date)
         if context['error'] is not None:
+            logger.error(context['error'])
             messages.error(self.request, context['error'])
         # context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
@@ -1105,6 +1117,7 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
                                                              self.request.user.last_name+self.request.user.first_name, class_id, start_date,
                                                              end_date)
         if context['error'] is not None:
+            logger.error(context['error'])
             messages.error(self.request, context['error'])
         # context = get_trainee_schedule_data_func(context, self.request.user.id, lecture_id, start_date, end_date)
 
@@ -1494,6 +1507,7 @@ def delete_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)

@@ -1,3 +1,4 @@
+import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -9,6 +10,8 @@ from center.models import CenterTb, CenterTrainerTb
 from configs.views import AccessTestMixin
 from login.models import CommonCdTb
 from trainer.models import ClassTb
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
@@ -58,6 +61,7 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['class_data'] = class_data
 
         if error is not None:
+            logger.error(error)
             messages.error(self.request, error)
 
         return context
@@ -80,6 +84,7 @@ class GetTrainerDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['member_data'] = member_data
 
         if error is not None:
+            logger.error(error)
             messages.error(self.request, error)
 
         return context

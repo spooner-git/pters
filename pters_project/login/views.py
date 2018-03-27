@@ -1,5 +1,6 @@
 import datetime
 
+import logging
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
@@ -30,6 +31,8 @@ from configs import settings
 from login.forms import MyPasswordResetForm
 from login.models import MemberTb
 from trainer.models import ClassTb
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(TemplateView):
@@ -196,6 +199,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
                 error = 'ID가 존재하지 않습니다.'
 
         if error is not None:
+            logger.error(error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -267,6 +271,7 @@ class ResetPasswordView(View):
 
             return render(request, self.template_name, context)
         else:
+            logger.error(error)
             messages.error(request, error)
             return render(request, self.template_name)
 
@@ -310,13 +315,13 @@ def add_member_info_logic_test(request):
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
                                       birthday_dt=birthday_dt,user_id=user.id, use=1)
                 member.save()
-                if group_type == 'trainer':
-                    class_info = ClassTb(member_id=user.id, class_type_cd='PT',
-                                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
-                                         class_hour=1, start_hour_unit=1, class_member_num=100,
-                                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                # if group_type == 'trainer':
+                #     class_info = ClassTb(member_id=user.id, class_type_cd='PT',
+                #                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
+                #                         class_hour=1, start_hour_unit=1, class_member_num=100,
+                #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
-                    class_info.save()
+                #    class_info.save()
 
         except ValueError as e:
             error = '이미 가입된 회원입니다.'
@@ -330,9 +335,11 @@ def add_member_info_logic_test(request):
             error = '이미 가입된 회원입니다.'
 
     if error is None:
+        logger.info(member.name+' 회원 가입 완료')
         messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -411,6 +418,7 @@ class AddMemberView(RegistrationView, View):
                                 error += err
 
         if error is not None:
+            logger.error(error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -477,6 +485,7 @@ class AddMemberNoEmailView(View):
                 error = '이미 가입된 회원입니다.'
 
         if error is not None:
+            logger.error(error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -588,6 +597,7 @@ def out_member_logic(request):
     if error is None:
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)

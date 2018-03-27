@@ -34,6 +34,7 @@ from trainer.models import ClassTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
 logger = logging.getLogger(__name__)
+# logging.basicConfig(level=logging.DEBUG)
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
@@ -137,9 +138,9 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                         # break
 
         if error is None :
-            #남은 횟수 1개 이상인 경우 - 180314 hk.kim
+            # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
             context['total_member_num'] = total_member_num
-            #남은 횟수 1개 이상 3개 미만인 경우 - 180314 hk.kim
+            # 남은 횟수 1개 이상 3개 미만인 경우 - 180314 hk.kim
             context['to_be_end_member_num'] = to_be_end_member_num
             context['np_member_num'] = np_member_num
             context['new_member_num'] = new_member_num
@@ -148,7 +149,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                            start_dt__gte=today, start_dt__lt=one_day_after,
                                                            en_dis_type='1').count()
-            #new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+            # new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
             #                                          start_date__gte=month_first_day,
             #                                          start_date__lt=next_month_first_day, use=1).count()
 
@@ -171,9 +172,10 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
         if error is not None:
-                messages.error(self.request, error)
-        # else:
-            # logger.error(class_info.member.name+'['+str(class_info.class_id)+'] : login success')
+            logger.error(error)
+            messages.error(self.request, error)
+        else:
+            logger.info(self.request.user.last_name+self.request.user.first_name+'['+str(self.request.user.id)+'] : login success')
 
         return context
 
@@ -858,6 +860,7 @@ def add_member_info_logic(request):
         log_data.save()
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -987,6 +990,7 @@ def add_member_info_logic_test(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1087,6 +1091,7 @@ def update_member_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1177,6 +1182,7 @@ def delete_member_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1220,6 +1226,7 @@ def resend_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1269,6 +1276,7 @@ def delete_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1317,6 +1325,7 @@ def refund_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1363,6 +1372,7 @@ def update_member_lecture_view_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1424,6 +1434,7 @@ def refund_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1499,6 +1510,7 @@ def update_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1546,7 +1558,9 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 error = '회원 ID를 확인해 주세요.'
 
         context['member_info'] = member
-        messages.error(request, error)
+        if error is not None:
+            logger.error(error)
+            messages.error(request, error)
 
         return render(request, self.template_name, context)
 
@@ -1575,6 +1589,7 @@ def alarm_delete_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -1690,6 +1705,7 @@ def update_setting_push_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1785,6 +1801,7 @@ def update_setting_reserve_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1929,6 +1946,7 @@ def update_setting_sales_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1982,6 +2000,7 @@ def update_setting_language_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -2089,6 +2108,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         context = get_lecture_list_by_class_member_id(context, class_id, member_id)
 
         if context['error'] is not None:
+            logger.error(context['error'])
             messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
@@ -2101,6 +2121,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
 
         context = get_lecture_list_by_class_member_id(context, class_id, member_id)
         if context['error'] is not None:
+            logger.error(context['error'])
             messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
@@ -2243,6 +2264,7 @@ def class_processing_logic(request):
     if error is None:
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
     return redirect(next_page)
 
@@ -2278,6 +2300,7 @@ def delete_class_info_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -2322,6 +2345,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data.save()
 
         if error is not None:
+            logger.error(error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -2398,6 +2422,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data.save()
 
         if error is not None:
+            logger.error(error)
             messages.error(request, error)
 
         return render(request, self.template_name)

@@ -3,6 +3,8 @@ import datetime
 import boto3
 import botocore
 import base64
+
+import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -28,6 +30,8 @@ from trainee.models import LectureTb
 from trainer.models import ClassTb
 
 from django.core.files.base import ContentFile
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(TemplateView):
@@ -485,6 +489,7 @@ def add_schedule_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -541,6 +546,7 @@ def delete_schedule_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -633,6 +639,7 @@ def finish_schedule_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -831,8 +838,10 @@ def add_repeat_schedule_logic(request):
                     error = error
 
                 if error == '예약 가능한 횟수를 확인해주세요.' or error == '날짜가 중복됐습니다.' or error == '등록 값에 문제가 있습니다.':
+                    logger.error(error)
                     messages.error(request, error)
                 elif error == '등록 값의 형태에 문제가 있습니다.' or error == '회원 수강 정보를 불러오지 못했습니다.' or error == '강사 정보를 불러오지 못했습니다.':
+                    logger.error(error)
                     messages.error(request, error)
                 elif error is not None:
                     if error_date_message is None:
@@ -841,6 +850,7 @@ def add_repeat_schedule_logic(request):
                         error_date_message = error_date_message + '/' + error
 
             else:
+                logger.error(error)
                 messages.error(request, error)
 
             error = None
@@ -854,6 +864,7 @@ def add_repeat_schedule_logic(request):
                     check_date = check_date + datetime.timedelta(days=7)
 
     if error_date_message is not None:
+        # logger.info(error_date_message)
         messages.info(request, error_date_message)
 
     return redirect(next_page)
@@ -967,6 +978,7 @@ def add_repeat_schedule_confirm(request):
             messages.info(request, information)
             return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -1071,6 +1083,7 @@ def delete_repeat_schedule_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -1109,6 +1122,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
         # print(error)
         context['data_changed'] = update_check
         if error is not None:
+            logger.error(error)
             messages.error(self.request, error)
 
         return context
@@ -1300,5 +1314,6 @@ def update_memo_schedule_logic(request):
 
         return redirect(next_page)
     else:
+        logger.error(error)
         messages.error(request, error)
         return redirect(next_page)

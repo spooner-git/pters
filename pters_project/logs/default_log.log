@@ -1,0 +1,7 @@
+[27/Mar/2018 17:50:24] INFO [trainer.views:177] 김현기[2] : login success
+[27/Mar/2018 17:50:24] DEBUG [trainer.views:178] 김현기[2] : login success
+[27/Mar/2018 17:50:24] ERROR [trainer.views:179] 김현기[2] : login success
+[27/Mar/2018 17:50:24] INFO [django.server:131] "GET /trainer/trainer_main/ HTTP/1.1" 200 34882
+[27/Mar/2018 17:50:24] INFO [django.server:131] "GET /trainer/trainer_main/ HTTP/1.1" 200 34882
+[27/Mar/2018 17:50:24] INFO [django.server:131] "GET /static/user/res/spooner_b.png HTTP/1.1" 200 5867
+[27/Mar/2018 17:50:24] INFO [django.server:131] "GET /static/user/res/spooner_b.png HTTP/1.1" 200 5867

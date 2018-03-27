@@ -173,3 +173,99 @@ AWS_S3_OBJECT_PARAMETERS = {
 
 # db data upload size
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+
+
+LOG_FILE = os.path.join(os.path.dirname(__file__), '..', 'logs/default_log.log')
+LOG_FILE_LOGIN = os.path.join(os.path.dirname(__file__), '..', 'logs/login_log.log')
+LOG_FILE_SCHEDULE = os.path.join(os.path.dirname(__file__), '..', 'logs/schedule_log.log')
+LOG_FILE_TRAINEE = os.path.join(os.path.dirname(__file__), '..', 'logs/trainee_log.log')
+LOG_FILE_TRAINER = os.path.join(os.path.dirname(__file__), '..', 'logs/trainer_log.log')
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'default': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_FILE,
+            'maxBytes': 1024*1024*5, # 5 MB
+            'formatter': 'verbose',
+            'backupCount': 5,
+        },
+        'login_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE_LOGIN,
+            'maxBytes': 1024*1024*10,
+            'backupCount': 5,
+        },
+        'trainer_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE_TRAINER,
+            'maxBytes': 1024*1024*10,
+            'backupCount': 5,
+        },
+        'trainee_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE_TRAINEE,
+            'maxBytes': 1024*1024*10,
+            'backupCount': 5,
+        },
+        'schedule_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE_TRAINEE,
+            'maxBytes': 1024*1024*10,
+            'backupCount': 5,
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['default'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+        'django': {
+            'handlers': ['default'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['default'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        'login': {
+            'handlers': ['login_file'],
+            'level': 'DEBUG',
+        },
+        'trainer': {
+            'handlers': ['trainer_file'],
+            'level': 'DEBUG',
+        },
+        'trainee': {
+            'handlers': ['trainee_file'],
+            'level': 'DEBUG',
+        },
+        'schedule': {
+            'handlers': ['schedule_file'],
+            'level': 'DEBUG',
+        },
+    }
+}
+
