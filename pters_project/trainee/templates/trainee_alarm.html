@@ -2,11 +2,11 @@
 <div class="endless_page_template">
 {% include page_template %}
 </div>
-{% load static %}
+{% load static_url %}
 
 {% block js %}
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="{% static "common/js/el-pagination.js" %}"></script>
+    <script src="{% static_url "common/js/el-pagination.js" %}"></script>
     <script>
 
         $.endlessPaginate({

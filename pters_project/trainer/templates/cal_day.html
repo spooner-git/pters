@@ -1,10 +1,10 @@
 {% extends "trainer_base.html" %}
-{% load static %}
+{% load static_url %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.day.cal.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.day.cal.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
         <meta name="description" content="daycal">
 {% endblock %}
 
@@ -55,7 +55,7 @@
   <!--플로팅 버튼-->
   <div id="float_btn_wrap">
     <div id="float_btn">
-      <img src={% static "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
+      <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
     </div>
     <div id="float_inner1" class="float_inner">
     <a class="KRtext">PT<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
@@ -72,20 +72,20 @@
 
   <!--PC버전 Arrow-->
     <div class="arrowButtonPC">
-        <a id="leftarrowPC" style="left: 10%"><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 12px;left: 0;"><span>이전 날</span></a>
-        <a id="rightarrowPC" style="right: 10%"><span>다음 날</span><img src={% static "user/res/icon-setting-arrow.png" %} alt="" style="width: 12px;right: 0;"></a>
+        <a id="leftarrowPC" style="left: 10%"><img src={% static_url "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 12px;left: 0;"><span>이전 날</span></a>
+        <a id="rightarrowPC" style="right: 10%"><span>다음 날</span><img src={% static_url "user/res/icon-setting-arrow.png" %} alt="" style="width: 12px;right: 0;"></a>
     </div>
     
      <div id="ymdText" class="wrapunlimit" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
             <div class='arrowButton'>
               <a href="" style="left: 4%">
-                <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
-                <img src={% static "user/res/daycal_arrow.png" %} alt="" style="width: 7px;">
+                <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
+                <img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="width: 7px;">
                 <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible">Today</span>
               </a>
               <a href="" style="right: 4%">
-                <img src={% static "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;">
-                <img src={% static "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
+                <img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;">
+                <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
                 <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible">Today</span>
               </a>
             </div>
@@ -185,7 +185,7 @@
     </div>
 
     <div id="memberName" class="ptaddbox">
-      <div class="ptaddboxtext"> <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
+      <div class="ptaddboxtext"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
       <div id="membersSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">회원명 선택</span>
@@ -207,14 +207,14 @@
     </div>
 
     <div id="remainCount" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약가능 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Available Counts</span></div>
+      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약가능 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Available Counts</span></div>
       <!-- 남은 횟수 DB연동 필요 -->
             <div id="countsSelected" class="dropdown" placeholder="ー"></div>
     </div>
 
 
     <div id="dateSelector" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
+      <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
       <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
     </div>
 
@@ -270,7 +270,7 @@
     </div>
 
     <div id="classStartTime" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> <span class="KRtext"> 시작 시간</span><span class="JPtext"> 開始時間</span><span class="ENtext"> Start Time</span></div>
+      <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> <span class="KRtext"> 시작 시간</span><span class="JPtext"> 開始時間</span><span class="ENtext"> Start Time</span></div>
       <div id="starttimesSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -285,7 +285,7 @@
     </div>
 
     <div id="classDuration" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Time</span></div>
+      <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Time</span></div>
       <div id="durationsSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -301,9 +301,9 @@
 
     <div id="repeatSchedule" class="ptaddbox repeatbox" style="display:none;">
         <div id="repeatScheduleText" class="ptaddboxtext repeattext">
-          <img src={% static "user/res/ptadd/icon-repeat-cal.png" %} class="icons">
+          <img src={% static_url "user/res/ptadd/icon-repeat-cal.png" %} class="icons">
            <span onclick="location.href='{% url 'schedule:add_repeat_off' %}'">반복일정</span>
-           <img class="icons-next-button" src={% static "user/res/ptadd/btn-next-white.png" %}>
+           <img class="icons-next-button" src={% static_url "user/res/ptadd/btn-next-white.png" %}>
          </div>
         
         <!--반복일정 박스-->
@@ -346,12 +346,12 @@
     </div>
 
     <div id="dateSelector_PC" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
+      <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
       <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
     </div>
 
     <div id="memberName" class="ptaddbox">
-      <div class="ptaddboxtext"> <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
+      <div class="ptaddboxtext"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
       <div id="membersSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">회원명 선택</span>
@@ -374,7 +374,7 @@
 
 
     <div id="remainCount" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약가능 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Available Counts</span></div>
+      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약가능 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Available Counts</span></div>
       <!-- 남은 횟수 DB연동 필요 -->
             <div id="countsSelected" class="dropdown" placeholder="ー"></div>
     </div>
@@ -431,7 +431,7 @@
     </div>
 
     <div id="classStartTime" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> <span class="KRtext"> 시작 시간</span><span class="JPtext"> 開始時間</span><span class="ENtext"> Start Time</span></div>
+      <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> <span class="KRtext"> 시작 시간</span><span class="JPtext"> 開始時間</span><span class="ENtext"> Start Time</span></div>
       <div id="starttimesSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -446,7 +446,7 @@
     </div>
 
     <div id="classDuration" class="ptaddbox">
-      <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Time</span></div>
+      <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Time</span></div>
       <div id="durationsSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
           <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -536,7 +536,7 @@
 
           var addTypeSelect = "" //팝업 종류 선택 (PT or OFF)
         </script>
-        <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.day.js" %}></script>
+        <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.day.js" %}></script>
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 2,
@@ -583,5 +583,5 @@
               
             })
         </script>
-        <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>
+        <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>
 {% endblock %}

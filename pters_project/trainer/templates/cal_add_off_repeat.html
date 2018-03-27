@@ -1,10 +1,10 @@
 {% extends "trainer_base_add_off_repeat.html" %}
-{% load static %}
+{% load static_url %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.off.repeat.add.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.off.repeat.add.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         
 {% endblock %}
@@ -58,7 +58,7 @@
 
   
 <div id="repeatSetting" class="ptaddbox">
-  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/offadd/icon-repeat.png" %} style="width:14px;"> 반복 빈도</div>
+  <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/offadd/icon-repeat.png" %} style="width:14px;"> 반복 빈도</div>
   <div id="repeattypeSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
@@ -71,18 +71,18 @@
 </div>
 
 <div id="dateSelector" class="ptaddbox">
-  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 반복 시작</div>
+  <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 시작</div>
   <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
 </div>
 
 <div id="dateSelector2" class="ptaddbox">
-  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 반복 종료</div>
+  <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 종료</div>
   <p class="datepicktext dropdown"><input type="text" id="datepicker2" placeholder="-" readonly></p>  
 </div>
 
 
 <div id="daySelect" class="ptaddbox">
-  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %} style="width:14px;"> 요일별 일정</div>
+  <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %} style="width:14px;"> 요일별 일정</div>
     <div class="dateButtonGroup" style="width:100%;">
         <div class="dateButton" data-date="SUN">일</div>
         <div class="dateButton" data-date="MON">월</div>
@@ -96,7 +96,7 @@
 
 
 <div id="classStartTime" class="ptaddbox">
-  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+  <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
   <div id="starttimesSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
@@ -131,7 +131,7 @@
 
 
 <div id="classDuration" class="ptaddbox">
-  <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+  <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
   <div id="durationsSelected" class="dropdown">
     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
     <ul id="durations" class="dropdown-menu pters_dropdown_custom">
@@ -165,7 +165,7 @@
         <!-- Placed at the end of the document so the pages load faster -->
          <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.cal.add.off.repeat.js" %}></script>
+         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.off.repeat.js" %}></script>
 
         
 

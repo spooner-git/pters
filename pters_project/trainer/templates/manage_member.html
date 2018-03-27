@@ -1,10 +1,10 @@
 {% extends "trainer_base.html" %}
-{% load static %}
+{% load static_url %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.manage.member.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.mini.cal.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +16,7 @@
    <!--플로팅 버튼-->
 <div id="float_btn_wrap">
     <div id="float_btn">
-      <img src={% static "user/res/memberadd/float_plus_member.png" %} alt="">  <!--2017.10.2-->
+      <img src={% static_url "user/res/memberadd/float_plus_member.png" %} alt="">  <!--2017.10.2-->
     </div>
     <div id="float_inner1" class="float_inner">
         <a class="KRtext">신규<br/>회원</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
@@ -50,7 +50,7 @@
 
 <!--
 <div class="confirmPopup">
-    <div style="height: 40px;"><img src={% static "user/res/stopmark.png" %} style="width:35px;margin-top:6px;"></div>
+    <div style="height: 40px;"><img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:6px;"></div>
     <div class="KRtext confirmText">정말 회원을 삭제하시겠습니까?<br>되돌릴 수 없습니다.</div>
     <div class="JPtext confirmText">日程を削除しますか</div>
     <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
@@ -69,7 +69,7 @@
 
 <div class="lectureStateChangePopup popups">
     <div style="height: 50px;">
-        <img src={% static "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
+        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
     <div class="KRtext confirmText">회원님 등록을 취소하시겠습니까?<br>환불 금액을 입력해 주세요.</div>
@@ -91,7 +91,7 @@
 
 <div class="lectureConnectStateChangePopup popups">
     <div style="height: 50px;">
-        <img src={% static "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
+        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
     <div class="KRtext confirmText">회원님과의 달력 연동상태를 변경하시겠습니까?<br>변경을 원하는 상태를 선택해주세요.</div>
@@ -113,7 +113,7 @@
 
 <div class="resendPopup popups">
     <div style="height: 40px;">
-        <img src={% static "user/res/stopmark.png" %} style="width:35px;margin-top:5px;">
+        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:5px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_resend_PC" class="_btn_close_resend_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
     <div class="KRtext confirmText">회원님께서 달력연결을 해제하셨습니다.<br>원하는 추가 작업을 선택해주세요.</div>
@@ -212,8 +212,8 @@
     </div>
 
     <div>
-       <button id="infoMemberDelete"><img src={% static "user/res/member/icon-delete-black.png" %}></button>
-       <button id="infoMemberModify" data-type="view"><img src={% static "user/res/member/icon-edit.png" %}></button>
+       <button id="infoMemberDelete"><img src={% static_url "user/res/member/icon-delete-black.png" %}></button>
+       <button id="infoMemberModify" data-type="view"><img src={% static_url "user/res/member/icon-edit.png" %}></button>
     </div>
     
     <form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
@@ -224,7 +224,7 @@
 
         <div class="ptaddbox form-group">
             <label for="memberName_info" class="ptaddboxtext">
-                <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명
+                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명
                 <span id="npSituationPresent"></span>
             </label>
             <div class="dropdown pters_input_custom">
@@ -235,7 +235,7 @@
 
         <div class="ptaddbox form-group">
             <label for="memberId" class="ptaddboxtext">
-                <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 ID
+                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 ID
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="text" class="dropdown form-control" id="memberId" name="id" readonly>
@@ -244,7 +244,7 @@
 
         <div class="ptaddbox form-group">
             <label for="memberBirthSex_info" class="ptaddboxtext">
-                <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원 부가정보
+                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 부가정보
             </label>
             <div id="memberBirth_info">
                 <!--
@@ -288,7 +288,7 @@
 
         <div class="ptaddbox form-group">
             <label for="memberPhone_info" class="ptaddboxtext">
-                <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="tel" class="dropdown form-control" id="memberPhone_info" name="phone" required="required" readonly>
@@ -297,7 +297,7 @@
 
         <div class="ptaddbox form-group">
             <label for="memberCount_info" class="ptaddboxtext">
-                <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록횟수
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록횟수
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="tel" class="dropdown form-control" id="memberRegCount_info" name="counts" readonly>
@@ -307,7 +307,7 @@
 
         <div class="ptaddbox form-group">
             <label for="memberCount_info" class="ptaddboxtext">
-                <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 남은횟수
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 남은횟수
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
@@ -317,7 +317,7 @@
 
         <div class="ptaddbox form-group">
             <label for="memberEmail_info" class="ptaddboxtext">
-                <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail
+                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> E-mail
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="email" class="dropdown form-control" id="memberEmail_info" name="email" readonly>
@@ -326,17 +326,17 @@
 
             
         <div id="dateSelector_info" class="ptaddbox">
-            <label class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</label>
+            <label class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 시작일자</label>
             <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
         </div>
         <div id="dateSelector2_info"  class="ptaddbox">
-            <label class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</label>
+            <label class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 종료일자</label>
             <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
         </div>
             
         <div class="ptaddbox form-group">
             <label for="comment_info" class="ptaddboxtext">
-                <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
+                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> 특이사항
             </label>
             <div class="dropdown pters_input_custom">
                 <textarea class="dropdown form-control" rows="1" id="comment_info" name="contents" readonly></textarea>
@@ -345,7 +345,7 @@
 
         <div id="ptrepeat-btn">
             <span>PT 반복 일정 등록</span>
-            <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
+            <img class="icons-next-button" src={% static_url "user/res/ptadd/btn-next.png" %}>
         </div>
     </form>
 
@@ -359,7 +359,7 @@
     </div>
     <div id="member_history" class="history_view ptaddbox">
         <label for="memberHistory" class="ptaddboxtext">
-                <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 활동 내역
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 활동 내역
         </label>
         <div><span>history1</span></div>
         <div><span>history2</span></div>
@@ -491,7 +491,7 @@
         <div>
             <div class="ptaddbox form-group">
                 <label for="memberSearch" class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static "user/res/icon-earth.png" %}> 회원 아이디 검색
+                    <img class="icons"  style="width:13px;" src={% static_url "user/res/icon-earth.png" %}> 회원 아이디 검색
                     <!--<p class="icons_description"> <br>PTERS에 이미 가입되어있는 회원님의 정보를 가져옵니다.</p>-->
                 </label>
                 <div id="memberSearch" class="dropdown pters_input_custom">
@@ -505,7 +505,7 @@
 
             <div class="ptaddbox form-group">
                 <label for="memberNameSex" class="ptaddboxtext">
-                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span>
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span>
                 </label>
                 <div id="memberName_reg" class="dropdown pters_input_custom">
                     <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10">
@@ -519,7 +519,7 @@
 
             <div class="ptaddbox form-group">
                 <label for="memberPhone" class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-phone.png" %}> 연락처 <span style="color: #fe4e65;">*</span>
+                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처 <span style="color: #fe4e65;">*</span>
                     <!--<p class="icons_description"> 회원님의 초기 접속 ID로 사용됩니다. <br>초기 비밀번호는 전화번호 마지막 네자리이며, 접속하여 ID와 비밀번호 변경이 가능합니다.</p>-->
                 </label>
                 <div class="dropdown pters_input_custom">
@@ -530,7 +530,7 @@
 
             <div class="ptaddbox form-group">
                 <label for="memberBirthSex" class="ptaddboxtext">
-                    <img class="icons" src={% static "user/res/ptadd/icon-name.png" %}> 생년월일
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 생년월일
                 </label>
                 <div id="memberBirth">
                     <!--
@@ -577,7 +577,7 @@
             <!--
             <div class="ptaddbox form-group">
                 <label for="memberEmail" class="ptaddboxtext">
-                    <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> E-mail  <span style="color: #fe4e65;">*</span>
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> E-mail  <span style="color: #fe4e65;">*</span>
                 </label>
                 <div class="dropdown pters_input_custom">
                     <input type="email" class="form-control" id="memberEmail_add" name="email" placeholder="이메일 입력">
@@ -586,7 +586,7 @@
             -->
 
             <label for="" class="ptaddboxtext" style="padding-right: 5%;padding-left: 5%;">
-                    <img class="icons" src={% static "user/res/ptadd/icon-bell.png" %}> PT등록정보 <span style="color: #fe4e65;">*</span>
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> PT등록정보 <span style="color: #fe4e65;">*</span>
             </label>
             <div id="selectBox2" class="selectbox">
                 <div id="btnCallSimple" href="#" class="selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
@@ -596,7 +596,7 @@
             <div id="manualReg"> <!-- 세부 설정 방식 -->
                 <div class="ptaddbox form-group">
                     <label for="memberCount" class="ptaddboxtext">
-                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록횟수
+                        <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록횟수
                     </label>
                     <div class="dropdown pters_input_custom">
                         <input type="tel" class="form-control" id="memberCount_add" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
@@ -604,7 +604,7 @@
                 </div>
                 <div class="ptaddbox form-group">
                     <label for="lecturePrice" class="ptaddboxtext">
-                        <img class="icons" src={% static "user/res/ptadd/icon-card.png" %}> 결제 요금
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-card.png" %}> 결제 요금
                     </label>
                     <div class="dropdown pters_input_custom">
                         <input type="hidden" id="lecturePrice_add_value" name="price" value="0">
@@ -621,11 +621,11 @@
                     </div>
                 </div>
                 <div id="dateSelector" class="ptaddbox">
-                    <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
+                    <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
                     <p class="datepicktext dropdown"><input type="text" id="datepicker_add" name="start_date" placeholder="선택" readonly></p>
                 </div>
                 <div id="dateSelector2"  class="ptaddbox">
-                    <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
+                    <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 종료일자</div>
                     <p class="datepicktext dropdown"><input type="text" id="datepicker2_add" name="end_date" placeholder="선택"  readonly></p>
                 </div>
             </div>
@@ -634,7 +634,7 @@
                 <div class="ptaddbox form-group _count">
                     <label for="memberCount" class="ptaddboxtext">
                         <input type="hidden" id="memberCount_add_fast" name="counts_fast" >
-                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-count.png" %}> 등록 횟수
+                        <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록 횟수
                     </label>
                     <div>
                       <table>
@@ -653,7 +653,7 @@
                 </div>
                 <div class="ptaddbox form-group">
                     <label for="lecturePrice" class="ptaddboxtext">
-                        <img class="icons" src={% static "user/res/ptadd/icon-card.png" %}> 결제 요금
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-card.png" %}> 결제 요금
                     </label>
                     <div class="dropdown pters_input_custom">
                         <input type="hidden" id="lecturePrice_add_value_fast" name="price_fast" value="0">
@@ -671,7 +671,7 @@
                 </div>
                 <div class="ptaddbox form-group _due">
                     <label for="memberDue" class="ptaddboxtext">
-                        <img class="icons" src={% static "user/res/ptadd/icon-clock.png" %}> 진행 기간
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 기간
                     </label>
                     <div>
                       <table>
@@ -697,12 +697,12 @@
                     </div>
                 </div>
                 <div id="dateSelector3" class="ptaddbox">
-                    <div class="ptaddboxtext"><img class="icons" src={% static "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
+                    <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 시작일자</div>
                     <p class="datepicktext dropdown"><input type="text" id="datepicker_fast" name="start_date_fast" placeholder="선택" readonly></p>
                 </div>
                 <div class="ptaddbox form-group">
                     <label for="memberDue" class="ptaddboxtext">
-                        <img class="icons"  style="width:13px;" src={% static "user/res/ptadd/icon-cal.png" %}> 종료 일자
+                        <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-cal.png" %}> 종료 일자
                     </label>
                     <div class="dropdown pters_input_custom">
                         <input type="hidden" id="memberDue_add_2_fast" name="end_date_fast">
@@ -714,7 +714,7 @@
 
         <div class="ptaddbox form-group">
             <label for="comment" class="ptaddboxtext">
-                <img class="icons" src={% static "user/res/ptadd/icon-pencil.png" %}> 특이사항
+                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> 특이사항
             </label>
             <div class="dropdown pters_input_custom">
                 <textarea class="form-control" rows="1" id="comment" name="contents" ></textarea>
@@ -723,7 +723,7 @@
 
         <div id="ptrepeat-btn">
             <span>PT 반복 일정 등록</span>
-            <img class="icons-next-button" src={% static "user/res/ptadd/btn-next.png" %}>
+            <img class="icons-next-button" src={% static_url "user/res/ptadd/btn-next.png" %}>
         </div>
         <div id="pcBtn" style="text-align: center;">
             <div class="submitBtn">
@@ -742,9 +742,9 @@
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
          <!--
-         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.manage.member.add.js" %}></script>
+         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.add.js" %}></script>
      -->
-         <script type="text/javascript" src={% static "user/js/trainer/pters.trainer.manage.member.js" %}></script>
+         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
          <script>
           $('#uptext').text("회원 관리")
           $('footer').hide()

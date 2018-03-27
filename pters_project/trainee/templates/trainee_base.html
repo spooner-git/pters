@@ -17,7 +17,7 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
     <!-- End Google Tag Manager -->
-        {% load static %}
+        {% load static_url %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -28,13 +28,13 @@
         <title>{% block title %}PTers-Trainee Mode {% endblock %}</title>
 
         <!-- Bootstrap core CSS -->
-        <link href={% static "common/css/bootstrap.min.css" %} rel="stylesheet">
+        <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
         <link rel="icon" href="/static/common/favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
-        <link rel="stylesheet" href={% static "user/css/pters.base.set.css" %}>
-        <link rel="stylesheet" href={% static "user/css/trainee/pters.trainee.select.teacher.css" %}>
-        <link rel="stylesheet" href={% static "common/css/swiper.min.css"%}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.select.teacher.css" %}>
+        <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
         {% block local_css %}
         {% endblock %}
     
@@ -59,18 +59,18 @@
         <div class="">
             <div class="navbar-header">
                 <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
-                    <a><img src={% static "user/res/icon-user-setting.png" %} style="width:25px;"></a>
+                    <a><img src={% static_url "user/res/icon-user-setting.png" %} style="width:25px;"></a>
                  </button> 
                  {% block nav_center_img %}
                  <span id="uptext" class="uptext" style="cursor: default;">{{ user.last_name }}{{ user.first_name }} 회원님 월간 PT 일정</span>
                 {% endblock %}
                  <!--
                  <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">
-                    <a><img src={% static "user/res/icon-calendar-week.png" %} style="width:20px;"></a>
+                    <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>
                  </button> 
                   -->
                  <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
-                    <a><img src={% static "user/res/icon-calendar-week.png" %} style="width:20px;"></a>
+                    <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>
                  </button> 
             </div>
          </div><!-- /.container -->
@@ -157,10 +157,10 @@
     {% endblock %}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src={% static "common/js/bootstrap.min.js" %}></script>
-    <script type="text/javascript" src={% static "common/js/jquery.swipe.js" %}></script>
-    <script type="text/javascript" src={% static "common/js/jquery.touch.js" %}></script>
-    <script type="text/javascript" src={% static "common/js/swiper.jquery.min.js" %}></script>
+    <script src={% static_url "common/js/bootstrap.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
     <script>
 
             $('#errorMessageBar span:nth-child(2)').click(function(){
@@ -441,7 +441,7 @@
               }; 
 
     </script>
-     <script type="text/javascript" src={% static "user/js/pters.base.set.js" %}></script>
+     <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
 
 
     {% block local_js_footer %}

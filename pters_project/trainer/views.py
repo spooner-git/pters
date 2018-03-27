@@ -74,8 +74,6 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainerMainView, self).get_context_data(**kwargs)
-        # for folder in settings.STATICFILES_DIRS:
-        #     print(str(folder))
         class_id = self.request.session.get('class_id', '')
         # print(class_id)
         error = None

@@ -1,9 +1,9 @@
 {% extends "trainer_base.html" %}
-{% load static %}
+{% load static_url %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.select.class.css" %}>
-        <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
         <style type="text/css">
           button.classAdd{
             width: 70px;
