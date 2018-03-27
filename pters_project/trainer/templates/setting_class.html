@@ -4,6 +4,16 @@
 {% block local_css %}
         <link rel="stylesheet" href={% static "user/css/trainer/pters.trainer.select.class.css" %}>
         <link rel="stylesheet" href={% static "user/css/pters.add.style.css" %}>
+        <style type="text/css">
+          button.classAdd{
+            width: 70px;
+            height: 25px;
+            float: right;
+            background: #fe4e65;
+            border-radius: 1px;
+            border-color: #fe4e65;
+          }
+        </style>
 {% endblock %}
 
 
@@ -21,7 +31,7 @@
   <p class="settingText2">나의 전체 강의 리스트를 관리할 수 있습니다.</p>
 </div>
 <div id="defaultFeeSetting" class="settingBox wrap800">
-  <p>강의 리스트</p>
+  <p>강의 리스트<button class="submitBtn classAdd" onclick="location.href='/trainer/add_class'">추가</button></p>
   <div class="pters_table pters_table_at_setting_page">
     <div class="pters_table_cell_head table_center_name">센터명</div>
     <div class="pters_table_cell_head table_lecture_name">강의명</div>

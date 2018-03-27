@@ -578,13 +578,12 @@ $(document).ready(function(){
         if(Data[userID].npCount > 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-np-wait.png" style="width:18px;margin:0 0 5px 3px" title="연결 대기중"> (연결 대기중)</span>'
         }*/
-        if(Data[userID].npCount == 0 && Data[userID].npCount == 0){
+        if(Data[userID].npCount == 0 && Data[userID].rjCount == 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:11px;margin:0 0 5px 3px" title="연결됨"> (연결됨)</span>'
         }
-        else if(Data[userID].npCount > 0){
+        else if(Data[userID].rjCount > 0){
           var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 취소"> (연결 취소)</span>'
         }
-
 
         $('#npSituationPresent').html(npCountImg)
 
