@@ -4,7 +4,8 @@
 	top: 50%;
 	transform:translate(-50%, -50%);
 	display: none;
-	width: 450px;
+	width: 98%;
+	max-width: 450px;
 	border:1px solid #cccccc;
 	background:#ffffff;
 	z-index: 150;
