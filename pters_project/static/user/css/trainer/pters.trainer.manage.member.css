@@ -882,7 +882,7 @@ th{
 		display: table-cell;
 	}
 
-	img._info_view{
+	img._info_view,img._info_modify{
 		display: none;
 	}
 

@@ -155,8 +155,8 @@
         <span>회원 관리</span>
     </div>
     <div id="selectBox" class="btn-group btn-group-justified">
-      <div id="btnCallCurrent" href="#" class="btn btn-primary active">진행 중 회원</div>
-      <div id="btnCallFinished" href="#" class="btn btn-primary">종료된 회원</div>
+      <div id="btnCallCurrent" onclick="shiftMemberList('current')" class="btn btn-primary active">진행 중 회원</div>
+      <div id="btnCallFinished" onclick="shiftMemberList('finished')" class="btn btn-primary">종료된 회원</div>
     </div> 
     <div id="alignBox">
       <div style="font-size:14px;position: relative;">
@@ -625,12 +625,12 @@
                         <span class="inputunit">원</span>
                     </div>
                     <div class="pricebutton">
-                        <div class="pricebuttonchild" id="price1">100만원</div>
-                        <div class="pricebuttonchild" id="price2">50만원</div>
-                        <div class="pricebuttonchild" id="price3">10만원</div>
-                        <div class="pricebuttonchild" id="price4">5만원</div>
-                        <div class="pricebuttonchild" id="price5">1만원</div>
-                        <div class="pricebuttonchild" id="price6" style="width: 7%;color: #fe4e65;">X</div>
+                        <div class="pricebuttonchild" id="price1" onclick="priceInput(1000000,'sum',1)">100만원</div>
+                        <div class="pricebuttonchild" id="price2" onclick="priceInput(500000,'sum',1)">50만원</div>
+                        <div class="pricebuttonchild" id="price3" onclick="priceInput(100000,'sum',1)">10만원</div>
+                        <div class="pricebuttonchild" id="price4" onclick="priceInput(50000,'sum',1)">5만원</div>
+                        <div class="pricebuttonchild" id="price5" onclick="priceInput(10000,'sum',1)">1만원</div>
+                        <div class="pricebuttonchild" id="price6" onclick="priceInput(0,'del',1)" style="width: 7%;color: #fe4e65;">X</div>
                     </div>
                 </div>
                 <div id="dateSelector" class="ptaddbox">
@@ -674,12 +674,12 @@
                         <span class="inputunit">원</span>
                     </div>
                     <div class="pricebutton">
-                        <div class="pricebuttonchild" id="price1_2">100만원</div>
-                        <div class="pricebuttonchild" id="price2_2">50만원</div>
-                        <div class="pricebuttonchild" id="price3_2">10만원</div>
-                        <div class="pricebuttonchild" id="price4_2">5만원</div>
-                        <div class="pricebuttonchild" id="price5_2">1만원</div>
-                        <div class="pricebuttonchild" id="price6_2" style="width: 7%;color: #fe4e65;">X</div>
+                        <div class="pricebuttonchild" id="price1_2" onclick="priceInput(1000000,'sum',2)">100만원</div>
+                        <div class="pricebuttonchild" id="price2_2" onclick="priceInput(500000,'sum',2)">50만원</div>
+                        <div class="pricebuttonchild" id="price3_2" onclick="priceInput(100000,'sum',2)">10만원</div>
+                        <div class="pricebuttonchild" id="price4_2" onclick="priceInput(50000,'sum',2)">5만원</div>
+                        <div class="pricebuttonchild" id="price5_2" onclick="priceInput(10000,'sum',2)">1만원</div>
+                        <div class="pricebuttonchild" id="price6_2" style="width: 7%;color: #fe4e65;" onclick="priceInput(0,'del',2)">X</div>
                     </div>
                 </div>
                 <div class="ptaddbox form-group _due">
