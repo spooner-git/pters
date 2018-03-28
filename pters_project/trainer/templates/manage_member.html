@@ -48,6 +48,19 @@
     <input type="hidden" name="id" id="deleteMemberId">
 </form>
 
+<form action="{% url 'trainer:update_member_lecture_info' %}" method="POST" class="member-form" id="update_member_lecture_info">
+    {% csrf_token %}
+    <input type="hidden" name="lecture_id" id="form_lecture_id">
+    <input type="hidden" name="member_name" id="form_member_name">
+    <input type="hidden" name="next_page" value="{% url 'trainer:update_member_lecture_info' %}">
+    <input type="hidden" name="start_date" id="form_start_date">
+    <input type="hidden" name="end_date" id="form_end_date">
+    <input type="hidden" name="price" id="form_price">
+    <input type="hidden" name="refund_price" id="form_refund_price">
+    <input type="hidden" name="lecture_reg_count" id="form_lecture_reg_count">
+    <input type="hidden" name="note" id="form_note">
+</form>
+
 <!--
 <div class="confirmPopup">
     <div style="height: 40px;"><img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:6px;"></div>
@@ -324,7 +337,7 @@
             </div>
         </div>
 
-            
+        <!--
         <div id="dateSelector_info" class="ptaddbox">
             <label class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 시작일자</label>
             <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
@@ -333,6 +346,7 @@
             <label class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 종료일자</label>
             <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
         </div>
+        -->
             
         <div class="ptaddbox form-group">
             <label for="comment_info" class="ptaddboxtext">
@@ -453,14 +467,14 @@
         </div>
 
         <div id="memberLectureHistory_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">활동 이력</label>
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">활동</label>
         </div>
     </div>
 
 
     <div class="member_info_PC_buttons_wrap popupBtn_mini">
         <button class="submitBtn _info_delete">삭제</button>
-        <button class="submitBtn _info_modify" data-type="view">수정</button>
+        <button class="submitBtn _info_modify" data-type="view" style="display: none;">수정</button>
         <button class="submitBtn _btn_close_info_PC">닫기</button>
     </div>
 </div>

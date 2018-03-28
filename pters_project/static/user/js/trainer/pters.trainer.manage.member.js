@@ -239,7 +239,7 @@ $(document).ready(function(){
             modify_member_info_pc(userID)
             get_indiv_repeat_info(userID)
             set_member_lecture_list()
-            $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('readonly',false);
+            $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('disabled',false);
             $('button._info_modify').text('완료').attr('data-type',"modify")
             $('#info_shift_base, #info_shift_lecture').show()
             $('#info_shift_schedule').hide()
@@ -248,11 +248,32 @@ $(document).ready(function(){
         }
     })
 
+    /*
     $(document).on('click','button._info_modify',function(){
       var userID = $('#memberId_info_PC').text()
-      modify_member_info_pc(userID)
+      var lectureID = $(this).parent('div').attr('data-lecid')
+      //modify_member_info_pc(userID)
       if($(this).attr('data-type')=="view"){
-        $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('readonly',false).attr('disabled',false);
+        $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('disabled',false);
+        $(this).text('완료').attr('data-type',"modify");
+      }else if($(this).attr('data-type')=="modify"){
+        console.log('수정송신')
+        send_member_modified_data_pc()
+      }else if($(this).attr('data-type')=="resend"){
+
+      }
+    })
+    */
+
+    $(document).on('click','#memberRegHistory_info_PC img',function(){
+      var userID = $('#memberId_info_PC').text()
+      var userName = DB[userID].name
+      var lectureID = $(this).attr('data-leid')
+      $('#form_member_name').val(userName)
+      $('#form_lecture_id').val(lectureID)
+      //modify_member_info_pc(userID)
+      if($(this).attr('data-type')=="view"){
+        $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('disabled',false);
         $(this).text('완료').attr('data-type',"modify");
       }else if($(this).attr('data-type')=="modify"){
         console.log('수정송신')
@@ -449,6 +470,7 @@ $(document).ready(function(){
 
       
     function open_member_info_popup_pc(userID){
+        modify_datepicker_set()
         if($('#currentMemberList').css('display') == "block"){
           var Data = DB
         }else if($('#finishedMemberList').css('display') == "block"){
@@ -535,13 +557,14 @@ $(document).ready(function(){
         }
         $('#memberEnd_info_PC').text(end)
         $('#comment_info, #memberComment_info_PC').val(Data[userID].contents)
-        $('#memberInfoPopup_PC input').removeClass('input_avaiable').attr('readonly',true).attr('disabled',true);
+        $('#memberInfoPopup_PC input').removeClass('input_avaiable').attr('disabled',true);
         $('button._info_modify').text('수정').attr('data-type',"view")
 
         $('#inputError_info_PC').css('display','none')
     }
     
     function open_member_info_popup_mobile(userID){
+        modify_datepicker_set()
         if($('#currentMemberList').css('display') == "block"){
           var Data = DB
         }else if($('#finishedMemberList').css('display') == "block"){
@@ -620,14 +643,29 @@ $(document).ready(function(){
         $('#memberComment_info_PC').keyup(function(){
             $('#comment_info').val($(this).val())
         })
-
     }
 
+    modify_member_lec_info_pc()
+    function modify_member_lec_info_pc(userID){
+        $(document).on('keyup','.lec_reg_count',function(){
+            console.log($(this).parent('div').siblings('.lec_rem_count').text())
+            var remainCount = $(this).parent('div').siblings('.lec_rem_count').text()
+            if(Number($(this).val()) >= Number(remainCount)){
+                $(this).css('color','#282828')
+                $('#form_lecture_reg_count').val($(this).val())
+            }else{
+                $(this).css('color','red')
+                $('#form_lecture_reg_count').val('')
+            }
+        })
+    }
+
+
     function send_member_modified_data_pc(){
-        var $form = $('#member-add-form-modify');
+        var $form = $('#update_member_lecture_info');
         console.log($form.serialize())
            $.ajax({
-              url:'/trainer/update_member_info/',
+              url:'/trainer/update_member_lecture_info/',
               type:'POST',
               data:$form.serialize(),
               dataType : 'html',
@@ -651,14 +689,14 @@ $(document).ready(function(){
                   }else{
                         $('#errorMessageBar').hide()
                         $('#errorMessageText').text('')
-                      DataFormattingDict('ID');
-                      DataFormatting('current');
-                      DataFormatting('finished');
-                      memberListSet('current','date','yes');
-                      memberListSet('finished','date','yes');
-                      $('#startR').attr('selected','selected')
-                      open_member_info_popup_pc($('#memberId_info_PC').text())
-                      console.log('success');
+                        DataFormattingDict('ID');
+                        DataFormatting('current');
+                        DataFormatting('finished');
+                        memberListSet('current','date','yes');
+                        memberListSet('finished','date','yes');
+                        $('#startR').attr('selected','selected')
+                        open_member_info_popup_pc($('#memberId_info_PC').text())
+                        console.log('success');
                   }
               },
 
@@ -918,7 +956,7 @@ $(document).ready(function(){
             success:function(data){
                 console.log(data)
                 var jsondata = JSON.parse(data);
-                console.log(jsondata.messageArray)
+                console.log(jsondata,'----')
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -940,7 +978,7 @@ $(document).ready(function(){
 
     function draw_member_lecture_list_table(jsondata, targetHTML){
         var $regHistory = targetHTML
-        var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>진행상태</div><div>연결상태</div></div>']
+        var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
         for(var i=0; i<jsondata.lectureIdArray.length; i++){
             var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
             var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
@@ -949,11 +987,15 @@ $(document).ready(function(){
             var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateArray[i]+'</div>'
             var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
             var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
-            var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
+            //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
             var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
-            var remcount =    '<div>'+jsondata.remCountArray[i]+'</div>'
-            var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
-            var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'  
+            var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
+            //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
+            //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
+            var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
+            var start = '<div><input data-type="lec_start_date" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
+            var end = '<div><input data-type="lec_end_date" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
+            var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
                 var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }else if(jsondata.lectureStateArray[i] == "PE"){
@@ -968,7 +1010,7 @@ $(document).ready(function(){
             }else if(jsondata.memberViewStateArray[i] == "VIEW"){
                 var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
             }
-            result_history_html.push('<div>'+start+end+regcount+remcount+lectureTypeName+lectureConnectTypeName+'</div>')
+            result_history_html.push('<div data-lecid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>')
         }
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
@@ -1489,19 +1531,19 @@ $(document).ready(function(){
         }
     });
 
-    /*
-    $("#memberStart_info_PC, #memberEnd_info_PC").datepicker({
-        minDate : 0,
-        onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
-            $("#memberEnd_info_PC").datepicker('option','minDate',$("#memberStart_info_PC").val())
-            $("#memberStart_info_PC").datepicker('option','maxDate',$("#memberEnd_info_PC").val())
-            $('#datepicker_info').val($("#memberStart_info_PC").val())
-            $('#datepicker2_info').val($("#memberEnd_info_PC").val())
-            console.log($("#datepicker_info").val(),$("#datepicker2_info").val())
-        }
-    });
-    */
+    function modify_datepicker_set(){
+        $(document).on("focus","input.lec_start_date, input.lec_end_date",function(){
+            $(this).datepicker({
+                minDate : 0,
+                onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+                    $('#'+$(this).attr('data-type').replace(/lec_/gi,'form_')).val($(this).val())
+                    console.log('#'+$(this).attr('data-type').replace(/lec_/gi,'form_'))
 
+                }
+            })
+        });
+    }
+    
 
     $("#memberEmail_add").keyup(function(){  //이메일 입력시 하단에 핑크선
         if($(this).val().length>8){
@@ -1883,7 +1925,7 @@ $(document).ready(function(){
     };
 
 
-    $("#upbutton-check, #pcBtn .submitBtn, button._info_modify").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
+    $("#upbutton-check, #pcBtn .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
         var test = $('#id_search_confirm').val();
         var $form2 = $('#add-member-id-form');
         var url2 = '/login/add_member_info_no_email/';
@@ -1907,7 +1949,6 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(data){
-                        //var jsondata = JSON.parse(data);
                         var jsondata = JSON.parse(data);
                         ajax_received_json_data(data);
                         console.log(jsondata.messageArray)
@@ -1945,7 +1986,6 @@ $(document).ready(function(){
 
     function add_member_form_func(){
         var $form = $('#member-add-form-new');
-
         $.ajax({
             url:'/trainer/add_member_info/',
             type:'POST',
@@ -2000,7 +2040,7 @@ $(document).ready(function(){
          })
     }
 
-    $('#upbutton-modify, #infoMemberModify').click(function(){ //회원정보창에서 수정 눌렀을때
+    $('#upbutton-modify, #infoMemberModify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
         if($(this).attr('data-type') == "view" ){
             $('#uptext3').text('회원 정보 수정');
             $('#uptext-pc-modify').text('회원 정보 수정');
