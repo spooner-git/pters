@@ -61,6 +61,7 @@ $(document).ready(function(){
               },
 
               success:function(data){
+              	$('#shade3,.popups').hide()
               	ajax_received_json_data_member_manage(data)
               	DB=[]
               	DBe=[]
