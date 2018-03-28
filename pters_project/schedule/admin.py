@@ -62,16 +62,16 @@ class CompanyTbAdmin(admin.ModelAdmin):
 @admin.register(ClassLectureTb)
 class ClassLectureTbAdmin(admin.ModelAdmin):
     list_display = ('class_lecture_id', 'class_tb', 'lecture_tb', 'auth_cd',
-                    'mod_member', 'reg_dt', 'mod_dt', 'use')
+                    'mod_member_id', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(MemberClassTb)
 class MemberClassTbAdmin(admin.ModelAdmin):
     list_display = ('member_class_id', 'member', 'class_tb', 'auth_cd',
-                    'mod_member', 'reg_dt', 'mod_dt', 'use')
+                    'mod_member_id', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(MemberLectureTb)
 class MemberLectureTbAdmin(admin.ModelAdmin):
     list_display = ('member_lecture_id', 'member', 'lecture_tb', 'auth_cd',
-                    'mod_member', 'reg_dt', 'mod_dt', 'use')
+                    'mod_member_id', 'reg_dt', 'mod_dt', 'use')
