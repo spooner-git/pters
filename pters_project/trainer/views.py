@@ -3,9 +3,7 @@ import copy
 import datetime
 
 import logging
-import os
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Group
@@ -81,9 +79,6 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         today = datetime.date.today()
         one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
-        # print("modified : "+str(datetime.datetime.fromtimestamp(os.path.getmtime(str(os.path.dirname(os.path.abspath(__file__)))+"/"+(str(os.path.basename(__file__)))))))
-        # print("Last modified : "+str(datetime.datetime.fromtimestamp(os.path.getmtime(str(os.path.dirname(os.path.abspath(__file__)))+"/templates/main_trainer.html"))))
-
         next_year = int(month_first_day.strftime('%Y')) + 1
         next_month = int(month_first_day.strftime('%m')) % 12 + 1
         next_month_first_day = month_first_day.replace(month=next_month)

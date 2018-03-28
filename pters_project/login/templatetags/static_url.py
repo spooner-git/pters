@@ -34,7 +34,9 @@ def calculate_url(file_name):
             file_path = path.join(STATICFILES_DIRS[0], file_name)
             prefix = STATIC_URL
 
-        file_modified = calculate_file_name(path.join(STATICFILES_DIRS[0], file_path))[:16]
+        file_modified = calculate_file_name(path.join(STATICFILES_DIRS[0], file_path))
+        if file_modified != 'error':
+            file_modified = file_modified[: 16]
         value = '%s%s?v=%s' % (prefix, file_name, file_modified)
         # logger.info("Caching url '%s' for file '%s'", value, file_name)
     except Exception as e:
@@ -48,8 +50,13 @@ def calculate_url(file_name):
 
 
 def calculate_file_name(file_path):
-    temp = str(datetime.datetime.fromtimestamp(os.path.getmtime(file_path)))
-    temp = temp.replace(' ', '_')
+
+    try:
+        temp = str(datetime.datetime.fromtimestamp(os.path.getmtime(file_path)))
+    except FileNotFoundError:
+        temp = 'error'
+    if temp != 'error':
+        temp = temp.replace(' ', '_')
     return temp
     # with open(file_path, 'rb') as fh:
     #    m = hashlib.md5()
