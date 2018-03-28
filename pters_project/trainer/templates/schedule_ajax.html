@@ -23,6 +23,8 @@
       [{% for pt_schedule_lecture_id_info in pt_schedule_lecture_id %}"{{ pt_schedule_lecture_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_member_name" :
       [{% for pt_schedule_member_name_info in pt_schedule_member_name %}"{{ pt_schedule_member_name_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classTimeArray_member_id" :
+      [{% for pt_schedule_member_id_info in pt_schedule_member_id %}"{{ pt_schedule_member_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_start_date" : 
       [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}"{{ pt_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_end_date" : 
