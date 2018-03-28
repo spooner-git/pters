@@ -553,7 +553,8 @@ $(document).ready(function(){
         $('#memberEnd_info_PC').text(end)
         $('#comment_info, #memberComment_info_PC').val(Data[userID].contents)
         $('#memberInfoPopup_PC input').removeClass('input_avaiable').attr('disabled',true);
-        $('button._info_modify').text('수정').attr('data-type',"view")
+        //$('button._info_modify').text('수정').attr('data-type',"view")
+        $('#memberRegHistory_info_PC img').text('수정').attr('data-type',"view")
 
         $('#inputError_info_PC').css('display','none')
     }
