@@ -440,6 +440,12 @@ th{
 				margin: 0;
 				border: 0;
 			}
+			#memberRegHistory_info_PC input{
+				width: 100%;
+				text-align: center;
+				padding: 0;
+				line-height: 19px;
+			}
 			#memberRepeat_info_PC > div{
 				position: relative;
 				display: block;
@@ -481,11 +487,13 @@ th{
 				background:#fe4e65;
 				z-index: 100;
 			}
-
-
+				#memberRegHistory_info_PC img{
+					width: 12px;
+					cursor: pointer;
+				}
 				#memberRegHistory_info_PC > div > div{
 					display: table-cell;
-					width: 16.6%;
+					width: 15%;
 					height: 20px;
 					padding: 0;
 					text-align: center;
@@ -580,7 +588,12 @@ th{
 
 #info_shift_schedule{
 	display: none;
+	width: 100%;
 }
+	#memberRepeat_info_PC_wrap,#memberLectureHistory_info_PC_wrap{
+		height: 190px;
+		overflow-y: auto;
+	}
 
 #info_shift_lecture, #info_shift_schedule{
 	height: 230px;
