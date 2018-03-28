@@ -1328,6 +1328,9 @@ def update_member_lecture_info_logic(request):
     next_page = request.POST.get('next_page', '')
 
     error = None
+    input_refund_price = 0
+    input_price = 0
+    input_lecture_reg_count = 0
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1345,29 +1348,45 @@ def update_member_lecture_info_logic(request):
         if end_date is None or end_date == '':
             end_date = lecture_info.end_date
         if price is None or price == '':
-            price = lecture_info.price
+            input_price = lecture_info.price
+        else:
+            try:
+                input_price = int(price)
+            except ValueError:
+                error = '강의 금액은 숫자만 입력 가능합니다.'
         if refund_price is None or refund_price == '':
-            refund_price = lecture_info.refund_price
+            input_refund_price = lecture_info.refund_price
+        else:
+            try:
+                input_refund_price = int(refund_price)
+            except ValueError:
+                error = '환불 금액은 숫자만 입력 가능합니다.'
         if lecture_reg_count is None or lecture_reg_count == '':
-            lecture_reg_count = lecture_info.lecture_reg_count
+            input_lecture_reg_count = lecture_info.lecture_reg_count
+        else:
+            try:
+                input_lecture_reg_count = int(lecture_reg_count)
+            except ValueError:
+                error = '등록 횟수는 숫자만 입력 가능합니다.'
+
         if note is None or note == '':
             note = lecture_info.note
 
     if error is None:
-        if lecture_reg_count < lecture_info.lecture_rem_count:
+        if input_lecture_reg_count < lecture_info.lecture_rem_count:
             error = '등록 횟수가 남은 횟수보다 작습니다.'
 
     if error is None:
-        if lecture_reg_count < lecture_info.lecture_reg_count-lecture_info.lecture_avail_count:
+        if input_lecture_reg_count < lecture_info.lecture_reg_count-lecture_info.lecture_avail_count:
             error = '등록 횟수가 이미 등록한 스케쥴보다 작습니다.'
 
     if error is None:
         lecture_info.start_date = start_date
         lecture_info.end_date = end_date
-        lecture_info.price = price
-        lecture_info.refund_price = refund_price
+        lecture_info.price = input_price
+        lecture_info.refund_price = input_refund_price
         lecture_info.note = note
-        lecture_info.lecture_reg_count = lecture_reg_count
+        lecture_info.lecture_reg_count = input_lecture_reg_count
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
 
