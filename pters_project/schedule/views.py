@@ -230,6 +230,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     pt_schedule_start_datetime = []
     pt_schedule_end_datetime = []
     pt_schedule_member_name = []
+    pt_schedule_member_id = []
     pt_schedule_finish_check = []
     pt_schedule_note = []
     off_repeat_schedule_id = []
@@ -318,6 +319,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
                 # lecture schedule 에 해당하는 lecture id 셋팅
                 pt_schedule_lecture_id.append(lecture_datum.lecture_id)
                 pt_schedule_member_name.append(member_data.name)
+                pt_schedule_member_id.append(member_data.member_id)
                 pt_schedule_start_datetime.append(pt_schedule_datum.start_dt)
                 pt_schedule_end_datetime.append(pt_schedule_datum.end_dt)
                 if pt_schedule_datum.note is None:
@@ -341,6 +343,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['pt_schedule_id'] = pt_schedule_id
     context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
     context['pt_schedule_member_name'] = pt_schedule_member_name
+    context['pt_schedule_member_id'] = pt_schedule_member_id
 
     context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
     context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
