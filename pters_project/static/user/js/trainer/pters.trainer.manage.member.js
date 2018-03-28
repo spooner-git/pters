@@ -178,10 +178,10 @@ $(document).ready(function(){
             open_member_info_popup_pc(userID)
             get_indiv_repeat_info(userID)
             set_member_lecture_list()
-            $('#info_shift_base').show()
-            $('#info_shift_lecture, #info_shift_schedule').hide()
-            $('#select_info_shift_base').css('color','#fe4e65')
-            $('#select_info_shift_lecture,#select_info_shift_schedule').css('color','#282828')
+            $('#info_shift_base, #info_shift_lecture').show()
+            $('#info_shift_schedule').hide()
+            $('#select_info_shift_lecture').css('color','#fe4e65')
+            $('#select_info_shift_schedule').css('color','#282828')
         }
     });
 
@@ -194,10 +194,10 @@ $(document).ready(function(){
             open_member_info_popup_pc(userID)
             get_indiv_repeat_info(userID)
             set_member_lecture_list()
-            $('#info_shift_base').show()
-            $('#info_shift_lecture, #info_shift_schedule').hide()
-            $('#select_info_shift_base').css('color','#fe4e65')
-            $('#select_info_shift_lecture,#select_info_shift_schedule').css('color','#282828')
+            $('#info_shift_base, #info_shift_lecture').show()
+            $('#info_shift_schedule').hide()
+            $('#select_info_shift_lecture').css('color','#fe4e65')
+            $('#select_info_shift_schedule').css('color','#282828')
         }
     })
 
@@ -227,6 +227,8 @@ $(document).ready(function(){
       $('#shade3').fadeIn('fast');
     })
 
+
+
     $(document).on('click','img._info_modify',function(e){
         e.stopPropagation()
         var userID = $(this).parent('td').siblings('._id').text()
@@ -239,10 +241,10 @@ $(document).ready(function(){
             set_member_lecture_list()
             $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('readonly',false);
             $('button._info_modify').text('완료').attr('data-type',"modify")
-            $('#info_shift_base').show()
-            $('#info_shift_lecture, #info_shift_schedule').hide()
-            $('#select_info_shift_base').css('color','#fe4e65')
-            $('#select_info_shift_lecture,#select_info_shift_schedule').css('color','#282828')
+            $('#info_shift_base, #info_shift_lecture').show()
+            $('#info_shift_schedule').hide()
+            $('#select_info_shift_lecture').css('color','#fe4e65')
+            $('#select_info_shift_schedule').css('color','#282828')
         }
     })
 
@@ -267,22 +269,15 @@ $(document).ready(function(){
       $('#shade3').fadeOut('fast');
     });
 
-    $('#select_info_shift_base').click(function(){
-        $('#info_shift_base').show()
-        $('#info_shift_lecture, #info_shift_schedule').hide()
-        $(this).css('color','#fe4e65')
-        $(this).siblings('.button_shift_info').css('color','#282828')
-    })
-
     $('#select_info_shift_lecture').click(function(){
-        $('#info_shift_base,#info_shift_schedule').hide()
+        $('#info_shift_schedule').hide()
         $('#info_shift_lecture').show()
         $(this).css('color','#fe4e65')
         $(this).siblings('.button_shift_info').css('color','#282828')
     })
 
     $('#select_info_shift_schedule').click(function(){
-        $('#info_shift_base,#info_shift_lecture').hide()
+        $('#info_shift_lecture').hide()
         $('#info_shift_schedule').show()
         $(this).css('color','#fe4e65')
         $(this).siblings('.button_shift_info').css('color','#282828')
@@ -509,11 +504,12 @@ $(document).ready(function(){
         var birth_month = Data[userID].birth.split(' ')[1]
         var birth_date = Data[userID].birth.split(' ')[2]
         if(Data[userID].birth == "None"){
-          var birth_year = "-"
+          var birth_year = ""
         }
-        $('#memberBirth_Year_info_PC').val(birth_year)
-        $('#memberBirth_Month_info_PC').val(birth_month)
-        $('#memberBirth_Date_info_PC').val(birth_date)
+        $('#memberBirth_Year_info_PC').text(Data[userID].birth)
+        //$('#memberBirth_Year_info_PC').text(birth_year)
+        //$('#memberBirth_Month_info_PC').text(birth_month)
+        //$('#memberBirth_Date_info_PC').text(birth_date)
         if(Data[userID].birth != 'None'){
           $('#form_birth_modify').val(birth_year.replace(/년/gi,"-")+birth_month.replace(/월/gi,"-")+birth_date.replace(/일/gi,""))
         }else{
@@ -522,22 +518,22 @@ $(document).ready(function(){
         
         $('#deleteMemberId').val(userID);
         $('#memberName_info').val(Data[userID].name)
-        $('#memberId').val(userID).attr('data-dbid',Data[userID].dbId);
+        $('#memberId').text(userID).val(userID).attr('data-dbid',Data[userID].dbId);
         $('#memberId_info_PC').text(userID).attr('data-dbid',Data[userID].dbId);
-        $('#memberPhone_info, #memberPhone_info_PC').val(Data[userID].phone);
-        $('#memberRegCount_info_PC').val(Data[userID].regcount + yetReg + '회')
-        $('#memberRemainCount_info_PC').val(Data[userID].count + yet + '회')
-        $('#memberAvailCount_info_PC').val(Data[userID].availCount + '회')
-        $('#memberFinishCount_info_PC').val(Data[userID].regcount-Data[userID].count + '회')
+        $('#memberPhone_info, #memberPhone_info_PC').text(Data[userID].phone).val(Data[userID].phone);
+        $('#memberRegCount_info_PC').val(Data[userID].regcount + yetReg).text(Data[userID].regcount + yetReg)
+        $('#memberRemainCount_info_PC').val(Data[userID].count + yet).text(Data[userID].count + yet)
+        $('#memberAvailCount_info_PC').val(Data[userID].availCount).text(Data[userID].availCount)
+        $('#memberFinishCount_info_PC').val(Data[userID].regcount-Data[userID].count).text(Data[userID].regcount-Data[userID].count)
         $('#memberEmail_info, #memberEmail_info_PC').val(email)
-        $('#memberStart_info_PC').val(Data[userID].start.replace(/년 |월 /gi,"-").replace(/일/gi,""))
+        $('#memberStart_info_PC').text(Data[userID].start)
         var end = Data[userID].end
         if(end == "9999년 12월 31일"){
           var end = "소진시까지"
         }else{
-          var end = Data[userID].end.replace(/년 |월 /gi,"-").replace(/일/gi,"")
+          var end = Data[userID].end
         }
-        $('#memberEnd_info_PC').val(end)
+        $('#memberEnd_info_PC').text(end)
         $('#comment_info, #memberComment_info_PC').val(Data[userID].contents)
         $('#memberInfoPopup_PC input').removeClass('input_avaiable').attr('readonly',true).attr('disabled',true);
         $('button._info_modify').text('수정').attr('data-type',"view")
@@ -1493,6 +1489,7 @@ $(document).ready(function(){
         }
     });
 
+    /*
     $("#memberStart_info_PC, #memberEnd_info_PC").datepicker({
         minDate : 0,
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
@@ -1503,6 +1500,7 @@ $(document).ready(function(){
             console.log($("#datepicker_info").val(),$("#datepicker2_info").val())
         }
     });
+    */
 
 
     $("#memberEmail_add").keyup(function(){  //이메일 입력시 하단에 핑크선
@@ -2432,8 +2430,9 @@ $(document).ready(function(){
             var repeat_id = repeat_id_array[i]
             var repeat_type = repeat_info_dict['KOR'][repeat_type_array[i]]
             var repeat_start = repeat_start_array[i].replace(/-/gi,".");
-            var repeat_start_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복시작 : </span>"
-            var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
+            var repeat_start_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복 : </span>"
+            //var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
+            var repeat_end_text = ""
             var repeat_end = repeat_end_array[i].replace(/-/gi,".");
             var repeat_time = Number(repeat_time_array[i].split(':')[0])+0
             var repeat_dur = repeat_dur_array[i]

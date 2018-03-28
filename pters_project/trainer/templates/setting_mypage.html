@@ -80,7 +80,8 @@
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
-        <span class="menuName">ID(이메일)</span><span>ppkyum@naver.com</span>
+        <span class="menuName">ID(이메일)</span>
+        <span>ppkyum@naver.com</span><button onclick="goPage('delAccount')">탈퇴</button>
       </div>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
@@ -216,6 +217,8 @@
             function goPage(option){
               if(option == 2){
                 location.href= "/accounts/password/change/"
+              }else if(option = "delAccount"){
+
               }
             }
             

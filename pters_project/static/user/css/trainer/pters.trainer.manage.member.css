@@ -352,12 +352,12 @@ th{
 	position: absolute;
 	background: #ffffff;
 	padding: 10px;
-	width: 420px;
+	width: 600px;
 	z-index:115;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%,-50%);
-
+	border-radius: 3px;
 	border: 1px solid #cccccc;
 }
 
@@ -376,38 +376,53 @@ th{
 		cursor: pointer;
 	}
 		.member_info_PC_wrap{
-			display: table;
-			width: 100%;
+			display: inline-block;
+			width: 47%;
 			font-size: 14px;
-			margin: 10px 0 10px 0;
+		}
+		#memberRegHistory_info_PC_wrap{
+			width: 100%;
+		}
+		#memberLectureHistory_info_PC_wrap{
+			max-height: 190px;
+			overflow-y: auto;
 		}
 			.member_info_PC_wrap label{
-				display: table-cell;
-				width: 35%;
+				display: inline-block;
+				width: 120px;
 				color: #7d7d7d;
 				font-size: 13px;
 				font-weight: 500;
+				margin-bottom: 0px;
 			}
 			#memberBirth_Year_info_PC{
-				width: 29%;
+				/*width: 29%;*/
+			
+				width: 100%:;
 			}
 			#memberBirth_Month_info_PC,#memberBirth_Date_info_PC{
 				width: 20%;
 				margin-left: 1px;
+
+				display: none;
 			}
-			.member_info_PC_wrap input, .member_info_PC_wrap > div{
-				display: table-cell;
-				width: 98%;
+			.member_info_PC_wrap input, .member_info_PC_wrap span, .member_info_PC_wrap > div{
+				display: inline-block;
+				width: 190px;
 				border:1px solid #ffffff;
 				background: #ffffff;
 				color: #282828;
 				font-weight: 500;
-				margin-top: 2px;
-				margin-bottom: 2px;
+				margin-top: 0px;
+				margin-bottom: 10px;
 				text-align: left;
 				cursor: initial;
 				padding-left: 10px;
 			}
+			#memberRegCount_info_PC, #memberRemainCount_info_PC, #memberAvailCount_info_PC, #memberFinishCount_info_PC{
+				width: 45px;
+			}
+
 			.member_info_PC_wrap >label img{
 				width: 15px;
 				margin:0 5px 4px 0;
@@ -442,12 +457,13 @@ th{
 			.deleteBtn{
 				position: absolute;
 				line-height: 35px;
-				width: 15px;
+				width: 15px !important;
 				margin-left: 15px;
+				padding-left: 3px !important;
 				top: 0;
 				right: 0;
 				text-align: center;
-				background: #cccccc;
+				background: #cccccc !important;
 				cursor: pointer;
 			}
 
@@ -485,6 +501,11 @@ th{
 				}
 			#memberRegHistory_info_PC_wrap > label, #memberRegHistory_info_wrap > label, #memberRepeat_info_PC_wrap >label{
 				display: inline;
+			}
+			span.summaryInnerBoxText_Repeatendtext{
+				width: 50px;
+				padding: 0;
+				margin-bottom: 0;
 			}
 			.lectureType_VIEW{
 				color: green !important;
@@ -554,12 +575,23 @@ th{
 .info_shift_wrap{
 	border:1px solid #cccccc;
 	padding-left: 10px;
-	min-height: 275px;
 	overflow:auto;
 }
 
-#info_shift_lecture, #info_shift_schedule{
+#info_shift_schedule{
 	display: none;
+}
+
+#info_shift_lecture, #info_shift_schedule{
+	height: 230px;
+	overflow: auto;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#info_shift_base{
+	padding-top: 10px;
+	margin-bottom: 10px;
 }
 
 
