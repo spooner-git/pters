@@ -30,7 +30,7 @@ from registration.forms import RegistrationForm
 from configs import settings
 from login.forms import MyPasswordResetForm
 from login.models import MemberTb
-from trainer.models import ClassTb
+# from schedule.models import ClassTb
 
 logger = logging.getLogger(__name__)
 

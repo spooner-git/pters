@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 from center.models import CenterTb, CenterTrainerTb
 from configs.views import AccessTestMixin
 from login.models import CommonCdTb
-from trainer.models import ClassTb
+from schedule.models import ClassTb
 
 logger = logging.getLogger(__name__)
 

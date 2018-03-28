@@ -25,9 +25,9 @@ from django.views.generic.base import ContextMixin
 from configs import settings
 from configs.views import date_check_func, get_client_ip
 from login.models import LogTb, MemberTb
+from schedule.models import LectureTb
+from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
-from trainee.models import LectureTb
-from trainer.models import ClassTb
 
 from django.core.files.base import ContentFile
 
