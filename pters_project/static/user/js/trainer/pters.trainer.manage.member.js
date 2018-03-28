@@ -70,6 +70,24 @@ $(document).ready(function(){
         $('#memberSex .selectboxopt').removeClass('selectbox_disable')
     })
 
+     $('.ymdText-pc-add').click(function(){
+        $('#page_addmember').fadeIn('fast')
+        $('#shade').fadeIn('fast');
+        $('#uptext2').text('신규 회원 등록')
+        $('#page-base').fadeOut();
+        $('#page-base-addstyle').fadeIn();
+        scrollToIndicator($('#page_addmember'))
+
+        $('#inputError').css('display','none')
+        $('#fast_check').val('0')
+        $('#form_birth').val('')
+        $('#memberBirthDate, #memberBirthDate_info').html('')
+        birth_dropdown_set()
+
+        $('#memberSearchButton').attr('data-type','')
+        $('#memberSex .selectboxopt').removeClass('selectbox_disable')
+    })
+
     $('#float_inner2').click(function(){
         alert('float_inner2')
         /*
@@ -117,32 +135,6 @@ $(document).ready(function(){
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
-	$("#btnCallCurrent").click(function(){
-		var currentMemberList = $("#currentMemberList");
-        var currentMemberNum = $('#currentMemberNum');
-    	var finishedMemberList = $("#finishedMemberList");
-        var finishedMemberNum = $('#finishMemberNum');
-    	if(currentMemberList.css("display")=="none"){
-    		finishedMemberList.css("display","none");
-            finishedMemberNum.css("display","none");
-    		currentMemberList.css("display","block");
-            currentMemberNum.css("display","block");
-    	}
-	});
-
-    $("#btnCallFinished").click(function(){
-    	var currentMemberList = $("#currentMemberList");
-        var currentMemberNum = $('#currentMemberNum');
-        var finishedMemberList = $("#finishedMemberList");
-        var finishedMemberNum = $('#finishMemberNum');
-    	if(finishedMemberList.css("display")=="none"){
-    		finishedMemberList.css("display","block");
-            finishedMemberNum.css("display","block");
-    		currentMemberList.css("display","none");
-            currentMemberNum.css("display","none");
-    	}
-    });
-
     var alignType = "name"
     $('.alignSelect').change(function(){
         if($(this).val()=="회원명 가나다 순"){
@@ -185,6 +177,7 @@ $(document).ready(function(){
         }
     });
 
+    /*
     $(document).on('click','img._info_view',function(e){
         e.stopPropagation()
         var userID = $(this).parent('td').siblings('._id').text()
@@ -200,6 +193,7 @@ $(document).ready(function(){
             $('#select_info_shift_schedule').css('color','#282828')
         }
     })
+    */
 
     $(document).on('click','img._info_delete',function(e){
         e.stopPropagation()
@@ -228,7 +222,7 @@ $(document).ready(function(){
     })
 
 
-
+    /*
     $(document).on('click','img._info_modify',function(e){
         e.stopPropagation()
         var userID = $(this).parent('td').siblings('._id').text()
@@ -247,6 +241,7 @@ $(document).ready(function(){
             $('#select_info_shift_schedule').css('color','#282828')
         }
     })
+    */
 
     /*
     $(document).on('click','button._info_modify',function(){
@@ -558,7 +553,8 @@ $(document).ready(function(){
         $('#memberEnd_info_PC').text(end)
         $('#comment_info, #memberComment_info_PC').val(Data[userID].contents)
         $('#memberInfoPopup_PC input').removeClass('input_avaiable').attr('disabled',true);
-        $('button._info_modify').text('수정').attr('data-type',"view")
+        //$('button._info_modify').text('수정').attr('data-type',"view")
+        $('#memberRegHistory_info_PC img').text('수정').attr('data-type',"view")
 
         $('#inputError_info_PC').css('display','none')
     }
@@ -1053,49 +1049,6 @@ $(document).ready(function(){
     memberListSet('finished','name')
 //#####################페이지 들어오면 초기 시작 함수//#####################
 
-
-    function count_format_to_nnnn(rawData){
-        if(rawData == '0'){
-            return rawData
-        }
-        var maxlen = String(rawData).length
-        var repeat =  4 - Number(maxlen)
-        var data = rawData
-        for(var j=0; j<repeat; j++){
-            var data = '0'+data
-        }
-        return data
-    }
-
-    function count_format_to_nnnn_Array(rawDataArray){
-        var maxlen = String(Math.max.apply(null, rawDataArray)).length
-        var result = []
-        for(var i=0;i<rawDataArray.length ;i++){
-            var repeat =  Number(maxlen)-Number(String(rawDataArray[i]).length)
-            var data = rawDataArray[i]
-            for(var j=0; j<repeat; j++){
-              var data = '0'+data
-            }
-            result[i] = data
-        }
-        return result
-    }
-
-    function remove_front_zeros(rawData){
-        var len = String(rawData).length;
-        var raw = rawData
-        var result;
-        if(rawData =='0'){
-          return rawData
-        }else{
-            for(var i=0; i<len; i++){
-                if(raw.substr(i,1)!='0'){
-                  var result = raw.substr(i,len)
-                  return result
-                }
-            }
-        }
-    }
 
     function DataFormatting(type){
         switch(type){
@@ -1619,63 +1572,7 @@ $(document).ready(function(){
         }
     })
 
-    function birth_dropdown_set(){
-        var yearoption = ['<option selected disabled hidden>연도</option>']
-        for(var i=2018; i>=1908; i--){
-            yearoption.push('<option data-year="'+i+'년'+'">'+i+'년</option>')
-        }
-        var birth_year_options = yearoption.join('')
-        $('#birth_year, #birth_year_info').html(birth_year_options)
-
-
-        var monthoption = ['<option selected disabled hidden>월</option>']
-        for(var i=1; i<=12; i++){
-            monthoption.push('<option data-month="'+i+'월'+'">'+i+'월</option>')
-        }
-        var birth_month_options = monthoption.join('')
-        $('#birth_month, #birth_month_info').html(birth_month_options)
-
-
-        var dateoption = ['<option selected disabled hidden>일</option>']
-        for(var i=1; i<=31; i++){
-            dateoption.push('<option data-date="'+i+'일'+'">'+i+'일</option>')
-        }
-        var birth_date_options = dateoption.join('')
-        $('#birth_date, #birth_date_info').html(birth_date_options)
-
-
-        $('#birth_month, #birth_month_info').change(function(){
-            var dateoption = ['<option selected disabled hidden>일</option>']
-            $('#birth_date, #birth_date_info').html("")
-            var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31];
-            var month = $(this).val().replace(/월/gi,"")
-            for(var i=1; i<=lastDay[month-1]; i++){
-                dateoption.push('<option data-date="'+i+'일'+'">'+i+'일</option>')
-            }
-            var birth_date_options = dateoption.join('')
-            $('#birth_date, #birth_date_info').html(birth_date_options)
-        })
-
-        $('#birth_year, #birth_month, #birth_date').change(function(){
-            $(this).addClass("dropdown_selected")
-            $(this).css('color','#282828')
-            var year = $('#birth_year').val().replace(/년/gi,"")
-            var month = $('#birth_month').val().replace(/월/gi,"")
-            var date = $('#birth_date').val().replace(/일/gi,"")
-            var birthdata = year+'-'+month+'-'+date
-            $('#form_birth').attr('value',birthdata)
-        })
-
-        $('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
-            $(this).addClass("dropdown_selected")
-            $(this).css('color','#282828')
-            var year = $('#birth_year_info').val().replace(/년/gi,"")
-            var month = $('#birth_month_info').val().replace(/월/gi,"")
-            var date = $('#birth_date_info').val().replace(/일/gi,"")
-            var birthdata = year+'-'+month+'-'+date
-            $('#form_birth_modify').attr('value',birthdata)
-        })
-    }
+    
 
 
 
@@ -1726,91 +1623,8 @@ $(document).ready(function(){
 
     })
 
-    $('#price1').click(function(){
-        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
-        var priceInputValue = 1000000 + Number(priceInputValue);
-        $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value').val(priceInputValue)
 
-    })
-
-    $('#price2').click(function(){
-        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
-        var priceInputValue = 500000 + Number(priceInputValue);
-        $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value').val(priceInputValue)
-    })
-
-    $('#price3').click(function(){
-        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
-        var priceInputValue = 100000 + Number(priceInputValue);
-        $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value').val(priceInputValue)
-    })
-
-    $('#price4').click(function(){
-        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
-        var priceInputValue = 50000 + Number(priceInputValue);
-        $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value').val(priceInputValue)
-    })
-
-    $('#price5').click(function(){
-        var priceInputValue = $('#lecturePrice_add').val().replace(/,/g, "")
-        var priceInputValue = 10000 + Number(priceInputValue);
-        $('#lecturePrice_add').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value').val(priceInputValue)
-    })
-
-    $('#price6').click(function(){
-        $('#lecturePrice_add').val("").attr('readonly',false)
-        $('#lecturePrice_add_value').val(0)
-    })
-
-    $('#price1_2').click(function(){
-        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
-        var priceInputValue = 1000000 + Number(priceInputValue);
-        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value_fast').val(priceInputValue)
-    })
-
-    $('#price2_2').click(function(){
-        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
-        var priceInputValue = 500000 + Number(priceInputValue);
-        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value_fast').val(priceInputValue)
-    })
-
-    $('#price3_2').click(function(){
-        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
-        var priceInputValue = 100000 + Number(priceInputValue);
-        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value_fast').val(priceInputValue)
-    })
-
-    $('#price4_2').click(function(){
-        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
-        var priceInputValue = 50000 + Number(priceInputValue);
-        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value_fast').val(priceInputValue)
-    })
-
-    $('#price5_2').click(function(){
-        var priceInputValue = $('#lecturePrice_add_2').val().replace(/,/g, "")
-        var priceInputValue = 10000 + Number(priceInputValue);
-        $('#lecturePrice_add_2').val(numberWithCommas(priceInputValue)).attr('readonly',true)
-        $('#lecturePrice_add_value_fast').val(priceInputValue)
-    })
-
-    $('#price6_2').click(function(){
-        $('#lecturePrice_add_2').val("").attr('readonly',false)
-        $('#lecturePrice_add_value_fast').val(0)
-    })
-
-    $('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
-        var priceInputValue = $(this).val().replace(/,/g, "")
-        $(this).val(numberWithCommas(priceInputValue))
-    })
+    
 
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
@@ -1844,14 +1658,6 @@ $(document).ready(function(){
             }
         }
         else{
-            /*
-            console.log('lastnameInput::'+(lastnameInput).hasClass("dropdown_selected"))
-            console.log('firstnameInput::'+(firstnameInput).hasClass("dropdown_selected"))
-            console.log('phoneInput::'+(phoneInput).hasClass("dropdown_selected"))
-            console.log('countInput_fast::'+(countInput_fast).hasClass("dropdown_selected"))
-            console.log('dateInput_fast::'+(dateInput_fast).hasClass("dropdown_selected"))
-            console.log('sexInput::'+sexInput.length)
-            */
             if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput_fast).hasClass("dropdown_selected")==true&&(dateInput_fast).hasClass("dropdown_selected")==true && sexInput.length>0){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 $('.submitBtn').addClass('submitBtnActivated')
@@ -2308,21 +2114,6 @@ $(document).ready(function(){
         messageArray = jsondata.messageArray;
     }
 
-    function beforeSend(){
-        $('html').css("cursor","wait");
-        $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-        $('.ajaxloadingPC').show();
-    }
-
-    function completeSend(){
-        $('html').css("cursor","auto");
-        $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-        $('.ajaxloadingPC').hide();
-        //$('#shade').hide();
-        //$('#calendar').show();
-        //alert('complete: 일정 정상 등록')
-    }
-
     function closePopup(){
         if($('#memberInfoPopup').css('display')=='block'){ //회원정보팝업 모바일버전 띄웠을때 x눌렀을 경우
             //if($('body').width()<600){
@@ -2499,6 +2290,21 @@ $(document).ready(function(){
         }
         $('#memberRepeat_info_PC').html(schedulesHTML.join(''))
     }
+
+    function beforeSend(){
+        $('html').css("cursor","wait");
+        $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+        $('.ajaxloadingPC').show();
+    }
+
+    function completeSend(){
+        $('html').css("cursor","auto");
+        $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+        $('.ajaxloadingPC').hide();
+        //$('#shade').hide();
+        //$('#calendar').show();
+        //alert('complete: 일정 정상 등록')
+    }
  
 
  //작은달력 설정
@@ -2515,9 +2321,170 @@ $(document).ready(function(){
         yearSuffix: '년'
     });
 
-    function numberWithCommas(x) { //천단위 콤마 찍기
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+    
 
 
 });
+
+//Onclick 이벤트 함수
+
+//진행중 회원, 종료된 회원 리스트 스왑
+function shiftMemberList(type){
+    if(type == "current"){
+        var currentMemberList = $("#currentMemberList");
+        var currentMemberNum = $('#currentMemberNum');
+        var finishedMemberList = $("#finishedMemberList");
+        var finishedMemberNum = $('#finishMemberNum');
+        if(currentMemberList.css("display")=="none"){
+            finishedMemberList.css("display","none");
+            finishedMemberNum.css("display","none");
+            currentMemberList.css("display","block");
+            currentMemberNum.css("display","block");
+        }
+    }else if(type == "finished"){
+        var currentMemberList = $("#currentMemberList");
+        var currentMemberNum = $('#currentMemberNum');
+        var finishedMemberList = $("#finishedMemberList");
+        var finishedMemberNum = $('#finishMemberNum');
+        if(finishedMemberList.css("display")=="none"){
+            finishedMemberList.css("display","block");
+            finishedMemberNum.css("display","block");
+            currentMemberList.css("display","none");
+            currentMemberNum.css("display","none");
+        }
+    }
+}
+
+//간편 가격입력
+function priceInput(price, type, selector){
+    if(selector == 2){
+        var select = '_2'
+        var loc = "_fast"
+    }else if(selector == 1){
+        var select = ''
+        var loc = ''
+    }
+    if(type == "sum"){
+        var priceInputValue = $('#lecturePrice_add'+select).val().replace(/,/g, "")
+        var priceInputValue = price + Number(priceInputValue);
+        $('#lecturePrice_add'+select).val(numberWithCommas(priceInputValue)).attr('readonly',true)
+        $('#lecturePrice_add_value'+loc).val(priceInputValue)
+    }else if(type == "del"){
+        $('#lecturePrice_add'+select).val("").attr('readonly',false)
+        $('#lecturePrice_add_value'+loc).val(0)
+    }
+    function numberWithCommas(x) { //천단위 콤마 찍기
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+}
+//수동 가격입력
+$('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
+    var priceInputValue = $(this).val().replace(/,/g, "")
+    $(this).val(numberWithCommas(priceInputValue))
+})
+
+
+//생일입력 드랍다운
+function birth_dropdown_set(){
+    var yearoption = ['<option selected disabled hidden>연도</option>']
+    for(var i=2018; i>=1908; i--){
+        yearoption.push('<option data-year="'+i+'년'+'">'+i+'년</option>')
+    }
+    var birth_year_options = yearoption.join('')
+    $('#birth_year, #birth_year_info').html(birth_year_options)
+
+
+    var monthoption = ['<option selected disabled hidden>월</option>']
+    for(var i=1; i<=12; i++){
+        monthoption.push('<option data-month="'+i+'월'+'">'+i+'월</option>')
+    }
+    var birth_month_options = monthoption.join('')
+    $('#birth_month, #birth_month_info').html(birth_month_options)
+
+
+    var dateoption = ['<option selected disabled hidden>일</option>']
+    for(var i=1; i<=31; i++){
+        dateoption.push('<option data-date="'+i+'일'+'">'+i+'일</option>')
+    }
+    var birth_date_options = dateoption.join('')
+    $('#birth_date, #birth_date_info').html(birth_date_options)
+
+
+    $('#birth_month, #birth_month_info').change(function(){
+        var dateoption = ['<option selected disabled hidden>일</option>']
+        $('#birth_date, #birth_date_info').html("")
+        var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31];
+        var month = $(this).val().replace(/월/gi,"")
+        for(var i=1; i<=lastDay[month-1]; i++){
+            dateoption.push('<option data-date="'+i+'일'+'">'+i+'일</option>')
+        }
+        var birth_date_options = dateoption.join('')
+        $('#birth_date, #birth_date_info').html(birth_date_options)
+    })
+
+    $('#birth_year, #birth_month, #birth_date').change(function(){
+        $(this).addClass("dropdown_selected")
+        $(this).css('color','#282828')
+        var year = $('#birth_year').val().replace(/년/gi,"")
+        var month = $('#birth_month').val().replace(/월/gi,"")
+        var date = $('#birth_date').val().replace(/일/gi,"")
+        var birthdata = year+'-'+month+'-'+date
+        $('#form_birth').attr('value',birthdata)
+    })
+
+    $('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
+        $(this).addClass("dropdown_selected")
+        $(this).css('color','#282828')
+        var year = $('#birth_year_info').val().replace(/년/gi,"")
+        var month = $('#birth_month_info').val().replace(/월/gi,"")
+        var date = $('#birth_date_info').val().replace(/일/gi,"")
+        var birthdata = year+'-'+month+'-'+date
+        $('#form_birth_modify').attr('value',birthdata)
+    })
+}
+
+
+//포맷 변환 함수
+
+function count_format_to_nnnn(rawData){
+    if(rawData == '0'){
+        return rawData
+    }
+    var maxlen = String(rawData).length
+    var repeat =  4 - Number(maxlen)
+    var data = rawData
+    for(var j=0; j<repeat; j++){
+        var data = '0'+data
+    }
+    return data
+}
+
+function count_format_to_nnnn_Array(rawDataArray){
+    var maxlen = String(Math.max.apply(null, rawDataArray)).length
+    var result = []
+    for(var i=0;i<rawDataArray.length ;i++){
+        var repeat =  Number(maxlen)-Number(String(rawDataArray[i]).length)
+        var data = rawDataArray[i]
+        for(var j=0; j<repeat; j++){
+          var data = '0'+data
+        }
+        result[i] = data
+    }
+    return result
+}
+
+function remove_front_zeros(rawData){
+    var len = String(rawData).length;
+    var raw = rawData
+    var result;
+    if(rawData =='0'){
+      return rawData
+    }else{
+        for(var i=0; i<len; i++){
+            if(raw.substr(i,1)!='0'){
+              var result = raw.substr(i,len)
+              return result
+            }
+        }
+    }
+}
