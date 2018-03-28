@@ -325,6 +325,8 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+
+
 def get_member_data(context, class_id, member_id):
 
     error = None

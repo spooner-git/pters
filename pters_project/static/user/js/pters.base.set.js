@@ -261,7 +261,7 @@ function remove_front_zeros(rawData){
 
 
 function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
-      //DB데이터 가공
+    //DB데이터 가공
     var classTimeLength = startarray.length
     var startlength = startarray.length;
     var endlength = endarray.length;
@@ -326,7 +326,6 @@ function scrollToDom(dom){
     var offset = dom.offset();
     $('body, html').animate({scrollTop : offset.top-180},10)
 }
-
 
 
 

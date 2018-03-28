@@ -48,6 +48,52 @@ $(document).ready(function(){
             })
      }
 
+    //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
+    $(document).on('click','.memberNameForInfoView',function(){  
+    	$.ajax({
+              url: '/trainer/member_manage_ajax/',
+			  dataType : 'html',
+
+              beforeSend:function(){
+              	//AjaxBeforeSend();
+              },
+
+              success:function(data){
+              	console.log(data)
+              	ajax_received_json_data_member_manage(data)
+              	DB=[]
+              	DBe=[]
+              	DataFormattingDict('ID');
+		        DataFormatting('current');
+		        var userID = $(this).find('._id').attr('data-name');
+		        var userID = "01011112222"
+		        console.log(DB)
+		        if($('body').width()<600){
+		            open_member_info_popup_mobile(userID)
+		            get_indiv_repeat_info(userID)
+		            set_member_lecture_list()
+		        }else if($('body').width()>=600){
+		            open_member_info_popup_pc(userID)
+		            get_indiv_repeat_info(userID)
+		            set_member_lecture_list()
+		            $('#info_shift_base, #info_shift_lecture').show()
+		            $('#info_shift_schedule').hide()
+		            $('#select_info_shift_lecture').css('color','#fe4e65')
+		            $('#select_info_shift_schedule').css('color','#282828')
+		        }
+			  },
+
+              complete:function(){
+              	//AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+        })
+    	
+    });
+
 
 	$('#float_inner1, .ymdText-pc-add-pt').click(function(){ //PT추가버튼
 		clear_pt_off_add_popup()
@@ -289,13 +335,13 @@ $(document).ready(function(){
 			break; 
 		}
 		var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
-		var infoText2 = info[6]+member+time+yourplan
+		var infoText2 = '<span class="memberNameForInfoView">'+info[6]+'</span>'+member+time+yourplan
 		var infoText3 = $(this).attr('data-memo')
 		if($(this).attr('data-memo') == undefined){
 			var infoText3 = ""
 		}
 		$('#popup_info').text(infoText);
-		$('#popup_info2').text(infoText2);
+		$('#popup_info2').html(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
 		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('schedule-id'))
 		$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
