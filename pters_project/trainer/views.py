@@ -165,7 +165,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
         if error is not None:
-            logger.error(error)
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+error)
             messages.error(self.request, error)
         else:
             logger.info(self.request.user.last_name+self.request.user.first_name+'['+str(self.request.user.id)+'] : login success')
@@ -853,7 +853,7 @@ def add_member_info_logic(request):
         log_data.save()
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -983,7 +983,7 @@ def add_member_info_logic_test(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1084,7 +1084,7 @@ def update_member_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1175,7 +1175,7 @@ def delete_member_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1219,7 +1219,7 @@ def resend_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1269,7 +1269,7 @@ def delete_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1318,7 +1318,7 @@ def refund_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1365,7 +1365,7 @@ def update_member_lecture_view_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1427,7 +1427,7 @@ def refund_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1503,7 +1503,7 @@ def update_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1552,7 +1552,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
 
         context['member_info'] = member
         if error is not None:
-            logger.error(error)
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
             messages.error(request, error)
 
         return render(request, self.template_name, context)
@@ -1582,7 +1582,7 @@ def alarm_delete_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -1698,7 +1698,7 @@ def update_setting_push_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1794,7 +1794,7 @@ def update_setting_reserve_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1939,7 +1939,7 @@ def update_setting_sales_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1993,7 +1993,7 @@ def update_setting_language_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -2101,7 +2101,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         context = get_lecture_list_by_class_member_id(context, class_id, member_id)
 
         if context['error'] is not None:
-            logger.error(context['error'])
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+context['error'])
             messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
@@ -2114,7 +2114,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
 
         context = get_lecture_list_by_class_member_id(context, class_id, member_id)
         if context['error'] is not None:
-            logger.error(context['error'])
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+context['error'])
             messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
@@ -2257,7 +2257,7 @@ def class_processing_logic(request):
     if error is None:
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
     return redirect(next_page)
 
@@ -2293,7 +2293,7 @@ def delete_class_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -2338,7 +2338,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data.save()
 
         if error is not None:
-            logger.error(error)
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -2433,7 +2433,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data.save()
 
         if error is not None:
-            logger.error(error)
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
             messages.error(request, error)
         return render(request, self.template_name)
 

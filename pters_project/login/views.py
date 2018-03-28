@@ -199,7 +199,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
                 error = 'ID가 존재하지 않습니다.'
 
         if error is not None:
-            logger.error(error)
+            logger.error(username+'['+email+']'+error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -271,7 +271,7 @@ class ResetPasswordView(View):
 
             return render(request, self.template_name, context)
         else:
-            logger.error(error)
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+error)
             messages.error(request, error)
             return render(request, self.template_name)
 
@@ -339,7 +339,7 @@ def add_member_info_logic_test(request):
         messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(name+'['+user_id+']'+error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -358,6 +358,8 @@ class AddMemberView(RegistrationView, View):
         sex = request.POST.get('sex', '')
         group_type = request.POST.get('group_type', 'trainee')
         birthday_dt = request.POST.get('birthday', '')
+        address = request.POST.get('address', '')
+        country = request.POST.get('country', '')
 
         error = None
 
@@ -382,9 +384,12 @@ class AddMemberView(RegistrationView, View):
                         user.save()
                         if birthday_dt == '':
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
+                                              country=country, address=address,
                                               mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
                         else:
-                            member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
+                            member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
+                                              country=country, address=address,
+                                              mod_dt=timezone.now(), reg_dt=timezone.now(),
                                               birthday_dt=birthday_dt,user_id=user.id, use=1)
                         member.save()
                         # if group_type == 'trainer':
@@ -399,11 +404,11 @@ class AddMemberView(RegistrationView, View):
                 except IntegrityError as e:
                     error = '등록 값에 문제가 있습니다.'
                 except TypeError as e:
-                    error = '등록 값의 형태가 문제 있습니다.1'
+                    error = '등록 값의 형태가 문제 있습니다.'
                 except ValidationError as e:
-                    error = '등록 값의 형태가 문제 있습니다.2'
+                    error = '등록 값의 형태가 문제 있습니다.'
                 except InternalError:
-                    error = '이미 가입된 회원입니다.2'
+                    error = '이미 가입된 회원입니다.'
         else:
             for field in form:
                 if field.errors:
@@ -418,7 +423,7 @@ class AddMemberView(RegistrationView, View):
                                 error += err
 
         if error is not None:
-            logger.error(error)
+            logger.error(name+'['+form.cleaned_data['email']+']'+error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -485,7 +490,7 @@ class AddMemberNoEmailView(View):
                 error = '이미 가입된 회원입니다.'
 
         if error is not None:
-            logger.error(error)
+            logger.error(name+'[강사 회원가입]'+error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -597,7 +602,7 @@ def out_member_logic(request):
     if error is None:
         return redirect(next_page)
     else:
-        logger.error(error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
