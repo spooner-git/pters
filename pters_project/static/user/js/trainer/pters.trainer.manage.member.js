@@ -261,21 +261,28 @@ $(document).ready(function(){
     */
 
     $(document).on('click','#memberRegHistory_info_PC img',function(){
-      var userID = $('#memberId_info_PC').text()
-      var userName = DB[userID].name
-      var lectureID = $(this).attr('data-leid')
-      $('#form_member_name').val(userName)
-      $('#form_lecture_id').val(lectureID)
-      //modify_member_info_pc(userID)
-      if($(this).attr('data-type')=="view"){
-        $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('disabled',false);
-        $(this).text('완료').attr('data-type',"modify");
-      }else if($(this).attr('data-type')=="modify"){
-        console.log('수정송신')
-        send_member_modified_data_pc()
-      }else if($(this).attr('data-type')=="resend"){
+        $(this).attr('src','/static/user/res/btn-pt-complete.png')
+        if($('#currentMemberList').css('display') == "block"){
+          var Data = DB
+        }else if($('#finishedMemberList').css('display') == "block"){
+           var Data = DBe
+        }
+        var userID = $('#memberId_info_PC').text()
+        var userName = Data[userID].name
+        var lectureID = $(this).attr('data-leid')
+        $('#form_member_name').val(userName)
+        $('#form_lecture_id').val(lectureID)
+        if($(this).attr('data-type')=="view"){
+            var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input')
+            myRow.addClass('input_avaiable').attr('disabled',false);
+            $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide()
+            $(this).text('완료').attr('data-type',"modify");
+        }else if($(this).attr('data-type')=="modify"){
+            console.log('수정송신')
+            send_member_modified_data_pc()
+        }else if($(this).attr('data-type')=="resend"){
 
-      }
+        }
     })
 
 
@@ -691,6 +698,7 @@ $(document).ready(function(){
                         memberListSet('current','date','yes');
                         memberListSet('finished','date','yes');
                         $('#startR').attr('selected','selected')
+                        $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
                         open_member_info_popup_pc($('#memberId_info_PC').text())
                         console.log('success');
                   }
@@ -989,8 +997,8 @@ $(document).ready(function(){
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
             var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
-            var start = '<div><input data-type="lec_start_date" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
-            var end = '<div><input data-type="lec_end_date" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
+            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
+            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
             var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
                 var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
@@ -1006,7 +1014,7 @@ $(document).ready(function(){
             }else if(jsondata.memberViewStateArray[i] == "VIEW"){
                 var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
             }
-            result_history_html.push('<div data-lecid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>')
+            result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>')
         }
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
@@ -1487,11 +1495,13 @@ $(document).ready(function(){
     function modify_datepicker_set(){
         $(document).on("focus","input.lec_start_date, input.lec_end_date",function(){
             $(this).datepicker({
-                minDate : 0,
                 onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
                     $('#'+$(this).attr('data-type').replace(/lec_/gi,'form_')).val($(this).val())
-                    console.log('#'+$(this).attr('data-type').replace(/lec_/gi,'form_'))
-
+                    var startDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_start_date')
+                    var endDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_end_date')
+                    console.log(startDatepicker.val(), endDatepicker.val())
+                    $("input.lec_end_date").datepicker('option','minDate',startDatepicker.val())
+                    $("input.lec_start_date").datepicker('option','maxDate',endDatepicker.val())
                 }
             })
         });

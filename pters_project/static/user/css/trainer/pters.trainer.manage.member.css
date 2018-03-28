@@ -537,7 +537,6 @@ th{
 			}
 			.lecConnectType_PE{
 				color: #282828 !important;
-				text-decoration: underline;
 				cursor: pointer !important;
 			}
 			.lecConnectType_RF{
@@ -566,7 +565,8 @@ th{
 		}
 
 .input_avaiable{
-	background: #ffffff !important;
+	background: #fe4e65 !important;
+	color: #ffffff !important;
 	border-color: #282828 !important;
 }
 
