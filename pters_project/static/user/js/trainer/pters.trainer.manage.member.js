@@ -1587,8 +1587,6 @@ function open_member_info_popup_pc(userID){
 
     })
 
->>>>>>> c7e8e90d781e526f76f56b7bc1e89af51909f01e
-
     if(Data[userID].email.length==0){
       var email = ''
     }else{

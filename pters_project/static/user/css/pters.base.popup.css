@@ -52,6 +52,11 @@
 	}
 }
 
+.memberNameForInfoView{
+	border-bottom: 1px solid #282828;
+	cursor: pointer;
+}
+
 #cal_popup_plandelete, #cal_popup_repeatconfirm{
 	display: none;
 	position: fixed;

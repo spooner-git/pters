@@ -49,7 +49,9 @@ $(document).ready(function(){
      }
 
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
-    $(document).on('click','.memberNameForInfoView',function(){  
+    $(document).on('click','.memberNameForInfoView',function(){
+    	var clickedName = $(this).attr('data-name')
+    	console.log(clickedName)
     	$.ajax({
               url: '/trainer/member_manage_ajax/',
 			  dataType : 'html',
@@ -59,15 +61,13 @@ $(document).ready(function(){
               },
 
               success:function(data){
-              	console.log(data)
               	ajax_received_json_data_member_manage(data)
               	DB=[]
               	DBe=[]
-              	DataFormattingDict('ID');
+              	DataFormattingDict('name');
 		        DataFormatting('current');
-		        var userID = $(this).find('._id').attr('data-name');
-		        var userID = "01011112222"
-		        console.log(DB)
+		        var userID = DB[clickedName].id
+		        DataFormattingDict('ID');
 		        if($('body').width()<600){
 		            open_member_info_popup_mobile(userID)
 		            get_indiv_repeat_info(userID)
@@ -335,7 +335,7 @@ $(document).ready(function(){
 			break; 
 		}
 		var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
-		var infoText2 = '<span class="memberNameForInfoView">'+info[6]+'</span>'+member+time+yourplan
+		var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'">'+info[6]+'</span>'+member+time+yourplan
 		var infoText3 = $(this).attr('data-memo')
 		if($(this).attr('data-memo') == undefined){
 			var infoText3 = ""
