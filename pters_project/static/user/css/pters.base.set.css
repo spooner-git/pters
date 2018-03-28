@@ -18,7 +18,7 @@ a:focus, a:hover{
 #errorMessageBar{
     display: none;
     width: 100%;
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
     height: 35px;
@@ -35,7 +35,7 @@ a:focus, a:hover{
     #errorMessageBar span:nth-child(2){
         position: absolute;
         right: 0;
-        margin-right: 85px;
+        margin-right: 7px;
         cursor: pointer;
     }
 
@@ -504,6 +504,30 @@ a:focus, a:hover{
 
 /*미디어 쿼리*/
 @media(min-width:600px){
+
+    #errorMessageBar{
+        display: none;
+        width: 100%;
+        position: sticky;
+        top: 0;
+        left: 0;
+        height: 35px;
+        text-align: center;
+        background: red;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: bold;
+        z-index: 1500;
+    }   
+        #errorMessageBar span{
+            line-height: 35px;
+        }
+        #errorMessageBar span:nth-child(2){
+            position: absolute;
+            right: 0;
+            margin-right: 85px;
+            cursor: pointer;
+        }
 
 
     #page-base{

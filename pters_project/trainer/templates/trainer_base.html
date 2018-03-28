@@ -398,8 +398,16 @@
             })
 
             $('#errorMessageBar span:nth-child(2)').click(function(){
-                $('#errorMessageBar').fadeOut()
-                $('#errorMessageText').text('')
+                $('#errorMessageBar').fadeOut();
+                $('#errorMessageText').text('');
+                $('html').css("cursor","auto");
+                $('.ajaxloadingPC').hide();
+                if($('body').width()>600){
+                    $('#calendar').css('position','relative')
+                    $('#shade, #shade3, .popups').hide();
+                }else{
+                    $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+                }
             })
 
 
@@ -572,7 +580,8 @@
             function open_lecture_select_popup(){
                 $('.popups').hide()
                 $('#popup_lecture_select').fadeIn('fast')
-                $('#shade3').show()
+                closeNav()
+                $('#shade').show()
                 ajax_read_lecture_info_from_db()
             }
 
