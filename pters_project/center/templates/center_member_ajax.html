@@ -19,5 +19,5 @@
       [{% for member_info in member_data %}"{{ member_info.member.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
-      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
     }

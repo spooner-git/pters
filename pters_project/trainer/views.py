@@ -43,7 +43,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         self.url = '/trainer/class_select/'
         class_id = request.session.get('class_id', '')
         class_counter = 0
-
+        error = None
         if class_id is None or class_id == '':
             if len(class_data) == 0:
                 self.url = '/trainer/add_class/'
@@ -51,15 +51,28 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 self.url = '/trainer/trainer_main/'
                 for class_info in class_data:
                     self.request.session['class_id'] = class_info.class_id
-                    class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
-                    self.request.session['class_type_name'] = class_name.common_cd_nm
-                    self.request.session['class_center_name'] = class_info.center_tb.center_name
+                    try:
+                        class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                    except ObjectDoesNotExist:
+                        error = '강좌 과목 정보를 불러오지 못했습니다.'
+                    if error is None:
+                        self.request.session['class_type_name'] = class_name.common_cd_nm
+                    else:
+                        self.request.session['class_type_name'] = ''
+
+                    if class_info.center_tb is None or class_info.center_tb == '':
+                        self.request.session['class_center_name'] = ''
+                    else:
+                        self.request.session['class_center_name'] = class_info.center_tb.center_name
             else:
                 self.url = '/trainer/class_select/'
         else:
             self.url = '/trainer/trainer_main/'
             class_id_comp = ''
             class_np_counter = 0
+        if error is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+error)
+            messages.error(self.request, error)
 
         return super(IndexView, self).get(request, **kwargs)
 
@@ -722,144 +735,6 @@ class LanguageSettingView(AccessTestMixin, TemplateView):
 
 
 # 회원가입 api
-def add_member_info_logic(request):
-    fast_check = request.POST.get('fast_check')
-    email = request.POST.get('email')
-    name = request.POST.get('name')
-    phone = request.POST.get('phone')
-    contents = request.POST.get('contents')
-    counts = request.POST.get('counts')
-    price = request.POST.get('price')
-    start_date = request.POST.get('start_date')
-    end_date = request.POST.get('end_date')
-    counts_fast = request.POST.get('counts_fast')
-    price_fast = request.POST.get('price_fast')
-    start_date_fast = request.POST.get('start_date_fast')
-    end_date_fast = request.POST.get('end_date_fast')
-    sex = request.POST.get('sex')
-    birthday_dt = request.POST.get('birthday')
-    class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
-
-    error = None
-    input_start_date = ''
-    input_end_date = ''
-    input_counts = 0
-    input_price = 0
-    now = timezone.now()
-    class_info = None
-
-    if User.objects.filter(username=phone).exists():
-        error = '이미 가입된 회원 입니다.'
-    #elif User.objects.filter(email=email).exists():
-    #    error = '이미 가입된 회원 입니다.'
-    #elif email == '':
-    #    error = 'e-mail 정보를 입력해 주세요.'
-    elif name == '':
-        error = '이름을 입력해 주세요.'
-    elif phone == '':
-        error = '연락처를 입력해 주세요.'
-    elif len(phone) != 11 and len(phone) != 10:
-        error = '연락처를 확인해 주세요.'
-    elif not phone.isdigit():
-        error = '연락처를 확인해 주세요.'
-
-    if error is None:
-        if fast_check == '0':
-            if counts_fast == '':
-                error = '남은 횟수를 입력해 주세요.'
-            elif start_date_fast == '':
-                error = '시작 날짜를 입력해 주세요.'
-            else:
-                input_counts = counts_fast
-                input_start_date = start_date_fast
-                if price_fast == '':
-                    input_price = 0
-                else:
-                    input_price = price_fast
-                if end_date_fast == '':
-                    input_end_date = '9999-12-31'
-                else:
-                    input_end_date = end_date_fast
-
-        elif fast_check == '1':
-            if counts == '':
-                error = '남은 횟수를 입력해 주세요.'
-            elif start_date == '':
-                error = '시작 날짜를 입력해 주세요.'
-            else:
-                input_counts = counts
-                input_start_date = start_date
-                if price == '':
-                    input_price = 0
-                else:
-                    input_price = price
-                if end_date == '':
-                    input_end_date = '9999-12-31'
-                else:
-                    input_end_date = end_date
-
-    if error is None:
-        if len(phone) == 11:
-            password = phone[7:]
-        elif len(phone) == 10:
-            password = phone[6:]
-
-    if error is None:
-
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 강좌 정보가 없습니다.'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                user = User.objects.create_user(username=phone, email=email, first_name=name, password=password)
-                group = Group.objects.get(name='trainee')
-                user.groups.add(group)
-                if birthday_dt == '':
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
-                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
-                else:
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
-                                      birthday_dt=birthday_dt, mod_dt=timezone.now(),reg_dt=timezone.now(), user_id=user.id)
-                member.save()
-                lecture = LectureTb(class_tb_id=class_info.class_id,member_id=member.member_id,
-                                    lecture_reg_count=input_counts, lecture_rem_count=input_counts,
-                                    lecture_avail_count=input_counts, price=input_price, option_cd='DC', state_cd='IP',
-                                    start_date=input_start_date,end_date=input_end_date, mod_dt=now,
-                                    reg_dt=now, use=1)
-                lecture.save()
-
-        except ValueError as e:
-            error = '이미 가입된 회원입니다.'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
-            error = '등록 값의 형태가 문제 있습니다'
-        except InternalError:
-            error = '이미 가입된 회원입니다.'
-
-    if error is None:
-        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 '\
-        #               + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
-        log_data = LogTb(log_type='LB01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=name, class_tb_id=class_id, lecture_tb_id=lecture.lecture_id,
-                         log_info='회원 정보', log_how='등록',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
-        log_data.save()
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
-        messages.error(request, error)
-
-        return redirect(next_page)
-
-
-# 회원가입 api
 def add_member_info_logic_test(request):
     fast_check = request.POST.get('fast_check')
     user_id = request.POST.get('user_id')
@@ -989,14 +864,14 @@ def add_member_info_logic_test(request):
         return redirect(next_page)
 
 
-def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, start_date, end_date, note):
+def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, start_date, end_date, contents):
 
     lecture = LectureTb(class_tb_id=class_id, member_id=member_id,
                         lecture_reg_count=counts, lecture_rem_count=counts,
                         lecture_avail_count=counts, price=price, option_cd='DC',
                         state_cd=state_cd,
                         start_date=start_date, end_date=end_date,
-                        note=note,
+                        note=contents,
                         mod_dt=timezone.now(),
                         reg_dt=timezone.now(), use=1)
     lecture.save()
@@ -1125,11 +1000,6 @@ def delete_member_info_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                #user.is_active = 0
-                #user.save()
-                #member.use = 0
-                #member.mod_dt = timezone.now()
-                #member.save()
                 for lecture_info in lecture_data:
                     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                               lecture_tb_id=lecture_info.lecture_id,
@@ -1140,14 +1010,12 @@ def delete_member_info_logic(request):
                                                                      state_cd='PE')
                     repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                                            lecture_tb_id=lecture_info.lecture_id)
-                    schedule_data.delete()
-                    repeat_schedule_data.delete()
-                    # schedule_data_finish.class_tb_id = ''
-                    # schedule_data_finish.save()
-                    if lecture_info.state_cd == 'IP':
-                        lecture_info.state_cd = 'PE'
+                    # schedule_data.delete()
+                    # repeat_schedule_data.delete()
+                    schedule_data_finish.use = 0
+                    schedule_data_finish.save()
                     lecture_info.use = 0
-                    lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+                    # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.save()
 
@@ -1246,14 +1114,18 @@ def delete_member_lecture_info_logic(request):
     if error is None:
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                   state_cd='NP')
+        schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                         state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-        schedule_data.delete()
-        repeat_schedule_data.delete()
+        # schedule_data.delete()
+        # repeat_schedule_data.delete()
+        schedule_data_finish.use = 0
+        schedule_data_finish.save()
         lecture_info.use = 0
-        lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+        # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
         lecture_info.mod_dt = timezone.now()
-        if lecture_info.state_cd == 'IP':
-            lecture_info.state_cd = 'PE'
+        # if lecture_info.state_cd == 'IP':
+        #    lecture_info.state_cd = 'PE'
         lecture_info.save()
 
     if error is None:
@@ -1402,6 +1274,10 @@ def refund_member_lecture_info_logic(request):
             error = '환불 금액은 숫자만 입력 가능합니다.'
 
     if error is None:
+        if refund_price > lecture_info.price:
+            error = '환불 금액이 등록 금액보다 많습니다.'
+
+    if error is None:
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                   state_cd='NP')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
@@ -1479,7 +1355,7 @@ def update_member_lecture_info_logic(request):
 
     if error is None:
         if lecture_reg_count < lecture_info.lecture_reg_count-lecture_info.lecture_avail_count:
-            error = '등록횟수가이미 등록한 스케쥴보다 작습니다.'
+            error = '등록 횟수가 이미 등록한 스케쥴보다 작습니다.'
 
     if error is None:
         lecture_info.start_date = start_date
@@ -1594,19 +1470,30 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
     def get(self, request, *args, **kwargs):
         context = super(ReadMemberLectureData, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
+        context['error'] = None
 
         context = get_trainee_repeat_schedule_data_func(context, class_id, None)
-        context = get_member_data(context, class_id, None)
+        if context['error'] is None:
+            context = get_member_data(context, class_id, None)
+
+        if context['error'] is not None:
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+context['error'])
+            messages.error(request, context['error'])
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        lecture_id = request.POST.get('lecture_id', None)
+        context = super(ReadMemberLectureData, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', None)
-        context = super(ReadMemberLectureData, self).get_context_data(**kwargs)
+        context['error'] = None
         context = get_trainee_repeat_schedule_data_func(context, class_id, member_id)
-        context = get_member_data(context, class_id, member_id)
+        if context['error'] is None:
+            context = get_member_data(context, class_id, member_id)
+
+        if context['error'] is not None:
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+context['error'])
+            messages.error(request, context['error'])
 
         return render(request, self.template_name, context)
 
@@ -2249,9 +2136,19 @@ def class_processing_logic(request):
 
     if error is None:
         request.session['class_id'] = class_id
-        class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
-        request.session['class_type_name'] = class_name.common_cd_nm
-        request.session['class_center_name'] = class_info.center_tb.center_name
+        try:
+            class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+        except ObjectDoesNotExist:
+            error = '강좌 과목 정보를 불러오지 못했습니다.'
+        if error is None:
+            request.session['class_type_name'] = class_name.common_cd_nm
+        else:
+            request.session['class_type_name'] = ''
+
+        if class_info.center_tb is None or class_info.center_tb == '':
+            request.session['class_center_name'] = ''
+        else:
+            request.session['class_center_name'] = class_info.center_tb.center_name
 
     # print(error)
     if error is None:

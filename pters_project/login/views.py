@@ -440,7 +440,7 @@ class AddMemberNoEmailView(View):
         phone = request.POST.get('username', '')
         sex = request.POST.get('sex', '')
         birthday_dt = request.POST.get('birthday', '')
-        contents = request.POST.get('contents', '')
+        # contents = request.POST.get('contents', '')
 
         error = None
 
@@ -470,10 +470,10 @@ class AddMemberNoEmailView(View):
                     group = Group.objects.get(name='trainee')
                     user.groups.add(group)
                     if birthday_dt == '':
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                           mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
                     else:
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, contents=contents, sex=sex,
+                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                           birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
                                           user_id=user.id)
                     member.save()

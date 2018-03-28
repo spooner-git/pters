@@ -8,8 +8,17 @@
       "memberLectureIdArray":
       [{% for member_info in member_data %}"{{ member_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+      "memberFinishIdArray":
+      [{% for member_info in member_finish_data %}"{{ member_info.user.id  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberFinishNameArray":
+      [{% for member_info in member_finish_data %}"{{ member_info.name  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberFinishAvailCountArray":
+      [{% for member_info in member_finish_data %}"{{ member_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberFinishLectureIdArray":
+      [{% for member_info in member_finish_data %}"{{ member_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "messageArray" :
-      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "ptRepeatScheduleIdArray" :
       [{% for pt_repeat_schedule_id_info in pt_repeat_schedule_id_data %}"{{ pt_repeat_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

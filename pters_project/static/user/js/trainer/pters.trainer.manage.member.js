@@ -954,6 +954,7 @@ $(document).ready(function(){
 
             //통신성공시 처리
             success:function(data){
+                console.log(data)
                 var jsondata = JSON.parse(data);
                 console.log(jsondata,'----')
                 if(jsondata.messageArray.length>0){
@@ -2403,9 +2404,11 @@ $(document).ready(function(){
 
                   beforeSend:function(){
                       //beforeSend(); //ajax 로딩이미지 출력
+                      console.log('test')
                   },
 
                   success:function(data){
+                      console.log(data)
                     var jsondata = JSON.parse(data);
                     console.log(jsondata.messageArray)
                     if(jsondata.messageArray.length>0){
