@@ -26,9 +26,9 @@ from center.models import CenterTrainerTb
 from configs.views import AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_trainer_schedule_data_func
-from trainee.models import LectureTb
+from schedule.models import LectureTb, ClassLectureTb, MemberClassTb
+from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func
-from trainer.models import ClassTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
 logger = logging.getLogger(__name__)
@@ -39,20 +39,24 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     # url = '/trainee/cal_month/'
     def get(self, request, **kwargs):
 
-        class_data = ClassTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
+        class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd__contains='DELETE')
+        # class_data = ClassTb
+
+        # class_data = ClassTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
+        # class_data = class_auth_data.class_tb
         self.url = '/trainer/class_select/'
         class_id = request.session.get('class_id', '')
         class_counter = 0
         error = None
         if class_id is None or class_id == '':
-            if len(class_data) == 0:
+            if len(class_auth_data) == 0:
                 self.url = '/trainer/add_class/'
-            elif len(class_data) == 1:
+            elif len(class_auth_data) == 1:
                 self.url = '/trainer/trainer_main/'
-                for class_info in class_data:
-                    self.request.session['class_id'] = class_info.class_id
+                for class_info in class_auth_data:
+                    self.request.session['class_id'] = class_info.class_tb_id
                     try:
-                        class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                        class_name = CommonCdTb.objects.get(common_cd=class_info.class_tb.subject_cd)
                     except ObjectDoesNotExist:
                         error = '강좌 과목 정보를 불러오지 못했습니다.'
                     if error is None:
@@ -60,10 +64,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     else:
                         self.request.session['class_type_name'] = ''
 
-                    if class_info.center_tb is None or class_info.center_tb == '':
+                    if class_info.class_tb.center_tb is None or class_info.class_tb.center_tb == '':
                         self.request.session['class_center_name'] = ''
                     else:
-                        self.request.session['class_center_name'] = class_info.center_tb.center_name
+                        self.request.session['class_center_name'] = class_info.class_tb.center_tb.center_name
             else:
                 self.url = '/trainer/class_select/'
         else:
@@ -1169,10 +1173,10 @@ def refund_member_lecture_info_logic(request):
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                   state_cd='NP')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-        schedule_data.delete()
-        repeat_schedule_data.delete()
+        # schedule_data.delete()
+        # repeat_schedule_data.delete()
         lecture_info.use = 0
-        lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+        # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
         lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'RF'
         lecture_info.save()
@@ -1324,6 +1328,9 @@ def update_member_lecture_info_logic(request):
     next_page = request.POST.get('next_page', '')
 
     error = None
+    input_refund_price = 0
+    input_price = 0
+    input_lecture_reg_count = 0
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1341,29 +1348,45 @@ def update_member_lecture_info_logic(request):
         if end_date is None or end_date == '':
             end_date = lecture_info.end_date
         if price is None or price == '':
-            price = lecture_info.price
+            input_price = lecture_info.price
+        else:
+            try:
+                input_price = int(price)
+            except ValueError:
+                error = '강의 금액은 숫자만 입력 가능합니다.'
         if refund_price is None or refund_price == '':
-            refund_price = lecture_info.refund_price
+            input_refund_price = lecture_info.refund_price
+        else:
+            try:
+                input_refund_price = int(refund_price)
+            except ValueError:
+                error = '환불 금액은 숫자만 입력 가능합니다.'
         if lecture_reg_count is None or lecture_reg_count == '':
-            lecture_reg_count = lecture_info.lecture_reg_count
+            input_lecture_reg_count = lecture_info.lecture_reg_count
+        else:
+            try:
+                input_lecture_reg_count = int(lecture_reg_count)
+            except ValueError:
+                error = '등록 횟수는 숫자만 입력 가능합니다.'
+
         if note is None or note == '':
             note = lecture_info.note
 
     if error is None:
-        if lecture_reg_count < lecture_info.lecture_rem_count:
+        if input_lecture_reg_count < lecture_info.lecture_rem_count:
             error = '등록 횟수가 남은 횟수보다 작습니다.'
 
     if error is None:
-        if lecture_reg_count < lecture_info.lecture_reg_count-lecture_info.lecture_avail_count:
+        if input_lecture_reg_count < lecture_info.lecture_reg_count-lecture_info.lecture_avail_count:
             error = '등록 횟수가 이미 등록한 스케쥴보다 작습니다.'
 
     if error is None:
         lecture_info.start_date = start_date
         lecture_info.end_date = end_date
-        lecture_info.price = price
-        lecture_info.refund_price = refund_price
+        lecture_info.price = input_price
+        lecture_info.refund_price = input_refund_price
         lecture_info.note = note
-        lecture_info.lecture_reg_count = lecture_reg_count
+        lecture_info.lecture_reg_count = input_lecture_reg_count
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
 

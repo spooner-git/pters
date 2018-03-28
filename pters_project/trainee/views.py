@@ -22,8 +22,8 @@ from el_pagination.views import AjaxListView
 from configs.views import date_check_func, AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_member_schedule_input_lecture
-from trainee.models import LectureTb
-from trainer.models import ClassTb
+from schedule.models import LectureTb
+from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
 
 from django.utils import timezone

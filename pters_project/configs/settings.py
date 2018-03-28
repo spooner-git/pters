@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'login',
-    'trainer',
     'trainee',
+    'trainer',
     'schedule',
     'center',
     'el_pagination',
@@ -266,13 +266,3 @@ LOGGING = {
     }
 }
 
-CACHES = {
-  'default': {
-    'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-    'LOCATION': '127.0.0.1:11211',
-  },
-  'staticfiles': {
-    'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    'LOCATION': 'staticfiles-filehashes'
-  }
-}
