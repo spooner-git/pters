@@ -26,7 +26,7 @@ from center.models import CenterTrainerTb
 from configs.views import AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_trainer_schedule_data_func
-from schedule.models import LectureTb, ClassLectureTb, MemberClassTb
+from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
@@ -39,7 +39,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     # url = '/trainee/cal_month/'
     def get(self, request, **kwargs):
 
-        class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd__contains='DELETE')
+        class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd='VIEW')
         # class_data = ClassTb
 
         # class_data = ClassTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
@@ -127,6 +127,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 member_lecture_rem_count = 0
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
+                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id)
                 lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_info.member_id,
                                                         lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
                 if len(lecture_list) > 0:
@@ -348,19 +349,27 @@ def get_member_data(context, class_id, member_id):
             member_data_finish = copy.copy(member_info)
             lecture_finish_check = 0
             # 강좌에 해당하는 수강/회원 정보 가져오기
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id, state_cd='IP',
-                                                    use=1).order_by('start_date')
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=member_data.member_id,
+                                                         lecture_tb__state_cd='IP', auth_cd='VIEW', lecture_tb__use=1)
 
-            lecture_finish_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
-                                                           use=1).exclude(state_cd='IP').order_by('start_date')
+            # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id, state_cd='IP',
+            #                                        use=1).order_by('start_date')
+
+            lecture_finish_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=member_data.member_id,
+                                                                auth_cd='VIEW', lecture_tb__use=1).exclude(lecture_tb__state_cd='IP')
+
+            # lecture_finish_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
+            #                                               use=1).exclude(state_cd='IP').order_by('start_date')
 
             if len(lecture_list) == 0:
                 if len(lecture_finish_list) > 0:
                     lecture_finish_check = 1
 
             if len(lecture_list) > 0:
-                lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
-                                                        use=1).order_by('start_date')
+                lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=member_data.member_id,
+                                                             lecture_tb__use=1)
+                # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
+                #                                        use=1).order_by('start_date')
                 member_data.rj_lecture_counts = 0
                 member_data.np_lecture_counts = 0
 
@@ -381,12 +390,13 @@ def get_member_data(context, class_id, member_id):
                 member_data.end_date = None
                 member_data.mod_dt = None
 
-                for idx, lecture_info in enumerate(lecture_list):
+                for idx, lecture_info_data in enumerate(lecture_list):
                     # if lecture_info.state_cd == 'RJ':
-                    if lecture_info.member_view_state_cd == 'DELETE':
+                    lecture_info = lecture_info_data.lecture_tb
+                    if lecture_info_data.auth_cd == 'DELETE':
                         member_data.rj_lecture_counts += 1
                     # if lecture_info.state_cd == 'NP':
-                    if lecture_info.member_view_state_cd == 'WAIT':
+                    if lecture_info_data.auth_cd == 'WAIT':
                         member_data.np_lecture_counts += 1
 
                     if lecture_info.use != 0:
@@ -443,12 +453,13 @@ def get_member_data(context, class_id, member_id):
                 member_data_finish.start_date = None
                 member_data_finish.end_date = None
                 member_data_finish.mod_dt = None
-                for idx, lecture_info in enumerate(lecture_finish_list):
+                for idx, lecture_info_data in enumerate(lecture_finish_list):
                     # if lecture_info.state_cd == 'RJ':
-                    if lecture_info.member_view_state_cd == 'DELETE':
+                    lecture_info = lecture_info_data.lecture_tb
+                    if lecture_info_data.auth_cd == 'DELETE':
                         member_data_finish.rj_lecture_counts += 1
                     # if lecture_info.state_cd == 'NP':
-                    if lecture_info.member_view_state_cd == 'WAIT':
+                    if lecture_info_data.auth_cd == 'WAIT':
                         member_data_finish.np_lecture_counts += 1
 
                     if lecture_info.use != 0:
@@ -836,7 +847,17 @@ def add_member_info_logic_test(request):
 
                 state_cd = 'IP'
 
-                lecture_info = add_lecture_info_logic_func(class_info.class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
+                lecture_info = add_lecture_info_logic_func(class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
+                member_lecture_info = MemberLectureTb(member_id=user.id, lecture_tb_id=lecture_info.lecture_id,
+                                                      auth_cd='WAIT', mod_member_id=request.user.id,
+                                                      reg_dt=timezone.now(), mod_dt=timezone.now(),
+                                                      use=1)
+                member_lecture_info.save()
+                class_lecture_info = ClassLectureTb(class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                                                    auth_cd='VIEW', mod_member_id=request.user.id,
+                                                    reg_dt=timezone.now(), mod_dt=timezone.now(),
+                                                    use=1)
+                class_lecture_info.save()
 
         except ValueError as e:
             error = '이미 가입된 회원입니다.'
@@ -998,30 +1019,37 @@ def delete_member_info_logic(request):
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                member_id=user.id, use=1)
+    if error is None:
+        class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id, use=1)
 
+        # lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+        #                                         member_id=user.id, use=1)
     if error is None:
         try:
             with transaction.atomic():
-                for lecture_info in lecture_data:
-                    schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                for class_lecture_info in class_lecture_data:
+                    lecture_info = class_lecture_info.lecture_tb
+                    schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                               lecture_tb_id=lecture_info.lecture_id,
                                                               state_cd='NP')
 
-                    schedule_data_finish = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                    schedule_data_finish = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                      lecture_tb_id=lecture_info.lecture_id,
                                                                      state_cd='PE')
-                    repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                    repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                            lecture_tb_id=lecture_info.lecture_id)
                     # schedule_data.delete()
                     # repeat_schedule_data.delete()
-                    schedule_data_finish.use = 0
-                    schedule_data_finish.save()
-                    lecture_info.use = 0
+                    if len(schedule_data) > 0:
+                        schedule_data.update(use=0)
+                    if len(schedule_data_finish) > 0:
+                        schedule_data_finish.use = 0
+                        schedule_data_finish.update(use=0)
+                    # lecture_info.use = 0
                     # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
-                    lecture_info.mod_dt = timezone.now()
-                    lecture_info.save()
+                    # lecture_info.mod_dt = timezone.now()
+                    # lecture_info.save()
+                class_lecture_data.update(auth_cd='DELETE', mod_member_id=request.user.id, mod_dt=timezone.now())
 
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
@@ -1040,7 +1068,7 @@ def delete_member_info_logic(request):
         #               + member.name + ' 회원님의</span> 수강정보를 <span class="status">삭제</span>했습니다.'
 
         log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         to_member_name=member.name, class_tb_id=class_id,
                          log_info='수강 정보', log_how='삭제',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
@@ -1068,13 +1096,15 @@ def resend_member_lecture_info_logic(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            lecture_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_id)
+            # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
         # lecture_info.state_cd = 'NP'
-        lecture_info.member_view_state_cd = 'WAIT'
+        lecture_info.auth_cd = 'WAIT'
+        # lecture_info.member_view_state_cd = 'WAIT'
         lecture_info.mod_dt = timezone.now()
 
         lecture_info.save()
@@ -1084,7 +1114,7 @@ def resend_member_lecture_info_logic(request):
         #               + member_name + ' 회원님의</span> 수강정보를 <span class="status">재요청</span>했습니다.'
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보', log_how='재요청',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
@@ -1111,33 +1141,36 @@ def delete_member_lecture_info_logic(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            class_lecture_info = ClassLectureTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id)
+            # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
                                                   state_cd='NP')
-        schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+        schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
                                                          state_cd='PE')
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
         # schedule_data.delete()
         # repeat_schedule_data.delete()
-        schedule_data_finish.use = 0
-        schedule_data_finish.save()
-        lecture_info.use = 0
+
+        schedule_data.update(use=0)
+        schedule_data_finish.update(use=0)
+        class_lecture_info.auth_cd = 'DELETE'
+        # lecture_info.use = 0
         # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
-        lecture_info.mod_dt = timezone.now()
+        class_lecture_info.mod_dt = timezone.now()
         # if lecture_info.state_cd == 'IP':
         #    lecture_info.state_cd = 'PE'
-        lecture_info.save()
+        class_lecture_info.save()
 
     if error is None:
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
         #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보', log_how='삭제',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
 
@@ -1175,7 +1208,7 @@ def refund_member_lecture_info_logic(request):
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         # schedule_data.delete()
         # repeat_schedule_data.delete()
-        lecture_info.use = 0
+        # lecture_info.use = 0
         # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
         lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'RF'
@@ -1219,21 +1252,25 @@ def update_member_lecture_view_info_logic(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            member_lecture_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_id)
+            # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        lecture_info.member_view_state_cd = member_view_state_cd
-        lecture_info.mod_dt = timezone.now()
-        lecture_info.save()
+        member_lecture_info.auth_cd = member_view_state_cd
+        # lecture_info.member_view_state_cd = member_view_state_cd
+        # lecture_info.mod_dt = timezone.now()
+        # lecture_info.save()
+        member_lecture_info.mod_dt = timezone.now()
+        member_lecture_info.save()
 
     if error is None:
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
         #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='회원 연동', log_how='수정',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
 
@@ -2120,21 +2157,23 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(GetClassDataViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+        # class_id = self.request.session.get('class_id', '')
         error = None
-        class_data = None
+        class_auth_data = None
 
         if error is None:
+            class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd__contains='VIEW').order_by('-reg_dt')
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            class_data = ClassTb.objects.filter(member_id=self.request.user.id, member_view_state_cd='VIEW', use=1).order_by('-reg_dt')
+            # class_data = ClassTb.objects.filter(member_id=self.request.user.id, member_view_state_cd='VIEW', use=1).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
-            for class_info in class_data:
+            for class_auth_info in class_auth_data:
+                class_info = class_auth_info.class_tb
                 class_info.subject_type_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
                 class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
 
-        context['class_data'] = class_data
+        context['class_data'] = class_auth_data
 
         if error is not None:
             messages.error(self.request, error)
@@ -2194,14 +2233,18 @@ def delete_class_info_logic(request):
 
     if error is None:
         try:
-            class_info = ClassTb.objects.get(class_id=class_id)
+            class_info = MemberClassTb.objects.get(member_id=request.user.id, class_tb_id=class_id)
+            # class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
             error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
-        class_info.member_view_state_cd = 'DELETE'
+        class_info.auth_cd = 'DELETE'
         class_info.mod_dt = timezone.now()
         class_info.save()
+        # class_info.member_view_state_cd = 'DELETE'
+        # class_info.mod_dt = timezone.now()
+        # class_info.save()
 
     if error is None:
         log_data = LogTb(log_type='LC02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -2234,14 +2277,18 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             try:
-                class_info = ClassTb.objects.get(class_id=class_id)
+                class_info = MemberClassTb.objects.get(member_id=request.user.id, class_tb_id=class_id)
+                # class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
                 error = '강좌 정보를 불러오지 못했습니다.'
 
         if error is None:
-            class_info.member_view_state_cd = 'DELETE'
+            class_info.auth_cd = 'DELETE'
             class_info.mod_dt = timezone.now()
             class_info.save()
+            # class_info.member_view_state_cd = 'DELETE'
+            # class_info.mod_dt = timezone.now()
+            # class_info.save()
 
         if error is None:
             if class_id == class_id_session:
@@ -2303,7 +2350,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                         class_info = ClassTb(member_id=request.user.id,
                                              subject_cd=subject_cd, start_date=start_date, end_date=end_date,
                                              class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
-                                             member_view_state_cd='VIEW',
+                                             # member_view_state_cd='VIEW',
                                              class_member_num=int(class_member_num), state_cd='IP',
                                              reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
@@ -2311,20 +2358,24 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                         class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
                                              subject_cd=subject_cd, start_date=start_date, end_date=end_date,
                                              class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
-                                             member_view_state_cd='VIEW',
+                                             # member_view_state_cd='VIEW',
                                              class_member_num=int(class_member_num), state_cd='IP',
                                              reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
 
                     class_info.save()
+                    member_class_info = MemberClassTb(member_id=request.user.id, class_tb_id=class_info.class_id,
+                                                      auth_cd='VIEW', mod_member_id=request.user.id,
+                                                      reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                    member_class_info.save()
 
             except ValueError as e:
-                error = '등록 값에 문제가 있습니다.1'
+                error = '등록 값에 문제가 있습니다.'
             except IntegrityError as e:
-                error = '등록 값에 문제가 있습니다.2'
+                error = '등록 값에 문제가 있습니다.'
             except TypeError as e:
-                error = '등록 값의 형태가 문제 있습니다.1'
+                error = '등록 값의 형태가 문제 있습니다.'
             except ValidationError as e:
-                error = '등록 값의 형태가 문제 있습니다.2'
+                error = '등록 값의 형태가 문제 있습니다.'
             except InternalError:
                 error = '등록 값에 문제가 있습니다.'
 

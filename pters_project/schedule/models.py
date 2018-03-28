@@ -193,7 +193,7 @@ class ClassLectureTb(models.Model):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE)
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE)  # Field name made lowercase.
     auth_cd = models.CharField(db_column='AUTH_CD', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    mod_member = models.CharField(db_column='MOD_MEMBER_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    mod_member_id = models.CharField(db_column='MOD_MEMBER_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
@@ -208,7 +208,7 @@ class MemberClassTb(models.Model):
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE)
     auth_cd = models.CharField(db_column='AUTH_CD', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    mod_member = models.CharField(db_column='MOD_MEMBER_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    mod_member_id = models.CharField(db_column='MOD_MEMBER_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
@@ -223,7 +223,7 @@ class MemberLectureTb(models.Model):
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE)
     auth_cd = models.CharField(db_column='AUTH_CD', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    mod_member = models.CharField(db_column='MOD_MEMBER_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    mod_member_id = models.CharField(db_column='MOD_MEMBER_ID', max_length=20, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
