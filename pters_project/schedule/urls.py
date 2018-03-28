@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^check_schedule_update/$', views.CheckScheduleUpdateViewAjax.as_view(), name='check_schedule_update'),
     url(r'^upload_sign_image/$', views.upload_sign_image_logic, name='upload_sign_image'),
 
+    # 수정 필요 - hkkim - 2018.03.28
     url(r'^get_finish_schedule/$', views.GetFinishScheduleViewAjax.as_view(), name='get_finish_schedule'),
 
     url(r'^update_memo_schedule/$', views.update_memo_schedule_logic, name='update_memo_schedule'),

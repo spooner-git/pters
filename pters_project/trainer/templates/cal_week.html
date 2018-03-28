@@ -1057,6 +1057,9 @@
           var classArray_lecture_id = [{% for pt_schedule_lecture_id_info in pt_schedule_lecture_id %}'{{ pt_schedule_lecture_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           //pt schedule 에 해당하는 회원명
           var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+          //pt schedule 에 해당하는 회원 ID
+          var classTimeArray_member_id = [{% for pt_schedule_member_id_info in pt_schedule_member_id %}'{{ pt_schedule_member_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
           var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           //pt schedule이 끝났는지 확인
