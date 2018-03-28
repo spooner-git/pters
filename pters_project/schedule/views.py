@@ -114,7 +114,7 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                  start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after).exclude(schedule_id=add_schedule_info.schedule_id)
+                                                  start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after, use=1).exclude(schedule_id=add_schedule_info.schedule_id)
         for schedule_datum in schedule_data:
             error = date_check_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
                                     schedule_datum.start_dt, schedule_datum.end_dt)

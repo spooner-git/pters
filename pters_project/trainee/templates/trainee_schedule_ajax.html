@@ -19,5 +19,5 @@
       [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}"{{ off_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
-      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
     }

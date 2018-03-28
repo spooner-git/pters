@@ -23,5 +23,5 @@
       [{% for class_info in class_data %}"{{ class_info.np_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
-      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
     }

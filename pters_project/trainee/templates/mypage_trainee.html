@@ -140,31 +140,31 @@
 {% block local_js_footer %}
         <!-- for db by hk.kim 170805-->
         <script>
-            var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}',{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+            var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
         
             //여기를 가져다 써야함 - hkkim 171021;
-            var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}',{% endfor %}];
-        	var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}',{% endfor %}];
-            var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}',{% endfor %}];
-            var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}', {% endfor %}];
-            var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}',{% endfor %}];
+            var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        	var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
 
-            var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}',{% endfor %}];
-            var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}',{% endfor %}];
+            var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
 
 
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
             var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
-            var ptRepeatScheduleIdArray =  [{% for pt_repeat_schedule_id_info in pt_repeat_schedule_id_data %}'{{ pt_repeat_schedule_id_info }}', {% endfor %}];
-            var ptRepeatScheduleTypeArray =  [{% for pt_repeat_schedule_type_info in pt_repeat_schedule_type_data %}'{{ pt_repeat_schedule_type_info }}', {% endfor %}];
-            var ptRepeatScheduleWeekInfoArray =  [{% for pt_repeat_schedule_week_info_info in pt_repeat_schedule_week_info_data %}'{{ pt_repeat_schedule_week_info_info }}', {% endfor %}];
-            var ptRepeatScheduleStartDateArray =  [{% for pt_repeat_schedule_start_date_info in pt_repeat_schedule_start_date_data %}'{{ pt_repeat_schedule_start_date_info }}', {% endfor %}];
-            var ptRepeatScheduleEndDateArray =  [{% for pt_repeat_schedule_end_date_info in pt_repeat_schedule_end_date_data %}'{{ pt_repeat_schedule_end_date_info }}', {% endfor %}];
-            var ptRepeatScheduleStartTimeArray =  [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}'{{ pt_repeat_schedule_start_time_info }}', {% endfor %}];
-            var ptRepeatScheduleTimeDurationArray =  [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}'{{ pt_repeat_schedule_time_duration_info }}', {% endfor %}];
+            var ptRepeatScheduleIdArray =  [{% for pt_repeat_schedule_id_info in pt_repeat_schedule_id_data %}'{{ pt_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var ptRepeatScheduleTypeArray =  [{% for pt_repeat_schedule_type_info in pt_repeat_schedule_type_data %}'{{ pt_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var ptRepeatScheduleWeekInfoArray =  [{% for pt_repeat_schedule_week_info_info in pt_repeat_schedule_week_info_data %}'{{ pt_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var ptRepeatScheduleStartDateArray =  [{% for pt_repeat_schedule_start_date_info in pt_repeat_schedule_start_date_data %}'{{ pt_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var ptRepeatScheduleEndDateArray =  [{% for pt_repeat_schedule_end_date_info in pt_repeat_schedule_end_date_data %}'{{ pt_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var ptRepeatScheduleStartTimeArray =  [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}'{{ pt_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var ptRepeatScheduleTimeDurationArray =  [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}'{{ pt_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
 
             var next_schedule = ['{{ next_schedule }}'];

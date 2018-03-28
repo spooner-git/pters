@@ -998,21 +998,22 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
         # 강사 클래스의 반복일정 불러오기
         pt_repeat_schedule_data = RepeatScheduleTb
 
-        for idx, lecture_info in enumerate(lecture_list):
-            if idx == 0:
-                pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                          en_dis_type='1')
-            else:
-                pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                           en_dis_type='1')
-        for pt_repeat_schedule_info in pt_repeat_schedule_data:
-            pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
-            pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
-            pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
-            pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
-            pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
-            pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
-            pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
+        if len(lecture_list) > 0:
+            for idx, lecture_info in enumerate(lecture_list):
+                if idx == 0:
+                    pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                              en_dis_type='1')
+                else:
+                    pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                               en_dis_type='1')
+            for pt_repeat_schedule_info in pt_repeat_schedule_data:
+                pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
+                pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
+                pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
+                pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
+                pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
+                pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
+                pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
 
     context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
     context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
@@ -1021,6 +1022,8 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
     context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
     context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
+    if error is None:
+        context['error'] = error
 
     return context
 
