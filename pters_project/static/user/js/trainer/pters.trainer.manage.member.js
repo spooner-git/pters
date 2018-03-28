@@ -1520,8 +1520,8 @@ $(document).ready(function(){
             check_dropdown_selected();
         }
         $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val())
-        $('#add_member_form_first_name').val($('#memberLastName_add').val())
-        $('#add_member_form_last_name').val($('#memberFirstName_add').val())
+        $('#add_member_form_first_name').val($('#memberFirstName_add').val())
+        $('#add_member_form_last_name').val($('#memberLastName_add').val())
         $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val())
     })
 

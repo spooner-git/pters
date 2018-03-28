@@ -127,16 +127,19 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 member_lecture_rem_count = 0
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id)
-                lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_info.member_id,
-                                                        lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
-                if len(lecture_list) > 0:
+                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_info.member_id,
+                                                                   lecture_tb__lecture_rem_count__gt=0, lecture_tb__state_cd='IP',
+                                                                   lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
+                # lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_info.member_id,
+                #                                        lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
+                if len(class_lecture_list) > 0:
                     total_member_num += 1
-                    if len(lecture_list) == 1:
-                        if month_first_day < lecture_list[0].start_date < next_month_first_day:
+                    if len(class_lecture_list) == 1:
+                        if month_first_day < class_lecture_list[0].lecture_tb.start_date < next_month_first_day:
                             new_member_num += 1
 
-                    for lecture_info in lecture_list:
+                    for lecture_info_data in class_lecture_list:
+                        lecture_info = lecture_info_data.lecture_tb
                         # if lecture_info.state_cd == 'NP':
                         if lecture_info.member_view_state_cd == 'WAIT':
                             np_member_num += 1
@@ -367,7 +370,7 @@ def get_member_data(context, class_id, member_id):
 
             if len(lecture_list) > 0:
                 lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=member_data.member_id,
-                                                             lecture_tb__use=1)
+                                                             lecture_tb__use=1, auth_cd='VIEW')
                 # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
                 #                                        use=1).order_by('start_date')
                 member_data.rj_lecture_counts = 0
@@ -1020,7 +1023,7 @@ def delete_member_info_logic(request):
             error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id, use=1)
+        class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id, use=1, auth_cd='VIEW')
 
         # lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id,
         #                                         member_id=user.id, use=1)
@@ -2098,15 +2101,32 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             error = '강좌 type을 불러오지 못했습니다.'
 
     if error is None:
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, use=1).order_by('-start_date')
+        lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
+                                                     lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
+        # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, use=1).order_by('-start_date')
 
-        for lecture_info in lecture_data:
+        for lecture_info_data in lecture_data:
+            lecture_info = lecture_info_data.lecture_tb
             lecture_info.start_date = str(lecture_info.start_date)
             lecture_info.end_date = str(lecture_info.end_date)
             lecture_info.mod_dt = str(lecture_info.mod_dt)
             lecture_info.reg_dt = str(lecture_info.reg_dt)
-            lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
-            lecture_info.member_view_state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.member_view_state_cd)
+            try:
+                lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
+            except ObjectDoesNotExist:
+                error = '상태 코드를 가져오지 못했습니다.'
+            try:
+                lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
+            except ObjectDoesNotExist:
+                error = '회원의 수강정보 조회 정보를 불러오지 못했습니다.'
+
+            lecture_info.member_view_state_cd = lecture_test.auth_cd
+
+            try:
+                lecture_info.member_view_state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.member_view_state_cd)
+            except ObjectDoesNotExist:
+                error = '상태 코드를 가져오지 못했습니다.'
+
             if lecture_info.member_view_state_cd == 'WAIT':
                 np_lecture_counts += 1
             lecture_counts += 1

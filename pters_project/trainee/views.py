@@ -22,7 +22,7 @@ from el_pagination.views import AjaxListView
 from configs.views import date_check_func, AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_member_schedule_input_lecture
-from schedule.models import LectureTb
+from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
 
@@ -35,7 +35,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     # url = '/trainee/cal_month/'
     def get(self, request, **kwargs):
 
-        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
+        lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
+        # lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
         self.url = '/trainee/cal_month/'
 
         class_counter = 0
@@ -43,17 +44,19 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         if len(lecture_data) == 0:
             self.url = '/trainee/blank/'
         elif len(lecture_data) == 1:
-            for lecture_info in lecture_data:
+            for lecture_info_data in lecture_data:
+                lecture_info = lecture_info_data.lecture_tb
                 self.request.session['class_id'] = lecture_info.class_tb_id
                 self.request.session['lecture_id'] = lecture_info.lecture_id
-                if lecture_info.member_view_state_cd == 'WAIT':
+                if lecture_info_data.auth_cd == 'WAIT':
                     self.url = '/trainee/lecture_select/'
         else:
             class_id_comp = ''
             lecture_np_counter = 0
             lecture_id_select = ''
-            for lecture_info in lecture_data:
-                if lecture_info.member_view_state_cd == 'WAIT':
+            for lecture_info_data in lecture_data:
+                lecture_info = lecture_info_data.lecture_tb
+                if lecture_info_data.auth_cd == 'WAIT':
                     lecture_np_counter += 1
                 if class_id_comp != lecture_info.class_tb_id:
                     class_id_comp = lecture_info.class_tb_id
@@ -95,9 +98,12 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_list = []
         class_data = []
         # lecture_data2 = []
-        lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE')
+        lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
 
-        for lecture_info in lecture_data:
+        # lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE')
+
+        for lecture_info_data in lecture_data:
+            lecture_info = lecture_info_data.lecture_tb
             class_info = None
             trainer_info = None
             pt_type_name = None
@@ -134,25 +140,55 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 lecture_info.trainer_info = trainer_info
 
         context['lecture_data'] = lecture_data
+        if error is None:
+            for class_info in class_list:
+                lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=self.request.user.id).order_by('lecture_tb')
 
-        for class_info in class_list:
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                    member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
-            lecture_class = class_info
-            if len(lecture_list) > 0:
-                lecture_class.np_lecture_counts = 0
-                lecture_class.lecture_counts = len(lecture_list)
-                input_lecture_info = lecture_list[0]
-                for idx, lecture_info in enumerate(lecture_list):
-                    if lecture_info.member_view_state_cd == 'WAIT':
-                        lecture_class.np_lecture_counts += 1
-                    if idx != 0:
-                        input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
-                        input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
-                        input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+                # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+                #                                        member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
 
-                lecture_class.lecture_info = input_lecture_info
-                class_data.append(lecture_class)
+                lecture_class = class_info
+                lecture_class.lecture_counts = 0
+                if len(lecture_list) > 0:
+                    lecture_class.np_lecture_counts = 0
+                    lecture_class.lecture_counts = 0
+                    input_lecture_info = LectureTb
+                    for idx, lecture_list_data in enumerate(lecture_list):
+                        try:
+                            lecture_info_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=self.request.user.id, lecture_tb=lecture_list_data.lecture_tb_id)
+                        except ObjectDoesNotExist:
+                            error = '수강 정보 조회에 대한 정보가 없습니다.'
+
+                        if error is None:
+                            lecture_class.lecture_counts += 1
+                            input_lecture_info = lecture_info_data.lecture_tb
+                            if lecture_info_data.auth_cd == 'WAIT':
+                                lecture_class.np_lecture_counts += 1
+                            if lecture_class.lecture_counts == 1:
+                                input_lecture_info.lecture_reg_count = lecture_info.lecture_reg_count
+                                input_lecture_info.lecture_rem_count = lecture_info.lecture_rem_count
+                                input_lecture_info.lecture_avail_count = lecture_info.lecture_avail_count
+
+                            else:
+                                input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
+                                input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
+                                input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+                        else:
+                            error = None
+
+                    # lecture_class.np_lecture_counts = 0
+                    # lecture_class.lecture_counts = len(lecture_list)
+                    # input_lecture_info = lecture_list[0]
+                    # for idx, lecture_info in enumerate(lecture_list):
+                    #    if lecture_info.member_view_state_cd == 'WAIT':
+                    #        lecture_class.np_lecture_counts += 1
+                    #    if idx != 0:
+                    #        input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
+                    #        input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
+                    #        input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+
+                    lecture_class.lecture_info = input_lecture_info
+                    class_data.append(lecture_class)
 
         context['class_data'] = class_data
 
@@ -213,9 +249,12 @@ def get_lecture_list_by_member_id(context, member_id):
     class_list = []
     class_data = []
     error = None
-    lecture_data = LectureTb.objects.filter(member_id=member_id).exclude(member_view_state_cd='DELETE')
+    lecture_data = MemberLectureTb.objects.filter(member_id=member_id).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
 
-    for lecture_info in lecture_data:
+    # lecture_data = LectureTb.objects.filter(member_id=member_id).exclude(member_view_state_cd='DELETE')
+
+    for lecture_info_data in lecture_data:
+        lecture_info = lecture_info_data.lecture_tb
         class_info = None
         trainer_info = None
         pt_type_name = None
@@ -255,26 +294,62 @@ def get_lecture_list_by_member_id(context, member_id):
 
     if error is None:
         for class_info in class_list:
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                    member_id=member_id).order_by('-start_date').exclude(
-                member_view_state_cd='DELETE')
-            lecture_class = class_info
-            if len(lecture_list) > 0:
-                lecture_class.lecture_counts = 0
-                lecture_class.np_lecture_counts = 0
-                lecture_class.lecture_counts = len(lecture_list)
-                input_lecture_info = lecture_list[0]
-                for idx, lecture_info in enumerate(lecture_list):
-                    if lecture_info.member_view_state_cd == 'WAIT':
-                        lecture_class.np_lecture_counts += 1
-                    if idx != 0:
-                        input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
-                        input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
-                        input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
-                    lecture_class.lecture_counts += 1
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=member_id).order_by('lecture_tb')
 
+            # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+            #                                        member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
+
+            lecture_class = class_info
+            lecture_class.lecture_counts = 0
+            if len(lecture_list) > 0:
+                lecture_class.np_lecture_counts = 0
+                lecture_class.lecture_counts = 0
+                input_lecture_info = LectureTb
+                for idx, lecture_list_data in enumerate(lecture_list):
+                    try:
+                        lecture_info_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id, lecture_tb=lecture_list_data.lecture_tb_id)
+                    except ObjectDoesNotExist:
+                        error = '수강 정보 조회에 대한 정보가 없습니다.'
+
+                    if error is None:
+                        lecture_class.lecture_counts += 1
+                        input_lecture_info = lecture_info_data.lecture_tb
+                        if lecture_info_data.auth_cd == 'WAIT':
+                            lecture_class.np_lecture_counts += 1
+                        if lecture_class.lecture_counts == 1:
+                            input_lecture_info.lecture_reg_count = lecture_info.lecture_reg_count
+                            input_lecture_info.lecture_rem_count = lecture_info.lecture_rem_count
+                            input_lecture_info.lecture_avail_count = lecture_info.lecture_avail_count
+
+                        else:
+                            input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
+                            input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
+                            input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+                    else:
+                        error = None
                 lecture_class.lecture_info = input_lecture_info
                 class_data.append(lecture_class)
+
+            # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+            #                                        member_id=member_id).order_by('-start_date').exclude(
+            #    member_view_state_cd='DELETE')
+            # lecture_class = class_info
+            # if len(lecture_list) > 0:
+            #    lecture_class.lecture_counts = 0
+            #    lecture_class.np_lecture_counts = 0
+            #    lecture_class.lecture_counts = len(lecture_list)
+            #    input_lecture_info = lecture_list[0]
+            #    for idx, lecture_info in enumerate(lecture_list):
+            #        if lecture_info.member_view_state_cd == 'WAIT':
+            #            lecture_class.np_lecture_counts += 1
+            #        if idx != 0:
+            #            input_lecture_info.lecture_reg_count += lecture_info.lecture_reg_count
+            #            input_lecture_info.lecture_rem_count += lecture_info.lecture_rem_count
+            #            input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
+            #        lecture_class.lecture_counts += 1
+
+            #    lecture_class.lecture_info = input_lecture_info
+            #    class_data.append(lecture_class)
 
     context['class_data'] = class_data
     if error is not None:
@@ -289,6 +364,7 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
     context['error'] = None
     lecture_counts = 0
     np_lecture_counts = 0
+    output_lecture_list = []
     if class_id is None or class_id == '':
         error = '강사 정보를 불러오지 못했습니다.'
 
@@ -314,23 +390,34 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             error = '강좌 type을 불러오지 못했습니다.'
 
     if error is None:
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id).order_by('-start_date')
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id).order_by('-lecture_tb__start_date')
+        # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id).order_by('-start_date')
 
-        for lecture_info in lecture_data:
-            lecture_info.start_date = str(lecture_info.start_date)
-            lecture_info.end_date = str(lecture_info.end_date)
-            lecture_info.mod_dt = str(lecture_info.mod_dt)
-            lecture_info.reg_dt = str(lecture_info.reg_dt)
-            lecture_info.member_view_state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.member_view_state_cd)
-            lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
-            if lecture_info.member_view_state_cd == 'WAIT':
-                np_lecture_counts += 1
-            lecture_counts += 1
+        for lecture_info in lecture_list:
+            try:
+                lecture_info_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id, lecture_tb=lecture_info.lecture_tb_id)
+            except ObjectDoesNotExist:
+                error = '수강 정보 조회에 대한 정보가 없습니다.'
+
+            if error is None:
+                lecture_info.lecture_tb.start_date = str(lecture_info_data.lecture_tb.start_date)
+                lecture_info.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                lecture_info.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+                lecture_info.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                lecture_info.member_view_state_cd = lecture_info_data.auth_cd
+                lecture_info.member_view_state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.auth_cd)
+                lecture_info.lecture_tb.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.state_cd)
+                if lecture_info.lecture_tb.member_view_state_cd == 'WAIT':
+                    np_lecture_counts += 1
+                lecture_counts += 1
+                output_lecture_list.append(lecture_info)
+            else:
+                error = None
 
     class_data.lecture_counts = lecture_counts
     class_data.np_lecture_counts = np_lecture_counts
     context['class_data'] = class_data
-    context['lecture_data'] = lecture_data
+    context['lecture_data'] = output_lecture_list
 
     # print(error)
     if error is not None:
@@ -356,7 +443,8 @@ def lecture_processing(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            lecture_info = MemberLectureTb.objects.get(member=request.user.id, lecture_tb=lecture_id)
+            # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보가 존재하지 않습니다.'
 
@@ -368,13 +456,15 @@ def lecture_processing(request):
             #schedule_data.delete()
             #lecture_info.delete()
             # lecture_info.state_cd = 'RJ'
-            lecture_info.member_view_state_cd = 'DELETE'
+            # lecture_info.member_view_state_cd = 'DELETE'
+            lecture_info.auth_cd = 'DELETE'
             lecture_info.save()
         elif check == '0':
             request.session['class_id'] = class_id
             request.session['lecture_id'] = lecture_id
             # lecture_info.state_cd = 'IP'
-            lecture_info.member_view_state_cd = 'VIEW'
+            # lecture_info.member_view_state_cd = 'VIEW'
+            lecture_info.auth_cd = 'VIEW'
             lecture_info.save()
         elif check == '2':
             request.session['class_id'] = class_id
@@ -665,8 +755,10 @@ def pt_delete_logic(request):
 
     # print(error)
     if error is None:
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
-        for member_lecture_info in member_lecture_data:
+        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
+        # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
+        for member_lecture_data_info in member_lecture_data:
+            member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
         class_info.schedule_check = 1
@@ -784,8 +876,10 @@ def pt_add_logic(request):
 
     # print(error)
     if error is None:
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
-        for member_lecture_info in member_lecture_data:
+        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
+        # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
+        for member_lecture_data_info in member_lecture_data:
+            member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
         class_info.schedule_check = 1
@@ -984,12 +1078,17 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     # 수강 정보 불러 오기
     if error is None:
         if member_id is None or member_id == '':
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__stat_cd='IP',
+                                                         lecture_tb__use='1')
+            # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
             # lecture_list = lecture_list.filter()
         else:
-            lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__stat_cd='IP',
+                                                         lecture_tb__member_id=member_id,
+                                                         lecture_tb__use='1')
+            # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
             # lecture_list = lecture_list.filter()
@@ -999,7 +1098,8 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
         pt_repeat_schedule_data = RepeatScheduleTb
 
         if len(lecture_list) > 0:
-            for idx, lecture_info in enumerate(lecture_list):
+            for idx, lecture_list_info in enumerate(lecture_list):
+                lecture_info = lecture_list_info.lecture_tb
                 if idx == 0:
                     pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                               en_dis_type='1')
@@ -1291,7 +1391,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     lecture_avail_count_sum = 0
     pt_start_date = ''
     pt_end_date = ''
-
+    lecture_counts = 0
     if class_id is None or class_id == '':
         error = '강사 정보를 불러오지 못했습니다.'
 
@@ -1310,52 +1410,67 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=user_id, member_view_state_cd='VIEW')
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                     lecture_tb__member_id=user_id).order_by('lecture_tb')
+
+        # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=user_id, member_view_state_cd='VIEW')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
-        for idx, lecture_info in enumerate(lecture_data):
-            if idx == 0:
-                pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id,
-                                                             en_dis_type='1',
-                                                             start_dt__gte=start_date,
-                                                             start_dt__lt=end_date)
-                pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                          en_dis_type='1')
-                # if lecture_info.use != 0:
-                # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
-                if lecture_info.state_cd == 'IP':
-                    pt_start_date = lecture_info.start_date
-                    pt_end_date = lecture_info.end_date
-            else:
-                pt_schedule_data |= ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id,
-                                                              en_dis_type='1',
-                                                              start_dt__gte=start_date,
-                                                              start_dt__lt=end_date)
-                pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                           en_dis_type='1')
-                # if lecture_info.use != 0:
-                # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
-                if lecture_info.state_cd == 'IP':
-                    if pt_start_date == '':
-                        pt_start_date = lecture_info.start_date
-                    else:
-                        if pt_start_date > lecture_info.start_date:
-                            pt_start_date = lecture_info.start_date
-                    if pt_end_date == '':
-                        pt_end_date = lecture_info.end_date
-                    else:
-                        if pt_end_date < lecture_info.end_date:
-                            pt_end_date = lecture_info.end_date
+        for idx, lecture_list_info in enumerate(lecture_list):
+            lecture_info = lecture_list_info.lecture_tb
+            try:
+                lecture_info_data = MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id,
+                                                                lecture_tb=lecture_info.lecture_id)
+            except ObjectDoesNotExist:
+                error = '수강 정보 조회에 대한 정보가 없습니다.'
 
-            # if lecture_info.use != 0:
-            # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
-            if lecture_info.state_cd == 'IP':
-                lecture_reg_count_sum += lecture_info.lecture_reg_count
-                lecture_rem_count_sum += lecture_info.lecture_rem_count
-                lecture_avail_count_sum += lecture_info.lecture_avail_count
-            lecture_info.schedule_check = 0
-            lecture_info.save()
+            if error is None:
+                lecture_counts += 1
+                if lecture_counts == 1:
+                # if idx == 0:
+                    pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id,
+                                                                 en_dis_type='1',
+                                                                 start_dt__gte=start_date,
+                                                                 start_dt__lt=end_date)
+                    pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                              en_dis_type='1')
+                    # if lecture_info.use != 0:
+                    # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                    if lecture_info.state_cd == 'IP':
+                        pt_start_date = lecture_info.start_date
+                        pt_end_date = lecture_info.end_date
+                else:
+                    pt_schedule_data |= ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id,
+                                                                  en_dis_type='1',
+                                                                  start_dt__gte=start_date,
+                                                                  start_dt__lt=end_date)
+                    pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                               en_dis_type='1')
+                    # if lecture_info.use != 0:
+                    # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                    if lecture_info.state_cd == 'IP':
+                        if pt_start_date == '':
+                            pt_start_date = lecture_info.start_date
+                        else:
+                            if pt_start_date > lecture_info.start_date:
+                                pt_start_date = lecture_info.start_date
+                        if pt_end_date == '':
+                            pt_end_date = lecture_info.end_date
+                        else:
+                            if pt_end_date < lecture_info.end_date:
+                                pt_end_date = lecture_info.end_date
+
+                # if lecture_info.use != 0:
+                # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                if lecture_info.state_cd == 'IP':
+                    lecture_reg_count_sum += lecture_info.lecture_reg_count
+                    lecture_rem_count_sum += lecture_info.lecture_rem_count
+                    lecture_avail_count_sum += lecture_info.lecture_avail_count
+                lecture_info.schedule_check = 0
+                lecture_info.save()
+            else:
+                error = None
 
         # PT 스케쥴 정보 셋팅
         for pt_schedule_datum in pt_schedule_data:
@@ -1430,7 +1545,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
 
     context['next_schedule_start_dt'] = next_schedule_start_dt
     context['next_schedule_end_dt'] = next_schedule_end_dt
-    context['lecture_info'] = lecture_data
+    context['lecture_info'] = lecture_list
     context['class_info'] = class_info
     context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
@@ -1452,9 +1567,11 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         error = None
 
         if error is None:
-            lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE')
+            lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id, auth_cd='VIEW')
+            # lecture_data = LectureTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE')
 
-            for idx, lecture_info in enumerate(lecture_data):
+            for idx, lecture_data_info in enumerate(lecture_data):
+                lecture_info = lecture_data_info.lecture_tb
                 if idx == 0:
                     log_data = LogTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=1).order_by('-reg_dt')
                 else:
@@ -1491,18 +1608,20 @@ def delete_member_lecture_info_logic(request):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            lecture_info = MemberLectureTb.objects.get(member_id=request.user.id, lecture_tb=lecture_id)
+            # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        lecture_info.member_view_state_cd = 'DELETE'
+        lecture_info.auth_cd = 'DELETE'
+        # lecture_info.member_view_state_cd = 'DELETE'
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
 
     if error is None:
         log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보', log_how='연동 해제',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
 

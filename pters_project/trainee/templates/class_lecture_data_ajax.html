@@ -1,20 +1,20 @@
     {
       "lectureIdArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "startArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "endArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "countArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "remCountArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "availCountArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lectureStateArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lectureStateNameArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberViewStateArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.member_view_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberViewStateNameArray":

@@ -25,7 +25,7 @@ from django.views.generic.base import ContextMixin
 from configs import settings
 from configs.views import date_check_func, get_client_ip
 from login.models import LogTb, MemberTb
-from schedule.models import LectureTb
+from schedule.models import LectureTb, ClassLectureTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
 
@@ -260,7 +260,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
-        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                    en_dis_type='0')
         for off_repeat_schedule_info in off_repeat_schedule_data:
             off_repeat_schedule_id.append(off_repeat_schedule_info.repeat_schedule_id)
@@ -271,7 +271,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
             off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
 
-        pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+        pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   en_dis_type='1')
         for pt_repeat_schedule_info in pt_repeat_schedule_data:
             pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
@@ -284,7 +284,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
 
     # OFF 일정 조회
     if error is None:
-        off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+        off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                       en_dis_type='0', start_dt__gte=start_date,
                                                       start_dt__lt=end_date)
         for off_schedule_datum in off_schedule_data:
@@ -299,15 +299,18 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     # PT 일정 조회
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, use=1)
-        for lecture_datum in lecture_data:
+        # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, use=1)
+        lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, use=1)
+
+        for lecture_datum_info in lecture_data:
+            lecture_datum = lecture_datum_info.lecture_tb
             # 강좌별로 연결되어있는 회원 리스트 불러오기
             member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
             # 강좌별로 연결된 PT 스케쥴 가져오기
             lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
                                                                        en_dis_type='1',
                                                                        start_dt__gte=start_date,
-                                                                       start_dt__lt=end_date)
+                                                                       start_dt__lt=end_date, use=1)
             # PT 스케쥴 정보 셋팅
             for pt_schedule_datum in lecture_datum.pt_schedule_data:
                 # lecture schedule id 셋팅
@@ -478,11 +481,13 @@ def add_schedule_logic(request):
             error = error
 
     if error is None:
-
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
-        for member_lecture_info in member_lecture_data:
+        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
+        # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
+        for member_lecture_data_info in member_lecture_data:
+            member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
+
         save_log_data(schedule_start_datetime, schedule_end_datetime,
                       class_info.class_id, lecture_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LS01', request)
@@ -537,8 +542,10 @@ def delete_schedule_logic(request):
 
     if error is None:
 
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=1)
-        for member_lecture_info in member_lecture_data:
+        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
+        # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
+        for member_lecture_data_info in member_lecture_data:
+            member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
         save_log_data(start_date, end_date, class_id, lecture_id, request.user.last_name+request.user.first_name,
@@ -961,8 +968,10 @@ def add_repeat_schedule_confirm(request):
             if error is None:
                 information = '반복일정 등록이 취소됐습니다.'
         else:
-            member_lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=1)
-            for member_lecture_info in member_lecture_data:
+            member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
+            # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
+            for member_lecture_data_info in member_lecture_data:
+                member_lecture_info = member_lecture_data_info.lecture_tb
                 member_lecture_info.schedule_check = 1
                 member_lecture_info.save()
 
@@ -1075,8 +1084,10 @@ def delete_repeat_schedule_logic(request):
     # print(error)
 
     if error is None:
-        member_lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=1)
-        for member_lecture_info in member_lecture_data:
+        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
+        # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
+        for member_lecture_data_info in member_lecture_data:
+            member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
         save_log_data(start_date, end_date, class_id, delete_repeat_schedule.lecture_tb_id, request.user.last_name+request.user.first_name,
@@ -1190,10 +1201,13 @@ def get_member_schedule_input_lecture(class_id, member_id):
 
     lecture_id = None
     # 강좌에 해당하는 수강/회원 정보 가져오기
-    lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, state_cd='IP',
-                                            lecture_avail_count__gt=0, use=1).order_by('start_date')
+    lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
+                                                 lecture_tb__state_cd='IP', lecture_tb__lecture_avail_count__gt=0,
+                                                 lecture_tb__use=1).order_by('lecture_tb__start_date')
+    # lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, state_cd='IP',
+     #                                        lecture_avail_count__gt=0, use=1).order_by('start_date')
     if len(lecture_list) > 0:
-        lecture_id = lecture_list[0].lecture_id
+        lecture_id = lecture_list[0].lecture_tb.lecture_id
 
     return lecture_id
 
@@ -1232,6 +1246,7 @@ def upload_sign_image_logic(request):
     return redirect(next_page)
 
 
+# 수정 필요 - hkkim - 2018.03.28
 @method_decorator(csrf_exempt, name='dispatch')
 class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
     template_name = 'finish_schedule_ajax.html'
