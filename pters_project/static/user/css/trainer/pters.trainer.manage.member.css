@@ -349,7 +349,7 @@ th{
 /*-----------------PC 회원정보 팝업-----------------------*/
 .infopopup_pc{
 	display: none;
-	position: absolute;
+	position: fixed;
 	background: #ffffff;
 	padding: 10px;
 	width: 600px;
