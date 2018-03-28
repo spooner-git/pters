@@ -4,7 +4,6 @@ pters_project/configs/__pycache__/
 pters_project/center/__pycache__/
 pters_project/center/migrations/__pycache__/
 pters_project/login/__pycache__/
-pters_project/login/templatetags/__pycache__/
 pters_project/login/migrations/__pycache__/
 pters_project/schedule/__pycache__/
 pters_project/trainer/__pycache__/
@@ -17,3 +16,4 @@ pters_project/logs/login_log.log
 pters_project/logs/trainer_log.log
 pters_project/logs/trainee_log.log
 pters_project/logs/schedule_log.log
+pters_project/login/templatetags/__pycache__/
