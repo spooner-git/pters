@@ -262,7 +262,6 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
     def get(self, request, *args, **kwargs):
         context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
         class_id = request.GET.get('class_id', '')
-        print(class_id)
         context['error'] = None
         context = get_lecture_list_by_class_member_id(context, class_id, request.user.id)
 
@@ -293,7 +292,6 @@ def get_lecture_list_by_member_id(context, member_id):
     lecture_data = MemberLectureTb.objects.filter(member_id=member_id).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
 
     # lecture_data = LectureTb.objects.filter(member_id=member_id).exclude(member_view_state_cd='DELETE')
-    print('1')
     class_lecture_data = None
 
     if len(lecture_data) > 0:
@@ -303,7 +301,6 @@ def get_lecture_list_by_member_id(context, member_id):
             else:
                 class_lecture_data |= ClassLectureTb.objects.filter(lecture_tb=lecture_info.lecture_tb, use=1).order_by('-lecture_tb__start_date')
 
-    print('2')
     if class_lecture_data is not None and len(class_lecture_data) > 0:
         for lecture_info_data in class_lecture_data:
             lecture_info = lecture_info_data.lecture_tb
@@ -343,26 +340,21 @@ def get_lecture_list_by_member_id(context, member_id):
                 lecture_info.class_info = class_info
                 lecture_info.trainer_info = trainer_info
 
-    print('3')
     context['lecture_data'] = lecture_data
 
     if error is None:
-        print('4')
         for class_info in class_list:
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=member_id).order_by('lecture_tb')
 
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
             #                                        member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
 
-            print('5')
             lecture_class = class_info
             lecture_class.lecture_counts = 0
             if len(lecture_list) > 0:
-                print('6')
                 lecture_class.np_lecture_counts = 0
                 lecture_class.lecture_counts = 0
                 input_lecture_info = LectureTb
-                print('7')
                 for idx, lecture_list_data in enumerate(lecture_list):
                     try:
                         lecture_info_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id, lecture_tb=lecture_list_data.lecture_tb_id)
@@ -385,11 +377,9 @@ def get_lecture_list_by_member_id(context, member_id):
                             input_lecture_info.lecture_avail_count += lecture_info.lecture_avail_count
                     else:
                         error = None
-                print('8')
                 lecture_class.lecture_info = input_lecture_info
                 class_data.append(lecture_class)
 
-            print('9')
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id,
             #                                        member_id=member_id).order_by('-start_date').exclude(
             #    member_view_state_cd='DELETE')
@@ -411,7 +401,6 @@ def get_lecture_list_by_member_id(context, member_id):
             #    lecture_class.lecture_info = input_lecture_info
             #    class_data.append(lecture_class)
 
-    print('7')
     context['class_data'] = class_data
     if error is not None:
         context['error'] = error
@@ -449,42 +438,33 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.subject_cd)
         except ObjectDoesNotExist:
             error = '강좌 type을 불러오지 못했습니다.'
-    print('a1')
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id).order_by('-lecture_tb__start_date')
         # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id).order_by('-start_date')
 
-        print('a2')
         for lecture_info in lecture_list:
             try:
                 lecture_info_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id, lecture_tb=lecture_info.lecture_tb_id)
             except ObjectDoesNotExist:
                 error = '수강 정보 조회에 대한 정보가 없습니다.'
 
-            print('a3')
             if error is None:
-                print('a4')
                 lecture_info.lecture_tb.start_date = str(lecture_info_data.lecture_tb.start_date)
                 lecture_info.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
                 lecture_info.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
                 lecture_info.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
-                print('a5')
                 lecture_info.auth_cd = lecture_info_data.auth_cd
                 lecture_info.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.auth_cd)
                 lecture_info.lecture_tb.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.state_cd)
-                print('a6')
                 if lecture_info.auth_cd == 'WAIT':
                     np_lecture_counts += 1
                 lecture_counts += 1
-                print('a7')
                 output_lecture_list.append(lecture_info)
             else:
                 error = None
 
-        print('a8')
     class_data.lecture_counts = lecture_counts
     class_data.np_lecture_counts = np_lecture_counts
-    print('a9')
     context['class_data'] = class_data
     context['lecture_data'] = output_lecture_list
 
