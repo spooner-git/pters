@@ -6,7 +6,27 @@ body{
 	font-family: 'Noto Sans KR';
 }
 
-button:focus{
+#page_managemember table{
+	font-size: 81%;
+	text-align: center;
+	table-layout: fixed;
+}
+
+#page_managemember #tableThead{
+	width: 91.6%;
+	margin:0 auto;
+}
+
+#page_managemember tbody{
+	background-color: #ffffff;
+}
+
+#page_managemember th{
+	text-align: center;
+	background:#eeeeee;
+}
+
+#page_managemember button:focus{
 	outline: 0;
 }
 
@@ -139,26 +159,6 @@ select:focus > option:checked {
 	border-right-color: transparent;
 }
 
-
-table{
-	font-size: 81%;
-	text-align: center;
-	table-layout: fixed;
-}
-
-#tableThead{
-	width: 91.6%;
-	margin:0 auto;
-}
-
-tbody{
-	background-color: #ffffff;
-}
-
-th{
-	text-align: center;
-	background:#eeeeee;
-}
 
 ._countnum,._id,._email,._finday,._manage{
 	display: none;
@@ -723,7 +723,7 @@ th{
 	width: 0;
 }
 
-.ymdText-pc-add{
+.ymdText-pc-add-member-wrap{
 	display: none;
 }
 
@@ -813,7 +813,7 @@ th{
 		top: 75px;
 	}
 
-	.ymdText-pc-add{
+	.ymdText-pc-add-member-wrap{
 		display: inline;
 		line-height: 33px;
 		position: relative;
@@ -948,19 +948,19 @@ th{
 		width: 50px;
 	}
 
-	table,td{
+	#page_managemember table,#page_managemember td{
 		border:0 !important;
 	}
 
-	tr{
+	#page_managemember tr{
 		border-bottom:0.5px solid #cccccc;
 	}
 	
-	td{
+	#page_managemember td{
 		font-size : 13px;
 	}
 
-	th{
+	#page_managemember th{
 		border:0 !important;
 		font-size: 13.5px;
 		border-left:0.5px solid #ffffff !important;

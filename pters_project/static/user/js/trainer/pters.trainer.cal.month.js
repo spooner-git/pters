@@ -48,7 +48,53 @@ $(document).ready(function(){
                 console.log('server error')
               }
             })
-     }
+    }
+
+    //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
+    $(document).on('click','.memberNameForInfoView',function(){
+    	var clickedName = $(this).attr('data-name')
+    	console.log(clickedName)
+    	$.ajax({
+              url: '/trainer/member_manage_ajax/',
+			  dataType : 'html',
+
+              beforeSend:function(){
+              	//AjaxBeforeSend();
+              },
+
+              success:function(data){
+              	$('#shade3,.popups').hide()
+              	ajax_received_json_data_member_manage(data)
+              	DB=[]
+              	DBe=[]
+              	DataFormattingDict('name');
+		        DataFormatting('current');
+		        var userID = DB[clickedName].id
+		        DataFormattingDict('ID');
+		        if($('body').width()<600){
+		            open_member_info_popup_mobile(userID)
+		            get_indiv_repeat_info(userID)
+		            set_member_lecture_list()
+		        }else if($('body').width()>=600){
+		            open_member_info_popup_pc(userID)
+		            get_indiv_repeat_info(userID)
+		            set_member_lecture_list()
+		            $('#info_shift_base, #info_shift_lecture').show()
+		            $('#info_shift_schedule').hide()
+		            $('#select_info_shift_lecture').css('color','#fe4e65')
+		            $('#select_info_shift_schedule').css('color','#282828')
+		        }
+			  },
+
+              complete:function(){
+              	//AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+        })	
+    });
 
 
 	$('#float_btn').click(function(){
@@ -253,7 +299,7 @@ $(document).ready(function(){
 			
 			var selectedDate = $('.popup_ymdText').text()
 			var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
-			var selectedPerson = $(this).find('.plancheckname').text()
+			var selectedPerson = '<span class="memberNameForInfoView" data-name="'+$(this).find('.plancheckname').text()+'">'+$(this).find('.plancheckname').text()+'</span>'
 			var selectedMemo = $(this).attr('data-memo')
 			if($(this).attr('data-memo') == undefined){
 				var selectedMemo = ""
@@ -263,7 +309,7 @@ $(document).ready(function(){
 				$('#shade3').show()
 			}
 			$('#popup_info').text(selectedDate);
-			$('#popup_info2').text(selectedPerson+'의 '+ selectedTime + '시 일정');
+			$('#popup_info2').html(selectedPerson+'의 '+ selectedTime + '시 일정');
 			$('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
 
 			$('#canvas').hide().css({'border-color':'#282828'})
@@ -1130,11 +1176,11 @@ $(document).ready(function(){
 
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
 	function availableDateIndicator(not_AvailableStartTime,Endtime){ 
-	// 요소설명
-	// not_AvailableStartTime : 강사가 설정한 '회원이 예약 불가능한 시간대 시작시간'
-	// not_AvailableStartTime : 강사가 설정한 '회원이 예약 불가능한 시간대 종료시간'
-	// ex : 밤 22시 ~ 익일 새벽 6시까지 일정 설정 불가 (24시간제로 입력)
-	//Start : 17, End : 6 current: 14
+		// 요소설명
+		// not_AvailableStartTime : 강사가 설정한 '회원이 예약 불가능한 시간대 시작시간'
+		// not_AvailableStartTime : 강사가 설정한 '회원이 예약 불가능한 시간대 종료시간'
+		// ex : 밤 22시 ~ 익일 새벽 6시까지 일정 설정 불가 (24시간제로 입력)
+		//Start : 17, End : 6 current: 14
 		if(currentHour<Endtime || currentHour>=not_AvailableStartTime){
 			for(i=currentDate;i<=currentDate+14;i++){
 				if(i>lastDay[oriMonth-1] && oriMonth<12){

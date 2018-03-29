@@ -5,6 +5,7 @@
 
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.month.cal.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.off.repeat.add.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
 {% endblock %}
@@ -35,459 +36,723 @@
   <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
 </form>
 
-  <!--플로팅 버튼-->
-    <div id="float_btn_wrap">
-        <div id="float_btn">
-          <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
-        </div>
-        <div id="float_inner1" class="float_inner">
-        <a class="KRtext">PT<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
-        </div>
-        <div id="float_inner2" class="float_inner">
-        <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
-        </div>
+<!--플로팅 버튼-->
+<div id="float_btn_wrap">
+    <div id="float_btn">
+      <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
     </div>
-  <!--플로팅 버튼-->
-
-  <!--shade3는 #f4f4f4 색을 가진 배경(모바일에서 팝업시 뒷배경)-->
-    <div id="shade3">
+    <div id="float_inner1" class="float_inner">
+    <a class="KRtext">PT<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
     </div>
-    <!--플로팅 버튼-->
+    <div id="float_inner2" class="float_inner">
+    <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
+    </div>
+</div>
+<!--플로팅 버튼-->
 
-  <!-- 월간 달력 -->
-    <div id="ymdText" class="" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
-      <div class='arrowButton'>
-              <a id="leftArrowButton" style="left: 4%">
-                <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
-                <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="leftArrowButtonImg">
-                <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible">Today</span>
-              </a>
-              <a id="rightArrowButton" style="right: 4%">
-                <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="rightArrowButtonImg">
-                <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
-                <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible">Today</span>
-              </a>
-            </div>
-      <div id="yearText">
+<!--shade3는 #f4f4f4 색을 가진 배경(모바일에서 팝업시 뒷배경)-->
+<div id="shade3">
+</div>
+<!--플로팅 버튼-->
+
+<!-- 월간 달력 -->
+<div id="ymdText" class="" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">
+  <div class='arrowButton'>
+          <a id="leftArrowButton" style="left: 4%">
+            <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
+            <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="leftArrowButtonImg">
+            <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible">Today</span>
+          </a>
+          <a id="rightArrowButton" style="right: 4%">
+            <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="rightArrowButtonImg">
+            <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
+            <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible">Today</span>
+          </a>
+        </div>
+  <div id="yearText">
+  </div>
+  <div id="monthText">
+  </div>
+  <div id="menuName">월간 일정
+  </div>
+  <div id="menuDescription">월별 일정을 확인 할 수 있습니다.
+  </div>
+</div>
+
+<div id="hidetoggle" class="wrap">
+  <img src="/static/user/res/daycal_arrow_pink.png" style="-webkit-transform:rotate(90deg)"><span>일정 넓게 보기</span>
+</div>
+
+
+<div id="ymdText-pc" class="wrap">
+    <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
+    <div class="ymdText-pc-fulldate">
+      <span id="ymdText-pc-year" class="ymdText-pc-year"></span>
+      <span id="ymdText-pc-month" class="ymdText-pc-month"></span>
+    </div>
+    <img src="/static/user/res/icon-cal-btn.png"  id="ymdText-pc-next-btn" style="-webkit-transform:rotate(180deg)">
+
+    <div class="ymdText-pc-add">
+      <div class="ymdText-pc-add-off">+ OFF 일정추가</div>
+      <div class="ymdText-pc-add-pt">+ PT 일정추가</div>
+    </div>
+</div>
+
+<div id="date" class="week-style wrap"> <!--월화수목금토일-->
+        <table class="calendar-style calendar-day-style">
+            <tr>
+                <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
+                <td id="monday"><p class="calendar_image weekday_style weekdays">월</p></td>
+                <td id="tuesday"><p class="calendar_image weekday_style weekdays">화</p></td>
+                <td id="wednesday"><p class="calendar_image weekday_style weekdays">수</p></td>
+                <td id="thursday"><p class="calendar_image weekday_style weekdays">목</p></td>
+                <td id="friday"><p class="calendar_image weekday_style weekdays">금</p></td>
+                <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
+            </tr>
+        </table>
+</div> <!--월화수목금토일-->
+
+<div id="calendar" class="wrap _calmonth" > <!-- Calendar container-->    
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" id="slide0"></div> <!--Index0-->
+            <div class="swiper-slide"></div> <!--Index1-->
+            <div class="swiper-slide" id="slide2"></div> <!--Index2-->
+        </div>  <!--Swiper-wrapper-->
+    </div> <!--Swiper-container-->
+    <!--Swiper-->
+    <!-- <div class="swiper-pagination"></div> -->
+    <div id="cal_box" class="cal_box"></div>
+</div>
+
+
+<div id="page-addplan" class="wrap popups">
+    <!--
+      {% if messages %}
+          {% for message in messages %}
+              <div id="inputError">
+                      <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
+              </div>
+          {% endfor %}
+      {% endif %}
+    -->
+      <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="member_id"    id="id_member_id">
+          <input type="hidden" name="lecture_id"    id="id_lecture_id">
+          <input type="hidden" name="member_name"   id="id_member_name">
+          <input type="hidden" name="training_date" id="id_training_date">
+          <input type="hidden" name="time_duration" id="id_time_duration">
+          <input type="hidden" name="training_time" id="id_training_time">
+          <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
+          <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+          <input type="hidden" name="add_memo" id="id_memo_mini">
+      </form>
+
+      <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="training_date" id="id_training_date_off">
+          <input type="hidden" name="time_duration" id="id_time_duration_off">
+          <input type="hidden" name="training_time" id="id_training_time_off">
+          <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
+          <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+          <input type="hidden" name="add_memo" id="id_memo_mini_off">
+      </form>
+
+      <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="member_id"        id="id_repeat_member_id">
+          <input type="hidden" name="lecture_id"        id="id_repeat_lecture_id">
+          <input type="hidden" name="member_name"       id="id_repeat_member_name">
+          <input type="hidden" name="repeat_freq"       id="id_repeat_freq">
+          <input type="hidden" name="repeat_start_date" id="id_repeat_start_date">
+          <input type="hidden" name="repeat_end_date"   id="id_repeat_end_date">
+          <input type="hidden" name="repeat_day"        id="id_repeat_day">
+          <input type="hidden" name="repeat_start_time" id="id_repeat_start_time">
+          <input type="hidden" name="repeat_dur"        id="id_repeat_dur">
+          <input type="hidden" name="en_dis_type" value="1">
+          <input type="hidden" name="next_page" value="{% url 'trainer:cal_day_ajax' %}">
+      </form>
+
+      <form action="{% url 'schedule:add_repeat_schedule' %}"  id="add-off-repeat-schedule-form" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="repeat_freq"         id="id_repeat_freq_off">
+          <input type="hidden" name="repeat_start_date"   id="id_repeat_start_date_off">
+          <input type="hidden" name="repeat_end_date"     id="id_repeat_end_date_off">
+          <input type="hidden" name="repeat_day"          id="id_repeat_day_off">
+          <input type="hidden" name="repeat_start_time"   id="id_repeat_start_time_off">
+          <input type="hidden" name="repeat_dur"          id="id_repeat_dur_off">
+          <input type="hidden" name="en_dis_type" value="0">
+          <input type="hidden" name="next_page" value="{% url 'trainer:cal_day_ajax' %}">
+      </form>
+      
+      <div class="ptaddbox" id="pcaddpopup">
+        <span class="KRtext">PT 일정 추가</span>
+        <span class="JPtext">PT 日程追加</span>
+        <span class="ENtext">Add PT Schedule</span>
+        <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
       </div>
-      <div id="monthText">
+
+      <div class="ptaddbox" id="pcaddpopup_off">
+        <span class="KRtext">OFF 일정 추가</span>
+        <span class="JPtext">OFF 日程追加</span>
+        <span class="ENtext">Add OFF Schedule</span>
+        <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
       </div>
-      <div id="menuName">월간 일정
-      </div>
-      <div id="menuDescription">월별 일정을 확인 할 수 있습니다.
-      </div>
-    </div>
 
-    <div id="hidetoggle" class="wrap">
-      <img src="/static/user/res/daycal_arrow_pink.png" style="-webkit-transform:rotate(90deg)"><span>일정 넓게 보기</span>
-    </div>
-
-
-    <div id="ymdText-pc" class="wrap">
-        <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
-        <div class="ymdText-pc-fulldate">
-          <span id="ymdText-pc-year" class="ymdText-pc-year"></span>
-          <span id="ymdText-pc-month" class="ymdText-pc-month"></span>
-        </div>
-        <img src="/static/user/res/icon-cal-btn.png"  id="ymdText-pc-next-btn" style="-webkit-transform:rotate(180deg)">
-
-        <div class="ymdText-pc-add">
-          <div class="ymdText-pc-add-off">+ OFF 일정추가</div>
-          <div class="ymdText-pc-add-pt">+ PT 일정추가</div>
-        </div>
-    </div>
-
-    <div id="date" class="week-style wrap"> <!--월화수목금토일-->
-            <table class="calendar-style calendar-day-style">
-                <tr>
-                    <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
-                    <td id="monday"><p class="calendar_image weekday_style weekdays">월</p></td>
-                    <td id="tuesday"><p class="calendar_image weekday_style weekdays">화</p></td>
-                    <td id="wednesday"><p class="calendar_image weekday_style weekdays">수</p></td>
-                    <td id="thursday"><p class="calendar_image weekday_style weekdays">목</p></td>
-                    <td id="friday"><p class="calendar_image weekday_style weekdays">금</p></td>
-                    <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
-                </tr>
-            </table>
-    </div> <!--월화수목금토일-->
-
-    <div id="calendar" class="wrap _calmonth" > <!-- Calendar container-->    
-        <div class="swiper-container">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide" id="slide0"></div> <!--Index0-->
-                <div class="swiper-slide"></div> <!--Index1-->
-                <div class="swiper-slide" id="slide2"></div> <!--Index2-->
-            </div>  <!--Swiper-wrapper-->
-        </div> <!--Swiper-container-->
-        <!--Swiper-->
-        <!-- <div class="swiper-pagination"></div> -->
-        <div id="cal_box" class="cal_box"></div>
-    </div>
-
-
-    <div id="page-addplan" class="wrap popups">
-        <!--
-          {% if messages %}
-              {% for message in messages %}
-                  <div id="inputError">
-                          <div id="errorMsg" class="inputErrorInner"><p style="line-height: 35px;vertical-align: middle;margin:0;">{{ message }}</p></div>
-                  </div>
+      <div id="memberName" class="ptaddbox">
+        <div class="ptaddboxtext"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
+        <div id="membersSelected" class="dropdown">
+          <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+            <span class="KRtext" style="color:#cccccc;">회원명 선택</span>
+            <span class="JPtext" style="color:#cccccc;">選択</span>
+            <span class="ENtext" style="color:#cccccc;">Select</span></button>
+          <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
+          <ul id="members_mobile" class="dropdown-menu pters_dropdown_custom">
+            <!-- 회원명 DB연동 필요
+              {# {% for lecture in trainer_member %}
+              <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
+                  {{ lecture.trainer_member.name }}</a>
+              </li>
               {% endfor %}
-          {% endif %}
-        -->
-          <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="member_id"    id="id_member_id">
-              <input type="hidden" name="lecture_id"    id="id_lecture_id">
-              <input type="hidden" name="member_name"   id="id_member_name">
-              <input type="hidden" name="training_date" id="id_training_date">
-              <input type="hidden" name="time_duration" id="id_time_duration">
-              <input type="hidden" name="training_time" id="id_training_time">
-              <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
-              <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
-              <input type="hidden" name="add_memo" id="id_memo_mini">
-          </form>
-
-          <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="training_date" id="id_training_date_off">
-              <input type="hidden" name="time_duration" id="id_time_duration_off">
-              <input type="hidden" name="training_time" id="id_training_time_off">
-              <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
-              <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
-              <input type="hidden" name="add_memo" id="id_memo_mini_off">
-          </form>
-
-          <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="member_id"        id="id_repeat_member_id">
-              <input type="hidden" name="lecture_id"        id="id_repeat_lecture_id">
-              <input type="hidden" name="member_name"       id="id_repeat_member_name">
-              <input type="hidden" name="repeat_freq"       id="id_repeat_freq">
-              <input type="hidden" name="repeat_start_date" id="id_repeat_start_date">
-              <input type="hidden" name="repeat_end_date"   id="id_repeat_end_date">
-              <input type="hidden" name="repeat_day"        id="id_repeat_day">
-              <input type="hidden" name="repeat_start_time" id="id_repeat_start_time">
-              <input type="hidden" name="repeat_dur"        id="id_repeat_dur">
-              <input type="hidden" name="en_dis_type" value="1">
-              <input type="hidden" name="next_page" value="{% url 'trainer:cal_day_ajax' %}">
-          </form>
-
-          <form action="{% url 'schedule:add_repeat_schedule' %}"  id="add-off-repeat-schedule-form" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="repeat_freq"         id="id_repeat_freq_off">
-              <input type="hidden" name="repeat_start_date"   id="id_repeat_start_date_off">
-              <input type="hidden" name="repeat_end_date"     id="id_repeat_end_date_off">
-              <input type="hidden" name="repeat_day"          id="id_repeat_day_off">
-              <input type="hidden" name="repeat_start_time"   id="id_repeat_start_time_off">
-              <input type="hidden" name="repeat_dur"          id="id_repeat_dur_off">
-              <input type="hidden" name="en_dis_type" value="0">
-              <input type="hidden" name="next_page" value="{% url 'trainer:cal_day_ajax' %}">
-          </form>
-          
-          <div class="ptaddbox" id="pcaddpopup">
-            <span class="KRtext">PT 일정 추가</span>
-            <span class="JPtext">PT 日程追加</span>
-            <span class="ENtext">Add PT Schedule</span>
-            <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
-          </div>
-
-          <div class="ptaddbox" id="pcaddpopup_off">
-            <span class="KRtext">OFF 일정 추가</span>
-            <span class="JPtext">OFF 日程追加</span>
-            <span class="ENtext">Add OFF Schedule</span>
-            <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
-          </div>
-
-          <div id="memberName" class="ptaddbox">
-            <div class="ptaddboxtext"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
-            <div id="membersSelected" class="dropdown">
-              <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
-                <span class="KRtext" style="color:#cccccc;">회원명 선택</span>
-                <span class="JPtext" style="color:#cccccc;">選択</span>
-                <span class="ENtext" style="color:#cccccc;">Select</span></button>
-              <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-              <ul id="members_mobile" class="dropdown-menu pters_dropdown_custom">
-                <!-- 회원명 DB연동 필요
-                  {# {% for lecture in trainer_member %}
-                  <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
-                      {{ lecture.trainer_member.name }}</a>
-                  </li>
-                  {% endfor %}
-                   #}
-                  -->
-              </ul>
-            </div>
-          </div>
-
-          <div id="remainCount" class="ptaddbox">
-            <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약 가능 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Remain Counts</span></div>
-            <!-- 남은 횟수 DB연동 필요 -->
-                  <div id="countsSelected" class="dropdown" placeholder="ー"></div>
-          </div>
-
-
-          <div class="_NORMAL_ADD_wrap">
-            <div id="dateSelector" class="ptaddbox _NORMAL_ADD">
-              <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
-              <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
-            </div>
-
-            <div id="timeGraph" class="ptaddbox _NORMAL_ADD_timegraph" style="display: none;">
-              <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;"><span class="KRtext"> 등록 가능 시간 </span><span class="JPtext"> 登録可能時間</span><span class="ENtext">Available Time</span><div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
-              <table class="timegraphtext">
-                <tbody>
-                  <tr>
-                    <td class="">0</td>
-                    <td class="">1</td>
-                    <td class="">2</td>
-                    <td class="">3</td>
-                    <td class="">4</td>
-                    <td class="">5</td>
-                    <td class="">6</td>
-                    <td class="">7</td>
-                    <td class="">8</td>
-                    <td class="">9</td>
-                    <td class="">10</td>
-                    <td class="">11</td>
-                    <td class="">12</td>
-                    <td class="">13</td>
-                    <td class="">14</td>
-                    <td class="">15</td>
-                    <td class="">16</td>
-                    <td class="">17</td>
-                    <td class="">18</td>
-                    <td class="">19</td>
-                    <td class="">20</td>
-                    <td class="">21</td>
-                    <td class="">22</td>
-                    <td class="">23</td>
-                  </tr>
-                  <tr>
-                    <td id="0g" class="tdgraph"></td>
-                    <td id="1g" class="tdgraph"></td>
-                    <td id="2g" class="tdgraph"></td>
-                    <td id="3g" class="tdgraph"></td>
-                    <td id="4g" class="tdgraph"></td>
-                    <td id="5g" class="tdgraph"></td>
-                    <td id="6g" class="tdgraph"></td>
-                    <td id="7g" class="tdgraph"></td>
-                    <td id="8g" class="tdgraph"></td>
-                    <td id="9g" class="tdgraph"></td>
-                    <td id="10g" class="tdgraph"></td>
-                    <td id="11g" class="tdgraph"></td>
-                    <td id="12g" class="tdgraph"></td>
-                    <td id="13g" class="tdgraph"></td>
-                    <td id="14g" class="tdgraph"></td>
-                    <td id="15g" class="tdgraph"></td>
-                    <td id="16g" class="tdgraph"></td>
-                    <td id="17g" class="tdgraph"></td>
-                    <td id="18g" class="tdgraph"></td>
-                    <td id="19g" class="tdgraph"></td>
-                    <td id="20g" class="tdgraph"></td>
-                    <td id="21g" class="tdgraph"></td>
-                    <td id="22g" class="tdgraph"></td>
-                    <td id="23g" class="tdgraph"></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div id="classStartTime" class="ptaddbox _NORMAL_ADD">
-              <div class="ptaddboxtext">
-                <img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}>
-                <span class="KRtext"> 시작 시간</span>
-                <span class="JPtext"> 開始時間</span>
-                <span class="ENtext"> Start Time</span>
-              </div>
-              <div id="starttimesSelected" class="dropdown">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
-                  <span class="KRtext" style="color:#cccccc;">선택</span>
-                  <span class="JPtext" style="color:#cccccc;">選択</span>
-                  <span class="ENtext" style="color:#cccccc;">Select</span>
-                </button>
-                <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
-                </ul>
-              </div>
-            </div>
-
-            <div id="classDuration" class="ptaddbox _NORMAL_ADD">
-              <div class="ptaddboxtext">
-                <img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}>
-                <span class="KRtext"> 진행 시간</span>
-                <span class="JPtext"> 進行時間</span>
-                <span class="ENtext"> Class Time</span>
-              </div>
-              <div id="durationsSelected" class="dropdown">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
-                  <span class="KRtext" style="color:#cccccc;">선택</span>
-                  <span class="JPtext" style="color:#cccccc;">選択</span>
-                  <span class="ENtext" style="color:#cccccc;">Select</span>
-                </button>
-                <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                <ul id="durations" class="dropdown-menu pters_dropdown_custom">
-                </ul>
-              </div>
-            </div> 
-          </div>
-
-          <div id="scheduleMemo" class="ptaddbox">
-            <div class="ptaddboxtext">
-              <img class="icons" style="width:13px;" src={% static_url "user/res/icon-pencil.png" %}>
-              <span class="KRtext"> 메모</span>
-              <span class="JPtext">メモ―</span>
-              <span class="ENtext">Memo</span>
-            </div>
-            <input type="text" name="add_memo" class="dropdown" maxlength="15">
-          </div>
-
-          <!--반복 일정 개요 박스-->
-          <div id="repeatSchedule" class="ptaddbox repeatbox">
-              <div id="repeatScheduleText" class="ptaddboxtext repeattext">
-                <img src={% static_url "user/res/icon-cal-mini.png" %} class="icons">
-                 <span>반복일정</span>
-                 <img class="icons-next-button" src={% static_url "user/res/icon-setting-arrow.png" %}>
-               </div>
-          </div>
-          <!--반복 일정 개요 박스-->
-
-          <div class="_REPEAT_ADD_wrap">
-
-            <div id="offRepeatSummary" class="ptaddbox _REPEAT_ADD">
-                <span id="summaryText KRtext">일정요약</span><span id="summaryText JPtext">現在登録現況</span><span id="summaryText ENtext">Repeat Summary</span>
-                <!--
-                <div class="summaryInnerBox">
-                  <span class="summaryInnerBoxText">매주 월요일 오전 11시</span>
-                  <span class="summaryInnerBoxText2">반복종료 : 계속반복</span>
-                  <span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;">
-                  <div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>
-                  </span>
-                </div>
-                <div class="summaryInnerBox">
-                  <span class="summaryInnerBoxText">매주 수요일 오후 3시</span>
-                  <span class="summaryInnerBoxText2">반복종료 : 2017.12.31</span>
-                  <span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;">
-                  <div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>
-                  </span>  
-                </div>
-                -->
-            </div>
-              
-            <div id="repeatSetting" class="ptaddbox _REPEAT_ADD">
-              <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/offadd/icon-repeat.png" %} style="width:14px;"> 반복 빈도</div>
-              <div id="repeattypeSelected" class="dropdown">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
-                  <span class="KRtext" style="color:#cccccc;">선택</span>
-                  <span class="JPtext" style="color:#cccccc;">選択</span>
-                  <span class="ENtext" style="color:#cccccc;">Select</span>
-                </button>
-                <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
-                  <!-- 회원명 DB연동 필요-->
-                  <li><a data-repeat="WW">매주</a></li>
-                  <li><a data-repeat="2W">격주</a></li>
-                  <li><a data-repeat="DD">매일</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div id="daySelect" class="ptaddbox _REPEAT_ADD">
-              <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %} style="width:14px;"> 요일별 일정</div>
-                <div class="dateButtonGroup" style="width:100%;">
-                    <div class="dateButton" data-date="1_SUN">일</div>
-                    <div class="dateButton" data-date="2_MON">월</div>
-                    <div class="dateButton" data-date="3_TUE">화</div>
-                    <div class="dateButton" data-date="4_WED">수</div>
-                    <div class="dateButton" data-date="5_THS">목</div>
-                    <div class="dateButton" data-date="6_FRI">금</div>
-                    <div class="dateButton" data-date="7_SAT">토</div>
-                </div>
-            </div>
-
-            <div id="dateSelector_repeat_start" class="ptaddbox _REPEAT_ADD">
-              <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 시작</div>
-              <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_start" placeholder="-" readonly></p>  
-            </div>
-
-            <div id="dateSelector_repeat_end" class="ptaddbox _REPEAT_ADD">
-              <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 종료</div>
-              <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_end" placeholder="-" readonly></p>  
-            </div>
-          
-            <div id="repeatStartTime" class="ptaddbox _REPEAT_ADD">
-              <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
-              <div id="repeatstarttimesSelected" class="dropdown">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
-                  <span class="KRtext" style="color:#cccccc;">선택</span>
-                  <span class="JPtext" style="color:#cccccc;">選択</span>
-                  <span class="ENtext" style="color:#cccccc;">Select</span>
-                </button>
-                <ul id="repeatstarttimes" class="dropdown-menu pters_dropdown_custom">
-                  <!-- 회원명 DB연동 필요-->
-                  <!--
-                  <li><a data-trainingtime="00:00:00.000000">오전 0시</a></li>
-                  <li><a data-trainingtime="01:00:00.000000">오전 1시</a></li>
-                  <li><a data-trainingtime="02:00:00.000000">오전 2시</a></li>
-                  <li><a data-trainingtime="03:00:00.000000">오전 3시</a></li>
-                  <li><a data-trainingtime="04:00:00.000000">오전 4시</a></li>
-                  <li><a data-trainingtime="05:00:00.000000">오전 5시</a></li>
-                  <li><a data-trainingtime="06:00:00.000000">오전 6시</a></li>
-                  <li><a data-trainingtime="07:00:00.000000">오전 7시</a></li>
-                  <li><a data-trainingtime="08:00:00.000000">오전 8시</a></li>
-                  <li><a data-trainingtime="09:00:00.000000">오전 9시</a></li>
-                  <li><a data-trainingtime="10:00:00.000000">오전 10시</a></li>
-                  <li><a data-trainingtime="11:00:00.000000">오전 11시</a></li>
-                  <li><a data-trainingtime="12:00:00.000000">오후 12시</a></li>
-                  <li><a data-trainingtime="13:00:00.000000">오후 1시</a></li>
-                  <li><a data-trainingtime="14:00:00.000000">오후 2시</a></li>
-                  <li><a data-trainingtime="15:00:00.000000">오후 3시</a></li>
-                  <li><a data-trainingtime="16:00:00.000000">오후 4시</a></li>
-                  <li><a data-trainingtime="17:00:00.000000">오후 5시</a></li>
-                  <li><a data-trainingtime="18:00:00.000000">오후 6시</a></li>
-                  <li><a data-trainingtime="19:00:00.000000">오후 7시</a></li>
-                  <li><a data-trainingtime="20:00:00.000000">오후 8시</a></li>
-                  <li><a data-trainingtime="21:00:00.000000">오후 9시</a></li>
-                  <li><a data-trainingtime="22:00:00.000000">오후 10시</a></li>
-                  <li><a data-trainingtime="23:00:00.000000">오후 11시</a></li>
-                  -->
-                </ul>
-              </div>
-            </div>
-
-            <div id="repeatDurTime" class="ptaddbox _REPEAT_ADD">
-              <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
-              <div id="repeatdurationsSelected" class="dropdown">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
-                  <span class="KRtext" style="color:#cccccc;">선택</span>
-                  <span class="JPtext" style="color:#cccccc;">選択</span>
-                  <span class="ENtext" style="color:#cccccc;">Select</span>
-                </button>
-                <ul id="repeatdurations" class="dropdown-menu pters_dropdown_custom">
-                  <!-- 회원명 DB연동 필요-->
-                  <!--
-                  <li><a data-dur="1">1시간</a></li>
-                  <li><a data-dur="2">2시간</a></li>
-                  <li><a data-dur="3">3시간</a></li>
-                  <li><a data-dur="4">4시간</a></li>
-                  <li><a data-dur="5">5시간</a></li>
-                  <li><a data-dur="6">6시간</a></li>
-                  <li><a data-dur="7">7시간</a></li>
-                  <li><a data-dur="8">8시간</a></li>
-                  <li><a data-dur="9">9시간</a></li>
-                  <li><a data-dur="10">10시간</a></li>
-                  <li><a data-dur="11">11시간</a></li>
-                  <li><a data-dur="12">12시간</a></li>
-                  -->
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class='popupBtn'>
-            <div class="submitBtn" id="submitBtn_pt"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
-          </div>
+               #}
+              -->
+          </ul>
+        </div>
       </div>
 
+      <div id="remainCount" class="ptaddbox">
+        <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약 가능 횟수</span><span class="JPtext"> 残余回数</span><span class="ENtext"> Remain Counts</span></div>
+        <!-- 남은 횟수 DB연동 필요 -->
+              <div id="countsSelected" class="dropdown" placeholder="ー"></div>
+      </div>
+
+
+      <div class="_NORMAL_ADD_wrap">
+        <div id="dateSelector" class="ptaddbox _NORMAL_ADD">
+          <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
+          <p class="datepicktext dropdown"><input type="text" id="datepicker" placeholder="-" readonly></p>  
+        </div>
+
+        <div id="timeGraph" class="ptaddbox _NORMAL_ADD_timegraph" style="display: none;">
+          <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;"><span class="KRtext"> 등록 가능 시간 </span><span class="JPtext"> 登録可能時間</span><span class="ENtext">Available Time</span><div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
+          <table class="timegraphtext">
+            <tbody>
+              <tr>
+                <td class="">0</td>
+                <td class="">1</td>
+                <td class="">2</td>
+                <td class="">3</td>
+                <td class="">4</td>
+                <td class="">5</td>
+                <td class="">6</td>
+                <td class="">7</td>
+                <td class="">8</td>
+                <td class="">9</td>
+                <td class="">10</td>
+                <td class="">11</td>
+                <td class="">12</td>
+                <td class="">13</td>
+                <td class="">14</td>
+                <td class="">15</td>
+                <td class="">16</td>
+                <td class="">17</td>
+                <td class="">18</td>
+                <td class="">19</td>
+                <td class="">20</td>
+                <td class="">21</td>
+                <td class="">22</td>
+                <td class="">23</td>
+              </tr>
+              <tr>
+                <td id="0g" class="tdgraph"></td>
+                <td id="1g" class="tdgraph"></td>
+                <td id="2g" class="tdgraph"></td>
+                <td id="3g" class="tdgraph"></td>
+                <td id="4g" class="tdgraph"></td>
+                <td id="5g" class="tdgraph"></td>
+                <td id="6g" class="tdgraph"></td>
+                <td id="7g" class="tdgraph"></td>
+                <td id="8g" class="tdgraph"></td>
+                <td id="9g" class="tdgraph"></td>
+                <td id="10g" class="tdgraph"></td>
+                <td id="11g" class="tdgraph"></td>
+                <td id="12g" class="tdgraph"></td>
+                <td id="13g" class="tdgraph"></td>
+                <td id="14g" class="tdgraph"></td>
+                <td id="15g" class="tdgraph"></td>
+                <td id="16g" class="tdgraph"></td>
+                <td id="17g" class="tdgraph"></td>
+                <td id="18g" class="tdgraph"></td>
+                <td id="19g" class="tdgraph"></td>
+                <td id="20g" class="tdgraph"></td>
+                <td id="21g" class="tdgraph"></td>
+                <td id="22g" class="tdgraph"></td>
+                <td id="23g" class="tdgraph"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="classStartTime" class="ptaddbox _NORMAL_ADD">
+          <div class="ptaddboxtext">
+            <img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}>
+            <span class="KRtext"> 시작 시간</span>
+            <span class="JPtext"> 開始時間</span>
+            <span class="ENtext"> Start Time</span>
+          </div>
+          <div id="starttimesSelected" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+              <span class="KRtext" style="color:#cccccc;">선택</span>
+              <span class="JPtext" style="color:#cccccc;">選択</span>
+              <span class="ENtext" style="color:#cccccc;">Select</span>
+            </button>
+            <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
+            <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
+            </ul>
+          </div>
+        </div>
+
+        <div id="classDuration" class="ptaddbox _NORMAL_ADD">
+          <div class="ptaddboxtext">
+            <img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}>
+            <span class="KRtext"> 진행 시간</span>
+            <span class="JPtext"> 進行時間</span>
+            <span class="ENtext"> Class Time</span>
+          </div>
+          <div id="durationsSelected" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+              <span class="KRtext" style="color:#cccccc;">선택</span>
+              <span class="JPtext" style="color:#cccccc;">選択</span>
+              <span class="ENtext" style="color:#cccccc;">Select</span>
+            </button>
+            <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
+            <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+            </ul>
+          </div>
+        </div> 
+      </div>
+
+      <div id="scheduleMemo" class="ptaddbox">
+        <div class="ptaddboxtext">
+          <img class="icons" style="width:13px;" src={% static_url "user/res/icon-pencil.png" %}>
+          <span class="KRtext"> 메모</span>
+          <span class="JPtext">メモ―</span>
+          <span class="ENtext">Memo</span>
+        </div>
+        <input type="text" name="add_memo" class="dropdown" maxlength="15">
+      </div>
+
+      <!--반복 일정 개요 박스-->
+      <div id="repeatSchedule" class="ptaddbox repeatbox">
+          <div id="repeatScheduleText" class="ptaddboxtext repeattext">
+            <img src={% static_url "user/res/icon-cal-mini.png" %} class="icons">
+             <span>반복일정</span>
+             <img class="icons-next-button" src={% static_url "user/res/icon-setting-arrow.png" %}>
+           </div>
+      </div>
+      <!--반복 일정 개요 박스-->
+
+      <div class="_REPEAT_ADD_wrap">
+
+        <div id="offRepeatSummary" class="ptaddbox _REPEAT_ADD">
+            <span id="summaryText KRtext">일정요약</span><span id="summaryText JPtext">現在登録現況</span><span id="summaryText ENtext">Repeat Summary</span>
+            <!--
+            <div class="summaryInnerBox">
+              <span class="summaryInnerBoxText">매주 월요일 오전 11시</span>
+              <span class="summaryInnerBoxText2">반복종료 : 계속반복</span>
+              <span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;">
+              <div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>
+              </span>
+            </div>
+            <div class="summaryInnerBox">
+              <span class="summaryInnerBoxText">매주 수요일 오후 3시</span>
+              <span class="summaryInnerBoxText2">반복종료 : 2017.12.31</span>
+              <span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;">
+              <div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>
+              </span>  
+            </div>
+            -->
+        </div>
+          
+        <div id="repeatSetting" class="ptaddbox _REPEAT_ADD">
+          <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/offadd/icon-repeat.png" %} style="width:14px;"> 반복 빈도</div>
+          <div id="repeattypeSelected" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+              <span class="KRtext" style="color:#cccccc;">선택</span>
+              <span class="JPtext" style="color:#cccccc;">選択</span>
+              <span class="ENtext" style="color:#cccccc;">Select</span>
+            </button>
+            <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
+              <!-- 회원명 DB연동 필요-->
+              <li><a data-repeat="WW">매주</a></li>
+              <li><a data-repeat="2W">격주</a></li>
+              <li><a data-repeat="DD">매일</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="daySelect" class="ptaddbox _REPEAT_ADD">
+          <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %} style="width:14px;"> 요일별 일정</div>
+            <div class="dateButtonGroup" style="width:100%;">
+                <div class="dateButton" data-date="1_SUN">일</div>
+                <div class="dateButton" data-date="2_MON">월</div>
+                <div class="dateButton" data-date="3_TUE">화</div>
+                <div class="dateButton" data-date="4_WED">수</div>
+                <div class="dateButton" data-date="5_THS">목</div>
+                <div class="dateButton" data-date="6_FRI">금</div>
+                <div class="dateButton" data-date="7_SAT">토</div>
+            </div>
+        </div>
+
+        <div id="dateSelector_repeat_start" class="ptaddbox _REPEAT_ADD">
+          <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 시작</div>
+          <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_start" placeholder="-" readonly></p>  
+        </div>
+
+        <div id="dateSelector_repeat_end" class="ptaddbox _REPEAT_ADD">
+          <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 종료</div>
+          <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_end" placeholder="-" readonly></p>  
+        </div>
+      
+        <div id="repeatStartTime" class="ptaddbox _REPEAT_ADD">
+          <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+          <div id="repeatstarttimesSelected" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+              <span class="KRtext" style="color:#cccccc;">선택</span>
+              <span class="JPtext" style="color:#cccccc;">選択</span>
+              <span class="ENtext" style="color:#cccccc;">Select</span>
+            </button>
+            <ul id="repeatstarttimes" class="dropdown-menu pters_dropdown_custom">
+              <!-- 회원명 DB연동 필요-->
+              <!--
+              <li><a data-trainingtime="00:00:00.000000">오전 0시</a></li>
+              <li><a data-trainingtime="01:00:00.000000">오전 1시</a></li>
+              <li><a data-trainingtime="02:00:00.000000">오전 2시</a></li>
+              <li><a data-trainingtime="03:00:00.000000">오전 3시</a></li>
+              <li><a data-trainingtime="04:00:00.000000">오전 4시</a></li>
+              <li><a data-trainingtime="05:00:00.000000">오전 5시</a></li>
+              <li><a data-trainingtime="06:00:00.000000">오전 6시</a></li>
+              <li><a data-trainingtime="07:00:00.000000">오전 7시</a></li>
+              <li><a data-trainingtime="08:00:00.000000">오전 8시</a></li>
+              <li><a data-trainingtime="09:00:00.000000">오전 9시</a></li>
+              <li><a data-trainingtime="10:00:00.000000">오전 10시</a></li>
+              <li><a data-trainingtime="11:00:00.000000">오전 11시</a></li>
+              <li><a data-trainingtime="12:00:00.000000">오후 12시</a></li>
+              <li><a data-trainingtime="13:00:00.000000">오후 1시</a></li>
+              <li><a data-trainingtime="14:00:00.000000">오후 2시</a></li>
+              <li><a data-trainingtime="15:00:00.000000">오후 3시</a></li>
+              <li><a data-trainingtime="16:00:00.000000">오후 4시</a></li>
+              <li><a data-trainingtime="17:00:00.000000">오후 5시</a></li>
+              <li><a data-trainingtime="18:00:00.000000">오후 6시</a></li>
+              <li><a data-trainingtime="19:00:00.000000">오후 7시</a></li>
+              <li><a data-trainingtime="20:00:00.000000">오후 8시</a></li>
+              <li><a data-trainingtime="21:00:00.000000">오후 9시</a></li>
+              <li><a data-trainingtime="22:00:00.000000">오후 10시</a></li>
+              <li><a data-trainingtime="23:00:00.000000">오후 11시</a></li>
+              -->
+            </ul>
+          </div>
+        </div>
+
+        <div id="repeatDurTime" class="ptaddbox _REPEAT_ADD">
+          <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+          <div id="repeatdurationsSelected" class="dropdown">
+            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
+              <span class="KRtext" style="color:#cccccc;">선택</span>
+              <span class="JPtext" style="color:#cccccc;">選択</span>
+              <span class="ENtext" style="color:#cccccc;">Select</span>
+            </button>
+            <ul id="repeatdurations" class="dropdown-menu pters_dropdown_custom">
+              <!-- 회원명 DB연동 필요-->
+              <!--
+              <li><a data-dur="1">1시간</a></li>
+              <li><a data-dur="2">2시간</a></li>
+              <li><a data-dur="3">3시간</a></li>
+              <li><a data-dur="4">4시간</a></li>
+              <li><a data-dur="5">5시간</a></li>
+              <li><a data-dur="6">6시간</a></li>
+              <li><a data-dur="7">7시간</a></li>
+              <li><a data-dur="8">8시간</a></li>
+              <li><a data-dur="9">9시간</a></li>
+              <li><a data-dur="10">10시간</a></li>
+              <li><a data-dur="11">11시간</a></li>
+              <li><a data-dur="12">12시간</a></li>
+              -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class='popupBtn'>
+        <div class="submitBtn" id="submitBtn_pt"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
+      </div>
+</div>
+
+
+<div id="memberInfoPopup" class="infopopup wrap">
+
+    <div id="inputError_info">
+        <div id="errorMsg_info" class="inputErrorInner">
+            <p style="line-height: 35px;vertical-align: middle;margin:0;"></p>
+        </div>
+    </div>
+
+    <div class="ptaddbox" id="pcaddpopup">
+       <span id="uptext-pc-modify">회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+    </div>
+
+    <div>
+       <button id="infoMemberDelete"><img src={% static_url "user/res/member/icon-delete-black.png" %}></button>
+       <button id="infoMemberModify" data-type="view"><img src={% static_url "user/res/member/icon-edit.png" %}></button>
+    </div>
+    
+    <form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
+        {% csrf_token %}
+        <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
+        <input type="hidden" name="sex" id="form_sex_modify">
+        <input type="hidden" name="birthday" id="form_birth_modify">
+
+        <div class="ptaddbox form-group">
+            <label for="memberName_info" class="ptaddboxtext">
+                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명
+                <span id="npSituationPresent"></span>
+            </label>
+            <div class="dropdown pters_input_custom">
+                <input type="text" class="dropdown form-control" id="memberName_info" name="name" readonly>
+            </div>
+        </div>
+
+
+        <div class="ptaddbox form-group">
+            <label for="memberId" class="ptaddboxtext">
+                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 ID
+            </label>
+            <div class="dropdown pters_input_custom">
+                <input type="text" class="dropdown form-control" id="memberId" name="id" readonly>
+            </div>
+        </div>
+
+        <div class="ptaddbox form-group">
+            <label for="memberBirthSex_info" class="ptaddboxtext">
+                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 부가정보
+            </label>
+            <div id="memberBirth_info">
+                <!--
+                <input type="text" class="dropdown form-control" id="memberBirthYear_info" name="birthyear" maxlength="4" readonly>
+                <div id="memberBirthMonthSelected_info" class="dropdown">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom input_disabled_color" type="button" data-toggle="dropdown" name="birthmonth" disabled></button>
+                    <ul id="memberBirthMonth_info" class="dropdown-menu dropdownlist">
+                        <li><a value="1">1월</a></li>
+                        <li><a value="2">2월</a></li>
+                        <li><a value="3">3월</a></li>
+                        <li><a value="4">4월</a></li>
+                        <li><a value="5">5월</a></li>
+                        <li><a value="6">6월</a></li>
+                        <li><a value="7">7월</a></li>
+                        <li><a value="8">8월</a></li>
+                        <li><a value="9">9월</a></li>
+                        <li><a value="10">10월</a></li>
+                        <li><a value="11">11월</a></li>
+                        <li><a value="12">12월</a></li>
+                    </ul>
+                </div>
+                <div id="memberBirthDateSelected_info" class="dropdown">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom input_disabled_color" type="button" data-toggle="dropdown" name="birthdate" disabled></button>
+                    <ul id="memberBirthDate_info" class="dropdown-menu dropdownlist">
+                        
+                    </ul>
+                </div>
+                --> 
+                <select class="dropdown_birth dropdown_birth_info" id="birth_year_info" disabled>
+                </select>
+                <select class="dropdown_birth dropdown_birth_info" id="birth_month_info" disabled>
+                </select>
+                <select class="dropdown_birth dropdown_birth_info" id="birth_date_info" disabled>
+                </select>
+            </div>
+            <div id="memberSex_info">
+                <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
+                <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
+            </div>
+        </div>
+
+        <div class="ptaddbox form-group">
+            <label for="memberPhone_info" class="ptaddboxtext">
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처
+            </label>
+            <div class="dropdown pters_input_custom">
+                <input type="tel" class="dropdown form-control" id="memberPhone_info" name="phone" required="required" readonly>
+            </div>
+        </div>
+
+        <div class="ptaddbox form-group">
+            <label for="memberCount_info" class="ptaddboxtext">
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록횟수
+            </label>
+            <div class="dropdown pters_input_custom">
+                <input type="tel" class="dropdown form-control" id="memberRegCount_info" name="counts" readonly>
+            </div>
+        </div>
+
+
+        <div class="ptaddbox form-group">
+            <label for="memberCount_info" class="ptaddboxtext">
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 남은횟수
+            </label>
+            <div class="dropdown pters_input_custom">
+                <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
+            </div>
+        </div>
+            
+
+        <div class="ptaddbox form-group">
+            <label for="memberEmail_info" class="ptaddboxtext">
+                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> E-mail
+            </label>
+            <div class="dropdown pters_input_custom">
+                <input type="email" class="dropdown form-control" id="memberEmail_info" name="email" readonly>
+            </div>
+        </div>
+
+        <!--
+        <div id="dateSelector_info" class="ptaddbox">
+            <label class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 시작일자</label>
+            <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
+        </div>
+        <div id="dateSelector2_info"  class="ptaddbox">
+            <label class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 종료일자</label>
+            <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
+        </div>
+        -->
+            
+        <div class="ptaddbox form-group">
+            <label for="comment_info" class="ptaddboxtext">
+                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> 특이사항
+            </label>
+            <div class="dropdown pters_input_custom">
+                <textarea class="dropdown form-control" rows="1" id="comment_info" name="contents" readonly></textarea>
+            </div>  
+        </div>
+
+        <div id="ptrepeat-btn">
+            <span>PT 반복 일정 등록</span>
+            <img class="icons-next-button" src={% static_url "user/res/ptadd/btn-next.png" %}>
+        </div>
+    </form>
+
+    <div id="memberRegHistory_info_wrap" class="member_info_wrap ptaddbox">
+            <label class="ptaddboxtext">
+                <img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
+            </label>
+            <div id="memberRegHistory_info">
+                  
+            </div>
+    </div>
+    <div id="member_history" class="history_view ptaddbox">
+        <label for="memberHistory" class="ptaddboxtext">
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 활동 내역
+        </label>
+        <div><span>history1</span></div>
+        <div><span>history2</span></div>
+        <div><span>history3</span></div>
+    </div>
+</div>
+
+<div id="memberInfoPopup_PC" class="infopopup_pc wrap popups">
+    <div id="inputError_info_PC" style="position: absolute;top: 0;left: 0;">
+        <div id="errorMsg_info_PC" class="inputErrorInner" style="height: 22px;">
+            <p style="line-height: 22px;vertical-align: middle;margin:0;"></p>
+        </div>
+    </div>
+
+    <label id="memberInfoPopup_PC_label">
+        <img src="/static/user/res/member/icon-female-pink.png">
+        <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">
+    </label>
+
+    <div id="info_shift_base" class="info_shift_wrap">
+        <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-user.png">아이디</label><span id="memberId_info_PC"></span>
+        </div>
+        <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
+            <span id="memberBirth_Year_info_PC"></span>
+            <span id="memberBirth_Month_info_PC"></span>
+            <span id="memberBirth_Date_info_PC"></span>
+        </div>
+        <div id="memberPhone_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label><span id="memberPhone_info_PC"><span>
+        </div>
+
+        <div id="memberEmail_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-mail-grey.png">E-mail</label><span id="memberEmail_info_PC"></span>
+        </div>
+        <!--
+        <div id="memberStart_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-cal-grey.png">시작일자</label><span id="memberStart_info_PC"></span>
+        </div>
+        <div id="memberEnd_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-cal-grey.png">종료일자</label><span id="memberEnd_info_PC"></span>
+        </div>
+        
+        <div id="memberComment_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-info.png">특이사항</label><input id="memberComment_info_PC" readonly>
+        </div>
+        -->
+    </div> 
+
+    <div id="member_info_type_select">
+        <button class="button_shift_info" id="select_info_shift_lecture">수강 정보</button>
+        <button class="button_shift_info" id="select_info_shift_schedule">일정 정보</button>
+    </div>
+
+    <div id="info_shift_lecture" class="info_shift_wrap">
+        <div id="memberRegCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록횟수</label>
+            <span id="memberRegCount_info_PC" readonly></span>회
+        </div>
+        <div id="memberRemainCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">남은횟수</label>
+            <span id="memberRemainCount_info_PC" readonly></span>회
+        </div>
+
+        <div id="memberAvailCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">예약 가능 횟수</label>
+            <span id="memberAvailCount_info_PC" readonly></span>회
+        </div>
+        <div id="memberFinishCount_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">완료 횟수</label>
+            <span id="memberFinishCount_info_PC" readonly></span>회
+        </div>
+        <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력</label>
+            <div id="memberRegHistory_info_PC">
+                  
+            </div>
+        </div>
+    </div>
+
+    <div id="info_shift_schedule" class="info_shift_wrap">
+        <div id="memberRepeat_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">반복 일정</label>
+            <div id="memberRepeat_info_PC">
+                  
+            </div>
+        </div>
+
+        <div id="memberLectureHistory_info_PC_wrap" class="member_info_PC_wrap">
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">활동</label>
+        </div>
+    </div>
+
+
+    <div class="member_info_PC_buttons_wrap popupBtn_mini">
+        <button class="submitBtn _info_delete">삭제</button>
+        <button class="submitBtn _info_modify" data-type="view" style="display: none;">수정</button>
+        <button class="submitBtn _btn_close_info_PC">닫기</button>
+    </div>
+</div>
 
 
 {% endblock %}
@@ -644,5 +909,5 @@
         </script>
         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>
         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.off.repeat.js" %}></script>
-
+        <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
 {% endblock %}

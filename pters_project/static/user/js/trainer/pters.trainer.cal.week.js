@@ -91,8 +91,7 @@ $(document).ready(function(){
               error:function(){
                 console.log('server error')
               }
-        })
-    	
+        })	
     });
 
 

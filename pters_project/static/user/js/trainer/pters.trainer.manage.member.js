@@ -1751,7 +1751,11 @@ function send_member_modified_data_pc(){
                     memberListSet('finished','date','yes');
                     $('#startR').attr('selected','selected')
                     $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
-                    open_member_info_popup_pc($('#memberId_info_PC').text())
+                    if($('body').width()>600){
+                        open_member_info_popup_pc($('#memberId_info_PC').text())
+                    }else if($('body').width()<=600){
+                        open_member_info_popup_mobile($('#memberId_info_PC').text())
+                    }
                     console.log('success');
               }
           },
@@ -2550,7 +2554,7 @@ function completeSend(){
     $('html').css("cursor","auto");
     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
     $('.ajaxloadingPC').hide();
-    //$('#shade').hide();
-    //$('#calendar').show();
+    $('#shade').hide();
+    $('#calendar').show();
     //alert('complete: 일정 정상 등록')
 }
