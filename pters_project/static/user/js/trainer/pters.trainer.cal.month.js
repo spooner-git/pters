@@ -299,7 +299,7 @@ $(document).ready(function(){
 			
 			var selectedDate = $('.popup_ymdText').text()
 			var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
-			var selectedPerson = '<span class="memberNameForInfoView" data-name="'+$(this).find('.plancheckname').text()+'">'+$(this).find('.plancheckname').text()+'</span>'
+			var selectedPerson = '<span class="memberNameForInfoView" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
 			var selectedMemo = $(this).attr('data-memo')
 			if($(this).attr('data-memo') == undefined){
 				var selectedMemo = ""

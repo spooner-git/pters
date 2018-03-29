@@ -260,11 +260,14 @@ $(document).ready(function(){
           var Data = DB
         }else if($('#finishedMemberList').css('display') == "block"){
            var Data = DBe
+        }else if($('#calendar').length>0){
+            var Data = DB
         }
         var userID = $('#memberId_info_PC').text()
         if($('body').width()<600){
             var userID = $('#memberId').val()
         }
+
         var userName = Data[userID].name
         var lectureID = $(this).attr('data-leid')
         $('#form_member_name').val(userName)
@@ -2558,7 +2561,9 @@ function completeSend(){
     $('html').css("cursor","auto");
     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
     $('.ajaxloadingPC').hide();
-    $('#shade').hide();
-    $('#calendar').show();
+    if($('body').width()<=600){
+       $('#shade').hide();
+       $('#calendar').show(); 
+    }
     //alert('complete: 일정 정상 등록')
 }
