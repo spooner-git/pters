@@ -39,7 +39,7 @@ class SettingTbAdmin(admin.ModelAdmin):
 
 @admin.register(ClassTb)
 class ClassTbAdmin(admin.ModelAdmin):
-    list_display = ('class_id', 'member_id', 'center_tb', 'subject_cd', 'subject_detail_nm',
+    list_display = ('class_id', 'member', 'center_tb', 'subject_cd', 'subject_detail_nm',
                     'start_date', 'end_date',
                     'class_hour', 'start_hour_unit', 'class_member_num', 'state_cd',
                     'member_view_state_cd', 'schedule_check',

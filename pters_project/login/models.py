@@ -27,7 +27,7 @@ class MemberTb(models.Model):
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'MEMBER_TB'
 
     def __str__(self):
@@ -46,7 +46,7 @@ class CommonCdTb(models.Model):
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'COMMON_CD_TB'
 
 
@@ -78,5 +78,5 @@ class HolidayTb(models.Model):
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'HOLIDAY_TB'
