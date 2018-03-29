@@ -1078,14 +1078,14 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     # 수강 정보 불러 오기
     if error is None:
         if member_id is None or member_id == '':
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__stat_cd='IP',
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__state_cd='IP',
                                                          lecture_tb__use='1')
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
             # lecture_list = lecture_list.filter()
         else:
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__stat_cd='IP',
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__state_cd='IP',
                                                          lecture_tb__member_id=member_id,
                                                          lecture_tb__use='1')
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)

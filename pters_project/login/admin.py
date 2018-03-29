@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.core.exceptions import ObjectDoesNotExist
+
 from login.models import CommonCdTb
 from login.models import LogTb
 from login.models import MemberTb
@@ -27,11 +29,13 @@ class MemberTbAdmin(admin.ModelAdmin):
                     'address', 'job', 'contents', 'reg_dt', 'mod_dt', 'use')
 
     def get_user_group(self, obj):
-        group_data = obj.user.groups.get(user=obj.user)
-        if group_data is None:
+        if obj.user is None:
             group_data = ''
         else:
-            group_data = group_data
+            try:
+                group_data = obj.user.groups.get(user=obj.user)
+            except ObjectDoesNotExist:
+                group_data = ''
         return group_data
     get_user_group.short_description = 'Group'
 
