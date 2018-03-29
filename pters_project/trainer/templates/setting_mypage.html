@@ -103,8 +103,8 @@
             </div>
           </div>
           <span class="_regionInfo _originalInfo">{{ member_info.name }}</span>
-          <input type="" name="last_name" class="modifyInfoTool">
-          <input type="" name="first_name" class="modifyInfoTool">
+          <input type="" name="last_name" class="modifyInfoTool" placeholder="성">
+          <input type="" name="first_name" class="modifyInfoTool" placeholder="이름">
       </div>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
@@ -116,7 +116,7 @@
               <button class="cancelPhone cancelMemberInfo">취소</button>
             </div>
           </div>
-          <input type="tel" name="newphone" class="modifyInfoTool">
+          <input type="tel" name="newphone" class="modifyInfoTool" placeholder="'-'를 제외한 숫자만 입력">
           <span class="_regionInfo _originalInfo">{{ member_info.phone }}</span>
       </div>
   </div>
@@ -506,7 +506,8 @@
     <input type="hidden" name="country" id="newcountry" value="" >
     <input type="hidden" name="address" id="newcity" value="" >
     <input type="hidden" name="phone" id="newphone" value="" >
-    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:update_member_info' %}">
+    <input type="hidden" name="contents" id="contents" value="" >
+    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:trainer_mypage_ajax' %}">
 </form>
 
 
