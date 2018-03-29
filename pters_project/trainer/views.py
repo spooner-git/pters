@@ -830,13 +830,13 @@ class MyPageView(AccessTestMixin, TemplateView):
         context['end_schedule_num'] = end_schedule_num
         context['center_name'] = center_name
 
-        context['pt_repeat_schedule_id_data'] = off_repeat_schedule_id
-        context['pt_repeat_schedule_type_data'] = off_repeat_schedule_type
-        context['pt_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
-        context['pt_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
-        context['pt_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
-        context['pt_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
-        context['pt_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
+        context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
+        context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
+        context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
+        context['off_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
+        context['off_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
+        context['off_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
+        context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
 
         return context
 
