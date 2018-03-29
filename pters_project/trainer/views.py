@@ -1232,7 +1232,7 @@ def update_member_info_logic(request):
 
     if error is None:
         try:
-            user = User.objects.get(username=member_id)
+            user = User.objects.get(id=member_id)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
