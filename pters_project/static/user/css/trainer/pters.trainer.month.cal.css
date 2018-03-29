@@ -952,19 +952,3 @@ img,a,div,span,p{
 	}
 }
 
-@media(max-width: 1130px) and (min-width: 600px){
-	.arrowButtonPC{
-		display: none;
-	}
-
-	.arrowButton{
-		display: block;
-	}
-	
-	.arrowButton a{
-		width: auto;
-		top: 47%;
-		height: 50px;
-	}
-
-}

@@ -76,11 +76,9 @@ $(document).ready(function(){
       $('#shade3').css('display','none')
    })
 
-
-
-
-
 });
+
+
 
 var date = new Date();
 var currentYear = date.getFullYear(); //현재 년도
@@ -193,6 +191,8 @@ function time_h_format_to_hh(time){
   return result
 }
 
+
+//2018년 3월 29일 3:00 오후 --> 2018년 3월 29일 오후 3:00 
 function db_datatimehangul_format_realign(dbhangul){
    var data = dbhangul.split(' ')
    var len = data.length
