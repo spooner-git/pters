@@ -991,8 +991,8 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
             next_schedule_start_dt = pt_schedule_data[0].start_dt
             next_schedule_end_dt = pt_schedule_data[0].end_dt
 
-        context['next_schedule_start_dt'] = next_schedule_start_dt
-        context['next_schedule_end_dt'] = next_schedule_end_dt
+        context['next_schedule_start_dt'] = str(next_schedule_start_dt)
+        context['next_schedule_end_dt'] = str(next_schedule_end_dt)
         context['member_info'] = user_member_info
         context['end_schedule_num'] = end_schedule_num
         context['center_name'] = center_name
