@@ -64,6 +64,7 @@ $(document).ready(function(){
 
       var select_all_check = false;
 
+/*
       $(document).on('click','.deleteBtn',function(){ //일정요약에서 반복일정 오른쪽 화살표 누르면 휴지통 열림
         var $btn = $(this).find('div')
         if($btn.css('width')=='0px'){
@@ -78,10 +79,11 @@ $(document).ready(function(){
       $(document).on('click','div.deleteBtnBin',function(){
         var id_info = $(this).parents('div.summaryInnerBox').attr('data-id')
         $('#id_repeat_schedule_id_confirm').val(id_info)
-        $('#cal_popup_plandelete').fadeIn()
+        var repeat_schedule_id = $(this).parents('.summaryInnerBox').attr('data-id')
+        $('#cal_popup_plandelete').fadeIn().attr('data-id',repeat_schedule_id)
         $('#shade3').show()
       })
-      
+*/
 
 
       $(document).on('click','.summaryInnerBoxText, .summaryInnerBoxText2',function(){ //반복일정 텍스트 누르면 휴지통 닫힘
