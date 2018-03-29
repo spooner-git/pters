@@ -580,7 +580,6 @@
                 $.ajax({
                   url:'/trainer/update_member_info/',
                   type:'POST',
-                  //data : {"id":,"first_name":,"last_name":,"phone":,"contents":,"country":,"address":,"sex":,"birthday":,"next_page":,}
                   data : $('#modify-member-id-form').serialize(),
                   dataType : 'html',
 
@@ -602,6 +601,10 @@
                     
                   },
               })
+            }
+
+            function fill_recieved_member_info(){
+              
             }
 
 
