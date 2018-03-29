@@ -1576,6 +1576,8 @@ def update_member_lecture_info_logic(request):
     input_refund_price = 0
     input_price = 0
     input_lecture_reg_count = 0
+    finish_pt_count = 0
+    reserve_pt_count = 0
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1626,12 +1628,20 @@ def update_member_lecture_info_logic(request):
             error = '등록 횟수가 이미 등록한 스케쥴보다 작습니다.'
 
     if error is None:
+        schedule_list = ScheduleTb.objects.filter(lecture_tb=lecture_id)
+        if len(schedule_list) > 0:
+            reserve_pt_count = schedule_list.count()
+            finish_pt_count = schedule_list.filter(state_cd='PE').count()
+
+    if error is None:
         lecture_info.start_date = start_date
         lecture_info.end_date = end_date
         lecture_info.price = input_price
         lecture_info.refund_price = input_refund_price
         lecture_info.note = note
         lecture_info.lecture_reg_count = input_lecture_reg_count
+        lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
+        lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
 
