@@ -700,7 +700,143 @@ class MyPageView(AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MyPageView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
+        error = None
+        class_info = None
+        now = timezone.now()
+        next_schedule_start_dt = ''
+        next_schedule_end_dt = ''
+
         context = get_trainer_setting_data(context, self.request.user.id, class_id)
+        today = datetime.date.today()
+        one_day_after = today + datetime.timedelta(days=1)
+        month_first_day = today.replace(day=1)
+        next_year = int(month_first_day.strftime('%Y')) + 1
+        next_month = int(month_first_day.strftime('%m')) % 12 + 1
+        next_month_first_day = month_first_day.replace(month=next_month)
+
+        if next_month == 1:
+            next_month_first_day = next_month_first_day.replace(year=next_year)
+
+        end_schedule_num = 0
+        new_member_num = 0
+        total_member_num = 0
+        current_total_member_num = 0
+        # np_member_num = 0
+        center_name = '없음'
+        off_repeat_schedule_id = []
+        off_repeat_schedule_type = []
+        off_repeat_schedule_week_info = []
+        off_repeat_schedule_start_date = []
+        off_repeat_schedule_end_date = []
+        off_repeat_schedule_start_time = []
+        off_repeat_schedule_time_duration = []
+        context['total_member_num'] = 0
+        context['current_total_member_num'] = 0
+        context['end_schedule_num'] = 0
+        context['new_member_num'] = 0
+
+        if class_id is None or class_id == '':
+            error = '강사 정보가 존재하지 않습니다'
+
+        if error is None:
+            try:
+                user_member_info = MemberTb.objects.get(member_id=self.request.user.id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '강좌 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            if class_info.center_tb is None or class_info.center_tb == '':
+                center_name = '없음'
+            else:
+                center_name = class_info.center_tb.center_name
+        if error is None:
+            off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                       en_dis_type='0')
+
+        if error is None:
+            for off_repeat_schedule_info in off_repeat_schedule_data:
+                off_repeat_schedule_id.append(off_repeat_schedule_info.repeat_schedule_id)
+                off_repeat_schedule_type.append(off_repeat_schedule_info.repeat_type_cd)
+                off_repeat_schedule_week_info.append(off_repeat_schedule_info.week_info)
+                off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_date))
+                off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_date))
+                off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
+                off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
+        # error = 'test'
+        if error is None:
+            all_member = MemberTb.objects.filter().order_by('name')
+
+            for member_info in all_member:
+                # member_data = member_info
+
+                member_lecture_reg_count = 0
+                member_lecture_rem_count = 0
+                member_lecture_avail_count = 0
+                # 강좌에 해당하는 수강/회원 정보 가져오기
+                total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_info.member_id,
+                                                                         lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
+                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_info.member_id,
+                                                                   lecture_tb__state_cd='IP',
+                                                                   lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
+                # lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_info.member_id,
+                #                                        lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
+                if len(total_class_lecture_list) > 0:
+                    current_total_member_num += 1
+
+                if len(class_lecture_list) > 0:
+                    total_member_num += 1
+                    if len(class_lecture_list) == 1:
+                        if month_first_day < class_lecture_list[0].lecture_tb.start_date < next_month_first_day:
+                            new_member_num += 1
+
+        if error is None :
+            # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
+            context['total_member_num'] = total_member_num
+            # 남은 횟수 1개 이상 3개 미만인 경우 - 180314 hk.kim
+            context['current_total_member_num'] = current_total_member_num
+            context['new_member_num'] = new_member_num
+
+        if error is None:
+            end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                         en_dis_type='1', state_cd='PE').count()
+            # new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
+            #                                          start_date__gte=month_first_day,
+            #                                          start_date__lt=next_month_first_day, use=1).count()
+
+        if error is None:
+            if user_member_info.birthday_dt is None:
+                user_member_info.birthday_dt = '미입력'
+            if user_member_info.country is None:
+                user_member_info.country = '미입력'
+            if user_member_info.address is None:
+                user_member_info.address = '미입력'
+
+        pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                     en_dis_type='1',
+                                                     start_dt__gte=now).order_by('start_dt')
+        if len(pt_schedule_data) > 0:
+            next_schedule_start_dt = pt_schedule_data[0].start_dt
+            next_schedule_end_dt = pt_schedule_data[0].end_dt
+
+        context['next_schedule_start_dt'] = next_schedule_start_dt
+        context['next_schedule_end_dt'] = next_schedule_end_dt
+        context['member_info'] = user_member_info
+        context['end_schedule_num'] = end_schedule_num
+        context['center_name'] = center_name
+
+        context['pt_repeat_schedule_id_data'] = off_repeat_schedule_id
+        context['pt_repeat_schedule_type_data'] = off_repeat_schedule_type
+        context['pt_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
+        context['pt_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
+        context['pt_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
+        context['pt_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
+        context['pt_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
 
         return context
 

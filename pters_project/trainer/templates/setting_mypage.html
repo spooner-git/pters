@@ -44,34 +44,34 @@
   <div id="regCountBoardWrap" class="boardWrap">
       <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">총 회원</p>
         <p class="countBoard_explain">현재까지 관리한 총 회원수</p>
-        <p><span>{{lecture_reg_count}} </span>회</p>
+        <p><span>{{total_member_num}} </span>회</p>
       </div>
       <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">현재 회원</p>
         <p class="countBoard_explain">현재 진행중인 회원수</p>
-        <p><span><script type="text/javascript">document.write(Number({{lecture_reg_count}})-Number({{lecture_finish_count}}))</script></span>회</p>
+        <p><span>{{current_total_member_num}}</span>회</p>
       </div>
   </div>
 
   <div id="countBoardWrap" class="boardWrap">
       <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">총 완료</p>
         <p class="countBoard_explain">현재까지 완료한 총 강의 횟수</p>
-        <p><span>{{lecture_avail_count}} </span>회</p>
+        <p><span>{{end_schedule_num}} </span>회</p>
       </div>
       <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">신규 회원</p>
         <p class="countBoard_explain">이번달 등록한 신규회원 수</p>
-        <p><span>{{lecture_finish_count}} </span>회</p>
+        <p><span>{{new_member_num}} </span>회</p>
       </div>
   </div>
 
   <div id="planBoardWrap" class="boardWrap">
-      <div class="planBoard _Next_Info"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 PT 일정</p><p></p></div>
+      <div class="planBoard _Next_Info"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 PT 일정</p>{{ next_schedule_start_dt }}~{{ next_schedule_end_dt }}</div>
       <div class="planBoard _Repeat_Info"><p><img src="/static/user/res/member/icon-repeat.png" alt="">OFF 반복 일정</p><p style="margin:0;"></p><span></span></div> 
   </div>
 
   <!--
   <div id="dateBoardWrap" class="boardWrap">
-      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 시작일</p><p style="margin:0;">{{ pt_start_date }}</p></div></div>
-      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 종료일</p><p style="margin:0;">{{ pt_end_date }}</p></div></div>
+      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 시작일</p><p style="margin:0;"></p></div></div>
+      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 종료일</p><p style="margin:0;"></p></div></div>
   </div>
   -->
 
@@ -81,7 +81,7 @@
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
         <span class="menuName">ID(이메일)</span>
-        <span>ppkyum@naver.com</span><button onclick="goPage('delAccount')">탈퇴</button>
+        <span>{{ request.user.username }}</span><button onclick="goPage('delAccount')">탈퇴</button>
       </div>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
@@ -91,17 +91,17 @@
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
-        <span class="menuName">생일</span><span>1990.10.10</span><button>변경</button>
+        <span class="menuName">생일</span><span>{{ member_info.birthday_dt }}</span><button>변경</button>
       </div>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
-        <span class="menuName">지역</span><span>대한민국 서울특별시</span><button>변경</button>
+        <span class="menuName">지역</span><span>{{ member_info.country }} {{ member_info.address }}</span><button>변경</button>
       </div>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
-        <span class="menuName">가입일</span><span>2018.03.19</span>
+        <span class="menuName">가입일</span><span>{{ member_info.reg_dt }}</span>
       </div>
   </div>
 
@@ -110,7 +110,7 @@
       <img src="/static/user/res/member/icon-user.png" alt=""><span>소속 기관</span>
   </div>
   <div id="trainerGymInfoWrap" class="boardWrap">
-      <div class="trainerInfo"><span>{{ class_info.mem_info.name }} 트레이너</span><img src="/static/user/res/member/icon-call.png" alt=""><img src="/static/user/res/member/icon-message.png" alt=""></div>
+      <div class="trainerInfo"><span>{{ center_name }} </span><img src="/static/user/res/member/icon-call.png" alt=""><img src="/static/user/res/member/icon-message.png" alt=""></div>
   </div>
 </div>
 
@@ -166,36 +166,15 @@
         <!-- for db by hk.kim 170805-->
         <script>
             var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
-        
-            //여기를 가져다 써야함 - hkkim 171021;
-            var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        	var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
+            var offRepeatScheduleIdArray =  [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}'{{ off_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var offRepeatScheduleTypeArray =  [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}'{{ off_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var offRepeatScheduleWeekInfoArray =  [{% for off_repeat_schedule_week_info_info in off_repeat_schedule_week_info_data %}'{{ off_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var offRepeatScheduleStartDateArray =  [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}'{{ off_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var offRepeatScheduleEndDateArray =  [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}'{{ off_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var offRepeatScheduleStartTimeArray =  [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}'{{ off_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var offRepeatScheduleTimeDurationArray =  [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}'{{ off_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
-            var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-
-
-            var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
-            var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
-
-            var ptRepeatScheduleIdArray =  [{% for pt_repeat_schedule_id_info in pt_repeat_schedule_id_data %}'{{ pt_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var ptRepeatScheduleTypeArray =  [{% for pt_repeat_schedule_type_info in pt_repeat_schedule_type_data %}'{{ pt_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var ptRepeatScheduleWeekInfoArray =  [{% for pt_repeat_schedule_week_info_info in pt_repeat_schedule_week_info_data %}'{{ pt_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var ptRepeatScheduleStartDateArray =  [{% for pt_repeat_schedule_start_date_info in pt_repeat_schedule_start_date_data %}'{{ pt_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var ptRepeatScheduleEndDateArray =  [{% for pt_repeat_schedule_end_date_info in pt_repeat_schedule_end_date_data %}'{{ pt_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var ptRepeatScheduleStartTimeArray =  [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}'{{ pt_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var ptRepeatScheduleTimeDurationArray =  [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}'{{ pt_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-
-            var next_schedule = ['{{ next_schedule }}'];
-            var lt_res_01 =  ['{{ lt_res_01 }}'];
-            var lt_res_02 =  ['{{ lt_res_02 }}'];
-            var lt_res_03 =  ['{{ lt_res_03 }}'];
         </script>
 
         <!-- Placed at the end of the document so the pages load faster -->
