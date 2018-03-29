@@ -868,7 +868,7 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
     template_name = 'mypage_member_info_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(MyPageView, self).get_context_data(**kwargs)
+        context = super(MyPageViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
         class_info = None
