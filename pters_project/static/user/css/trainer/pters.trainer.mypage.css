@@ -304,15 +304,10 @@ body{
 		padding-right: 0;
 	}
 
-	#newbirthday{
-		display: none;
-	}
-		.cancelBirth{
-			display: none;
-		}
+
 
 	#country{
-		display: none;
+		display: inline-block;
 	}
 		#country_input{
 			width: 140px;
@@ -321,7 +316,7 @@ body{
 				width: 100%;
 			}
 	#city-KOR{
-		display: none;
+		display: inline-block;
 	}
 		#region_input{
 			width: 120px;
@@ -329,10 +324,13 @@ body{
 			#region_input select{
 				width: 100%;
 			}
-			.cancelRegion{
-				display: none;
-			}
 
+	.modifyInfoTool{
+		display: none;
+	}
+	.cancelMemberInfo{
+		display: none;
+	}
 
 .countBoard:first-child,.dateBoard:first-child{
 	margin-right: 5px;
