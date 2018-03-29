@@ -554,6 +554,7 @@ $(document).ready(function(){
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		$('#popup_delete_btn_yes').click(function(){
 			if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd"){
+				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
 				$.ajax({
 	                url:'/schedule/delete_repeat_schedule/',
 	                type:'POST',

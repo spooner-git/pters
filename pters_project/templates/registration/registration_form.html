@@ -109,6 +109,7 @@
            <div class="outerbox">
                 <input type="password" name="" placeholder="새 비밀번호"  id="pw_input">
                 <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re"><span class="pw_confirm"></span>
+                <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
            </div>
 
            <div class="outerbox">
@@ -134,9 +135,10 @@
                <span class="birth_confirm"></span>
            </div>
 
-           <div class="outerbox">
+           <div class="outerbox" id="country">
                <span>국가</span>
                <select class="login_dropdown"  id="country_input">
+                  <option selected disabled>선택</option>
                   <option value="USA">United States</option>
                   <option value="KOR">대한민국</option>
                   <option value="JPN">日本</option>
@@ -389,7 +391,7 @@
                </select>
            </div>
 
-           <div class="outerbox">
+           <div class="outerbox" id="city-KOR">
                <span>지역</span>
                <select class="login_dropdown"  id="region_input">
                    <option disabled selected>선택</option>
@@ -462,7 +464,8 @@
         <input type="hidden" name="name" id="newname" value="" >
         <input type="hidden" name="sex" id="newsex" value="" >
         <input type="hidden" name="birthday" id="newbirth" value="" >
-        <input type="hidden" name="address" id="newregion" value="" >
+        <input type="hidden" name="country" id="newcountry" value="" >
+        <input type="hidden" name="address" id="newcity" value="" >
         <input type="hidden" id="id_duplicate_check" value="none" >
         <input type="hidden" name="group_type" id="id_group_type" value="trainee">
     </form>
@@ -535,19 +538,45 @@
   $('button#registerMember').click(function(){
     var duplicate_check = $form.find('#id_duplicate_check').val()
       if(duplicate_check == 1){
-          $('.registerbox_add').css('transform','translateX(-400%)')
-          $('._step2_label').css('transform','translateX(-400%)')
+          if(blank_input_check() == 1){
+              $('.registerbox_add').css('transform','translateX(-400%)')
+              $('._step2_label').css('transform','translateX(-400%)')
 
-          $('.promise_wrap').css('transform','translateX(-50%)')
-          $('._step3_label').css('transform','translateX(-50%)')
-          $('.outerbox_horizontal').attr('data-view',1)
+              $('.promise_wrap').css('transform','translateX(-50%)')
+              $('._step3_label').css('transform','translateX(-50%)')
+              $('.outerbox_horizontal').attr('data-view',1)
+          }else{
+            alert(blank_input_check())
+          }
       }else if(duplicate_check == 0){
           alert('사용할 수 없는 아이디')
       }else if(duplicate_check == 'none'){
           alert('중복 체크 필요')
       }
+
       
   })
+
+  function blank_input_check(){
+      if($('#first_name').val().length == 0 ){
+        var result = '이름을 입력해주세요'
+      }else if($('#last_name').val().length == 0 ){
+        var result = '성을 입력해주세요'
+      }else if($('#newsex').val().length == 0 ){
+        var result = '성별을 입력해주세요'
+      }else if($('#newbirth').val().length == 0 ){
+        var result = '생일을 입력해주세요'
+      }else if($('#newcountry').val().length == 0 ){
+        var result = '거주 국가를 입력해주세요'
+      }else if($('#newcity').val().length == 0 ){
+        if($('#newcountry').val() == "KOR"){
+            var result = '거주 도시를 입력해주세요'
+        }
+      }else{
+        result = 1
+      }
+      return result
+  }
 
 
   function goPrev(){
@@ -709,11 +738,16 @@
         input_birth_to_form()
     })
 
-    
+    $('#country_input').change(function(){
+        if($(this).val() == "KOR"){
+          $('#city-KOR').show()
+        }
+        $('#newcountry').val($(this).val())
+    })
 
 
     $('#region_input').change(function(){
-        $form.find('#newregion').attr('value',$(this).val())
+        $form.find('#newcity').attr('value',$(this).val())
     })
 
 

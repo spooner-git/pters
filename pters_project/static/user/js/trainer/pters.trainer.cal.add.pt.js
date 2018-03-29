@@ -442,7 +442,9 @@ $(document).ready(function(){
                     success:function(data){
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
-                        //messageArray = jsondata.messageArray;
+                        console.log(jsondata)
+                        console.log(messageArray = jsondata.messageArray)
+                        console.log(messageArray.length)
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
                         if(jsondata.messageArray.length>0){
@@ -539,6 +541,7 @@ $(document).ready(function(){
                 if(jsondata.messageArray.length>0){
                   $('#errorMessageBar').show()
                   $('#errorMessageText').text(jsondata.messageArray)
+                  console.log(jsondata.messageArray, jsondata.messageArray.length)
                 }else{
                   ajax_received_json_data(jsondata)
                 }

@@ -405,55 +405,60 @@ $(document).ready(function(){
           $btn.find('img').css({'display':'none'})
     })
 
+    
     $('#popup_delete_btn_yes').click(function(){
-        if(deleteTypeSelect == "repeatinfodelete"){
-            var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
-            $.ajax({
-                url:'/schedule/delete_repeat_schedule/',
-                type:'POST',
-                data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/cal_day_ajax/'},
-                dataType:'html',
+        if($('#calendar').length==0){
+           if(deleteTypeSelect == "repeatinfodelete"){
+                var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
+                $.ajax({
+                    url:'/schedule/delete_repeat_schedule/',
+                    type:'POST',
+                    data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/cal_day_ajax/'},
+                    dataType:'html',
 
-                beforeSend:function(){
-                    beforeSend()
-                },
+                    beforeSend:function(){
+                        beforeSend()
+                    },
 
-                //통신성공시 처리
-                success:function(data){
-                    var jsondata = JSON.parse(data)
-                    console.log(jsondata.messageArray)
-                    if(jsondata.messageArray.length>0){
+                    //통신성공시 처리
+                    success:function(data){
+                        var jsondata = JSON.parse(data)
+                        console.log(jsondata.messageArray)
+                        if(jsondata.messageArray.length>0){
+                            $('#errorMessageBar').show()
+                            $('#errorMessageText').text(jsondata.messageArray)
+                        }else{
+                            $('#errorMessageBar').hide()
+                            $('#errorMessageText').text('')
+                            var userID = $('#memberId_info_PC').text()
+                            get_indiv_repeat_info(userID)
+                            $('#cal_popup_plandelete').css('display','none')
+                            deleteTypeSelect = "memberinfodelete"
+                            $('#shade3').hide()
+                        }
+                      },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                        completeSend()
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
                         $('#errorMessageBar').show()
-                        $('#errorMessageText').text(jsondata.messageArray)
-                    }else{
-                        $('#errorMessageBar').hide()
-                        $('#errorMessageText').text('')
-                        var userID = $('#memberId_info_PC').text()
-                        get_indiv_repeat_info(userID)
-                        $('#cal_popup_plandelete').css('display','none')
-                        deleteTypeSelect = "memberinfodelete"
-                        $('#shade3').hide()
-                    }
-                  },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-                    completeSend()
-                },
-
-                //통신 실패시 처리
-                error:function(){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text('통신 에러: 관리자 문의')
-                },
-            })
-        }else{
-            //$('.confirmPopup').fadeOut('fast');
-            $('#cal_popup_plandelete').fadeOut('fast');
-            $('#shade3').fadeOut('fast');
-            deleteMemberAjax();
-        }       
+                        $('#errorMessageText').text('통신 에러: 관리자 문의')
+                    },
+                })
+            }else if(deleteTypeSelect == "memberinfodelete"){
+                //$('.confirmPopup').fadeOut('fast');
+                $('#cal_popup_plandelete').fadeOut('fast');
+                $('#shade3').fadeOut('fast');
+                deleteMemberAjax();
+            }    
+        }
+                
     })
+    
 //#####################회원정보 팝업 //#####################
 
 
