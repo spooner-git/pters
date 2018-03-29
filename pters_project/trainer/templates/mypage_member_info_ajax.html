@@ -1,30 +1,30 @@
     {
         "total_member_num":
-      [{{ new_member_num }}],
+      ["{{ new_member_num }}"],
         "current_total_member_num":
-      [{{ new_member_num }}],
+      ["{{ new_member_num }}"],
         "new_member_num":
-      [{{ new_member_num }}],
+      ["{{ new_member_num }}"],
         "end_schedule_num":
-      [{{ end_schedule_num }}],
+      ["{{ end_schedule_num }}"],
 
         "next_schedule_start_dt":
-      [{{ next_schedule_start_dt }}],
+      ["{{ next_schedule_start_dt }}"],
         "next_schedule_end_dt":
-      [{{ next_schedule_end_dt }}],
+      ["{{ next_schedule_end_dt }}"],
 
         "id":
-      [{{ request.user.username }}],
+      ["{{ request.user.username }}"],
         "birthday_dt":
-      [{{ member_info.birthday_dt }}],
+      ["{{ member_info.birthday_dt }}"],
         "country":
-      [{{ member_info.country }}],
+      ["{{ member_info.country }}"],
         "address":
-      [{{ member_info.address }}],
+      ["{{ member_info.address }}"],
         "reg_dt":
-      [{{ member_info.reg_dt }}],
+      ["{{ member_info.reg_dt }}"],
         "center_name":
-      [{{ center_name }}],
+      ["{{ center_name }}"],
 
         "off_repeat_schedule_id_data":
       [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}"{{ off_repeat_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
