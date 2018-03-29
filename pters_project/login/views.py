@@ -389,8 +389,8 @@ class AddMemberView(RegistrationView, View):
                         else:
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                               country=country, address=address,
-                                              mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                              birthday_dt=birthday_dt,user_id=user.id, use=1)
+                                              birthday_dt=birthday_dt,
+                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
                         member.save()
                         # if group_type == 'trainer':
                         #    class_info = ClassTb(member_id=user.id, subject_cd='WP',
