@@ -474,7 +474,7 @@ $(document).ready(function(){
     }); 
 //#####################회원정보 도움말 팝업 //#####################
 
-    var select_all_check = false;
+    
 
     $('#memberSearchButton').click(function(){
         var searchID = $('#memberSearch_add').val()
@@ -680,6 +680,7 @@ $(document).ready(function(){
     })
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
     $("#upbutton-check, #pcBtn .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
+        console.log(select_all_check)
         var test = $('#id_search_confirm').val();
         var $form2 = $('#add-member-id-form');
         var url2 = '/login/add_member_info_no_email/';
@@ -1304,8 +1305,9 @@ function show_shadow_reponsively(){
     } 
 }
 
+console.log($('#fast_check').val())
 //모든 입력란을 채웠을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-function check_dropdown_selected(){ 
+function check_dropdown_selected(){
     var emailInput = $("#memberEmail_add");
     var lastnameInput = $("#memberLastName_add");
     var firstnameInput = $("#memberFirstName_add");
@@ -1326,6 +1328,7 @@ function check_dropdown_selected(){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('.submitBtn').addClass('submitBtnActivated')
             select_all_check=true;
+            console.log('fast=1',select_all_check)
 
         }else{
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
@@ -1338,6 +1341,7 @@ function check_dropdown_selected(){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('.submitBtn').addClass('submitBtnActivated')
             select_all_check=true;
+            console.log('fast=0',select_all_check)
 
         }else{
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
