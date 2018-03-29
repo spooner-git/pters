@@ -1163,7 +1163,7 @@ def update_member_info_logic(request):
                 member.phone = input_phone
                 member.contents = input_contents
                 member.sex = input_sex
-                if input_birthday_dt != '':
+                if input_birthday_dt is not None and input_birthday_dt != '':
                     member.birthday_dt = input_birthday_dt
                 member.country = input_country
                 member.address = input_address
