@@ -727,9 +727,14 @@ img,a,div,span,p{
 		height: 46px;
 	}
 
-
 	.arrowButton{
-		display:none;
+		display: none;
+	}
+	
+	.arrowButton a{
+		width: auto;
+		top: 47%;
+		height: 50px;
 	}
 
 	#ymdText{
@@ -908,19 +913,5 @@ img,a,div,span,p{
 		font-weight: bold;
 	}
 }
-
-@media(max-width: 1130px) and (min-width: 600px){
-	.arrowButton{
-		display: block;
-	}
-	
-	.arrowButton a{
-		width: auto;
-		top: 47%;
-		height: 50px;
-	}
-
-}
-
 
 
