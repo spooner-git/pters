@@ -40,6 +40,8 @@
       [{% for message in messages %}"{% if message.tags == "info" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "repeatArray" :
       ["{{ request.session.repeat_schedule_id }}"],
+      "repeatScheduleCounterArray" :
+      ["{{ request.session.repeat_schedule_input_counter }}"],
 
       "offRepeatScheduleIdArray" :
       [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}"{{ off_repeat_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
