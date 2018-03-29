@@ -23,6 +23,7 @@ class MemberTb(models.Model):
     address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, null=True)  # Field name made lowercase.
     job = models.CharField(db_column='JOB', max_length=20, blank=True, null=True)  # Field name made lowercase.
     contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
+    reg_info = models.CharField(db_column='REG_INFO', max_length=20, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.

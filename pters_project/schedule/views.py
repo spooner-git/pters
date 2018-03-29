@@ -1263,12 +1263,12 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
         finish_schedule_list = None
         if lecture_id is None or lecture_id == '':
             lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
-
-            for idx, lecture_info in enumerate(lecture_list):
-                if idx == 0:
-                    finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
-                else:
-                    finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+            if len(lecture_list) > 0:
+                for idx, lecture_info in enumerate(lecture_list):
+                    if idx == 0:
+                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                    else:
+                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
         else:
             finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
 
@@ -1286,11 +1286,12 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
         if lecture_id is None or lecture_id == '':
             lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
 
-            for idx, lecture_info in enumerate(lecture_list):
-                if idx == 0:
-                    finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
-                else:
-                    finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+            if len(lecture_list) > 0:
+                for idx, lecture_info in enumerate(lecture_list):
+                    if idx == 0:
+                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                    else:
+                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
         else:
             finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
 

@@ -366,6 +366,7 @@ def get_member_data(context, class_id, member_id):
             # lecture_finish_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
             #                                               use=1).exclude(state_cd='IP').order_by('start_date')
 
+
             if len(lecture_list) == 0:
                 if len(lecture_finish_list) > 0:
                     lecture_finish_check = 1
@@ -395,6 +396,8 @@ def get_member_data(context, class_id, member_id):
                 member_data.end_date = None
                 member_data.mod_dt = None
 
+                lecture_count = 0
+
                 for idx, lecture_info_data in enumerate(lecture_list):
                     # if lecture_info.state_cd == 'RJ':
                     lecture_info = lecture_info_data.lecture_tb
@@ -403,6 +406,10 @@ def get_member_data(context, class_id, member_id):
                     # if lecture_info.state_cd == 'NP':
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data.np_lecture_counts += 1
+
+                    lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                                                                    lecture_tb=lecture_info.lecture_id,
+                                                                    auth_cd='VIEW', lecture_tb__use=1).count()
 
                     if lecture_info.use != 0:
                         # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
@@ -436,6 +443,12 @@ def get_member_data(context, class_id, member_id):
                         member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
                         member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
                         member_data.lecture_id = lecture_info.lecture_id
+                if member_data.reg_info is None or '':
+                    # member_data.name = ''
+                    if lecture_count == 0:
+                        member_data.sex = ''
+                        member_data.birthday_dt = ''
+                        member_data.phone = ''
 
                 member_list.append(member_data)
 
@@ -458,6 +471,9 @@ def get_member_data(context, class_id, member_id):
                 member_data_finish.start_date = None
                 member_data_finish.end_date = None
                 member_data_finish.mod_dt = None
+
+                lecture_finish_count = 0
+
                 for idx, lecture_info_data in enumerate(lecture_finish_list):
                     # if lecture_info.state_cd == 'RJ':
                     lecture_info = lecture_info_data.lecture_tb
@@ -466,6 +482,10 @@ def get_member_data(context, class_id, member_id):
                     # if lecture_info.state_cd == 'NP':
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data_finish.np_lecture_counts += 1
+
+                    lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                                                                           lecture_tb=lecture_info.lecture_id,
+                                                                           auth_cd='VIEW', lecture_tb__use=1).count()
 
                     if lecture_info.use != 0:
                         # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
@@ -502,6 +522,12 @@ def get_member_data(context, class_id, member_id):
                         member_data_finish.lecture_avail_count_total += lecture_info.lecture_avail_count
                         member_data_finish.lecture_id = lecture_info.lecture_id
 
+                if member_data_finish.reg_info is None or '':
+                    if lecture_finish_count == 0:
+                        # member_data.name = ''
+                        member_data_finish.sex = ''
+                        member_data_finish.birthday_dt = ''
+                        member_data_finish.phone = ''
                 member_finish_list.append(member_data_finish)
 
         context['member_data'] = member_list
@@ -775,9 +801,6 @@ class MyPageView(AccessTestMixin, TemplateView):
             for member_info in all_member:
                 # member_data = member_info
 
-                member_lecture_reg_count = 0
-                member_lecture_rem_count = 0
-                member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
                 total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_info.member_id,
                                                                          lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
@@ -1048,30 +1071,21 @@ def add_lecture_info_logic_func(member_id, state_cd, counts, price, start_date, 
 # 회원수정 api
 def update_member_info_logic(request):
     member_id = request.POST.get('id')
-    email = request.POST.get('email')
-    first_name = request.POST.get('first_name')
-    last_name = request.POST.get('last_name')
-    name = request.POST.get('name')
-    phone = request.POST.get('phone')
-    contents = request.POST.get('contents')
-    sex = request.POST.get('sex')
-    birthday_dt = request.POST.get('birthday')
-    class_id = request.session.get('class_id', '')
+    email = request.POST.get('email', '')
+    first_name = request.POST.get('first_name', '')
+    last_name = request.POST.get('last_name', '')
+    phone = request.POST.get('phone', '')
+    contents = request.POST.get('contents', '')
+    country = request.POST.get('country', '')
+    address = request.POST.get('address', '')
+    sex = request.POST.get('sex', '')
+    birthday_dt = request.POST.get('birthday', '')
     next_page = request.POST.get('next_page')
 
     error = None
 
     if member_id == '':
         error = '회원 ID를 확인해 주세요.'
-
-    if name == '':
-        error = '이름을 입력해 주세요.'
-    elif phone == '':
-        error = '연락처를 입력해 주세요.'
-    elif len(phone) != 11 and len(phone) != 10:
-        error = '연락처를 확인해 주세요.'
-    elif not phone.isdigit():
-        error = '연락처를 확인해 주세요.'
 
     if error is None:
         try:
@@ -1084,20 +1098,74 @@ def update_member_info_logic(request):
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
+    input_first_name = ''
+    input_last_name = ''
+    input_phone = ''
+    input_contents = ''
+    input_country = ''
+    input_address = ''
+    input_sex = ''
+    input_birthday_dt = ''
+
+    if first_name is None or first_name == '':
+        input_first_name = user.first_name
+    else:
+        input_first_name = first_name
+
+    if last_name is None or last_name == '':
+        input_last_name = user.last_name
+    else:
+        input_last_name = last_name
+
+    if contents is None or contents == '':
+        input_contents = member.contents
+    else:
+        input_contents = contents
+
+    if country is None or country == '':
+        input_country = member.country
+    else:
+        input_country = country
+
+    if address is None or address == '':
+        input_address = member.address
+    else:
+        input_address = address
+
+    if sex is None or sex == '':
+        input_sex = member.sex
+    else:
+        input_sex = sex
+
+    if birthday_dt is None or birthday_dt == '':
+        input_birthday_dt = member.birthday_dt
+    else:
+        input_birthday_dt = birthday_dt
+
+    if phone is None or phone == '':
+        input_phone = member.phone
+    else:
+        if len(phone) != 11 and len(phone) != 10:
+            error = '연락처를 확인해 주세요.'
+        elif not phone.isdigit():
+            error = '연락처를 확인해 주세요.'
+        else:
+            input_phone = phone
+
     if error is None:
         try:
             with transaction.atomic():
-                user.first_name = first_name
-                user.last_name = last_name
-                user.email = email
+                user.first_name = input_first_name
+                user.last_name = input_last_name
+                # user.email = email
                 user.save()
-                member.name = name
-                member.phone = phone
-                member.contents = contents
-                member.sex = sex
-
-                if birthday_dt != '':
-                    member.birthday_dt = birthday_dt
+                member.name = input_last_name+input_first_name
+                member.phone = input_phone
+                member.contents = input_contents
+                member.sex = input_sex
+                member.birthday_dt = input_birthday_dt
+                member.country = input_country
+                member.address = input_address
                 member.mod_dt = timezone.now()
                 member.save()
 
@@ -1118,7 +1186,6 @@ def update_member_info_logic(request):
         #              + name + ' 회원님의</span> 정보를 <span class="status">수정</span>했습니다.'
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=name, class_tb_id=class_id,
                          log_info='회원 정보', log_how='수정',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
@@ -1597,6 +1664,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
     def post(self, request, *args, **kwargs):
         context = super(GetMemberInfoView, self).get_context_data(**kwargs)
         user_id = request.POST.get('id', '')
+        class_id = request.session.get('class_id', '')
 
         member = ''
         user = ''
@@ -1626,6 +1694,20 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 member = MemberTb.objects.get(user_id=user.id)
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
+
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
+                                                     lecture_tb__use=1, auth_cd='VIEW')
+        lecture_count = 0
+        for lecture_info_data in enumerate(lecture_list):
+            lecture_count += MemberLectureTb.objects.filter(member_id=user.id,
+                                                            lecture_tb=lecture_info_data.lecture_id,
+                                                            auth_cd='VIEW', lecture_tb__use=1).count()
+
+        if member.reg_info is None or '':
+            if lecture_count == 0:
+                member.sex = ''
+                member.birthday_dt = ''
+                member.phone = ''
 
         context['member_info'] = member
         if error is not None:
