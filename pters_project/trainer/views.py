@@ -1226,7 +1226,7 @@ def update_member_info_logic(request):
     next_page = request.POST.get('next_page')
 
     error = None
-
+    member_id = request.user.id
     if member_id == '':
         error = '회원 ID를 확인해 주세요.'
 
