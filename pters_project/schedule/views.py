@@ -682,6 +682,7 @@ def add_repeat_schedule_logic(request):
     repeat_schedule_info = None
     # request.session['date'] = date
     # request.session['day'] = day
+    pt_schedule_input_counter = 0
 
     week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
 
@@ -859,6 +860,8 @@ def add_repeat_schedule_logic(request):
                         error_date_message = error
                     else:
                         error_date_message = error_date_message + '/' + error
+                if error is None:
+                    pt_schedule_input_counter += 1
 
             else:
                 logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -873,7 +876,7 @@ def add_repeat_schedule_logic(request):
             if int(check_date.strftime('%w')) == 0:
                 if repeat_type == '2W':
                     check_date = check_date + datetime.timedelta(days=7)
-
+    request.session['repeat_schedule_input_counter'] = pt_schedule_input_counter
     if error_date_message is not None:
         # logger.info(error_date_message)
         messages.info(request, error_date_message)

@@ -440,6 +440,7 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(data){
+                        console.log(data)
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
                         console.log(jsondata)
