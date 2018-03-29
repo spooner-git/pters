@@ -78,7 +78,7 @@ $(document).ready(function(){
     })
 
     //PC버전 회원추가 버튼
-    $('.ymdText-pc-add').click(function(){
+    $('.ymdText-pc-add-member-wrap').click(function(){
         $('#page_addmember').fadeIn('fast')
         $('#shade').fadeIn('fast');
         $('#uptext2').text('신규 회원 등록')
