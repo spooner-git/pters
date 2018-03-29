@@ -1,8 +1,9 @@
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
+
 body{
 	padding-top: 50px;
-	background-color: #eeeeee;
+	background-color: #f7f7f7;
 	font-family: 'Noto Sans KR';
 }
 
@@ -877,7 +878,7 @@ select:focus > option:checked {
 
 	
 	#currentMemberList, #finishedMemberList{
-		width: 1080px;
+		/*width: 1080px;*/
 		height: 600px;
 		overflow-y: overlay;
 	}
@@ -914,11 +915,12 @@ select:focus > option:checked {
 	}
 
 	._id{
-		width: 70px;
+		width: 90px;
 	}
 
 	._email{
 		width: 115px;
+		display: none;
 	}
 
 	._regcount{

@@ -28,10 +28,12 @@ $(document).ready(function(){
 
 
     $('li').click(function(){
-        if($('.dropdown').hasClass('open')){
-          $('html, body').css('overflow-y','auto')
-        }else{
-          $('html, body').css('overflow-y','hidden')
+        if($('#calendar').length==0){
+            if($('.dropdown').hasClass('open')){
+              $('html, body').css('overflow-y','auto')
+            }else{
+              $('html, body').css('overflow-y','hidden')
+            } 
         }
     })
 
@@ -1172,8 +1174,8 @@ function memberListSet (type,option,Reverse){
             var starts = array[6];
             var ends = array[7];
             var phoneToEdit = array[4].replace(/-| |/gi,"");
-            if(name.length>5){
-              var name = array[2].substr(0,5)+'..'
+            if(name.length105){
+              var name = array[2].substr(0,9)+'..'
             }
             var npCounts = array[9]
             var rjCounts = array[10]
@@ -1191,8 +1193,8 @@ function memberListSet (type,option,Reverse){
             var starts = array[6];
             var ends = array[7];
             var phoneToEdit = array[2].replace(/-| |/gi,"");
-            if(name.length>5){
-              var name = array[0].substr(0,5)+'..'
+            if(name.length>10){
+              var name = array[0].substr(0,9)+'..'
             }
             var npCounts = array[9]
             var rjCounts = array[10]
@@ -1211,8 +1213,8 @@ function memberListSet (type,option,Reverse){
             var starts = array[0];
             var ends = array[7];
             var phoneToEdit = array[3].replace(/-| |/gi,"");
-            if(name.length>5){
-              var name = array[1].substr(0,5)+'..'
+            if(name.length>10){
+              var name = array[1].substr(0,9)+'..'
             }
             var npCounts = array[9]
             var rjCounts = array[10]
@@ -1279,7 +1281,7 @@ function memberListSet (type,option,Reverse){
         var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdeleteimage+'</td>'
         var scrolltd = '<td class="forscroll"></td>'
 
-        var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+scrolltd+'</tr>'
+        var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>'
         arrayResult[i] = td
     }
 
