@@ -1,0 +1,46 @@
+    {
+        "total_member_num":
+      [{{ new_member_num }}],
+        "current_total_member_num":
+      [{{ new_member_num }}],
+        "new_member_num":
+      [{{ new_member_num }}],
+        "end_schedule_num":
+      [{{ end_schedule_num }}],
+
+        "next_schedule_start_dt":
+      [{{ next_schedule_start_dt }}],
+        "next_schedule_end_dt":
+      [{{ next_schedule_end_dt }}],
+
+        "id":
+      [{{ request.user.username }}],
+        "birthday_dt":
+      [{{ member_info.birthday_dt }}],
+        "country":
+      [{{ member_info.country }}],
+        "address":
+      [{{ member_info.address }}],
+        "reg_dt":
+      [{{ member_info.reg_dt }}],
+        "center_name":
+      [{{ center_name }}],
+
+        "off_repeat_schedule_id_data":
+      [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}"{{ off_repeat_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_type_data":
+      [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}"{{ off_repeat_schedule_type_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_week_info_data":
+      [{% for off_repeat_schedule_week_info_info in off_repeat_schedule_week_info_data %}"{{ off_repeat_schedule_week_info_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_start_date_data":
+      [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}"{{ off_repeat_schedule_start_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_end_date_data":
+      [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}"{{ off_repeat_schedule_end_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_start_time_data":
+      [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}"{{ off_repeat_schedule_start_time_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_time_duration_data":
+      [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}"{{ off_repeat_schedule_time_duration_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }
