@@ -538,7 +538,7 @@ $(document).ready(function(){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>1){
+                if(jsondata.messageArray.length>0){
                   $('#errorMessageBar').show()
                   $('#errorMessageText').text(jsondata.messageArray)
                   console.log(jsondata.messageArray, jsondata.messageArray.length)
