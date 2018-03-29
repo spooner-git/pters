@@ -159,6 +159,9 @@ div._step1_label, div._step2_label, div._step3_label{
 		text-align: center;
 	}
 	
+	#city-KOR{
+		display: none;
+	}
 	.outerbox{
 		margin-top: 15px;
 	}
@@ -222,6 +225,12 @@ div._step1_label, div._step2_label, div._step3_label{
 	.pw_confirm,.id_confirm{
 		display: none;
 		font-size: 12px;
+	}
+
+	.pw_notice{
+		margin-top: 3px;
+		font-size: 11px;
+		color:#fe4e65;
 	}
 
 	.register_button{
