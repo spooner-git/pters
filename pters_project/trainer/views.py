@@ -75,7 +75,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             class_id_comp = ''
             class_np_counter = 0
         if error is not None:
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+error)
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+error)
             messages.error(self.request, error)
 
         return super(IndexView, self).get(request, **kwargs)
@@ -141,7 +141,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
                         # if lecture_info.state_cd == 'NP':
-                        if lecture_info.member_view_state_cd == 'WAIT':
+                        if lecture_info_data.auth_cd == 'WAIT':
                             np_member_num += 1
                         member_lecture_reg_count += lecture_info.lecture_reg_count
                         member_lecture_rem_count += lecture_info.lecture_rem_count
@@ -186,7 +186,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
         if error is not None:
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+error)
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+error)
             messages.error(self.request, error)
         else:
             logger.info(self.request.user.last_name+self.request.user.first_name+'['+str(self.request.user.id)+'] : login success')
@@ -852,7 +852,7 @@ def add_member_info_logic_test(request):
 
                 state_cd = 'IP'
 
-                lecture_info = add_lecture_info_logic_func(class_id, user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
+                lecture_info = add_lecture_info_logic_func(user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
                 member_lecture_info = MemberLectureTb(member_id=user.id, lecture_tb_id=lecture_info.lecture_id,
                                                       auth_cd='WAIT', mod_member_id=request.user.id,
                                                       reg_dt=timezone.now(), mod_dt=timezone.now(),
@@ -888,15 +888,15 @@ def add_member_info_logic_test(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
 
 
-def add_lecture_info_logic_func(class_id, member_id, state_cd, counts, price, start_date, end_date, contents):
+def add_lecture_info_logic_func(member_id, state_cd, counts, price, start_date, end_date, contents):
 
-    lecture = LectureTb(class_tb_id=class_id, member_id=member_id,
+    lecture = LectureTb(member_id=member_id,
                         lecture_reg_count=counts, lecture_rem_count=counts,
                         lecture_avail_count=counts, price=price, option_cd='DC',
                         state_cd=state_cd,
@@ -989,7 +989,7 @@ def update_member_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1080,7 +1080,7 @@ def delete_member_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1126,7 +1126,7 @@ def resend_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1183,7 +1183,7 @@ def delete_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1232,7 +1232,7 @@ def refund_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1243,7 +1243,7 @@ def update_member_lecture_view_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_name = request.POST.get('member_name', '')
-    member_view_state_cd = request.POST.get('member_view_state_cd', '')
+    auth_cd = request.POST.get('member_view_state_cd', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
@@ -1252,7 +1252,7 @@ def update_member_lecture_view_info_logic(request):
         error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        if member_view_state_cd != 'VIEW' and member_view_state_cd != 'WAIT' and member_view_state_cd != 'DELETE':
+        if auth_cd != 'VIEW' and auth_cd != 'WAIT' and auth_cd != 'DELETE':
             error = '회원 상태 코드가 맞지 않습니다.'
 
     if error is None:
@@ -1263,7 +1263,7 @@ def update_member_lecture_view_info_logic(request):
             error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        member_lecture_info.auth_cd = member_view_state_cd
+        member_lecture_info.auth_cd = auth_cd
         # lecture_info.member_view_state_cd = member_view_state_cd
         # lecture_info.mod_dt = timezone.now()
         # lecture_info.save()
@@ -1283,7 +1283,7 @@ def update_member_lecture_view_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1349,7 +1349,7 @@ def refund_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1444,7 +1444,7 @@ def update_member_lecture_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1493,7 +1493,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
 
         context['member_info'] = member
         if error is not None:
-            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
             messages.error(request, error)
 
         return render(request, self.template_name, context)
@@ -1523,7 +1523,7 @@ def alarm_delete_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -1542,7 +1542,7 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
             context = get_member_data(context, class_id, None)
 
         if context['error'] is not None:
-            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+context['error'])
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
             messages.error(request, context['error'])
 
         return render(request, self.template_name, context)
@@ -1557,7 +1557,7 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
             context = get_member_data(context, class_id, member_id)
 
         if context['error'] is not None:
-            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+context['error'])
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
             messages.error(request, context['error'])
 
         return render(request, self.template_name, context)
@@ -1650,7 +1650,7 @@ def update_setting_push_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1676,9 +1676,9 @@ def update_setting_reserve_logic(request):
         if setting_member_reserve_time_available == '':
             setting_member_reserve_time_available = '00:00-23:59'
         if setting_member_reserve_time_prohibition == '':
-            setting_member_reserve_time_prohibition = '0'
+            setting_member_reserve_time_prohibition = '1'
         if setting_member_reserve_prohibition == '':
-            setting_member_reserve_prohibition = '0'
+            setting_member_reserve_prohibition = '1'
         if setting_trainer_work_time_available == '':
             setting_trainer_work_time_available = '00:00-23:59'
 
@@ -1746,7 +1746,7 @@ def update_setting_reserve_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1891,7 +1891,7 @@ def update_setting_sales_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1945,7 +1945,7 @@ def update_setting_language_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -2053,7 +2053,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         context = get_lecture_list_by_class_member_id(context, class_id, member_id)
 
         if context['error'] is not None:
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+context['error'])
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
             messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
@@ -2066,7 +2066,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
 
         context = get_lecture_list_by_class_member_id(context, class_id, member_id)
         if context['error'] is not None:
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+context['error'])
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
             messages.error(self.request, context['error'])
 
         return render(request, self.template_name, context)
@@ -2122,14 +2122,14 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             except ObjectDoesNotExist:
                 error = '회원의 수강정보 조회 정보를 불러오지 못했습니다.'
 
-            lecture_info.member_view_state_cd = lecture_test.auth_cd
+            lecture_info.auth_cd = lecture_test.auth_cd
 
             try:
-                lecture_info.member_view_state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.member_view_state_cd)
+                lecture_info.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.auth_cd)
             except ObjectDoesNotExist:
                 error = '상태 코드를 가져오지 못했습니다.'
 
-            if lecture_info.member_view_state_cd == 'WAIT':
+            if lecture_info.auth_cd == 'WAIT':
                 np_lecture_counts += 1
             lecture_counts += 1
 
@@ -2238,7 +2238,7 @@ def class_processing_logic(request):
     if error is None:
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
     return redirect(next_page)
 
@@ -2278,7 +2278,7 @@ def delete_class_info_logic(request):
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -2327,7 +2327,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data.save()
 
         if error is not None:
-            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -2426,7 +2426,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data.save()
 
         if error is not None:
-            logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
             messages.error(request, error)
         return render(request, self.template_name)
 

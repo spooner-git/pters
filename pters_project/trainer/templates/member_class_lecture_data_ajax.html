@@ -3,9 +3,9 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       
       "memberViewStateArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.member_view_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.auth_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberViewStateNameArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.member_view_state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.auth_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "lectureStateArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

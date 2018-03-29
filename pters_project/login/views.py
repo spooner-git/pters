@@ -271,7 +271,7 @@ class ResetPasswordView(View):
 
             return render(request, self.template_name, context)
         else:
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+error)
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+error)
             messages.error(request, error)
             return render(request, self.template_name)
 
@@ -339,7 +339,7 @@ def add_member_info_logic_test(request):
         messages.info(request, '회원가입이 정상적으로 완료됐습니다.')
         return redirect(next_page)
     else:
-        logger.error(name+'['+user_id+']'+error)
+        logger.error(name+'['+str(user_id)+']'+error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -602,7 +602,7 @@ def out_member_logic(request):
     if error is None:
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+request.user.id+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
         return redirect(next_page)

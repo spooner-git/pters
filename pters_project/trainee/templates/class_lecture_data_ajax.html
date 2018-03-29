@@ -16,9 +16,9 @@
       "lectureStateNameArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberViewStateArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.member_view_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.auth_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberViewStateNameArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.member_view_state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.auth_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "classInfoArray":
       ["{{ class_data.class_type_name.common_cd_nm}}"],

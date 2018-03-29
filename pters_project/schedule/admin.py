@@ -42,15 +42,15 @@ class ClassTbAdmin(admin.ModelAdmin):
     list_display = ('class_id', 'member', 'center_tb', 'subject_cd', 'subject_detail_nm',
                     'start_date', 'end_date',
                     'class_hour', 'start_hour_unit', 'class_member_num', 'state_cd',
-                    'member_view_state_cd', 'schedule_check',
+                    'schedule_check',
                     'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(LectureTb)
 class LectureTbAdmin(admin.ModelAdmin):
-    list_display = ('lecture_id', 'class_tb', 'member', 'lecture_reg_count', 'lecture_rem_count', 'lecture_avail_count',
+    list_display = ('lecture_id', 'member', 'lecture_reg_count', 'lecture_rem_count', 'lecture_avail_count',
                     'day_count', 'start_date', 'end_date',
-                    'price', 'refund_price', 'option_cd', 'state_cd', 'member_view_state_cd', 'schedule_check','note', 'reg_dt', 'mod_dt', 'use')
+                    'price', 'refund_price', 'option_cd', 'state_cd', 'schedule_check','note', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(CompanyTb)

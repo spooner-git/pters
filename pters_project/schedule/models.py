@@ -23,7 +23,7 @@ class ClassTb(models.Model):
     start_hour_unit = models.FloatField(db_column='START_HOUR_UNIT', blank=True, null=True)  # Field name made lowercase.
     class_member_num = models.IntegerField(db_column='CLASS_MEMBER_NUM', blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    member_view_state_cd = models.CharField(db_column='MEMBER_VIEW_STATE_CD', max_length=20, blank=True, null=True, default='WAIT')  # Field name made lowercase.
+    # member_view_state_cd = models.CharField(db_column='MEMBER_VIEW_STATE_CD', max_length=20, blank=True, null=True, default='WAIT')  # Field name made lowercase.
     schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', blank=True, null=True)
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
@@ -39,7 +39,7 @@ class ClassTb(models.Model):
 
 class LectureTb(models.Model):
     lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    # class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE)  # Field name made lowercase.
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     lecture_reg_count = models.IntegerField(db_column='LECTURE_REG_COUNT', default=0)  # Field name made lowercase.
     lecture_rem_count = models.IntegerField(db_column='LECTURE_REM_COUNT', default=0)
@@ -51,7 +51,7 @@ class LectureTb(models.Model):
     refund_price = models.IntegerField(db_column='REFUND_PRICE', blank=True, null=True, default=0)  # Field name made lowercase.
     option_cd = models.CharField(db_column='OPTION_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    member_view_state_cd = models.CharField(db_column='MEMBER_VIEW_STATE_CD', max_length=20, blank=True, null=True, default='WAIT')  # Field name made lowercase.
+    # member_view_state_cd = models.CharField(db_column='MEMBER_VIEW_STATE_CD', max_length=20, blank=True, null=True, default='WAIT')  # Field name made lowercase.
     schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', blank=True, null=True, default=0)
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.

@@ -61,7 +61,7 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['class_data'] = class_data
 
         if error is not None:
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+error)
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+error)
             messages.error(self.request, error)
 
         return context
@@ -84,7 +84,7 @@ class GetTrainerDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['member_data'] = member_data
 
         if error is not None:
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+self.request.user.id+']'+error)
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+error)
             messages.error(self.request, error)
 
         return context
