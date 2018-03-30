@@ -890,10 +890,33 @@ select:focus > option:checked {
 		border:1px solid #cccccc;
 		cursor: pointer;
 	}
+	.ymdText-pc-add-member-again{
+		display: inline;
+		margin-left: 5px;
+		padding:3px 13px 3px 13px;
+		color: #282828;
+		font-size: 14px;
+		border:1px solid #cccccc;
+		cursor: pointer;
+	}
 		.ymdText-pc-add-member:hover{
 			background-color: #fe4e65;
 			color: #ffffff;
 		}
+		.ymdText-pc-add-member-again:hover{
+			background: #282828;
+			color: #ffffff;
+		}
+	#button_add_member_lecture{
+		font-weight: bold;
+		border: 1px solid #cccccc;
+		color:#fe4e65;
+		width: 15px;
+		line-height: 15px;
+		text-align:center;
+		padding:0;
+		cursor: pointer;
+	}
 
 	#float_btn{
 		display: none !important;

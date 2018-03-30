@@ -165,7 +165,8 @@
         <span class="memberAlign">회원 정렬 기준</span><span id="currentMemberNum" class="memberNum"></span><span id="finishMemberNum" class="memberNum"></span>
       </div>
       <div class="ymdText-pc-add-member-wrap">
-          <div class="ymdText-pc-add-member">회원 추가</div>
+          <div class="ymdText-pc-add-member" onclick="pc_add_member(0)">회원 추가</div>
+          <div class="ymdText-pc-add-member-again" onclick="pc_add_member(1)">연장 추가</div>
       </div>
 
       <select class="alignSelect">
@@ -222,7 +223,7 @@
     </div>
 
     <div class="ptaddbox" id="pcaddpopup">
-       <span id="uptext-pc-modify">회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+       <span id="uptext-pc-modify">회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_info')">
     </div>
 
     <div>
@@ -367,6 +368,7 @@
     <div id="memberRegHistory_info_wrap" class="member_info_wrap ptaddbox">
             <label class="ptaddboxtext">
                 <img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
+                <span style="font-weight: bold;border: 1px solid #cccccc;color:#fe4e65;">+</span>
             </label>
             <div id="memberRegHistory_info">
                   
@@ -392,7 +394,7 @@
 
     <label id="memberInfoPopup_PC_label">
         <img src="/static/user/res/member/icon-female-pink.png">
-        <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">
+        <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('member_info_PC')">
     </label>
 
     <div id="info_shift_base" class="info_shift_wrap">
@@ -451,7 +453,9 @@
             <span id="memberFinishCount_info_PC" readonly></span>회
         </div>
         <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력</label>
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
+                <span id="button_add_member_lecture" onclick="pc_add_member(2)">+</span>
+            </label>
             <div id="memberRegHistory_info_PC">
                   
             </div>
@@ -480,11 +484,9 @@
     <div class="member_info_PC_buttons_wrap popupBtn_mini">
         <button class="submitBtn _info_delete">삭제</button>
         <button class="submitBtn _info_modify" data-type="view" style="display: none;">수정</button>
-        <button class="submitBtn _btn_close_info_PC">닫기</button>
+        <button class="submitBtn _btn_close_info_PC" onclick="closePopup('member_info_PC')">닫기</button>
     </div>
 </div>
-
-
 
 <div id="page_addmember" class="wrap popups"> 
 
@@ -495,7 +497,7 @@
     </div>
 
     <div class="ptaddbox" id="pcaddpopup">
-      <span>신규 회원 추가</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+      <span id="uptext2_PC">신규 회원 추가</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_add')">
     </div>
 
     <form action="{% url 'trainer:add_member_info' %}" method="POST" class="member-form" id="member-add-form-new">
@@ -521,7 +523,7 @@
                 <p class="icons_description"> <br>PTERS에 이미 가입되어있는 회원님의 정보를 가져옵니다.</p>
             </div>
 
-            <div class="ptaddbox form-group">
+            <div class="ptaddbox form-group _ADD_MEMBER_NEW">
                 <label for="memberNameSex" class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span>
                 </label>
@@ -535,7 +537,7 @@
                 </div>
             </div>
 
-            <div class="ptaddbox form-group">
+            <div class="ptaddbox form-group _ADD_MEMBER_NEW">
                 <label for="memberPhone" class="ptaddboxtext">
                     <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처 <span style="color: #fe4e65;">*</span>
                     <!--<p class="icons_description"> 회원님의 초기 접속 ID로 사용됩니다. <br>초기 비밀번호는 전화번호 마지막 네자리이며, 접속하여 ID와 비밀번호 변경이 가능합니다.</p>-->
@@ -546,7 +548,7 @@
                 <p class="icons_description"> 회원님의 초기 접속 ID로 사용됩니다. <br>초기 비밀번호는 전화번호 마지막 네자리이며, 접속하여 ID와 비밀번호 변경이 가능합니다.</p>
             </div>
 
-            <div class="ptaddbox form-group">
+            <div class="ptaddbox form-group _ADD_MEMBER_NEW">
                 <label for="memberBirthSex" class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 생년월일
                 </label>
@@ -816,6 +818,7 @@
             var DBe = {};
 
             var deleteTypeSelect;
+            var alignType = "name"
             var select_all_check = false;
 
             DataFormattingDict('ID');
