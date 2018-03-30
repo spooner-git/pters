@@ -102,7 +102,7 @@
               <button class="cancelName cancelMemberInfo">취소</button>
             </div>
           </div>
-          <span class="_regionInfo _originalInfo">{{ member_info.name }}</span>
+          <span class="_nameInfo _originalInfo">{{ member_info.name }}</span>
           <input type="" name="last_name" class="modifyInfoTool" placeholder="성">
           <input type="" name="first_name" class="modifyInfoTool" placeholder="이름">
       </div>
@@ -117,7 +117,7 @@
             </div>
           </div>
           <input type="tel" name="newphone" class="modifyInfoTool" placeholder="'-'를 제외한 숫자만 입력">
-          <span class="_regionInfo _originalInfo">{{ member_info.phone }}</span>
+          <span class="_phoneInfo _originalInfo">{{ member_info.phone }}</span>
       </div>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
@@ -589,7 +589,8 @@
                   //통신성공시 처리
                   success:function(data){
                       var jsondata = JSON.parse(data)
-                      console.log(data)
+                      console.log('received member info data',jsondata)
+                      fill_recieved_member_info(jsondata)
                     },
 
                   //보내기후 팝업창 닫기
@@ -603,8 +604,11 @@
               })
             }
 
-            function fill_recieved_member_info(){
-
+            function fill_recieved_member_info(jsondata){
+                $('._nameInfo').text(jsondata.name)
+                $('._phoneInfo').text(jsondata.phone)
+                $('._birthInfo').text(jsondata.birthday_dt)
+                $('._regionInfo').text(jsondata.country+' '+jsondata.address)
             }
 
 
