@@ -582,9 +582,9 @@ select:focus > option:checked {
 			color: #ffffff;
 		}
 
-.input_avaiable{
-	background: #fe4e65 !important;
-	color: #ffffff !important;
+.input_available{
+	background: #ffffff !important;
+	color: #fe4e65 !important;
 	border-color: #282828 !important;
 }
 

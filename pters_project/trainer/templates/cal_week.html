@@ -45,13 +45,13 @@
     
    <!--플로팅 버튼-->
 <div id="float_btn_wrap">
-    <div id="float_btn">
+    <div id="float_btn" onclick="float_btn_addplan(0)">
       <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
     </div>
-    <div id="float_inner1" class="float_inner">
+    <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
     <a class="KRtext">PT<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
     </div>
-    <div id="float_inner2" class="float_inner">
+    <div id="float_inner2" class="float_inner"  onclick="float_btn_addplan(2)">
     <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
     </div>
 </div>
@@ -119,12 +119,12 @@
     <img src="/static/user/res/icon-cal-btn.png"  id="ymdText-pc-next-btn" style="-webkit-transform:rotate(180deg)">
 
     <div class="ymdText-pc-add">
-      <div class="ymdText-pc-add-off">
+      <div class="ymdText-pc-add-off" onclick="float_btn_addplan(2)">
         <span class="KRtext">+ OFF 일정추가</span>
         <span class="JPtext">+ OFF 追加</span>
         <span class="ENtext">+ Add OFF</span>
       </div>
-      <div class="ymdText-pc-add-pt">
+      <div class="ymdText-pc-add-pt" onclick="float_btn_addplan(1)">
         <span class="KRtext">+ PT 일정추가</span>
         <span class="JPtext">+ プラン 追加</span>
         <span class="ENtext">+ Add plan</span>

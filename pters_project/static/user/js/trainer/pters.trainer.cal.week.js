@@ -95,64 +95,6 @@ $(document).ready(function(){
     });
 
 
-	$('#float_inner1, .ymdText-pc-add-pt').click(function(){ //PT추가버튼
-		clear_pt_off_add_popup()
-		scrollToDom($('#calendar'))
-		addTypeSelect = "ptadd"
-		$('#memberName,#remainCount').css('display','block');
-	    $('#page-addplan').fadeIn('fast');
-	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-	    $('#float_btn_wrap').fadeOut();
-	    $('#uptext2').text('PT 일정 등록')
-	    $('#page-base').fadeOut();
-	    $('#page-base-addstyle').fadeIn();
-	    $("#datepicker").datepicker('setDate',null)
-	    
-	    if($('body').width()<600){
-	    	$('#calendar').hide();
-	        $('#shade').hide()
-	    	$('#shade3').fadeIn('fast');
-		    $('#calendar').css('height','0')
-		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
-	    }else{
-	    	$('#calendar').css('position','fixed')
-	    	$('#pcaddpopup').show()
-			$('#pcaddpopup_off').hide()
-	    }
-	    if($(this).hasClass('ymdText-pc-add-pt')){
-	    	$('#shade').fadeIn('fast')
-	    }
-	})
-
-	$('#float_inner2, .ymdText-pc-add-off').click(function(){ //OFF추가버튼
-		clear_pt_off_add_popup()
-		scrollToDom($('#calendar'))
-		addTypeSelect = "offadd"
-		$('#memberName,#remainCount').css('display','none');
-	    $('#page-addplan').fadeIn('fast');
-	    $('#uptext2').text('OFF 일정 등록')
-	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-	    $('#float_btn_wrap').fadeOut();
-	    $('#page-base').fadeOut();
-	    $('#page-base-addstyle').fadeIn();
-	    $("#datepicker").datepicker('setDate',null)
-	    
-	    if($('body').width()<600){
-	    	$('#calendar').hide();
-	        $('#shade').hide()
-	    	$('#shade3').fadeIn('fast');
-		    $('#calendar').css('height','0')
-		    $('#pcaddpopup,#pcaddpopup_off').css('display','none')
-	    }else{
-	    	$('#calendar').css('position','fixed')
-	    	$('#pcaddpopup').hide()
-	    	$('#pcaddpopup_off').show()
-	    }
-
-	    if($(this).hasClass('ymdText-pc-add-off')){
-	    	$('#shade').fadeIn('fast')
-	    }
-	})
 
 	$('#upbutton-x').click(function(){
 		$('#calendar').css('height','90%')
@@ -952,21 +894,7 @@ $(document).ready(function(){
 
 
 
-	//플로팅 버튼 Start
-	$('#float_btn').click(function(){
-		$("#float_btn").animate({opacity:'1'})
-		if($('#shade').css('display')=='none'){
-			$('#shade').show();
-			$('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
-			$('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
-			$('#float_btn').addClass('rotate_btn');
-		}else{
-			$('#shade').hide();
-			$('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-			$('#float_btn').removeClass('rotate_btn');
-		}
-	});
-	//플로팅 버튼 End
+	
 
 	//플로팅 버튼 스크롤시 숨기기 Start
 	var ts;
