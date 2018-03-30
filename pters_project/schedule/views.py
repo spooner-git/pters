@@ -219,7 +219,6 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
 
     error = None
     class_info = None
-    context['lecture_info'] = None
     off_schedule_id = []
     off_schedule_start_datetime = []
     off_schedule_end_datetime = []
@@ -248,10 +247,6 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     pt_repeat_schedule_end_date = []
     pt_repeat_schedule_start_time = []
     pt_repeat_schedule_time_duration = []
-    #off_repeat_schedule_reg_dt = []
-    #today = datetime.datetime.strptime(date, '%Y-%m-%d')
-    #fourteen_days_ago = today - datetime.timedelta(days=14)
-    #fifteen_days_after = today + datetime.timedelta(days=15)
 
     # 강사 정보 가져오기
     try:
@@ -300,7 +295,6 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     # PT 일정 조회
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
-        # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, use=1)
         lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, use=1)
 
         for lecture_datum_info in lecture_data:

@@ -2239,12 +2239,22 @@ function fill_member_info_by_ID_search(){
     else{
         $('memberSex_info').addClass('selectbox_checked');
     }
-    var dropdown_year_selected = $('#birth_year option[data-year="'+id_search_memberBirth.split(' ')[0]+'"]');
-    var dropdown_month_selected = $('#birth_month option[data-month="'+id_search_memberBirth.split(' ')[1]+'"]');
-    var dropdown_date_selected = $('#birth_date option[data-date="'+id_search_memberBirth.split(' ')[2]+'"]');
-    dropdown_year_selected.prop('selected',true);
-    dropdown_month_selected.prop('selected',true);
-    dropdown_date_selected.prop('selected',true);
+
+    var dropdown_year_selected = ''
+    var dropdown_month_selected = ''
+    var dropdown_date_selected = ''
+
+    if(id_search_memberBirth == ''){
+        $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
+    }
+    else{
+        dropdown_year_selected = $('#birth_year option[data-year="'+id_search_memberBirth.split(' ')[0]+'"]');
+        dropdown_month_selected = $('#birth_month option[data-month="'+id_search_memberBirth.split(' ')[1]+'"]');
+        dropdown_date_selected = $('#birth_date option[data-date="'+id_search_memberBirth.split(' ')[2]+'"]');
+        dropdown_year_selected.prop('selected',true);
+        dropdown_month_selected.prop('selected',true);
+        dropdown_date_selected.prop('selected',true);
+    }
 
     $('#memberLastName_add').prop('disabled',true);
     $('#memberFirstName_add').prop('disabled',true);

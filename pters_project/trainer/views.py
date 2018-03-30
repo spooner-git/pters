@@ -32,21 +32,16 @@ from trainee.views import get_trainee_repeat_schedule_data_func
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
 logger = logging.getLogger(__name__)
-# logging.basicConfig(level=logging.DEBUG)
 
 
 class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
-    # url = '/trainee/cal_month/'
+    url = '/trainer/class_select/'
+
     def get(self, request, **kwargs):
 
-        class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd='VIEW')
-        # class_data = ClassTb
-
-        # class_data = ClassTb.objects.filter(member_id=self.request.user.id).exclude(member_view_state_cd='DELETE').order_by('-start_date')
-        # class_data = class_auth_data.class_tb
-        self.url = '/trainer/class_select/'
         class_id = request.session.get('class_id', '')
-        class_counter = 0
+        class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd='VIEW')
+
         error = None
         if class_id is None or class_id == '':
             if len(class_auth_data) == 0:
@@ -72,8 +67,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 self.url = '/trainer/class_select/'
         else:
             self.url = '/trainer/trainer_main/'
-            class_id_comp = ''
-            class_np_counter = 0
+
         if error is not None:
             logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+error)
             messages.error(self.request, error)
@@ -89,10 +83,10 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainerMainView, self).get_context_data(**kwargs)
+
         class_id = self.request.session.get('class_id', '')
-        # print(class_id)
         error = None
-        # class_info = None
+
         today = datetime.date.today()
         one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
@@ -127,11 +121,12 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 member_lecture_rem_count = 0
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_info.member_id,
-                                                                   lecture_tb__lecture_rem_count__gt=0, lecture_tb__state_cd='IP',
-                                                                   lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
-                # lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_info.member_id,
-                #                                        lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
+                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                                   lecture_tb__member_id=member_info.member_id,
+                                                                   lecture_tb__state_cd='IP',
+                                                                   lecture_tb__use=1,
+                                                                   auth_cd='VIEW').order_by('-lecture_tb__start_date')
+
                 if len(class_lecture_list) > 0:
                     total_member_num += 1
                     if len(class_lecture_list) == 1:
@@ -140,7 +135,6 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
-                        # if lecture_info.state_cd == 'NP':
                         if lecture_info_data.auth_cd == 'WAIT':
                             np_member_num += 1
                         member_lecture_reg_count += lecture_info.lecture_reg_count
@@ -149,7 +143,6 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
                     if 0 < member_lecture_rem_count < 4:
                         to_be_end_member_num += 1
-                        # break
 
         if error is None :
             # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
@@ -163,12 +156,8 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                            start_dt__gte=today, start_dt__lt=one_day_after,
                                                            en_dis_type='1').count()
-            # new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-            #                                          start_date__gte=month_first_day,
-            #                                          start_date__lt=next_month_first_day, use=1).count()
 
         context['today_schedule_num'] = today_schedule_num
-        # context['new_member_num'] = new_member_num
 
         context = get_trainer_setting_data(context, self.request.user.id, class_id)
 
@@ -262,8 +251,10 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         today = datetime.date.today()
         start_date = today - datetime.timedelta(days=18)
         end_date = today + datetime.timedelta(days=19)
+
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
         context = get_member_data(context, class_id, None)
+
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
 
@@ -328,8 +319,6 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-
-
 def get_member_data(context, class_id, member_id):
 
     error = None
@@ -354,28 +343,25 @@ def get_member_data(context, class_id, member_id):
             member_data_finish = copy.copy(member_info)
             lecture_finish_check = 0
             # 강좌에 해당하는 수강/회원 정보 가져오기
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=member_data.member_id,
-                                                         lecture_tb__state_cd='IP', auth_cd='VIEW', lecture_tb__use=1)
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                         lecture_tb__member_id=member_data.member_id,
+                                                         lecture_tb__state_cd='IP', auth_cd='VIEW',
+                                                         lecture_tb__use=1, use=1)
 
-            # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id, state_cd='IP',
-            #                                        use=1).order_by('start_date')
-
-            lecture_finish_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=member_data.member_id,
-                                                                auth_cd='VIEW', lecture_tb__use=1).exclude(lecture_tb__state_cd='IP')
-
-            # lecture_finish_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
-            #                                               use=1).exclude(state_cd='IP').order_by('start_date')
-
+            lecture_finish_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                lecture_tb__member_id=member_data.member_id,
+                                                                auth_cd='VIEW', lecture_tb__use=1,
+                                                                use=1).exclude(lecture_tb__state_cd='IP')
 
             if len(lecture_list) == 0:
                 if len(lecture_finish_list) > 0:
                     lecture_finish_check = 1
 
             if len(lecture_list) > 0:
-                lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__member_id=member_data.member_id,
-                                                             lecture_tb__use=1, auth_cd='VIEW')
-                # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, member_id=member_data.member_id,
-                #                                        use=1).order_by('start_date')
+                lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                             lecture_tb__member_id=member_data.member_id,
+                                                             auth_cd='VIEW', lecture_tb__use=1, use=1)
+
                 member_data.rj_lecture_counts = 0
                 member_data.np_lecture_counts = 0
 
@@ -398,7 +384,7 @@ def get_member_data(context, class_id, member_id):
 
                 lecture_count = 0
 
-                for idx, lecture_info_data in enumerate(lecture_list):
+                for lecture_info_data in lecture_list:
                     # if lecture_info.state_cd == 'RJ':
                     lecture_info = lecture_info_data.lecture_tb
                     if lecture_info_data.auth_cd == 'DELETE':
@@ -444,7 +430,6 @@ def get_member_data(context, class_id, member_id):
                         member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
                         member_data.lecture_id = lecture_info.lecture_id
                 if member_data.reg_info is None or '':
-                    # member_data.name = ''
                     if lecture_count == 0:
                         member_data.sex = ''
                         member_data.birthday_dt = ''
@@ -474,7 +459,7 @@ def get_member_data(context, class_id, member_id):
 
                 lecture_finish_count = 0
 
-                for idx, lecture_info_data in enumerate(lecture_finish_list):
+                for lecture_info_data in lecture_finish_list:
                     # if lecture_info.state_cd == 'RJ':
                     lecture_info = lecture_info_data.lecture_tb
                     if lecture_info_data.auth_cd == 'DELETE':
@@ -524,7 +509,6 @@ def get_member_data(context, class_id, member_id):
 
                 if member_data_finish.reg_info is None or '':
                     if lecture_finish_count == 0:
-                        # member_data.name = ''
                         member_data_finish.sex = ''
                         member_data_finish.birthday_dt = ''
                         member_data_finish.phone = ''
@@ -616,72 +600,6 @@ def entry_index(
         context.update(extra_context)
     return render(request, template, context)
 
-'''
-def entry_index(
-        request,
-        template='alarm_test.html',
-        page_template='alarm_test_page.html'):
-    class_id = request.session.get('class_id', '')
-    error = None
-    log_data = None
-    if error is None:
-        # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-        log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
-        log_data.order_by('-reg_dt')
-
-    if error is None:
-        for log_info in log_data:
-            if log_info.read == 0:
-                log_info.log_read = 0
-                log_info.read = 1
-                log_info.save()
-            elif log_info.read == 1:
-                log_info.log_read = 1
-            else:
-                log_info.log_read = 2
-
-    context = {
-        'request': request,
-        'entry_list': log_data,
-        'page_template': page_template,
-    }
-    if request.is_ajax():
-        template = page_template
-
-    return render(request, template, context)
-'''
-
-'''
-@page_template('alarm_test_page.html')  # just add this decorator
-def entry_index(request, template='alarm_test.html', extra_context=None):
-    class_id = request.session.get('class_id', '')
-    error = None
-
-    if error is None:
-        # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-        log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
-        log_data.order_by('-reg_dt')
-
-    if error is None:
-        for log_info in log_data:
-            if log_info.read == 0:
-                log_info.log_read = 0
-                log_info.read = 1
-                log_info.save()
-            elif log_info.read == 1:
-                log_info.log_read = 1
-            else:
-                log_info.log_read = 2
-
-    context = {
-        'entries': log_data,
-    }
-    if extra_context is not None:
-        context.update(extra_context)
-    return render_to_response(
-        template, context, context_instance=RequestContext(request))
-'''
-
 
 class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'alarm_data_ajax.html'
@@ -734,7 +652,6 @@ class MyPageView(AccessTestMixin, TemplateView):
 
         context = get_trainer_setting_data(context, self.request.user.id, class_id)
         today = datetime.date.today()
-        one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
         next_month = int(month_first_day.strftime('%m')) % 12 + 1
@@ -747,8 +664,8 @@ class MyPageView(AccessTestMixin, TemplateView):
         new_member_num = 0
         total_member_num = 0
         current_total_member_num = 0
-        # np_member_num = 0
         center_name = '없음'
+
         off_repeat_schedule_id = []
         off_repeat_schedule_type = []
         off_repeat_schedule_week_info = []
@@ -794,7 +711,7 @@ class MyPageView(AccessTestMixin, TemplateView):
                 off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_date))
                 off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
                 off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
-        # error = 'test'
+
         if error is None:
             all_member = MemberTb.objects.filter().order_by('name')
 
@@ -802,13 +719,17 @@ class MyPageView(AccessTestMixin, TemplateView):
                 # member_data = member_info
 
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_info.member_id,
-                                                                         lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
-                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_info.member_id,
+                total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                                         lecture_tb__member_id=member_info.member_id,
+                                                                         lecture_tb__use=1, auth_cd='VIEW',
+                                                                         use=1).order_by('-lecture_tb__start_date')
+                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                                   lecture_tb__member_id=member_info.member_id,
                                                                    lecture_tb__state_cd='IP',
-                                                                   lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
-                # lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_info.member_id,
-                #                                        lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
+                                                                   lecture_tb__use=1,
+                                                                   auth_cd='VIEW',
+                                                                   use=1).order_by('-lecture_tb__start_date')
+
                 if len(total_class_lecture_list) > 0:
                     current_total_member_num += 1
 
@@ -828,10 +749,6 @@ class MyPageView(AccessTestMixin, TemplateView):
         if error is None:
             end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                          en_dis_type='1', state_cd='PE').count()
-            # new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-            #                                          start_date__gte=month_first_day,
-            #                                          start_date__lt=next_month_first_day, use=1).count()
-
         if error is None:
             if user_member_info.birthday_dt is None:
                 user_member_info.birthday_dt = '미입력'
@@ -842,7 +759,7 @@ class MyPageView(AccessTestMixin, TemplateView):
 
         pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                      en_dis_type='1',
-                                                     start_dt__gte=now).order_by('start_dt')
+                                                     start_dt__gte=now, use=1).order_by('start_dt')
         if len(pt_schedule_data) > 0:
             next_schedule_start_dt = pt_schedule_data[0].start_dt
             next_schedule_end_dt = pt_schedule_data[0].end_dt
@@ -878,7 +795,6 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
 
         context = get_trainer_setting_data(context, self.request.user.id, class_id)
         today = datetime.date.today()
-        one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
         next_month = int(month_first_day.strftime('%m')) % 12 + 1
@@ -891,7 +807,6 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
         new_member_num = 0
         total_member_num = 0
         current_total_member_num = 0
-        # np_member_num = 0
         center_name = '없음'
         off_repeat_schedule_id = []
         off_repeat_schedule_type = []
@@ -946,13 +861,18 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
                 # member_data = member_info
 
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_info.member_id,
-                                                                         lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
-                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_info.member_id,
+                total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                                         lecture_tb__member_id=member_info.member_id,
+                                                                         lecture_tb__use=1,
+                                                                         auth_cd='VIEW',
+                                                                         use=1).order_by('-lecture_tb__start_date')
+                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                                   lecture_tb__member_id=member_info.member_id,
                                                                    lecture_tb__state_cd='IP',
-                                                                   lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
-                # lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_info.member_id,
-                #                                        lecture_rem_count__gt=0, state_cd='IP', use=1).order_by('-start_date')
+                                                                   lecture_tb__use=1,
+                                                                   auth_cd='VIEW',
+                                                                   use=1).order_by('-lecture_tb__start_date')
+
                 if len(total_class_lecture_list) > 0:
                     current_total_member_num += 1
 
@@ -971,7 +891,8 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
 
         if error is None:
             end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                         en_dis_type='1', state_cd='PE').count()
+                                                         en_dis_type='1',
+                                                         state_cd='PE', use=1).count()
             # new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
             #                                          start_date__gte=month_first_day,
             #                                          start_date__lt=next_month_first_day, use=1).count()
@@ -986,7 +907,8 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
 
         pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                      en_dis_type='1',
-                                                     start_dt__gte=now).order_by('start_dt')
+                                                     start_dt__gte=now,
+                                                     use=1).order_by('start_dt')
         if len(pt_schedule_data) > 0:
             next_schedule_start_dt = pt_schedule_data[0].start_dt
             next_schedule_end_dt = pt_schedule_data[0].end_dt
@@ -1006,6 +928,7 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
         context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
 
         return context
+
 
 class PushSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_push.html'
@@ -1080,15 +1003,8 @@ def add_member_info_logic_test(request):
     input_end_date = ''
     input_counts = 0
     input_price = 0
-    class_info = None
     lecture_info = None
 
-    # if User.objects.filter(username=phone).exists():
-    #    error = '이미 가입된 회원 입니다.'
-    # elif User.objects.filter(email=email).exists():
-    #    error = '이미 가입된 회원 입니다.'
-    # elif email == '':
-    #    error = 'e-mail 정보를 입력해 주세요.'
     if search_confirm == '0':
         if name == '':
             error = '이름을 입력해 주세요.'
@@ -1178,8 +1094,6 @@ def add_member_info_logic_test(request):
             error = '이미 가입된 회원입니다.'
 
     if error is None:
-        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
-        #               + name + ' 회원님의</span> 정보를 <span class="status">등록</span>했습니다.'
 
         log_data = LogTb(log_type='LB01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
@@ -1325,10 +1239,6 @@ def update_member_info_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-
-        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
-        #              + name + ' 회원님의</span> 정보를 <span class="status">수정</span>했습니다.'
-
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          log_info='회원 정보', log_how='수정',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
@@ -1354,12 +1264,6 @@ def delete_member_info_logic(request):
         error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 강좌 정보가 없습니다.'
-
-    if error is None:
 
         try:
             user = User.objects.get(username=member_id)
@@ -1374,8 +1278,6 @@ def delete_member_info_logic(request):
     if error is None:
         class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id, use=1, auth_cd='VIEW')
 
-        # lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id,
-        #                                         member_id=user.id, use=1)
     if error is None:
         try:
             with transaction.atomic():
@@ -1393,10 +1295,9 @@ def delete_member_info_logic(request):
                     # schedule_data.delete()
                     # repeat_schedule_data.delete()
                     if len(schedule_data) > 0:
-                        schedule_data.update(use=0)
+                        schedule_data.update(mod_dt=timezone.now(), use=0)
                     if len(schedule_data_finish) > 0:
-                        schedule_data_finish.use = 0
-                        schedule_data_finish.update(use=0)
+                        schedule_data_finish.update(mod_dt=timezone.now(), use=0)
                     # lecture_info.use = 0
                     # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                     # lecture_info.mod_dt = timezone.now()
@@ -1507,8 +1408,8 @@ def delete_member_lecture_info_logic(request):
         # schedule_data.delete()
         # repeat_schedule_data.delete()
 
-        schedule_data.update(use=0)
-        schedule_data_finish.update(use=0)
+        schedule_data.update(mod_dt=timezone.now(), use=0)
+        schedule_data_finish.update(mod_dt=timezone.now(), use=0)
         class_lecture_info.auth_cd = 'DELETE'
         # lecture_info.use = 0
         # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
@@ -1826,7 +1727,6 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
 
         if user_id == '':
             error = 'id를 입력해주세요.'
-
         if error is None:
             try:
                 user = User.objects.get(username=user_id)
@@ -1848,16 +1748,16 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 member = MemberTb.objects.get(user_id=user.id)
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
-
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
-                                                     lecture_tb__use=1, auth_cd='VIEW')
+                                                     lecture_tb__use=1, auth_cd='VIEW', use=1)
         lecture_count = 0
-        for lecture_info_data in enumerate(lecture_list):
-            lecture_count += MemberLectureTb.objects.filter(member_id=user.id,
-                                                            lecture_tb=lecture_info_data.lecture_id,
-                                                            auth_cd='VIEW', lecture_tb__use=1).count()
+        for lecture_info_data in lecture_list:
+            member_lecture_list = MemberLectureTb.objects.filter(member_id=user.id,
+                                                                 lecture_tb=lecture_info_data.lecture_tb_id,
+                                                                 auth_cd='VIEW', lecture_tb__use=1)
+            lecture_count += len(member_lecture_list)
 
-        if member.reg_info is None or '':
+        if member.reg_info is None or member.reg_info == '':
             if lecture_count == 0:
                 member.sex = ''
                 member.birthday_dt = ''
@@ -2862,10 +2762,10 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
                 lecture_info = lecture_list_info.lecture_tb
                 if idx == 0:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type='1')
+                                                                 en_dis_type='1', use=1)
                 else:
                     pt_schedule_data |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                  en_dis_type='1')
+                                                                  en_dis_type='1', use=1)
 
     context['pt_schedule_data'] = pt_schedule_data
 
