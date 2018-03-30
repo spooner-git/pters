@@ -52,6 +52,9 @@ urlpatterns = [
     # 회원 데이터 관련
     url(r'^read_member_lecture_data/$', views.ReadMemberLectureData.as_view(), name='read_member_lecture_data'),
 
+    # 회원 스케쥴 데이터 read
+    url(r'^read_member_schedule_data/$', views.ReadMemberScheduleDataView.as_view(), name='read_member_schedule_data'),
+
     # log 관련
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
     url(r'^alarm_test/$', views.AlarmTestView.as_view(), name='alarm_test'),
