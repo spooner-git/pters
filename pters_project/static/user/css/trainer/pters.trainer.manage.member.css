@@ -551,10 +551,14 @@ select:focus > option:checked {
 			#memberRepeat_info_PC p:nth-child(1){
 				color: #fe4e65;
 				margin: 0;
+				line-height: unset;
+				font-size: unset;
 			}
 			#memberRepeat_info_PC p:nth-child(2){
 				color: #444444;
 				margin: 0;
+				line-height: unset;
+				font-size: unset;
 			}
 			.deleteBtn{
 				position: absolute;

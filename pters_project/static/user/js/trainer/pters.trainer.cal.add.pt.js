@@ -454,7 +454,7 @@ $(document).ready(function(){
                         }else{
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
                               var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ")
-                              $('._repeatconfirmQuestion').text('선택한 일정 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.')
+                              $('._repeatconfirmQuestion').text('선택한 일정 총 '+jsondata.repeatScheduleCounterArray[0]+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.')
                               var repeat_info = popup_repeat_confirm()
                               $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
                               $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
@@ -465,6 +465,7 @@ $(document).ready(function(){
                               var repeat_info = popup_repeat_confirm()
                               var day_info = repeat_info.day_info
                               var dur_info = repeat_info.dur_info
+                              $('._repeatconfirmQuestion').text('총 '+jsondata.repeatScheduleCounterArray[0]+' 건의 일정이 등록됩니다.')
                               $('#repeat_confirm_day').text(day_info)
                               $('#repeat_confirm_dur').text(dur_info)
                               $('#id_repeat_schedule_id_confirm').val(repeatArray)
@@ -506,7 +507,7 @@ $(document).ready(function(){
       $('#btn_close_repeatconfirm, #popup_btn_repeatconfim_no').click(function(){
         $('#id_repeat_confirm').val(0);
         $('#cal_popup_repeatconfirm').fadeOut('fast');
-        $('#shade3').hide()
+        $('#shade3, .popups').hide()
         ajaxRepeatConfirmSend();
       })
       
@@ -518,7 +519,7 @@ $(document).ready(function(){
         }
         $('#id_repeat_confirm').val(1);
         $('#cal_popup_repeatconfirm').fadeOut('fast');
-        $('#shade3').hide()
+        $('#shade3, .popups').hide()
         $('#calendar').show().css('height','100%');
         ajaxRepeatConfirmSend();
         closeAddPopup();
@@ -1580,6 +1581,7 @@ function float_btn_addplan(option){
         }else{
           $('#calendar').css('position','fixed')
           $('#pcaddpopup').show()
+          $('#shade').show()
         $('#pcaddpopup_off').hide()
         }
         if($(this).hasClass('ymdText-pc-add-pt')){
@@ -1609,6 +1611,7 @@ function float_btn_addplan(option){
           $('#calendar').css('position','fixed')
           $('#pcaddpopup').hide()
           $('#pcaddpopup_off').show()
+          $('#shade').show()
         }
 
         if($(this).hasClass('ymdText-pc-add-off')){

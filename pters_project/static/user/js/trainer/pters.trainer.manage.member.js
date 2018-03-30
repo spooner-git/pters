@@ -102,7 +102,7 @@ $(document).ready(function(){
             set_member_lecture_list()
             set_member_history_list()
             $('#info_shift_base, #info_shift_lecture').show()
-            $('#info_shift_schedule,#info_shift_history').hide()
+            $('#info_shift_schedule, #info_shift_history').hide()
             $('#select_info_shift_lecture').css('color','#fe4e65')
             $('#select_info_shift_schedule').css('color','#282828')
             $('#select_info_shift_history').css('color','#282828')
