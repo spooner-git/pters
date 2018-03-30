@@ -556,6 +556,7 @@
                     $(this).siblings('button.cancelMemberInfo').hide()
                     $(this).parents('.trainerInfo').find('._originalInfo').show()
                     $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
+                    send_modified_member_info()
                 }
             })
 
@@ -571,9 +572,6 @@
                 targetID.val($(this).val())
             })
 
-            $('body').click(function(){
-              send_modified_member_info()
-            })
 
             function send_modified_member_info(){
               console.log($('#modify-member-id-form').serialize())
@@ -608,7 +606,8 @@
                 $('._nameInfo').text(jsondata.name)
                 $('._phoneInfo').text(jsondata.phone)
                 $('._birthInfo').text(jsondata.birthday_dt)
-                $('._regionInfo').text(jsondata.country+' '+jsondata.address)
+                var countryname = $('option[value='+jsondata.country+']').text()
+                $('._regionInfo').text(countryname+' '+jsondata.address)
             }
 
 
@@ -618,7 +617,7 @@
                         $('#city-KOR').css('display','inline-block')
                     }else{
                         $('#city-KOR').css('display','none')
-                        $('#newcity').val('')
+                        $('#newcity').val('-')
                     }
                     $('#newcountry').val($(this).val())
                 })
