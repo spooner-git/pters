@@ -38,47 +38,7 @@ $(document).ready(function(){
     })
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
-      //플로팅 버튼 Start
-    $('#float_btn').click(function(){
-      $("#float_btn").animate({opacity:'1'})
-      if($('#shade').css('display')=='none'){
-        $('#shade').show();
-        $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
-        $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
-        $('#float_btn').addClass('rotate_btn');
-      }else{
-        $('#shade').hide();
-        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn').removeClass('rotate_btn');
-      }
-    });
-    //플로팅 버튼 End
-
-    //플로팅버튼 (아래)
-    $('#float_inner1').click(function(){
-        $('#page_addmember').fadeIn('fast')
-        $('#shade').hide()
-        $('#shade3').fadeIn('fast');
-        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
-        $('#uptext2').text('신규 회원 등록')
-        $('#page-base').fadeOut();
-        $('#page-base-addstyle').fadeIn();
-        scrollToDom($('#page_addmember'))
-        if($('body').width()<600){
-          $('#page_managemember').hide();
-        }
-
-        $('#inputError').css('display','none')
-        $('#fast_check').val('0')
-        $('#form_birth').val('')
-        $('#memberBirthDate, #memberBirthDate_info').html('')
-        birth_dropdown_set()
-
-        $('#memberSearchButton').attr('data-type','')
-        $('#memberSex .selectboxopt').removeClass('selectbox_disable')
-    })
-
+    
     //PC버전 회원추가 버튼
     $('.ymdText-pc-add-member-wrap').click(function(){
         $('#page_addmember').fadeIn('fast')
@@ -98,30 +58,6 @@ $(document).ready(function(){
         $('#memberSex .selectboxopt').removeClass('selectbox_disable')
     })
 
-    //플로팅버튼 (위)
-    $('#float_inner2').click(function(){
-        alert('float_inner2')
-        /*
-        $('#page_addmember').fadeIn('fast')
-        $('#shade').hide()
-        $('#shade3').fadeIn('fast');
-        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
-        $('#uptext2').text('신규 회원 등록')
-        $('#page-base').fadeOut();
-        $('#page-base-addstyle').fadeIn();
-        scrollToDom($('#page_addmember'))
-        if($('body').width()<600){
-          $('#page_managemember').hide();
-        }
-
-        $('#inputError').css('display','none')
-        $('#fast_check').val('0')
-        $('#form_birth').val('')
-        $('#memberBirthDate, #memberBirthDate_info').html('')
-        birth_dropdown_set()
-        */
-    })
 
     $(document).on('click','#upbutton-x,#upbutton-x-modify,.cancelBtn, ._btn_close_info_PC',function(){
         closePopup()
@@ -851,6 +787,67 @@ $(document).ready(function(){
         yearSuffix: '년'
     });
 });
+
+
+function float_btn_managemember(option){
+    if(option == 0){
+        $("#float_btn").animate({opacity:'1'})
+        if($('#shade').css('display')=='none'){
+            $('#shade').show();
+            $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
+            $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
+            $('#float_btn').addClass('rotate_btn');
+        }else{
+            $('#shade').hide();
+            $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+            $('#float_btn').removeClass('rotate_btn');
+        }
+    }else if(option == 1){
+        $('#page_addmember').fadeIn('fast')
+        $('#shade').hide()
+        $('#shade3').fadeIn('fast');
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').fadeOut();
+        $('#uptext2').text('신규 회원 등록')
+        $('#page-base').fadeOut();
+        $('#page-base-addstyle').fadeIn();
+        scrollToDom($('#page_addmember'))
+        if($('body').width()<600){
+          $('#page_managemember').hide();
+        }
+
+        $('#inputError').css('display','none')
+        $('#fast_check').val('0')
+        $('#form_birth').val('')
+        $('#memberBirthDate, #memberBirthDate_info').html('')
+        birth_dropdown_set()
+
+        $('#memberSearchButton').attr('data-type','')
+        $('#memberSex .selectboxopt').removeClass('selectbox_disable')
+    }else if(option == 2){
+        alert('float_inner2')
+        /*
+        $('#page_addmember').fadeIn('fast')
+        $('#shade').hide()
+        $('#shade3').fadeIn('fast');
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').fadeOut();
+        $('#uptext2').text('신규 회원 등록')
+        $('#page-base').fadeOut();
+        $('#page-base-addstyle').fadeIn();
+        scrollToDom($('#page_addmember'))
+        if($('body').width()<600){
+          $('#page_managemember').hide();
+        }
+
+        $('#inputError').css('display','none')
+        $('#fast_check').val('0')
+        $('#form_birth').val('')
+        $('#memberBirthDate, #memberBirthDate_info').html('')
+        birth_dropdown_set()
+        */
+    }
+}
 
 
 //진행중 회원, 종료된 회원 리스트 스왑
@@ -1672,7 +1669,7 @@ function open_member_info_popup_mobile(userID){
     $('#datepicker_info').val(Data[userID].start);
     $('#datepicker2_info').val(Data[userID].end);
 
-    var dropdown_year_selected = $('#birth_year_info option[data-year='+Data[userID].birth.split(' ')[0]+']')
+    var dropdown_year_selected = $('#birth_year_info option[data-year="'+Data[userID].birth.split(' ')[0]+'"]')
     var dropdown_month_selected = $('#birth_month_info option[data-month="'+Data[userID].birth.split(' ')[1]+'"]')
     var dropdown_date_selected = $('#birth_date_info option[data-date="'+Data[userID].birth.split(' ')[2]+'"]')
     dropdown_year_selected.prop('selected',true)
