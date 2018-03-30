@@ -486,6 +486,62 @@ select:focus > option:checked {
 				#memberRegHistory_info_PC_wrap > label, #memberRegHistory_info_wrap > label, #memberRepeat_info_PC_wrap >label{
 					display: inline;
 				}
+
+			#memberLectureHistory_info_PC, #memberLectureHistory_info{
+				display: block;
+				font-size:12px;
+				width: 100%;
+				padding: 0;
+			}
+				#memberLectureHistory_info_PC div, #memberLectureHistory_info div{
+					display: table;
+					width: 100%;
+					padding: 0;
+					margin: 0;
+					border: 0;
+				}
+					#memberLectureHistory_info_PC > div > div:nth-child(1), #memberLectureHistory_info > div > div:nth-child(1){
+						display: table-cell;
+						width: 32%;
+						height: 20px;
+						padding: 0;
+						text-align: center;
+						border: 0;
+						border-right:1px solid #cccccc;
+					}
+					#memberLectureHistory_info_PC > div > div:nth-child(2), #memberLectureHistory_info > div > div:nth-child(2){
+						display: table-cell;
+						width: 15%;
+						height: 20px;
+						padding: 0;
+						text-align: center;
+						border: 0;
+						border-right:1px solid #cccccc;
+					}
+					#memberLectureHistory_info_PC > div > div:nth-child(3), #memberLectureHistory_info > div > div:nth-child(3){
+						display: table-cell;
+						width: 13%;
+						height: 20px;
+						padding: 0;
+						text-align: center;
+						border: 0;
+						border-right:1px solid #cccccc;
+					}
+					#memberLectureHistory_info_PC > div > div:nth-child(4), #memberLectureHistory_info > div > div:nth-child(4){
+						display: table-cell;
+						width: 40%;
+						height: 20px;
+						padding: 0;
+						text-align: center;
+						border: 0;
+					}
+					.historyState_PE{
+						color: green;
+					}
+					.historyState_NP{
+						color: #fe4e65;
+					}
+
 			#memberRepeat_info_PC > div{
 				position: relative;
 				display: block;
@@ -495,10 +551,14 @@ select:focus > option:checked {
 			#memberRepeat_info_PC p:nth-child(1){
 				color: #fe4e65;
 				margin: 0;
+				line-height: unset;
+				font-size: unset;
 			}
 			#memberRepeat_info_PC p:nth-child(2){
 				color: #444444;
 				margin: 0;
+				line-height: unset;
+				font-size: unset;
 			}
 			.deleteBtn{
 				position: absolute;
@@ -604,7 +664,7 @@ select:focus > option:checked {
 	overflow:auto;
 }
 
-#info_shift_schedule{
+#info_shift_schedule,#info_shift_history{
 	display: none;
 	width: 100%;
 }
@@ -613,7 +673,7 @@ select:focus > option:checked {
 		overflow-y: auto;
 	}
 
-#info_shift_lecture, #info_shift_schedule{
+#info_shift_lecture, #info_shift_schedule, #info_shift_history{
 	height: 230px;
 	overflow: auto;
 	padding-top: 10px;

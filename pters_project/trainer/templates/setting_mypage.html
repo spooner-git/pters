@@ -22,9 +22,9 @@
               <span style="color:#fe4e65;font-weight: bold;font-size: 16px;">~ </span>
             </span>
          </div>
-        <div id="yearText">회원 정보</div>
+        <div id="yearText">내 정보</div>
         <div id="monthText"></div>
-        <div id="menuName">회원 정보
+        <div id="menuName">마이 페이지
         </div>
         <div id="menuDescription">나의 정보를 확인할 수 있습니다.
         </div>
@@ -65,7 +65,10 @@
 
   <div id="planBoardWrap" class="boardWrap">
       <div class="planBoard _Next_Info"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 PT 일정</p><p></p></div>
-      <div class="planBoard _Repeat_Info"><p><img src="/static/user/res/member/icon-repeat.png" alt="">OFF 반복 일정</p><p style="margin:0;"></p><span></span></div> 
+      <div class="planBoard _Repeat_Info">
+        <p><img src="/static/user/res/member/icon-repeat.png" alt="">OFF 반복 일정</p>
+        <div></div>
+      </div> 
   </div>
 
   <!--
@@ -150,7 +153,7 @@
               <button class="cancelRegion cancelMemberInfo">취소</button>
             </div>
           </div>
-          <span class="_regionInfo _originalInfo">{{ member_info.country }} {{ member_info.address }}</span>
+          <span class="_regionInfo _originalInfo"></span>
           <div class="modifyInfoTool">
               <div class="outerbox" id="country">
                  <select class="login_dropdown"  id="country_input">
@@ -529,7 +532,6 @@
 
         <!-- Placed at the end of the document so the pages load faster -->
 
-        <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.mypage.js" %}></script> <!--달력에 대한 JS-->
         <script>
 
             $('#uptext').text("마이페이지")
@@ -556,6 +558,7 @@
                     $(this).siblings('button.cancelMemberInfo').hide()
                     $(this).parents('.trainerInfo').find('._originalInfo').show()
                     $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
+                    send_modified_member_info()
                 }
             })
 
@@ -571,12 +574,8 @@
                 targetID.val($(this).val())
             })
 
-            $('body').click(function(){
-              send_modified_member_info()
-            })
-
+            send_modified_member_info()
             function send_modified_member_info(){
-              console.log($('#modify-member-id-form').serialize())
                 $.ajax({
                   url:'/trainer/update_member_info/',
                   type:'POST',
@@ -589,7 +588,7 @@
                   //통신성공시 처리
                   success:function(data){
                       var jsondata = JSON.parse(data)
-                      console.log('received member info data',jsondata)
+                      console.log(jsondata)
                       fill_recieved_member_info(jsondata)
                     },
 
@@ -608,7 +607,61 @@
                 $('._nameInfo').text(jsondata.name)
                 $('._phoneInfo').text(jsondata.phone)
                 $('._birthInfo').text(jsondata.birthday_dt)
-                $('._regionInfo').text(jsondata.country+' '+jsondata.address)
+                var countryname = $('option[value='+jsondata.country+']').text()
+                $('._regionInfo').text(countryname+' '+jsondata.address)
+
+                var repeat_info_dict= { 'KOR':
+                                  {'DD':'매일', 'WW':'매주', '2W':'격주',
+                                   'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+                                  'JAP':
+                                  {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                                   'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+                                  'JAP':
+                                  {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                                   'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+                                 }
+                var repeatList = []
+                if(jsondata.off_repeat_schedule_type_data.length>0){
+                    for(var i=0; i<jsondata.off_repeat_schedule_type_data.length; i++){
+                        var off_type = repeat_info_dict[Options.language][jsondata.off_repeat_schedule_type_data[0]]
+                        var off_day = function(){
+                                                  var repeat_day_info_raw = jsondata.off_repeat_schedule_week_info_data[i].split('/')
+                                                  var repeat_day_info = ""
+                                                  if(repeat_day_info_raw.length>1){
+                                                      for(var j=0; j<repeat_day_info_raw.length; j++){
+                                                          var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+                                                      }
+                                                  }else if(repeat_day_info_raw.length == 1){
+                                                      var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+                                                  }
+                                                  if(repeat_day_info.substr(0,1) == '/'){
+                                                      var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+                                                  }
+                                                    return repeat_day_info
+                                                };
+                        var off_startdate = jsondata.off_repeat_schedule_start_date_data[i]
+                        var off_enddate = jsondata.off_repeat_schedule_end_date_data[i]
+                        var off_time = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
+                        var off_dur = jsondata.off_repeat_schedule_time_duration_data[i]
+                        var off_endtime = Number(off_time)+Number(off_dur)
+                        var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_time+'시 ~ '+off_endtime+'시 ('+off_dur+'시간)'+'</p>'
+                        var offText2 = '<span>'+off_startdate+'부터 ~ '+off_enddate+"까지"+'</span>'
+                        repeatList.push(offText+offText2)
+                        //$('._Repeat_Info p:nth-child(2)').text(offText)
+                        //$('._Repeat_Info span').text(offText2)
+                    }$('._Repeat_Info div').html(repeatList.join(''))
+                      
+                  }else{
+                      var trainee_repeat_type = ''
+                      var trainee_repeat_day = '설정된 반복일정이 없습니다.'
+                      var trainee_repeat_time = ''
+                      var trainee_repeat_end = ''
+                      $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
+                    $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_type+' '
+                                                          +trainee_repeat_day + ' '
+                                                          +trainee_repeat_time)
+                    $('._Repeat_Info span').text(trainee_repeat_end)
+                  }
             }
 
 
@@ -618,7 +671,7 @@
                         $('#city-KOR').css('display','inline-block')
                     }else{
                         $('#city-KOR').css('display','none')
-                        $('#newcity').val('')
+                        $('#newcity').val('-')
                     }
                     $('#newcountry').val($(this).val())
                 })

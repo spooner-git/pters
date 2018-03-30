@@ -95,14 +95,17 @@ $(document).ready(function(){
             open_member_info_popup_mobile(userID)
             get_indiv_repeat_info(userID)
             set_member_lecture_list()
+            set_member_history_list()
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID)
             get_indiv_repeat_info(userID)
             set_member_lecture_list()
+            set_member_history_list()
             $('#info_shift_base, #info_shift_lecture').show()
-            $('#info_shift_schedule').hide()
+            $('#info_shift_schedule, #info_shift_history').hide()
             $('#select_info_shift_lecture').css('color','#fe4e65')
             $('#select_info_shift_schedule').css('color','#282828')
+            $('#select_info_shift_history').css('color','#282828')
         }
     });
 
@@ -231,8 +234,9 @@ $(document).ready(function(){
     });
 
     $('#select_info_shift_lecture').click(function(){
-        $('#info_shift_schedule').hide()
         $('#info_shift_lecture').show()
+        $('#info_shift_schedule').hide()
+        $('#info_shift_history').hide()
         $(this).css('color','#fe4e65')
         $(this).siblings('.button_shift_info').css('color','#282828')
     })
@@ -240,6 +244,15 @@ $(document).ready(function(){
     $('#select_info_shift_schedule').click(function(){
         $('#info_shift_lecture').hide()
         $('#info_shift_schedule').show()
+        $('#info_shift_history').hide()
+        $(this).css('color','#fe4e65')
+        $(this).siblings('.button_shift_info').css('color','#282828')
+    })
+
+    $('#select_info_shift_history').click(function(){
+        $('#info_shift_lecture').hide()
+        $('#info_shift_schedule').hide()
+        $('#info_shift_history').show()
         $(this).css('color','#fe4e65')
         $(this).siblings('.button_shift_info').css('color','#282828')
     })
@@ -2087,6 +2100,76 @@ function draw_member_lecture_list_table(jsondata, targetHTML){
             var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
         }
         result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>')
+    }
+    var result_history = result_history_html.join('')
+    $regHistory.html(result_history)
+}
+
+function set_member_history_list(){
+    if($('#memberInfoPopup_PC').css('display')=="block"){
+        var userID = $('#memberId_info_PC').text()
+        var $regHistory = $('#memberLectureHistory_info_PC')
+    }else if($('#memberInfoPopup').css('display')=="block"){
+        var userID = $('#memberId').val()
+        var $regHistory = $('#memberLectureHistory_info')
+    }
+    if($('#currentMemberList').css('display') == "block"){
+      var Data = DB
+    }else if($('#finishedMemberList').css('display') == "block"){
+       var Data = DBe
+    }else if($('#calendar').length>0){
+        var Data = DB
+    }
+    var dbId = Data[userID].dbId
+    
+    $.ajax({
+        url:'/trainer/read_member_schedule_data/', 
+        type:'POST',
+        data:{"member_id":dbId},
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                console.log(jsondata)
+                draw_member_history_list_table(jsondata,$regHistory) 
+            }
+            
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
+function draw_member_history_list_table(jsondata,targetHTML){
+    var $regHistory = targetHTML
+    var result_history_html = ['<div><div>수행일자</div><div>진행시간</div><div>구분</div><div>메모</div></div>']
+    var stateCodeDict = {"PE":"완료","NP":"시작전"}
+    for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
+        var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+db_datatimehangul_format_realign(jsondata.ptScheduleStartDtArray[i])+'</div>'
+        var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
+        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+(Number(jsondata.ptScheduleEndDtArray[i].split(' ')[3].split(':')[0])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[3].split(':')[0]))+'시간</div>'
+        var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
+        result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
     }
     var result_history = result_history_html.join('')
     $regHistory.html(result_history)

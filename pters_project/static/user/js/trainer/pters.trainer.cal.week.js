@@ -73,14 +73,17 @@ $(document).ready(function(){
 		            open_member_info_popup_mobile(userID)
 		            get_indiv_repeat_info(userID)
 		            set_member_lecture_list()
+		            set_member_history_list()
 		        }else if($('body').width()>=600){
 		            open_member_info_popup_pc(userID)
 		            get_indiv_repeat_info(userID)
 		            set_member_lecture_list()
+		            set_member_history_list()
 		            $('#info_shift_base, #info_shift_lecture').show()
-		            $('#info_shift_schedule').hide()
+		            $('#info_shift_schedule, #info_shift_history').hide()
 		            $('#select_info_shift_lecture').css('color','#fe4e65')
 		            $('#select_info_shift_schedule').css('color','#282828')
+		            $('#select_info_shift_history').css('color','#282828')
 		        }
 			  },
 
@@ -240,6 +243,7 @@ $(document).ready(function(){
 
 		$('#page-addplan-pc').hide()
 		$("#cal_popup_planinfo").fadeIn('fast');
+		$('#popup_info3_memo,#popup_info3_memo_modify').show()
 		if($('body').width()>600){
 			$('#shade3').css({'display':'block'});	
 		}else{
@@ -324,6 +328,7 @@ $(document).ready(function(){
 		$('#page-addplan-pc').hide()
 		//$('.td00').css('background','transparent')
 		$("#cal_popup_planinfo").fadeIn('fast');
+		$('#popup_info3_memo,#popup_info3_memo_modify').hide()
 		if($('body').width()>600){
 			$('#shade3').css({'display':'block'});	
 		}else{
