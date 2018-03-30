@@ -1066,7 +1066,7 @@ $(document).ready(function(){
         $('#page-addplan').hide('fast','swing');
         $('#float_btn_wrap').fadeIn();
         $('#float_btn').removeClass('rotate_btn');
-        $('#page-base').fadeIn();
+        $('#page-base').show();
         $('#page-base-addstyle').hide();
       }
 

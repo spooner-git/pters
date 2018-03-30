@@ -243,6 +243,7 @@ $(document).ready(function(){
 
 		$('#page-addplan-pc').hide()
 		$("#cal_popup_planinfo").fadeIn('fast');
+		$('#popup_info3_memo,#popup_info3_memo_modify').show()
 		if($('body').width()>600){
 			$('#shade3').css({'display':'block'});	
 		}else{
@@ -327,6 +328,7 @@ $(document).ready(function(){
 		$('#page-addplan-pc').hide()
 		//$('.td00').css('background','transparent')
 		$("#cal_popup_planinfo").fadeIn('fast');
+		$('#popup_info3_memo,#popup_info3_memo_modify').hide()
 		if($('body').width()>600){
 			$('#shade3').css({'display':'block'});	
 		}else{

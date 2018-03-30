@@ -22,9 +22,9 @@
               <span style="color:#fe4e65;font-weight: bold;font-size: 16px;">~ </span>
             </span>
          </div>
-        <div id="yearText">회원 정보</div>
+        <div id="yearText">내 정보</div>
         <div id="monthText"></div>
-        <div id="menuName">회원 정보
+        <div id="menuName">마이 페이지
         </div>
         <div id="menuDescription">나의 정보를 확인할 수 있습니다.
         </div>
@@ -644,7 +644,7 @@
                         var off_time = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
                         var off_dur = jsondata.off_repeat_schedule_time_duration_data[i]
                         var off_endtime = Number(off_time)+Number(off_dur)
-                        var offText = '<p style="margin:0px;">'+off_type+' '+off_day()+' '+off_time+'시 ~ '+off_endtime+'시 ('+off_dur+'시간)'+'</p>'
+                        var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_time+'시 ~ '+off_endtime+'시 ('+off_dur+'시간)'+'</p>'
                         var offText2 = '<span>'+off_startdate+'부터 ~ '+off_enddate+"까지"+'</span>'
                         repeatList.push(offText+offText2)
                         //$('._Repeat_Info p:nth-child(2)').text(offText)
