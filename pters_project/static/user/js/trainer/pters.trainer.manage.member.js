@@ -164,7 +164,7 @@ $(document).ready(function(){
             modify_member_info_pc(userID)
             get_indiv_repeat_info(userID)
             set_member_lecture_list()
-            $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('disabled',false);
+            $('#memberInfoPopup_PC input').addClass('input_available').attr('disabled',false);
             $('button._info_modify').text('완료').attr('data-type',"modify")
             $('#info_shift_base, #info_shift_lecture').show()
             $('#info_shift_schedule').hide()
@@ -180,7 +180,7 @@ $(document).ready(function(){
       var lectureID = $(this).parent('div').attr('data-lecid')
       //modify_member_info_pc(userID)
       if($(this).attr('data-type')=="view"){
-        $('#memberInfoPopup_PC input').addClass('input_avaiable').attr('disabled',false);
+        $('#memberInfoPopup_PC input').addClass('input_available').attr('disabled',false);
         $(this).text('완료').attr('data-type',"modify");
       }else if($(this).attr('data-type')=="modify"){
         console.log('수정송신')
@@ -212,12 +212,12 @@ $(document).ready(function(){
         $('#form_lecture_id').val(lectureID)
         if($(this).attr('data-type')=="view"){
             var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input')
-            myRow.addClass('input_avaiable').attr('disabled',false);
+            myRow.addClass('input_available').attr('disabled',false);
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide()
             $(this).text('완료').attr('data-type',"modify");
         }else if($(this).attr('data-type')=="modify"){
             console.log('수정송신')
-            send_member_modified_data_pc()
+            send_member_modified_data()
         }else if($(this).attr('data-type')=="resend"){
 
         }
@@ -1312,7 +1312,6 @@ function show_shadow_reponsively(){
     } 
 }
 
-console.log($('#fast_check').val())
 //모든 입력란을 채웠을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
 function check_dropdown_selected(){
     var emailInput = $("#memberEmail_add");
@@ -1638,7 +1637,7 @@ function open_member_info_popup_pc(userID){
     }
     $('#memberEnd_info_PC').text(end)
     $('#comment_info, #memberComment_info_PC').val(Data[userID].contents)
-    $('#memberInfoPopup_PC input').removeClass('input_avaiable').attr('disabled',true);
+    $('#memberInfoPopup_PC input').removeClass('input_available').attr('disabled',true);
     //$('button._info_modify').text('수정').attr('data-type',"view")
     $('#memberRegHistory_info_PC img').text('수정').attr('data-type',"view")
 
@@ -1658,6 +1657,7 @@ function open_member_info_popup_mobile(userID){
     $('#float_btn_wrap').fadeOut();
     $('#page-base').fadeOut('fast');
     $('#page-base-modifystyle').fadeIn('fast');
+    console.log(Data, userID, Data[userID].name)
     $('#memberName_info').val(Data[userID].name)
     $('#memberId').val(userID).attr('data-dbid',Data[userID].dbId)
     $('#deleteMemberId').val(userID).attr('data-dbid',Data[userID].dbId)
@@ -1699,6 +1699,7 @@ function open_member_info_popup_mobile(userID){
       $('#form_sex_modify').val('W')
     }
     $('#memberInfoPopup').fadeIn('fast');
+    $('#memberInfoPopup input').removeClass('input_available').attr('disabled',true);
     $('#shade3').fadeIn('fast');
     scrollToDom($('#page_managemember'));
     if($('body').width()<600){
@@ -1727,7 +1728,7 @@ function modify_member_lec_info_pc(){
 }
 
 //회원의 수정된 수강정보를 서버로 전송한다.
-function send_member_modified_data_pc(){
+function send_member_modified_data(){
     var $form = $('#update_member_lecture_info');
     console.log($form.serialize())
        $.ajax({
@@ -1748,7 +1749,6 @@ function send_member_modified_data_pc(){
           //통신성공시 처리
           success:function(data){
               ajax_received_json_data_member_manage(data);
-              console.log(messageArray)
               if(messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(messageArray)
@@ -1765,7 +1765,7 @@ function send_member_modified_data_pc(){
                     if($('body').width()>600){
                         open_member_info_popup_pc($('#memberId_info_PC').text())
                     }else if($('body').width()<=600){
-                        open_member_info_popup_mobile($('#memberId_info_PC').text())
+                        open_member_info_popup_mobile($('#memberId').val())
                     }
                     console.log('success');
               }
@@ -2031,9 +2031,7 @@ function set_member_lecture_list(){
 
         //통신성공시 처리
         success:function(data){
-            console.log(data)
             var jsondata = JSON.parse(data);
-            console.log(jsondata,'----')
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -2459,13 +2457,10 @@ function get_indiv_repeat_info(userID){
 
               beforeSend:function(){
                   //beforeSend(); //ajax 로딩이미지 출력
-                  console.log('test')
               },
 
               success:function(data){
-                  console.log(data)
                 var jsondata = JSON.parse(data);
-                console.log(jsondata.messageArray)
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
