@@ -11,6 +11,7 @@ pters_project/trainee/__pycache__/
 pters_project/schedule/migrations/__pycache__/
 pters_project/trainer/migrations/__pycache__/
 pters_project/trainee/migrations/__pycache__/
+pters_project/logs/
 pters_project/logs/default_log.log
 pters_project/logs/login_log.log
 pters_project/logs/trainer_log.log
