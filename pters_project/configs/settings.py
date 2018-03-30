@@ -153,12 +153,17 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 # Email Activation
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_SSL = True
+EMAIL_PORT = os.environ.get("PTERS_EMAIL_POST", '')
+EMAIL_HOST = os.environ.get("PTERS_EMAIL_HOST", '')
+
 EMAIL_HOST_USER = os.environ.get("PTERS_EMAIL_HOST_USER", '')
 EMAIL_HOST_PASSWORD = os.environ.get("PTERS_EMAIL_HOST_PASSWORD", '')
-DEFAULT_FROM_MAIL = 'Spooner_Developer'
+DEFAULT_FROM_EMAIL = os.environ.get("PTERS_EMAIL_HOST", '')
 
 # AWS S3 Upload
 PTERS_AWS_ACCESS_KEY_ID = os.environ.get("PTERS_AWS_ACCESS_KEY_ID", '')

@@ -187,7 +187,6 @@ class ResendEmailAuthenticationView(RegistrationView, View):
                     user.email = email
                     user.set_password(password)
                     user.save()
-
         if error is None:
             # user = authenticate(username=username, password=password)
             if user is not None:
