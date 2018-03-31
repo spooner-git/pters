@@ -163,7 +163,7 @@ EMAIL_HOST = os.environ.get("PTERS_EMAIL_HOST", '')
 
 EMAIL_HOST_USER = os.environ.get("PTERS_EMAIL_HOST_USER", '')
 EMAIL_HOST_PASSWORD = os.environ.get("PTERS_EMAIL_HOST_PASSWORD", '')
-DEFAULT_FROM_EMAIL = os.environ.get("PTERS_EMAIL_HOST", '')
+DEFAULT_FROM_EMAIL = os.environ.get("PTERS_EMAIL_DEFAULT", '')
 
 # AWS S3 Upload
 PTERS_AWS_ACCESS_KEY_ID = os.environ.get("PTERS_AWS_ACCESS_KEY_ID", '')
