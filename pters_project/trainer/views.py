@@ -1545,8 +1545,8 @@ def refund_member_lecture_info_logic(request):
     refund_price = request.POST.get('refund_price', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
-    error = None
     input_refund_price = 0
+    error = None
 
     if lecture_id is None or lecture_id == '':
         error = '회원 수강정보를 불러오지 못했습니다.'
@@ -1568,7 +1568,7 @@ def refund_member_lecture_info_logic(request):
             error = '환불 금액은 숫자만 입력 가능합니다.'
 
     if error is None:
-        if refund_price > lecture_info.price:
+        if input_refund_price > lecture_info.price:
             error = '환불 금액이 등록 금액보다 많습니다.'
 
     if error is None:
