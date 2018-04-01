@@ -499,7 +499,7 @@
     </div>
 
     <div class="ptaddbox" id="pcaddpopup">
-       <span id="uptext-pc-modify">회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
+       <span id="uptext-pc-modify">회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_info')">
     </div>
 
     <div>
@@ -642,20 +642,22 @@
     </form>
 
     <div id="memberRegHistory_info_wrap" class="member_info_wrap ptaddbox">
-            <label class="ptaddboxtext">
-                <img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
-            </label>
-            <div id="memberRegHistory_info">
-                  
-            </div>
+        <label class="ptaddboxtext">
+            <img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
+            <!--<span class="button_add_member_lecture" onclick="pc_add_member(3)">+</span>-->
+        </label>
+        <div id="memberRegHistory_info">
+              
+        </div>
     </div>
-    <div id="member_history" class="history_view ptaddbox">
+
+    <div id="memberLectureHistory_info_wrap" class="member_info_wrap history_view ptaddbox">
         <label for="memberHistory" class="ptaddboxtext">
                 <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 활동 내역
         </label>
-        <div><span>history1</span></div>
-        <div><span>history2</span></div>
-        <div><span>history3</span></div>
+        <div id="memberLectureHistory_info">
+                  
+        </div>
     </div>
 </div>
 
@@ -668,7 +670,7 @@
 
     <label id="memberInfoPopup_PC_label">
         <img src="/static/user/res/member/icon-female-pink.png">
-        <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기">
+        <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('member_info_PC')">
     </label>
 
     <div id="info_shift_base" class="info_shift_wrap">
@@ -727,7 +729,9 @@
             <span id="memberFinishCount_info_PC" readonly></span>회
         </div>
         <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력</label>
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
+                <!--<span class="button_add_member_lecture" onclick="pc_add_member(2)">+</span>-->
+            </label>
             <div id="memberRegHistory_info_PC">
                   
             </div>
@@ -756,7 +760,70 @@
     <div class="member_info_PC_buttons_wrap popupBtn_mini">
         <button class="submitBtn _info_delete">삭제</button>
         <button class="submitBtn _info_modify" data-type="view" style="display: none;">수정</button>
-        <button class="submitBtn _btn_close_info_PC">닫기</button>
+        <button class="submitBtn _btn_close_info_PC" onclick="closePopup('member_info_PC')">닫기</button>
+    </div>
+</div>
+
+<div class="lectureStateChangePopup popups">
+    <div style="height: 50px;">
+        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
+        <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
+    </div>
+    <div class="KRtext confirmText">회원님 등록을 취소하시겠습니까?<br>환불 금액을 입력해 주세요.</div>
+    <div class="KRtext confirmText" style="font-size: 12px;height: 35px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.</div>
+    <div class="JPtext confirmText">日程を削除しますか</div>
+    <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
+    <div style="text-align: center;margin-bottom: 10px;"><input type="number" name="refund_price" style="border:1px solid #fe4e65;"> 원</div>
+    <div class="popup_inner popup_inner_resend">
+        <span style="color:#fe4e65;" class="KRtext refund">환불</span>
+        <span style="color:#fe4e65;" class="JPtext refund">はい</span>
+        <span style="color:#fe4e65;" class="ENtext refund">Yes</span>
+    </div>
+    <div class="popup_inner popup_inner_resend">
+        <span class="KRtext cancel_refund">취소</span>
+        <span class="JPtext cancel_refund">いいえ</span>
+        <span class="ENtext cancel_refund">No</span>
+    </div>
+</div>
+
+<div class="lectureConnectStateChangePopup popups">
+    <div style="height: 50px;">
+        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
+        <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
+    </div>
+    <div class="KRtext confirmText">회원님과의 달력 연동상태를 변경하시겠습니까?<br>변경을 원하는 상태를 선택해주세요.</div>
+    <div class="KRtext confirmText" style="font-size: 12px;height: 35px;color:#fe4e65;font-weight: normal">※연결해제시 회원님께서 더이상 달력을 볼 수 없게 됩니다.</div>
+    <div class="JPtext confirmText">日程を削除しますか</div>
+    <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
+    <div class="popup_inner popup_inner_resend" data-stat="DELETE">
+        <span style="color:#fe4e65;" class="KRtext connectchange">연결해제</span>
+        <span style="color:#fe4e65;" class="JPtext connectchange">はい</span>
+        <span style="color:#fe4e65;" class="ENtext connectchange">Yes</span>
+    </div>
+    <div class="popup_inner popup_inner_resend">
+        <span class="KRtext cancel_connectchange">취소</span>
+        <span class="JPtext cancel_connectchange">いいえ</span>
+        <span class="ENtext cancel_connectchange">No</span>
+    </div>
+</div>
+
+<div class="resendPopup popups">
+    <div style="height: 40px;">
+        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:5px;">
+        <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_resend_PC" class="_btn_close_resend_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
+    </div>
+    <div class="KRtext confirmText">회원님께서 달력연결을 해제하셨습니다.<br>원하는 추가 작업을 선택해주세요.</div>
+    <div class="JPtext confirmText">日程を削除しますか</div>
+    <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
+    <div class="popup_inner popup_inner_resend">
+        <span style="color:#282828;" class="KRtext resend">재전송</span>
+        <span style="color:#282828;" class="JPtext resend">はい</span>
+        <span style="color:#282828;" class="ENtext resend">Yes</span>
+    </div>
+    <div class="popup_inner popup_inner_resend">
+        <span class="KRtext delete_resend">이력 삭제</span>
+        <span class="JPtext delete_resend">いいえ</span>
+        <span class="ENtext delete_resend">No</span>
     </div>
 </div>
 
