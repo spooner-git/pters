@@ -487,7 +487,11 @@ a:focus, a:hover{
     margin-right: 10px;
     font-weight: 500;
     line-height: 62px;
+    cursor: pointer;
 }
+    .pcwho:hover{
+        color: #fe4e65;
+    }
 
 .pcwhere{
     color: #282828;
@@ -559,6 +563,12 @@ a:focus, a:hover{
         background: #ffffff;
         z-index: 1;
     }
+    .language_set{
+        cursor: pointer;
+    }
+        .language_set:hover{
+            color: #fe4e65;
+        }
 }
 
 @media(min-width: 760px){

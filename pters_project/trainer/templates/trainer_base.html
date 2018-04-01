@@ -328,7 +328,7 @@
                 <div id="loginInfo" class="centermenu_div" style="float:right;">
                     <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
                     <span class="pcwhere"></span>
-                    <span class="pcwho">{{user.last_name}} {{user.first_name}} <span></span></span>
+                    <span class="pcwho" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">{{user.last_name}} {{user.first_name}} <span></span></span>
                 </div>
                 <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
                 <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;">v0.1712.0000</span>
@@ -346,9 +346,14 @@
 
         <footer class="fixfooter bottomzero">
             <div class="bottomfooter1">
-                <span>English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
+                    <input type="hidden" name = "next_page" value="/trainer/trainer_main">
+                </form>
+                <span class="language_set" onclick="languageSet('ENG')">English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span class="language_set" onclick="languageSet('KOR')">한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span class="language_set" onclick="languageSet('JPN')">日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
             </div>
             <div class="bottomfooter2">
                 <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
@@ -475,6 +480,11 @@
               }else if(Options.language=="KOR"){
                 $(".ENtext, .JPtext").remove();
                 $(".KRtext").show();
+              }
+
+              function languageSet(language){
+                    $('#id_setting_language').val(language)
+                    document.getElementById('update-setting-language-form').submit();
               }
 
 
