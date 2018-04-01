@@ -328,7 +328,7 @@ $(document).ready(function(){
 		$('#page-addplan-pc').hide()
 		//$('.td00').css('background','transparent')
 		$("#cal_popup_planinfo").fadeIn('fast');
-		$('#popup_info3_memo,#popup_info3_memo_modify').hide()
+		$('#popup_info3_memo,#popup_info3_memo_modify').show()
 		if($('body').width()>600){
 			$('#shade3').css({'display':'block'});	
 		}else{
@@ -373,6 +373,7 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').text(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
+		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('schedule-id'))
 		$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#popup_btn_complete").hide()
@@ -453,6 +454,7 @@ $(document).ready(function(){
 				$(this).attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
 				var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
 				var memo = $('#popup_info3_memo').val()
+				console.log(schedule_id, memo)
 				$.ajax({
 		            url:'/schedule/update_memo_schedule/',
 		            type:'POST',
@@ -1605,6 +1607,7 @@ $(document).ready(function(){
 		$('#calendar').css('display','none');
 		for(var i=0; i<offlen; i++){
 			var indexArray = offTimeArray[i]
+			var memoArray = offScheduleNoteArray[i]
 			var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
 			var offYear = datasplit[0]
 			var offMonth = datasplit[1]
@@ -1635,7 +1638,7 @@ $(document).ready(function(){
 			var tdOff = $("#"+offStart);
 			tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
 			
-			tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
+			tdOffStart.attr('off-time',indexArray).attr('schedule-id',offScheduleIdArray[i]).attr('data-memo',memoArray).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
 		};
 		$('#calendar').css('display','block');
 	};

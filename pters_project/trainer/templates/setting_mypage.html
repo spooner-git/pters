@@ -604,6 +604,7 @@
             }
 
             function fill_recieved_member_info(jsondata){
+              console.log(jsondata.off_repeat_schedule_type_data)
                 $('._nameInfo').text(jsondata.name)
                 $('._phoneInfo').text(jsondata.phone)
                 $('._birthInfo').text(jsondata.birthday_dt)
@@ -652,15 +653,8 @@
                     }$('._Repeat_Info div').html(repeatList.join(''))
                       
                   }else{
-                      var trainee_repeat_type = ''
-                      var trainee_repeat_day = '설정된 반복일정이 없습니다.'
-                      var trainee_repeat_time = ''
-                      var trainee_repeat_end = ''
-                      $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
-                    $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_type+' '
-                                                          +trainee_repeat_day + ' '
-                                                          +trainee_repeat_time)
-                    $('._Repeat_Info span').text(trainee_repeat_end)
+                      var offText = '<span style="margin:0px;margin-top:7px;">'+'설정된 반복 일정이 없습니다.'+'</span>'
+                      $('._Repeat_Info div').html(offText)
                   }
             }
 
