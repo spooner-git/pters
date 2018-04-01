@@ -77,8 +77,8 @@
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
         <span>{{ class_info.mem_info.name }} 트레이너</span>
-        <img src="/static/user/res/member/icon-call.png" alt="">
-        <img src="/static/user/res/member/icon-message.png" alt="">
+        <a href='tel:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-call.png"></a>
+        <a href='sms:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-message.png" alt=""></a>
       </div>
       <div class="trainerWorkTimeInfo">
         <span>업무 시간</span><span></span>
@@ -86,13 +86,13 @@
   </div>
 </div>
 
+<!--
 <div class="mypage_label _GRAPH_OPEN">
     <img src="/static/user/res/member/icon-user.png" alt=""><span>월별 활동 그래프</span>
 </div>
 
 <div id="mygraph" data-open="0">
     <div id="yyyyText">
-        <!--<img src="/static/user/res/icon-calendar-week.png" alt="" class="iconimg">-->
         <a id="leftArrow" style="left: 6%;cursor: pointer;"><img src={% static_url "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 6px;"></a>
         <span id="yy"></span>
         <a id="rightArrow" style="right: 6%;cursor: pointer;"><img src={% static_url "user/res/icon-setting-arrow.png" %} alt="" style="width: 6px;"></a>
@@ -130,6 +130,7 @@
       </div>
     </div> 
 </div>
+-->
 
 <div class="mypage_label button_trainee_logout">
   <span onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
