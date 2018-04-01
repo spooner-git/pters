@@ -364,8 +364,8 @@
                           var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
                           var trainerName = '<div class="pters_table_cell table_trainer_name">'+'달력 연동'+'</div>'
                           var selection = '<div class="pters_table_cell table_selection"><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',0, '+lec_select_classIdArray[j]+')">연결/</a><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',1, '+lec_select_classIdArray[j]+')">취소</a></div>'
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',0, '+classid+')">연결/</a><a data="" '
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',1, '+classid+')">취소</a></div>'
                           var sum = table + lectureName + trainerName + selection + '</div>'
                           list_table_to_join.push(sum)
                       }else if(lec_select_stateArray[j] == 'VIEW'){
@@ -373,7 +373,7 @@
                           var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
                           var trainerName = '<div class="pters_table_cell table_trainer_name">'+'달력 연동'+'</div>'
                           var selection = '<div class="pters_table_cell table_selection"><a data="" '
-                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',2, '+lec_select_classIdArray[0]+')">선택</a></div>'
+                                          +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',2, '+classid+')">선택</a></div>'
                           var sum = table + lectureName + trainerName + selection + '</div>'
                           list_table_to_join.push(sum)
                       }
