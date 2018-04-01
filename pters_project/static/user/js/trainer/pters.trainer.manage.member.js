@@ -1512,12 +1512,13 @@ function open_member_info_popup_pc(userID){
     }
     */
     
-    
+    /*
     if(Data[userID].npCount == 0 && Data[userID].rjCount == 0){
       var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:18px;margin:0 0 5px 3px" title="연결됨"> (연결됨)</span>'
     }else if(Data[userID].rjCount > 0){
       var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 취소"> (연결 취소)</span>'
     }
+    */
 
     var yetReg = ""
     var yet = ""
@@ -1753,12 +1754,14 @@ function open_member_info_popup_mobile(userID){
     if(Data[userID].npCount > 0){
       var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-np-wait.png" style="width:18px;margin:0 0 5px 3px" title="연결 대기중"> (연결 대기중)</span>'
     }*/
+    /*
     if(Data[userID].npCount == 0 && Data[userID].rjCount == 0){
       var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:11px;margin:0 0 5px 3px" title="연결됨"> (연결됨)</span>'
     }
     else if(Data[userID].rjCount > 0){
       var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 취소"> (연결 취소)</span>'
     }
+    */
 
     $('#npSituationPresent').html(npCountImg)
 
@@ -1802,7 +1805,6 @@ function modify_member_lec_info_pc(){
 //회원의 수정된 수강정보를 서버로 전송한다.
 function send_member_modified_data(){
     var $form = $('#update_member_lecture_info');
-    console.log($form.serialize())
        $.ajax({
           url:'/trainer/update_member_lecture_info/',
           type:'POST',
@@ -1836,8 +1838,10 @@ function send_member_modified_data(){
                     $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
                     if($('#memberInfoPopup_PC').css('display') == "block"){
                         open_member_info_popup_pc($('#memberId_info_PC').text())
+                        set_member_lecture_list()
                     }else if($('#memberInfoPopup').css('display') == "block"){
                         open_member_info_popup_mobile($('#memberId').val())
+                        set_member_lecture_list()
                     }
                     console.log('success');
               }
@@ -2137,6 +2141,7 @@ function set_member_lecture_list(){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
