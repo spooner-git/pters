@@ -271,3 +271,5 @@ LOGGING = {
     }
 }
 
+EL_PAGINATION_LOADING = "<img src='/static/user/res/ajax/loading.gif' alt='loading' style='width:10%;'/>"
+
