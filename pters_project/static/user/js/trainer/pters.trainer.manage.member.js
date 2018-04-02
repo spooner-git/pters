@@ -476,14 +476,16 @@ $(document).ready(function(){
         }
     });
 
+
     $("#datepicker_fast").datepicker({
-        minDate : 0,
+        //minDate : 0,
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
             $(this).addClass("dropdown_selected");
             autoDateInput();
             check_dropdown_selected();
         }
     });
+    
 
     $(document).on("focus","input.lec_start_date, input.lec_end_date",function(){
         $(this).datepicker({
