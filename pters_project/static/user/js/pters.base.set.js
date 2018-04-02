@@ -73,27 +73,6 @@ $(document).ready(function(){
       }else{
           $('#shade').css('display','block')
       }
-      $.ajax({
-              url: '/trainer/alarm/',
-              dataType : 'html',
-
-              beforeSend:function(){
-                //AjaxBeforeSend();
-              },
-
-              success:function(data){
-                  console.log(data)
-                  $('#alarm div').html(data)
-              },
-
-              complete:function(){
-                //AjaxCompleteSend();
-              },
-
-              error:function(){
-                console.log('server error')
-              }
-            })
    })
 
    $('#alarm button').click(function(){
