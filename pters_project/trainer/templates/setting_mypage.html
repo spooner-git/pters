@@ -513,7 +513,6 @@
     <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:trainer_mypage_ajax' %}">
 </form>
 
-
 {% endblock %}
 
 {% block local_js_footer %}
@@ -744,6 +743,7 @@
               if(option == 2){
                 location.href= "/accounts/password/change/"
               }else if(option = "delAccount"){
+                  location.href="/login/out_member/";
 
               }
             }

@@ -31,6 +31,7 @@ from configs import settings
 from login.forms import MyPasswordResetForm
 from login.models import MemberTb
 # from schedule.models import ClassTb
+from schedule.models import MemberLectureTb
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +92,7 @@ def login_trainer(request):
     if error is None:
         return redirect(next_page)
     else:
-        messages.info(request, error)
+        messages.error(request, error)
         return redirect(next_page)
 
 
@@ -558,25 +559,30 @@ class NewMemberReSendEmailView(TemplateView):
 
 # 회워탈퇴 api
 def out_member_logic(request):
-    member_id = request.POST.get('id')
     next_page = request.POST.get('next_page')
-
+    next_page = '/login/'
     error = None
 
+    member_id = request.user.id
+    user = None
     if member_id == '':
         error = '회원 ID를 확인해 주세요.'
 
     if error is None:
 
         try:
-            user = User.objects.get(username=member_id)
+            user = User.objects.get(id=member_id)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
+    if error is None:
         try:
             member = MemberTb.objects.get(user_id=user.id, use=1)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
+
+    # if error is None:
+    #    group = user.groups.get(user=request.user.id)
 
     if error is None:
         try:

@@ -34,6 +34,32 @@
     <link rel="icon" href="/static/common/favicon.ico">
     <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
     <link rel="shortcut icon" href="/static/common/favicon-152.png">
+   <style type="text/css">
+      #errorMessageBar{
+          display: block;
+          width: 100%;
+          position: sticky;
+          top: 0;
+          left: 0;
+          height: 35px;
+          text-align: center;
+          background: red;
+          color: #ffffff;
+          font-size: 15px;
+          font-weight: bold;
+          z-index: 1500;
+      }
+          #errorMessageBar span{
+              line-height: 35px;
+          }
+          #errorMessageBar span:nth-child(2){
+              position: absolute;
+              right: 0;
+              margin-right: 85px;
+              cursor: pointer;
+          }
+
+    </style>
 
 {% endblock %}
     </head>
@@ -44,7 +70,15 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-    
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+
+        <div id="errorMessageBar">
+            <span id="errorMessageText">{{ message }}</span><span>닫기</span>
+        </div>
+
+            {% endif %}
+        {% endfor %}
     <div class="loginbox">
         <div class="logintext">
             <div><img src="/static/user/res/PTERS_logo_pure.png"id="pterstext"><span id="logintext">로그인</span></div>

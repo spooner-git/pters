@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 
 # Create your views here.
+from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
@@ -29,19 +30,32 @@ class HomeView(LoginRequiredMixin, RedirectView):
 class AccessTestMixin(UserPassesTestMixin):
     def test_func(self):
         test_result = False
-        user_for_group = User.objects.get(id=self.request.user.id)
-        group = user_for_group.groups.get(user=self.request.user.id)
-        url = self.request.get_full_path().split('/')
+        error = None
 
-        if url[1] == 'trainee':
-            if group.name == 'trainee':
-                test_result = True
-        if url[1] == 'trainer':
-            if group.name == 'trainer':
-                test_result = True
-        if url[1] == 'center':
-            if group.name == 'center':
-                test_result = True
+        try:
+            user_for_group = User.objects.get(id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = 'error'
+
+        if error is None:
+            try:
+                group = user_for_group.groups.get(user=self.request.user.id)
+            except ObjectDoesNotExist:
+                error = '그룹 정보를 가져오지 못했습니다'
+
+        if error is None:
+            url = self.request.get_full_path().split('/')
+
+        if error is None:
+            if url[1] == 'trainee':
+                if group.name == 'trainee':
+                    test_result = True
+            if url[1] == 'trainer':
+                if group.name == 'trainer':
+                    test_result = True
+            if url[1] == 'center':
+                if group.name == 'center':
+                    test_result = True
 
         return test_result
 
