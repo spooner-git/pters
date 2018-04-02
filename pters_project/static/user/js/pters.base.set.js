@@ -69,12 +69,57 @@ $(document).ready(function(){
    $('.__alarm').click(function(){
       $('#alarm').css('transform','translate(-50%,0%)')
       $('#shade3').css('display','block')
+      $.ajax({
+              url: '/trainer/alarm/',
+              dataType : 'html',
+
+              beforeSend:function(){
+                //AjaxBeforeSend();
+              },
+
+              success:function(data){
+                  console.log(data)
+                  $('#alarm').html(data)
+              },
+
+              complete:function(){
+                //AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })
    })
 
    $('#alarm button').click(function(){
       $('#alarm').css('transform','translate(-50%,-200%)')
       $('#shade3').css('display','none')
+      $.ajax({
+              url: '/trainer/alarm/',
+              dataType : 'html',
+
+              beforeSend:function(){
+                //AjaxBeforeSend();
+              },
+
+              success:function(data){
+                  console.log(data)
+                  
+              },
+
+              complete:function(){
+                //AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })
    })
+
+
+
 
 });
 
@@ -101,8 +146,7 @@ var multiLanguage = { 'KOR':
                      }
 
 //데이트가 2018-08-23 혹은 20180823 혹은 2018_08_23 혹은 2018-8-23 으로 들어왔을때 2018년 8월 23일 로 출력
-function date_format_to_hangul(yyyymmdd){   
-      console.log(yyyymmdd)
+function date_format_to_hangul(yyyymmdd){
       var date = yyyymmdd
       if(date.split('-').length==3){ //2018-08-23 or 2018-8-23
          var hangul_year = date.split('-')[0]
@@ -172,6 +216,7 @@ function date_format_to_yyyymmdd(hanguldate, resultSplit){
   return result
 }
 
+
 function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
   if(String(yyyymmdd).length==8){
     var yyyy = yyyymmdd.substr(0,4)
@@ -180,6 +225,32 @@ function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
     var result = yyyy+resultSplit+mm+resultSplit+dd
   }
   return result
+}
+
+function date_format_yyyy_m_d_to_yyyymmdd(yyyy_m_d){
+    var yyyy = String(yyyy_m_d.split('_')[0])
+    var mm = String(yyyy_m_d.split('_')[1])
+    var dd = String(yyyy_m_d.split('_')[2])
+    if(mm.length<2){
+      var mm = '0' + String(yyyy_m_d.split('_')[1])
+    }
+    if(dd.length<2){
+      var dd = '0' + String(yyyy_m_d.split('_')[2])
+    }
+    return yyyy+mm+dd
+}
+
+function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d,resultSplit){
+    var yyyy = String(yyyy_m_d.split('-')[0])
+    var mm = String(yyyy_m_d.split('-')[1])
+    var dd = String(yyyy_m_d.split('-')[2])
+    if(mm.length<2){
+      var mm = '0' + String(yyyy_m_d.split('-')[1])
+    }
+    if(dd.length<2){
+      var dd = '0' + String(yyyy_m_d.split('-')[2])
+    }
+    return yyyy+resultSplit+mm+resultSplit+dd
 }
 
 //10:00:00.000000 --> 오전 10시
@@ -375,6 +446,9 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
       var sHour = Number(stime[0])
       var sMinute = stime[1]
 
+      var eYeat = Number(edate[0])
+      var eMonth = Number(edate[1])
+      var eDate = Number(edate[2])
       var eHour = Number(etime[0])
       var eMinute = etime[1]
       
@@ -382,6 +456,9 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
       //["2017", "10", "7", "6", "00", "오전"]
 
       var dura = etime[0] - stime[0];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+      if(eDate == sDate+1 && eHour==sHour){
+        var dura = 24
+      }
 
 
       if(option=="class"){

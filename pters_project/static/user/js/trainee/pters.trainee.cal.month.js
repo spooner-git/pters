@@ -556,10 +556,9 @@ $(document).ready(function(){
 		// 요소설명
 		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 시작시간'
 		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 마감시간'
-		console.log(currentHour,'<',Endtime , currentHour,'>=',availableStartTime)
 
 		if(currentHour<Endtime && currentHour>=availableStartTime){
-			for(i=currentDate;i<=currentDate+14;i++){
+			for(i=currentDate;i<=currentDate+Options.availDate;i++){
 				if(i>lastDay[oriMonth-1] && oriMonth<12){
 				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
 				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
@@ -569,7 +568,7 @@ $(document).ready(function(){
 				}
 			}
 		}else{
-			for(i=currentDate;i<=currentDate+14;i++){
+			for(i=currentDate;i<=currentDate+Options.availDate;i++){
 				if(i>lastDay[oriMonth-1] && oriMonth<12){
 				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
 				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
@@ -710,22 +709,6 @@ $(document).ready(function(){
 	}
 
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	//일정 추가관련//
-
-	//var classDateData = []
-    //var classTimeData = []
-    //var offDateData=[]
-    //var offTimeData = []
-    //var offAddOkArray = [] //OFF 등록 시작 시간 리스트
-    //var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-
-    //DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
-    //DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
-
-
-
 	function startTimeSet(){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21];
         startTimeArraySet(); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
         var offOkLen = offAddOkArray.length
@@ -757,68 +740,6 @@ $(document).ready(function(){
         console.log(offAddOkArray)
     }
 
-    /*
-    function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
-    	//DB데이터 가공
-      var classTimeLength = startarray.length
-      var startlength = startarray.length;
-      var endlength = endarray.length;
-      var resultarray = []
-
-      for(i=0;i<classTimeLength; i++){
-        var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
-        var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
-        var startSplitArray= start.split("_"); 
-        var endSplitArray = end.split("_");
-        //["2017", "10", "7", "6", "00", "오전"]
-   
-        if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
-          startSplitArray[3] = String(Number(startSplitArray[3])+12);
-        }
-
-        if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
-          endSplitArray[3] = String(Number(endSplitArray[3])+12); 
-        }
-
-        if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
-          startSplitArray[3] = String(Number(startSplitArray[3])+12); 
-        }
-
-        if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
-          endSplitArray[3] = String(Number(endSplitArray[3])+12); 
-        }
-        
-        var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
-        if(dura>0){
-          startSplitArray[5] = String(dura) 
-        }else{
-          startSplitArray[5] = String(dura+24)
-        }
-
-        if(option=="class"){
-          startSplitArray.push(classTimeArray_member_name[i]) 
-          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
-        }else if(option=="off"){
-          startSplitArray.push(classTimeArray_member_name[i]) 
-          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);   
-        }else if(option=="member"){
-          result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);    
-          result2.push(startSplitArray[3]+":"+startSplitArray[4]);
-        }else if(option=="graph"){
-          var mm = startSplitArray[1]
-            var dd = startSplitArray[2]
-            if(mm.length<2){
-              var mm = '0'+startSplitArray[1]
-            }
-            if(dd.length<2){
-              var dd = '0'+startSplitArray[2]
-            }
-            result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
-            result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2   
-        }
-      }
-    }
-    */
 
     function timeGraphSet(option, CSStheme, Page){ //가능 시간 그래프 채우기
         //1. option인자 : "class", "off"
@@ -875,12 +796,13 @@ $(document).ready(function(){
           	var targetTime = 0
           }
           var durTime = splitTimeArray[2]
-          if(DateDataArray[i] == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
+          console.log(DateDataArray[i],date)
+          if(date_format_yyyy_m_d_to_yyyy_mm_dd(DateDataArray[i],'-') == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
               for(var j=0; j<durTime; j++){
                 var time = Number(targetTime)+j
                 $('#'+(time)+'g').addClass(cssClass)
               }
-          }else if(DateDataArray[i] == date && durTime==1){ //수업시간이 1시간짜리일때 칸 채우기
+          }else if(date_format_yyyy_m_d_to_yyyy_mm_dd(DateDataArray[i],'-') == date && durTime==1){ //수업시간이 1시간짜리일때 칸 채우기
               $('#'+targetTime+'g').addClass(cssClass)
           }
         }
@@ -898,7 +820,6 @@ $(document).ready(function(){
         timeGraphLimitSet(Options.limit)
     }
 
-    //Options.limit = 4
     function timeGraphLimitSet(limit){  //회원달력 전용 timeGraphLimitSet 함수 
         var selecteddatearry = $('#popup_info4').text().replace(/년 |월 |일 |:| /gi,"_").split("_")
         var yy_ = selecteddatearry[0];
@@ -910,9 +831,7 @@ $(document).ready(function(){
         if(dd_.length<2){
         	var dd_ = '0'+dd_
         }
-        var selecteddate = yy_+'-'+mm_+'-'+dd_
-
-        //var selecteddate = $("#datepicker").val();
+        var selecteddate = yy_+mm_+dd_
         var date = new Date();
         var yy = date.getFullYear();
         var mm = String(date.getMonth()+1);
@@ -924,9 +843,8 @@ $(document).ready(function(){
           var dd = '0'+dd
         }
         var hh = date.getHours();
-        var today = yy+'-'+mm+'-'+dd
-        console.log(selecteddate,today)
-        if(selecteddate==today){
+        var today = yy+mm+dd
+        if(selecteddate>=today && selecteddate < Number(today)+parseInt(limit/24)){
           for(var i=0;i<=23;i++){
             var time = $('#'+i+'g')
             console.log(hh,limit,hh+limit)
@@ -935,6 +853,7 @@ $(document).ready(function(){
             }
           }
         }
+
     }
 
 

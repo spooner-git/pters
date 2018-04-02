@@ -51,7 +51,6 @@ $(document).ready(function(){
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
     $(document).on('click','.memberNameForInfoView',function(){
     	var clickedName = $(this).attr('data-name')
-    	console.log(clickedName)
     	$.ajax({
               url: '/trainer/member_manage_ajax/',
 			  dataType : 'html',
@@ -454,7 +453,6 @@ $(document).ready(function(){
 				$(this).attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
 				var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
 				var memo = $('#popup_info3_memo').val()
-				console.log(schedule_id, memo)
 				$.ajax({
 		            url:'/schedule/update_memo_schedule/',
 		            type:'POST',
@@ -684,7 +682,6 @@ $(document).ready(function(){
                   	$('#errorMessageBar').show()
                   	$('#errorMessageText').text(jsondata.messageArray)
 	          	}else{
-	          		console.log(jsondata)
 	          		classTimeArray = [];
 	                offTimeArray = [];
 	                classTimeArray_member_name = [];
@@ -1375,18 +1372,6 @@ $(document).ready(function(){
 		};
 	}
 
-	function date_format_yyyy_m_d_to_yyyymmdd(yyyy_m_d){
-		var yyyy = String(yyyy_m_d.split('_')[0])
-		var mm = String(yyyy_m_d.split('_')[1])
-		var dd = String(yyyy_m_d.split('_')[2])
-		if(mm.length<2){
-			var mm = '0' + String(yyyy_m_d.split('_')[1])
-		}
-		if(dd.length<2){
-			var dd = '0' + String(yyyy_m_d.split('_')[2])
-		}
-		return yyyy+mm+dd
-	}
 	
 	function weekNum_Set(Index){
 		var index = Number(myswiper.activeIndex+1);
@@ -1636,7 +1621,6 @@ $(document).ready(function(){
 			
 			var offStartArr = [offYear,offMonth,offDate,offHour,offMinute]
 			var offStart = offStartArr.join("_")
-			//var offStart = datasplit[0]+'_'+datasplit[1]+'_'+datasplit[2]+'_'+datasplit[3]+'_'+datasplit[4];
 			var tdOffStart = $("#"+offStart+" div");
 			var tdOff = $("#"+offStart);
 			tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
