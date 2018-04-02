@@ -73,6 +73,7 @@ $(document).ready(function(){
       }else{
           $('#shade').css('display','block')
       }
+      $('#alarm div').html('<iframe src="/trainer/alarm/" width="540" height="400" frameborder="0"></iframe>')
    })
 
    $('#alarm button').click(function(){
