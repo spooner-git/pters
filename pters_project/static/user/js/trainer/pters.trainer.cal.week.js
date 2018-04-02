@@ -684,6 +684,7 @@ $(document).ready(function(){
                   	$('#errorMessageBar').show()
                   	$('#errorMessageText').text(jsondata.messageArray)
 	          	}else{
+	          		console.log(jsondata)
 	          		classTimeArray = [];
 	                offTimeArray = [];
 	                classTimeArray_member_name = [];
@@ -692,6 +693,7 @@ $(document).ready(function(){
 	                offScheduleIdArray = [];
 	                scheduleFinishArray = [];
 	          		scheduleNoteArray = [];
+	          		offScheduleNoteArray = []
 	          		memberIdArray = [];
 	                memberLectureIdArray = [];
 	                memberNameArray = [];
@@ -724,6 +726,7 @@ $(document).ready(function(){
 	                offScheduleIdArray = jsondata.offScheduleIdArray
 	                scheduleFinishArray = jsondata.scheduleFinishArray;
 	          		scheduleNoteArray = jsondata.scheduleNoteArray;
+	          		offScheduleNoteArray = jsondata.offScheduleNoteArray;
 	          		memberIdArray = jsondata.memberIdArray;
 	                memberLectureIdArray = jsondata.memberLectureIdArray;
 	                memberNameArray = jsondata.memberNameArray;

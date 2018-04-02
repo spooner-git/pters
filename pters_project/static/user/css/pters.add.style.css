@@ -519,6 +519,7 @@ ul a{
 
 .submitBtn{
 	display:none;
+	cursor: pointer;
 }
 
 .submitBtn_mini{
