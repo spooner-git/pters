@@ -30,6 +30,11 @@
 	transition: 1s;
 	z-index: 1500;
 }
+	#alarm iframe{
+		width: 100%;
+		padding: 10px;
+	}
+
 
 
 #cal_popup_planinfo{
