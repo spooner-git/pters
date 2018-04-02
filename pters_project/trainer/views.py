@@ -40,7 +40,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     def get(self, request, **kwargs):
 
         class_id = request.session.get('class_id', '')
-        class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd='VIEW')
+        class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd='VIEW', use=1)
 
         error = None
         if class_id is None or class_id == '':
@@ -125,7 +125,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                                                                    lecture_tb__member_id=member_info.member_id,
                                                                    lecture_tb__state_cd='IP',
                                                                    lecture_tb__use=1,
-                                                                   auth_cd='VIEW').order_by('-lecture_tb__start_date')
+                                                                   auth_cd='VIEW', use=1).order_by('-lecture_tb__start_date')
 
                 if len(class_lecture_list) > 0:
                     total_member_num += 1
@@ -395,7 +395,7 @@ def get_member_data(context, class_id, member_id):
 
                     lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                     lecture_tb=lecture_info.lecture_id,
-                                                                    auth_cd='VIEW', lecture_tb__use=1).count()
+                                                                    auth_cd='VIEW', lecture_tb__use=1, use=1).count()
 
                     if lecture_info.use != 0:
                         # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
@@ -474,7 +474,7 @@ def get_member_data(context, class_id, member_id):
 
                     lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                            lecture_tb=lecture_info.lecture_id,
-                                                                           auth_cd='VIEW', lecture_tb__use=1).count()
+                                                                           auth_cd='VIEW', lecture_tb__use=1, use=1).count()
 
                     if lecture_info.use != 0:
                         # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
@@ -2411,7 +2411,7 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_auth_data = None
 
         if error is None:
-            class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd__contains='VIEW').order_by('-reg_dt')
+            class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd__contains='VIEW', use=1).order_by('-reg_dt')
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
             # class_data = ClassTb.objects.filter(member_id=self.request.user.id, member_view_state_cd='VIEW', use=1).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
