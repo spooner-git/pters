@@ -78,6 +78,7 @@ class RepeatScheduleTb(models.Model):
     time_duration = models.CharField(db_column='TIME_DURATION', max_length=20, blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
 
@@ -102,6 +103,7 @@ class DeleteRepeatScheduleTb(models.Model):
     time_duration = models.CharField(db_column='TIME_DURATION', max_length=20, blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
@@ -125,7 +127,9 @@ class DeleteScheduleTb(models.Model):
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     sign_data_url = models.CharField(db_column='SIGN_DATA_URL', max_length=255, blank=True, null=True)  # Field name made lowercase.
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, null=True)
+    member_note = models.CharField(db_column='MEMBER_NOTE', max_length=255, blank=True, null=True)
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
@@ -146,7 +150,9 @@ class ScheduleTb(models.Model):
     sign_data_url = models.CharField(db_column='SIGN_DATA_URL', max_length=255, blank=True, null=True)  # Field name made lowercase.
     max_mem_count = models.IntegerField(db_column='MAX_MEM_COUNT', default=1, blank=True, null=True)
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, null=True)
+    member_note = models.CharField(db_column='MEMBER_NOTE', max_length=255, blank=True, null=True)
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True, default=1)  # Field name made lowercase.
