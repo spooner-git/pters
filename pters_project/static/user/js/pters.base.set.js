@@ -191,7 +191,6 @@ function time_h_format_to_hh(time){
   return result
 }
 
-
 //2018년 3월 29일 3:00 오후 --> 2018년 3월 29일 오후 3:00 
 function db_datatimehangul_format_realign(dbhangul){
    var data = dbhangul.split(' ')
@@ -212,7 +211,6 @@ function db_datatimehangul_format_realign(dbhangul){
    }
    return realign.join(' ')
 }
-
 
 function count_format_to_nnnn(rawData){
   if(rawData == '0'){
@@ -260,6 +258,7 @@ function remove_front_zeros(rawData){
 /*/////////////////////일정 관련 공통 함수////////////////////////////////*/
 
 
+/*
 function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
     //DB데이터 가공
     var classTimeLength = startarray.length
@@ -274,7 +273,7 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
       var endSplitArray = end.split("_");
       //["2017", "10", "7", "6", "00", "오전"]
  
-     if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
+      if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
         startSplitArray[3] = String(Number(startSplitArray[3])+12);
       }
 
@@ -317,6 +316,58 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
           }
           result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
           result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
+      }
+    }
+}
+*/
+
+function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
+    //DB데이터 가공
+    var classTimeLength = startarray.length
+    var startlength = startarray.length;
+    var endlength = endarray.length;
+    var resultarray = []
+
+      //2018-08-15 09:00:00
+    for(i=0;i<classTimeLength; i++){
+      if(startarray[i].split(' ').length>1){
+          var sdate = startarray[i].split(' ')[0].split('-')
+          var stime = startarray[i].split(' ')[1].split(':')
+      }else{
+          var sdate = startarray[i].split(' ')[0].split('-')
+          var stime = ''
+      }
+
+      if(endarray[i].split(' ').length>1){
+          var edate = endarray[i].split(' ')[0].split('-')
+          var etime = endarray[i].split(' ')[1].split(':')
+      }else{
+          var edate = endarray[i].split(' ')[0].split('-')
+          var etime = ''
+      }
+      
+
+      //["2017", "10", "7", "6", "00", "오전"]
+
+      var dura = etime[0] - stime[0];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+      /*
+      if(dura>0){
+        startSplitArray[5] = String(dura) 
+      }else{
+        startSplitArray[5] = String(dura+24)
+      }
+      */
+
+      if(option=="class"){
+        result.push(sdate[0]+"_"+sdate[1]+"_"+sdate[2]+"_"+stime[0]+"_"+stime[1]+"_"+dura+"_"+classTimeArray_member_name[i]+"_"+etime[0]+"_"+etime[1]);
+      }else if(option=="off"){
+        result.push(sdate[0]+"_"+sdate[1]+"_"+sdate[2]+"_"+stime[0]+"_"+stime[1]+"_"+dura+"_"+"OFF"+"_"+etime[0]+"_"+etime[1]);   
+      }else if(option=="member"){
+        result.push(startarray[i].replace(/_/gi,'_'));    
+        result2.push(stime[0]+":"+stime[1]);
+      }else if(option=="graph"){
+          result.push(sdate[0]+"-"+sdate[1]+"-"+sdate[2]); //2017_10_7
+          result2.push(stime[0]+"_"+stime[1] +"_"+ dura); //6_00_2  
       }
     }
 }
