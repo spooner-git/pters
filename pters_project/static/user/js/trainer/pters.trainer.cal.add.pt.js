@@ -124,7 +124,6 @@ $(document).ready(function(){
               $("#id_time_duration").val(1)
               $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
               $("#id_training_time_off").val(hh+':00:00.000000');
-              console.log(hh)
               durTimeSet(hh,"mini");
             }
       })
@@ -263,7 +262,6 @@ $(document).ready(function(){
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
       function fill_repeat_info(option){ //반복일정 요약 채우기
-        console.log('fill')
           switch(option){
               case 'class':
                 var len = ptRepeatScheduleIdArray.length
@@ -392,7 +390,6 @@ $(document).ready(function(){
           serializeArray.push({"name":"date", "value":today_form})
           serializeArray.push({"name":"day", "value":46})
           var sendData = serializeArray
-          //console.log(sendData)
           return sendData
       }
 
@@ -422,7 +419,6 @@ $(document).ready(function(){
             var serverURL = '/schedule/add_repeat_schedule/'
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
-            //console.log(select_all_check)
          }
         
          if(select_all_check==true){
@@ -440,12 +436,8 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(data){
-                        console.log(data)
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
-                        console.log(jsondata)
-                        console.log(messageArray = jsondata.messageArray)
-                        console.log(messageArray.length)
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
                         if(jsondata.messageArray.length>0){
@@ -543,7 +535,6 @@ $(document).ready(function(){
                 if(jsondata.messageArray.length>0){
                   $('#errorMessageBar').show()
                   $('#errorMessageText').text(jsondata.messageArray)
-                  console.log(jsondata.messageArray, jsondata.messageArray.length)
                 }else{
                   ajax_received_json_data(jsondata)
                 }
@@ -1151,7 +1142,6 @@ $(document).ready(function(){
         timeArray[offOkLen]='<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>'
         var timeArraySum = timeArray.join('')
         startTimeList.html(timeArraySum)
-        console.log(startTimeList)
       }
 
       function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우기
@@ -1200,12 +1190,12 @@ $(document).ready(function(){
             var targetTime = 0
           }
           var durTime = splitTimeArray[2]
-          if(DateDataArray[i] == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
+          if(date_format_yyyy_m_d_to_yyyy_mm_dd(DateDataArray[i],'-') == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
               for(var j=0; j<durTime; j++){
                 var time = Number(targetTime)+j
                 $('#'+(time)+'g'+option).addClass(cssClass)
               }
-          }else if(DateDataArray[i] == date && durTime==1){ //수업시간이 1시간짜리일때 칸 채우기
+          }else if(date_format_yyyy_m_d_to_yyyy_mm_dd(DateDataArray[i],'-') == date && durTime==1){ //수업시간이 1시간짜리일때 칸 채우기
               $('#'+targetTime+'g'+option).addClass(cssClass)
           }
         }
@@ -1237,7 +1227,6 @@ $(document).ready(function(){
         var len = offAddOkArray.length;
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
-        console.log(offAddOkArray,'offAddOkArray')
        if(substr>1){
           var fininfo = Number(selectedTime)+1
           if(fininfo>12){
@@ -1646,7 +1635,6 @@ function addPtMemberListSet(){
 
 //PT, OFF추가하는 모바일,PC팝업 선택사항을 초기화
 function clear_pt_off_add_popup(){
-    console.log('clear popup')
     //핑크체크를 원래대로 검정 체크로 돌린다(모바일)
     $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
     //submitButton 초기화
