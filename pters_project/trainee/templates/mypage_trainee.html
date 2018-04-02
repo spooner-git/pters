@@ -184,7 +184,7 @@
             $('#upbutton').attr('onclick',"location.href='{% url 'trainee:cal_month'%}'")
             $('#upbutton img').attr('src','/static/user/res/icon-setting-arrow.png').css({'transform':'rotate(180deg)','height':'20px','width':'unset'})
             if('{{next_schedule_start_dt }}'.length>0){
-              var trainee_next_schedule = db_datatimehangul_format_realign('{{next_schedule_start_dt }}')
+              var trainee_next_schedule = date_format_to_user_hangul('{{next_schedule_start_dt }}')
             }else{
               var trainee_next_schedule = "일정이 없습니다."
             }

@@ -86,17 +86,17 @@ var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 var multiLanguage = { 'KOR':
                       {'DD':'매일', 'WW':'매주', '2W':'격주',
                        'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
-                       'WeekSmpl':['일','월','화','수','목','금','토']
+                       "WeekSmpl":['일','월','화','수','목','금','토']
                       },
                       'JAP':
                       {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
                        'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日',
-                       'WeekSmpl':['日','月','火','水','木','金','土']
+                       "WeekSmpl":['日','月','火','水','木','金','土']
                       },
-                      'JAP':
+                      'ENG':
                       {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
                        'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat',
-                       'WeekSmpl':['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+                       "WeekSmpl":['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
                       },
                      }
 
@@ -146,10 +146,10 @@ function date_format_to_hangul(yyyymmdd){
 
 //데이트가 2018-08-23 10:00:00 을 2018년 8월 23일(수) 10:00:00
 function date_format_to_user_hangul(yyyy_mm_dd){
-  var date = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일'
-  var day =  ' ('+multiLanguage[Options.language]['WeekSmpl'][new Date(yyyy_mm_dd).getDay()]+') '
-  var time = yyyy_mm_dd.split(' ')[1]
-  return date+day+time
+  var dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일'
+  var day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') '
+  var time = yyyy_mm_dd.split(' ')[1].substr(0,5)
+  return dates+day+time
 }
 
 //2018년 8월 23일 --->> 20180823 , 2018-08-23 등 특수문자 Split형식으로
