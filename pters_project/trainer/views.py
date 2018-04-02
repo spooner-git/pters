@@ -529,45 +529,14 @@ def get_member_data(context, class_id, member_id):
     return context
 
 
-class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'alarm.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(AlarmView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        error = None
-
-        if error is None:
-            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
-            log_data.order_by('-reg_dt')
-
-        if error is None:
-            for log_info in log_data:
-                if log_info.read == 0:
-                    log_info.log_read = 0
-                    log_info.read = 1
-                    log_info.save()
-                elif log_info.read == 1:
-                    log_info.log_read = 1
-                else:
-                    log_info.log_read = 2
-
-            context['log_data'] = log_data
-
-        return context
-
-
-class AlarmTestView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
+class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
     context_object_name = "log_data"
-    template_name = "alarm_test.html"
-    page_template = 'alarm_test_page.html'
+    template_name = "alarm.html"
+    page_template = 'alarm_page.html'
 
     def get_queryset(self):
-        # context = super(AlarmTestView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
-        # page_template =
         log_data = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
@@ -584,8 +553,7 @@ class AlarmTestView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                     log_info.log_read = 1
                 else:
                     log_info.log_read = 2
-
-        # context['log_data'] = log_data
+                log_info.reg_dt = str(log_info.reg_dt).split('.')[0]
 
         return log_data
 
@@ -608,34 +576,6 @@ def entry_index(
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
-
-
-class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'alarm_data_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(AlarmViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        error = None
-
-        if error is None:
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
-            log_data.order_by('-reg_dt')
-
-        if error is None:
-            for log_info in log_data:
-                if log_info.read == 0:
-                    log_info.log_read = 0
-                    log_info.read = 1
-                    log_info.save()
-                elif log_info.read == 1:
-                    log_info.log_read = 1
-                else:
-                    log_info.log_read = 2
-
-            context['log_data'] = log_data
-
-        return context
 
 
 class TrainerSettingView(AccessTestMixin, TemplateView):
@@ -1381,7 +1321,7 @@ def resend_member_lecture_info_logic(request):
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강 정보', log_how='재요청',
+                         log_info='수강 정보 연동', log_how='재요청',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
 
@@ -1537,7 +1477,7 @@ def update_member_lecture_view_info_logic(request):
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='회원 연동', log_how='수정',
+                         log_info='수강 정보 연동', log_how='수정',
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
 
         log_data.save()

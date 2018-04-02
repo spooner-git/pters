@@ -1,105 +1,16 @@
-{% extends "trainer_base_alarm.html" %}
+<h2>Entries:</h2>
+{% include page_template %}
 {% load static_url %}
 
-{% block local_css %}
-        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.alarm.css" %}>
-{% endblock %}
-
-
-
-{% block content %}
-  <form action="{% url 'trainer:alarm_delete' %}" id="alarm-delete-form" method="post">
-    {% csrf_token %}
-      <input type="hidden" name="log_id_size" value = "{{ log_data|length }}">
-      {% for log_data_detail in log_data %}
-          <input type="hidden" name="log_id_array[]" value ="{{ log_data_detail.log_id }}">
-      {% endfor %}
-    <input type="hidden" name="next_page" value = '{% url 'trainer:alarm' %}'>
-  </form>
-<!--
-<div class="alarmBox">
-  <div id="modifyInfo">
-      <img id="bell" src="/static/user/res/alarm/icon-alarm-new.png"> <span>%DB.Name%</span>님이 일정을 <span class="status">변경</span>했습니다.<span class="timePast">2017년 10월 30일 10:50 오후</span>
-  </div>
-  <div id="beforeInfo">2017년 11월 30일 월요일 오전 07:00 - 오전 08:30</div>
-  <div style="text-align: center"><img id="arrow" src="/static/user/res/alarm/icon-down-black.png"></div>
-  <div id="afterInfo">2017년 11월 30일 월요일 오후 08:00 - 오후 09:30</div>
-</div>
--->
-
-    {% for log_data_detail in log_data %}
-
-<div class="alarmBox {% if log_data_detail.log_read == 0 %}unreadAlarm {% endif %}" >  <!-- 알림 박스 -->
-  <div id="modifyInfo">
-      {% if log_data_detail.log_read == 0 %}
-        <img id="bell" src="/static/user/res/alarm/icon-alarm-new.png">
-      {% endif %}
-      {% autoescape off %}{{ log_data_detail.log_contents }}{% endautoescape %}
-      <span class="timePast" >
-        <script>
-          var date = new Date();
-          var currentMonth = date.getMonth()+1; //달은 0부터 출력해줌 0~11
-          var currentDate = date.getDate(); //오늘 날짜
-          var currentDay = date.getDay(); // 0,1,2,3,4,5,6,7
-          var currentHour = date.getHours();
-          var currentMin = date.getMinutes();
-          var date = '{{ log_data_detail.reg_date }}'
-          var dateInfo = date.replace(/년 |월 |일 |:| /gi,"_")
-          var dateInfoArry = dateInfo.split('_')
-
-          var hourInfo = currentHour - dateIEnfoArry[3];  //12시 - 11시 1시간
-          var minInfo = currentMin - dateInfoArry[4]
-          var dayInfo = currentDate - dateInfoArry[2]    // 30일 - 20일//  2일 28일
-          var monthInfo = currentMonth - dateInfoArry[1] //11월 - 10월 1
-          if(dateInfoArry[5]=='오후' && dateInfoArry[3] !=12){
-            var hourInfo = currentHour - dateInfoArry[3] + 12
-          }
-          console.log(dayInfo)
-          if(hourInfo<=1 && minInfo<=60 && dayInfo==0){
-            var timeInfo = minInfo + (hourInfo * 60)+'분 전'
-          }else if(hourInfo>1 && dayInfo==0 && monthInfo==0){
-            var timeInfo = hourInfo+'시간 전'
-          }else if(dayInfo>0 && monthInfo==0){
-            var timeInfo = dayInfo +'일 전'
-          }else if(dayInfo<0 && monthInfo==1){
-            var timeInfo = dayInfo+31+'일 전'
-          }else if(monthInfo>0){
-            var timeInfo = monthInfo+'달 전'
-          }
-          
-          document.write(timeInfo)
-        </script>
-      </span>
-  </div>
-    {% if log_data_detail.log_type == 2 %}
-        <div id="beforeInfo">{{ log_data_detail.log_before_date }}</div>
-          <div style="text-align: center"><img id="arrow" src="/static/user/res/alarm/icon-down-black.png"></div>
-    {% endif %}
-    <div id="afterInfo">{{ log_data_detail.log_after_date }}</div>
-</div>
-    {% endfor %}
-
-{% endblock %}
-
-
-{% block local_js_footer %}
-    <!-- Bootstrap core JavaScript
-        ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.alarm.js" %}></script>
-
+{% block js %}
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="{% static_url "common/js/el-pagination.js" %}"></script>
     <script>
-      var logIdArray = [{% for log_info in log_data %}"{{ log_data.log_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logTypeArray = [{% for log_info in log_data %}"{{ log_data.log_type }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logAuthMemberIdArray = [{% for log_info in log_data %}"{{ log_data.auth_member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logFromMemberNameArray = [{% for log_info in log_data %}"{{ log_data.from_member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logToMemberNameArray = [{% for log_info in log_data %}"{{ log_data.to_member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logClassTbIdArray = [{% for log_info in log_data %}"{{ log_data.class_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logLectureTbIdArray = [{% for log_info in log_data %}"{{ log_data.lecture_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logInfoArray = [{% for log_info in log_data %}"{{ log_data.log_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logHowArray = [{% for log_info in log_data %}"{{ log_data.log_how }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logDetailArray = [{% for log_info in log_data %}"{{ log_data.log_detail }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logRegDtArray = [{% for log_info in log_data %}"{{ log_data.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var logReadArray = [{% for log_info in log_data %}"{{ log_data.read }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+        $.endlessPaginate({
+            paginateOnScroll: true,
+            paginateOnScrollMargin: 10
+        });
+
     </script>
 {% endblock %}
