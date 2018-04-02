@@ -816,6 +816,8 @@ $(document).ready(function(){
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classNameArray,'class')
+	console.log('112',classDateArray)
+	console.log('222',classNameArray)
 	DBdataProcessMonthTrainer(); //트레이너 월간일정에서 날짜별 PT갯수 표기를 위함
 
 	//dateDisabled(); //PT 불가 일정에 회색 동그라미 표시

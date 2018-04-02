@@ -328,7 +328,7 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
     var endlength = endarray.length;
     var resultarray = []
 
-      //2018-08-15 09:00:00
+    //2018-08-15 09:00:00
     for(i=0;i<classTimeLength; i++){
       if(startarray[i].split(' ').length>1){
           var sdate = startarray[i].split(' ')[0].split('-')
@@ -345,32 +345,36 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
           var edate = endarray[i].split(' ')[0].split('-')
           var etime = ''
       }
+
+      var sYear = Number(sdate[0])
+      var sMonth = Number(sdate[1])
+      var sDate = Number(sdate[2])
+      var sHour = Number(stime[0])
+      var sMinute = stime[1]
+
+      var eHour = Number(etime[0])
+      var eMinute = etime[1]
       
 
       //["2017", "10", "7", "6", "00", "오전"]
 
       var dura = etime[0] - stime[0];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
-      /*
-      if(dura>0){
-        startSplitArray[5] = String(dura) 
-      }else{
-        startSplitArray[5] = String(dura+24)
-      }
-      */
+
 
       if(option=="class"){
-        result.push(sdate[0]+"_"+sdate[1]+"_"+sdate[2]+"_"+stime[0]+"_"+stime[1]+"_"+dura+"_"+classTimeArray_member_name[i]+"_"+etime[0]+"_"+etime[1]);
+        result.push(sYear+"_"+sMonth+"_"+sDate+"_"+sHour+"_"+sMinute+"_"+dura+"_"+classTimeArray_member_name[i]+"_"+eHour+"_"+eMinute);
       }else if(option=="off"){
-        result.push(sdate[0]+"_"+sdate[1]+"_"+sdate[2]+"_"+stime[0]+"_"+stime[1]+"_"+dura+"_"+"OFF"+"_"+etime[0]+"_"+etime[1]);   
+        result.push(sYear+"_"+sMonth+"_"+sDate+"_"+sHour+"_"+sMinute+"_"+dura+"_"+"OFF"+"_"+eHour+"_"+eMinute);   
       }else if(option=="member"){
-        result.push(startarray[i].replace(/_/gi,'_'));    
-        result2.push(stime[0]+":"+stime[1]);
+        result.push(sYear+'_'+sMonth+'_'+sDate);    
+        result2.push(sHour+":"+sMinute);
       }else if(option=="graph"){
-          result.push(sdate[0]+"-"+sdate[1]+"-"+sdate[2]); //2017_10_7
-          result2.push(stime[0]+"_"+stime[1] +"_"+ dura); //6_00_2  
+          result.push(sYear+"-"+sMonth+"-"+sDate); //2017_10_7
+          result2.push(sHour+"_"+sMinute +"_"+ dura); //6_00_2  
       }
     }
 }
+
 
 
 function scrollToDom(dom){
@@ -378,6 +382,23 @@ function scrollToDom(dom){
     $('body, html').animate({scrollTop : offset.top-180},10)
 }
 
+
+var multiLanguage = { 'KOR':
+                      {'DD':'매일', 'WW':'매주', '2W':'격주',
+                       'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
+                       'WeekSmpl':['일','월','화','수','목','금','토']
+                      },
+                      'JAP':
+                      {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                       'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日',
+                       'WeekSmpl':['日','月','火','水','木','金','土']
+                      },
+                      'JAP':
+                      {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                       'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat',
+                       'WeekSmpl':['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+                      },
+                     }
 
 
 

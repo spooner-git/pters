@@ -1677,9 +1677,9 @@ function open_member_info_popup_pc(userID){
     }else{
       var email = Data[userID].email
     }
-    var birth_year = Data[userID].birth.split(' ')[0]
-    var birth_month = Data[userID].birth.split(' ')[1]
-    var birth_date = Data[userID].birth.split(' ')[2]
+    var birth_year = Data[userID].birth.split('-')[0]
+    var birth_month = Data[userID].birth.split('-')[1]
+    var birth_date = Data[userID].birth.split('-')[2]
     if(Data[userID].birth == "None"){
       var birth_year = ""
     }
@@ -1744,9 +1744,9 @@ function open_member_info_popup_mobile(userID){
     $('#datepicker_info').val(Data[userID].start);
     $('#datepicker2_info').val(Data[userID].end);
 
-    var dropdown_year_selected = $('#birth_year_info option[data-year="'+Data[userID].birth.split(' ')[0]+'"]')
-    var dropdown_month_selected = $('#birth_month_info option[data-month="'+Data[userID].birth.split(' ')[1]+'"]')
-    var dropdown_date_selected = $('#birth_date_info option[data-date="'+Data[userID].birth.split(' ')[2]+'"]')
+    var dropdown_year_selected = $('#birth_year_info option[data-year="'+Data[userID].birth.split('-')[0]+'"]')
+    var dropdown_month_selected = $('#birth_month_info option[data-month="'+Data[userID].birth.split('-')[1]+'"]')
+    var dropdown_date_selected = $('#birth_date_info option[data-date="'+Data[userID].birth.split('-')[2]+'"]')
     dropdown_year_selected.prop('selected',true)
     dropdown_month_selected.prop('selected',true)
     dropdown_date_selected.prop('selected',true)
@@ -2264,9 +2264,10 @@ function draw_member_history_list_table(jsondata,targetHTML){
     var result_history_html = ['<div><div>수행일자</div><div>진행시간</div><div>구분</div><div>메모</div></div>']
     var stateCodeDict = {"PE":"완료","NP":"시작전"}
     for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
-        var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+db_datatimehangul_format_realign(jsondata.ptScheduleStartDtArray[i])+'</div>'
+        var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay()
+        var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleStartDtArray[i].split(' ')[0]+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
-        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+(Number(jsondata.ptScheduleEndDtArray[i].split(' ')[3].split(':')[0])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[3].split(':')[0]))+'시간</div>'
+        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+(Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]))+'시간</div>'
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
         result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
     }
