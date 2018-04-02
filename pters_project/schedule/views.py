@@ -78,13 +78,15 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
                 if repeat_id is None:
                     add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                    start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                                   state_cd='NP', note=note, en_dis_type=en_dis_type,
+                                                   state_cd='NP', note=note, member_note='', en_dis_type=en_dis_type,
+                                                   reg_member_id=user_id,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
                 else:
                     add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                    repeat_schedule_tb_id=repeat_id,
                                                    start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                                   state_cd='NP', note=note, en_dis_type=en_dis_type,
+                                                   state_cd='NP', note=note, member_note='', en_dis_type=en_dis_type,
+                                                   reg_member_id=user_id,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
                 add_schedule_info.save()
 
@@ -166,7 +168,8 @@ def delete_schedule_logic_func(schedule_info):
                                                    delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
                                                    state_cd=schedule_info.state_cd, note=schedule_info.note,
-                                                   en_dis_type=schedule_info.en_dis_type,
+                                                   en_dis_type=schedule_info.en_dis_type, member_note=schedule_info.member_note,
+                                                   reg_member_id=schedule_info.reg_member_id,
                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
 
                 delete_schedule.save()
@@ -729,6 +732,7 @@ def add_repeat_schedule_logic(request):
                                                 start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date_info,
                                                 start_time=repeat_schedule_time, time_duration=repeat_schedule_time_duration,
                                                 state_cd='NP', en_dis_type=en_dis_type,
+                                                reg_member_id=request.user.id,
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 
         repeat_schedule_info.save()
@@ -1066,6 +1070,7 @@ def delete_repeat_schedule_logic(request):
                                                                 start_time=repeat_schedule_info.start_time,
                                                                 time_duration=repeat_schedule_info.time_duration,
                                                                 state_cd=repeat_schedule_info.state_cd, en_dis_type=repeat_schedule_info.en_dis_type,
+                                                                reg_member_id=repeat_schedule_info.reg_member_id,
                                                                 reg_dt=repeat_schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
                 delete_repeat_schedule.save()
                 repeat_schedule_info.delete()
