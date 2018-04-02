@@ -63,9 +63,34 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                                                                     lecture_tb=lecture_info.lecture_id)
                 except ObjectDoesNotExist:
                     error = '수강 조회 정보를 불러오지 못했습니다.'
+
                 if lecture_auth_info is not None:
                     if lecture_auth_info.auth_cd == 'WAIT':
                         self.url = '/trainee/lecture_select/'
+                else:
+                    class_type_name = ''
+                    class_name = None
+                    try:
+                        class_name = CommonCdTb.objects.get(common_cd=lecture_info_data.class_tb_id.class_tb.subject_cd)
+                    except ObjectDoesNotExist:
+                        error = '강좌 과목 정보를 불러오지 못했습니다.'
+                    if error is None:
+                        if lecture_info_data.class_tb_id.subject_detail_nm is None or lecture_info_data.class_tb_id.subject_detail_nm == '':
+                            class_type_name = class_name.common_cd_nm
+                        else:
+                            class_type_name = lecture_info_data.class_tb_id.subject_detail_nm
+
+                    if error is None:
+                        self.request.session['class_type_name'] = class_type_name
+                    else:
+                        self.request.session['class_type_name'] = ''
+
+                    if error is None:
+                        if lecture_info_data.class_tb_id.center_tb is None or lecture_info_data.class_tb_id.center_tb == '':
+                            self.request.session['class_center_name'] = ''
+                        else:
+                            self.request.session['class_center_name'] = lecture_info_data.class_tb_id.center_tb.center_name
+
         else:
             class_id_comp = ''
             lecture_np_counter = 0
@@ -96,6 +121,35 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     self.url = '/trainee/lecture_select/'
                 else:
                     self.url = '/trainee/cal_month/'
+                    class_type_name = ''
+                    class_name = None
+
+                    try:
+                        class_info = ClassTb.objects.get(class_id=class_id_comp)
+                    except ObjectDoesNotExist:
+                        error = '강좌 정보를 불러오지 못했습니다.'
+
+                    if error is None:
+                        try:
+                            class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                        except ObjectDoesNotExist:
+                            error = '강좌 과목 정보를 불러오지 못했습니다.'
+                    if error is None:
+                        if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
+                            class_type_name = class_name.common_cd_nm
+                        else:
+                            class_type_name = class_info.subject_detail_nm
+
+                    if error is None:
+                        self.request.session['class_type_name'] = class_type_name
+                    else:
+                        self.request.session['class_type_name'] = ''
+
+                    if error is None:
+                        if class_info.center_tb is None or class_info.center_tb == '':
+                            self.request.session['class_center_name'] = ''
+                        else:
+                            self.request.session['class_center_name'] = class_info.center_tb.center_name
 
         return super(IndexView, self).get(request, **kwargs)
 
@@ -310,6 +364,35 @@ def lecture_processing(request):
         elif check == '0':
             request.session['class_id'] = class_id
             request.session['lecture_id'] = lecture_id
+            class_type_name = ''
+            class_name = None
+
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '강좌 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                try:
+                    class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                except ObjectDoesNotExist:
+                    error = '강좌 과목 정보를 불러오지 못했습니다.'
+            if error is None:
+                if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
+                    class_type_name = class_name.common_cd_nm
+                else:
+                    class_type_name = class_info.subject_detail_nm
+
+            if error is None:
+                request.session['class_type_name'] = class_type_name
+            else:
+                request.session['class_type_name'] = ''
+
+            if error is None:
+                if class_info.center_tb is None or class_info.center_tb == '':
+                    request.session['class_center_name'] = ''
+                else:
+                    request.session['class_center_name'] = class_info.center_tb.center_name
             # lecture_info.state_cd = 'IP'
             # lecture_info.member_view_state_cd = 'VIEW'
             lecture_info.auth_cd = 'VIEW'
@@ -317,6 +400,35 @@ def lecture_processing(request):
         elif check == '2':
             request.session['class_id'] = class_id
             request.session['lecture_id'] = lecture_id
+            class_type_name = ''
+            class_name = None
+
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '강좌 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                try:
+                    class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                except ObjectDoesNotExist:
+                    error = '강좌 과목 정보를 불러오지 못했습니다.'
+            if error is None:
+                if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
+                    class_type_name = class_name.common_cd_nm
+                else:
+                    class_type_name = class_info.subject_detail_nm
+
+            if error is None:
+                request.session['class_type_name'] = class_type_name
+            else:
+                request.session['class_type_name'] = ''
+
+            if error is None:
+                if class_info.center_tb is None or class_info.center_tb == '':
+                    request.session['class_center_name'] = ''
+                else:
+                    request.session['class_center_name'] = class_info.center_tb.center_name
 
     if error is None:
 
