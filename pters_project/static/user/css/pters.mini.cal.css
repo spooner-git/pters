@@ -15,6 +15,7 @@ div.ui-widget-header{
 	
 	text-align: center;
 	font-size: 13.5px;
+	cursor: pointer;
 }
 
 span.ui-datepicker-year{
