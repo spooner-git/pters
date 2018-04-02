@@ -69,12 +69,57 @@ $(document).ready(function(){
    $('.__alarm').click(function(){
       $('#alarm').css('transform','translate(-50%,0%)')
       $('#shade3').css('display','block')
+      $.ajax({
+              url: '/trainer/alarm/',
+              dataType : 'html',
+
+              beforeSend:function(){
+                //AjaxBeforeSend();
+              },
+
+              success:function(data){
+                  console.log(data)
+                  $('#alarm').html(data)
+              },
+
+              complete:function(){
+                //AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })
    })
 
    $('#alarm button').click(function(){
       $('#alarm').css('transform','translate(-50%,-200%)')
       $('#shade3').css('display','none')
+      $.ajax({
+              url: '/trainer/alarm/',
+              dataType : 'html',
+
+              beforeSend:function(){
+                //AjaxBeforeSend();
+              },
+
+              success:function(data){
+                  console.log(data)
+                  
+              },
+
+              complete:function(){
+                //AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })
    })
+
+
+
 
 });
 
