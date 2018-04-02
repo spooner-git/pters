@@ -708,6 +708,8 @@ class MyPageView(AccessTestMixin, TemplateView):
             if user_member_info.address is None:
                 user_member_info.address = '미입력'
 
+            user_member_info.reg_dt = str(user_member_info.reg_dt).split('.')[0]
+
         pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                      en_dis_type='1',
                                                      start_dt__gte=now, use=1).order_by('start_dt')
@@ -2714,10 +2716,10 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
                 lecture_info = lecture_list_info.lecture_tb
                 if idx == 0:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type='1', use=1).order_by('start_dt')
+                                                                 en_dis_type='1', use=1).order_by('-start_dt')
                 else:
                     pt_schedule_data |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                  en_dis_type='1', use=1).order_by('start_dt')
+                                                                  en_dis_type='1', use=1).order_by('-start_dt')
     if pt_schedule_data is not None and len(pt_schedule_data) > 0:
         for pt_schedule_info in pt_schedule_data:
             pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)

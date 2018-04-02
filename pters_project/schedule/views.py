@@ -817,6 +817,8 @@ def add_repeat_schedule_logic(request):
                                                         schedule_end_datetime, request.user.id,
                                                         lecture_id, '', en_dis_type,
                                                         repeat_schedule_info.repeat_schedule_id, class_id)
+                        if error is None:
+                            pt_schedule_input_counter += 1
                         '''
 
                         # 1시간 단위 날짜 값 셋팅
@@ -854,8 +856,6 @@ def add_repeat_schedule_logic(request):
                         error_date_message = error
                     else:
                         error_date_message = error_date_message + '/' + error
-                if error is None:
-                    pt_schedule_input_counter += 1
 
             else:
                 logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
