@@ -444,9 +444,16 @@
                 var stoptimeStart = ''
                 var stoptimeEnd = ''
              }
+
              if(worktime.length>0){
                 var worktimeStart = Number('{{ request.session.setting_trainer_work_time_available }}'.split(':')[0])
                 var worktimeEnd = Number('{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[0])
+                if('{{ request.session.setting_trainer_work_time_available }}'.split(':')[0] == '23' && '{{ request.session.setting_trainer_work_time_available }}'.split(':')[1] == '59'){
+                    var worktimeStart = 24
+                }
+                if('{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[0] == '23' && '{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[1] == '59' ){
+                    var worktimeEnd = 24
+                }
              }else{
                 var worktimeStart = ''
                 var worktimeEnd = ''
