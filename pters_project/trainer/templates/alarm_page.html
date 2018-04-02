@@ -1,5 +1,5 @@
 {% load el_pagination_tags %}
-{% paginate 5 log_data %}
+{% paginate 20 log_data %}
 {% for log_info in log_data %}
     {# your code to show the entry #}
     <div>
@@ -10,3 +10,4 @@
 {% endfor %}
 
 {% show_more "더보기" %}
+
