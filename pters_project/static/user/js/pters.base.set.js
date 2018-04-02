@@ -66,9 +66,13 @@ $(document).ready(function(){
    }
 
 
-   $('.__alarm').click(function(){
+   $('.__alarm, #upbutton-alarm').click(function(){
       $('#alarm').css('transform','translate(-50%,0%)')
-      $('#shade3').css('display','block')
+      if($('body').width()>600){
+          $('#shade3').css('display','block')
+      }else{
+          $('#shade').css('display','block')
+      }
       $.ajax({
               url: '/trainer/alarm/',
               dataType : 'html',
@@ -79,7 +83,7 @@ $(document).ready(function(){
 
               success:function(data){
                   console.log(data)
-                  $('#alarm').html(data)
+                  $('#alarm div').html(data)
               },
 
               complete:function(){
@@ -94,28 +98,11 @@ $(document).ready(function(){
 
    $('#alarm button').click(function(){
       $('#alarm').css('transform','translate(-50%,-200%)')
-      $('#shade3').css('display','none')
-      $.ajax({
-              url: '/trainer/alarm/',
-              dataType : 'html',
-
-              beforeSend:function(){
-                //AjaxBeforeSend();
-              },
-
-              success:function(data){
-                  console.log(data)
-                  
-              },
-
-              complete:function(){
-                //AjaxCompleteSend();
-              },
-
-              error:function(){
-                console.log('server error')
-              }
-            })
+      if($('body').width()>600){
+          $('#shade3').css('display','none')
+      }else{
+          $('#shade').css('display','none')
+      }
    })
 
 
