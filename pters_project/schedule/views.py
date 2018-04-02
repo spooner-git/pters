@@ -285,8 +285,8 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
                                                       start_dt__lt=end_date)
         for off_schedule_datum in off_schedule_data:
             off_schedule_id.append(off_schedule_datum.schedule_id)
-            off_schedule_start_datetime.append(off_schedule_datum.start_dt)
-            off_schedule_end_datetime.append(off_schedule_datum.end_dt)
+            off_schedule_start_datetime.append(str(off_schedule_datum.start_dt))
+            off_schedule_end_datetime.append(str(off_schedule_datum.end_dt))
             if off_schedule_datum.note is None:
                 off_schedule_note.append('')
             else:
@@ -314,8 +314,8 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
                 pt_schedule_lecture_id.append(lecture_datum.lecture_id)
                 pt_schedule_member_name.append(member_data.name)
                 pt_schedule_member_id.append(member_data.member_id)
-                pt_schedule_start_datetime.append(pt_schedule_datum.start_dt)
-                pt_schedule_end_datetime.append(pt_schedule_datum.end_dt)
+                pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
+                pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
                 if pt_schedule_datum.note is None:
                     pt_schedule_note.append('')
                 else:

@@ -409,7 +409,7 @@ def get_member_data(context, class_id, member_id):
                             else:
                                 if member_data.start_date > lecture_info.start_date:
                                     member_data.start_date = lecture_info.start_date
-                            if member_data.end_date is None or member_data.start_date == '':
+                            if member_data.end_date is None or member_data.end_date == '':
                                 member_data.end_date = lecture_info.end_date
                             else:
                                 if member_data.end_date < lecture_info.end_date:
@@ -435,6 +435,10 @@ def get_member_data(context, class_id, member_id):
                         member_data.birthday_dt = ''
                         member_data.phone = ''
 
+                member_data.start_date = str(member_data.start_date)
+                member_data.end_date = str(member_data.end_date)
+                member_data.mod_dt = str(member_data.mod_dt)
+                member_data.birthday_dt = str(member_data.birthday_dt)
                 member_list.append(member_data)
 
             if lecture_finish_check > 0:
@@ -512,6 +516,11 @@ def get_member_data(context, class_id, member_id):
                         member_data_finish.sex = ''
                         member_data_finish.birthday_dt = ''
                         member_data_finish.phone = ''
+
+                member_data_finish.start_date = str(member_data_finish.start_date)
+                member_data_finish.end_date = str(member_data_finish.end_date)
+                member_data_finish.mod_dt = str(member_data_finish.mod_dt)
+                member_data_finish.birthday_dt = str(member_data_finish.birthday_dt)
                 member_finish_list.append(member_data_finish)
 
         context['member_data'] = member_list
@@ -752,6 +761,8 @@ class MyPageView(AccessTestMixin, TemplateView):
         if error is None:
             if user_member_info.birthday_dt is None:
                 user_member_info.birthday_dt = '미입력'
+            else:
+                user_member_info.birthday_dt = str(user_member_info.birthday_dt)
             if user_member_info.country is None:
                 user_member_info.country = '미입력'
             if user_member_info.address is None:
@@ -764,8 +775,8 @@ class MyPageView(AccessTestMixin, TemplateView):
             next_schedule_start_dt = pt_schedule_data[0].start_dt
             next_schedule_end_dt = pt_schedule_data[0].end_dt
 
-        context['next_schedule_start_dt'] = next_schedule_start_dt
-        context['next_schedule_end_dt'] = next_schedule_end_dt
+        context['next_schedule_start_dt'] = str(next_schedule_start_dt)
+        context['next_schedule_end_dt'] = str(next_schedule_end_dt)
         context['member_info'] = user_member_info
         context['end_schedule_num'] = end_schedule_num
         context['center_name'] = center_name
@@ -900,6 +911,8 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
         if error is None:
             if user_member_info.birthday_dt is None:
                 user_member_info.birthday_dt = '미입력'
+            else:
+                user_member_info.birthday_dt = str(user_member_info.birthday_dt)
             if user_member_info.country is None:
                 user_member_info.country = '미입력'
             if user_member_info.address is None:
@@ -1762,7 +1775,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 member.sex = ''
                 member.birthday_dt = ''
                 member.phone = ''
-
+        member.birthday_dt = str(member.birthday_dt)
         context['member_info'] = member
         if error is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -2751,10 +2764,9 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
 
     # 수강 정보 불러 오기
     if error is None:
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__state_cd='IP',
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                      lecture_tb__member_id=member_id,
                                                      lecture_tb__use='1', auth_cd='VIEW', use=1)
-
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
@@ -2762,10 +2774,16 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
                 lecture_info = lecture_list_info.lecture_tb
                 if idx == 0:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type='1', use=1)
+                                                                 en_dis_type='1', use=1).order_by('start_dt')
                 else:
                     pt_schedule_data |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                  en_dis_type='1', use=1)
+                                                                  en_dis_type='1', use=1).order_by('start_dt')
+    if pt_schedule_data is not None and len(pt_schedule_data) > 0:
+        for pt_schedule_info in pt_schedule_data:
+            pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
+            pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
+            pt_schedule_info.mod_dt = str(pt_schedule_info.mod_dt)
+            pt_schedule_info.reg_dt = str(pt_schedule_info.reg_dt)
 
     context['pt_schedule_data'] = pt_schedule_data
 
