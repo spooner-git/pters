@@ -260,18 +260,36 @@
           $('#id_setting_trainer_work_time').val(worktime)
           if(Options.workStartTime>12){
             var worktimestart = Number(Options.workStartTime)-12
-            $("#workTimehourSelect button").addClass("dropdown_selected").text('오후'+worktimestart+"시").val(Options.workStartTime);
+            var scale = "오후"
+            if(Options.workStartTime == 24){
+              var scale = '오전'
+              var worktimestart = 12  
+            }
+            $("#workTimehourSelect button").addClass("dropdown_selected").text(scale+worktimestart+"시").val(Options.workStartTime);
             fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'))
           }else{
-            $("#workTimehourSelect button").addClass("dropdown_selected").text('오전'+Options.workStartTime+"시").val(Options.workStartTime);
+            var scale = "오전"
+            if(Options.workStartTime == 12){
+              var scale = "오후"
+            }
+            $("#workTimehourSelect button").addClass("dropdown_selected").text(scale+Options.workStartTime+"시").val(Options.workStartTime);
             fill_dropdown_reserve_endtime($('#workTimehourSelect button').val(),$('#ulWorkTimes2'))
           }
 
           if(Options.workEndTime>12){
             var worktimeend = Number(Options.workEndTime)-12
-            $("#workTimehourSelect2 button").addClass("dropdown_selected").text('오후'+worktimeend+"시").val(Options.workEndTime);
+            var scale = "오후"
+            if(Options.workEndTime == 24){
+              var scale = '오전'
+              var worktimeend = 12  
+            }
+            $("#workTimehourSelect2 button").addClass("dropdown_selected").text(scale+worktimeend+"시").val(Options.workEndTime);
           }else{
-            $("#workTimehourSelect2 button").addClass("dropdown_selected").text('오전'+Options.workEndTime+"시").val(Options.workEndTime);
+            var scale = "오전"
+            if(Options.workEndTime == 12){
+              var scale = "오후"
+            }
+            $("#workTimehourSelect2 button").addClass("dropdown_selected").text(scale+Options.workEndTime+"시").val(Options.workEndTime);
           }
           /*업무 시간 설정 DB저장값으로 초기셋팅*/
 

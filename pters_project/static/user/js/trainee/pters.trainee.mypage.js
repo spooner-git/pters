@@ -145,4 +145,5 @@ $(document).ready(function(){
 	    $('._Repeat_Info span').text(trainee_repeat_end)
     }
 
+
 });//document(ready)

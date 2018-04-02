@@ -1159,7 +1159,7 @@ $(document).ready(function(){
 				}
 			}
 		}
-
+		
 		for(var i=0; i<summaryArrayResult.length; i++){
 			var splited = summaryArrayResult[i].split("_")
 			var yy = splited[0];

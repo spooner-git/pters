@@ -487,6 +487,7 @@ $(document).ready(function(){
 	};
 
 	function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
+		console.log(classDateArray)
 		for(var i=0; i<classDateArray.length; i++){
 			var finish = scheduleFinishArray[i]
 			var memo = scheduleNoteArray[i]
@@ -578,56 +579,6 @@ $(document).ready(function(){
 				}
 			}
 		}	
-	}
-	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
-
-	function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
-		//DB데이터 가공
-		var classTimeLength = startarray.length
-    	var startlength = startarray.length;
-    	var endlength = endarray.length;
-    	var resultarray = []
-
-    	for(i=0;i<classTimeLength; i++){
-    		var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
-    		var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
-    		var startSplitArray= start.split("_"); 
-    		var endSplitArray = end.split("_");
-    		//["2017", "10", "7", "6", "00", "오전"]
-   
-    		if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
-    			startSplitArray[3] = String(Number(startSplitArray[3])+12);
-    		}
-
-    		if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
-    			endSplitArray[3] = String(Number(endSplitArray[3])+12);	
-    		}
-
-    		var memberClassDur = endSplitArray[3] - startSplitArray[3]
-    	
-    		startSplitArray[5] = String(endSplitArray[3] - startSplitArray[3])
-    		if(option=="class"){
-    			startSplitArray.push(classTimeArray_member_name[i])	
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
-    		}else if(option=="off"){
-    			startSplitArray.push(classTimeArray_member_name[i])	
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);		
-    		}else if(option=="member"){
-    			result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);		
-    			result2.push(startSplitArray[3]+":"+startSplitArray[4]);
-    		}else if(option=="graph"){
-              var mm = startSplitArray[1]
-              var dd = startSplitArray[2]
-              if(mm.length<2){
-                var mm = '0'+startSplitArray[1]
-              }
-              if(dd.length<2){
-                var dd = '0'+startSplitArray[2]
-              }
-              result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
-              result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2  
-          }	
-  	    }
 	}
 
 	function ad_month(selector){ // 월간 달력 하단에 광고
@@ -806,6 +757,7 @@ $(document).ready(function(){
         console.log(offAddOkArray)
     }
 
+    /*
     function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
     	//DB데이터 가공
       var classTimeLength = startarray.length
@@ -866,6 +818,7 @@ $(document).ready(function(){
         }
       }
     }
+    */
 
     function timeGraphSet(option, CSStheme, Page){ //가능 시간 그래프 채우기
         //1. option인자 : "class", "off"
