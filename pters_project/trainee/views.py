@@ -1198,8 +1198,6 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                 # lecture schedule 에 해당하는 lecture id 셋팅
                 pt_schedule_lecture_id.append(pt_schedule_datum.lecture_tb_id)
                 pt_schedule_member_name.append(user_name)
-                pt_schedule_start_datetime.append(pt_schedule_datum.start_dt)
-                pt_schedule_end_datetime.append(pt_schedule_datum.end_dt)
 
                 if pt_schedule_datum.start_dt > now:
                     if next_schedule_start_dt is '':
@@ -1208,6 +1206,9 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                     elif next_schedule_start_dt > pt_schedule_datum.start_dt:
                         next_schedule_start_dt = pt_schedule_datum.start_dt
                         next_schedule_end_dt = pt_schedule_datum.end_dt
+
+                pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
+                pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
 
                 if pt_schedule_datum.note is None:
                     pt_schedule_note.append('')
@@ -1235,8 +1236,8 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                                                           start_dt__gte=start_date,
                                                           start_dt__lt=end_date)
             for off_schedule_datum in off_schedule_data:
-                off_schedule_start_datetime.append(off_schedule_datum.start_dt)
-                off_schedule_end_datetime.append(off_schedule_datum.end_dt)
+                off_schedule_start_datetime.append(str(off_schedule_datum.start_dt))
+                off_schedule_end_datetime.append(str(off_schedule_datum.end_dt))
 
     holiday = HolidayTb.objects.filter(use=1)
 
@@ -1262,15 +1263,15 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
     context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
 
-    context['next_schedule_start_dt'] = next_schedule_start_dt
-    context['next_schedule_end_dt'] = next_schedule_end_dt
+    context['next_schedule_start_dt'] = str(next_schedule_start_dt)
+    context['next_schedule_end_dt'] = str(next_schedule_end_dt)
     context['lecture_info'] = lecture_list
     context['class_info'] = class_info
     context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
     context['lecture_avail_count'] = lecture_avail_count_sum
-    context['pt_start_date'] = pt_start_date
-    context['pt_end_date'] = pt_end_date
+    context['pt_start_date'] = str(pt_start_date)
+    context['pt_end_date'] = str(pt_end_date)
     context['holiday'] = holiday
 
     return context

@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),
     url(r'^delete_member_lecture_info/$', views.delete_member_lecture_info_logic, name='delete_member_lecture_info'),
 
+    # 회원정보로 스케쥴 정보 list 조회
     url(r'^read_trainee_schedule_ajax/$', views.ReadTraineeScheduleViewAjax.as_view(), name='read_trainee_schedule_ajax'),
 
     # 회원정보로 강좌 정보 list 조회
