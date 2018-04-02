@@ -83,7 +83,22 @@ $(document).ready(function(){
 var date = new Date();
 var currentYear = date.getFullYear(); //현재 년도
 var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-
+var multiLanguage = { 'KOR':
+                      {'DD':'매일', 'WW':'매주', '2W':'격주',
+                       'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
+                       'WeekSmpl':['일','월','화','수','목','금','토']
+                      },
+                      'JAP':
+                      {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                       'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日',
+                       'WeekSmpl':['日','月','火','水','木','金','土']
+                      },
+                      'JAP':
+                      {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                       'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat',
+                       'WeekSmpl':['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+                      },
+                     }
 
 //데이트가 2018-08-23 혹은 20180823 혹은 2018_08_23 혹은 2018-8-23 으로 들어왔을때 2018년 8월 23일 로 출력
 function date_format_to_hangul(yyyymmdd){   
@@ -127,6 +142,14 @@ function date_format_to_hangul(yyyymmdd){
          var hangul_result = hangul_year +'년 ' + hangul_month +'월 '+ hangul_date + '일'
       }
       return hangul_result
+}
+
+//데이트가 2018-08-23 10:00:00 을 2018년 8월 23일(수) 10:00:00
+function date_format_to_user_hangul(yyyy_mm_dd){
+  var date = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일'
+  var day =  ' ('+multiLanguage[Options.language]['WeekSmpl'][new Date(yyyy_mm_dd).getDay()]+') '
+  var time = yyyy_mm_dd.split(' ')[1]
+  return date+day+time
 }
 
 //2018년 8월 23일 --->> 20180823 , 2018-08-23 등 특수문자 Split형식으로
@@ -383,22 +406,7 @@ function scrollToDom(dom){
 }
 
 
-var multiLanguage = { 'KOR':
-                      {'DD':'매일', 'WW':'매주', '2W':'격주',
-                       'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
-                       'WeekSmpl':['일','월','화','수','목','금','토']
-                      },
-                      'JAP':
-                      {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
-                       'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日',
-                       'WeekSmpl':['日','月','火','水','木','金','土']
-                      },
-                      'JAP':
-                      {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
-                       'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat',
-                       'WeekSmpl':['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
-                      },
-                     }
+
 
 
 
