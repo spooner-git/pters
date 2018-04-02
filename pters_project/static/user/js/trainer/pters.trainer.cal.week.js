@@ -1625,7 +1625,7 @@ $(document).ready(function(){
 			var tdOff = $("#"+offStart);
 			tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
 			
-			tdOffStart.attr('off-time',indexArray).attr('schedule-id',offScheduleIdArray[i]).attr('data-memo',memoArray).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
+			tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).attr('data-memo',memoArray).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
 		};
 		$('#calendar').css('display','block');
 	};

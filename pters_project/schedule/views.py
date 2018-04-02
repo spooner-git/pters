@@ -501,8 +501,8 @@ def add_schedule_logic(request):
 
 # 일정 삭제
 def delete_schedule_logic(request):
-    pt_schedule_id = request.POST.get('schedule_id')
-    off_schedule_id = request.POST.get('off_schedule_id')
+    pt_schedule_id = request.POST.get('schedule_id', '')
+    off_schedule_id = request.POST.get('off_schedule_id', '')
     member_name = request.POST.get('member_name')
     en_dis_type = request.POST.get('en_dis_type')
     date = request.POST.get('date', '')
