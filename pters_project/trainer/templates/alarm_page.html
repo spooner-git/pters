@@ -12,7 +12,7 @@
      {{ log_info.log_info }}를 {{ log_info.log_how }} 했습니다.  {{ log_info.reg_dt }}
     <br/>
     </div>
-    <input type="hidden" name="log_id_array[]" value ="{{ log_info.log_id }}">
+    <input type="hidden" name="log_id_array[]" class="log_id_array" value ="{{ log_info.log_id }}">
 {% endfor %}
 
 {% show_more "더보기" %}

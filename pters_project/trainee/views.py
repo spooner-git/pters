@@ -1365,11 +1365,8 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
     page_template = 'trainee_alarm_page.html'
 
     def get_queryset(self):
-        # context = super(AlarmTestView, self).get_context_data(**kwargs)
         lecture_id = self.request.session.get('lecture_id', '')
-        # print(lecture_id)
         error = None
-        # page_template =
         log_data = None
 
         if lecture_id is None or lecture_id == '':
@@ -1394,6 +1391,5 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                 else:
                     log_info.log_read = 2
 
-        # context['log_data'] = log_data
 
         return log_data

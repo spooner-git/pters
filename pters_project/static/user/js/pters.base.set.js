@@ -67,30 +67,34 @@ $(document).ready(function(){
 
 
    $('.__alarm, #upbutton-alarm').click(function(){
-      $('#alarm').css('transform','translate(-50%,0%)')
+      $('#alarm').css('transform','translate(-50%,0%)');
       if($('body').width()>600){
-          $('#shade3').css('display','block')
+          $('#shade3').css('display','block');
       }else{
-          $('#shade').css('display','block')
+          $('#shade').css('display','block');
       }
-      $('#alarm div').html('<iframe src="/trainer/alarm/" width="540" height="400" frameborder="0"></iframe>')
-   })
+      $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="400" frameborder="0"></iframe>');
+   });
 
    $('#alarm button').click(function(){
-      $('#alarm').css('transform','translate(-50%,-200%)')
+      $('#alarm').css('transform','translate(-50%,-200%)');
       if($('body').width()>600){
-          $('#shade3').css('display','none')
+          $('#shade3').css('display','none');
       }else{
-          $('#shade').css('display','none')
+          $('#shade').css('display','none');
       }
-   })
-
-
-
+   });
 
 });
 
 
+$('#alarm_delete').click(function(){
+    var alarm_size = $('#alarm-iframe').contents().find(".log_id_array").length;
+    alert(alarm_size);
+    $('#alarm-iframe').contents().find("#log_id_size").val(alarm_size);
+    $('#alarm-iframe').contents().find("#alarm-delete-form").submit();
+
+});
 
 var date = new Date();
 var currentYear = date.getFullYear(); //현재 년도

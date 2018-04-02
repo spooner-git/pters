@@ -145,6 +145,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
 
     def post(self, request, *args, **kwargs):
         username = request.POST.get('username', '')
+        user_id = request.POST.get('id', '')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
         member_type = request.POST.get('member_type', '')
@@ -157,7 +158,10 @@ class ResendEmailAuthenticationView(RegistrationView, View):
         if error is None:
             if member_type == 'new':
                 if password is None or password == '':
-                    error = '비밀번호를 입력해주세요'
+                    error = '비밀번호를 입력해주세요.'
+                else:
+                    if len(password) < 8:
+                        error = '비밀번호는 8자 이상 입력햇주세요.'
 
         if error is None:
             if member_type == 'new':
@@ -165,9 +169,25 @@ class ResendEmailAuthenticationView(RegistrationView, View):
                     error = 'email을 입력해주세요'
 
         if error is None:
+            if member_type == 'id':
+                if email is None or email == '':
+                    error = 'id를 입력해주세요'
+
+        if error is None:
             if member_type == 'new':
                 try:
-                    User.objects.get(username=email)
+                    User.objects.get(username=user_id)
+                except ObjectDoesNotExist:
+                    error = '존재 하지 않음'
+                if error is None:
+                    error = '이미 가입된 ID 입니다.'
+                else:
+                    error = None
+
+        if error is None:
+            if member_type == 'new':
+                try:
+                    User.objects.get(email=email)
                 except ObjectDoesNotExist:
                     error = '존재 하지 않음'
                 if error is None:
@@ -184,7 +204,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
         if error is None:
             if member_type == 'new':
                 if error is None:
-                    user.username = email
+                    user.username = user_id
                     user.email = email
                     user.set_password(password)
                     user.save()
@@ -199,8 +219,10 @@ class ResendEmailAuthenticationView(RegistrationView, View):
                 error = 'ID가 존재하지 않습니다.'
 
         if error is not None:
-            logger.error(username+'['+email+']'+error)
+            logger.error(username+'->'+user_id+'['+email+']'+error)
             messages.error(request, error)
+        else:
+            logger.error(username+'->'+user_id+'['+email+'] 회원가입 완료')
 
         return render(request, self.template_name)
 
