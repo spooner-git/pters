@@ -52,7 +52,6 @@ $(document).ready(function(){
     $(document).on('click','.memberNameForInfoView',function(){
     	var clickedName = $(this).attr('data-name')
     	var scheduleComplete = $(this).attr('data-schedule-check')
-    	console.log(scheduleComplete)
     	$.ajax({
               url: '/trainer/member_manage_ajax/',
 			  dataType : 'html',
@@ -64,27 +63,27 @@ $(document).ready(function(){
               success:function(data){
               	$('#shade3,.popups').hide()
               	ajax_received_json_data_member_manage(data)
+              	var jsondata = JSON.parse(data)
               	DB=[]
               	DBe=[]
               	DataFormattingDict('name');
-		        //DataFormatting('current');
-		        if(scheduleComplete == 0){
+		        if(jsondata.nameArray.indexOf(clickedName)!=-1){
 		    		var Data = DB
-		    	}else if(scheduleComplete == 1){
+		    	}else if(jsondata.finishnameArray.indexOf(clickedName)!=-1){
 		    		var Data = DBe
 		    	}
 		        var userID = Data[clickedName].id
 		        DataFormattingDict('ID');
 		        if($('body').width()<600){
-		            open_member_info_popup_mobile(userID)
-		            get_indiv_repeat_info(userID)
-		            set_member_lecture_list()
-		            set_member_history_list()
+		            open_member_info_popup_mobile(userID,jsondata)
+		            get_indiv_repeat_info(userID,jsondata)
+		            set_member_lecture_list(jsondata)
+		            set_member_history_list(jsondata)
 		        }else if($('body').width()>=600){
-		            open_member_info_popup_pc(userID)
-		            get_indiv_repeat_info(userID)
-		            set_member_lecture_list()
-		            set_member_history_list()
+		            open_member_info_popup_pc(userID,jsondata)
+		            get_indiv_repeat_info(userID,jsondata)
+		            set_member_lecture_list(jsondata)
+		            set_member_history_list(jsondata)
 		            $('#info_shift_base, #info_shift_lecture').show()
 		            $('#info_shift_schedule, #info_shift_history').hide()
 		            $('#select_info_shift_lecture').css('color','#fe4e65')
@@ -511,7 +510,6 @@ $(document).ready(function(){
 
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		$('#popup_delete_btn_yes').click(function(){
-			console.log(addTypeSelect, deleteTypeSelect)
 			if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || deleteTypeSelect=='repeatinfodelete'){
 				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
 				$.ajax({
@@ -1407,7 +1405,6 @@ $(document).ready(function(){
 
 		for(var i=2; i<=8; i++){			
 			var dateID = swiperPage.find('.td00:nth-child('+i+')').attr('id').split('_');
-			//console.log(dateID)
 			var yy = dateID[0];
 			var mm = dateID[1];
 			var dd = dateID[2];

@@ -53,7 +53,7 @@ $(document).ready(function(){
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
     $(document).on('click','.memberNameForInfoView',function(){
     	var clickedName = $(this).attr('data-name')
-    	console.log(clickedName)
+    	var scheduleComplete = $(this).attr('data-schedule-check')
     	$.ajax({
               url: '/trainer/member_manage_ajax/',
 			  dataType : 'html',
@@ -65,20 +65,27 @@ $(document).ready(function(){
               success:function(data){
               	$('#shade3,.popups').hide()
               	ajax_received_json_data_member_manage(data)
+              	var jsondata = JSON.parse(data)
               	DB=[]
               	DBe=[]
               	DataFormattingDict('name');
-		        DataFormatting('current');
-		        var userID = DB[clickedName].id
+		        if(jsondata.nameArray.indexOf(clickedName)!=-1){
+		    		var Data = DB
+		    	}else if(jsondata.finishnameArray.indexOf(clickedName)!=-1){
+		    		var Data = DBe
+		    	}
+		        var userID = Data[clickedName].id
 		        DataFormattingDict('ID');
 		        if($('body').width()<600){
-		            open_member_info_popup_mobile(userID)
-		            get_indiv_repeat_info(userID)
-		            set_member_lecture_list()
+		            open_member_info_popup_mobile(userID,jsondata)
+		            get_indiv_repeat_info(userID,jsondata)
+		            set_member_lecture_list(jsondata)
+		            set_member_history_list(jsondata)
 		        }else if($('body').width()>=600){
-		            open_member_info_popup_pc(userID)
-		            get_indiv_repeat_info(userID)
-		            set_member_lecture_list()
+		            open_member_info_popup_pc(userID,jsondata)
+		            get_indiv_repeat_info(userID,jsondata)
+		            set_member_lecture_list(jsondata)
+		            set_member_history_list(jsondata)
 		            $('#info_shift_base, #info_shift_lecture').show()
 		            $('#info_shift_schedule, #info_shift_history').hide()
 		            $('#select_info_shift_lecture').css('color','#fe4e65')
@@ -563,7 +570,6 @@ $(document).ready(function(){
 				var mm = '0' + mm
 			}
 			var today_form = yyyy+'-'+ mm +'-'+"01"
-			console.log(today_form)
 
             $.ajax({
               url: '/trainer/cal_day_ajax/',
@@ -816,8 +822,6 @@ $(document).ready(function(){
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classNameArray,'class')
-	console.log('112',classDateArray)
-	console.log('222',classNameArray)
 	DBdataProcessMonthTrainer(); //트레이너 월간일정에서 날짜별 PT갯수 표기를 위함
 
 	//dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
