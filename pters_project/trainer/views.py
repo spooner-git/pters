@@ -175,6 +175,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
         self.request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
         self.request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        self.request.session['setting_member_reserve_date_available'] = context['lt_res_05']
         self.request.session['setting_language'] = context['lt_lan_01']
 
         self.request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
@@ -1943,6 +1944,8 @@ def update_setting_reserve_logic(request):
     setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '')
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition', '')
     setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '')
+    setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '')
+
     class_id = request.session.get('class_id', '')
 
     next_page = request.POST.get('next_page')
@@ -1952,6 +1955,7 @@ def update_setting_reserve_logic(request):
     lt_res_02 = None
     lt_res_03 = None
     lt_res_04 = None
+    lt_res_05 = None
 
     if error is None:
         if setting_member_reserve_time_available == '':
@@ -1962,6 +1966,8 @@ def update_setting_reserve_logic(request):
             setting_member_reserve_prohibition = '1'
         if setting_trainer_work_time_available == '':
             setting_trainer_work_time_available = '00:00-23:59'
+        if setting_member_reserve_date_available == '':
+            setting_member_reserve_date_available = '14'
 
     if error is None:
         try:
@@ -1980,6 +1986,10 @@ def update_setting_reserve_logic(request):
             lt_res_04 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_04')
         except ObjectDoesNotExist:
             lt_res_04 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_04', reg_dt=timezone.now(), use=1)
+        try:
+            lt_res_05 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_05')
+        except ObjectDoesNotExist:
+            lt_res_05 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_05', reg_dt=timezone.now(), use=1)
 
     if error is None:
         try:
@@ -2000,6 +2010,10 @@ def update_setting_reserve_logic(request):
                 lt_res_04.setting_info = setting_trainer_work_time_available
                 lt_res_04.save()
 
+                lt_res_05.mod_dt = timezone.now()
+                lt_res_05.setting_info = setting_member_reserve_date_available
+                lt_res_05.save()
+
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
@@ -2016,6 +2030,7 @@ def update_setting_reserve_logic(request):
         request.session['setting_member_reserve_time_available'] = setting_member_reserve_time_available
         request.session['setting_member_reserve_time_prohibition'] = setting_member_reserve_time_prohibition
         request.session['setting_trainer_work_time_available'] = setting_trainer_work_time_available
+        request.session['setting_member_reserve_date_available'] = setting_member_reserve_date_available
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
         #               + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
@@ -2269,11 +2284,16 @@ def get_trainer_setting_data(context, user_id, class_id):
         lt_res_04 = '00:00-23:59'
 
     try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_05', use=1)
+        lt_res_05 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_05 = '14'
+
+    try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_LAN_01', use=1)
         lt_lan_01 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_lan_01 = 'KOR'
-
 
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_01', use=1)
@@ -2309,6 +2329,7 @@ def get_trainer_setting_data(context, user_id, class_id):
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
     context['lt_res_04'] = lt_res_04
+    context['lt_res_05'] = lt_res_05
     context['lt_lan_01'] = lt_lan_01
 
     context['lt_pus_01'] = lt_pus_01

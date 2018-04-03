@@ -564,9 +564,9 @@ def pt_delete_logic(request):
     start_date = None
     end_date = None
     today = datetime.datetime.today()
-    fifteen_days_after = today + datetime.timedelta(days=15)
     disable_time = timezone.now()
     nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
+    reserve_avail_date = 14
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
@@ -582,10 +582,6 @@ def pt_delete_logic(request):
         end_date = schedule_info.end_dt
         if start_date < timezone.now():  # 강사 설정 시간으로 변경필요
             error = '이미 지난 일정입니다.'
-
-    if error is None:
-        if start_date >= fifteen_days_after:
-            error = '입력할 수 없는 날짜입니다.'
 
     if error is None:
         if schedule_info.state_cd == 'PE':
@@ -634,9 +630,16 @@ def pt_delete_logic(request):
         except ObjectDoesNotExist:
             lt_res_04 = '00:00-23:59'
 
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
+                                                      setting_type_cd='LT_RES_05', use=1)
+            lt_res_05 = int(setting_data_info.setting_info)
+        except ObjectDoesNotExist:
+            lt_res_05 = 14
+
         reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
         reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
-
+        reserve_avail_date = lt_res_05
         reserve_prohibition_time = lt_res_02
         reserve_stop = lt_res_03
 
@@ -650,12 +653,14 @@ def pt_delete_logic(request):
         if reserve_stop == '1':
             error = '강사 설정에 의해 현재 예약이 일시 정지 되어있습니다.'
 
+    avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
+
     if error is None:
         if lecture_info.member_id != str(request.user.id):
             error = '회원 정보가 일치하지 않습니다.'
 
     if error is None:
-        if start_date >= fifteen_days_after:
+        if start_date >= avail_end_date:
             error = '삭제할 수 없는 날짜입니다.'
 
     if error is None:
@@ -758,10 +763,9 @@ def pt_add_logic(request):
     start_date = None
     end_date = None
     today = datetime.datetime.today()
-    fifteen_days_after = today + datetime.timedelta(days=15)
     disable_time = timezone.now()
     nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
-
+    reserve_avail_date = 14
     if class_id is None or class_id == '':
         error = '강좌 정보를 불러오지 못했습니다.'
     if training_date == '':
@@ -806,7 +810,14 @@ def pt_add_logic(request):
             lt_res_03 = setting_data_info.setting_info
         except ObjectDoesNotExist:
             lt_res_03 = '0'
+
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id, setting_type_cd='LT_RES_05', use=1)
+            lt_res_05 = int(setting_data_info.setting_info)
+        except ObjectDoesNotExist:
+            lt_res_05 = 14
         reserve_stop = lt_res_03
+        reserve_avail_date = lt_res_05
 
         if reserve_prohibition_time != '':
             disable_time = disable_time + datetime.timedelta(hours=int(reserve_prohibition_time))
@@ -820,8 +831,10 @@ def pt_add_logic(request):
             if nowtime > reserve_avail_end_time:
                 error = '현재는 입력할수 없는 시간입니다.'
 
+    avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
+
     if error is None:
-        if start_date >= fifteen_days_after:
+        if start_date >= avail_end_date:
             error = '입력할 수 없는 날짜입니다.'
 
     if error is None:
@@ -1213,11 +1226,17 @@ def get_trainer_setting_data(context, user_id, class_id):
         lt_res_04 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_04 = '00:00-23:59'
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_05')
+        lt_res_05 = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_05 = '14'
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
     context['lt_res_04'] = lt_res_04
+    context['lt_res_05'] = lt_res_05
     return context
 
 
