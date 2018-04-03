@@ -136,12 +136,9 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                                                                    lecture_tb__state_cd='IP',
                                                                    lecture_tb__use=1,
                                                                    auth_cd='VIEW', use=1).order_by('-lecture_tb__start_date')
-
+                start_date = ''
                 if len(class_lecture_list) > 0:
                     total_member_num += 1
-                    if len(class_lecture_list) == 1:
-                        if month_first_day < class_lecture_list[0].lecture_tb.start_date < next_month_first_day:
-                            new_member_num += 1
 
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
@@ -150,6 +147,14 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                         member_lecture_reg_count += lecture_info.lecture_reg_count
                         member_lecture_rem_count += lecture_info.lecture_rem_count
                         member_lecture_avail_count += lecture_info.lecture_avail_count
+                        if start_date == '':
+                            start_date = lecture_info.start_date
+                        else:
+                            if start_date > lecture_info.start_date:
+                                start_date = lecture_info.start_date
+
+                    if month_first_day < start_date < next_month_first_day:
+                        new_member_num += 1
 
                     if 0 < member_lecture_rem_count < 4:
                         to_be_end_member_num += 1
@@ -449,7 +454,10 @@ def get_member_data(context, class_id, member_id):
                 member_data.start_date = str(member_data.start_date)
                 member_data.end_date = str(member_data.end_date)
                 member_data.mod_dt = str(member_data.mod_dt)
-                member_data.birthday_dt = str(member_data.birthday_dt)
+                if member_data.birthday_dt is None or member_data.birthday_dt == '':
+                    member_data.birthday_dt = ''
+                else:
+                    member_data.birthday_dt = str(member_data.birthday_dt)
                 member_list.append(member_data)
 
             if lecture_finish_check > 0:
@@ -531,7 +539,10 @@ def get_member_data(context, class_id, member_id):
                 member_data_finish.start_date = str(member_data_finish.start_date)
                 member_data_finish.end_date = str(member_data_finish.end_date)
                 member_data_finish.mod_dt = str(member_data_finish.mod_dt)
-                member_data_finish.birthday_dt = str(member_data_finish.birthday_dt)
+                if member_data_finish.birthday_dt is None or member_data_finish.birthday_dt == '':
+                    member_data_finish.birthday_dt = ''
+                else:
+                    member_data_finish.birthday_dt = str(member_data_finish.birthday_dt)
                 member_finish_list.append(member_data_finish)
 
         context['member_data'] = member_list
