@@ -183,7 +183,7 @@ $(document).ready(function(){
          }
      })
 
-
+    
     function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
         var memberSelect = $("#membersSelected button");
         var dateSelect = $("#dateSelector p");
@@ -236,6 +236,7 @@ $(document).ready(function(){
                 $('#page-addplan .submitBtn').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
+            console.log(select_all_check)
         }else if(addTypeSelect == "repeatoffadd"){
           console.log('add_repeat의 checkdropdown')
             if((repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
@@ -249,7 +250,8 @@ $(document).ready(function(){
                 select_all_check=false;
             }
         }
-      }
+    }
+
 
     function fill_repeat_info(option){ //반복일정 요약 채우기
           switch(option){
