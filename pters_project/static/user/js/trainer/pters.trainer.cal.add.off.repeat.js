@@ -17,7 +17,7 @@ $(document).ready(function(){
             $(this).find('.icons-next-button').addClass('rotate_90')
             check_dropdown_selected()
             if($('#membersSelected button').val().length == 0){
-              $('#offRepeatSummary').html('')
+              $('#offRepeatSummary').html('').hide()
             }
             console.log(addTypeSelect)
           }else if(addTypeSelect == "offadd"){
@@ -318,7 +318,12 @@ $(document).ready(function(){
           }
 
           var summaryText = '<span id="summaryText">일정요약</span>'
-          $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
+          if(schedulesHTML.length>0){
+            $('#offRepeatSummary').html(summaryText + schedulesHTML.join('')).show()
+          }else{
+            $('#offRepeatSummary').hide()
+          }
+          
         }
 
 

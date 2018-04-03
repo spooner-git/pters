@@ -336,7 +336,13 @@ $(document).ready(function(){
           }
 
           var summaryText = '<span id="summaryText">일정요약</span>'
-          $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
+          console.log(schedulesHTML)
+          if(schedulesHTML.length>0){
+            $('#offRepeatSummary').html(summaryText + schedulesHTML.join('')).show()
+          }else{
+            $('#offRepeatSummary').hide()
+          }
+
       }
 
       $(document).on('click','#starttimes li a',function(){
