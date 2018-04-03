@@ -1713,21 +1713,26 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 member = MemberTb.objects.get(user_id=user.id)
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
-                                                     lecture_tb__use=1, auth_cd='VIEW', use=1)
+        if error is None:
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
+                                                         lecture_tb__use=1, auth_cd='VIEW', use=1)
         lecture_count = 0
-        for lecture_info_data in lecture_list:
-            member_lecture_list = MemberLectureTb.objects.filter(member_id=user.id,
-                                                                 lecture_tb=lecture_info_data.lecture_tb_id,
-                                                                 auth_cd='VIEW', lecture_tb__use=1)
-            lecture_count += len(member_lecture_list)
 
-        if member.reg_info is None or member.reg_info == '':
-            if lecture_count == 0:
-                member.sex = ''
-                member.birthday_dt = ''
-                member.phone = ''
-        member.birthday_dt = str(member.birthday_dt)
+        if error is None:
+            for lecture_info_data in lecture_list:
+                member_lecture_list = MemberLectureTb.objects.filter(member_id=user.id,
+                                                                     lecture_tb=lecture_info_data.lecture_tb_id,
+                                                                     auth_cd='VIEW', lecture_tb__use=1)
+                lecture_count += len(member_lecture_list)
+
+        if error is None:
+            if member.reg_info is None or member.reg_info == '':
+                if lecture_count == 0:
+                    member.sex = ''
+                    member.birthday_dt = ''
+                    member.phone = ''
+            member.birthday_dt = str(member.birthday_dt)
+
         context['member_info'] = member
         if error is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -2467,9 +2472,29 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         if error is None:
             for class_auth_info in class_auth_data:
+
                 class_info = class_auth_info.class_tb
+                all_member = MemberTb.objects.filter().order_by('name')
+                total_member_num = 0
+                for member_info in all_member:
+                    # member_data = member_info
+
+                    member_lecture_reg_count = 0
+                    member_lecture_rem_count = 0
+                    member_lecture_avail_count = 0
+                    # 강좌에 해당하는 수강/회원 정보 가져오기
+                    class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                       lecture_tb__member_id=member_info.member_id,
+                                                                       lecture_tb__state_cd='IP',
+                                                                       lecture_tb__use=1,
+                                                                       auth_cd='VIEW', use=1).order_by('-lecture_tb__start_date')
+
+                    if len(class_lecture_list) > 0:
+                        total_member_num += 1
+
                 class_info.subject_type_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
                 class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
+                class_info.total_member_num = total_member_num
 
         context['class_data'] = class_auth_data
 
