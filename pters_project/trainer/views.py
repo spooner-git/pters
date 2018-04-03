@@ -57,10 +57,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     except ObjectDoesNotExist:
                         error = '강좌 과목 정보를 불러오지 못했습니다.'
                     if error is None:
-                        if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
+                        if class_info.class_tb.subject_detail_nm is None or class_info.class_tb.subject_detail_nm == '':
                             class_type_name = class_name.common_cd_nm
                         else:
-                            class_type_name = class_info.subject_detail_nm
+                            class_type_name = class_info.class_tb.subject_detail_nm
 
                     if error is None:
                         self.request.session['class_type_name'] = class_type_name
