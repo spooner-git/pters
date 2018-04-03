@@ -1000,17 +1000,16 @@ def add_repeat_schedule_confirm(request):
             try:
                 with transaction.atomic():
                     schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id)
-                    schedule_data.delete()
-                    repeat_schedule_data.delete()
-                    if en_dis_type == '1':
-                        lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-                        if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
-                            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
-                                                               - len(lecture_schedule_data)
-                        else:
-                            error = '예약 가능한 횟수를 확인해주세요.'
-                            raise ValidationError()
+                    # schedule_data.delete()
+                    for delete_schedule_info in schedule_data:
+                        if delete_schedule_info.state_cd != 'PE':
+                            error = delete_schedule_logic_func(delete_schedule_info)
+                        if error is not None:
+                            break
 
+                    repeat_schedule_data.delete()
+
+                    if en_dis_type == '1':
                         if lecture_info.lecture_rem_count > 0:
                             lecture_info.state_cd = 'IP'
                         else:
