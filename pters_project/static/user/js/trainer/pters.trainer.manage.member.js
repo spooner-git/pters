@@ -1502,8 +1502,10 @@ function open_member_info_popup_pc(userID){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('#calendar').length>0){
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
         var Data = DB
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+        var Data = DBe
     }
     $('#memberInfoPopup_PC').fadeIn('fast')
     $('#shade').fadeIn('fast');
@@ -1726,8 +1728,10 @@ function open_member_info_popup_mobile(userID){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('#calendar').length>0){
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
         var Data = DB
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+        var Data = DBe
     }
     birth_dropdown_set()
     $('#float_btn_wrap').fadeOut();
@@ -2121,8 +2125,10 @@ function set_member_lecture_list(){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('#calendar').length>0){
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
         var Data = DB
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+        var Data = DBe
     }
     var dbId = Data[userID].dbId
     
@@ -2217,8 +2223,10 @@ function set_member_history_list(){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('#calendar').length>0){
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
         var Data = DB
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+        var Data = DBe
     }
     var dbId = Data[userID].dbId
     
@@ -2263,12 +2271,22 @@ function set_member_history_list(){
 function draw_member_history_list_table(jsondata,targetHTML){
     var $regHistory = targetHTML
     var result_history_html = ['<div><div>수행일자</div><div>진행시간</div><div>구분</div><div>메모</div></div>']
-    var stateCodeDict = {"PE":"완료","NP":"시작전"}
+    var stateCodeDict = {"PE":"완료","NP":"시작전","IP":"시작전"}
+    console.log(jsondata.ptScheduleEndDtArray,jsondata.ptScheduleStartDtArray)
     for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay()
+        var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2])
+        var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2])
+        var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0])
+        var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])
+        if( endDate == startDate+1 && endTime==0){
+            var duration = 24 - startTime
+        }else{
+            var duration = endTime - startTime
+        }
         var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleStartDtArray[i].split(' ')[0]+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
-        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+(Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]))+'시간</div>'
+        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration+'시간</div>'
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
         result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
     }
@@ -2658,8 +2676,10 @@ function get_indiv_repeat_info(userID){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('#calendar').length>0){
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
         var Data = DB
+    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+        var Data = DBe
     }
     var dbId = Data[userID].dbId
     $.ajax({

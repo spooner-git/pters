@@ -538,7 +538,7 @@ select:focus > option:checked {
 					.historyState_PE{
 						color: green;
 					}
-					.historyState_NP{
+					.historyState_NP,.historyState_IP{
 						color: #fe4e65;
 					}
 
