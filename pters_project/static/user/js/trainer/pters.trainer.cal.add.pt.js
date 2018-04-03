@@ -440,11 +440,11 @@ $(document).ready(function(){
           var dateSelect_repeat_end = $("#datepicker_repeat_end").parent('p');
 
           if(addTypeSelect == "ptadd"){
-              if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
+              if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true && $('#countsSelected').text() != 0){
                   $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                   $('#page-addplan .submitBtn').addClass('submitBtnActivated')
                   select_all_check=true;
-              }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect).hasClass("dropdown_selected")==true){
+              }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect).hasClass("dropdown_selected")==true && $('#countsSelected').text() != 0){
                   $('#submitBtn_mini').css('background','#fe4e65');
                   select_all_check=true;
               }else{
@@ -592,7 +592,10 @@ $(document).ready(function(){
                  })
 
          }else{
-          alert('빠진 항목 체크해봐야함')
+            if($('#countsSelected').text() == 0){
+              alert('회원님의 남은 예약 가능 횟수가 없습니다.')
+            }
+          //alert('빠진 항목 체크해봐야함')
             //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
          }
