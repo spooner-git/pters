@@ -469,9 +469,11 @@ $(document).ready(function(){
     })
 
     $("#datepicker_add, #datepicker2_add").datepicker({
-        minDate : 0,
+        //minDate : 0,
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
             $(this).addClass("dropdown_selected");
+            $("#datepicker2_add").datepicker('option','minDate',$("#datepicker_add").val())
+            $("#datepicker_add").datepicker('option','maxDate',$("#datepicker2_add").val())
             check_dropdown_selected();
         }
     });
