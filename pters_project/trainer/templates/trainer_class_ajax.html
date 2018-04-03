@@ -26,6 +26,9 @@
         "regDtArray":
       [{% for class_info in class_data %}"{{ class_info.class_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+        "classInProgressMemberNumArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.total_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
         "currentClassId":
       ["{{ request.session.class_id }}"],
 
