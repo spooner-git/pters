@@ -624,62 +624,63 @@ $(document).ready(function(){
     })
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
     $("#upbutton-check, #pcBtn .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
-        console.log(select_all_check)
-        var test = $('#id_search_confirm').val();
-        var $form2 = $('#add-member-id-form');
-        var url2 = '/login/add_member_info_no_email/';
-        if(select_all_check==true){
-            if(test==0){
-                $.ajax({
-                    url:'/login/add_member_info_no_email/',
-                    type:'POST',
-                    data:$form2.serialize(),
-                    dataType : 'html',
+        if($('#page_addmember').css('display')=='block'){
+            var test = $('#id_search_confirm').val();
+            var $form2 = $('#add-member-id-form');
+            var url2 = '/login/add_member_info_no_email/';
+            if(select_all_check==true){
+                if(test==0){
+                    $.ajax({
+                        url:'/login/add_member_info_no_email/',
+                        type:'POST',
+                        data:$form2.serialize(),
+                        dataType : 'html',
 
-                    beforeSend:function(){
-                      beforeSend()
-                    },
+                        beforeSend:function(){
+                          beforeSend()
+                        },
 
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                        completeSend()
-                        //
-                    },
+                        //보내기후 팝업창 닫기
+                        complete:function(){
+                            //completeSend()
+                        },
 
-                    //통신성공시 처리
-                    success:function(data){
-                        var jsondata = JSON.parse(data);
-                        ajax_received_json_data_member_manage(data);
-                        console.log(jsondata.messageArray)
-                        if(messageArray.length>0){
-                            $('html').css("cursor","auto")
-                            $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                            scrollToDom($('#page_addmember'))
-                            $('#errorMessageBar').show()
-                            $('#errorMessageText').text(messageArray)
-                        }else{
-                            add_member_form_func();
-                            $('#errorMessageBar').hide()
-                            $('#errorMessageText').text('')
-                        }
-                    },
+                        //통신성공시 처리
+                        success:function(data){
+                            var jsondata = JSON.parse(data);
+                            ajax_received_json_data_member_manage(data);
+                            console.log(jsondata.messageArray)
+                            if(messageArray.length>0){
+                                $('html').css("cursor","auto")
+                                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                                scrollToDom($('#page_addmember'))
+                                $('#errorMessageBar').show()
+                                $('#errorMessageText').text(messageArray)
+                            }else{
+                                add_member_form_func();
+                                $('#errorMessageBar').hide()
+                                $('#errorMessageText').text('')
+                            }
+                        },
 
-                    //통신 실패시 처리
-                    error:function(){
-                      $('#errorMessageBar').show()
-                      $('#errorMessageText').text('통신 에러: 관리자 문의')
-                    },
-                })
+                        //통신 실패시 처리
+                        error:function(){
+                          $('#errorMessageBar').show()
+                          $('#errorMessageText').text('통신 에러: 관리자 문의')
+                        },
+                    })
+                }
+                else{
+                    add_member_form_func();
+                }
+            }else{
+                scrollToDom($('#page_addmember'))
+                //$('#errorMessageBar').show();
+                //$('#errorMessageText').text('모든 필수 정보를 입력해주세요')
+                //입력값 확인 메시지 출력 가능
             }
-            else{
-                add_member_form_func();
-            }
-        }else{
-            scrollToDom($('#page_addmember'))
-            //$('#errorMessageBar').show();
-            //$('#errorMessageText').text('모든 필수 정보를 입력해주세요')
-            //입력값 확인 메시지 출력 가능
         }
+        
     })
 
     $('#upbutton-modify, #infoMemberModify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
@@ -2358,7 +2359,6 @@ function add_member_form_func(){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                closePopup('member_add')
                 if($('body').width()<600){
                     $('#page_managemember').show();
                 }
@@ -2374,6 +2374,7 @@ function add_member_form_func(){
                 memberListSet('current','date','yes');
                 memberListSet('finished','date','yes');
                 $('#startR').attr('selected','selected')
+                closePopup('member_add')
                 console.log('success');
             }
         },

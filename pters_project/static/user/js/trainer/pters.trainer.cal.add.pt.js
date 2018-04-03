@@ -518,7 +518,7 @@ $(document).ready(function(){
         
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
-
+                console.log(sendData)
                  $.ajax({
                     url: serverURL,
                     type:'POST',
@@ -533,6 +533,7 @@ $(document).ready(function(){
                     success:function(data){
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
+                        console.log(jsondata)
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
                         if(jsondata.messageArray.length>0){
@@ -1025,6 +1026,7 @@ function ajax_received_json_data(json){
     offScheduleIdArray = [];
     scheduleFinishArray = [];
     scheduleNoteArray = [];
+    offScheduleNoteArray = [];
     memberIdArray = [];
     memberLectureIdArray = [];
     memberNameArray = [];
@@ -1057,6 +1059,7 @@ function ajax_received_json_data(json){
     offScheduleIdArray = jsondata.offScheduleIdArray
     scheduleFinishArray = jsondata.scheduleFinishArray;
     scheduleNoteArray = jsondata.scheduleNoteArray;
+    offScheduleNoteArray = jsondata.offScheduleNoteArray;
     memberIdArray = jsondata.memberIdArray;
     memberLectureIdArray = jsondata.memberLectureIdArray;
     memberNameArray = jsondata.memberNameArray;
@@ -1157,6 +1160,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
           }
 }
 
+/*
 function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   var location = $('meta[name="description"]').attr('content')
   switch(location){
@@ -1275,6 +1279,7 @@ function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하�
         //$('#calendar').css('display','none');
         for(var i=0; i<offlen; i++){
           var indexArray = offTimeArray[i]
+          var memoArray = scheduleNoteArray[i]
           var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
           var offYear = datasplit[0]
           var offMonth = datasplit[1]
@@ -1319,6 +1324,7 @@ function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하�
         //$('#calendar').css('display','none');
         for(var i=0; i<offlen; i++){
           var indexArray = offTimeArray[i]
+          var memoArray = offScheduleNoteArray[i]
           var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
           var offYear = datasplit[0]
           var offMonth = datasplit[1]
@@ -1342,12 +1348,103 @@ function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하�
           var tdOff = $("#"+offStart);
           tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
           
-          tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
+          tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).attr('data-memo',memoArray).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
         };
         //$('#calendar').css('display','block');
     break;
   }
 }
+*/
+
+function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+    var planheight = 30;
+      if($calendarWidth>=600){
+        //var planheight = 46;
+        var planheight = 43;
+    }
+    var classlen = classTimeArray.length;
+    $('#calendar').css('display','none');
+    for(var i=0; i<classlen; i++){
+      var indexArray = classTimeArray[i]
+      var memoArray = scheduleNoteArray[i]
+      var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
+      var classYear = datasplit[0]
+      var classMonth = datasplit[1]
+      var classDate = datasplit[2]
+      var classHour = datasplit[3]
+      var hourType = ""
+      if(classHour == 24){
+        var hourType = "오전"
+        var classHour = 0
+      }else if(classHour < 12){
+        var hourType = "오전"
+      }else{
+        var hourType = "오후"
+      }
+      var classMinute = datasplit[4]
+      var classDura = datasplit[5];
+      var memberName = datasplit[6];
+      if(memberName.length>3){
+        var memberName = memberName.substr(0,3) + ".."
+      }
+      var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
+      var classStart = classStartArr.join("_")
+      var tdClassStart = $("#"+classStart+" div");
+      var tdClass = $("#"+classStart);
+      tdClass.parent('div').siblings('.fake_for_blankpage').css('display','none')
+
+      if(scheduleFinishArray[i]=="0") {
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+            }else {
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+            }
+    };
+    $('#calendar').css('display','block');
+};
+
+function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+  var planheight = 30;
+    if($calendarWidth>=600){
+      var planheight = 46;
+  }
+  var offlen = offTimeArray.length;
+  $('#calendar').css('display','none');
+  for(var i=0; i<offlen; i++){
+    var indexArray = offTimeArray[i]
+    var memoArray = offScheduleNoteArray[i]
+    var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
+    var offYear = datasplit[0]
+    var offMonth = datasplit[1]
+    var offDate = datasplit[2]
+    var offHour = datasplit[3]
+    var hourType = ""
+    if(offHour==24){
+      var hourType = "오전"
+      var offHour = 0
+    }else if(offHour < 12){
+      var hourType = "오전"
+    }else{
+      var hourType = "오후"
+    }
+    var offMinute = datasplit[4]
+    var offDura = datasplit[5];
+    var memberName = datasplit[6];
+
+    if(Options.workStartTime>offHour && offDura > Options.workStartTime - offHour){
+      var offHour = Options.workStartTime
+      var offDura = offDura - (Options.workStartTime - offHour)
+    } //만약 8시~23시까지 OFF로 설정해두고, 업무시간을 9~23시로 했을때 8시에 배치가 안되서 off일정이 안보이는 현상을 해결
+    
+    var offStartArr = [offYear,offMonth,offDate,offHour,offMinute]
+    var offStart = offStartArr.join("_")
+    var tdOffStart = $("#"+offStart+" div");
+    var tdOff = $("#"+offStart);
+    tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
+    
+    tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).attr('data-memo',memoArray).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
+  };
+  $('#calendar').css('display','block');
+};
 
 function beforeSend(){
   $('#shade3').show();
