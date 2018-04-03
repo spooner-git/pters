@@ -12,10 +12,11 @@
 
 <form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
     {% csrf_token %}
-  <input type="hidden" name="setting_trainer_work_time_available" id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
-  <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
+  <input type="hidden" name="setting_trainer_work_time_available"       id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
+  <input type="hidden" name="setting_member_reserve_time_available"     id="id_setting_member_reserve_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
   <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->
-  <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
+  <input type="hidden" name="setting_member_reserve_prohibition"        id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
+  <input type="hidden" name="setting_member_reserve_date_available"     id="id_setting_member_reserve_available_date" value=""> <!--예약금지 활성 1, 비활성 0-->
   <input type="hidden" name="next_page" value = '{% url 'trainer:reserve_setting' %}'>
 </form>
 
@@ -95,6 +96,37 @@
           </div>
     </div>  
 </div>
+
+
+<div id="memberAvailDateSettingText" class="settingMenu wrap800" style="margin-top:10px;">
+  <p class="settingText">회원 예약 허용 날짜 구간 설정</p>
+  <p class="settingText2">회원이 오늘로부터 설정한 날짜 단위로 예약이 가능합니다.</p>
+</div>
+<div id="memberAvailDateSetting" class="settingBox wrap800">
+    <div class="iconText" style="width: 100%;">
+        <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 날짜 설정</span>
+        <div id="dateSelect" class="dropdown">
+              <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+              <ul id="ulTimes_availDate" class="dropdown-menu pters_dropdown_custom ulTimes">
+                <li><a data-time="1">1일 후</a></li>
+                <li><a data-time="2">2일 후</a></li>
+                <li><a data-time="3">3일 후</a></li>
+                <li><a data-time="4">4일 후</a></li>
+                <li><a data-time="5">5일 후</a></li>
+                <li><a data-time="6">6일 후</a></li>
+                <li><a data-time="7">7일 후</a></li>
+                <li><a data-time="8">8일 후</a></li>
+                <li><a data-time="9">9일 후</a></li>
+                <li><a data-time="10">10일 후</a></li>
+                <li><a data-time="11">11일 후</a></li>
+                <li><a data-time="12">12일 후</a></li>
+                <li><a data-time="13">13일 후</a></li>
+                <li><a data-time="14">14일 후</a></li>
+              </ul>
+        </div>
+    </div> 
+</div>
+
 
 <div id="memberReserveSettingText" class="settingMenu wrap800">
   <p class="settingText">회원 예약 허용 시간대 설정</p>
@@ -228,7 +260,7 @@
           var select_all_check = false;
 
 
-          $('#id_setting_member_available_time').val(Options.stoptimeStart+':00-'+Options.stoptimeEnd+':00')
+          $('#id_setting_member_reserve_available_time').val(Options.stoptimeStart+':00-'+Options.stoptimeEnd+':00')
           $('#id_setting_member_reserve_time_prohibition').val(Options.limit)
           $('#id_setting_member_reserve_prohibition').val(Options.reserve)
 
@@ -293,8 +325,14 @@
           }
           /*업무 시간 설정 DB저장값으로 초기셋팅*/
 
+          /*회원 예약 허용 날짜 설정 DB저장값으로 초기셋팅*/
+          $('#id_setting_member_reserve_available_date').val(Options.availDate)
+          $("#dateSelect button").addClass("dropdown_selected").text(Options.availDate+"일 후").val(Options.limit);
+          /*회원 예약 허용 날짜 설정 DB저장값으로 초기셋팅*/
+
+
           /*회원 예약 허용 시간대 설정 DB저장값으로 초기셋팅*/
-          $('#id_setting_member_available_time').val(stoptime)
+          $('#id_setting_member_reserve_available_time').val(stoptime)
           if(Options.stoptimeStart>12){
             var stoptimestart = Number(Options.stoptimeStart)-12
             $("#hourSelect button").addClass("dropdown_selected").text('오후'+stoptimestart+"시").val(Options.stoptimeStart);
@@ -390,7 +428,7 @@
           $("#ulTimes li a").click(function(){
                 $("#hourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
                 var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
-                $('#id_setting_member_available_time').val(availableTime)
+                $('#id_setting_member_reserve_available_time').val(availableTime)
                 fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#ulTimes2'))
 
                 check_dropdown_selected();
@@ -398,7 +436,7 @@
           $(document).on('click',"#ulTimes2 li a",function(){
                 $("#hourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
                 var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
-                $('#id_setting_member_available_time').val(availableTime)
+                $('#id_setting_member_reserve_available_time').val(availableTime)
                 check_dropdown_selected();
           });
           /*회원 예약 허용 시간대 설정*/
@@ -408,6 +446,12 @@
                 $('#id_setting_member_reserve_time_prohibition').val($('#timeSelect button').val())
                 check_dropdown_selected();
           });
+
+          $('#ulTimes_availDate li a').click(function(){
+              $("#dateSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+              $('#id_setting_member_reserve_available_date').val($(this).attr('data-time'))
+              check_dropdown_selected()
+          })
 
           function fill_dropdown_reserve_endtime(starttime, target){
             var array = []
@@ -441,14 +485,12 @@
           })
 
           function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-            var availableTime = $('#id_setting_member_available_time').val()
+            var availableTime = $('#id_setting_member_reserve_available_time').val()
             var limit = $('#id_setting_member_reserve_time_prohibition').val()
             var reservedisable =  $('#id_setting_member_reserve_prohibition').val()
             var workTime = $('#id_setting_trainer_work_time').val()
-            console.log(availableTime, limit, reservedisable)
-            console.log(worktime, stoptime, Options.limit, Options.reserve)
-            console.log($('#id_setting_trainer_work_time').val(),'asefasef')
-            if(availableTime == stoptime && limit == Options.limit && reservedisable == Options.reserve && workTime == worktime){
+            var availDate = $('#id_setting_member_reserve_available_date').val()
+            if(availableTime == stoptime && limit == Options.limit && reservedisable == Options.reserve && workTime == worktime && availDate == Options.availDate){
               $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
               select_all_check=false;
               console.log('false')
