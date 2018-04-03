@@ -68,10 +68,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         self.request.session['class_type_name'] = ''
 
                     if error is None:
-                        if class_info.center_tb is None or class_info.center_tb == '':
+                        if class_info.class_tb.center_tb is None or class_info.class_tb.center_tb == '':
                             self.request.session['class_center_name'] = ''
                         else:
-                            self.request.session['class_center_name'] = class_info.center_tb.center_name
+                            self.request.session['class_center_name'] = class_info.class_tb.center_tb.center_name
 
             else:
                 self.url = '/trainer/class_select/'
