@@ -26,6 +26,10 @@ li a{
 	
 }
 
+#memberAvailDateSetting{
+	z-index: 5;
+}
+
 #memberReserveSetting{
 	z-index: 2;
 }
@@ -35,7 +39,7 @@ li a{
 	width: 50%;
 }
 
-#timeSelect{
+#timeSelect, #dateSelect{
 	left: 16%;
 	max-width: 170px;
 	display: inline-flex;
