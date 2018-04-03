@@ -43,6 +43,11 @@ class IndexView(TemplateView):
         logout(self.request)
         context = super(IndexView, self).get_context_data(**kwargs)
 
+        # acceptLang = self.request.META['HTTP_ACCEPT_LANGUAGE']
+        # firstLang = acceptLang.split(',')[0]
+        # if 'ko' in firstLang:
+        #    print('ko')
+
         return context
 
 
