@@ -78,14 +78,14 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
                 if repeat_id is None:
                     add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                    start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                                   state_cd='NP', note=note, member_note='', en_dis_type=en_dis_type,
+                                                   state_cd='IP', note=note, member_note='', en_dis_type=en_dis_type,
                                                    reg_member_id=user_id,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
                 else:
                     add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                    repeat_schedule_tb_id=repeat_id,
                                                    start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                                   state_cd='NP', note=note, member_note='', en_dis_type=en_dis_type,
+                                                   state_cd='IP', note=note, member_note='', en_dis_type=en_dis_type,
                                                    reg_member_id=user_id,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
                 add_schedule_info.save()
@@ -198,6 +198,9 @@ def delete_schedule_logic_func(schedule_info):
                             raise ValidationError()
 
                     if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
+                        lecture_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+                        if len(lecture_repeat_schedule_data) > 0:
+                            lecture_repeat_schedule_data.update(state_cd='IP')
                         lecture_info.state_cd = 'IP'
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.schedule_check = 1
@@ -271,7 +274,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
 
         pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                  en_dis_type='1')
+                                                                  en_dis_type='1').exclude(state_cd='PE')
         for pt_repeat_schedule_info in pt_repeat_schedule_data:
             pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
             pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
@@ -622,6 +625,11 @@ def finish_schedule_logic(request):
 
                 if lecture_info.lecture_rem_count == 0:
                     lecture_info.state_cd = 'PE'
+                    lecture_repeat_schedule_data = RepeatScheduleTb.objects.filter(
+                        lecture_tb_id=schedule_info.lecture_tb_id)
+                    if len(lecture_repeat_schedule_data) > 0:
+                        lecture_repeat_schedule_data.update(state_cd='PE')
+
                 lecture_info.mod_dt = timezone.now()
                 lecture_info.schedule_check = 1
                 lecture_info.save()
@@ -729,7 +737,7 @@ def add_repeat_schedule_logic(request):
                                                 week_info=repeat_week_type,
                                                 start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date_info,
                                                 start_time=repeat_schedule_time, time_duration=repeat_schedule_time_duration,
-                                                state_cd='NP', en_dis_type=en_dis_type,
+                                                state_cd='IP', en_dis_type=en_dis_type,
                                                 reg_member_id=request.user.id,
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 
