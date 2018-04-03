@@ -1538,12 +1538,12 @@ $(document).ready(function(){
 		var yymmdd = ymdArry.join('')
 		for(i=1;i<=7;i++){
 		var scan = $('#weekNum_'+i).attr('data-date')
-			if(yymmdd<=scan && scan<=14+Number(yymmdd)){
+			if(yymmdd<=scan && scan<=Options.availDate+Number(yymmdd)){
 				$('#weekNum_'+i).addClass('reserveavailable')
-			}else if(scan.substr(0,4)==yy+1 && scan.substr(4,2) == '01' &&scan.substr(6,2)<=Number(dd)+14-lastDay[currentMonth]){
+			}else if(scan.substr(0,4)==yy+1 && scan.substr(4,2) == '01' &&scan.substr(6,2)<=Number(dd)+Options.availDate-lastDay[currentMonth]){
 				$('#weekNum_'+i).addClass('reserveavailable')
 			}
-			else if(scan.substr(4,2)== Number(mm)+1 && scan.substr(6,2)<=Number(dd)+14-lastDay[currentMonth]){
+			else if(scan.substr(4,2)== Number(mm)+1 && scan.substr(6,2)<=Number(dd)+Options.availDate-lastDay[currentMonth]){
 				$('#weekNum_'+i).addClass('reserveavailable')	
 			}else{
 				$('#weekNum_'+i).removeClass('reserveavailable')
