@@ -28,7 +28,7 @@ from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_trainer_schedule_data_func
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb
 from schedule.models import ClassTb
-from trainee.views import get_trainee_repeat_schedule_data_func
+from trainee.views import get_trainee_repeat_schedule_data_func, get_trainee_repeat_schedule_data_func_from_schedule
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
 logger = logging.getLogger(__name__)
@@ -1795,6 +1795,45 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
 
         if context['error'] is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
+            messages.error(request, context['error'])
+
+        return render(request, self.template_name, context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ReadMemberLectureDataFromSchedule(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'member_lecture_data_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(ReadMemberLectureDataFromSchedule, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        context['error'] = None
+
+        context = get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, None)
+        if context['error'] is None:
+            context = get_member_data(context, class_id, None)
+
+        if context['error'] is not None:
+            logger.error(
+                request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + context[
+                    'error'])
+            messages.error(request, context['error'])
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(ReadMemberLectureDataFromSchedule, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        member_id = request.POST.get('member_id', None)
+        context['error'] = None
+        context = get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, member_id)
+        if context['error'] is None:
+            context = get_member_data(context, class_id, member_id)
+
+        if context['error'] is not None:
+            logger.error(
+                request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + context[
+                    'error'])
             messages.error(request, context['error'])
 
         return render(request, self.template_name, context)

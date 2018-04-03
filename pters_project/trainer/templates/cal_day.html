@@ -525,6 +525,7 @@
           var ptRepeatScheduleEndDateArray =  [{% for pt_repeat_schedule_end_date_info in pt_repeat_schedule_end_date_data %}'{{ pt_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           var ptRepeatScheduleStartTimeArray =  [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}'{{ pt_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           var ptRepeatScheduleTimeDurationArray =  [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}'{{ pt_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+          var ptRepeatScheduleStateCdArray =  [{% for pt_repeat_schedule_state_cd_info in pt_repeat_schedule_state_cd %}'{{ pt_repeat_schedule_state_cd_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
           var classTimeArray = [];
           var offTimeArray = [];
