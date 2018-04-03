@@ -62,8 +62,6 @@ $(document).ready(function(){
       })
 
 
-      var select_all_check = false;
-
 /*
       $(document).on('click','.deleteBtn',function(){ //일정요약에서 반복일정 오른쪽 화살표 누르면 휴지통 열림
         var $btn = $(this).find('div')

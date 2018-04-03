@@ -52,7 +52,6 @@ $(document).ready(function(){
     $(document).on('click','.memberNameForInfoView',function(){
     	var clickedName = $(this).attr('data-name')
     	var scheduleComplete = $(this).attr('data-schedule-check')
-    	console.log(scheduleComplete)
     	$.ajax({
               url: '/trainer/member_manage_ajax/',
 			  dataType : 'html',
@@ -64,27 +63,28 @@ $(document).ready(function(){
               success:function(data){
               	$('#shade3,.popups').hide()
               	ajax_received_json_data_member_manage(data)
+              	var jsondata = JSON.parse(data)
+              	console.log(jsondata,clickedName)
               	DB=[]
               	DBe=[]
               	DataFormattingDict('name');
-		        //DataFormatting('current');
-		        if(scheduleComplete == 0){
+		        if(jsondata.nameArray.indexOf(clickedName)!=-1){
 		    		var Data = DB
-		    	}else if(scheduleComplete == 1){
+		    	}else if(jsondata.finishnameArray.indexOf(clickedName)!=-1){
 		    		var Data = DBe
 		    	}
 		        var userID = Data[clickedName].id
 		        DataFormattingDict('ID');
 		        if($('body').width()<600){
-		            open_member_info_popup_mobile(userID)
-		            get_indiv_repeat_info(userID)
-		            set_member_lecture_list()
-		            set_member_history_list()
+		            open_member_info_popup_mobile(userID,jsondata)
+		            get_indiv_repeat_info(userID,jsondata)
+		            set_member_lecture_list(jsondata)
+		            set_member_history_list(jsondata)
 		        }else if($('body').width()>=600){
-		            open_member_info_popup_pc(userID)
-		            get_indiv_repeat_info(userID)
-		            set_member_lecture_list()
-		            set_member_history_list()
+		            open_member_info_popup_pc(userID,jsondata)
+		            get_indiv_repeat_info(userID,jsondata)
+		            set_member_lecture_list(jsondata)
+		            set_member_history_list(jsondata)
 		            $('#info_shift_base, #info_shift_lecture').show()
 		            $('#info_shift_schedule, #info_shift_history').hide()
 		            $('#select_info_shift_lecture').css('color','#fe4e65')

@@ -1499,14 +1499,14 @@ function limit_char(e){
 
 //회원정보////////////////////////////////////////////////////////
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
-function open_member_info_popup_pc(userID){
+function open_member_info_popup_pc(userID,jsondata){
     if($('#currentMemberList').css('display') == "block"){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
+    }else if(jsondata.idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     $('#memberInfoPopup_PC').fadeIn('fast')
@@ -1725,14 +1725,14 @@ function open_member_info_popup_pc(userID){
 }
 
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. MOBILE
-function open_member_info_popup_mobile(userID){
+function open_member_info_popup_mobile(userID,jsondata){
     if($('#currentMemberList').css('display') == "block"){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
+    }else if(jsondata.idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     birth_dropdown_set()
@@ -2115,7 +2115,7 @@ function disconnect_member_lecture_data(stateCode){
 }
 
 //회원의 등록 이력을 서버로부터 받아온다.
-function set_member_lecture_list(){
+function set_member_lecture_list(jsondata){
     if($('#memberInfoPopup_PC').css('display')=="block"){
         var userID = $('#memberId_info_PC').text()
         var $regHistory = $('#memberRegHistory_info_PC')
@@ -2127,9 +2127,9 @@ function set_member_lecture_list(){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
+    }else if(jsondata.idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     var dbId = Data[userID].dbId
@@ -2213,7 +2213,7 @@ function draw_member_lecture_list_table(jsondata, targetHTML){
     $regHistory.html(result_history)
 }
 
-function set_member_history_list(){
+function set_member_history_list(jsondata){
     if($('#memberInfoPopup_PC').css('display')=="block"){
         var userID = $('#memberId_info_PC').text()
         var $regHistory = $('#memberLectureHistory_info_PC')
@@ -2225,9 +2225,9 @@ function set_member_history_list(){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
+    }else if(jsondata.idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     var dbId = Data[userID].dbId
@@ -2674,14 +2674,14 @@ function initialize_add_member_sheet(){
 }
 
 //서버로부터 회원의 반복일정 정보를 받아온다.
-function get_indiv_repeat_info(userID){
+function get_indiv_repeat_info(userID,jsondata){
     if($('#currentMemberList').css('display') == "block"){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==0){
+    }else if(jsondata.idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if($('.memberNameForInfoView').attr('data-schedule-check')==1){
+    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     var dbId = Data[userID].dbId
