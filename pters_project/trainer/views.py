@@ -147,14 +147,16 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                         member_lecture_reg_count += lecture_info.lecture_reg_count
                         member_lecture_rem_count += lecture_info.lecture_rem_count
                         member_lecture_avail_count += lecture_info.lecture_avail_count
-                        if start_date == '':
-                            start_date = lecture_info.start_date
-                        else:
-                            if start_date > lecture_info.start_date:
-                                start_date = lecture_info.start_date
 
-                    if month_first_day < start_date < next_month_first_day:
-                        new_member_num += 1
+                        if lecture_info.state_cd == 'IP':
+                            if start_date == '':
+                                start_date = lecture_info.start_date
+                            else:
+                                if start_date > lecture_info.start_date:
+                                    start_date = lecture_info.start_date
+                    if start_date != '':
+                        if month_first_day <= start_date < next_month_first_day:
+                            new_member_num += 1
 
                     if 0 < member_lecture_rem_count < 4:
                         to_be_end_member_num += 1
