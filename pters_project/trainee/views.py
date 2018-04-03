@@ -259,6 +259,10 @@ def get_lecture_list_by_member_id(context, member_id):
 
             if error is None:
                 class_lecture_info.class_type_name = pt_type_name.common_cd_nm
+
+                if class_lecture_info.class_tb.subject_detail_nm is not None and class_lecture_info.class_tb.subject_detail_nm != '':
+                    class_lecture_info.class_type_name = class_lecture_info.class_tb.subject_detail_nm
+
                 check = 0
                 for check_class_list_item in class_list:
                     if check_class_list_item.class_tb_id == class_lecture_info.class_tb_id:
@@ -853,7 +857,6 @@ def pt_add_logic(request):
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                             lecture_tb__state_cd='IP',
                                                             auth_cd='VIEW', lecture_tb__use=1, use=1)
-        # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
         for member_lecture_data_info in member_lecture_data:
             member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
