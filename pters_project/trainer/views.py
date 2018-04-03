@@ -2492,7 +2492,11 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     if len(class_lecture_list) > 0:
                         total_member_num += 1
 
-                class_info.subject_type_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                subject_type_name_code = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                class_info.subject_type_name = subject_type_name_code.common_cd_nm
+
+                if class_info.subject_detail_nm is not None and class_info.subject_detail_nm != '':
+                    class_info.subject_type_name = class_info.subject_detail_nm
                 class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
                 class_info.total_member_num = total_member_num
 

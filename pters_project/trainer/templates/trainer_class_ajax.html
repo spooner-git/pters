@@ -6,7 +6,7 @@
         "subjectCodeArray":
       [{% for class_info in class_data %}"{{ class_info.class_tb.subject_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "subjectNameArray":
-      [{% for class_info in class_data %}"{{ class_info.class_tb.subject_type_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for class_info in class_data %}"{{ class_info.class_tb.subject_type_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "startDateArray":
       [{% for class_info in class_data %}"{{ class_info.class_tb.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "endDateArray":

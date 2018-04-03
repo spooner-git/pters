@@ -89,6 +89,7 @@
   <input type="hidden" name="class_hour" id="class_hour" value=1.0> <!--강좌 진행 시간-->
   <input type="hidden" name="start_hour_unit" id="start_hour_unit" value="1.0"> <!--강좌 시작 시간(1: 정시, 0.5: 30분단위-->
   <input type="hidden" name="class_member_num" id="class_member_num" value="1"> <!--강좌 수업별 최대 허용 인원-->
+  <input type="hidden" name="subject_detail_nm" id="id_subject_detail_nm" >
 </form>
 
 <form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
@@ -144,7 +145,7 @@
             </ul>
         </div>
     {% endfor %}
-    <input type="text" name="subject_detail_nm" placeholder="상세 과목명">
+    <input type="text" name="subject_detail_nm" id="id_input_subject_detail_nm" placeholder="상세 과목명">
     <button onclick="goNext('0')">다음</button>
     <button onclick="goNext('home')">취소</button>
 </div>
@@ -490,6 +491,10 @@
               })
           }
 
+           $('#id_input_subject_detail_nm').keyup(function(){
+                var userinput = $(this).val();
+                $('#id_subject_detail_nm').attr('value',userinput);
+            });
         </script>
 
 {% endblock %}

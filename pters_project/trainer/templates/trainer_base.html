@@ -77,6 +77,7 @@
             <div class="pters_table">
               <div class="pters_table_cell_head table_center_name">센터</div>
               <div class="pters_table_cell_head table_lecture_name">클래스</div>
+              <div class="pters_table_cell_head table_trainee_number">수강생</div>
               <div class="pters_table_cell_head table_start_date">개강일</div>
               <div class="pters_table_cell_head table_lecture_status">상태</div>
             </div>
@@ -628,10 +629,11 @@
                       //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                       var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>'
                       var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>'
+                      var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>'
                       var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
                       var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>'
                       //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
-                      var sum = table + centerName + lectureName + startDate + status + '</div>'
+                    var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>'
                       list_table_to_join.push(sum)
                 }
                 var list_table = list_table_to_join.join('')
