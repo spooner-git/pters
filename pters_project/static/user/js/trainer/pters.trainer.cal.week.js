@@ -64,7 +64,6 @@ $(document).ready(function(){
               	$('#shade3,.popups').hide()
               	ajax_received_json_data_member_manage(data)
               	var jsondata = JSON.parse(data)
-              	console.log(jsondata,clickedName)
               	DB=[]
               	DBe=[]
               	DataFormattingDict('name');
@@ -511,7 +510,6 @@ $(document).ready(function(){
 
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		$('#popup_delete_btn_yes').click(function(){
-			console.log(addTypeSelect, deleteTypeSelect)
 			if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || deleteTypeSelect=='repeatinfodelete'){
 				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
 				$.ajax({
@@ -1407,7 +1405,6 @@ $(document).ready(function(){
 
 		for(var i=2; i<=8; i++){			
 			var dateID = swiperPage.find('.td00:nth-child('+i+')').attr('id').split('_');
-			//console.log(dateID)
 			var yy = dateID[0];
 			var mm = dateID[1];
 			var dd = dateID[2];

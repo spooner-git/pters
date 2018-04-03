@@ -43,7 +43,6 @@ $(document).ready(function(){
 
 
     $(document).on('click','#upbutton-x, #upbutton-x-modify',function(){
-        console.log('??')
         closePopup('member_info')
         closePopup('member_add')
     })
@@ -205,7 +204,6 @@ $(document).ready(function(){
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide()
             $(this).text('완료').attr('data-type',"modify");
         }else if($(this).attr('data-type')=="modify"){
-            console.log('수정송신')
             send_member_modified_data()
         }else if($(this).attr('data-type')=="resend"){
 
@@ -341,7 +339,6 @@ $(document).ready(function(){
     
     $('#popup_delete_btn_yes').click(function(){
         if($('#calendar').length==0){
-            console.log('#calendar length = 0', deleteTypeSelect)
            if(deleteTypeSelect == "repeatinfodelete"){
                 var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
                 $.ajax({
@@ -357,7 +354,6 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(data){
                         var jsondata = JSON.parse(data)
-                        console.log(jsondata.messageArray)
                         if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show()
                             $('#errorMessageText').text(jsondata.messageArray)
@@ -437,7 +433,6 @@ $(document).ready(function(){
             //통신성공시 처리
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -495,7 +490,6 @@ $(document).ready(function(){
                 $('#'+$(this).attr('data-type').replace(/lec_/gi,'form_')).val($(this).val())
                 var startDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_start_date')
                 var endDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_end_date')
-                console.log(startDatepicker.val(), endDatepicker.val())
                 $("input.lec_end_date").datepicker('option','minDate',startDatepicker.val())
                 $("input.lec_start_date").datepicker('option','maxDate',endDatepicker.val())
             }
@@ -651,7 +645,6 @@ $(document).ready(function(){
                         success:function(data){
                             var jsondata = JSON.parse(data);
                             ajax_received_json_data_member_manage(data);
-                            console.log(jsondata.messageArray)
                             if(messageArray.length>0){
                                 $('html').css("cursor","auto")
                                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -728,7 +721,6 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(data){
                         ajax_received_json_data_member_manage(data);
-                        console.log(messageArray)
                         if(messageArray.length>0){
                             $('html').css("cursor","auto")
                             $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -908,7 +900,6 @@ function pc_add_member(option){
         initialize_add_member_sheet()
         if($('#memberInfoPopup').css('display') == 'block'){
             var userID = $('#memberId').val()
-            console.log(userID)
             $('#memberSearch_add').val(userID)
         }
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
@@ -1146,7 +1137,7 @@ function DataFormattingDict(Option){
                                         'dbId':finishDidArray[j],
                                         'email':finishemailArray[j],
                                         'count':finishcountArray[j],
-                                        'regcount':regCountArray[j],
+                                        'regcount':finishRegCountArray[j],
                                         'availCount':finishAvailCountArray[j],
                                         'phone':finishphoneArray[j],
                                         'contents':finishContentsArray[j],
@@ -1189,7 +1180,7 @@ function DataFormattingDict(Option){
                                     'dbId':finishDidArray[j],
                                     'email':finishemailArray[j],
                                     'count':finishcountArray[j],
-                                    'regcount':regCountArray[j],
+                                    'regcount':finishRegCountArray[j],
                                     'availCount':finishAvailCountArray[j],
                                     'phone':finishphoneArray[j],
                                     'contents':finishContentsArray[j],
@@ -1411,7 +1402,7 @@ function check_dropdown_selected(){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page_addmember .submitBtn').addClass('submitBtnActivated')
             select_all_check=true;
-            console.log('fast=1',select_all_check)
+
 
         }else{
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
@@ -1424,7 +1415,6 @@ function check_dropdown_selected(){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page_addmember .submitBtn').addClass('submitBtnActivated')
             select_all_check=true;
-            console.log('fast=0',select_all_check)
 
         }else{
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
@@ -1739,7 +1729,6 @@ function open_member_info_popup_mobile(userID,jsondata){
     $('#float_btn_wrap').fadeOut();
     $('#page-base').fadeOut('fast');
     $('#page-base-modifystyle').fadeIn('fast');
-    console.log(Data, userID, Data[userID].name)
     $('#memberName_info').val(Data[userID].name)
     $('#memberId').val(userID).attr('data-dbid',Data[userID].dbId)
     $('#deleteMemberId').val(userID).attr('data-dbid',Data[userID].dbId)
@@ -1799,7 +1788,6 @@ modify_member_lec_info_pc()
 //회원의 수강정보(등록횟수)를 수정한다.
 function modify_member_lec_info_pc(){
     $(document).on('keyup','.lec_reg_count',function(){
-        console.log($(this).parent('div').siblings('.lec_rem_count').text())
         var remainCount = $(this).parent('div').siblings('.lec_rem_count').text()
         if(Number($(this).val()) >= Number(remainCount)){
             $(this).css('color','#282828')
@@ -1891,7 +1879,6 @@ function resend_member_reg_data_pc(){
         //통신성공시 처리
         success:function(data){
             ajax_received_json_data_member_manage(data);
-            console.log(messageArray)
             if(messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(messageArray)
@@ -1949,7 +1936,6 @@ function delete_member_reg_data_pc(){
         //통신성공시 처리
         success:function(data){
             ajax_received_json_data_member_manage(data);
-            console.log(messageArray)
             if(messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(messageArray)
@@ -2010,7 +1996,6 @@ function refund_member_lecture_data(){
                 //통신성공시 처리
                 success:function(data){
                     ajax_received_json_data_member_manage(data);
-                    console.log(messageArray)
                     if(messageArray.length>0){
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(messageArray)
@@ -2077,7 +2062,6 @@ function disconnect_member_lecture_data(stateCode){
                 //통신성공시 처리
                 success:function(data){
                     ajax_received_json_data_member_manage(data);
-                    console.log(messageArray)
                     if(messageArray.length>0){
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(messageArray)
@@ -2152,7 +2136,6 @@ function set_member_lecture_list(jsondata){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -2256,7 +2239,6 @@ function set_member_history_list(jsondata){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                console.log(jsondata)
                 draw_member_history_list_table(jsondata,$regHistory) 
             }
             
@@ -2274,7 +2256,6 @@ function draw_member_history_list_table(jsondata,targetHTML){
     var $regHistory = targetHTML
     var result_history_html = ['<div><div>수행일자</div><div>진행시간</div><div>구분</div><div>메모</div></div>']
     var stateCodeDict = {"PE":"완료","NP":"시작전","IP":"시작전"}
-    console.log(jsondata.ptScheduleEndDtArray,jsondata.ptScheduleStartDtArray)
     for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay()
         var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2])
@@ -2423,7 +2404,6 @@ function deleteMemberAjax(){
         success:function(data){
             var jsondata = JSON.parse(data);
             ajax_received_json_data_member_manage(data);
-            console.log(jsondata.messageArray)
             if(messageArray.length>0){
                 $('html').css("cursor","auto")
                 $('#upbutton-modify img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -2620,11 +2600,9 @@ function closePopup(option){
         $('#cal_popup_plandelete').fadeOut('fast')
         $('#shade3').fadeOut('fast');
     }else if(option == 'member_info_PC'){
-        console.log('member_info_pc')
         $('#memberInfoPopup_PC').fadeOut('fast')
         $('#shade').fadeOut('fast');
     }else if(option == 'member_add'){
-        console.log('?')
         if($('body').width()<600){
             $('#page_managemember').show();
             $('#float_btn_wrap').show();
