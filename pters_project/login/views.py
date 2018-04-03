@@ -537,6 +537,25 @@ class CheckMemberIdView(View):
         return render(request, self.template_name, {'error': self.error})
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class CheckMemberEmailView(View):
+    template_name = 'id_check_ajax.html'
+    error = ''
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        user_email = request.POST.get('email', '')
+        if user_email == '':
+            self.error = 'email를 입력해주세요.'
+
+        if User.objects.filter(email=user_email).exists():
+            self.error = '이미 가입된 회원 입니다.'
+        return render(request, self.template_name, {'error': self.error})
+
+
 class RegisterErrorView(TemplateView):
     template_name = 'registration_error_ajax.html'
 
