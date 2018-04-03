@@ -61,7 +61,7 @@ $(document).ready(function(){
       $('.pclogout').text("로그아웃")
       $('#uptext span').text("코치님 일정")
       $('.__alarm').text("알림")
-      $('.__calSelect').text("강의관리")
+      $('.__calSelect').text("클래스 선택")
       $('.__mypage').text("마이페이지")
    }
 
