@@ -50,12 +50,11 @@
         <div id="shade3"></div>
 
         <div id="alarm">
-            <p>알림 팝업</p>
-            <div id="alarm_delete" style="display:block; position: fixed; height:100px;">
-                알람 삭제
+            <div id="alarm_delete">
+                <img src="/static/user/res/member/icon-delete-black.png" style="height:25px;float: right;margin-right: 10px; ">
             </div>
             <div id="alarm-iframe-div"></div>
-            <button>닫기</button>
+            <div style="text-align: center;"><button style="background: transparent;border:0;"><img src="/static/user/res/icon-down-grey.png" style="transform:rotate(180deg);"></button></div>
         </div>
 
         <div id="errorMessageBar">
@@ -73,14 +72,13 @@
                 <input type="hidden" name="class_id" id="id_class_id">
                 <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
             </form>
-            <label>달력 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
-            <p>일정 확인을 원하는 항목을 선택해 주세요.</p>
+            <label>클래스 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
+            <p>일정 확인을 원하는 클래스를 선택해 주세요.</p>
             <div class="pters_table">
-              <div class="pters_table_cell_head table_center_name">센터명</div>
-              <div class="pters_table_cell_head table_lecture_name">강의명</div>
-              <div class="pters_table_cell_head table_start_date">시작일</div>
+              <div class="pters_table_cell_head table_center_name">센터</div>
+              <div class="pters_table_cell_head table_lecture_name">클래스</div>
+              <div class="pters_table_cell_head table_start_date">개강일</div>
               <div class="pters_table_cell_head table_lecture_status">상태</div>
-              <div class="pters_table_cell_head lecture_selection">선택</div>
             </div>
             <div class="lecture_select_table_list">
             </div>
@@ -335,7 +333,7 @@
                     <span class="pcwho" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">{{user.last_name}} {{user.first_name}} <span></span></span>
                 </div>
                 <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
-                <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}  v0.1712.0000</span>
+                <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}</span>
             </div>
         </nav>
         
@@ -408,6 +406,8 @@
                     $('.popups').css('display','none')
                     $('#shade, #shade3').css('display','none')
                 }
+                $('#alarm').css('transform','translate(-50%,-200%)');
+
             })
 
             $('#errorMessageBar span:nth-child(2)').click(function(){
@@ -617,18 +617,20 @@
                   //if(lec_select_npLectureCountsArray[i] == '0'){
                       if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
                           var currentClass = 'currentClass'
-                          var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
+                          //var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
+                          var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                       }else{
                           var currentClass = ""
-                          var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
+                          //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
+                          var table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'>'
                       }
-                      var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
+                      //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                       var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>'
                       var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>'
                       var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
                       var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>'
-                      var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
-                      var sum = table + centerName + lectureName + startDate + status + selection +'</div>'
+                      //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
+                      var sum = table + centerName + lectureName + startDate + status + '</div>'
                       list_table_to_join.push(sum)
                 }
                 var list_table = list_table_to_join.join('')

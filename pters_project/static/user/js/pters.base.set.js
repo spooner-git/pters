@@ -73,7 +73,7 @@ $(document).ready(function(){
       }else{
           $('#shade').css('display','block');
       }
-      $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="400" frameborder="0"></iframe>');
+      $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
    });
 
    $('#alarm button').click(function(){

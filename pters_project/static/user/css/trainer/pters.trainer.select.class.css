@@ -60,6 +60,13 @@
 .currentClass{
 	font-weight: bold;
 }
+.lecture_row{
+	cursor: pointer;
+}
+	.lecture_row:hover{
+		color: #fe4e65 !important;
+		text-decoration: underline;
+	}
 
 
 
