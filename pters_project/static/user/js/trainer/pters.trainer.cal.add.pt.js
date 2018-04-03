@@ -507,6 +507,7 @@ $(document).ready(function(){
             var serverURL = '/schedule/add_repeat_schedule/'
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
+             console.log('test')
          }
          else if(addTypeSelect=="repeatoffadd"){
             var $form = $('#add-off-repeat-schedule-form')
@@ -539,8 +540,9 @@ $(document).ready(function(){
                             $('#errorMessageText').text(jsondata.messageArray)
                         }else{
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
-                              var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ")
-                              $('._repeatconfirmQuestion').text('선택한 일정 총 '+jsondata.repeatScheduleCounterArray[0]+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.')
+                              var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
+                                var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
+                              $('._repeatconfirmQuestion').text('선택한 일정 총 '+total_count+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.');
                               var repeat_info = popup_repeat_confirm()
                               $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
                               $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
