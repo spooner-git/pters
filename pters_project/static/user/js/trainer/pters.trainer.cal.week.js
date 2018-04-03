@@ -239,6 +239,8 @@ $(document).ready(function(){
 
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
+		deleteTypeSelect = ''
+		addTypeSelect ='ptadd'
 		$('#popup_planinfo_title').text('PT 일정')
 		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 		$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
@@ -323,6 +325,8 @@ $(document).ready(function(){
 	
 	//Off 일정 클릭시 팝업 Start
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
+		deleteTypeSelect = ''
+		addTypeSelect ='ptadd'
 		$('#popup_planinfo_title').text('OFF 일정')
 		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 		$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
@@ -507,6 +511,7 @@ $(document).ready(function(){
 
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		$('#popup_delete_btn_yes').click(function(){
+			console.log(addTypeSelect, deleteTypeSelect)
 			if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || deleteTypeSelect=='repeatinfodelete'){
 				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
 				$.ajax({
@@ -530,9 +535,10 @@ $(document).ready(function(){
 			                  	closeAddPlanPopup();
 			                  	ajax_received_json_data(jsondata)
 			                  	AjaxCompleteSend();
-			                  	if(deleteTypeSelect == 'repeatinfodelete'){
+			                  	if(deleteTypeSelect == 'repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){
 			                  		var userID = $('#memberId_info_PC').text()
 			                  		get_indiv_repeat_info(userID)
+			                  		$('#shade').show()
 			                  	}
 				          }
 	                  },
@@ -542,7 +548,8 @@ $(document).ready(function(){
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
-	                	$('#shade').show()
+	                	deleteTypeSelect = ''
+	  					addTypeSelect = 'ptadd'
 	                  },
 
 	                //통신 실패시 처리
