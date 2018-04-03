@@ -33,6 +33,8 @@
       "ptRepeatScheduleStartTimeArray" :
       [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}"{{ pt_repeat_schedule_start_time_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "ptRepeatScheduleTimeDurationArray" :
-      [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}"{{ pt_repeat_schedule_time_duration_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+      [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}"{{ pt_repeat_schedule_time_duration_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptRepeatScheduleStateCdArray" :
+      [{% for pt_repeat_schedule_state_cd_info in pt_repeat_schedule_state_cd %}"{{ pt_repeat_schedule_state_cd_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
 
     }

@@ -1032,6 +1032,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     pt_repeat_schedule_end_date = []
     pt_repeat_schedule_start_time = []
     pt_repeat_schedule_time_duration = []
+    pt_repeat_schedule_state_cd = []
     lecture_list = None
 
     # 강좌 정보 가져오기
@@ -1043,14 +1044,14 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     # 수강 정보 불러 오기
     if error is None:
         if member_id is None or member_id == '':
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__state_cd='IP',
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                          lecture_tb__use='1', auth_cd='VIEW', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
             # lecture_list = lecture_list.filter()
         else:
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id, lecture_tb__state_cd='IP',
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                          lecture_tb__member_id=member_id,
                                                          lecture_tb__use='1', auth_cd='VIEW', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)
@@ -1079,6 +1080,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
                 pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
                 pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
                 pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
+                pt_repeat_schedule_state_cd.append(pt_repeat_schedule_info.state_cd)
 
     context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
     context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
@@ -1087,6 +1089,83 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
     context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
     context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
+    context['pt_repeat_schedule_state_cd'] = pt_repeat_schedule_state_cd
+    if error is None:
+        context['error'] = error
+
+    return context
+
+
+def get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, member_id):
+
+    error = None
+    class_info = None
+
+    pt_repeat_schedule_id = []
+    pt_repeat_schedule_type = []
+    pt_repeat_schedule_week_info = []
+    pt_repeat_schedule_start_date = []
+    pt_repeat_schedule_end_date = []
+    pt_repeat_schedule_start_time = []
+    pt_repeat_schedule_time_duration = []
+    pt_repeat_schedule_state_cd = []
+    lecture_list = None
+
+    # 강좌 정보 가져오기
+    try:
+        class_info = ClassTb.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        error = '강사 정보가 존재하지 않습니다'
+
+    # 수강 정보 불러 오기
+    if error is None:
+        if member_id is None or member_id == '':
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+            # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
+            # lecture_list.filter(state_cd='IP')
+            # lecture_list.filter(state_cd='NP')
+            # lecture_list = lecture_list.filter()
+        else:
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                         lecture_tb__member_id=member_id,
+                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+            # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)
+            # lecture_list.filter(state_cd='IP')
+            # lecture_list.filter(state_cd='NP')
+            # lecture_list = lecture_list.filter()
+
+    if error is None:
+        # 강사 클래스의 반복일정 불러오기
+        pt_repeat_schedule_data = RepeatScheduleTb
+
+        if len(lecture_list) > 0:
+            for idx, lecture_list_info in enumerate(lecture_list):
+                lecture_info = lecture_list_info.lecture_tb
+                if idx == 0:
+                    pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                              en_dis_type='1').exclude(state_cd='PE')
+                else:
+                    pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                               en_dis_type='1').exclude(state_cd='PE')
+            for pt_repeat_schedule_info in pt_repeat_schedule_data:
+                pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
+                pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
+                pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
+                pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
+                pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
+                pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
+                pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
+                pt_repeat_schedule_state_cd.append(pt_repeat_schedule_info.state_cd)
+
+    context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
+    context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
+    context['pt_repeat_schedule_week_info_data'] = pt_repeat_schedule_week_info
+    context['pt_repeat_schedule_start_date_data'] = pt_repeat_schedule_start_date
+    context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
+    context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
+    context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
+    context['pt_repeat_schedule_state_cd'] = pt_repeat_schedule_state_cd
     if error is None:
         context['error'] = error
 

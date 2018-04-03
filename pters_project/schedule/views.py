@@ -185,7 +185,7 @@ def delete_schedule_logic_func(schedule_info):
                         error = '예약 가능한 횟수를 확인해주세요.'
                         raise ValidationError()
 
-                    #진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
+                    # 진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
                     if schedule_info.state_cd == 'PE':
                         lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                           state_cd='PE')
@@ -197,10 +197,41 @@ def delete_schedule_logic_func(schedule_info):
                             error = '예약 가능한 횟수를 확인해주세요.'
                             raise ValidationError()
 
+                    lecture_repeat_schedule_data = None
+
+                    if delete_schedule.delete_repeat_schedule_tb is not None and delete_schedule.delete_repeat_schedule_tb != '':
+                        try:
+                            lecture_repeat_schedule_data = RepeatScheduleTb.objects.get(
+                                repeat_schedule_id=delete_schedule.delete_repeat_schedule_tb)
+                        except ObjectDoesNotExist:
+                            lecture_repeat_schedule_data = None
+
+                    if lecture_repeat_schedule_data is not None:
+                        repeat_schedule_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=delete_schedule.delete_repeat_schedule_tb).count()
+                        repeat_schedule_finish_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=delete_schedule.delete_repeat_schedule_tb,
+                                                                                 state_cd='PE').count()
+                        if repeat_schedule_count == 0:
+                            delete_repeat_schedule = DeleteRepeatScheduleTb(
+                                class_tb_id=lecture_repeat_schedule_data.class_tb_id,
+                                lecture_tb_id=lecture_repeat_schedule_data.lecture_tb_id,
+                                repeat_schedule_id=lecture_repeat_schedule_data.repeat_schedule_id,
+                                repeat_type_cd=lecture_repeat_schedule_data.repeat_type_cd,
+                                week_info=lecture_repeat_schedule_data.week_info,
+                                start_date=lecture_repeat_schedule_data.start_date,
+                                end_date=lecture_repeat_schedule_data.end_date,
+                                start_time=lecture_repeat_schedule_data.start_time,
+                                time_duration=lecture_repeat_schedule_data.time_duration,
+                                state_cd=lecture_repeat_schedule_data.state_cd, en_dis_type=lecture_repeat_schedule_data.en_dis_type,
+                                reg_member_id=lecture_repeat_schedule_data.reg_member_id,
+                                reg_dt=lecture_repeat_schedule_data.reg_dt, mod_dt=timezone.now(), use=0)
+                            delete_repeat_schedule.save()
+                            lecture_repeat_schedule_data.delete()
+                        else:
+                            if repeat_schedule_finish_count == 0:
+                                lecture_repeat_schedule_data.state_cd = 'NP'
+                                lecture_repeat_schedule_data.save()
+
                     if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
-                        lecture_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-                        if len(lecture_repeat_schedule_data) > 0:
-                            lecture_repeat_schedule_data.update(state_cd='IP')
                         lecture_info.state_cd = 'IP'
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.schedule_check = 1
@@ -253,6 +284,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     pt_repeat_schedule_end_date = []
     pt_repeat_schedule_start_time = []
     pt_repeat_schedule_time_duration = []
+    pt_repeat_schedule_state_cd = []
 
     # 강사 정보 가져오기
     try:
@@ -283,6 +315,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
             pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
             pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
+            pt_repeat_schedule_state_cd.append(pt_repeat_schedule_info.state_cd)
 
     # OFF 일정 조회
     if error is None:
@@ -365,6 +398,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
     context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
     context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
+    context['pt_repeat_schedule_state_cd'] = pt_repeat_schedule_state_cd
 
     return context
 
@@ -623,12 +657,23 @@ def finish_schedule_logic(request):
                         error = '예약 가능한 횟수를 확인해주세요.'
                         raise ValidationError()
 
+                lecture_repeat_schedule_data = None
+                if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
+                    try:
+                        lecture_repeat_schedule_data = RepeatScheduleTb.objects.get(repeat_schedule_id=schedule_info.repeat_schedule_tb_id)
+                    except ObjectDoesNotExist:
+                        lecture_repeat_schedule_data = None
+
+                if lecture_repeat_schedule_data is not None:
+                    if lecture_repeat_schedule_data.state_cd == 'NP':
+                        lecture_repeat_schedule_data.state_cd = 'IP'
+                        lecture_repeat_schedule_data.save()
+
                 if lecture_info.lecture_rem_count == 0:
                     lecture_info.state_cd = 'PE'
-                    lecture_repeat_schedule_data = RepeatScheduleTb.objects.filter(
-                        lecture_tb_id=schedule_info.lecture_tb_id)
-                    if len(lecture_repeat_schedule_data) > 0:
-                        lecture_repeat_schedule_data.update(state_cd='PE')
+                    if lecture_repeat_schedule_data is not None:
+                        lecture_repeat_schedule_data.state_cd = 'PE'
+                        lecture_repeat_schedule_data.save()
 
                 lecture_info.mod_dt = timezone.now()
                 lecture_info.schedule_check = 1
@@ -737,7 +782,7 @@ def add_repeat_schedule_logic(request):
                                                 week_info=repeat_week_type,
                                                 start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date_info,
                                                 start_time=repeat_schedule_time, time_duration=repeat_schedule_time_duration,
-                                                state_cd='IP', en_dis_type=en_dis_type,
+                                                state_cd='NP', en_dis_type=en_dis_type,
                                                 reg_member_id=request.user.id,
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 

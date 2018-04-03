@@ -208,7 +208,7 @@ $(document).ready(function(){
       $(document).on('click',"#members_mobile li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
           $.ajax({
-              url: '/trainer/read_member_lecture_data/',
+              url: '/trainer/read_member_lecture_data_from_schedule/',
               type:'POST',
               data: {"lecture_id": $(this).attr('data-lectureid'), "member_id": $(this).attr('data-memberid')},
               dataType : 'html',
