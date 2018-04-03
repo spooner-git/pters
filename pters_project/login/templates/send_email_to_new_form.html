@@ -24,6 +24,9 @@
     <meta name="login" content="send_initial_mail_confirm_login">
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.register.css" %}>
     <style type="text/css">
+      .explaintype{
+        height: auto;
+      }
     	#submit_input{
     		overflow-y: hidden;
     		margin: 0;
@@ -51,6 +54,7 @@
     		position: relative !important;
     		margin: 0 auto !important;
     		margin-top: 15px !important;
+        margin-bottom: 15px !important;
     		left: unset !important;
     		transform: unset !important;
     	}
@@ -62,6 +66,23 @@
 			transform:translate(-50%,-50%);
 			z-index: 202;
 		  }
+
+      form  label{
+        display: block;
+      }
+
+      .button_duplicate_check{
+        color: #f4f4f4;
+        border: 1px solid #f4f4f4;
+        margin-left: 10px;
+        font-size: 12px;
+        padding: 2px;
+        cursor: pointer;
+      }
+
+      .login_dropdown{
+        display: block;
+      }
 
       #id_email{
         width: 220px;
@@ -136,12 +157,14 @@
 			  	<!--<input type="submit" value="{% trans 'Submit' %}" />-->
 
           <p style="line-height: 25px;">
-              ID : <input type="" name="id" placeholder="ID"  id="id_input">
-
+              <label>ID<span class="id_confirm" style="margin-left: 15px;"></span></label>
+              <input type="" name="id" placeholder="ID"  id="id_input"><span onclick="check_id()" class="button_duplicate_check">중복체크</span>
+              
           </p>
           <p style="line-height: 25px;">
+              <label>Email<span class="email_confirm" style="margin-left: 15px;"></span></label>
                <input type="" name="" placeholder="이메일"  id="email_input"> @
-               <input type="" name="" placeholder="이메일 뒷부분"  id="email_input_re" readonly>
+               <input type="" name="" placeholder="이메일 뒷부분"  id="email_input_re" readonly><span onclick="check_email()" class="button_duplicate_check">중복체크</span>
                <select class="login_dropdown" id="email_option">
                    <option id="optionnone">선택</option>
                    <option id="gmail">gmail.com</option>
@@ -149,10 +172,11 @@
                    <option id="daum">daum.net</option>
                    <option id="self">직접 입력</option>
                </select>
+
           </p>
           <p style="line-height: 25px;">
-            새 비밀번호  : <input type="password" style="margin-left: 12px;" name="newpassword" id="pw_input"><br>
-            비밀번호 확인 : <input type="password" name="newpassword_check" id="pw_input_re">
+            <label>새 비밀번호</label><input type="password" name="newpassword" id="pw_input"><br>
+            <label>비밀번호 확인</label><input type="password" name="newpassword_check" id="pw_input_re">
           </p>
           <p class="pw_confirm">영문 대소문자/숫자/특수문자를 포함한 8자이상</p>
 			</form>	
@@ -293,6 +317,78 @@
             $('#id_email').attr('value',"")
         }
     })
+
+    function check_id(){
+        $.ajax({
+                url:'/login/check_member_id/',
+                type:'POST',
+                data:{"id" : $('#id_input').val() },
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    var id_check_message = jsondata.id_check_result
+                    if(id_check_message[0].length>0){
+                      var error_msg = id_check_message[0]
+                      $('.id_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
+                      //$form.find('#id_duplicate_check').val(0)
+                    }else{
+                      $('.id_confirm').text('사용 가능').css({'display':'inline','color':'green'})
+                      //$form.find('#id_duplicate_check').val(1)
+                    }
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                  },
+
+                //통신 실패시 처리
+                error:function(){
+                  alert("에러: 서버 통신 실패")
+                },
+            })
+    }
+
+    function check_email(){
+        $.ajax({
+                url:'/login/check_member_email/',
+                type:'POST',
+                data:{"email" : $('#id_email').val() },
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    var id_check_message = jsondata.id_check_result
+                    if(id_check_message[0].length>0){
+                      var error_msg = id_check_message[0]
+                      $('.email_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
+                      //$form.find('#id_duplicate_check').val(0)
+                    }else{
+                      $('.email_confirm').text('사용 가능').css({'display':'inline','color':'green'})
+                      //$form.find('#id_duplicate_check').val(1)
+                    }
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                  },
+
+                //통신 실패시 처리
+                error:function(){
+                  alert("에러: 서버 통신 실패")
+                },
+            })
+    }
 
 
 </script>
