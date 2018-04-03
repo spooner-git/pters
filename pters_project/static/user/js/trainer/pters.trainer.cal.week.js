@@ -372,7 +372,7 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').text(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('schedule-id'))
+		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('off-schedule-id'))
 		$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#popup_btn_complete").hide()
@@ -2106,6 +2106,18 @@ $(document).ready(function(){
           var summaryText = '<span id="summaryText">일정요약</span>'
           $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
         }
-
 });//document(ready)
 
+//작은달력 설정
+$.datepicker.setDefaults({
+  dateFormat: 'yy-mm-dd',
+  prevText: '이전 달',
+  nextText: '다음 달',
+  monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+  monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+  dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+  dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+  dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+  showMonthAfterYear: true,
+  yearSuffix: '년',
+});
