@@ -10,7 +10,7 @@ $(document).ready(function(){
       DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
       DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
 
-      var select_all_check = false;
+      //var select_all_check = false;
       var offset_for_canvas;
 
       var date = new Date();
@@ -492,10 +492,13 @@ $(document).ready(function(){
           }
       }
 
-
+      $('#page-addplan').click(function(){
+        console.log('page-addplan',select_all_check)
+      })
 
       $("#upbutton-check, #submitBtn_pt, #submitBtn_mini").click(function(e){
          e.preventDefault();
+         console.log(select_all_check,0)
          if(addTypeSelect=="ptadd"){
             var $form = $('#pt-add-form')
             var serverURL = '/schedule/add_schedule/'
@@ -509,11 +512,13 @@ $(document).ready(function(){
             var sendData = send_Data(serializeArray)
 
          }else if(addTypeSelect=="repeatptadd"){
+          console.log(select_all_check,1)
             var $form = $('#add-repeat-schedule-form')
             var serverURL = '/schedule/add_repeat_schedule/'
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
              console.log('test')
+             console.log(select_all_check,2)
          }
          else if(addTypeSelect=="repeatoffadd"){
             var $form = $('#add-off-repeat-schedule-form')
@@ -521,7 +526,7 @@ $(document).ready(function(){
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
          }
-        
+        console.log(select_all_check,3)
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
                 console.log(sendData)
@@ -595,6 +600,7 @@ $(document).ready(function(){
             if($('#countsSelected').text() == 0){
               alert('회원님의 남은 예약 가능 횟수가 없습니다.')
             }
+            console.log('else')
           //alert('빠진 항목 체크해봐야함')
             //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
