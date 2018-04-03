@@ -137,6 +137,8 @@ $(document).ready(function(){
             }
       })
 
+      $('#page-addplan-pc').click(function(){console.log(addTypeSelect)})
+
       if($('#calendar').width()<=600){
           $(document).off('click','.td00')
       }
@@ -784,6 +786,7 @@ function float_btn_addplan(option){
           $('#pcaddpopup,#pcaddpopup_off').css('display','none')
         }else{
           $('#calendar').css('position','fixed')
+          $('#page-addplan-pc').hide()
           $('#pcaddpopup').show()
           $('#shade').show()
         $('#pcaddpopup_off').hide()
@@ -825,6 +828,7 @@ function float_btn_addplan(option){
           $('#pcaddpopup,#pcaddpopup_off').css('display','none')
         }else{
           $('#calendar').css('position','fixed')
+          $('#page-addplan-pc').hide()
           $('#pcaddpopup').hide()
           $('#pcaddpopup_off').show()
           $('#shade').show()
@@ -939,6 +943,7 @@ function ajaxRepeatConfirmSend(){
             })    
       }
 
+/*
 function ajaxClassTime(){
       $.ajax({
         url: '/trainer/cal_day_ajax',
@@ -968,13 +973,14 @@ function ajaxClassTime(){
         }
       })    
 }
+*/
 
 function ajaxTimeGraphSet(){
       var today_form = $('#datepicker').val()
       $.ajax({
         url: '/trainer/cal_day_ajax/',
         type : 'POST',
-        data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
+        data : {"date":today_form, "day":7}, //월간 46 , 주간 18, 하루 1
         dataType : 'html',
 
         beforeSend:function(){
@@ -1604,6 +1610,8 @@ function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우�
       var option = "" 
     break;
   }
+  console.log(DateDataArray)
+  console.log(TimeDataArray)
 
   var date = datepicker.val();
   var Arraylength = DateDataArray.length;
