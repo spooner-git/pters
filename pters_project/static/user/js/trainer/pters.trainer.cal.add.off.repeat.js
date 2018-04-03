@@ -131,8 +131,10 @@ $(document).ready(function(){
               startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li>')
             }else if(i<12){
               startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li>')
-            }else if(i>=12){
-              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+i+'시</a></li>')
+            }else if(i>12){
+              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li>')
+            }else if(i==12){
+              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li>')
             }
           }
           $('#repeatstarttimes').html(startTimeList.join(''))
