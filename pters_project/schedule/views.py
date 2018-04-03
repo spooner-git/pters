@@ -476,7 +476,7 @@ def add_schedule_logic(request):
         except IntegrityError as e:
             error = error
         except ValidationError as e:
-            error = error
+            error = error + '등록 일정이 겹칩니다.'
         except InternalError as e:
             error = error
 
@@ -537,8 +537,6 @@ def delete_schedule_logic(request):
 
     if error is None:
         error = delete_schedule_logic_func(schedule_info)
-
-    # print(error)
 
     if error is None:
 

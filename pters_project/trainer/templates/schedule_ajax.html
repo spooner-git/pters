@@ -35,7 +35,7 @@
       [{% for pt_schedule_note_info in pt_schedule_note %}"{{ pt_schedule_note_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
-      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
       "RepeatDuplicationDateArray" :
       [{% for message in messages %}"{% if message.tags == "info" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "repeatArray" :
