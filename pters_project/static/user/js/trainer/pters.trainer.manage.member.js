@@ -2622,6 +2622,7 @@ function closePopup(option){
         $('#memberInfoPopup_PC').fadeOut('fast')
         $('#shade').fadeOut('fast');
     }else if(option == 'member_add'){
+        console.log('?')
         if($('body').width()<600){
             $('#page_managemember').show();
             $('#float_btn_wrap').show();
