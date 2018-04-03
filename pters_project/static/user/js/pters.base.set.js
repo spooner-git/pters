@@ -429,6 +429,8 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
       var dura = etime[0] - stime[0];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
       if(eDate == sDate+1 && eHour==sHour){
         var dura = 24
+      }else if(eDate == sDate+1 && eHour == 0){
+        var dura = 24-sHour
       }
 
 

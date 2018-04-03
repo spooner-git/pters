@@ -480,7 +480,7 @@
             <!-- 회원명 DB연동 필요-->
             <li><a data-repeat="WW">매주</a></li>
             <li><a data-repeat="2W">격주</a></li>
-            <li><a data-repeat="DD">매일</a></li>
+            <!--<li><a data-repeat="DD">매일</a></li>-->
           </ul>
         </div>
       </div>
@@ -1187,6 +1187,7 @@
 
           var addTypeSelect = "ptadd" //팝업 종류 선택 (PT or OFF)
           var selectedDayGroup = [] //반복일정에서 요일 선택
+          var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
         </script>
         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.week.js" %}></script>
         <script>
