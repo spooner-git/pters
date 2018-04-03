@@ -1156,8 +1156,8 @@ function DataFormattingDict(Option){
                                         'sex':finishsexArray[j] 
                                     };
             }
-            $('#currentMemberNum').text("진행중 회원수 : "+DBlength)
-            $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
+            $('#currentMemberNum').text("진행중 : "+DBlength+"명")
+            $('#finishMemberNum').text("종료 : "+DBendlength+"명")
         break;
 
         case 'ID':
@@ -1198,8 +1198,8 @@ function DataFormattingDict(Option){
                                     'birth':finishbirthdayArray[j], 
                                     'sex':finishsexArray[j] };
             }
-            $('#currentMemberNum').text("진행중 회원수 : "+DBlength)
-            $('#finishMemberNum').text("종료된 회원수 : "+DBendlength)
+            $('#currentMemberNum').text("진행중 : "+DBlength+"명")
+            $('#finishMemberNum').text("종료 : "+DBendlength+"명")
         break;
     }
 }
