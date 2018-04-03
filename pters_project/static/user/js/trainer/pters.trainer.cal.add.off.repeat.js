@@ -200,21 +200,21 @@ $(document).ready(function(){
         if(addTypeSelect == "ptadd"){
             if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('.submitBtn').addClass('submitBtnActivated')
+                $('#page-addplan .submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
             }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect).hasClass("dropdown_selected")==true){
                 $('#submitBtn_mini').css('background','#fe4e65');
                 select_all_check=true;
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('.submitBtn').removeClass('submitBtnActivated')
+                $('#page-addplan .submitBtn').removeClass('submitBtnActivated')
                 $('#submitBtn_mini').css('background','#282828');
                 select_all_check=false;
             }
         }else if(addTypeSelect == "offadd"){
             if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('.submitBtn').addClass('submitBtnActivated')
+                $('#page-addplan .submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
             }else if($('#page-addplan-pc').css('display')=='block' && durSelect_mini.hasClass("dropdown_selected")==true){
                 $('#submitBtn_mini').css('background','#fe4e65');
@@ -222,30 +222,30 @@ $(document).ready(function(){
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                 $('#submitBtn_mini').css('background','#282828');
-                $('.submitBtn').removeClass('submitBtnActivated')
+                $('#page-addplan .submitBtn').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
         }else if(addTypeSelect == "repeatptadd"){
             if((memberSelect).hasClass("dropdown_selected")==true && (repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('.submitBtn').addClass('submitBtnActivated')
+                $('#page-addplan .submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                 $('#submitBtn_mini').css('background','#282828');
-                $('.submitBtn').removeClass('submitBtnActivated')
+                $('#page-addplan .submitBtn').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
         }else if(addTypeSelect == "repeatoffadd"){
           console.log('add_repeat의 checkdropdown')
             if((repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('.submitBtn').addClass('submitBtnActivated')
+                $('#page-addplan .submitBtn').addClass('submitBtnActivated')
                 select_all_check=true;
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                 $('#submitBtn_mini').css('background','#282828');
-                $('.submitBtn').removeClass('submitBtnActivated')
+                $('#page-addplan .submitBtn').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
         }
