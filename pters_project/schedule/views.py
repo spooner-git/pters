@@ -24,7 +24,7 @@ from django.views.generic.base import ContextMixin
 
 from configs import settings
 from configs.views import date_check_func, get_client_ip
-from login.models import LogTb, MemberTb
+from login.models import LogTb, MemberTb, CommonCdTb
 from schedule.models import LectureTb, ClassLectureTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
@@ -285,6 +285,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     pt_repeat_schedule_start_time = []
     pt_repeat_schedule_time_duration = []
     pt_repeat_schedule_state_cd = []
+    pt_repeat_schedule_state_cd_nm = []
 
     # 강사 정보 가져오기
     try:
@@ -316,6 +317,12 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
             pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
             pt_repeat_schedule_state_cd.append(pt_repeat_schedule_info.state_cd)
+            try:
+                state_cd_name = CommonCdTb.objects.get(common_cd=pt_repeat_schedule_info.state_cd)
+            except ObjectDoesNotExist:
+                error = '반복일정의 상태를 불러오지 못했습니다.'
+            if error is None:
+                pt_repeat_schedule_state_cd_nm.append(state_cd_name.common_cd_nm)
 
     # OFF 일정 조회
     if error is None:
@@ -399,6 +406,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
     context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
     context['pt_repeat_schedule_state_cd'] = pt_repeat_schedule_state_cd
+    context['pt_repeat_schedule_state_cd_nm'] = pt_repeat_schedule_state_cd_nm
 
     return context
 
