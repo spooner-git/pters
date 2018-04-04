@@ -274,9 +274,9 @@ $(document).ready(function(){
     		}
     		var sdate        = '<div class="cell3">'+sdateFormat+'</div>'
     		var edate  		 = '<div class="cell3">'+edateFormat+'</div>'
-    		var regCount     = '<div class="cell4">'+jsondata.countArray+'</div>'
-    		var remCount     = '<div class="cell4">'+jsondata.remCountArray+'</div>'
-    		var state     = '<div class="cell4">'+jsondata.lectureStateNameArray+'</div>'
+    		var regCount     = '<div class="cell4">'+jsondata.countArray[i]+'</div>'
+    		var remCount     = '<div class="cell4">'+jsondata.remCountArray[i]+'</div>'
+    		var state     = '<div class="cell4">'+jsondata.lectureStateNameArray[i]+'</div>'
     		html.push('<div class="lecture_history_table_row">'+number+sdate+edate+regCount+remCount+state+'</div>')
     	}
     	$Loc.html(tableHeader+html.join(''))
