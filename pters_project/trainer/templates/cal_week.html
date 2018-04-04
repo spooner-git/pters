@@ -1126,6 +1126,8 @@
 
           //PT 일정 등록시 필요한 정보
           var memberIdArray =[{% for member_info in member_data %}'{{ member_info.user.id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+          var memberUserIdArray =[{% for member_info in member_data %}'{{ member_info.user }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
           var memberNameArray = [{% for member_info in member_data %}'{{ member_info.name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           var memberAvailCountArray = [{% for member_info in member_data %}'{{ member_info.lecture_avail_count }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           var memberLectureIdArray = [{% for member_info in member_data %}'{{ member_info.lecture_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
