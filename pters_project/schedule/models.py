@@ -124,6 +124,7 @@ class DeleteScheduleTb(models.Model):
     delete_repeat_schedule_tb = models.IntegerField(db_column='DELETE_REPEAT_SCHEDULE_TB_ID', blank=True, null=True)  # Field name made lowercase.
     start_dt = models.DateTimeField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
     end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
+    permission_state_cd = models.CharField(db_column='PERMISSION_STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     sign_data_url = models.CharField(db_column='SIGN_DATA_URL', max_length=255, blank=True, null=True)  # Field name made lowercase.
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, null=True)

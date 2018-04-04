@@ -167,6 +167,7 @@ def delete_schedule_logic_func(schedule_info):
                                                    lecture_tb_id=schedule_info.lecture_tb_id,
                                                    delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                                   permission_state_cd=schedule_info.permission_state_cd,
                                                    state_cd=schedule_info.state_cd, note=schedule_info.note,
                                                    en_dis_type=schedule_info.en_dis_type, member_note=schedule_info.member_note,
                                                    reg_member_id=schedule_info.reg_member_id,
