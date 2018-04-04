@@ -55,6 +55,7 @@ $(document).ready(function(){
 			if($(this).find('div').hasClass('dateMytime')){
 				$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
 				$('#shade2').css({'display':'block'});
+				var schedule_finish_check = $(this).attr('data-schedule-check')
 				var info = $(this).attr('data-date').split('_')
 				var info2 = $(this).find(".blackballoon").text().split(':')
 				var yy=info[0]
@@ -71,15 +72,32 @@ $(document).ready(function(){
 					$('#popup_info2').text(infoText2)
 					$('#popup_text1 span').addClass("limited")
 					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+					$("#popup_text1").css("display","block");
+					$("#popup_sign_img").css("display","none");
 					console.log('if디버깅:',info2[0],currentHour,Options.cancellimit)
 				}else{
-					var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-					var infoText2 = info2[0]+"시 예약 취소 하시겠습니까?"
-					$('#popup_info').text(infoText)
-					$('#popup_info2').text(infoText2)
-					$('#popup_info3_memo').text($(this).find('.memo').text())
-					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
-					console.log('else디버깅:',info2[0],currentHour,Options.cancellimit)
+					if(schedule_finish_check == 1){
+						var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')';
+						var infoText2 = info2[0]+"시 완료 일정";
+						$('#popup_info').text(infoText);
+						$('#popup_info2').text(infoText2);
+						$('#popup_info3_memo').text($(this).find('.memo').text());
+						$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+						$("#popup_text1").css("display","none");
+						$("#popup_sign_img").css("display","block");
+						$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
+
+                    }else{
+						var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+						var infoText2 = info2[0]+"시 예약 취소 하시겠습니까?"
+						$('#popup_info').text(infoText);
+						$('#popup_info2').text(infoText2);
+						$('#popup_info3_memo').text($(this).find('.memo').text());
+						$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+					    $("#popup_text1").css("display","block");
+						$("#popup_sign_img").css("display","none");
+						console.log('else디버깅:',info2[0],currentHour,Options.cancellimit);
+					}
 				}
 			}else{
 				$('#addpopup').fadeIn('fast').css({'z-index':'103'})
@@ -523,11 +541,13 @@ $(document).ready(function(){
 
 			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
+				$("td[data-date="+classDateArray[i]+"]").attr('data-schedule-check',scheduleFinishArray[i])
 				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
 				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').html(finishImg)
 				$("td[data-date="+classDateArray[i]+"] div.memo").addClass('greymemo').text(memo)
 			}else{
 				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
+				$("td[data-date="+classDateArray[i]+"]").attr('data-schedule-check',scheduleFinishArray[i])
 				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
 				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').html(finishImg)
 				$("td[data-date="+classDateArray[i]+"] div.memo").text(memo)

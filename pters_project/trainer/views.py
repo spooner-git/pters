@@ -708,8 +708,17 @@ class MyPageView(AccessTestMixin, TemplateView):
 
                 if len(class_lecture_list) > 0:
                     total_member_num += 1
-                    if len(class_lecture_list) == 1:
-                        if month_first_day < class_lecture_list[0].lecture_tb.start_date < next_month_first_day:
+                    start_date = ''
+                    for lecture_info_data in class_lecture_list:
+                        lecture_info = lecture_info_data.lecture_tb
+                        if lecture_info.state_cd == 'IP':
+                            if start_date == '':
+                                start_date = lecture_info.start_date
+                            else:
+                                if start_date > lecture_info.start_date:
+                                    start_date = lecture_info.start_date
+                    if start_date != '':
+                        if month_first_day <= start_date < next_month_first_day:
                             new_member_num += 1
 
         if error is None :
@@ -855,8 +864,17 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
 
                 if len(class_lecture_list) > 0:
                     total_member_num += 1
-                    if len(class_lecture_list) == 1:
-                        if month_first_day < class_lecture_list[0].lecture_tb.start_date < next_month_first_day:
+                    start_date = ''
+                    for lecture_info_data in class_lecture_list:
+                        lecture_info = lecture_info_data.lecture_tb
+                        if lecture_info.state_cd == 'IP':
+                            if start_date == '':
+                                start_date = lecture_info.start_date
+                            else:
+                                if start_date > lecture_info.start_date:
+                                    start_date = lecture_info.start_date
+                    if start_date != '':
+                        if month_first_day <= start_date < next_month_first_day:
                             new_member_num += 1
 
         if error is None :
@@ -1551,8 +1569,7 @@ def refund_member_lecture_info_logic(request):
             error = '환불 금액이 등록 금액보다 많습니다.'
 
     if error is None:
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                  state_cd='NP')
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         schedule_data.delete()
         repeat_schedule_data.delete()

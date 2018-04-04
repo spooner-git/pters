@@ -38,6 +38,7 @@ urlpatterns = [
 
     # 회원정보로 스케쥴 정보 list 조회
     url(r'^read_trainee_schedule_ajax/$', views.ReadTraineeScheduleViewAjax.as_view(), name='read_trainee_schedule_ajax'),
+    url(r'^read_trainee_all_schedule_ajax/$', views.ReadTraineeAllScheduleViewAjax.as_view(), name='read_trainee_all_schedule_ajax'),
 
     # 회원정보로 강좌 정보 list 조회
     url(r'^read_trainee_lecture_ajax/$', views.ReadTraineeLectureViewAjax.as_view(), name='read_trainee_lecture_ajax'),
