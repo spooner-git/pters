@@ -11,6 +11,7 @@ $(document).ready(function(){
             /*애니메이션*/
             $('#uptext2').text('PT 반복 일정 등록')
             addTypeSelect = "repeatptadd"
+            deleteTypeSelect = "repeatptdelete"
             $("#id_repeat_member_id").val($('#id_member_id').val());
             $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
             $("#id_repeat_member_name").val($('#id_member_name').val());
@@ -19,7 +20,7 @@ $(document).ready(function(){
             if($('#membersSelected button').val().length == 0){
               $('#offRepeatSummary').html('').hide()
             }
-            console.log(addTypeSelect)
+            console.log(addTypeSelect,deleteTypeSelect)
           }else if(addTypeSelect == "offadd"){
             repeatStartTimeSet()
             /*애니메이션*/
@@ -29,10 +30,11 @@ $(document).ready(function(){
             /*애니메이션*/
             $('#uptext2').text('OFF 반복 일정 등록')
             addTypeSelect = "repeatoffadd"
+            deleteTypeSelect = "repeatoffdelete"
             check_dropdown_selected()
             $(this).find('.icons-next-button').addClass('rotate_90')
             fill_repeat_info('off')
-            console.log(addTypeSelect)
+            console.log(addTypeSelect,deleteTypeSelect)
           }else if(addTypeSelect == "repeatptadd"){
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','block')

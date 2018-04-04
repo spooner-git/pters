@@ -74,6 +74,7 @@ $(document).ready(function(){
 		    	}
 		        var userID = Data[clickedName].id
 		        DataFormattingDict('ID');
+		        console.log(jsondata,'-----')
 		        if($('body').width()<600){
 		        	$('#shade').hide()
 		            open_member_info_popup_mobile(userID,jsondata)
@@ -511,7 +512,8 @@ $(document).ready(function(){
 
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		$('#popup_delete_btn_yes').click(function(){
-			if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || deleteTypeSelect=='repeatinfodelete'){
+			console.log(deleteTypeSelect)
+			if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
 				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
 				$.ajax({
 	                url:'/schedule/delete_repeat_schedule/',
@@ -526,6 +528,7 @@ $(document).ready(function(){
 	                //통신성공시 처리
 	                success:function(data){
 		                  var jsondata = JSON.parse(data);
+		                  console.log(jsondata)
 		                  if(jsondata.messageArray.length>0){
 			                  	$('#errorMessageBar').show()
 			                  	$('#errorMessageText').text(jsondata.messageArray)
@@ -534,11 +537,6 @@ $(document).ready(function(){
 			                  	closeAddPlanPopup();
 			                  	ajax_received_json_data(jsondata)
 			                  	AjaxCompleteSend();
-			                  	if(deleteTypeSelect == 'repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){
-			                  		var userID = $('#memberId_info_PC').text()
-			                  		get_indiv_repeat_info(userID)
-			                  		$('#shade').show()
-			                  	}
 				          }
 	                  },
 
@@ -547,7 +545,55 @@ $(document).ready(function(){
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
-	                	deleteTypeSelect = ''
+	                	//deleteTypeSelect = ''
+	  					addTypeSelect = 'ptadd'
+	                  },
+
+	                //통신 실패시 처리
+	                error:function(){
+	                  alert("에러: 서버 통신 실패")
+	                  closeDeletePopup();
+	                  closeAddPlanPopup()
+	                  AjaxCompleteSend();
+	                },
+	            })
+			}else if(deleteTypeSelect=='repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){ //회원정보창의 반복일정 삭제
+				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
+				$.ajax({
+	                url:'/schedule/delete_repeat_schedule/',
+	                type:'POST',
+	                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/member_manage_ajax/'},
+	                dataType:'html',
+
+	                beforeSend:function(){
+	                 	AjaxBeforeSend();
+	                },
+
+	                //통신성공시 처리
+	                success:function(data){
+		                  var jsondata = JSON.parse(data);
+		                  if(jsondata.messageArray.length>0){
+			                  	$('#errorMessageBar').show()
+			                  	$('#errorMessageText').text(jsondata.messageArray)
+				          }else{
+		                  		var userID = $('#memberId_info_PC').text()
+		                  		open_member_info_popup_pc(userID,jsondata)
+		                  		get_indiv_repeat_info(userID,jsondata)
+		                  		set_member_lecture_list(jsondata)
+                        		set_member_history_list(jsondata)
+		                  		$('#shade').show()
+		                  		closeDeletePopup();
+			                  	closeAddPlanPopup();
+			                  	AjaxCompleteSend();
+				          }
+	                  },
+
+	                //보내기후 팝업창 닫기
+	                complete:function(){
+	                	if($('body').width()>=600){
+	                		$('#calendar').css('position','relative')	
+	                	}
+	                	//deleteTypeSelect = ''
 	  					addTypeSelect = 'ptadd'
 	                  },
 

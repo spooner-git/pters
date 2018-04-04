@@ -301,7 +301,8 @@ $(document).ready(function(){
 
 		//일정삭제 확인 팝업 예 버튼
 		$('#popup_delete_btn_yes').click(function(){
-			if(addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd"){
+			console.log(deleteTypeSelect)
+			if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
 				$.ajax({
 	                url:'/schedule/delete_repeat_schedule/',
 	                type:'POST',
@@ -323,13 +324,14 @@ $(document).ready(function(){
 		                  	closeAddPlanPopup();
 		                  	ajax_received_json_data(jsondata)
 		                  	AjaxCompleteSend();
+		                  	ajaxClassTime()
 				          }
 	                  },
 
 	                //보내기후 팝업창 닫기
 	                complete:function(){
 	                	$('#id_repeat_schedule_id_confirm').val('')
-	                	fill_repeat_info_off()
+	                	//fill_repeat_info_off()
 	                  },
 
 	                //통신 실패시 처리
@@ -340,6 +342,56 @@ $(document).ready(function(){
 	                  AjaxCompleteSend();
 	                },
 	            })
+			}else if(deleteTypeSelect=='repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){ //회원정보창의 반복일정 삭제
+				console.log('repeatinfodelete')
+				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
+				$.ajax({
+	                url:'/schedule/delete_repeat_schedule/',
+	                type:'POST',
+	                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/member_manage_ajax/'},
+	                dataType:'html',
+
+	                beforeSend:function(){
+	                 	AjaxBeforeSend();
+	                },
+
+	                //통신성공시 처리
+	                success:function(data){
+		                  var jsondata = JSON.parse(data);
+		                  if(jsondata.messageArray.length>0){
+			                  	$('#errorMessageBar').show()
+			                  	$('#errorMessageText').text(jsondata.messageArray)
+				          }else{
+		                  		var userID = $('#memberId_info_PC').text()
+		                  		open_member_info_popup_pc(userID,jsondata)
+		                  		get_indiv_repeat_info(userID,jsondata)
+		                  		set_member_lecture_list(jsondata)
+                        		set_member_history_list(jsondata)
+		                  		$('#shade').show()
+		                  		closeDeletePopup();
+			                  	closeAddPlanPopup();
+			                  	AjaxCompleteSend();
+			                  	ajaxClassTime()			                  	
+				          }
+	                  },
+
+	                //보내기후 팝업창 닫기
+	                complete:function(){
+	                	if($('body').width()>=600){
+	                		$('#calendar').css('position','relative')	
+	                	}
+	                	//deleteTypeSelect = ''
+	  					addTypeSelect = 'ptadd'
+	                  },
+
+	                //통신 실패시 처리
+	                error:function(){
+	                  alert("에러: 서버 통신 실패")
+	                  closeDeletePopup();
+	                  closeAddPlanPopup()
+	                  AjaxCompleteSend();
+	                },
+	            })	
 			}else{
 				var $ptdelform = $('#daily-pt-delete-form');
 				var $offdelform = $('#daily-off-delete-form');
@@ -545,9 +597,14 @@ $(document).ready(function(){
 	})
 
 	function closeDeletePopup(){
-		$("#cal_popup_plandelete, #cal_popup_planinfo").css({'display':'none'})
-		//$("#shade").css({'z-index':'100'})
-		$('#shade3').hide()
+		if($('#cal_popup_plandelete').css('display')=='block'){
+			$("#cal_popup_plandelete").css({'display':'none'})
+			$('#shade3, #shade').css({'display':'none'});
+		}
+		if($('#cal_popup_planinfo').css('display')=='block'){
+			$("#cal_popup_planinfo").css({'display':'none'})
+			$('#shade3, #shade').css({'display':'none'});
+		}
 	}
 
 	function AjaxBeforeSend(){

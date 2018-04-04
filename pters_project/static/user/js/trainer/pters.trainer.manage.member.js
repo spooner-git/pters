@@ -327,7 +327,10 @@ $(document).ready(function(){
         var repeat_schedule_id = $(this).parents('.summaryInnerBox').attr('data-id')
         $('#cal_popup_plandelete').fadeIn().attr('data-id',repeat_schedule_id)
         $('#shade3').show()
-        deleteTypeSelect = 'repeatinfodelete'
+        if($('#memberInfoPopup_PC').css('display')=="block" || $('#memberInfoPopup').css('display')=="block"){
+            deleteTypeSelect = 'repeatinfodelete'
+        }
+        
     })
 
     $(document).on('click','.summaryInnerBoxText, .summaryInnerBoxText2',function(){ //반복일정 텍스트 누르면 휴지통 닫힘
@@ -362,6 +365,8 @@ $(document).ready(function(){
                             $('#errorMessageText').text('')
                             var userID = $('#memberId_info_PC').text()
                             get_indiv_repeat_info(userID)
+                            set_member_lecture_list(jsondata)
+                            set_member_history_list(jsondata)
                             closePopup('member_delete')
                             deleteTypeSelect = "memberinfodelete"
                             $('#shade3').hide()
@@ -1819,6 +1824,7 @@ function send_member_modified_data(){
 
           //통신성공시 처리
           success:function(data){
+              var jsondata = JSON.parse(data)
               ajax_received_json_data_member_manage(data);
               if(messageArray.length>0){
                     $('#errorMessageBar').show();
@@ -1834,11 +1840,11 @@ function send_member_modified_data(){
                     $('#startR').attr('selected','selected')
                     $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
                     if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc($('#memberId_info_PC').text())
-                        set_member_lecture_list()
+                        open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                        set_member_lecture_list(jsondata)
                     }else if($('#memberInfoPopup').css('display') == "block"){
-                        open_member_info_popup_mobile($('#memberId').val())
-                        set_member_lecture_list()
+                        open_member_info_popup_mobile($('#memberId').val(),jsondata)
+                        set_member_lecture_list(jsondata)
                     }
                     console.log('success');
               }
@@ -1878,6 +1884,7 @@ function resend_member_reg_data_pc(){
 
         //통신성공시 처리
         success:function(data){
+            var jsondata = JSON.parse(data)
             ajax_received_json_data_member_manage(data);
             if(messageArray.length>0){
                 $('#errorMessageBar').show();
@@ -1893,11 +1900,11 @@ function resend_member_reg_data_pc(){
               memberListSet('finished','date','yes');
               $('#startR').attr('selected','selected')
               if($('#memberInfoPopup_PC').css('display') == "block"){
-                open_member_info_popup_pc($('#memberId_info_PC').text())
+                open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
               }else if($('#memberInfoPopup').css('display') == "block"){
-                open_member_info_popup_mobile($('#memberId').val())
+                open_member_info_popup_mobile($('#memberId').val(),jsondata)
               }
-              set_member_lecture_list()
+              set_member_lecture_list(jsondata)
               console.log('success');
             }
         },
@@ -1935,6 +1942,7 @@ function delete_member_reg_data_pc(){
 
         //통신성공시 처리
         success:function(data){
+            var jsondata = JSON.parse(data)
             ajax_received_json_data_member_manage(data);
             if(messageArray.length>0){
                 $('#errorMessageBar').show();
@@ -1950,11 +1958,11 @@ function delete_member_reg_data_pc(){
                 memberListSet('finished','date','yes');
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc($('#memberId_info_PC').text())
+                    open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
                 }else if($('#memberInfoPopup').css('display') == "block"){
-                    open_member_info_popup_mobile($('#memberId').val())
+                    open_member_info_popup_mobile($('#memberId').val(),jsondata)
                 }
-                set_member_lecture_list()
+                set_member_lecture_list(jsondata)
                 console.log('success');
             }
         },
@@ -1995,6 +2003,7 @@ function refund_member_lecture_data(){
 
                 //통신성공시 처리
                 success:function(data){
+                    var jsondata = JSON.parse(data)
                     ajax_received_json_data_member_manage(data);
                     if(messageArray.length>0){
                         $('#errorMessageBar').show();
@@ -2010,11 +2019,11 @@ function refund_member_lecture_data(){
                       memberListSet('finished','date','yes');
                       $('#startR').attr('selected','selected')
                       if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc($('#memberId_info_PC').text())
+                        open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
                       }else if($('#memberInfoPopup').css('display') == "block"){
-                        open_member_info_popup_mobile($('#memberId').val())
+                        open_member_info_popup_mobile($('#memberId').val(),jsondata)
                       }
-                      set_member_lecture_list()
+                      set_member_lecture_list(jsondata)
 
                       $('#shade3').css('display','none')
                       $('div.lectureStateChangePopup.popups input[type="number"]').val('')
@@ -2061,6 +2070,7 @@ function disconnect_member_lecture_data(stateCode){
 
                 //통신성공시 처리
                 success:function(data){
+                    var jsondata = JSON.parse(data)
                     ajax_received_json_data_member_manage(data);
                     if(messageArray.length>0){
                         $('#errorMessageBar').show();
@@ -2076,12 +2086,12 @@ function disconnect_member_lecture_data(stateCode){
                       memberListSet('finished','date','yes');
                       $('#startR').attr('selected','selected')
                       if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc($('#memberId_info_PC').text())
+                        open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
                       }else if($('#memberInfoPopup').css('display') == "block"){
-                        open_member_info_popup_mobile($('#memberId').val())
+                        open_member_info_popup_mobile($('#memberId').val(),jsondata)
                       }
                       
-                      set_member_lecture_list()
+                      set_member_lecture_list(jsondata)
 
                       $('#shade3').css('display','none')
                       $('div.lectureStateChangePopup.popups input[type="number"]').val('')
@@ -2364,7 +2374,7 @@ function add_member_form_func(){
                     $('#page_managemember').show();
                 }
                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
-                    set_member_lecture_list()
+                    set_member_lecture_list(jsondata)
                 }
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
