@@ -383,18 +383,18 @@ a:focus, a:hover{
 
 #page-base{
     display: block;
-    z-index: 110;
+    z-index: 150;
 }
 
 #page-base-addstyle{
     display: none;
-    z-index: 110;
+    z-index: 150;
     background: #ffffff;
 }
 
 #page-base-modifystyle{
     display: none;
-    z-index: 110;
+    z-index: 150;
     background: #ffffff;
 }
 

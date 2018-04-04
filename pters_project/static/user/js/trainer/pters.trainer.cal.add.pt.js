@@ -613,7 +613,11 @@ $(document).ready(function(){
       $('#btn_close_repeatconfirm, #popup_btn_repeatconfim_no').click(function(){
         $('#id_repeat_confirm').val(0);
         $('#cal_popup_repeatconfirm').fadeOut('fast');
-        $('#shade3, #cal_popup_repeatconfirm').hide()
+        if($('body').width()>600){
+          $('#shade3, #cal_popup_repeatconfirm').hide()
+        }else if($('body').width()<=600){
+          $('#cal_popup_repeatconfirm').hide()
+        }
         ajaxRepeatConfirmSend();
       })
       

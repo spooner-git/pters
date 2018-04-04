@@ -72,12 +72,12 @@
                 <input type="hidden" name="class_id" id="id_class_id">
                 <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
             </form>
-            <label>클래스 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
-            <p>일정 확인을 원하는 클래스를 선택해 주세요.</p>
+            <!--<label>클래스 선택</label>-->
+            <p>일정 확인을 원하는 클래스를 선택해 주세요.<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></p>
             <div class="pters_table">
               <div class="pters_table_cell_head table_center_name">센터</div>
               <div class="pters_table_cell_head table_lecture_name">클래스</div>
-              <div class="pters_table_cell_head table_trainee_number">수강생</div>
+              <div class="pters_table_cell_head table_trainee_num">수강생</div>
               <div class="pters_table_cell_head table_start_date">개강일</div>
               <div class="pters_table_cell_head table_lecture_status">상태</div>
             </div>
@@ -217,7 +217,13 @@
                             <div id="user_name">{{user.last_name}} {{user.first_name}}
                                 <span class="KRtext">코치님</span><span class="JPtext">様</span><span class="ENtext"></span>
                             </div>
-                            <div id="welcome"><span class="KRtext">안녕하세요!</span><span class="JPtext">こんにちは</span><span class="ENtext">What a nice day!</span></div>
+                            <div id="welcome">
+                                <span class="KRtext">안녕하세요!</span>
+                                <span class="JPtext">こんにちは</span>
+                                <span class="ENtext">What a nice day!</span>
+                                <p style="margin-top:15px;color:#f4f4f4;font-size:12px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}
+                                </p>
+                            </div>
                         </div>                     
 
                         <div class="sidebar_div" id="cal_day"><img src={% static_url "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
@@ -330,11 +336,11 @@
                 </div>
                 <div id="loginInfo" class="centermenu_div" style="float:right;">
                     <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
-                    <span class="pcwhere"></span>
+                    <span class="pcwhere">{{ request.session.class_center_name }}</span>
                     <span class="pcwho" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">{{user.last_name}} {{user.first_name}} <span></span></span>
                 </div>
                 <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
-                <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}</span>
+                <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;">{{ request.session.class_type_name }}</span>
             </div>
         </nav>
         
@@ -408,7 +414,6 @@
                     $('#shade, #shade3').css('display','none')
                 }
                 $('#alarm').css('transform','translate(-50%,-200%)');
-                ajaxClassTime()
             })
 
             $('#errorMessageBar span:nth-child(2)').click(function(){

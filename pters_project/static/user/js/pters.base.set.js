@@ -27,7 +27,7 @@ $(document).ready(function(){
       $('.__workmanage').text("業務管理")
       $('.__setting').text("設定")
       $('.pcwho span').text("様")
-      $('.pcwhere').text("PTERSトレーニングセンター")
+      //$('.pcwhere').text("PTERSトレーニングセンター")
       $('.pclogout').text("ログアウト")
       $('#uptext span').text("様のスケジュール")
       $('.__alarm').text("アラーム")
@@ -42,7 +42,7 @@ $(document).ready(function(){
       $('.__workmanage').text("Work")
       $('.__setting').text("Settings")
       $('.pcwho span').text("")
-      $('.pcwhere').text("PTERS Traning Center")
+      //$('.pcwhere').text("PTERS Traning Center")
       $('.pclogout').text("Logout")
       $('#uptext span').text("'s schedule")
       $('.__alarm').text("Alarm")
@@ -55,9 +55,9 @@ $(document).ready(function(){
       $('.__monthplan').text("월간 일정")
       $('.__membermanage').text("회원 관리")
       $('.__workmanage').text("업무 통계")
-      $('.__setting').text("서비스 설정")
+      $('.__setting').text("설정")
       $('.pcwho span').text("님")
-      $('.pcwhere').text("PTERS 트레이닝센터")
+      //$('.pcwhere').text("PTERS 트레이닝센터")
       $('.pclogout').text("로그아웃")
       $('#uptext span').text("코치님 일정")
       $('.__alarm').text("알림")
@@ -67,6 +67,13 @@ $(document).ready(function(){
 
 
    $('.__alarm, #upbutton-alarm').click(function(){
+      console.log($('#alarm-iframe').contents().find(".log_id_array").length)
+      if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
+        $('#alarm_delete').hide()
+      }else{
+        $('#alarm_delete').show()
+      }
+
       $('#alarm').css('transform','translate(-50%,0%)');
       if($('body').width()>600){
           $('#shade3').css('display','block');
@@ -88,9 +95,10 @@ $(document).ready(function(){
 });
 
 
+
 $('#alarm_delete').click(function(){
     var alarm_size = $('#alarm-iframe').contents().find(".log_id_array").length;
-    alert(alarm_size);
+    alert(alarm_size+'건의 알림을 삭제합니다.');
     $('#alarm-iframe').contents().find("#log_id_size").val(alarm_size);
     $('#alarm-iframe').contents().find("#alarm-delete-form").submit();
 
@@ -452,7 +460,10 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
 
 function scrollToDom(dom){
     var offset = dom.offset();
-    $('body, html').animate({scrollTop : offset.top-180},10)
+    if(offset != undefined){
+      $('body, html').animate({scrollTop : offset.top-180},10)
+    }
+    
 }
 
 

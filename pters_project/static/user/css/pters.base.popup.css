@@ -37,6 +37,9 @@
 		padding: 10px;
 	}
 
+.popups{
+	box-shadow: 1px 1px 5px 1px #cccccc;
+}
 
 
 #cal_popup_planinfo{
@@ -68,7 +71,8 @@
 	display: none;
 	position: fixed;
 	background: #ffffff;
-	border-color: transparent;
+	border:1px solid #cccccc;
+	box-shadow: 1px 1px 5px 1px #cccccc;
 	top: 50%;
 	width: 	100%;
 	max-width: 	330px;

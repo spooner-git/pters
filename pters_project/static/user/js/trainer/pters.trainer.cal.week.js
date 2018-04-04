@@ -75,6 +75,7 @@ $(document).ready(function(){
 		        var userID = Data[clickedName].id
 		        DataFormattingDict('ID');
 		        if($('body').width()<600){
+		        	$('#shade').hide()
 		            open_member_info_popup_mobile(userID,jsondata)
 		            get_indiv_repeat_info(userID,jsondata)
 		            set_member_lecture_list(jsondata)

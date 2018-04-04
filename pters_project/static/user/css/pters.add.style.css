@@ -650,6 +650,10 @@ ul a{
 #memberSearchButton{
 	display: table-cell;
 	width: 40px;
+	height: 35px;
+	background: #282828;
+	color: #ffffff;
+	border: 0;
 	font-size: 12px;
 }
 
@@ -798,6 +802,8 @@ option{
 	#memberSearchButton{
 		float: right;
 		width: 20%;
+		height: 28px;
+		margin-top: 5px;
 	}
 
 	#memberName_reg{
