@@ -679,6 +679,7 @@ def pt_delete_logic(request):
                                                    lecture_tb_id=schedule_info.lecture_tb_id,
                                                    delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                                   permission_state_cd=schedule_info.permission_state_cd,
                                                    state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
                                                    note=schedule_info.note, member_note=schedule_info.member_note,
                                                    reg_member_id=schedule_info.reg_member_id,
@@ -970,7 +971,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             with transaction.atomic():
                 lecture_schedule_data = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
                                                    start_dt=start_date, end_dt=end_date,
-                                                   state_cd='NP', en_dis_type='1',
+                                                   state_cd='NP', permission_state_cd='AP', en_dis_type='1',
                                                    note='', member_note='',
                                                    reg_member_id=request.user.id,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
