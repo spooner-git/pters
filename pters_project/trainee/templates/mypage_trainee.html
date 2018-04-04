@@ -33,8 +33,12 @@
   
 </div>
 
+<div class="mode_switch_button_wrap"> 
+<div class="mode_switch_button mode_active" data-page="summary_wrap">정보</div>
+<div class="mode_switch_button" data-page="history_wrap">이력</div>
+</div>
 
-<div id="summary_wrap">
+<div id="summary_wrap" class="mypage_page">
   <div class="mypage_label">
       <img src="/static/user/res/member/icon-user.png" alt=""><span>내 정보 개요</span>
   </div>
@@ -84,6 +88,25 @@
         <span>업무 시간</span><span></span>
       </div>
   </div>
+</div>
+
+<div id="history_wrap" class="mypage_page"> 
+    <div class="mypage_label">
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>활동 이력</span>
+    </div>
+
+    <div id="myActiveHistory" class="boardWrap">
+
+    </div>
+
+    <div class="mypage_label">
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>등록 이력</span>
+    </div>
+
+    <div id="myRegHistory" class="boardWrap">
+      
+    </div>
+
 </div>
 
 <!--

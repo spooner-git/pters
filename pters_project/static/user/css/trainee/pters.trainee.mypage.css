@@ -23,14 +23,41 @@ body{
 	height: 60px;
 }
 
+.mode_switch_button_wrap{
+	text-align: left;
+	max-width: 600px;
+	margin:0 auto;
+}
+
+.mode_switch_button{
+	display: table-cell;
+	width: 	70px;
+	height: 25px;
+
+	border-top-right-radius: 8px;
+	text-align: center;
+	font-size: 13px;
+	font-weight: bold;
+	cursor: pointer;
+	padding-top: 3px;
+	background:#cccccc;
+	color: 	#ffffff;
+}
+	.mode_active{
+		background:#fe4e65;
+		color: 	#ffffff;
+	}
+
+
 #mygraph{
 	transform:translateY(0%);
 	transition: 1s;
 }
 
 #summary_wrap{
-	transform:translateY(0%);
-	transition: 1s;
+	margin:0 auto;
+	max-width: 600px;
+	border: 1px solid #cccccc;
 }
 
 #yearText{

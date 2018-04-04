@@ -146,4 +146,48 @@ $(document).ready(function(){
     }
 
 
+    $('.mode_switch_button').click(function(){
+    	var page = $(this).attr('data-page')
+    	$('#'+page).show()
+    	$('#'+page).siblings('.mypage_page').hide()
+    	$(this).addClass('mode_active')
+    	$(this).siblings('.mode_switch_button').removeClass('mode_active')
+    })
+
+    // /trainee/read_trainee_all_schedule_ajax/ PT 일정 이력
+
+    $('body').click(function(){
+    	$.ajax({
+	          url: '/trainee/read_trainee_all_schedule_ajax/',
+			  dataType : 'html',
+			  type:'POST',
+
+	          beforeSend:function(){
+	          	//AjaxBeforeSend();
+	          },
+
+	          success:function(data){
+	          	var jsondata = JSON.parse(data);
+	          	console.log(jsondata)
+	          	if(jsondata.messageArray.length>0){
+	              	$('#errorMessageBar').show()
+	              	$('#errorMessageText').text(jsondata.messageArray)
+	            }else{
+					
+	            }
+	            
+			  },
+
+	          complete:function(){
+	          	
+	          },
+
+	          error:function(){
+	            console.log('server error')
+	          }
+        })
+    })
+
+
+
 });//document(ready)
