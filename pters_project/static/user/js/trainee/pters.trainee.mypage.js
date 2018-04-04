@@ -155,7 +155,8 @@ $(document).ready(function(){
     })
 
     // /trainee/read_trainee_all_schedule_ajax/ PT 일정 이력
-
+    get_trainee_lecture_history()
+    get_trainee_reg_history()
     function get_trainee_lecture_history(){
     	$.ajax({
 	          url: '/trainee/read_trainee_all_schedule_ajax/',
@@ -173,7 +174,7 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
-					
+					draw_trainee_lecture_history(jsondata,$('#myActiveHistory'))
 	            }
 	            
 			  },
@@ -189,7 +190,96 @@ $(document).ready(function(){
     }
 
     function draw_trainee_lecture_history(jsondata, targetHTML){
+    	var stateCodeDict = {"PE":"완료","NP":"시작전","IP":"시작전"}
     	var $Loc = targetHTML
+    	var tableHeader = '<div class="lecture_history_table_header">'+
+    						'<div class="cell1">회차</div>'+
+    						'<div class="cell2">날짜</div>'+
+    						'<div class="cell3">진행시간</div>'+
+    						'<div class="cell4">상태</div>'+
+    						'<div class="cell5">노트</div>'+
+    					   '</div>'
+    	var html = []
+    	for(var i=0; i<jsondata.ptScheduleStateCdArray.length; i++){
+    		var number 	     = '<div class="cell1">'+(jsondata.ptScheduleStateCdArray.length-i)+'</div>'
+    		if($('body').width()>600){
+    			var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i])
+    		}else if($('body').width()<=600){
+    			var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i],'minimize')
+    		}
+    		var date         = '<div class="cell2">'+dateFormat+'</div>'
+    		var durationcalc = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0])
+    		var duration     = '<div class="cell3">'+durationcalc+'시간'+'</div>'
+    		var state        = '<div class="cell4 state_'+jsondata.ptScheduleStateCdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
+    		var memo         = '<div class="cell5">'+jsondata.ptScheduleNoteArray[i]+'</div>'
+    		html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')
+    	}
+    	$Loc.html(tableHeader+html.join(''))
+    }
+
+    function get_trainee_reg_history(){
+    	$.ajax({
+	          url: '/trainee/read_trainee_lecture_by_class_ajax/',
+	          data:{"class_id":class_id[0]},
+			  dataType : 'html',
+			  type:'POST',
+
+	          beforeSend:function(){
+	          	//AjaxBeforeSend();
+	          },
+
+	          success:function(data){
+	          	var jsondata = JSON.parse(data);
+	          	console.log(jsondata)
+	          	if(jsondata.messageArray.length>0){
+	              	$('#errorMessageBar').show()
+	              	$('#errorMessageText').text(jsondata.messageArray)
+	            }else{
+					draw_trainee_reg_history(jsondata,$('#myRegHistory'))
+	            }
+	            
+			  },
+
+	          complete:function(){
+	          	
+	          },
+
+	          error:function(){
+	            console.log('server error')
+	          }
+        })
+    }
+
+    function draw_trainee_reg_history(jsondata, targetHTML){
+    	//var connectStateCodeDict = {"VIEW":"연결됨","WAIT":"연결안됨","DELETE":"연결안됨"}
+    	
+    	var $Loc = targetHTML
+    	var tableHeader = '<div class="lecture_history_table_header">'+
+    						'<div class="cell1">No.</div>'+
+    						'<div class="cell3">등록 날짜</div>'+
+    						'<div class="cell3">종료 날짜</div>'+
+    						'<div class="cell4">등록 횟수</div>'+
+    						'<div class="cell4">남은 횟수</div>'+
+    						'<div class="cell4">상태</div>'+
+    					   '</div>'
+    	var html = []
+    	for(var i=0; i<jsondata.countArray.length; i++){
+    		var number 	     = '<div class="cell1">'+(i+1)+'</div>'
+    		if($('body').width()>600){
+    			var sdateFormat = date_format_to_hangul(jsondata.startArray[i])
+    			var edateFormat = date_format_to_hangul(jsondata.endArray[i])
+    		}else if($('body').width()<=600){
+    			var sdateFormat = jsondata.startArray[i]
+    			var edateFormat =jsondata.endArray[i]
+    		}
+    		var sdate        = '<div class="cell3">'+sdateFormat+'</div>'
+    		var edate  		 = '<div class="cell3">'+edateFormat+'</div>'
+    		var regCount     = '<div class="cell4">'+jsondata.countArray[i]+'</div>'
+    		var remCount     = '<div class="cell4">'+jsondata.remCountArray[i]+'</div>'
+    		var state     = '<div class="cell4">'+jsondata.lectureStateNameArray[i]+'</div>'
+    		html.push('<div class="lecture_history_table_row">'+number+sdate+edate+regCount+remCount+state+'</div>')
+    	}
+    	$Loc.html(tableHeader+html.join(''))
     }
 
 

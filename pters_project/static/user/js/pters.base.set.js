@@ -167,11 +167,18 @@ function date_format_to_hangul(yyyymmdd){
       return hangul_result
 }
 
-//데이트가 2018-08-23 10:00:00 을 2018년 8월 23일(수) 10:00:00
-function date_format_to_user_hangul(yyyy_mm_dd){
-  var dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일'
-  var day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') '
-  var time = yyyy_mm_dd.split(' ')[1].substr(0,5)
+//데이트가 2018-08-23 10:00:00 을 2018년 8월 23일(수) 10:00
+function date_format_to_user_hangul(yyyy_mm_dd, minimize){
+  if(minimize!=undefined){
+    var dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])
+    var day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') '
+    var time = Number(yyyy_mm_dd.split(' ')[1].substr(0,2))+'시'
+  }else{
+    var dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일'
+    var day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') '
+    var time = yyyy_mm_dd.split(' ')[1].substr(0,5)
+  }
+  
   return dates+day+time
 }
 
