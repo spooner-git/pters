@@ -1661,10 +1661,6 @@ def update_member_lecture_info_logic(request):
             note = lecture_info.note
 
     if error is None:
-        if input_lecture_reg_count < lecture_info.lecture_rem_count:
-            error = '등록 횟수가 남은 횟수보다 작습니다.'
-
-    if error is None:
         if input_lecture_reg_count < lecture_info.lecture_reg_count-lecture_info.lecture_avail_count:
             error = '등록 횟수가 이미 등록한 스케쥴보다 작습니다.'
 
