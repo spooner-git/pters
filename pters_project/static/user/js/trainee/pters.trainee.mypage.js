@@ -269,8 +269,8 @@ $(document).ready(function(){
     			var sdateFormat = date_format_to_hangul(jsondata.startArray[i])
     			var edateFormat = date_format_to_hangul(jsondata.endArray[i])
     		}else if($('body').width()<=600){
-    			var sdateFormat = date_format_to_hangul(jsondata.startrray[i],'minimize')
-    			var edateFormat = date_format_to_hangul(jsondata.endArray[i],'minimize')
+    			var sdateFormat = jsondata.startArray[i]
+    			var edateFormat =jsondata.endArray[i]
     		}
     		var sdate        = '<div class="cell3">'+sdateFormat+'</div>'
     		var edate  		 = '<div class="cell3">'+edateFormat+'</div>'

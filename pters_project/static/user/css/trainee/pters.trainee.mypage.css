@@ -79,6 +79,7 @@ body{
 		padding-top: 5px;
 		padding-bottom: 5px;
 		font-weight: bold;
+		font-size: 12px;
 	}
 		.lecture_history_table_header div{
 			display: table-cell;
@@ -89,6 +90,7 @@ body{
 			width: 100%;
 			margin-top: 10px;
 			margin-bottom: 10px;
+			font-size: 12.5px;
 		}
 			.lecture_history_table_row div{
 				display: table-cell;
@@ -498,6 +500,10 @@ body{
 
 	.arrowButton{
 		display:none;
+	}
+
+	.lecture_history_table_header,.lecture_history_table_row{
+		font-size: 14px;
 	}
 
 	#menuName,{
