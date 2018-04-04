@@ -1312,7 +1312,7 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReadTraineeAllScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'member_all_schedule_ajax.html'
+    template_name = 'trainee_all_schedule_ajax.html'
 
     def post(self, request, *args, **kwargs):
         context = super(ReadTraineeAllScheduleViewAjax, self).get_context_data(**kwargs)
