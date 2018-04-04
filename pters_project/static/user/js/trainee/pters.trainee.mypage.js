@@ -156,7 +156,7 @@ $(document).ready(function(){
 
     // /trainee/read_trainee_all_schedule_ajax/ PT 일정 이력
 
-    $('body').click(function(){
+    function get_trainee_lecture_history(){
     	$.ajax({
 	          url: '/trainee/read_trainee_all_schedule_ajax/',
 			  dataType : 'html',
@@ -186,7 +186,12 @@ $(document).ready(function(){
 	            console.log('server error')
 	          }
         })
-    })
+    }
+
+    function draw_trainee_lecture_history(jsondata, targetHTML){
+    	var $Loc = targetHTML
+    }
+
 
 
 
