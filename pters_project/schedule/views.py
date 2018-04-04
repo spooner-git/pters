@@ -78,14 +78,14 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
                 if repeat_id is None:
                     add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                    start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                                   state_cd='IP', note=note, member_note='', en_dis_type=en_dis_type,
+                                                   state_cd='NP', permission_state_cd='AP', note=note, member_note='', en_dis_type=en_dis_type,
                                                    reg_member_id=user_id,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
                 else:
                     add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_id,
                                                    repeat_schedule_tb_id=repeat_id,
                                                    start_dt=schedule_start_datetime, end_dt=schedule_end_datetime,
-                                                   state_cd='IP', note=note, member_note='', en_dis_type=en_dis_type,
+                                                   state_cd='NP', permission_state_cd='AP', note=note, member_note='', en_dis_type=en_dis_type,
                                                    reg_member_id=user_id,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
                 add_schedule_info.save()

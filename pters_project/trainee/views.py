@@ -970,7 +970,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             with transaction.atomic():
                 lecture_schedule_data = ScheduleTb(class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
                                                    start_dt=start_date, end_dt=end_date,
-                                                   state_cd='NP', en_dis_type='1',
+                                                   state_cd='NP', permission_state_cd='AP', en_dis_type='1',
                                                    note='', member_note='',
                                                    reg_member_id=request.user.id,
                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
