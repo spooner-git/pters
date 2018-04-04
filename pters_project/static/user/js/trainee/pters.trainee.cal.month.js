@@ -781,6 +781,7 @@ $(document).ready(function(){
 	          	$('.blackballoon, .balloon').html('')
 	          	$('.blackballoon').removeClass('blackballoon')
 	          	$('.balloon').removeClass('balloon')
+	          	$('.dateMytime').removeClass('dateMytime')
 	          	$('.memo, .greymemo').text('').removeClass('greymemo')
 	          	classDates()
           	}
