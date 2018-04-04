@@ -1,6 +1,8 @@
     {
       "memberIdArray":
       [{% for member_info in member_data %}"{{ member_info.user.id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberUserIdArray":
+      [{% for member_info in member_data %}"{{ member_info.user }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberNameArray":
       [{% for member_info in member_data %}"{{ member_info.name  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "memberAvailCountArray":
