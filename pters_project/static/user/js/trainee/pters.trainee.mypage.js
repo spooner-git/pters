@@ -218,10 +218,9 @@ $(document).ready(function(){
     }
 
     function get_trainee_reg_history(){
-    	var classid=69
     	$.ajax({
 	          url: '/trainee/read_trainee_lecture_by_class_ajax/',
-	          data:{"class_id":classid},
+	          data:{"class_id":class_id[0]},
 			  dataType : 'html',
 			  type:'POST',
 
