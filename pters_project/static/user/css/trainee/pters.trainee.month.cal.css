@@ -788,6 +788,14 @@ img,a,div,span,p{
 		width: 330px;
 	}
 
+	#popup_sign_img{
+		display: none;
+		margin :0 auto;
+		position: relative;
+		background: #ffffff;
+		width: 330px;
+
+	}
 
 	#img_cal{
 		position: absolute;
@@ -1152,4 +1160,12 @@ img,a,div,span,p{
 	.today{
 		color: transparent;
 	}
+}
+
+
+
+#id_sign_img{
+	width: 100px;
+	margin-right: 14.845px;
+	margin-left: 14.845px;
 }

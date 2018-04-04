@@ -40,6 +40,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
         class_counter = 0
         class_data = None
+        error = None
 
         if len(lecture_data) > 0:
             for idx, lecture_info in enumerate(lecture_data):
@@ -1273,7 +1274,7 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         if day == '':
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(47))
+        end_date = today + datetime.timedelta(days=int(day))
 
         context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
                                                              self.request.user.last_name+self.request.user.first_name, class_id, start_date,
@@ -1305,6 +1306,29 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         if context['error'] is not None:
             logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
             messages.error(self.request, context['error'])
+
+        return render(request, self.template_name, context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ReadTraineeAllScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'member_all_schedule_ajax.html'
+
+    def post(self, request, *args, **kwargs):
+        context = super(ReadTraineeAllScheduleViewAjax, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        member_id = request.user.id
+        context['error'] = None
+
+        if member_id is None or member_id == '':
+            context['error'] = '회원 정보를 불러오지 못했습니다.'
+
+        if context['error'] is None:
+            context = get_trainee_schedule_data_func(context, class_id, member_id)
+
+        if context['error'] is not None:
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
+            messages.error(request, context['error'])
 
         return render(request, self.template_name, context)
 
@@ -1622,5 +1646,51 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                 else:
                     log_info.log_read = 2
 
-
         return log_data
+
+
+def get_trainee_schedule_data_func(context, class_id, member_id):
+
+    error = None
+    class_info = None
+
+    pt_schedule_data = None
+
+    lecture_list = None
+
+    # 강좌 정보 가져오기
+    try:
+        class_info = ClassTb.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        error = '강사 정보가 존재하지 않습니다'
+
+    # 수강 정보 불러 오기
+    if error is None:
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                     lecture_tb__member_id=member_id,
+                                                     lecture_tb__use='1', auth_cd='VIEW', use=1)
+    if error is None:
+        # 강사 클래스의 반복일정 불러오기
+        if len(lecture_list) > 0:
+            for idx, lecture_list_info in enumerate(lecture_list):
+                lecture_info = lecture_list_info.lecture_tb
+                if idx == 0:
+                    pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                 en_dis_type='1', use=1).order_by('-start_dt')
+                else:
+                    pt_schedule_data |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                  en_dis_type='1', use=1).order_by('-start_dt')
+    if pt_schedule_data is not None and len(pt_schedule_data) > 0:
+        for pt_schedule_info in pt_schedule_data:
+            pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
+            pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
+            pt_schedule_info.mod_dt = str(pt_schedule_info.mod_dt)
+            pt_schedule_info.reg_dt = str(pt_schedule_info.reg_dt)
+
+    context['pt_schedule_data'] = pt_schedule_data
+
+    if error is None:
+        context['error'] = error
+
+    return context
+
