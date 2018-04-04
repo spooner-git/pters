@@ -11,6 +11,43 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+	//setInterval(function(){ajaxCheckSchedule()}, 2000)// 자동 ajax 새로고침(일정가져오기)
+
+
+	function ajaxCheckSchedule(){
+
+            $.ajax({
+              url: '/schedule/check_schedule_update/',
+			  dataType : 'html',
+
+              beforeSend:function(){
+              	//AjaxBeforeSend();
+              },
+
+              success:function(data){
+              	var jsondata = JSON.parse(data);
+              	if(jsondata.messageArray.length>0){
+                  	$('#errorMessageBar').show()
+                  	$('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                	var update_data_changed = jsondata.data_changed;
+					if(update_data_changed[0]=="1"){
+						ajaxClassTime();
+					}
+                }
+                
+			  },
+
+              complete:function(){
+              	//AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })
+    }
+
 	
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
@@ -50,6 +87,7 @@ $(document).ready(function(){
 
 
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
+		$('#cal_popup').attr('data-date',$(this).attr('data-date'))
 		if($(this).hasClass('available')){
 			$('.cancellimit_time').text(Options.cancellimit+"시간 전")
 			if($(this).find('div').hasClass('dateMytime')){
@@ -70,6 +108,7 @@ $(document).ready(function(){
 					var infoText2 = "온라인 취소불가 일정 :"+info2[0]+"시 "+info2[1]+"분"
 					$('#popup_info').text(infoText)
 					$('#popup_info2').text(infoText2)
+					$('#popup_info3_memo').text($(this).find('.memo').text());
 					$('#popup_text1 span').addClass("limited")
 					$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 					$("#popup_text1").css("display","block");
@@ -217,19 +256,7 @@ $(document).ready(function(){
 		$(this).parents('.popups').fadeOut('fast')
 	})
 
-	$("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
-		if($(this).find("span").hasClass('limited')){
-			alert("선택한 일정은 삭제가 불가합니다.\n \n시작 "+Options.cancellimit+'시간 이내에는 온라인 취소가 불가합니다.\n \n담당 강사에게 직접 문의해주세요')
-		}else{
-			$("#cal_popup").hide().css({'z-index':'-2'})
-			$("#cal_popup3").fadeIn('fast').css({'z-index':'103'});
-			$('#shade2').css({'display':'block'});
-		}
-	})
-
-	$('#popup_text3').click(function(){
-		document.getElementById('pt-delete-form').submit();
-	})
+	
 
       var select_all_check = false;
       //달력 선택된 날짜
@@ -262,11 +289,100 @@ $(document).ready(function(){
 
     $("#submitBtn").click(function(){
         if(select_all_check==true){
-            document.getElementById('pt-add-form').submit();
+            //document.getElementById('pt-add-form').submit();
+        	send_reservation()
         }else{
             //입력값 확인 메시지 출력 가능
         }
     })
+
+    function send_reservation(){
+		$.ajax({
+	          url: '/trainee/pt_add_logic/',
+	          data: $('#pt-add-form').serialize(),
+			  dataType : 'html',
+			  type:'POST',
+
+	          beforeSend:function(){
+	          	//AjaxBeforeSend();
+	          },
+
+	          success:function(data){
+	          	var jsondata = JSON.parse(data);
+	          	if(jsondata.messageArray.length>0){
+	              	$('#errorMessageBar').show()
+	              	$('#errorMessageText').text(jsondata.messageArray)
+	            }else{
+					ajaxClassTime();
+					close_reserve_popup()
+	            }
+	            
+			  },
+
+	          complete:function(){
+	          	
+	          },
+
+	          error:function(){
+	            console.log('server error')
+	          }
+        })
+    }
+
+    $("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
+		if($(this).find("span").hasClass('limited')){
+			var clicked = date_format_yyyy_m_d_to_yyyymmdd($('#cal_popup').attr('data-date'))
+			var today = date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate)
+			if(clicked < today){
+				alert("지난 일정은 삭제가 불가합니다.\n담당 강사에게 직접 문의해주세요")
+			}else{
+				alert("선택한 일정은 삭제가 불가합니다.\n \n시작 "+Options.cancellimit+'시간 이내에는 온라인 취소가 불가합니다.\n \n담당 강사에게 직접 문의해주세요')
+			}
+		}else{
+			$("#cal_popup").hide().css({'z-index':'-2'})
+			$("#cal_popup3").fadeIn('fast').css({'z-index':'103'});
+			$('#shade2').css({'display':'block'});
+		}
+	})
+
+	$('#popup_text3').click(function(){
+		//document.getElementById('pt-delete-form').submit();
+		send_delete()
+	})
+
+	function send_delete(){
+		$.ajax({
+	          url: '/trainee/pt_delete_logic/',
+	          data: $('#pt-delete-form').serialize(),
+			  dataType : 'html',
+			  type:'POST',
+
+	          beforeSend:function(){
+	          	//AjaxBeforeSend();
+	          },
+
+	          success:function(data){
+	          	var jsondata = JSON.parse(data);
+	          	if(jsondata.messageArray.length>0){
+	              	$('#errorMessageBar').show()
+	              	$('#errorMessageText').text(jsondata.messageArray)
+	            }else{
+					ajaxClassTime();
+					close_delete_confirm_popup()
+	            }
+	            
+			  },
+
+	          complete:function(){
+	          	
+	          },
+
+	          error:function(){
+	            console.log('server error')
+	          }
+        })
+	}
+
 
 	$("#btn_close").click(function(){  //일정삭제 팝업 X버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup').css('display')=='block'){
@@ -286,11 +402,15 @@ $(document).ready(function(){
 	*/
 
 	$("#btn_close3").click(function(){ //일정삭제 확인 팝업 X버튼 눌렀을때 팝업 닫기
-			if($('#cal_popup3').css('display')=='block'){
+		close_delete_confirm_popup()
+	})
+
+	function close_delete_confirm_popup(){
+		if($('#cal_popup3').css('display')=='block'){
 				$("#cal_popup3").css({'display':'none','z-index':'-2'})
 				$('#shade2').css({'display':'none'});
-			}
-	})
+		}
+	}
 
 	$('#popup_text4').click(function(){ //일정삭제 확인 팝업 취소버튼 눌렀을때 팝업 닫기
 			if($('#cal_popup3').css('display')=='block'){
@@ -301,6 +421,10 @@ $(document).ready(function(){
 
 
 	$("#btn_close4").click(function(){ //일정예약 상세화면 팝업 X버튼 눌렀을때 팝업 닫기
+		close_reserve_popup()
+	})
+
+	function close_reserve_popup(){
 		$('.tdgraph').removeClass('graphindicator')
 		$('#starttimes').remove('li')
 		$('#durations').remove('li')
@@ -313,7 +437,7 @@ $(document).ready(function(){
 			$("#addpopup").css({'display':'none','z-index':'-2'})
 			$('#shade2').css({'display':'none'});
 		}
-	})
+	}
 
 	$('#ng_popup').click(function(){
 		$('#shade2').css({'display':'none'});
@@ -653,6 +777,11 @@ $(document).ready(function(){
 	          	offTimeArray_end_date = jsondata.offTimeArray_end_date
 
 	          	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
+	          	$('.classTime,.offTime').parent().html('<div></div>')
+	          	$('.blackballoon, .balloon').html('')
+	          	$('.blackballoon').removeClass('blackballoon')
+	          	$('.balloon').removeClass('balloon')
+	          	$('.memo, .greymemo').text('').removeClass('greymemo')
 	          	classDates()
           	}
           	

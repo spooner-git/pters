@@ -520,6 +520,7 @@ $(document).ready(function(){
 	                    	$('#canvasWrap span').hide();
 							$('#canvasWrap').css({'height':'0px'})
 							$('body').css('overflow-y','overlay');
+							$('#shade').show()
 	                      },
 
 	                    //통신 실패시 처리
@@ -1272,7 +1273,7 @@ $(document).ready(function(){
 					var stime = stime.substr(1,1)
 				}
 				var etime = splited[2]
-				var name = splited[4]+" 회원님"
+				var name = splited[4]
 				var morningday = ""
 				if(stime==0 & dateplans[i-2]==undefined){
 					var morningday = "오전"
