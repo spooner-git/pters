@@ -144,6 +144,7 @@ a:focus, a:hover{
     height: 50px;
     border-top: 0.5px solid #cccccc;
     background-color: #ffffff;
+    cursor: pointer;
 }
 
 .sidebar_text:focus{

@@ -226,20 +226,20 @@
                             </div>
                         </div>                     
 
-                        <div class="sidebar_div" id="cal_day"><img src={% static_url "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:cal_day' %}" class="sidebar_text __todayplan">
+                        <div class="sidebar_div" id="cal_day" onclick="sideGoPage('cal_day')"><img src={% static_url "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __todayplan">
                             </a>
                         </div>
-                        <div class="sidebar_div"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:cal_week' %}" class="sidebar_text __weekplan">
+                        <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __weekplan">
                             </a>
                         </div>
-                        <div class="sidebar_div"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:cal_month' %}" class="sidebar_text __monthplan">
+                        <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __monthplan">
                             </a>
                         </div>
-                        <div class="sidebar_div"><img src={% static_url "user/res/icon-user-setting.png" %} class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:member_manage' %}" class="sidebar_text __membermanage">
+                        <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src={% static_url "user/res/icon-user-setting.png" %} class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __membermanage">
                             </a>
                         </div>
                         <!--
@@ -248,15 +248,15 @@
                             </a>
                         </div>
                         -->
-                        <div class="sidebar_div"><img src={% static_url "user/res/member/icon-repeat.png" %} class="sidebar_icon" alt="#">
-                            <a onclick="open_lecture_select_popup()" class="sidebar_text __calSelect">
+                        <div class="sidebar_div" onclick="open_lecture_select_popup()"><img src={% static_url "user/res/member/icon-repeat.png" %} class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __calSelect">
                             </a>
                         </div>
                         <div class="sidebar_div" style="height: 100%;"></div>
                         <div class="sidebar_div sidebar_div_last">
-                          <div class="sidebar_div_last1">
+                          <div class="sidebar_div_last1" onclick="sideGoPage('trainer_setting')">
                             <img src="{% static_url "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
-                            <a href="{% url 'trainer:trainer_setting' %}" class="sidebar_text __setting">
+                            <a class="sidebar_text __setting">
                             </a>
                           </div>
                           <div class="sidebar_div_last2">
@@ -428,6 +428,10 @@
                     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 }
             })
+
+            function sideGoPage(page){
+                location.href="/trainer/"+page+'/'
+            }
 
 
              function openNav(){
