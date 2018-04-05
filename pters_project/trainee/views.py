@@ -568,7 +568,7 @@ def pt_delete_logic(request):
     schedule_info = None
     start_date = None
     end_date = None
-    today = datetime.datetime.today()
+    today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     disable_time = timezone.now()
     nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
     reserve_avail_date = 14
@@ -768,7 +768,7 @@ def pt_add_logic(request):
     class_info = None
     start_date = None
     end_date = None
-    today = datetime.datetime.today()
+    today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     disable_time = timezone.now()
     nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
     reserve_avail_date = 14
