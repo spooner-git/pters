@@ -11,7 +11,12 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
-	setInterval(function(){ajaxCheckSchedule()}, 60000)// 자동 ajax 새로고침(일정가져오기)
+	setInterval(function(){
+		ajaxCheckSchedule();
+		if (Push.Permission.has()){
+			ajaxCheckAlarm();
+		}
+	}, 60000)// 자동 ajax 새로고침(일정가져오기)
 
 
 	function ajaxCheckSchedule(){
@@ -47,6 +52,77 @@ $(document).ready(function(){
               }
             })
      }
+
+	function ajaxCheckAlarm(){
+            $.ajax({
+              url: '/trainer/check_alarm/',
+			  dataType : 'html',
+
+              beforeSend:function(){
+              	//AjaxBeforeSend();
+              },
+
+              success:function(data){
+              	var jsondata = JSON.parse(data);
+              	if(jsondata.messageArray.length>0){
+                  	$('#errorMessageBar').show()
+                  	$('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                	var update_data_changed = jsondata.data_changed;
+					if(update_data_changed[0]=="1"){
+						ajaxAlarmPush();
+					}
+                }
+
+			  },
+
+              complete:function(){
+              	//AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })
+     }
+
+	function ajaxAlarmPush(){
+
+		$.ajax({
+		  url: '/trainer/read_push_alarm/',
+		  dataType : 'html',
+
+		  beforeSend:function(){
+			//AjaxBeforeSend();
+		  },
+
+		  success:function(data){
+			var jsondata = JSON.parse(data);
+			if(jsondata.messageArray.length>0){
+				$('#errorMessageBar').show()
+				$('#errorMessageText').text(jsondata.messageArray)
+			}else{
+				var log_info_array = jsondata.log_info_array;
+
+				for(var i=0; i<log_info_array.length; i++){
+					Push.create("PTERS Alarm", {
+						body: log_info_array[i],
+						icon: '/static/common/favicon.ico'
+					});
+				};
+			}
+
+		  },
+
+		  complete:function(){
+			//AjaxCompleteSend();
+		  },
+
+		  error:function(){
+			console.log('server error')
+		  }
+		})
+ 	}
 
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
     $(document).on('click','.memberNameForInfoView',function(){
