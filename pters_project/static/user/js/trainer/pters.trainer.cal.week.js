@@ -108,11 +108,7 @@ $(document).ready(function(){
 				for(var i=0; i<log_info_array.length; i++){
 					Push.create("PTERS Alarm", {
 						body: log_info_array[i],
-						icon: '/static/common/favicon.ico',
-						onClick: function () {
-							window.focus();
-							this.close();
-						}
+						icon: '/static/common/favicon.ico'
 					});
 				};
 			}
