@@ -24,18 +24,23 @@
 	width: 100%;
 	padding:10px 0 10px 0;
 	max-width: 500px;
-	height: 370px;
+	height: 100%;
 	background: #f4f4f4;
 	left: 50%;
 	transform: translate(-50%,-200%);
-	transition: 1s;
 	overflow-y: hidden;
+	transition: 1s;
 	z-index: 1500;
 }
 	#alarm iframe{
 		width: 100%;
-		height: 305px;
+
 		padding: 10px;
+	}
+	#alarm-iframe-div{
+		height: 90%;
+		-webkit-overflow-scrolling: touch;
+		overflow: auto;
 	}
 
 .popups{
@@ -306,6 +311,9 @@
 
 
 @media(min-width:600px){
+	#alarm{
+		height: 370px;
+	}
 
 	#popup_img{
 		position: relative;

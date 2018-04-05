@@ -18,7 +18,6 @@ $(document).ready(function(){
 //	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
 	 };
 
-
    if(Options.language == "JPN"){
       $('.__todayplan').text("今日の日程")
       $('.__weekplan').text("日程表")
