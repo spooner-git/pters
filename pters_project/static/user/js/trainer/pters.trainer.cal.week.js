@@ -109,7 +109,6 @@ $(document).ready(function(){
 					Push.create("PTERS Alarm", {
 						body: log_info_array[i],
 						icon: '/static/common/favicon.ico',
-						timeout: 60000,
 						onClick: function () {
 							window.focus();
 							this.close();
