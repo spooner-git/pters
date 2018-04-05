@@ -163,6 +163,9 @@ button.classAdd{
 }
 
 @media(min-width: 600px){
+	button.classAdd{
+		display: none;
+	}
 	.pters_table_at_setting_page{
 		border: 1px solid #cccccc;
 	}

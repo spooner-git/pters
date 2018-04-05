@@ -89,4 +89,6 @@ urlpatterns = [
 
     url(r'^trainer_error_info/$', views.TrainerErrorInfoView.as_view(), name='trainer_error_info'),
 
+    # 피터스 탈퇴 확인 페이지로 이동
+    url(r'^delete_account/$', views.DeleteAccountView.as_view(), name='delete_account'),
 ]

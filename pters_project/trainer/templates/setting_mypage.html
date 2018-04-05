@@ -534,8 +534,16 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
-
+            $('#page-base').css('display','none')
+            $('#page-base-modifystyle').css('display','block')
+            $('#uptext3').text('마이페이지')
             $('#uptext').text("마이페이지")
+            $('#upbutton-modify').hide()
+
+            $('#upbutton-x-modify, ._button_Prev').click(function(){
+              location.href="/trainer/trainer_setting/"
+            })
+            
             regionChangeEventGroup()
             birthChangeEventGroup()
 
@@ -745,8 +753,7 @@
               if(option == 2){
                 location.href= "/accounts/password/change/"
               }else if(option = "delAccount"){
-                  location.href="/login/out_member/";
-
+                location.href="/trainer/delete_account/";
               }
             }
             
