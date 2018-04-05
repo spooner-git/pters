@@ -86,9 +86,9 @@ $(document).ready(function(){
             set_member_history_list();
             $('#info_shift_base, #info_shift_lecture').show();
             $('#info_shift_schedule, #info_shift_history').hide();
-            $('#select_info_shift_lecture').css('color','#fe4e65');
-            $('#select_info_shift_schedule').css('color','#282828');
-            $('#select_info_shift_history').css('color','#282828');
+            //$('#select_info_shift_lecture').css('color','#fe4e65');
+            //$('#select_info_shift_schedule').css('color','#282828');
+            //$('#select_info_shift_history').css('color','#282828');
         }
     });
 
@@ -219,24 +219,30 @@ $(document).ready(function(){
         $('#info_shift_lecture').show();
         $('#info_shift_schedule').hide();
         $('#info_shift_history').hide();
-        $(this).css('color','#fe4e65');
-        $(this).siblings('.button_shift_info').css('color','#282828');
+        //$(this).css({'color':'#ffffff','background':'#fe4e65'});
+        //$(this).siblings('.button_shift_info').css({'color':'#888888','background':'#f1f1f1'});\
+        $(this).addClass('button_active')
+        $(this).siblings('.button_shift_info').removeClass('button_active')
     });
 
     $('#select_info_shift_schedule').click(function(){
         $('#info_shift_lecture').hide();
         $('#info_shift_schedule').show();
         $('#info_shift_history').hide();
-        $(this).css('color','#fe4e65');
-        $(this).siblings('.button_shift_info').css('color','#282828');
+        //$(this).css({'color':'#ffffff','background':'#fe4e65'});
+        //$(this).siblings('.button_shift_info').css({'color':'#888888','background':'#f1f1f1'});
+        $(this).addClass('button_active')
+        $(this).siblings('.button_shift_info').removeClass('button_active')
     });
 
     $('#select_info_shift_history').click(function(){
         $('#info_shift_lecture').hide();
         $('#info_shift_schedule').hide();
         $('#info_shift_history').show();
-        $(this).css('color','#fe4e65');
-        $(this).siblings('.button_shift_info').css('color','#282828');
+        //$(this).css({'color':'#ffffff','background':'#fe4e65'});
+        //$(this).siblings('.button_shift_info').css({'color':'#888888','background':'#f1f1f1'});
+        $(this).addClass('button_active')
+        $(this).siblings('.button_shift_info').removeClass('button_active')
     });
 
     
@@ -287,6 +293,12 @@ $(document).ready(function(){
         $('.lectureStateChangePopup').css('display','none');
         //$('#shade3').css('display','none')
     });
+
+    $('.lectureStateChangePopup input').keyup(function(){
+        var priceInputValue = Number($(this).val().replace(/,/g, ""));
+        $(this).val(numberWithCommas(priceInputValue));
+        
+    })
 
     $('span.cancel_refund').parent('div').click(function(){
         $('.lectureStateChangePopup').css('display','none');
@@ -967,9 +979,6 @@ function priceInput(price, type, selector){
     }else if(type == "del"){
         $('#lecturePrice_add'+select).val("").attr('readonly',false);
         $('#lecturePrice_add_value'+loc).val(0);
-    }
-    function numberWithCommas(x) { //천단위 콤마 찍기
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 }
 //수동 가격입력
@@ -2146,6 +2155,7 @@ function set_member_lecture_list(jsondata){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -2168,7 +2178,7 @@ function set_member_lecture_list(jsondata){
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
 function draw_member_lecture_list_table(jsondata, targetHTML){
     var $regHistory = targetHTML
-    var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
+    var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
     for(var i=0; i<jsondata.lectureIdArray.length; i++){
         var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
         var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
@@ -2180,6 +2190,8 @@ function draw_member_lecture_list_table(jsondata, targetHTML){
         //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
         var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
         var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
+        var regPrice = '<div>'+numberWithCommas(jsondata.priceArray[i])+'원</div>' 
+        var regUnitPrice = '<div>'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'원</div>' 
         //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
         //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
         var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
@@ -2200,7 +2212,7 @@ function draw_member_lecture_list_table(jsondata, targetHTML){
         }else if(jsondata.memberViewStateArray[i] == "VIEW"){
             var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
         }
-        result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>')
+        result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>')
     }
     var result_history = result_history_html.join('')
     $regHistory.html(result_history)
@@ -2794,4 +2806,8 @@ function completeSend(){
        $('#calendar').show(); 
     }
     //alert('complete: 일정 정상 등록')
+}
+
+function numberWithCommas(x) { //천단위 콤마 찍기
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

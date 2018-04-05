@@ -469,13 +469,43 @@ select:focus > option:checked {
 				}
 				#memberRegHistory_info_PC > div > div{
 					display: table-cell;
-					width: 15%;
 					height: 20px;
 					padding: 0;
 					text-align: center;
 					border: 0;
 					border-right:1px solid #cccccc;
 				}
+				#memberRegHistory_info_PC > div > div:nth-child(1){
+					width: 12.5%;
+				}
+				#memberRegHistory_info_PC > div > div:nth-child(2){
+					width: 12.5%;
+				}
+				#memberRegHistory_info_PC > div > div:nth-child(3){
+					width: 10%;
+				}
+				#memberRegHistory_info_PC > div > div:nth-child(4){
+					width: 10%;
+				}
+				#memberRegHistory_info_PC > div > div:nth-child(5){
+					width: 12.5%;
+				}
+				#memberRegHistory_info_PC > div > div:nth-child(6){
+					width: 12.5%;
+				}
+				#memberRegHistory_info_PC > div > div:nth-child(7){
+					width: 12.5%;
+				}
+				#memberRegHistory_info_PC > div > div:nth-child(8){
+					width: 12.5%;
+				}
+				#memberRegHistory_info_PC > div > div:nth-child(9){
+					width: 12.5%;
+					border-right: 0;
+				}
+
+
+
 				#memberRegHistory_info > div > div{
 					display: table-cell;
 					width: 15.6%;
@@ -650,12 +680,18 @@ select:focus > option:checked {
 
 .button_shift_info{
 	background:#f1f1f1;
+	color: #828282;
 	border:1px solid #cccccc;
 	border-bottom: 0;
 	height: 22px;
 }
 	.button_shift_info:active{
-		color: #fe4e65;
+		background: #fe4e65;
+		color: #ffffff;
+	}
+	.button_active{
+		background: #fe4e65;
+		color: #ffffff;
 	}
 
 .info_shift_wrap{
