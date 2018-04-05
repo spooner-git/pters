@@ -10,6 +10,128 @@ body{
 	background-color: black !important;
 }
 
+nav.main_nav{
+	position:sticky;
+	top: 	0;
+	width: 	100%;
+	height: 45px;
+}
+	.main_nav_bg{
+		position: 	absolute;
+		top: 	0;
+		left:	0;
+		width: 	100%;
+		height: 	45px;
+		background: #282828;
+		opacity: 0.8;
+		z-index: -1;
+	}
+	.main_nav_content{
+		max-width: 	1920px;
+		margin: 	0 auto;
+	}
+	.main_nav_content label img{
+		width: 	100px;
+		margin-top: 	10px;
+		margin-left: 	25px;
+	}
+	.login_form_nav{
+		display: inline-block;
+		float: 	right;
+		margin-top: 	7px;
+		padding: 	3px;
+	}
+	#idinput_nav,#pwinput_nav,#checkbox_nav,#login-button_nav{
+		display: 	inline-block;
+		margin:0 !important;
+	}
+	#login-button_nav button{
+		margin:0 !important;
+		margin-bottom: 	4px !important;
+		height: 	25px !important;
+		font-size: 10px !important;
+	}
+	#idinput_nav input{
+		display: 	inline-block;
+		width: 	185px;
+		height: 	25px;
+		font-size: 	13px;
+	}
+	#idinput_nav img{
+		width: 	19px;
+		margin-bottom: 4px;
+	}
+	#pwinput_nav input{
+		display: 	inline-block;
+		height: 	25px;
+		width: 	150px
+	}
+	#pwinput_nav img{
+		width: 	16px;
+		margin-bottom: 	3px;
+	}
+
+
+
+.main_title{
+	position: 	absolute;
+	top: 	220px;
+	left: 	50%;
+	transform: translateX(-50%);
+	color: 	#ffffff;
+	text-align: 	center;
+}
+	.main_title_up{
+		text-align: 	center;
+	}
+	.main_title_up p:nth-child(1){
+		font-size: 30px;
+	}
+	.main_title_up p:nth-child(2){
+		font-size: 35px;
+		color: 	#fe4e65;
+	}
+		.main_title_up p:nth-child(2) span{
+			line-height: 30px;
+			display: 	inline-block;
+		}
+	.main_title_up img{
+		height: 	30px;
+		vertical-align: 	top;
+	}
+
+	.main_title_separate{
+			height: 3px;
+			margin-top: 50px;
+			margin-bottom: 	50px;
+	}
+		.main_title_separate div{
+			width: 	70px;
+			height: 3px;
+			background: #fe4e65;
+			margin:0 auto;
+		}
+
+	.main_title_down{
+		text-align: 	center;
+		font-size: 	20px;
+		color: #cccccc;
+	}
+
+	.main_title button{
+		width: 	150px;
+		font-size: 17px;
+		margin-top: 	80px;
+		background: 	#fe4e65;
+		border-radius: 5px;
+		border-color: 	#fe4e65;
+		height: 	40px;
+	}
+
+
+
+
+
 #loginimg{
 	position: fixed;
 	width: 	100%;
