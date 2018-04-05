@@ -22,7 +22,7 @@ body{
 
 a:focus, a:hover{
     text-decoration: none;
-    color: grey;
+    color: unset;
 }
 
 #errorMessageBar{
@@ -156,18 +156,11 @@ a:focus, a:hover{
     background-color: #ffffff;
     cursor: pointer;
 }
+    .sidebar_div:hover,.sidebar_div:active,.sidebar_div:focus{
+        color: #fe4e65 !important;
+        background: #eaeaea !important;
+    }
 
-.sidebar_text:focus{
-    color: #fe4e65;
-    background-color: #a2a2a2;
-    -webkit-background-color: #a2a2a2;
-}
-
-.sidebar_text:hover{
-    color: #fe4e65;
-    background-color: #a2a2a2;
-    -webkit-background-color: #a2a2a2;
-}
 
 .sidebar_div_last{
    position: absolute;

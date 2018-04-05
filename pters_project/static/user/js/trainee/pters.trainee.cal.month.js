@@ -721,7 +721,7 @@ $(document).ready(function(){
 		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 마감시간'
 
 		if(currentHour<Endtime && currentHour>=availableStartTime){
-			for(i=currentDate;i<=currentDate+Options.availDate;i++){
+			for(i=currentDate;i<currentDate+Options.availDate;i++){
 				if(i>lastDay[oriMonth-1] && oriMonth<12){
 				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
 				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
@@ -731,7 +731,7 @@ $(document).ready(function(){
 				}
 			}
 		}else{
-			for(i=currentDate;i<=currentDate+Options.availDate;i++){
+			for(i=currentDate;i<currentDate+Options.availDate;i++){
 				if(i>lastDay[oriMonth-1] && oriMonth<12){
 				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
 				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
