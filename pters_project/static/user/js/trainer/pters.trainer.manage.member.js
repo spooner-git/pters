@@ -2190,8 +2190,13 @@ function draw_member_lecture_list_table(jsondata, targetHTML){
         //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
         var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
         var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
-        var regPrice = '<div>'+numberWithCommas(jsondata.priceArray[i])+'원</div>' 
-        var regUnitPrice = '<div>'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'원</div>' 
+        if($('body').width()>600){
+            var regPrice = '<div>'+numberWithCommas(jsondata.priceArray[i])+'원</div>' 
+            var regUnitPrice = '<div>'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'원</div>' 
+        }else if($('body').width()<=600){
+            var regPrice = '<div>'+numberWithCommas(jsondata.priceArray[i])+'</div>' 
+            var regUnitPrice = '<div>'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+        }
         //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
         //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
         var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'

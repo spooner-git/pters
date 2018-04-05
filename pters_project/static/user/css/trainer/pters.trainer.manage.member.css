@@ -482,13 +482,13 @@ select:focus > option:checked {
 					width: 12.5%;
 				}
 				#memberRegHistory_info_PC > div > div:nth-child(3){
-					width: 10%;
+					width: 9%;
 				}
 				#memberRegHistory_info_PC > div > div:nth-child(4){
-					width: 10%;
+					width: 9%;
 				}
 				#memberRegHistory_info_PC > div > div:nth-child(5){
-					width: 12.5%;
+					width: 14%;
 				}
 				#memberRegHistory_info_PC > div > div:nth-child(6){
 					width: 12.5%;
@@ -513,6 +513,36 @@ select:focus > option:checked {
 					text-align: center;
 					border-right:1px solid #cccccc;
 				}
+					#memberRegHistory_info > div > div:nth-child(1){
+						width: 18%;
+					}
+					#memberRegHistory_info > div > div:nth-child(2){
+						width: 18%;
+					}
+					#memberRegHistory_info > div > div:nth-child(3){
+						width: 10%;
+					}
+					#memberRegHistory_info > div > div:nth-child(4){
+						width: 10%;
+					}
+					#memberRegHistory_info > div > div:nth-child(5){
+						width: 20%;
+					}
+					#memberRegHistory_info > div > div:nth-child(6){
+						display: none;
+					}
+					#memberRegHistory_info > div > div:nth-child(7){
+						width: 15%
+					}
+					#memberRegHistory_info > div > div:nth-child(8){
+						display: none;
+					}
+					#memberRegHistory_info > div > div:nth-child(9){
+						
+					}
+
+
+
 				#memberRegHistory_info_PC_wrap > label, #memberRegHistory_info_wrap > label, #memberRepeat_info_PC_wrap >label{
 					display: inline;
 				}
