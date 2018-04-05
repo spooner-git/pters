@@ -709,11 +709,16 @@ select:focus > option:checked {
 }
 
 .button_shift_info{
-	background:#f1f1f1;
-	color: #828282;
-	border:1px solid #cccccc;
+	display: table-cell;
+	background:#cccccc;
+	color: #ffffff;
 	border-bottom: 0;
+	border-top-right-radius: 9px;
 	height: 22px;
+	width: 70px;
+	font-size: 13px;
+	text-align: center;
+	cursor: pointer;
 }
 	.button_shift_info:active{
 		background: #fe4e65;
