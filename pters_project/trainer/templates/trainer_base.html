@@ -401,6 +401,24 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"> //미니달력</script>
+    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
+    <script type="text/javascript">
+// var requestButton = document.querySelector(".request-btn");
+
+    function onGranted() {
+        console.log('알람 승인 상태')
+    }
+
+    function onDenied() {
+        console.log('알람 거절 상태')
+    }
+
+//    $('.request-btn').click(function () {
+        Push.Permission.request(onGranted, onDenied);
+ //       console.log(Push.Permission.get());
+ //   });
+
+</script>
     <script src={% static_url "common/js/bootstrap.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>

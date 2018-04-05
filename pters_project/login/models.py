@@ -66,6 +66,7 @@ class LogTb(models.Model):
     ip = models.CharField(db_column='IP', max_length=255, blank=True, null=True)
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     read = models.IntegerField(db_column='READ', blank=True, null=True, default='0')  # Field name made lowercase.
+    push_check = models.IntegerField(db_column='PUSH_CHECK', blank=True, null=True, default='0')  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:

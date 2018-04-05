@@ -2891,3 +2891,90 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
 
     return context
 
+
+class AlarmCheckView(LoginRequiredMixin, AccessTestMixin, View):
+    context_object_name = "log_data"
+    template_name = "alarm.html"
+    page_template = 'alarm_page.html'
+
+    def get_queryset(self):
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        log_data = None
+        if error is None:
+            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
+            # log_data.order_by('-reg_dt')
+
+        if error is None:
+            for log_info in log_data:
+                if log_info.read == 0:
+                    log_info.log_read = 0
+                    log_info.read = 1
+                    log_info.save()
+                elif log_info.read == 1:
+                    log_info.log_read = 1
+                else:
+                    log_info.log_read = 2
+                log_info.reg_dt = str(log_info.reg_dt).split('.')[0]
+
+        return log_data
+
+
+class AlarmCheckView(LoginRequiredMixin, TemplateView):
+    template_name = 'alarm_change_check_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AlarmCheckView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+
+        # update_check 0 : data update 없음
+        # update_check 1 : data update 있음
+        update_check = 0
+
+
+        error = None
+        if error is None:
+            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
+            log_count = LogTb.objects.filter(class_tb_id=class_id, read=0, push_check=0, use=1).order_by('-reg_dt').count()
+            # log_data.order_by('-reg_dt')
+            if log_count > 0:
+                update_check = 1
+
+        # print(error)
+        context['data_changed'] = update_check
+        if error is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+error)
+            messages.error(self.request, error)
+
+        return context
+
+
+class AlarmPushView(LoginRequiredMixin, TemplateView):
+    template_name = 'alarm_push_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AlarmPushView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+
+        log_data = None
+        error = None
+        if error is None:
+            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, read=0, push_check=0, use=1).order_by('-reg_dt')
+            # log_data.order_by('-reg_dt')
+
+        if error is None:
+            for log_info in log_data:
+                if log_info.push_check == 0:
+                    log_info.push_check = 1
+                    log_info.save()
+                log_info.reg_dt = str(log_info.reg_dt).split('.')[0]
+
+        context['log_data'] = log_data
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        return context

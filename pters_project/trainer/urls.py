@@ -91,4 +91,9 @@ urlpatterns = [
 
     # 피터스 탈퇴 확인 페이지로 이동
     url(r'^delete_account/$', views.DeleteAccountView.as_view(), name='delete_account'),
+
+    # 알람 체크
+    url(r'^check_alarm/$', views.AlarmCheckView.as_view(), name='check_alarm'),
+    url(r'^read_push_alarm/$', views.AlarmPushView.as_view(), name='read_push_alarm'),
+
 ]
