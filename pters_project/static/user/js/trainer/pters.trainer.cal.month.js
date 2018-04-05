@@ -257,9 +257,14 @@ $(document).ready(function(){
 			var schedule_finish_check = $(this).attr('data-schedule-check')
 			if(schedule_finish_check=="0"){
 				$("#popup_btn_complete").show()
-	        }
-	        else{
+				$("#popup_text1").css("display","block")
+				$("#popup_sign_img").css("display","none")
+			}
+			else{
 				$("#popup_btn_complete").hide()
+				$("#popup_text1").css("display","none")
+				$("#popup_sign_img").css("display","block")
+				$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
 			}
 			schedule_on_off = 1;
 		})

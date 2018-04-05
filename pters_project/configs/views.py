@@ -1,9 +1,13 @@
+import logging
+
 from django.contrib.auth.models import User
 
 # Create your views here.
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+logger = logging.getLogger(__name__)
 
 
 class HomeView(LoginRequiredMixin, RedirectView):
@@ -83,3 +87,4 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+

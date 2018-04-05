@@ -250,7 +250,7 @@ LOGGING = {
         'django.request': {
             'handlers': ['default'],
             'propagate': False,
-            'level': 'INFO',
+            'level': 'ERROR',
         },
         'login': {
             'handlers': ['login_file'],
