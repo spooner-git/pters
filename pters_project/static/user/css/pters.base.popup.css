@@ -29,6 +29,7 @@
 	left: 50%;
 	transform: translate(-50%,-200%);
 	transition: 1s;
+	overflow-y: hidden;
 	z-index: 1500;
 }
 	#alarm iframe{
