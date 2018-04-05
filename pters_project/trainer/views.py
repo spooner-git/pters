@@ -704,10 +704,10 @@ class MyPageView(AccessTestMixin, TemplateView):
                                                                    use=1).order_by('-lecture_tb__start_date')
 
                 if len(total_class_lecture_list) > 0:
-                    current_total_member_num += 1
+                    total_member_num += 1
 
                 if len(class_lecture_list) > 0:
-                    total_member_num += 1
+                    current_total_member_num += 1
                     start_date = ''
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
@@ -860,10 +860,10 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
                                                                    use=1).order_by('-lecture_tb__start_date')
 
                 if len(total_class_lecture_list) > 0:
-                    current_total_member_num += 1
+                    total_member_num += 1
 
                 if len(class_lecture_list) > 0:
-                    total_member_num += 1
+                    current_total_member_num += 1
                     start_date = ''
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
