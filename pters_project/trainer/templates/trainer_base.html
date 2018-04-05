@@ -684,7 +684,19 @@
             ///********************* 강의 선택*************************************///
 
     </script>
-
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyBj_wmDL1z0suH2znta70mGgUV53hAmBOc",
+        authDomain: "pters-b9c4f.firebaseapp.com",
+        databaseURL: "https://pters-b9c4f.firebaseio.com",
+        projectId: "pters-b9c4f",
+        storageBucket: "pters-b9c4f.appspot.com",
+        messagingSenderId: "751903262384"
+      };
+      firebase.initializeApp(config);
+    </script>
     {% block local_js_footer %}
     {% endblock %}
 
