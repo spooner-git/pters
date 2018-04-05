@@ -48,6 +48,7 @@
     {% block navbar %}
         <div id="shade"></div>
         <div id="shade3"></div>
+        <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
         <div id="alarm">
             <div id="alarm_delete">
@@ -430,6 +431,7 @@
             })
 
             function sideGoPage(page){
+                $('.ajaxloadingPC').show()
                 location.href="/trainer/"+page+'/'
             }
 
