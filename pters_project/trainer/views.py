@@ -863,7 +863,7 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
                     total_member_num += 1
 
                 if len(class_lecture_list) > 0:
-                    current_total_member_num += 1
+                    total_member_num += 1
                     start_date = ''
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb

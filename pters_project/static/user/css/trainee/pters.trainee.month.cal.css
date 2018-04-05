@@ -1163,6 +1163,11 @@ img,a,div,span,p{
 }
 
 
+#popup_sign_img{
+	display: none;
+	position: relative;
+	background: #ffffff;
+}
 
 #id_sign_img{
 	width: 100px;
