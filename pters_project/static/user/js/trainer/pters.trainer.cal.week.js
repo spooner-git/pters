@@ -409,6 +409,7 @@ $(document).ready(function(){
 				send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
 				if(schedule_on_off==1){
 					//PT 일정 완료 처리시
+					send_memo()
 					$.ajax({
 	                    url:'/schedule/finish_schedule/',
 	                    type:'POST',
@@ -428,6 +429,7 @@ $(document).ready(function(){
 			                	signImageSend(send_data);
 			                    closeDeletePopup();
 			                    AjaxCompleteSend();
+			                    //send_memo()
 			                    ajaxClassTime();
 			                }
 	                      },
@@ -465,34 +467,38 @@ $(document).ready(function(){
 				//$('html,body').css({'position':'relative'})
 				$('#popup_info3_memo').attr({'readonly':true}).css({'border':'0'});
 				$(this).attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
-				var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
-				var memo = $('#popup_info3_memo').val()
-				$.ajax({
-		            url:'/schedule/update_memo_schedule/',
-		            type:'POST',
-		            data:{"schedule_id":schedule_id,"add_memo":memo,"next_page":'/trainer/cal_week'},
-
-		            beforeSend:function(){
-		            	//AjaxBeforeSend();
-		            },
-
-		            //통신성공시 처리
-		            success:function(data){
-		            	ajaxClassTime()
-		            },
-
-		            //보내기후 팝업창 닫기
-		            complete:function(){
-
-		            },
-
-		            //통신 실패시 처리
-		            error:function(){
-		    
-		            },
-		        })
+				send_memo()
 			}
 		})
+
+		function send_memo(){
+			var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
+			var memo = $('#popup_info3_memo').val()
+			$.ajax({
+	            url:'/schedule/update_memo_schedule/',
+	            type:'POST',
+	            data:{"schedule_id":schedule_id,"add_memo":memo,"next_page":'/trainer/cal_week'},
+
+	            beforeSend:function(){
+	            	//AjaxBeforeSend();
+	            },
+
+	            //통신성공시 처리
+	            success:function(data){
+	            	
+	            },
+
+	            //보내기후 팝업창 닫기
+	            complete:function(){
+	            	ajaxClassTime()
+	            },
+
+	            //통신 실패시 처리
+	            error:function(){
+	    
+	            },
+	        })
+		}
 
 		//PT일정/OFF일정 눌러서 나오는 팝업 X버튼 눌렀을때 팝업 닫기
 		$("#btn_close").click(function(){  
