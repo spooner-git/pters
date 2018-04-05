@@ -8,6 +8,11 @@ $(document).ready(function(){
            closeNav(); //Sidebar가 열렸을때 회색 영역을 터치해도 Sidebar가 닫힘
       });
 
+     function sideGoPage(page){
+          $('.ajaxloadingPC').show()
+          location.href="/trainer/"+page+'/'
+      }
+
 
 	 if($('meta[name="upperText"]').attr('content') == "main_trainer"){ //상단바에 텍스트 표시. 각 페이지의 Meta를 읽어와서 upperText를 셋팅
 //	 	  $('#uptext').text(upText[0]); //Main페이지에서는 Peters 표시
