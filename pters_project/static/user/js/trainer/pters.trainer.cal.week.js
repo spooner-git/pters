@@ -458,10 +458,12 @@ $(document).ready(function(){
 		//미니 팝업 메모수정
 		$('#popup_info3_memo_modify').click(function(){
 			if($(this).attr('data-type') == "view"){
-				$('#popup_info3_memo').attr('readonly',false).css({'border':'1px solid #fe4e65'});
+				//$('html,body').css({'position':'fixed'})
+				$('#popup_info3_memo').attr({'readonly':false}).css({'border':'1px solid #fe4e65'});
 				$(this).attr({'src':'/static/user/res/btn-pt-complete.png','data-type':'modify'})
 			}else if($(this).attr('data-type') == "modify"){
-				$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
+				//$('html,body').css({'position':'relative'})
+				$('#popup_info3_memo').attr({'readonly':true}).css({'border':'0'});
 				$(this).attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
 				var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
 				var memo = $('#popup_info3_memo').val()

@@ -1743,6 +1743,7 @@ function open_member_info_popup_mobile(userID,jsondata){
     $('#float_btn_wrap').fadeOut();
     $('#page-base').fadeOut('fast');
     $('#page-base-modifystyle').fadeIn('fast');
+    $('#upbutton-modify').hide()
     $('#memberName_info').val(Data[userID].name)
     $('#memberId').val(userID).attr('data-dbid',Data[userID].dbId)
     $('#deleteMemberId').val(userID).attr('data-dbid',Data[userID].dbId)
