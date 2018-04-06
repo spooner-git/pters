@@ -564,7 +564,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         log_data = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).exclude(auth_member_id=self.request.user.id).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
@@ -582,6 +582,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         return log_data
 
 
+'''
 @page_template('alarm_test_page.html')  # just add this decorator
 def entry_index(
         request, template='alarm_test.html', extra_context=None):
@@ -600,6 +601,7 @@ def entry_index(
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
+'''
 
 
 class TrainerSettingView(AccessTestMixin, TemplateView):
@@ -610,6 +612,7 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
 
         return context
 
+
 class DeleteAccountView(AccessTestMixin, TemplateView):
     template_name = 'delete_account_form.html'
 
@@ -617,6 +620,7 @@ class DeleteAccountView(AccessTestMixin, TemplateView):
         context = super(DeleteAccountView, self).get_context_data(**kwargs)
 
         return context
+
 
 class MyPageView(AccessTestMixin, TemplateView):
     template_name = 'setting_mypage.html'
@@ -2936,7 +2940,8 @@ class AlarmCheckView(LoginRequiredMixin, TemplateView):
         error = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            log_count = LogTb.objects.filter(class_tb_id=class_id, read=0, push_check=0, use=1).order_by('-reg_dt').count()
+            log_count = LogTb.objects.filter(class_tb_id=class_id, read=0,
+                                             push_check=0, use=1).exclude(auth_member_id=self.request.user.id).order_by('-reg_dt').count()
             # log_data.order_by('-reg_dt')
             if log_count > 0:
                 update_check = 1
@@ -2961,7 +2966,8 @@ class AlarmPushView(LoginRequiredMixin, TemplateView):
         error = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, read=0, push_check=0, use=1).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, read=0,
+                                            push_check=0, use=1).exclude(auth_member_id=self.request.user.id).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
