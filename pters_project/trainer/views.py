@@ -3012,7 +3012,7 @@ class GetOffRepeatScheduleDataViewAjax(LoginRequiredMixin, AccessTestMixin, Temp
         if error is None:
             # 강사 클래스의 반복일정 불러오기
             off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                      en_dis_type='1')
+                                                                       en_dis_type='0')
 
             for off_repeat_schedule_info in off_repeat_schedule_data:
                 off_repeat_schedule_id.append(off_repeat_schedule_info.repeat_schedule_id)
