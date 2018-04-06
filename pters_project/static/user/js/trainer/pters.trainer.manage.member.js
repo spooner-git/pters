@@ -338,11 +338,10 @@ $(document).ready(function(){
         $('#id_repeat_schedule_id_confirm').val(id_info);
         var repeat_schedule_id = $(this).parents('.summaryInnerBox').attr('data-id');
         $('#cal_popup_plandelete').fadeIn().attr('data-id',repeat_schedule_id);
-        $('#shade3').show();
         if($('#memberInfoPopup_PC').css('display')=="block" || $('#memberInfoPopup').css('display')=="block"){
             deleteTypeSelect = 'repeatinfodelete';
         }
-        
+        shade_index(200)
     });
 
     $(document).on('click','.summaryInnerBoxText, .summaryInnerBoxText2',function(){ //반복일정 텍스트 누르면 휴지통 닫힘
@@ -381,7 +380,6 @@ $(document).ready(function(){
                             set_member_history_list(jsondata);
                             closePopup('member_delete');
                             deleteTypeSelect = "memberinfodelete";
-                            $('#shade3').hide();
                         }
                       },
 
@@ -2650,7 +2648,6 @@ function closePopup(option){
     }else if(option = 'member_delete'){
         //$('.confirmPopup').fadeOut('fast');
         $('#cal_popup_plandelete').fadeOut('fast');
-        shade_index(-100)
     }
 };
 
