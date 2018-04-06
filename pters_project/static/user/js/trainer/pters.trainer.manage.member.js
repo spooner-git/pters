@@ -2626,21 +2626,15 @@ function closePopup(option){
         //$('#datepicker2_info').attr('disabled',true).addClass('input_disabled_color');
         //$('.confirmPopup').fadeOut('fast');
         $('#cal_popup_plandelete').fadeOut('fast')
-        $('#shade3').fadeOut('fast');
+        shade_index(-100)
     }else if(option == 'member_info_PC'){
         $('#memberInfoPopup_PC').fadeOut('fast')
-        $('#shade').fadeOut('fast');
+        shade_index(-100)
     }else if(option == 'member_add'){
         if($('body').width()<600){
             $('#page_managemember').show();
             $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
-        }
-        if($('#memberInfoPopup_PC').css('display') == "block"){
-            $('#shade3').fadeOut('fast');
-        }else{
-            $('#shade3').fadeOut('fast');
-            $('#shade').fadeOut('fast');
         }
         $('#page_addmember').fadeOut('fast');
         $('#memberInfoPopup_PC').css('z-index','115')
@@ -2652,10 +2646,11 @@ function closePopup(option){
         $('.ptaddbox input,#memberDue_add_2').val("");
         $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
         $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
+        shade_index(-100)
     }else if(option = 'member_delete'){
         //$('.confirmPopup').fadeOut('fast');
         $('#cal_popup_plandelete').fadeOut('fast');
-        $('#shade3').fadeOut('fast');
+        shade_index(-100)
     }
 };
 

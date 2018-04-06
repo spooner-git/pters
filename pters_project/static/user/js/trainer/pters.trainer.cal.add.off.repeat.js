@@ -64,28 +64,6 @@ $(document).ready(function(){
       })
 
 
-/*
-      $(document).on('click','.deleteBtn',function(){ //일정요약에서 반복일정 오른쪽 화살표 누르면 휴지통 열림
-        var $btn = $(this).find('div')
-        if($btn.css('width')=='0px'){
-          $btn.animate({'width':'40px'},300)
-          $btn.find('img').css({'display':'block'})
-        $('.deleteBtnBin').not($btn).animate({'width':'0px'},230);
-        $('.deleteBtnBin img').not($btn.find('img')).css({'display':'none'})
-        }
-      })
-
-      
-      $(document).on('click','div.deleteBtnBin',function(){
-        var id_info = $(this).parents('div.summaryInnerBox').attr('data-id')
-        $('#id_repeat_schedule_id_confirm').val(id_info)
-        var repeat_schedule_id = $(this).parents('.summaryInnerBox').attr('data-id')
-        $('#cal_popup_plandelete').fadeIn().attr('data-id',repeat_schedule_id)
-        $('#shade3').show()
-      })
-*/
-
-
       $(document).on('click','.summaryInnerBoxText, .summaryInnerBoxText2',function(){ //반복일정 텍스트 누르면 휴지통 닫힘
         var $btn = $('.deleteBtnBin')
           $btn.animate({'width':'0px'},230)

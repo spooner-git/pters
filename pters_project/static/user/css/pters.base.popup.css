@@ -1,24 +1,38 @@
 
-#shade{
-    position: fixed;
-    display: none;
-    background: black;
-    width: 100%;
-    height: 100%;
-    opacity: 0.7;
-    z-index: 117;
-    top: 0;
-}
-
-
-#shade3{
+.pshade,.mshade{
 	position: fixed;
+	display: none;
+	background: black;
 	width: 100%;
 	height: 100%;
-	background-color: #f4f4f4;
-	display: none;
-	z-index: 115;
+	top: 0;
+	opacity: 0.7;
+	z-index: -100
 }
+/*
+	#pshade{
+		z-index: 100;
+	}
+	#pshade2{
+		z-index: 200;
+	}
+	#pshade3{
+		z-index: 300;
+	}
+
+	#mshade{
+		z-index: 100;
+	}
+	#mshade2{
+		z-index: 200;
+	}
+	#mshade3{
+		z-index: 300;
+	}
+*/
+
+
+
 
 #alarm{
 	position: fixed;
@@ -60,7 +74,7 @@
 	max-width: 	330px;
 	left: 50%;
 	transform:translate(-50%,-50%);
-	z-index: 120;
+	z-index: 150;
 	text-align: center;
 }
 
@@ -86,7 +100,7 @@
 	max-width: 	330px;
 	left: 50%;
 	transform:translate(-50%,-50%);
-	z-index: 125;
+	z-index: 250;
 	text-align: center;
 }
 
@@ -133,21 +147,15 @@
 	background: #ffffff;
 }
 
-.popup_close_x_button{
-	position: absolute;
-	top: 31%;
-	left: 85%;
-	padding: 10px;
-	width: 35px;
-	float: right;
-	cursor: pointer;
-}
-
 .popup_inner{
 	background: #ffffff;
 	position: relative;
 	height: 50px;
 	border-top: 1px solid #a2a2a2;
+}
+
+.popup_inner_x3{
+
 }
 
 .popup_inner:hover{
@@ -368,6 +376,11 @@
 		width: 100px;
 		cursor: pointer;
 	}
+	.popup_inner_x3{
+		width: 85px;
+		margin-left: 3px;
+		margin-right: 3px;
+	}
 		.popup_inner span{
 			position: relative;
 			left: unset;
@@ -387,12 +400,6 @@
 			background: #282828;
 			border-color: #282828;
 			color: #ffffff;
-			margin-left: 10px;
-		}
-		#popup_btn_complete{
-			margin-right: 10px;
-		}
-		#popup_btn_delete{
 			margin-left: 10px;
 		}
 

@@ -404,6 +404,7 @@ a:focus, a:hover{
 
 #pcver{
     display: none;
+    z-index: 99;
 }
 
 .fixfooter{

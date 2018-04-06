@@ -12,7 +12,7 @@ ul a{
 	display: none;
 	position: absolute;
 	width: 100%;
-	z-index: 115;
+	z-index: 150;
 	left: 0%;
 	background: #f4f4f4;
 	top: 50px;
@@ -22,7 +22,7 @@ ul a{
 	display: none;
 }
 
-#pcaddpopup,#pcaddpopup_off{
+#addpopup_pc_label_pt,#addpopup_pc_label_off{
 	display: none;	
 }
 
@@ -526,7 +526,7 @@ ul a{
 	display:none;
 }
 
-.cancelBtn,.cancelBtn_mini{
+.cancelBtn_mini{
 	cursor: pointer;
 }
 
@@ -873,16 +873,13 @@ option{
 	}
 
 
-	#pcaddpopup,#pcaddpopup_off{
+	#addpopup_pc_label_pt,#addpopup_pc_label_off{
 		font-size: 16px;
 		font-weight: bold;
 		text-align: center;
 		display: block;
 	}
 
-	#pcaddpopup img,#pcaddpopup_off img{
-		float: right;
-	}
 
 	.submitBtn{
 		width: 100%;
