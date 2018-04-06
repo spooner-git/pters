@@ -17,6 +17,10 @@
             {% endif %}
             <span style="font-weight: bold;color:#fe4e65;font-size: 13px;">{{ log_info.log_info }}를
             {{ log_info.log_how }}</span> 했습니다.
+            {% if log_info.log_detail %}
+                {{ log_info.log_detail }}
+            {% endif %}
+            <br/>
             {{ log_info.reg_dt }}
         </span>
     </div>
