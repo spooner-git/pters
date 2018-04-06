@@ -494,7 +494,6 @@ $(document).ready(function(){
         close_info_popup('cal_popup_repeatconfirm')
         ajaxRepeatConfirmSend();
         check_dropdown_selected()
-        get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
       })
 
       $('#popup_btn_repeatconfirm_yes').click(function(){
@@ -747,13 +746,17 @@ function clear_pt_off_add_popup(){
 function close_info_popup(option){
   if(option=="cal_popup_planinfo"){
       $("#"+option).css({'display':'none'})
-      shade_index(-100)
+      if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
+        shade_index(100)
+      }else{
+        shade_index(-100)
+      }
       //$('body').css('overflow-y','overlay');
   }
   else if(option =="cal_popup_plandelete"){
       $("#"+option).css({'display':'none'})
       console.log($('#pshade').css('z-index'))
-      if($('#pshade').css('z-index')==200){
+      if($('#pshade').css('z-index')==200 || $('#mshade').css('z-index') == 200){
         shade_index(100)
       }else{
         shade_index(-100)
@@ -769,7 +772,7 @@ function close_info_popup(option){
   else if(option =="cal_popup_repeatconfirm"){
       $('#'+option).css('display','none')
       $('#calendar').css('position','relative')
-      if($('#pshade').css('z-index') == '200'){
+      if($('#pshade').css('z-index') == 200 || $('#mshade').css('z-index') == 200){
         shade_index(100)
       }else{
         shade_index(-100)
@@ -784,6 +787,10 @@ function close_info_popup(option){
           $('#page-base').show();
           $('#page-base-addstyle').hide();
       }
+  }
+  else if(option = "cal_popup_plancheck"){
+      $('#'+option).css('display','none')
+      shade_index(-100)
   }
 }
 
@@ -1005,21 +1012,21 @@ function ajax_received_json_data(json){
 }
 
 function get_repeat_info(lecture_id, member_id){
-    if(addTypeSelect == "repeatptadd"){
+    if(addTypeSelect == "repeatptadd" || addTypeSelect == "ptadd"){
       var url_ = '/trainer/read_member_lecture_data_from_schedule/'
       var data_ = {"lecture_id": lecture_id, "member_id": member_id}
       var fill_option = 'class'
       var type_ = 'POST'
     }else if(addTypeSelect == "repeatoffadd"){
       var url_ = '/trainer/get_off_repeat_schedule_ajax/'
-      var data_ = {"lecture_id": lecture_id, "member_id": member_id}
+      var data_;
       var fill_option = 'off'
-      var type_ = 'POST'
+      var type_;
     }
     $.ajax({
         url: url_,
-        //type: type_,
-        //data: data_,
+        type: type_,
+        data: data_,
         dataType : 'html',
 
         beforeSend:function(){
@@ -1027,27 +1034,31 @@ function get_repeat_info(lecture_id, member_id){
         },
 
         success:function(data){
+           console.log(data,'off?pt?')
+           console.log(url_,'url',addTypeSelect,'addTypeSelect')
           var jsondata = JSON.parse(data);
-          console.log(jsondata,'off?pt?')
+         
           if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show();
               $('#errorMessageText').text(jsondata.messageArray)
           }else{
-            ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
-            ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
-            ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
-            ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
-            ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
-            ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
-            ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
-
-            offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
-            offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
-            offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
-            offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
-            offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
-            offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
-            offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+            if(addTypeSelect == "repeatptadd" || addTypeSelect == "ptadd"){
+              ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+              ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+              ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+              ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+              ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+              ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+              ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
+            }else if(addTypeSelect == "repeatoffadd"){
+              offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
+              offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
+              offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
+              offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
+              offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
+              offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
+              offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+            }
 
             selectedMemberIdArray = jsondata.memberIdArray;
             selectedMemberAvailCountArray = jsondata.memberAvailCountArray;

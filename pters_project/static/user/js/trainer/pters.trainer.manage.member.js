@@ -2627,7 +2627,11 @@ function closePopup(option){
         shade_index(-100)
     }else if(option == 'member_info_PC'){
         $('#memberInfoPopup_PC').fadeOut('fast')
+        if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
+        
+        }else{
         shade_index(-100)
+        }
     }else if(option == 'member_add'){
         if($('body').width()<600){
             $('#page_managemember').show();

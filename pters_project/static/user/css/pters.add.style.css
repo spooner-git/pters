@@ -509,6 +509,7 @@ ul a{
 }
 
 .popupBtn_mini{
+	display: none;
 	width: 100%;
 	bottom: -23px;
 	right: -21px;
@@ -889,6 +890,10 @@ option{
 		background: #ffffff;
 		color: #f4f4f4;
 		border:0.5px solid #cccccc;
+	}
+
+	.popupBtn_mini{
+		display: block;
 	}
 	
 	.popupBtn_mini .submitBtn{
