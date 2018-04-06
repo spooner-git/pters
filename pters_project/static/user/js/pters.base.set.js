@@ -5,7 +5,98 @@ function sideGoPage(page){
 
 $(document).ready(function(){
 
+	var filter = "win16|win32|win64|mac|macintel";
+	var platform_check;
+	if ( navigator.platform ) {
+		if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
+			//mobile
+			platform_check = 'mobile'
+		}
+		else {
+			//pc
+			platform_check = 'pc'
+		}
+	}
 
+	setInterval(function(){
+	    if(platform_check=='pc')
+        {
+            if (Push.Permission.has()){
+                ajaxCheckAlarm();
+            }
+		}
+	}, 60000);// 자동 ajax 새로고침(일정가져오기)
+
+	function ajaxCheckAlarm(){
+            $.ajax({
+              url: '/trainer/check_alarm/',
+			  dataType : 'html',
+
+              beforeSend:function(){
+              	//AjaxBeforeSend();
+              },
+
+              success:function(data){
+              	var jsondata = JSON.parse(data);
+              	if(jsondata.messageArray.length>0){
+                  	$('#errorMessageBar').show()
+                  	$('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                	var update_data_changed = jsondata.data_changed;
+					if(update_data_changed[0]=="1"){
+						ajaxAlarmPush();
+					}
+                }
+
+			  },
+
+              complete:function(){
+              	//AjaxCompleteSend();
+              },
+
+              error:function(){
+                console.log('server error')
+              }
+            })
+     }
+
+	function ajaxAlarmPush(){
+
+		$.ajax({
+		  url: '/trainer/read_push_alarm/',
+		  dataType : 'html',
+
+		  beforeSend:function(){
+			//AjaxBeforeSend();
+		  },
+
+		  success:function(data){
+			var jsondata = JSON.parse(data);
+			if(jsondata.messageArray.length>0){
+				$('#errorMessageBar').show()
+				$('#errorMessageText').text(jsondata.messageArray)
+			}else{
+				var log_info_array = jsondata.log_info_array;
+
+				for(var i=0; i<log_info_array.length; i++){
+					Push.create("PTERS Alarm", {
+						body: log_info_array[i],
+						icon: '/static/common/favicon.ico',
+					});
+				};
+			}
+
+		  },
+
+		  complete:function(){
+			//AjaxCompleteSend();
+		  },
+
+		  error:function(){
+			console.log('server error')
+		  }
+		})
+ 	}
     var upText = "PTERS";
     var thisfilefullname = document.URL.substring(document.URL.lastIndexOf("/") + 1, document.URL.length);
 
