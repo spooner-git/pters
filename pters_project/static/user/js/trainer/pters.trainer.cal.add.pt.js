@@ -1012,14 +1012,14 @@ function get_repeat_info(lecture_id, member_id){
       var type_ = 'POST'
     }else if(addTypeSelect == "repeatoffadd"){
       var url_ = '/trainer/get_off_repeat_schedule_ajax/'
-      var data_ = ''
+      var data_ = {"lecture_id": lecture_id, "member_id": member_id}
       var fill_option = 'off'
-      var type_ = ''
+      var type_ = 'POST'
     }
     $.ajax({
         url: url_,
-        type: type_,
-        data: data_,
+        //type: type_,
+        //data: data_,
         dataType : 'html',
 
         beforeSend:function(){
@@ -1073,7 +1073,7 @@ function get_repeat_info(lecture_id, member_id){
 
         error:function(){
           $('#errorMessageBar').show()
-          $('#errorMessageText').text('통신 에러: 관리자 문의')
+          $('#errorMessageText').text('통신 에러: 관리자 문의----')
         }
       })
 }
