@@ -1009,14 +1009,16 @@ function get_repeat_info(lecture_id, member_id){
       var url_ = '/trainer/read_member_lecture_data_from_schedule/'
       var data_ = {"lecture_id": lecture_id, "member_id": member_id}
       var fill_option = 'class'
+      var type_ = 'POST'
     }else if(addTypeSelect == "repeatoffadd"){
-      var url_ = '/trainer/read_member_lecture_data_from_schedule/'
-      var data_ = {"lecture_id": lecture_id, "member_id": member_id}
+      var url_ = '/trainer/get_off_repeat_schedule_ajax/'
+      var data_ = ''
       var fill_option = 'off'
+      var type_ = ''
     }
     $.ajax({
         url: url_,
-        type:'POST',
+        type: type_,
         data: data_,
         dataType : 'html',
 
@@ -1038,6 +1040,15 @@ function get_repeat_info(lecture_id, member_id){
             ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
             ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
             ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
+
+            offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
+            offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
+            offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
+            offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
+            offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
+            offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
+            offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+
             selectedMemberIdArray = jsondata.memberIdArray;
             selectedMemberAvailCountArray = jsondata.memberAvailCountArray;
             selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
