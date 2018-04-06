@@ -2984,3 +2984,62 @@ class AlarmPushView(LoginRequiredMixin, TemplateView):
             messages.error(self.request, error)
 
         return context
+
+
+class GetOffRepeatScheduleDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'off_schedule_data_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetOffRepeatScheduleDataViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+
+        off_repeat_schedule_id = []
+        off_repeat_schedule_type = []
+        off_repeat_schedule_week_info = []
+        off_repeat_schedule_start_date = []
+        off_repeat_schedule_end_date = []
+        off_repeat_schedule_start_time = []
+        off_repeat_schedule_time_duration = []
+        off_repeat_schedule_state_cd = []
+        off_repeat_schedule_state_cd_nm = []
+
+        # 강좌 정보 가져오기
+        try:
+            ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다'
+
+        if error is None:
+            # 강사 클래스의 반복일정 불러오기
+            off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                      en_dis_type='1')
+
+            for off_repeat_schedule_info in off_repeat_schedule_data:
+                off_repeat_schedule_id.append(off_repeat_schedule_info.repeat_schedule_id)
+                off_repeat_schedule_type.append(off_repeat_schedule_info.repeat_type_cd)
+                off_repeat_schedule_week_info.append(off_repeat_schedule_info.week_info)
+                off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_date))
+                off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_date))
+                off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
+                off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
+                off_repeat_schedule_state_cd.append(off_repeat_schedule_info.state_cd)
+                try:
+                    state_cd_name = CommonCdTb.objects.get(common_cd=off_repeat_schedule_info.state_cd)
+                except ObjectDoesNotExist:
+                    error = '반복일정의 상태를 불러오지 못했습니다.'
+                if error is None:
+                    off_repeat_schedule_state_cd_nm.append(state_cd_name.common_cd_nm)
+
+        context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
+        context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
+        context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
+        context['off_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
+        context['off_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
+        context['off_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
+        context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
+        context['off_repeat_schedule_state_cd'] = off_repeat_schedule_state_cd
+        context['off_repeat_schedule_state_cd_nm'] = off_repeat_schedule_state_cd_nm
+        if error is None:
+            context['error'] = error
+
+        return context

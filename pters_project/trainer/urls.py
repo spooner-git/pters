@@ -96,4 +96,5 @@ urlpatterns = [
     url(r'^check_alarm/$', views.AlarmCheckView.as_view(), name='check_alarm'),
     url(r'^read_push_alarm/$', views.AlarmPushView.as_view(), name='read_push_alarm'),
 
+    url(r'^get_off_repeat_schedule_ajax/$', views.GetOffRepeatScheduleDataViewAjax.as_view(), name='get_off_repeat_schedule_ajax'),
 ]
