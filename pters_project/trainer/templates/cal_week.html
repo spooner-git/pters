@@ -277,18 +277,16 @@
         <input type="hidden" name="next_page" value="{% url 'trainer:cal_day_ajax' %}">
     </form>
     
-    <div class="ptaddbox" id="pcaddpopup">
+    <div class="ptaddbox" id="addpopup_pc_label_pt">
       <span class="KRtext">PT 일정 추가</span>
       <span class="JPtext">PT 日程追加</span>
       <span class="ENtext">Add PT Schedule</span>
-      <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
     </div>
 
-    <div class="ptaddbox" id="pcaddpopup_off">
+    <div class="ptaddbox" id="addpopup_pc_label_off">
       <span class="KRtext">OFF 일정 추가</span>
       <span class="JPtext">OFF 日程追加</span>
       <span class="ENtext">Add OFF Schedule</span>
-      <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
     </div>
 
     <div id="memberName" class="ptaddbox">
@@ -576,9 +574,15 @@
       </div>
     </div>
   
-    <div class='popupBtn'>
-      <div class="submitBtn" id="submitBtn_pt"><span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span></div>
+    <div class="member_info_PC_buttons_wrap popupBtn_mini" style="margin-bottom: 6px;">
+        <button class="submitBtn _info_modify" id="submitBtn_pt">
+          <span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span>
+        </button>
+        <button class="submitBtn" onclick="close_info_popup('page-addplan')">
+          <span class="KRtext">닫기</span><span class="JPtext">閉じる</span><span class="ENtext">Cancel</span>
+        </button>
     </div>
+
 </div>
 
 
@@ -926,7 +930,6 @@
 
     <label id="memberInfoPopup_PC_label">
         <img src="/static/user/res/member/icon-female-pink.png">
-        <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('member_info_PC')">
     </label>
 
     <div id="info_shift_base" class="info_shift_wrap">

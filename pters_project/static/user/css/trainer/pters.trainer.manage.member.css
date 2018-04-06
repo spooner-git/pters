@@ -38,7 +38,7 @@ body{
 	border-color: transparent;
 	width: 80%;
 	max-width: 330px;
-	z-index: 120;
+	z-index: 350;
 	text-align: center;
 	top: 50%;
 	left: 50%;
@@ -52,7 +52,7 @@ body{
 	border-color: transparent;
 	width: 80%;
 	max-width: 330px;
-	z-index: 120;
+	z-index: 350;
 	text-align: center;
 	top: 50%;
 	left: 50%;
@@ -339,7 +339,7 @@ select:focus > option:checked {
 	position: absolute;
 	background: #f4f4f4;
 	width: 100%;
-	z-index: 115;
+	z-index: 150;
 	max-width: 700px !important;
 	top: 50px;
 	left: 5%;
@@ -354,7 +354,7 @@ select:focus > option:checked {
 	background: #ffffff;
 	padding: 10px;
 	width: 600px;
-	z-index:115;
+	z-index:250;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%,-50%);

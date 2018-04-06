@@ -137,7 +137,7 @@ $(document).ready(function(){
               },
 
               success:function(data){
-              	$('#shade3,.popups').hide()
+              	$('.popups').hide()
               	ajax_received_json_data_member_manage(data)
               	var jsondata = JSON.parse(data)
               	DB=[]
@@ -152,7 +152,6 @@ $(document).ready(function(){
 		        DataFormattingDict('ID');
 		        console.log(jsondata,'-----')
 		        if($('body').width()<600){
-		        	$('#shade').hide()
 		            open_member_info_popup_mobile(userID,jsondata)
 		            get_indiv_repeat_info(userID,jsondata)
 		            set_member_lecture_list(jsondata)
@@ -184,8 +183,6 @@ $(document).ready(function(){
 
 	$('#upbutton-x').click(function(){
 		$('#calendar').css('height','90%')
-	    $('#shade3').fadeOut();
-	    $('#shade').hide();
 	    $('#page-addplan').fadeOut('fast','swing');
 	    if($('body').width()<600){
 	        $('#calendar').show();
@@ -226,61 +223,12 @@ $(document).ready(function(){
   //모바일 스타일
 
   //PC 스타일
-  	$('.cancelBtn').click(function(){
-	    $('#shade').hide();
-	    $('#page-addplan').fadeOut('fast','swing');
-	    if($('body').width()<600){
-	        $('#calendar').show();
-	    }else{
-	    	$('#calendar').css('position','relative')
-	    }
-	    $('#float_btn_wrap').show();
-	    $('#float_btn').removeClass('rotate_btn');
-	    $('#page-base').fadeIn();
-	    $('#page-base-addstyle').fadeOut();
-	    $('.submitBtn').removeClass('submitBtnActivated')
-
-	    $("#membersSelected button").removeClass("dropdown_selected");
-        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
-        $("#membersSelected .btn:first-child").val("");
-        $("#countsSelected,.countsSelected").text("")
-        $("#dateSelector p").removeClass("dropdown_selected");
-        $('#timeGraph').hide();
-        $("#starttimesSelected button").removeClass("dropdown_selected");
-        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#starttimesSelected .btn:first-child").val("");
-        $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected .btn:first-child").val("");
-        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-        $("#starttimes").empty();
-        $("#durations").empty();
-        $('.tdgraph').removeClass('graphindicator')
-
-        $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
-        $('.dateButton').removeClass('dateButton_selected')
-        $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
-        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
-        //$('#page-addplan form input').val('')
-        selectedDayGroup = []
-
-        addTypeSelect = "ptadd"
-        $('._NORMAL_ADD_wrap').css('display','block')
-        $('._REPEAT_ADD_wrap').css('display','none')
-        $('#timeGraph').css('display','none')
-  	})
-
   	$('.cancelBtn_mini').click(function(){
   		closeMiniPopup()
   	})
   //PC 스타일
 
-  	function closeAddPlanPopup(){
-  	  	$('#page-addplan').fadeOut('fast','swing')
-      	$('._NORMAL_ADD_wrap').css('display','block')
-      	$('._REPEAT_ADD_wrap').css('display','none')
-      	$('#timeGraph').css('display','none')
-  	}
+  	
 
    	function closeMiniPopup(){
    		$("#id_time_duration_off").val("")
@@ -313,6 +261,8 @@ $(document).ready(function(){
 	var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
 	//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
 
+	
+
 
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
@@ -328,12 +278,9 @@ $(document).ready(function(){
 
 		$('#page-addplan-pc').hide()
 		$("#cal_popup_planinfo").fadeIn('fast');
+		shade_index(100)
+
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
-		if($('body').width()>600){
-			$('#shade3').css({'display':'block'});	
-		}else{
-			$('#shade').css({'display':'block'});
-		}
 		var schedule_finish_check = $(this).attr('data-schedule-check')
 		var info = $(this).attr('class-time').split('_')
 		var yy=info[0]
@@ -416,11 +363,8 @@ $(document).ready(function(){
 		//$('.td00').css('background','transparent')
 		$("#cal_popup_planinfo").fadeIn('fast');
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
-		if($('body').width()>600){
-			$('#shade3').css({'display':'block'});	
-		}else{
-			$('#shade').css({'display':'block'});
-		}
+		shade_index(100)
+
 		var info = $(this).attr('off-time').split('_')
 		var yy=info[0]
 		var mm=info[1]
@@ -576,23 +520,6 @@ $(document).ready(function(){
 	        })
 		}
 
-		//PT일정/OFF일정 눌러서 나오는 팝업 X버튼 눌렀을때 팝업 닫기
-		$("#btn_close").click(function(){  
-			if($('#cal_popup_planinfo').css('display')=='block'){
-				$("#cal_popup_planinfo").css({'display':'none'})
-				$('#shade3, #shade').css({'display':'none'});
-				$('body').css('overflow-y','overlay');
-			}
-		})
-
-		//팝업삭제 눌렀을떄 나오는 삭제 확인 팝업  X버튼 눌렀을때 팝업 닫기
-		$("#btn_close3, #popup_delete_btn_no").click(function(){  
-			if($('#cal_popup_plandelete').css('display')=='block'){
-				$("#cal_popup_plandelete").css({'display':'none'})
-				$('#shade3, #shade').css({'display':'none'});
-				$('body').css('overflow-y','overlay');
-			}
-		})
 
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		$('#popup_delete_btn_yes').click(function(){
@@ -629,7 +556,7 @@ $(document).ready(function(){
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
-	                	//deleteTypeSelect = ''
+	                	
 	  					addTypeSelect = 'ptadd'
 	                  },
 
@@ -665,7 +592,6 @@ $(document).ready(function(){
 		                  		get_indiv_repeat_info(userID,jsondata)
 		                  		set_member_lecture_list(jsondata)
                         		set_member_history_list(jsondata)
-		                  		$('#shade').show()
 		                  		closeDeletePopup();
 			                  	closeAddPlanPopup();
 			                  	AjaxCompleteSend();
@@ -721,7 +647,7 @@ $(document).ready(function(){
 
 	                    //보내기후 팝업창 닫기
 	                    complete:function(){
-	                    	
+	                    	shade_index(-100)
 	                      },
 
 	                    //통신 실패시 처리
@@ -756,7 +682,7 @@ $(document).ready(function(){
 
 	                     //보내기후 팝업창 닫기
 	                    complete:function(){
-	                      	
+	                      	shade_index(-100)
 	                      },
 
 	                    //통신 실패시 처리
@@ -1025,11 +951,9 @@ $(document).ready(function(){
 	function closeDeletePopup(){
 		if($('#cal_popup_plandelete').css('display')=='block'){
 			$("#cal_popup_plandelete").css({'display':'none'})
-			$('#shade3, #shade').css({'display':'none'});
 		}
 		if($('#cal_popup_planinfo').css('display')=='block'){
 			$("#cal_popup_planinfo").css({'display':'none'})
-			$('#shade3, #shade').css({'display':'none'});
 		}
 	}
 
@@ -1037,14 +961,12 @@ $(document).ready(function(){
 		$('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
-        //$('#shade').css({'display':'block'});
 	}
 
 	function AjaxCompleteSend(){
 		$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
-        //$('#shade').css({'display':'none'});
 	}
 
 

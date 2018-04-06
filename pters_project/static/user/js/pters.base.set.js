@@ -3,6 +3,48 @@ function sideGoPage(page){
     location.href="/trainer/"+page+'/'
 }
 
+function shade_index(option){
+    if($('body').width()>600){
+      if(option<0){
+        $('#pshade').css({'z-index':option,'display':'none'});
+      }else{
+        $('#pshade').css({'z-index':option,'display':'block'});
+      }
+      
+    }else{
+      if(option<0){
+        $('#mshade').css({'z-index':option,'display':'none'});
+      }else{
+        $('#mshade').css({'z-index':option,'display':'block'});
+      }
+    }
+}
+
+
+function shade1(option){
+  if($('body').width()>600){
+    $('#pshade').css({'display':option});  
+  }else{
+    $('#mshade').css({'display':option});
+  }
+}
+
+function shade2(option){
+  if($('body').width()>600){
+    $('#pshade2').css({'display':option}); 
+  }else{
+    $('#mshade2').css({'display':option});
+  }
+}
+
+function shade3(option){
+  if($('body').width()>600){
+    $('#pshade3').css({'display':option}); 
+  }else{
+    $('#mshade3').css({'display':option});
+  }
+}
+
 $(document).ready(function(){
 
 
@@ -16,12 +58,12 @@ $(document).ready(function(){
 
 
 	 if($('meta[name="upperText"]').attr('content') == "main_trainer"){ //상단바에 텍스트 표시. 각 페이지의 Meta를 읽어와서 upperText를 셋팅
-//	 	  $('#uptext').text(upText[0]); //Main페이지에서는 Peters 표시
+    //	 	  $('#uptext').text(upText[0]); //Main페이지에서는 Peters 표시
          $('#uptext').text(upText);
       $('.icon-bar').css('background-color','white');
       $('#uptext').css({'color':'#fe4e65','font-size':'16px'});
 	 }else{
-//	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
+    //	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
 	 };
 
    if(Options.language == "JPN"){
