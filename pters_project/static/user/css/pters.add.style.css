@@ -22,9 +22,10 @@ ul a{
 	display: none;
 }
 
-#addpopup_pc_label_pt,#addpopup_pc_label_off{
+#addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
 	display: none;	
 }
+
 
 
 #inputError, #inputError_info, #inputError_info_PC{
@@ -486,6 +487,22 @@ ul a{
 	color: #3d3b3b;
 }
 
+button._info_delete_img{
+	position: absolute;
+	width: unset;
+	height: unset;
+	border: 0;
+	top: 0;
+	right: 0;
+	background: transparent;
+}
+	button._info_delete_img:focus{
+		outline: 0;
+	}
+	button._info_delete_img:active{
+		background: unset;
+	}
+
 .ajaxloadingPC{
 	position: fixed;
 	display: none;
@@ -874,7 +891,7 @@ option{
 	}
 
 
-	#addpopup_pc_label_pt,#addpopup_pc_label_off{
+	#addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
 		font-size: 16px;
 		font-weight: bold;
 		text-align: center;

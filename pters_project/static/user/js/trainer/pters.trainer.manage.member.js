@@ -74,6 +74,7 @@ $(document).ready(function(){
 
     $(document).on('click','tr.memberline',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
         var userID = $(this).find('._id').attr('data-name');
+        shade_index(100)
         if($('body').width()<600){
             open_member_info_popup_mobile(userID);
             get_indiv_repeat_info(userID);
@@ -634,7 +635,7 @@ $(document).ready(function(){
 
     });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
-    $("#upbutton-check, #pcBtn .submitBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
+    $("#upbutton-check, #pcBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
         if($('#page_addmember').css('display')=='block'){
             var test = $('#id_search_confirm').val();
             var $form2 = $('#add-member-id-form');
@@ -800,13 +801,13 @@ $(document).ready(function(){
 function float_btn_managemember(option){
     if(option == 0){ //모바일 플로팅 버튼
         $("#float_btn").animate({opacity:'1'});
-        if($('#shade').css('display')=='none'){
-            $('#shade').show();
+        if($('#mshade').css('display')=='none'){
+            shade_index(100)
             $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
             $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
             $('#float_btn').addClass('rotate_btn');
         }else{
-            $('#shade').hide();
+            shade_index(-100)
             $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
             $('#float_btn').removeClass('rotate_btn');
         }
@@ -818,11 +819,12 @@ function float_btn_managemember(option){
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
         $('#float_btn_wrap').fadeOut();
         $('#uptext2').text('신규 회원 등록');
-        $('#page-base').fadeOut();
-        $('#page-base-addstyle').fadeIn();
+        
         scrollToDom($('#page_addmember'));
         if($('body').width()<600){
-          $('#page_managemember').hide();
+            $('#page_managemember').hide();
+            $('#page-base').fadeOut();
+            $('#page-base-addstyle').fadeIn();
         }
 
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -858,14 +860,11 @@ function float_btn_managemember(option){
 //PC버전 회원추가 버튼
 
 function pc_add_member(option){
+    shade_index(300)
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
-        $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text('신규 회원 등록');
-        $('#page-base').fadeOut();
-        $('#page-base-addstyle').fadeIn();
-        scrollToDom($('#page_addmember'));
 
         $('._ADD_MEMBER_NEW').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -878,9 +877,6 @@ function pc_add_member(option){
         $('#page_addmember').fadeIn('fast');
         $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text('회원 연장 등록');
-        $('#page-base').fadeOut();
-        $('#page-base-addstyle').fadeIn();
-        scrollToDom($('#page_addmember'));
 
         $('._ADD_MEMBER_NEW').hide();
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -891,12 +887,8 @@ function pc_add_member(option){
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
-        $('#memberInfoPopup_PC').css('z-index','114');
         $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text('회원 연장 등록');
-        $('#page-base').fadeOut();
-        $('#page-base-addstyle').fadeIn();
-        scrollToDom($('#page_addmember'));
 
         $('._ADD_MEMBER_NEW').hide();
         $('#memberBirthDate, #memberBirthDate_info').html('')
@@ -1412,25 +1404,25 @@ function check_dropdown_selected(){
     if(fast=='1'){
         if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true&&(startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true && sexInput.length>0){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-            $('#page_addmember .submitBtn').addClass('submitBtnActivated');
+            $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;
 
 
         }else{
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-            $('#page_addmember .submitBtn').removeClass('submitBtnActivated');
+            $('#page_addmember .submitBtn:first-child').removeClass('submitBtnActivated');
             select_all_check=false;
         }
     }
     else{
         if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput_fast).hasClass("dropdown_selected")==true&&(dateInput_fast).hasClass("dropdown_selected")==true && sexInput.length>0){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-            $('#page_addmember .submitBtn').addClass('submitBtnActivated');
+            $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;
 
         }else{
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-            $('#page_addmember .submitBtn').removeClass('submitBtnActivated');
+            $('#page_addmember .submitBtn:first-child').removeClass('submitBtnActivated');
             select_all_check=false;
         }
     }
@@ -2639,7 +2631,6 @@ function closePopup(option){
             $('#float_btn').removeClass('rotate_btn');
         }
         $('#page_addmember').fadeOut('fast');
-        $('#memberInfoPopup_PC').css('z-index','115')
         
         $('#float_btn').fadeIn('fast');
         $('#page-base').fadeIn();
@@ -2648,7 +2639,11 @@ function closePopup(option){
         $('.ptaddbox input,#memberDue_add_2').val("");
         $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
         $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
-        shade_index(-100)
+        if($('#memberInfoPopup_PC').css('display')=="block"){
+            shade_index(100)
+        }else{
+            shade_index(-100)
+        }
     }else if(option = 'member_delete'){
         //$('.confirmPopup').fadeOut('fast');
         $('#cal_popup_plandelete').fadeOut('fast');

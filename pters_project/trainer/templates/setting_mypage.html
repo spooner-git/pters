@@ -452,6 +452,8 @@
   </div>
 </div>
 
+
+
 <!--
 <div class="mypage_label _GRAPH_OPEN">
     <img src="/static/user/res/member/icon-user.png" alt=""><span>월별 강의 완료 그래프</span>
@@ -498,6 +500,11 @@
 </div>
 -->
 
+<div class="popupBtn_mini">
+    <button class="submitBtn _button_Prev">이전</button>
+    <button class="submitBtn _button_Next"　style="display: none;">등록</button>
+</div>
+
 <form id="modify-member-id-form" method="post">
     {% csrf_token %}
     <div style="display: none">
@@ -534,13 +541,15 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
-            $('#page-base').css('display','none')
+            
             if($('body').width()<600){
+              $('#page-base').css('display','none')
               $('#page-base-modifystyle').css('display','block')
+              $('#uptext3').text('마이페이지')
+              $('#uptext').text("마이페이지")
+              $('#upbutton-modify').hide()
             }
-            $('#uptext3').text('마이페이지')
-            $('#uptext').text("마이페이지")
-            $('#upbutton-modify').hide()
+            
 
             $('#upbutton-x-modify, ._button_Prev').click(function(){
               location.href="/trainer/trainer_setting/"

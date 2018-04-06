@@ -50,8 +50,13 @@
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <script>
+          if($('body').width()<600){
+              $('#page-base-addstyle').css('display','block')
+              $('#page-base').css('display','none')
+              $('#uptext2').text("Language/언어/言語")
+          }
 
-          $('#page-base-addstyle').css('display','block')
+
 
           initial_language_setting_value()
           var select_all_check = false;

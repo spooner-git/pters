@@ -49,12 +49,14 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
-              $('#page-base').css('display','none')
-              $('#page-base-modifystyle').css('display','block')
-              $('#uptext3').text('강의 관리')
-              $('#uptext').text("강의 관리")
-              $('#upbutton-modify').hide()
-
+              if($('body').width()<600){
+                $('#page-base').css('display','none')
+                $('#page-base-modifystyle').css('display','block')
+                $('#uptext3').text('강의 관리')
+                $('#uptext').text("강의 관리")
+                $('#upbutton-modify').hide()
+              }
+              
               $('#upbutton-x-modify, ._button_Prev').click(function(){
                 location.href="/trainer/trainer_setting/"
               })

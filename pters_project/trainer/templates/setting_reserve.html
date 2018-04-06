@@ -256,7 +256,12 @@
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <script>
-          $('#page-base-addstyle').css('display','block')
+          if($('body').width()<600){
+              $('#page-base-addstyle').css('display','block')
+              $('#page-base').css('display','none')
+              $('#uptext2').text("예약 허용 시간대 설정")
+          }
+          
           var select_all_check = false;
 
 
@@ -351,7 +356,7 @@
           /*회원 예약 허용 시간대 설정 DB저장값으로 초기셋팅*/
 
 
-          $('#uptext2').text("예약 허용 시간대 설정")
+          
           $('.pters_switch').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
               $(this).find('.switchball').removeClass('switchoff').addClass('switchon')

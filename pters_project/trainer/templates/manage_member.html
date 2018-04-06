@@ -221,8 +221,9 @@
         </div>
     </div>
 
-    <div class="ptaddbox" id="pcaddpopup">
-       <span id="uptext-pc-modify">회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_info')">
+    <div class="ptaddbox" id="addpopup_pc_label_view">
+       <span id="uptext-pc-modify">회원 정보 조회</span>
+       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_info')" style="display: none;">
     </div>
 
     <div>
@@ -431,6 +432,9 @@
         <div class="button_shift_info  button_active" id="select_info_shift_lecture">수강 정보</div>
         <div class="button_shift_info" id="select_info_shift_schedule">반복 일정</div>
         <div class="button_shift_info" id="select_info_shift_history">일정 이력</div>
+        <button class="submitBtn _info_delete _info_delete_img">
+            <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:20px;">
+        </button>
     </div>
 
     <div id="info_shift_lecture" class="info_shift_wrap">
@@ -481,7 +485,7 @@
 
 
     <div class="member_info_PC_buttons_wrap popupBtn_mini">
-        <button class="submitBtn _info_delete">삭제</button>
+        <button class="submitBtn _info_delete" style="display: none;">삭제</button>
         <button class="submitBtn _info_modify" data-type="view" style="display: none;">수정</button>
         <button class="submitBtn _btn_close_info_PC" onclick="closePopup('member_info_PC')">닫기</button>
     </div>
@@ -495,8 +499,9 @@
         </div>
     </div>
 
-    <div class="ptaddbox" id="pcaddpopup">
-      <span id="uptext2_PC">신규 회원 추가</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_add')">
+    <div class="ptaddbox" id="addpopup_pc_label_new">
+      <span id="uptext2_PC"></span>
+      <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_add')" style="display: none;">
     </div>
 
     <form action="{% url 'trainer:add_member_info' %}" method="POST" class="member-form" id="member-add-form-new">
@@ -514,7 +519,7 @@
                     <!--<p class="icons_description"> <br>PTERS에 이미 가입되어있는 회원님의 정보를 가져옵니다.</p>-->
                 </label>
                 <div id="memberSearch" class="dropdown pters_input_custom">
-                    <input class="form-control" id="memberSearch_add" name="phone" required="required" placeholder="검색할 아이디를 입력해주세요" value="">
+                    <input  id="memberSearch_add" placeholder="검색할 아이디를 입력해주세요" value="" required>
                     <button class="memberSearchButton" id="memberSearchButton">
                     검색
                     </button>
@@ -744,10 +749,17 @@
             <span>PT 반복 일정 등록</span>
             <img class="icons-next-button" src={% static_url "user/res/ptadd/btn-next.png" %}>
         </div>
+        <!--
         <div id="pcBtn" style="text-align: center;">
             <div class="submitBtn">
                 <span class="btnok">등록</span>
             </div>
+        </div>
+        -->
+        <div class="member_info_PC_buttons_wrap popupBtn_mini" style="margin-bottom: 6px;">
+            <button id="pcBtn" class="submitBtn">등록</button>
+            <button class="submitBtn" style="display: none;">수정</button>
+            <button class="submitBtn" onclick="closePopup('member_add')">닫기</button>
         </div>
     </form>
 </div>
