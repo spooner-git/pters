@@ -2992,7 +2992,7 @@ class GetOffRepeatScheduleDataViewAjax(LoginRequiredMixin, AccessTestMixin, Temp
     def get_context_data(self, **kwargs):
         context = super(GetOffRepeatScheduleDataViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-
+        error = None
         off_repeat_schedule_id = []
         off_repeat_schedule_type = []
         off_repeat_schedule_week_info = []
