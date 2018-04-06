@@ -178,21 +178,21 @@ $(document).ready(function(){
         if(addTypeSelect == "ptadd"){
             if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn').addClass('submitBtnActivated')
+                $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
                 select_all_check=true;
             }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect).hasClass("dropdown_selected")==true){
                 $('#submitBtn_mini').css('background','#fe4e65');
                 select_all_check=true;
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn').removeClass('submitBtnActivated')
+                $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
                 $('#submitBtn_mini').css('background','#282828');
                 select_all_check=false;
             }
         }else if(addTypeSelect == "offadd"){
             if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn').addClass('submitBtnActivated')
+                $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
                 select_all_check=true;
             }else if($('#page-addplan-pc').css('display')=='block' && durSelect_mini.hasClass("dropdown_selected")==true){
                 $('#submitBtn_mini').css('background','#fe4e65');
@@ -200,18 +200,18 @@ $(document).ready(function(){
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                 $('#submitBtn_mini').css('background','#282828');
-                $('#page-addplan .submitBtn').removeClass('submitBtnActivated')
+                $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
         }else if(addTypeSelect == "repeatptadd"){
             if((memberSelect).hasClass("dropdown_selected")==true && (repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn').addClass('submitBtnActivated')
+                $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
                 select_all_check=true;
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                 $('#submitBtn_mini').css('background','#282828');
-                $('#page-addplan .submitBtn').removeClass('submitBtnActivated')
+                $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
             console.log(select_all_check)
@@ -219,94 +219,16 @@ $(document).ready(function(){
           console.log('add_repeat의 checkdropdown')
             if((repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn').addClass('submitBtnActivated')
+                $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
                 select_all_check=true;
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                 $('#submitBtn_mini').css('background','#282828');
-                $('#page-addplan .submitBtn').removeClass('submitBtnActivated')
+                $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
                 select_all_check=false;
             }
         }
     }
-
-
-    function fill_repeat_info(option){ //반복일정 요약 채우기
-          switch(option){
-              case 'class':
-                var len = ptRepeatScheduleIdArray.length
-                var repeat_id_array = ptRepeatScheduleIdArray
-                var repeat_type_array = ptRepeatScheduleTypeArray
-                var repeat_day_info_raw_array = ptRepeatScheduleWeekInfoArray
-                var repeat_start_array = ptRepeatScheduleStartDateArray
-                var repeat_end_array = ptRepeatScheduleEndDateArray
-                var repeat_time_array = ptRepeatScheduleStartTimeArray
-                var repeat_dur_array = ptRepeatScheduleTimeDurationArray
-              break;
-              case 'off':
-              var len = offRepeatScheduleIdArray.length
-              var repeat_id_array = offRepeatScheduleIdArray
-              var repeat_type_array = offRepeatScheduleTypeArray
-              var repeat_day_info_raw_array = offRepeatScheduleWeekInfoArray
-              var repeat_start_array = offRepeatScheduleStartDateArray
-              var repeat_end_array = offRepeatScheduleEndDateArray
-              var repeat_time_array = offRepeatScheduleStartTimeArray
-              var repeat_dur_array = offRepeatScheduleTimeDurationArray
-              break;
-          }
-          var repeat_info_dict= { 'KOR':
-                                  {'DD':'매일', 'WW':'매주', '2W':'격주',
-                                   'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
-                                  'JAP':
-                                  {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
-                                   'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
-                                  'JAP':
-                                  {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
-                                   'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
-                                 }
-          var schedulesHTML = []
-          for(var i=0; i<len; i++){
-            var repeat_id = repeat_id_array[i]
-            var repeat_type = repeat_info_dict['KOR'][repeat_type_array[i]]
-            var repeat_start = repeat_start_array[i].replace(/-/gi,".");
-            var repeat_end_text_small = "<span class='summaryInnerBoxText_Repeatendtext_small'>~</span>"
-            var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
-            var repeat_end = repeat_end_array[i].replace(/-/gi,".");
-            var repeat_time = Number(repeat_time_array[i].split(':')[0])+0
-            var repeat_dur = repeat_dur_array[i]
-            var repeat_sum = Number(repeat_time) + Number(repeat_dur)
-            var repeat_day =  function(){
-                                var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
-                                var repeat_day_info = ""
-                                if(repeat_day_info_raw.length>1){
-                                    for(var j=0; j<repeat_day_info_raw.length; j++){
-                                        var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
-                                    }
-                                }else if(repeat_day_info_raw.length == 1){
-                                    var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
-                                }
-                                if(repeat_day_info.substr(0,1) == '/'){
-                                    var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
-                                }
-                                  return repeat_day_info
-                              };
-
-            var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)</span>'
-            var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>'
-            var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
-            schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
-          }
-
-          var summaryText = '<span id="summaryText">일정요약</span>'
-          if(schedulesHTML.length>0){
-            $('#offRepeatSummary').html(summaryText + schedulesHTML.join('')).show()
-          }else{
-            $('#offRepeatSummary').hide()
-          }
-          
-        }
-
-
 
     /*미니달력 관련*/
     $("#datepicker_repeat_start").datepicker({

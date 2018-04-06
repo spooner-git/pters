@@ -447,9 +447,8 @@ $(document).ready(function(){
 			                  	$('#errorMessageText').text(jsondata.messageArray)
 			                }else{
 			                	signImageSend(send_data);
-			                    closeDeletePopup();
+			                    close_info_popup('cal_popup_planinfo')
 			                    AjaxCompleteSend();
-			                    //send_memo()
 			                    ajaxClassTime();
 			                }
 	                      },
@@ -461,6 +460,7 @@ $(document).ready(function(){
 	                    	$('#canvasWrap span').hide();
 							$('#canvasWrap').css({'height':'0px'})
 							$('body').css('overflow-y','overlay');
+							shade_index(-100)
 	                      },
 
 	                    //통신 실패시 처리
@@ -544,8 +544,8 @@ $(document).ready(function(){
 			                  	$('#errorMessageBar').show()
 			                  	$('#errorMessageText').text(jsondata.messageArray)
 				          }else{
-				          		closeDeletePopup();
-			                  	closeAddPlanPopup();
+				          		close_info_popup('cal_popup_plandelete')
+			                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
 			                  	ajax_received_json_data(jsondata)
 			                  	AjaxCompleteSend();
 				          }
@@ -556,15 +556,15 @@ $(document).ready(function(){
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
-	                	
-	  					addTypeSelect = 'ptadd'
+	  					//addTypeSelect = 'ptadd'
+	  					shade_index(-100)
 	                  },
 
 	                //통신 실패시 처리
 	                error:function(){
 	                  alert("에러: 서버 통신 실패")
-	                  closeDeletePopup();
-	                  closeAddPlanPopup()
+	                  close_info_popup('cal_popup_plandelete')
+	                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
 	                  AjaxCompleteSend();
 	                },
 	            })
@@ -592,8 +592,8 @@ $(document).ready(function(){
 		                  		get_indiv_repeat_info(userID,jsondata)
 		                  		set_member_lecture_list(jsondata)
                         		set_member_history_list(jsondata)
-		                  		closeDeletePopup();
-			                  	closeAddPlanPopup();
+		                  		close_info_popup('cal_popup_plandelete')
+			                  	//close_info_popup('page-addplan')
 			                  	AjaxCompleteSend();
 				          }
 	                  },
@@ -605,13 +605,14 @@ $(document).ready(function(){
 	                	}
 	                	//deleteTypeSelect = ''
 	  					addTypeSelect = 'ptadd'
+	  					shade_index(-100)
 	                  },
 
 	                //통신 실패시 처리
 	                error:function(){
 	                  alert("에러: 서버 통신 실패")
-	                  closeDeletePopup();
-	                  closeAddPlanPopup()
+	                  close_info_popup('cal_popup_plandelete')
+	                  //close_info_popup('page-addplan')
 	                  AjaxCompleteSend();
 	                },
 	            })
@@ -637,7 +638,7 @@ $(document).ready(function(){
 			                  	$('#errorMessageBar').show()
 			                  	$('#errorMessageText').text(jsondata.messageArray)
 				          	}else{
-				          		closeDeletePopup();
+				          		close_info_popup('cal_popup_plandelete')
 		                      	AjaxCompleteSend();
 		                      	ajaxClassTime()
 		                      	fake_show()
@@ -672,7 +673,7 @@ $(document).ready(function(){
 			                  	$('#errorMessageBar').show()
 			                  	$('#errorMessageText').text(jsondata.messageArray)
 				          	}else{
-				          		closeDeletePopup();
+				          		close_info_popup('cal_popup_plandelete')
 		                      	AjaxCompleteSend();
 		                      	ajaxClassTime()
 		                      	fake_show()
@@ -947,15 +948,6 @@ $(document).ready(function(){
           //DBdataProcessMonthTrainer();
           //classDatesTrainer();
     }
-
-	function closeDeletePopup(){
-		if($('#cal_popup_plandelete').css('display')=='block'){
-			$("#cal_popup_plandelete").css({'display':'none'})
-		}
-		if($('#cal_popup_planinfo').css('display')=='block'){
-			$("#cal_popup_planinfo").css({'display':'none'})
-		}
-	}
 
 	function AjaxBeforeSend(){
 		$('html').css("cursor","wait");
@@ -2105,7 +2097,7 @@ $(document).ready(function(){
         memberPcList.html(member_arraySum_pc);
 	}
 	*/
-
+	/*
 	function fill_repeat_info(option){ //반복일정 요약 채우기
           switch(option){
               case 'class':
@@ -2175,6 +2167,7 @@ $(document).ready(function(){
           var summaryText = '<span id="summaryText">일정요약</span>'
           $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
         }
+        */
 });//document(ready)
 
 //작은달력 설정
