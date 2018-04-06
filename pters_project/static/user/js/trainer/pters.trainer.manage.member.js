@@ -2616,13 +2616,17 @@ function closePopup(option){
         //$('#datepicker2_info').attr('disabled',true).addClass('input_disabled_color');
         //$('.confirmPopup').fadeOut('fast');
         $('#cal_popup_plandelete').fadeOut('fast')
-        shade_index(-100)
+        if($('#mshade').css('z-index')==150){
+            shade_index(150)
+        }else{
+            shade_index(-100)
+        }
     }else if(option == 'member_info_PC'){
         $('#memberInfoPopup_PC').fadeOut('fast')
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
         
         }else{
-        shade_index(-100)
+            shade_index(-100)
         }
     }else if(option == 'member_add'){
         if($('body').width()<600){
@@ -2641,7 +2645,10 @@ function closePopup(option){
         $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
         if($('#memberInfoPopup_PC').css('display')=="block"){
             shade_index(100)
-        }else{
+        }else if($('#mshade').css('z-index')==150){
+            shade_index(150)
+        }
+        else{
             shade_index(-100)
         }
     }else if(option = 'member_delete'){
