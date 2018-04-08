@@ -621,16 +621,18 @@ $(document).ready(function(){
 
 function float_btn_addplan(option){
     if(option == 0){
-        $("#float_btn").animate({opacity:'1'})
+        //$("#float_btn").animate({opacity:'1'})
         if($('#mshade').css('display')=='none'){
-            shade_index(100)
+            //$('#mshade').css({'z-index':100,'display':'block'})
             $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
             $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
             $('#float_btn').addClass('rotate_btn');
+            shade_index(100)
         }else{
-            shade_index(-100)
+            //$('#mshade').css({'z-index':-100,'display':'none'})
             $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
             $('#float_btn').removeClass('rotate_btn');
+            shade_index(-100)
         }
 
     }else if(option == 1){

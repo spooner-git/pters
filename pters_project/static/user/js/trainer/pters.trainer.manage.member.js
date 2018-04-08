@@ -13,18 +13,7 @@ $(document).ready(function(){
  		$(this).addClass("active").siblings().removeClass("active");
 	});
 
-    var ts;
-    $("body").bind("touchstart",function(e){
-    ts = e.originalEvent.touches[0].clientY;
-    	});
-    $("body").bind("touchend",function(e){
-    	var te = e.originalEvent.changedTouches[0].clientY;
-    	if(ts>te+5){
-    		$("#float_btn").fadeOut();
-    	}else if(ts<te-5){
-    		$("#float_btn").fadeIn();
-    	}
-    })
+
 
 
     $('li').click(function(){
@@ -800,16 +789,16 @@ $(document).ready(function(){
 
 function float_btn_managemember(option){
     if(option == 0){ //모바일 플로팅 버튼
-        $("#float_btn").animate({opacity:'1'});
+        //$("#float_btn").animate({opacity:'1'});
         if($('#mshade').css('display')=='none'){
-            shade_index(100)
             $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
             $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
             $('#float_btn').addClass('rotate_btn');
+            shade_index(100)
         }else{
-            shade_index(-100)
             $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
             $('#float_btn').removeClass('rotate_btn');
+            shade_index(-100)
         }
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet()

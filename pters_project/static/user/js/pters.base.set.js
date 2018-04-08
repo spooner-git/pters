@@ -1,3 +1,22 @@
+//플로팅 버튼 스크롤시 숨기기 Start
+var ts;
+$("body").bind("touchstart",function(e){
+ts = e.originalEvent.touches[0].clientY;
+});
+
+$("body").bind("touchend",function(e){
+  var te = e.originalEvent.changedTouches[0].clientY;
+  if(ts>te+5 && $('#mshade').css('z-index')<0){
+    $("#float_btn_wrap").fadeOut('fast')
+  }else if(ts<te-5){
+    if($('#mshade').css('z-index')<0){
+      $("#float_btn_wrap").show()  
+    }
+  }
+});
+//플로팅 버튼 스크롤시 숨기기 End
+
+
 function sideGoPage(page){
     $('.ajaxloadingPC').show()
     location.href="/trainer/"+page+'/'
@@ -20,6 +39,9 @@ function shade_index(option){
       }else{
         if($('#page-addplan').css('display') == 'block'){
           $('#mshade_popup').css({'z-index':$('#page-addplan').css('z-index'),'display':'block'});
+        }
+        if($('#float_btn_wrap').css('display')=='block' && !$('#float_btn').hasClass('rotate_btn')){
+          $('#float_btn_wrap').hide()
         }
         $('#mshade').css({'z-index':option,'display':'block'});
       }

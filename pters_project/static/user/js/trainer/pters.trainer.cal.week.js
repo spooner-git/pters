@@ -885,26 +885,6 @@ $(document).ready(function(){
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
 	}
-
-
-
-	
-
-	//플로팅 버튼 스크롤시 숨기기 Start
-	var ts;
-	$("body").bind("touchstart",function(e){
-	ts = e.originalEvent.touches[0].clientY;
-		});
-	
-	$("body").bind("touchend",function(e){
-		var te = e.originalEvent.changedTouches[0].clientY;
-		if(ts>te+5){
-			$("#float_btn").animate({opacity:'0'})
-		}else if(ts<te-5){
-			$("#float_btn").animate({opacity:'1'})
-		}
-	});
-	//플로팅 버튼 스크롤시 숨기기 End
 	
 
 	var date = new Date();
