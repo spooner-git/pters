@@ -456,14 +456,14 @@
              function openNav(){
                $("#outer_Sidenav").show();
                $("#inner_Sidenav").css({'width':'250px'});
-               $('#float_btn_wrap, #float_btn').fadeOut()
+               $('#float_btn_wrap, #float_btn').fadeOut('fast')
                //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
              }
 
              function closeNav(){
               $("#outer_Sidenav").hide();
               $("#inner_Sidenav").css({'width':'0'});
-              $('#float_btn_wrap, #float_btn').fadeIn()
+              $('#float_btn_wrap, #float_btn').fadeIn('fast')
               //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
              }; 
 
@@ -637,7 +637,7 @@
                 $('.popups').hide()
                 $('#popup_lecture_select').fadeIn('fast')
                 closeNav()
-                $('#shade').show()
+                shade_index(100)
                 ajax_read_lecture_info_from_db()
             }
 
@@ -669,9 +669,9 @@
                 $('.lecture_select_table_list').html(list_table)
             }
 
-            $('.button_close_popup').click(function(){
+            $('#popup_lecture_select .button_close_popup').click(function(){
                 $(this).parents('div.popups').fadeOut('fast')
-                $('#shade,#shade3').hide()
+                shade_index(-100)
             })
 
 
