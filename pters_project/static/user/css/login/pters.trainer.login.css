@@ -2,7 +2,18 @@
 body{
 	font-family: 'Noto Sans KR' !important;
 	padding-top: 0px;
-	overflow-y: hidden;
+	/*
+	background-image: url("/static/user/res/main/bg-image.png");
+	background-repeat: no-repeat;
+	background-position-x:center;
+	background-size:100%;
+	background-color: black !important;
+	*/
+}
+
+.pters_login_promote_box{
+	position: relative;
+	height: 675px;
 	background-image: url("/static/user/res/main/bg-image.png");
 	background-repeat: no-repeat;
 	background-position-x:center;
@@ -10,18 +21,34 @@ body{
 	background-color: black !important;
 }
 
+.pters_login_promote_box_sub{
+	position: relative;
+	text-align: center;
+	min-height: 420px;
+}
+
+.button_next_view{
+	position: absolute;
+	bottom: 5px;
+	text-align: center;
+	width: 100%;
+}
+	.button_next_view img{
+		cursor: pointer;
+	}
+
 nav.main_nav{
 	position:sticky;
 	top: 	0;
 	width: 	100%;
-	height: 45px;
+	height: 55px;
 }
 	.main_nav_bg{
 		position: 	absolute;
 		top: 	0;
 		left:	0;
 		width: 	100%;
-		height: 	45px;
+		height: 	55px;
 		background: #282828;
 		opacity: 0.8;
 		z-index: -1;
@@ -51,6 +78,9 @@ nav.main_nav{
 		margin-bottom: 	4px !important;
 		height: 	25px !important;
 		font-size: 10px !important;
+	}
+	#login-form_nav input{
+		border-radius: 0;
 	}
 	#idinput_nav input{
 		display: 	inline-block;
@@ -299,13 +329,42 @@ nav.main_nav{
 	display: none;
 }
 
+.bg-light{
+	background: #f4f4f4;
+	color: #282828;
+}
+
+.bg-dark{
+	background: #282828;
+	color: #f4f4f4;
+}
 
 
 @media(min-width: 600px){
 	body{
+		/*
 		background-image: url("/static/user/res/main/bg-image-pc-login.png");
 		background-position-y:unset;
 		background-size: auto;
+		*/
+	}
+
+	.pters_login_promote_box{
+		height: 800px;
+		background-image: url("/static/user/res/main/bg-image-pc-login.png");
+		background-position-y:unset;
+		background-size: auto;
+	}
+	.pters_login_promote_box_sub{
+		height: 700px;
+	}
+
+	.forgotPW{
+		margin-left: 240px;
+		font-size: 10px;
+		color: #c3c3c3;
+		text-decoration: underline;
+		cursor: pointer;
 	}
 
 	.loginbox{
@@ -348,7 +407,7 @@ nav.main_nav{
 	}
 
 	.fixfooter{
-		position: absolute;
+		position: relative;
 	    display: block;
 	    background: rgba(40, 40, 40, 0.50);
 	    width: 100%;

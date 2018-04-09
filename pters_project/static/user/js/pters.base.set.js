@@ -637,7 +637,6 @@ function scrollToDom(dom){
     if(offset != undefined){
       $('body, html').animate({scrollTop : offset.top-180},10)
     }
-    
 }
 
 
