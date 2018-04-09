@@ -332,7 +332,9 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
-					ajaxClassTime();
+					for (var i=0; i<=length(jsondata.pushArray); i++){
+						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.messageInfoArray[0]);
+					}
 					close_reserve_popup()
 	            }
 	            
@@ -345,6 +347,36 @@ $(document).ready(function(){
 	          error:function(){
 	            console.log('server error')
 	          }
+        })
+    }
+
+	function send_push(push_server_id, intance_id, message){
+
+        $.ajax({
+          url: 'https://fcm.googleapis.com/fcm/send',
+          type : 'POST',
+		  contentType : 'application/json',
+		  dataType: 'json',
+           headers : {
+                Authorization : 'key=' + push_server_id
+            },
+            data: JSON.stringify({"to": intance_id, "notification": {"title":"회원 일정 등록 알림","body":message}}),
+
+          beforeSend:function(){
+          	AjaxBeforeSend();
+          },
+
+          success:function(response){
+			  console.log(response);
+          },
+
+          complete:function(){
+          	AjaxCompleteSend();
+          },
+
+          error:function(){
+            console.log('server error')
+          }
         })
     }
 

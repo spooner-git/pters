@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 
 # Create your views here.
+from configs import settings
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -22,7 +23,7 @@ from el_pagination.views import AjaxListView
 from configs.views import date_check_func, AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.views import get_member_schedule_input_lecture
-from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb
+from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, MemberClassTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
 
@@ -865,6 +866,8 @@ def pt_add_logic(request):
             member_lecture_info.save()
         class_info.schedule_check = 1
         class_info.save()
+        messages.info(request, request.user.last_name+request.user.first_name+'님이 '+str(start_date)
+                      + '/' + str(end_date) + ' PT 일정을 등록했습니다')
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -1694,3 +1697,21 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
 
     return context
 
+
+class TraineePushAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_push_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TraineePushAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+
+        error = None
+        member_token = []
+        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, use=1)
+
+        for member_class_info in member_class_data:
+            member_token.append(member_class_info.member.m_token)
+
+        context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+        context['pushArray'] = member_token
+        return context

@@ -173,6 +173,8 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
+PTERS_PUSH_SERVER_KEY = os.environ.get("PTERS_PUSH_SERVER_KEY", '')
+
 # db data upload size
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
