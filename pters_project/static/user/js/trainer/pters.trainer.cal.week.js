@@ -934,6 +934,7 @@ $(document).ready(function(){
 	addPtMemberListSet();
 	//DBrepeatdata(repeatData,'class')
 	//DBrepeatdata(offrepeatData,'off')
+	
 	weekNum_Set_fixed()
 	dateText();
 	krHoliday()
@@ -941,6 +942,7 @@ $(document).ready(function(){
 	toDay();
 	addcurrentTimeIndicator_blackbox()
 	todayFinderArrow();	
+	
 
 
 
@@ -957,6 +959,7 @@ $(document).ready(function(){
 			reserveAvailable()
 			todayFinderArrow();
 			krHoliday()
+			//ajaxClassTime()
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
@@ -968,7 +971,8 @@ $(document).ready(function(){
 			dateText();
 			reserveAvailable()
 			todayFinderArrow();	
-			krHoliday()		
+			krHoliday()
+			//ajaxClassTime()
 	});
 
 	
@@ -1008,9 +1012,11 @@ $(document).ready(function(){
 			myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
 			myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>') //마지막 슬라이드에 새슬라이드 추가
 			calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기	
+			ajaxClassTime()
 			//classTime();
 			//offTime();
-			ajaxClassTime()
+
+			
 			
 			//DBrepeatdata(repeatData,'class')
 			//DBrepeatdata(offrepeatData,'off')
@@ -1341,8 +1347,8 @@ $(document).ready(function(){
 		$('.holidayName').text('')
 		for(var i=0; i<krHolidayList.length; i++){
 			var date_data = date_format_yyyy_m_d_to_yyyymmdd(krHolidayList[i])
-			$("div[data-date="+date_data+"]").addClass('holiday');
-			$("div[data-date="+date_data+"]").find('.holidayName').text(krHolidayNameList[i])
+			$("#week .weekNum[data-date="+date_data+"]").addClass('holiday');
+			$("#week .weekNum[data-date="+date_data+"]").find('.holidayName').text(krHolidayNameList[i])
 		};
 	}
 
