@@ -78,6 +78,7 @@ def login_trainer(request):
                 if token_data.member_id == user.id:
                     token_exist = True
                 else:
+                    token_data.delete()
                     token_exist = False
             except ObjectDoesNotExist:
                 token_exist = False
