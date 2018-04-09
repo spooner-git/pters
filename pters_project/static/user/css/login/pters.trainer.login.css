@@ -36,7 +36,8 @@ nav.main_nav{
 		margin-left: 	25px;
 	}
 	.login_form_nav{
-		display: inline-block;
+		display: none;
+		
 		float: 	right;
 		margin-top: 	7px;
 		padding: 	3px;
@@ -74,7 +75,9 @@ nav.main_nav{
 
 
 .main_title{
+	display: none;
 	position: 	absolute;
+	width: 100%;
 	top: 	220px;
 	left: 	50%;
 	transform: translateX(-50%);
@@ -166,6 +169,7 @@ nav.main_nav{
 }
 
 .loginbox{
+	display: block;
 	position: absolute;
 	width: 100%;
 	max-width: 500px;
@@ -302,6 +306,17 @@ nav.main_nav{
 		background-image: url("/static/user/res/main/bg-image-pc-login.png");
 		background-position-y:unset;
 		background-size: auto;
+	}
+
+	.loginbox{
+		display: none;
+	}
+
+	.main_title{
+		display: block;
+	}
+	.login_form_nav{
+		display: inline-block;
 	}
 
 	.logintext{
