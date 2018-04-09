@@ -342,14 +342,80 @@
 		height: 0px;
 	}
 
+	#loginInfo{
+		cursor: pointer;
+	}
+
 	.pcver-slide-menu{
-		position: fixed;
-		top: 60px;
-		right: 0;
-		width: 300px;
+		position: absolute;
+		display: block;
+		top: 62px;
+		right: 0px;
+		width: 450px;
 		height: 0;
 		background: #f4f4f4;
-	}
+		overflow: hidden;
+		transition: 1s;
+	}	
+		#myInfo{
+			margin-top: 5px;
+			padding-left: 10px;
+		}	
+			#myInfo>img{
+				width: 14px;
+				float: right;
+				margin-top: 3px;
+				margin-right: 10px;
+				cursor: pointer;
+			}
+			#myInfo>label>img{
+				width: 20px;
+				margin-bottom: 6px;
+				margin-right: 5px;
+			}
+			#myPageMove{
+				border:1px solid #fe4e65;
+				padding: 2px 5px 2px 5px;
+				font-size: 10px;
+				margin-left: 10px;
+				color: #fe4e65;
+				cursor: pointer;
+			}
+				#myPageMove:hover{
+					background: #fe4e65;
+					color: #ffffff;
+				}
+		#alarm-notify{
+			margin-top: 10px;
+			margin-bottom: 10px;
+			padding-left: 10px;
+			cursor: pointer;
+		}
+			#alarm-on-pc{
+				width: 22px;
+				margin-right: 10px;
+				cursor: pointer;
+			}
+		#alarm-iframe-div-pc{
+			background: #f4f4f4;
+			height: 0;
+			overflow-y: hidden;
+			transition: 1s;
+		}
+		#alarm-close-pc {
+			width: 100%;
+			display: none;
+			text-align: center;
+			cursor: pointer;
+		}
+			#alarm-close-pc:hover{
+				background:#cccccc;
+			}
+			#alarm-close-pc img{
+				width: 25px;
+				margin-left: 10px;
+				transform: rotate(180deg);
+			}
 
 	#popup_img{
 		position: relative;

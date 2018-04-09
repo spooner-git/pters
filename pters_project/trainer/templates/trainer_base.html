@@ -203,7 +203,7 @@
                         <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
                         <a id="uptext" class="uptext" href="{% url 'home' %}">{{ user.last_name}} {{user.first_name }}  <span></span></a>
                     {% endblock %}
-                    <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
+                    <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="openAlarm('mobile')">
                         <a><img src={% static_url "user/res/main/alarm-on.png" %} style="width:20px;"></a>
                     </button>
                     
@@ -305,10 +305,6 @@
         </nav><!-- /.navbar -->
         
         <nav class="navbar navbar-fixed-top" id="pcver">
-            <div class="pcver-slide-menu">
-                <div id="subject-selector"></div>
-                <div id="alarm-iframe-div"></div>
-            </div>
             <div class="centermenu">
                 <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
                 <div class="centermenu_box">
@@ -332,22 +328,43 @@
                     <div class="centermenu_div">
                         <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
                     </div>
+                    <!--
                     <div class="centermenu_div">
-                        <!--<a href="{% url 'trainer:alarm' %}" class="centermenu_text __alarm"></a>-->
                         <a class="centermenu_text __alarm"></a>
                     </div>
                     <div class="centermenu_div">
-                        <!--<a href="{% url 'trainer:alarm' %}" class="centermenu_text __alarm"></a>-->
                         <a class="centermenu_text __calSelect" onclick="open_lecture_select_popup()"></a>
                     </div>
+                    -->
                 </div>
-                <div id="loginInfo" class="centermenu_div" style="float:right;">
+                <div id="loginInfo" class="centermenu_div" style="float:right;" onclick="openAlarm('pc')">
                     <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
-                    <span class="pcwhere">{{ request.session.class_center_name }}</span>
-                    <span class="pcwho" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">{{user.last_name}} {{user.first_name}} <span></span></span>
+                    <span class="pcwhere">{{ request.session.class_type_name }}</span>
+                    <span class="pcwho" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
                 </div>
                 <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
-                <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;">{{ request.session.class_type_name }}</span>
+                <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
+                <div class="pcver-slide-menu">
+                    <div id="myInfo">
+                        <label><img src="/static/user/res/member/icon-user.png">내 클래스 정보</label>
+                        <span>{{ request.session.class_center_name }}</span>
+                        <span>{{user.last_name}} {{user.first_name}}</span>
+                        <span class="_nameAttach"></span>
+                        <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">My Page</span>
+                        <img src="/static/user/res/ptadd/btn-x.png" onclick="closeAlarm('pc')">
+                    </div>
+                    <div class="pters_table">
+                      <div class="pters_table_cell_head table_center_name">센터</div>
+                      <div class="pters_table_cell_head table_lecture_name">클래스</div>
+                      <div class="pters_table_cell_head table_trainee_num">수강생</div>
+                      <div class="pters_table_cell_head table_start_date">개강일</div>
+                      <div class="pters_table_cell_head table_lecture_status">상태</div>
+                    </div>
+                    <div id="subject-selector"></div>
+                    <div id="alarm-notify"><img id="alarm-on-pc" src="/static/user/res/main/alarm-on.png"><span>새로운 알림이 있습니다.</span></div>
+                    <div id="alarm-iframe-div-pc"></div>
+                    <div id="alarm-close-pc"><img src="/static/user/res/icon-down-grey.png"></div>
+                </div>
             </div>
         </nav>
         
@@ -472,6 +489,51 @@
              }; 
 
 
+            function openAlarm(option){ // pc or mobile
+                if(option == 'mobile'){
+                    if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
+                        $('#alarm_delete').hide()
+                    }else{
+                        $('#alarm_delete').show()
+                    }
+                    shade_index(100)
+                    $('#alarm').css('height','70%');
+                    $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
+                }
+                else if(option == 'pc'){
+                    open_lecture_select_popup_pc()
+                    if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
+                        $('#alarm_delete').hide()
+                    }else{
+                        $('#alarm_delete').show()
+                    }
+                    $('.pcver-slide-menu').css({'height':'auto','box-shadow':'1px 1px 1px 1px #c5c5c5'});
+                    $('#alarm-iframe-div-pc').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="100%" height="300" frameborder="0"></iframe>');
+                }
+            }
+
+            function closeAlarm(option){
+                if(option=='pc'){
+                    $('.pcver-slide-menu').css({'height':'0','box-shadow':'unset'});
+                    $('#alarm-iframe-div-pc').css('height','0px')
+                    $('#alarm-close-pc').fadeOut()
+                    $('#alarm-iframe-div-pc').html('');
+                }
+            }
+
+            $('#alarm-notify').click(function(){
+                $('#alarm-iframe-div-pc').css('height','300px')
+                $('#alarm-close-pc').fadeIn()
+            })
+
+            $('#alarm-close-pc').click(function(){
+                $('#alarm-iframe-div-pc').css('height','0px')
+                $('#alarm-close-pc').fadeOut()
+            })
+
+
+
+
             var worktime = '{{ request.session.setting_trainer_work_time_available }}'
             var stoptime = '{{ request.session.setting_member_reserve_time_available }}'
              if(stoptime.length>0){
@@ -546,7 +608,7 @@
             var lec_select_classIdArray = []
 
 
-            function ajax_read_lecture_info_from_db(){
+            function ajax_read_lecture_info_from_db(HTMLselector){
                 $.ajax({
 
                       url: ' /trainer/get_class_data/',
@@ -579,7 +641,7 @@
                             if(lec_select_classIdArray.length == 0){
                                 location.href="{% url 'trainer:add_class' %}"
                             }else{
-                                fill_lecture_select_popup()
+                                fill_lecture_select_popup(HTMLselector)
                             } 
                         }
                       },
@@ -642,10 +704,16 @@
                 $('#popup_lecture_select').fadeIn('fast')
                 closeNav()
                 shade_index(100)
-                ajax_read_lecture_info_from_db()
+                ajax_read_lecture_info_from_db($('.lecture_select_table_list'))
             }
 
-            function fill_lecture_select_popup(){
+            function open_lecture_select_popup_pc(){
+                $('.popups').hide()
+                closeNav()
+                ajax_read_lecture_info_from_db($('#subject-selector'))
+            }
+
+            function fill_lecture_select_popup(HTMLselector){
                 var len = lec_select_subjectNameArray.length;
                 var list_table_to_join = []
                 for(var i=0; i<len; i++){
@@ -670,7 +738,8 @@
                       list_table_to_join.push(sum)
                 }
                 var list_table = list_table_to_join.join('')
-                $('.lecture_select_table_list').html(list_table)
+                HTMLselector.html(list_table)
+                //$('.lecture_select_table_list').html(list_table)
             }
 
             $('#popup_lecture_select .button_close_popup').click(function(){

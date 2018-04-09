@@ -206,6 +206,7 @@ $(document).ready(function(){
 		$('#page-addplan-pc').hide()
 		$("#cal_popup_planinfo").fadeIn('fast');
 		shade_index(100)
+		closeAlarm('pc')
 
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
 		var schedule_finish_check = $(this).attr('data-schedule-check')
@@ -291,6 +292,7 @@ $(document).ready(function(){
 		$("#cal_popup_planinfo").fadeIn('fast');
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
 		shade_index(100)
+		closeAlarm('pc')
 
 		var info = $(this).attr('off-time').split('_')
 		var yy=info[0]
