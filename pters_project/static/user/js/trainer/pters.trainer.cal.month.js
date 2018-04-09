@@ -366,7 +366,7 @@ $(document).ready(function(){
 
 								if(jsondata.push_info != ''){
 									for (var i=0; i<=jsondata.pushArray.length; i++){
-										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info);
+										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0]);
 									}
 								}
 				          		close_info_popup('cal_popup_plandelete')
@@ -551,7 +551,6 @@ $(document).ready(function(){
 
           beforeSend:function(){
           	console.log('test_ajax')
-          	AjaxBeforeSend();
           },
 
           success:function(response){
@@ -559,7 +558,6 @@ $(document).ready(function(){
           },
 
           complete:function(){
-          	AjaxCompleteSend();
           },
 
           error:function(){

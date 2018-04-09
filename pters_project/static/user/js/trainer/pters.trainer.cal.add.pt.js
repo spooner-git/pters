@@ -434,7 +434,7 @@ $(document).ready(function(){
                         }else{
                             if(jsondata.push_info != ''){
                                 for (var i=0; i<=jsondata.pushArray.length; i++){
-                                    send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info);
+                                    send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0]);
                                 }
                             }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
