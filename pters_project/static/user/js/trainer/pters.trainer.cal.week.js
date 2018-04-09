@@ -449,7 +449,6 @@ $(document).ready(function(){
 	        })
 		}
 
-
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		$('#popup_delete_btn_yes').click(function(){
 			if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
@@ -565,6 +564,12 @@ $(document).ready(function(){
 			                  	$('#errorMessageBar').show()
 			                  	$('#errorMessageText').text(jsondata.messageArray)
 				          	}else{
+
+								if(jsondata.push_info != ''){
+									for (var i=0; i<=jsondata.pushArray.length; i++){
+										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info);
+									}
+								}
 				          		close_info_popup('cal_popup_plandelete')
 		                      	AjaxCompleteSend();
 		                      	ajaxClassTime()

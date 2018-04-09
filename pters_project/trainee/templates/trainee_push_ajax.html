@@ -3,8 +3,8 @@
       ["{{ push_server_id }}"],
       "pushArray" :
       [{% for push_info in push_data %}"{{ push_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "messageInfoArray" :
-      [{% for message in messages %}{% if message.tags == "info" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "push_info" :
+      ["{{ request.session.push_info }}"],
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }

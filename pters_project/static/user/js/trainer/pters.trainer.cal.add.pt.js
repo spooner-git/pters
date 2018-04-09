@@ -432,6 +432,11 @@ $(document).ready(function(){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray)
                         }else{
+                            if(jsondata.push_info != ''){
+                                for (var i=0; i<=jsondata.pushArray.length; i++){
+                                    send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info);
+                                }
+                            }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
                               var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
@@ -488,6 +493,43 @@ $(document).ready(function(){
             //입력값 확인 메시지 출력 가능
          }
       })
+
+    function send_push(push_server_id, intance_id, message){
+
+			$.ajax({
+			  url: 'https://fcm.googleapis.com/fcm/send',
+			  type : 'POST',
+			  contentType : 'application/json',
+			  dataType: 'json',
+			   headers : {
+					Authorization : 'key=' + push_server_id
+				},
+				data: JSON.stringify({
+					"to": intance_id,
+					"notification": {
+						"title":"PT 일정 알림",
+						"body":message
+					}
+				}),
+
+			  beforeSend:function(){
+				console.log('test_ajax')
+				AjaxBeforeSend();
+			  },
+
+			  success:function(response){
+				  console.log(response);
+			  },
+
+			  complete:function(){
+				AjaxCompleteSend();
+			  },
+
+			  error:function(){
+				console.log('server error')
+			  }
+			})
+		}
 
       //OFF반복일정 확인 팝업 "아니오" 눌렀을때 (선택지: 반복 설정 다시 하겠다)
       $('#popup_btn_repeatconfirm_no').click(function(){

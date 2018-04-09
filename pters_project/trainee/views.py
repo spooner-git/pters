@@ -746,9 +746,8 @@ def pt_delete_logic(request):
                          log_info='PT 일정', log_how='삭제', log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
-
-        messages.info(request, request.user.last_name+request.user.first_name+'님이 '+str(start_date)
-                      + '~' + str(end_date).split(' ')[1] + ' PT 일정을 삭제했습니다')
+        request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '+str(start_date)\
+                                       + '~' + str(end_date).split(' ')[1] + ' PT 일정을 삭제했습니다'
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -868,8 +867,9 @@ def pt_add_logic(request):
             member_lecture_info.save()
         class_info.schedule_check = 1
         class_info.save()
-        messages.info(request, request.user.last_name+request.user.first_name+'님이 '+str(start_date)
-                      + '~' + str(end_date).split(' ')[1] + ' PT 일정을 등록했습니다')
+
+        request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '+str(start_date)\
+                                       + '~' + str(end_date).split(' ')[1] + ' PT 일정을 등록했습니다'
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -1708,7 +1708,7 @@ class TraineePushAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id', '')
 
         push_token = []
-        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, use=1)
+        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id,auth_cd='VIEW', use=1)
 
         for member_class_info in member_class_data:
             token_data = PushInfoTb.objects.filter(member_id=member_class_info.member.member_id)

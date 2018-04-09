@@ -334,7 +334,7 @@ $(document).ready(function(){
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
 					for (var i=0; i<=jsondata.pushArray.length; i++){
-						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.messageInfoArray[0]);
+						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info);
 					}
 					ajaxClassTime();
 					close_reserve_popup()

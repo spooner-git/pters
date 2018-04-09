@@ -77,6 +77,12 @@
       "ptRepeatScheduleStateCdArray" :
       [{% for pt_repeat_schedule_state_cd_info in pt_repeat_schedule_state_cd %}"{{ pt_repeat_schedule_state_cd_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "ptRepeatScheduleStateCdNameArray" :
-      [{% for pt_repeat_schedule_state_cd_nm_info in pt_repeat_schedule_state_cd_nm %}"{{ pt_repeat_schedule_state_cd_nm_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+      [{% for pt_repeat_schedule_state_cd_nm_info in pt_repeat_schedule_state_cd_nm %}"{{ pt_repeat_schedule_state_cd_nm_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+      "push_server_id" :
+      ["{{ push_server_id }}"],
+      "pushArray" :
+      [{% for push_info in push_data %}"{{ push_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "push_info" :
+      [{{ request.session.push_info }}]
     }

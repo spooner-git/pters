@@ -23,8 +23,9 @@ from el_pagination.decorators import page_template
 from el_pagination.views import AjaxListView
 
 from center.models import CenterTrainerTb
+from configs import settings
 from configs.views import AccessTestMixin, get_client_ip
-from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
+from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
 from schedule.views import get_trainer_schedule_data_func
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb
 from schedule.models import ClassTb
@@ -227,6 +228,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
         class_id = request.session.get('class_id', '')
         date = request.session.get('date', '')
         day = request.session.get('day', '')
+        lecture_id = request.session.get('lecture_id', '')
         today = datetime.date.today()
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -238,6 +240,17 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
         context = get_member_data(context, class_id, None)
 
+        if lecture_id is not None and lecture_id != '':
+            push_token = []
+            member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, auth_cd='VIEW', use=1)
+
+            for member_lecture_info in member_lecture_data:
+                    token_data = PushInfoTb.objects.filter(member_id=member_lecture_info.member.member_id)
+                    for token_info in token_data:
+                        push_token.append(token_info.token)
+
+            context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+            context['push_data'] = push_token
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):

@@ -538,6 +538,14 @@ def add_schedule_logic(request):
                       class_info.class_id, lecture_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LS01', request)
 
+        if en_dis_type == '1':
+            request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '+str(schedule_start_datetime)\
+                                           + '~' + str(schedule_end_datetime).split(' ')[1] + ' PT 일정을 등록했습니다'
+            request.session['lecture_id'] = lecture_id
+        else:
+            request.session['push_info'] = ''
+            request.session['lecture_id'] = ''
+
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -594,6 +602,14 @@ def delete_schedule_logic(request):
             member_lecture_info.save()
         save_log_data(start_date, end_date, class_id, lecture_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LS02', request)
+
+        if en_dis_type == '1':
+            request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '+str(start_date)\
+                                           + '~' + str(end_date).split(' ')[1] + ' PT 일정을 삭제했습니다'
+            request.session['lecture_id'] = lecture_id
+        else:
+            request.session['push_info'] = ''
+            request.session['lecture_id'] = ''
 
         return redirect(next_page)
     else:
@@ -1041,6 +1057,13 @@ def add_repeat_schedule_confirm(request):
             save_log_data(start_date, end_date, class_id, lecture_id, request.user.last_name+request.user.first_name,
                           member_name, en_dis_type, 'LR01', request)
 
+            if en_dis_type == '1':
+                request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
+                                               + '~' + str(end_date) + ' PT 반복일정을 등록했습니다'
+                request.session['lecture_id'] = lecture_id
+            else:
+                request.session['push_info'] = ''
+                request.session['lecture_id'] = ''
             information = '반복일정 등록이 완료됐습니다.'
 
     # print(error)
@@ -1156,6 +1179,14 @@ def delete_repeat_schedule_logic(request):
             member_lecture_info.save()
         save_log_data(start_date, end_date, class_id, delete_repeat_schedule.lecture_tb_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LR02', request)
+
+        if en_dis_type == '1':
+            request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
+                                           + '~' + str(end_date) + ' PT 반복일정을 등록했습니다'
+            request.session['lecture_id'] = delete_repeat_schedule.lecture_tb_id
+        else:
+            request.session['push_info'] = ''
+            request.session['lecture_id'] = ''
 
         return redirect(next_page)
     else:

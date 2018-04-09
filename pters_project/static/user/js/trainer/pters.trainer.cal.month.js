@@ -363,6 +363,12 @@ $(document).ready(function(){
 			              		$('#errorMessageBar').show()
 			               		$('#errorMessageText').text(jsondata.messageArray)
 				          	}else{
+
+								if(jsondata.push_info != ''){
+									for (var i=0; i<=jsondata.pushArray.length; i++){
+										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info);
+									}
+								}
 				          		close_info_popup('cal_popup_plandelete')
 		                      	AjaxCompleteSend();
 		                      	ajaxClassTime()
@@ -524,6 +530,43 @@ $(document).ready(function(){
             },
         })
 	}
+
+	function send_push(push_server_id, intance_id, message){
+
+        $.ajax({
+          url: 'https://fcm.googleapis.com/fcm/send',
+          type : 'POST',
+		  contentType : 'application/json',
+		  dataType: 'json',
+           headers : {
+                Authorization : 'key=' + push_server_id
+            },
+            data: JSON.stringify({
+            	"to": intance_id,
+				"notification": {
+            		"title":"회원 일정 알림",
+					"body":message
+            	}
+            }),
+
+          beforeSend:function(){
+          	console.log('test_ajax')
+          	AjaxBeforeSend();
+          },
+
+          success:function(response){
+			  console.log(response);
+          },
+
+          complete:function(){
+          	AjaxCompleteSend();
+          },
+
+          error:function(){
+            console.log('server error')
+          }
+        })
+    }
 
 	//PC버전 새로고침 버튼
 	$('.ymdText-pc-add-refresh').click(function(){ 
