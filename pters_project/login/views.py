@@ -55,6 +55,7 @@ def login_trainer(request):
     # login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
+    keyword = request.POST.get('keyword', '')
     auto_login_check = request.POST.get('auto_login_check', '0')
     next_page = request.POST.get('next_page')
     error = None
@@ -70,7 +71,14 @@ def login_trainer(request):
             login(request, user)
             if auto_login_check == '0':
                 request.session.set_expiry(0)
-            # member_detail = MemberTb.objects.get(user_id=user_data.id)
+            try:
+                member = MemberTb.objects.get(member_id=user.id)
+            except ObjectDoesNotExist:
+                error = 'ID/비밀번호를 확인해주세요.'
+            if error is None:
+                if keyword is not None and keyword != '':
+                    member.m_token = keyword
+                    member.save()
             # request.session['is_first_login'] = True
             # request.session['member_id'] = member_detail.member_id
 

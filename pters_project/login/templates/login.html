@@ -93,6 +93,7 @@
                     <div id="login-button_nav">
                         <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
                     </div>
+                    <input type="hidden" name="keyword" id="keyword_pc">
                     <input type="hidden" name="next_page" value = '{% url 'home' %}'>
                 </form>
             </div>
@@ -143,6 +144,7 @@
                 <div class="innerbox">
                     <div id="registerButton" onclick="goPage(0)">회원 가입</div><div class="seperate_bar"></div><div id="findIDPW" onclick="goPage(1)">PW 초기화</div>
                 </div>
+                <input type="hidden" name="keyword" id="keyword_mobile">
                 <input type="hidden" name="next_page" value = '{% url 'home' %}'>
             </form>
         </div>
