@@ -514,7 +514,7 @@ $(document).ready(function(){
 
 			  beforeSend:function(){
 				console.log('test_ajax')
-				AjaxBeforeSend();
+
 			  },
 
 			  success:function(response){
@@ -522,7 +522,7 @@ $(document).ready(function(){
 			  },
 
 			  complete:function(){
-				AjaxCompleteSend();
+
 			  },
 
 			  error:function(){

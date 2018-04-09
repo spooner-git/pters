@@ -627,7 +627,43 @@ $(document).ready(function(){
 			}		
 		})
 	}
-	
+
+    function send_push(push_server_id, intance_id, message){
+
+			$.ajax({
+			  url: 'https://fcm.googleapis.com/fcm/send',
+			  type : 'POST',
+			  contentType : 'application/json',
+			  dataType: 'json',
+			   headers : {
+					Authorization : 'key=' + push_server_id
+				},
+				data: JSON.stringify({
+					"to": intance_id,
+					"notification": {
+						"title":"PT 일정 알림",
+						"body":message
+					}
+				}),
+
+			  beforeSend:function(){
+				console.log('test_ajax')
+
+			  },
+
+			  success:function(response){
+				  console.log(response);
+			  },
+
+			  complete:function(){
+
+			  },
+
+			  error:function(){
+				console.log('server error')
+			  }
+			})
+		}
 	
 	function signImageSend(send_data){
 		$.ajax({
