@@ -147,6 +147,7 @@ $(document).ready(function(){
 
 	var clicked_td_date_info;
 	$(document).on('click','#calendar td',function(){
+		closeAlarm('pc')
 		if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
 			deleteTypeSelect = ''
 			$('#cal_popup_plancheck').fadeIn('fast');

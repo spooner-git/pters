@@ -193,7 +193,7 @@ $(document).ready(function(){
       $('.__membermanage').text("会員管理")
       $('.__workmanage').text("業務管理")
       $('.__setting').text("設定")
-      $('.pcwho span').text("様")
+      $('._nameAttach').text("様")
       //$('.pcwhere').text("PTERSトレーニングセンター")
       $('.pclogout').text("ログアウト")
       $('#uptext span').text("様のスケジュール")
@@ -208,7 +208,7 @@ $(document).ready(function(){
       $('.__membermanage').text("Members")
       $('.__workmanage').text("Work")
       $('.__setting').text("Settings")
-      $('.pcwho span').text("")
+      $('._nameAttach').text("")
       //$('.pcwhere').text("PTERS Traning Center")
       $('.pclogout').text("Logout")
       $('#uptext span').text("'s schedule")
@@ -223,7 +223,7 @@ $(document).ready(function(){
       $('.__membermanage').text("회원 관리")
       $('.__workmanage').text("업무 통계")
       $('.__setting').text("설정")
-      $('.pcwho span').text("님")
+      $('._nameAttach').text("님")
       //$('.pcwhere').text("PTERS 트레이닝센터")
       $('.pclogout').text("로그아웃")
       $('#uptext span').text("코치님 일정")
@@ -232,35 +232,35 @@ $(document).ready(function(){
       $('.__mypage').text("마이페이지")
    }
 
-
+   /*
    $('.__alarm, #upbutton-alarm').click(function(){
-      console.log($('#alarm-iframe').contents().find(".log_id_array").length)
       if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
         $('#alarm_delete').hide()
       }else{
         $('#alarm_delete').show()
       }
 
-      $('#alarm').css('transform','translate(-50%,0%)');
+      
       if($('body').width()>600){
-          $('#shade3').css('display','block');
+          shade_index(100)
+          $('#alarm').css('height','370px');
       }else{
-          $('#shade').css('display','block');
+          shade_index(100)
+          $('#alarm').css('height','70%');
       }
       $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
    });
-
+  */  
    $('#alarm button').click(function(){
-      $('#alarm').css('transform','translate(-50%,-200%)');
+      /*$('#alarm').css('transform','translate(-50%,-200%)');*/
+      $('#alarm').css('height','0');
       if($('body').width()>600){
-          $('#shade3').css('display','none');
+          shade_index(-100)
       }else{
-          $('#shade').css('display','none');
+          shade_index(-100)
       }
    });
-
 });
-
 
 
 $('#alarm_delete').click(function(){

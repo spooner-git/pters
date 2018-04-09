@@ -64,6 +64,7 @@ $(document).ready(function(){
       });
 
       $(document).on('click','.td00',function(){ //주간달력 미니 팝업
+            closeAlarm('pc')
             var toploc = $(this).offset().top;
             var leftloc = $(this).offset().left;
             var tdwidth = $(this).width();
