@@ -427,8 +427,9 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
+	          		if
 					for (var i=0; i<=jsondata.pushArray.length; i++){
-						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.messageInfoArray[0]);
+						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0]);
 					}
 					ajaxClassTime();
 					close_delete_confirm_popup()
