@@ -57,7 +57,7 @@
                 <img src="/static/user/res/member/icon-delete-black.png" style="height:25px;float: right;margin-right: 10px; ">
             </div>
             <div id="alarm-iframe-div"></div>
-            <div style="text-align: center;margin-top: 20px;"><button style="background: transparent;border:0;"><img src="/static/user/res/icon-down-grey.png" style="transform:rotate(180deg);"></button></div>
+            <div style="text-align: center;"><button style="background: transparent;border:0;"><img src="/static/user/res/icon-down-grey.png" style="transform:rotate(180deg);"></button></div>
         </div>
 
         <div id="errorMessageBar">
@@ -305,6 +305,10 @@
         </nav><!-- /.navbar -->
         
         <nav class="navbar navbar-fixed-top" id="pcver">
+            <div class="pcver-slide-menu">
+                <div id="subject-selector"></div>
+                <div id="alarm-iframe-div"></div>
+            </div>
             <div class="centermenu">
                 <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
                 <div class="centermenu_box">
@@ -435,7 +439,7 @@
                     $('.popups').css('display','none')
                     $('.pshade').css({'z-index':-100,'display':'none'})
                 }
-                $('#alarm').css('transform','translate(-50%,-200%)');.0
+                $('#alarm').css('transform','translate(-50%,-200%)');
             })
 
             $('#errorMessageBar span:nth-child(2)').click(function(){

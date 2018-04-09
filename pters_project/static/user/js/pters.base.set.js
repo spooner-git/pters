@@ -234,28 +234,30 @@ $(document).ready(function(){
 
 
    $('.__alarm, #upbutton-alarm').click(function(){
-      console.log($('#alarm-iframe').contents().find(".log_id_array").length)
       if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
         $('#alarm_delete').hide()
       }else{
         $('#alarm_delete').show()
       }
 
-      $('#alarm').css('transform','translate(-50%,0%)');
+      
       if($('body').width()>600){
-          $('#shade3').css('display','block');
+          shade_index(100)
+          $('#alarm').css('height','370px');
       }else{
-          $('#shade').css('display','block');
+          shade_index(100)
+          $('#alarm').css('height','70%');
       }
       $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
    });
 
    $('#alarm button').click(function(){
-      $('#alarm').css('transform','translate(-50%,-200%)');
+      /*$('#alarm').css('transform','translate(-50%,-200%)');*/
+      $('#alarm').css('height','0');
       if($('body').width()>600){
-          $('#shade3').css('display','none');
+          shade_index(-100)
       }else{
-          $('#shade').css('display','none');
+          shade_index(-100)
       }
    });
 
