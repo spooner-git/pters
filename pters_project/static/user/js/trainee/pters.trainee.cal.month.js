@@ -328,6 +328,7 @@ $(document).ready(function(){
 
 	          success:function(data){
 	          	var jsondata = JSON.parse(data);
+	          	console.log(data)
 	          	if(jsondata.messageArray.length>0){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
@@ -335,6 +336,7 @@ $(document).ready(function(){
 					for (var i=0; i<=jsondata.pushArray.length; i++){
 						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.messageInfoArray[0]);
 					}
+					ajaxClassTime();
 					close_reserve_popup()
 	            }
 	            
@@ -360,9 +362,16 @@ $(document).ready(function(){
            headers : {
                 Authorization : 'key=' + push_server_id
             },
-            data: JSON.stringify({"to": intance_id, "notification": {"title":"회원 일정 등록 알림","body":message}}),
+            data: JSON.stringify({
+            	"to": intance_id,
+				"notification": {
+            		"title":"회원 일정 알림",
+					"body":message
+            	}
+            }),
 
           beforeSend:function(){
+          	console.log('test_ajax')
           	AjaxBeforeSend();
           },
 
@@ -418,6 +427,9 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
+					for (var i=0; i<=jsondata.pushArray.length; i++){
+						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.messageInfoArray[0]);
+					}
 					ajaxClassTime();
 					close_delete_confirm_popup()
 	            }

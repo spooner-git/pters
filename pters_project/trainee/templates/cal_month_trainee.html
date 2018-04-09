@@ -13,7 +13,7 @@
 <form action="{% url 'trainee:pt_delete_logic' %}" id="pt-delete-form" method="post">
     {% csrf_token %}
     <input type="hidden" name="schedule_id" id="id_schedule_id">
-    <input type="hidden" name="next_page" value = "{% url 'trainee:read_trainee_schedule_ajax' %}">
+    <input type="hidden" name="next_page" value = "{% url 'trainee:trainee_push_ajax' %}">
 </form>
 <form action="{% url 'trainee:pt_add_logic' %}" id="pt-add-form" method="post">
     {% csrf_token %}

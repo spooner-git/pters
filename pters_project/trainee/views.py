@@ -21,7 +21,7 @@ from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
 from configs.views import date_check_func, AccessTestMixin, get_client_ip
-from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
+from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
 from schedule.views import get_member_schedule_input_lecture
 from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, MemberClassTb
 from schedule.models import ClassTb
@@ -747,6 +747,8 @@ def pt_delete_logic(request):
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
 
+        messages.info(request, request.user.last_name+request.user.first_name+'님이 '+str(start_date)
+                      + '~' + str(end_date).split(' ')[1] + ' PT 일정을 삭제했습니다')
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -867,7 +869,7 @@ def pt_add_logic(request):
         class_info.schedule_check = 1
         class_info.save()
         messages.info(request, request.user.last_name+request.user.first_name+'님이 '+str(start_date)
-                      + '/' + str(end_date) + ' PT 일정을 등록했습니다')
+                      + '~' + str(end_date).split(' ')[1] + ' PT 일정을 등록했습니다')
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -1705,13 +1707,14 @@ class TraineePushAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineePushAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
 
-        error = None
-        member_token = []
+        push_token = []
         member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, use=1)
 
         for member_class_info in member_class_data:
-            member_token.append(member_class_info.member.m_token)
+            token_data = PushInfoTb.objects.filter(member_id=member_class_info.member.member_id)
+            for token_info in token_data:
+                push_token.append(token_info.token)
 
         context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
-        context['pushArray'] = member_token
+        context['push_data'] = push_token
         return context

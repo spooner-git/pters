@@ -29,7 +29,7 @@ from registration.forms import RegistrationForm
 
 from configs import settings
 from login.forms import MyPasswordResetForm
-from login.models import MemberTb
+from login.models import MemberTb, PushInfoTb
 # from schedule.models import ClassTb
 from schedule.models import MemberLectureTb
 
@@ -71,14 +71,22 @@ def login_trainer(request):
             login(request, user)
             if auto_login_check == '0':
                 request.session.set_expiry(0)
+
+            token_exist = False
             try:
-                member = MemberTb.objects.get(member_id=user.id)
+                token_data = PushInfoTb.objects.get(token=keyword)
+                if token_data.member_id == user.id:
+                    token_exist = True
+                else:
+                    token_exist = False
             except ObjectDoesNotExist:
-                error = 'ID/비밀번호를 확인해주세요.'
-            if error is None:
+                token_exist = False
+
+            if token_exist is False:
                 if keyword is not None and keyword != '':
-                    member.m_token = keyword
-                    member.save()
+                    token_info = PushInfoTb(member_id=user.id, token=keyword)
+                    token_info.save()
+
             # request.session['is_first_login'] = True
             # request.session['member_id'] = member_detail.member_id
 

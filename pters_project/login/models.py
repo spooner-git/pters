@@ -26,7 +26,6 @@ class MemberTb(models.Model):
     reg_info = models.CharField(db_column='REG_INFO', max_length=20, blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
-    m_token = models.CharField(db_column='M_TOKEN', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:
@@ -84,3 +83,13 @@ class HolidayTb(models.Model):
     class Meta:
         managed = False
         db_table = 'HOLIDAY_TB'
+
+
+class PushInfoTb(models.Model):
+    push_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    token = models.CharField(db_column='TOKEN', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PUSH_INFO_TB'
