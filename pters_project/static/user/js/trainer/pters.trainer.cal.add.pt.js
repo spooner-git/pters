@@ -886,6 +886,12 @@ function ajaxRepeatConfirmSend(){
                   $('#errorMessageBar').show()
                   $('#errorMessageText').text(jsondata.messageArray)
                 }else{
+
+                    if(jsondata.push_info != ''){
+                        for (var i=0; i<=jsondata.pushArray.length; i++){
+                            send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0]);
+                        }
+                    }
                   ajax_received_json_data(jsondata)
                 }
               },
