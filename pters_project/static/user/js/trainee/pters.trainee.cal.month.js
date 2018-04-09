@@ -332,7 +332,7 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
-					for (var i=0; i<=length(jsondata.pushArray); i++){
+					for (var i=0; i<=jsondata.pushArray.length; i++){
 						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.messageInfoArray[0]);
 					}
 					close_reserve_popup()
