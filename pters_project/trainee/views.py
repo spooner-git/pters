@@ -22,7 +22,6 @@ from el_pagination.views import AjaxListView
 
 from configs.views import date_check_func, AccessTestMixin, get_client_ip
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
-from schedule.views import get_member_schedule_input_lecture
 from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, MemberClassTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
@@ -492,7 +491,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(CalMonthView, self).get_context_data(**kwargs)
         error = None
         class_id = self.request.session.get('class_id', '')
-        lecture_id = self.request.session.get('lecture_id', '')
+        # lecture_id = self.request.session.get('lecture_id', '')
 
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
@@ -503,8 +502,8 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=46)
         end_date = today + datetime.timedelta(days=47)
 
-        if lecture_id is None or lecture_id == '':
-            error = '수강정보를 확인해 주세요.'
+        # if lecture_id is None or lecture_id == '':
+        #    error = '수강정보를 확인해 주세요.'
 
         if error is None:
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
@@ -528,7 +527,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(MyPageView, self).get_context_data(**kwargs)
         error = None
         class_id = self.request.session.get('class_id', '')
-        lecture_id = self.request.session.get('lecture_id', '')
+        # lecture_id = self.request.session.get('lecture_id', '')
 
         today = datetime.date.today()
         start_date = today - datetime.timedelta(days=46)
@@ -539,8 +538,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         except ObjectDoesNotExist:
             error = '강좌 정보를 불러오지 못했습니다.'
 
-        if lecture_id is None or lecture_id == '':
-            error = '수강정보를 확인해 주세요.'
+        # if lecture_id is None or lecture_id == '':
+        #    error = '수강정보를 확인해 주세요.'
 
         if error is None:
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
@@ -850,7 +849,8 @@ def pt_add_logic(request):
             error = '입력할 수 없는 일정입니다.'
 
     if error is None:
-        lecture_id = get_member_schedule_input_lecture(class_id, request.user.id)
+        lecture_id = get_trainee_schedule_input_lecture(class_id, request.user.id)
+        # print(lecture_id)
         if lecture_id is None:
             error = '등록할수 있는 일정이 없습니다.'
         if error is None:
@@ -897,7 +897,7 @@ def pt_add_array_logic(request):
 
     for i in range(0, int(add_pt_size)):
 
-        lecture_id = get_member_schedule_input_lecture(class_id, request.user.id)
+        lecture_id = get_trainee_schedule_input_lecture(class_id, request.user.id)
 
         if lecture_id is None:
             error = '등록할수 있는 일정이 없습니다.'
@@ -1718,3 +1718,26 @@ class TraineePushAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
         context['push_data'] = push_token
         return context
+
+
+def get_trainee_schedule_input_lecture(class_id, member_id):
+
+    lecture_id = None
+    # 강좌에 해당하는 수강/회원 정보 가져오기
+    lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
+                                                 lecture_tb__state_cd='IP', lecture_tb__lecture_avail_count__gt=0,
+                                                 lecture_tb__use=1).order_by('lecture_tb__start_date')
+    # lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, state_cd='IP',
+     #                                        lecture_avail_count__gt=0, use=1).order_by('start_date')
+    if len(lecture_list) > 0:
+        for lecture_info in lecture_list:
+            error = None
+            try:
+                MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
+                                            member_id=member_id,auth_cd='VIEW', use=1)
+            except ObjectDoesNotExist:
+                error = 'View 권한 없음'
+            if error is None:
+                lecture_id = lecture_info.lecture_tb.lecture_id
+
+    return lecture_id
