@@ -438,6 +438,13 @@ a:focus, a:hover{
     margin-bottom:1px;
 }
 
+.bottomfooter2 span{
+    cursor: pointer;
+}
+    .bottomfooter2 span:hover{
+        color:#fe4e65;
+    }
+
 .footergap{
 
 }

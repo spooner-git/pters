@@ -15,7 +15,7 @@
         <meta name="viewport" content="width=device-width,user-scalable:no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-        <title>{% block title %}피터스 - 트레이너{% endblock %}</title>
+        <title>{% block title %}PTERS{% endblock %}</title>
             
         <link rel="icon" href="/static/common/favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
@@ -38,17 +38,8 @@
     <!-- End Google Tag Manager (noscript) -->
     {% block navbar %}
         <div id="pshade" class="pshade _shade"></div>
-    <!--
-        <div id="pshade2" class="pshade _shade"></div>
-        <div id="pshade3" class="pshade _shade"></div>
-    -->
-   
         <div id="mshade" class="mshade _shade"></div>
         <div id="mshade_popup" class="mshade_popup _shade"></div>
-    <!--
-        <div id="mshade2" class="mshade _shade"></div>
-        <div id="mshade3" class="mshade _shade"></div>
-    -->
 
         <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
@@ -64,10 +55,6 @@
             <span id="errorMessageText"></span><span>닫기</span>
         </div>
 
-        <div id="commonPopup" style="position:absolute;display:none;width: 110px;height: 50px;background: transparent;z-index: 200;">
-            <div style="display:inline-block;width: 30px;height: 30px;border-radius: 50%;background: #fe4e65;color: #ffffff">추가</div>
-            <div style="display:inline-block;width: 30px;height: 30px;border-radius: 50%;background: #282828;color: #ffffff">변경</div>
-        </div>
 
         <div id="popup_lecture_select" class="popups">
             <form action="{% url 'trainer:class_processing' %}" id="lecture-check-form" method="post">
@@ -76,13 +63,18 @@
                 <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
             </form>
             <!--<label>클래스 선택</label>-->
-            <p>일정 확인을 원하는 클래스를 선택해 주세요.<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></p>
+            <p>
+                <span class="KRtext">클래스를 선택 해주세요.</span>
+                <span class="JPtext">クラスを選択してください。</span>
+                <span class="ENtext">Choose class</span>
+                <img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup">
+            </p>
             <div class="pters_table">
-              <div class="pters_table_cell_head table_center_name">센터</div>
-              <div class="pters_table_cell_head table_lecture_name">클래스</div>
-              <div class="pters_table_cell_head table_trainee_num">수강생</div>
-              <div class="pters_table_cell_head table_start_date">개강일</div>
-              <div class="pters_table_cell_head table_lecture_status">상태</div>
+              <div class="pters_table_cell_head table_center_name"><span class="KRtext">센터</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
+              <div class="pters_table_cell_head table_lecture_name"><span class="KRtext">클래스</span><span class="JPtext">クラス</span><span class="ENtext">Class</span></div>
+              <div class="pters_table_cell_head table_trainee_num"><span class="KRtext">수강생</span><span class="JPtext">受講生</span><span class="ENtext">Member</span></div>
+              <div class="pters_table_cell_head table_start_date"><span class="KRtext">개강일</span><span class="JPtext">開始</span><span class="ENtext">Open Date</span></div>
+              <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
             </div>
             <div class="lecture_select_table_list">
             </div>
@@ -171,23 +163,24 @@
           <div style="position: relative;">
             <div>
               <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
-              <span id="countNum">0</span>
+              <span id="countNum"></span>
             </div>
             <img src="/static/user/res/ptadd/btn-x.png" alt="" id="btn_close5" class="btn_close_popup" onclick="close_info_popup('cal_popup_plancheck')">
-            <p class="popup_ymdText">yy년,mm월,dd일,O요일</p></div>
+            <p class="popup_ymdText"></p>
+          </div>
             <p style="font-size: 11px;color:#fe4e65;"></p>
           <div class="popup_inner_month" style="height: auto;"></div>
         </div>
         <!--[월간전용] 일정조회(강사)팝업 -->
 
-        <!--[월간전용] 알림 팝업 -->
+        <!--[월간전용] 알림 팝업 
         <div id="ng_popup" class="popups">
            <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
             <div id="ng_popup_text" style="margin-bottom: 20px;">
               <p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>
             </div>
         </div>
-        <!--[월간전용] 알림 팝업 -->
+        [월간전용] 알림 팝업 -->
 
 
         <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
@@ -222,7 +215,7 @@
                             </div>
                             <div id="welcome">
                                 <span class="KRtext">안녕하세요!</span>
-                                <span class="JPtext">こんにちは</span>
+                                <span class="JPtext">Hello!</span>
                                 <span class="ENtext">What a nice day!</span>
                                 <p style="margin-top:15px;color:#f4f4f4;font-size:12px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}
                                 </p>
@@ -295,7 +288,7 @@
                         <img src={% static_url "user/res/ptadd/btn-x.png" %} style="width:90%;">
                     </button>
                     {% block nav_center_img2 %}
-                        <a id="uptext3" class="uptext">회원 정보</a>
+                        <a id="uptext3" class="uptext"><span class="KRtext">회원 정보</span><span class="JPtext">メンバー</span><span class="ENtext">Member Info.</span></a>
                     {% endblock %}
                     <button id="upbutton-modify" class="navbar-toggle" aria-controls="navbar" data-type = "view">
                         <img src={% static_url "user/res/member/icon-edit.png" %} style="width:100%;">
@@ -346,7 +339,7 @@
                 <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
                 <div class="pcver-slide-menu">
                     <div id="myInfo">
-                        <label><img src="/static/user/res/member/icon-user.png">내 클래스 정보</label>
+                        <label><img src="/static/user/res/member/icon-user.png"><span class="KRtext">내 클래스 정보</span><span class="JPtext">My Class</span><span class="ENtext">My Classes</span></label>
                         <span>{{ request.session.class_center_name }}</span>
                         <span>{{user.last_name}} {{user.first_name}}</span>
                         <span class="_nameAttach"></span>
@@ -354,14 +347,14 @@
                         <img src="/static/user/res/ptadd/btn-x.png" onclick="closeAlarm('pc')">
                     </div>
                     <div class="pters_table">
-                      <div class="pters_table_cell_head table_center_name">센터</div>
-                      <div class="pters_table_cell_head table_lecture_name">클래스</div>
-                      <div class="pters_table_cell_head table_trainee_num">수강생</div>
-                      <div class="pters_table_cell_head table_start_date">개강일</div>
-                      <div class="pters_table_cell_head table_lecture_status">상태</div>
+                      <div class="pters_table_cell_head table_center_name"><span class="KRtext">센터</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
+                      <div class="pters_table_cell_head table_lecture_name"><span class="KRtext">클래스</span><span class="JPtext">クラス</span><span class="ENtext">Class</span></div>
+                      <div class="pters_table_cell_head table_trainee_num"><span class="KRtext">수강생</span><span class="JPtext">受講生</span><span class="ENtext">Member</span></div>
+                      <div class="pters_table_cell_head table_start_date"><span class="KRtext">개강일</span><span class="JPtext">開始</span><span class="ENtext">Open Date</span></div>
+                      <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
                     </div>
                     <div id="subject-selector"></div>
-                    <div id="alarm-notify"><img id="alarm-on-pc" src="/static/user/res/main/alarm-on.png"><span>새로운 알림이 있습니다.</span></div>
+                    <div id="alarm-notify"><img id="alarm-on-pc" src="/static/user/res/main/alarm-on.png"><span class="KRtext">새로운 알림이 있습니다.</span><span class="JPtext">新しい通知があります</span><span class="ENtext">New notification arrived</span></div>
                     <div id="alarm-iframe-div-pc"></div>
                     <div id="alarm-close-pc"><img src="/static/user/res/icon-down-grey.png"></div>
                 </div>
@@ -390,11 +383,11 @@
             </div>
             <div class="bottomfooter2">
                 <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-                <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span class="KRtext">회사소개</span><span class="JPtext">会社紹介</span><span class="ENtext">About us</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span class="KRtext">이용안내</span><span class="JPtext">利用案内</span><span class="ENtext">Help</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span class="KRtext">제휴제안</span><span class="JPtext">提携</span><span class="ENtext">Partnership</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span class="KRtext">개인정보처리방침</span><span class="JPtext">個人情報処理方針</span><span class="ENtext">Privacy Policy</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span class="KRtext">고객센터</span><span class="JPtext">ヘルプ</span><span class="ENtext">Customer Service</span><span style="margin-left:10px;margin-right: 10px;">|</span>
             </div>
         </footer>
         
