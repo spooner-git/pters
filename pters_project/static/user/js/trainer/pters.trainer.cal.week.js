@@ -592,7 +592,7 @@ $(document).ready(function(){
 				          	}else{
 
 								if(jsondata.push_info != ''){
-									for (var i=0; i<=jsondata.pushArray.length; i++){
+									for (var i=0; i<jsondata.pushArray.length; i++){
 										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0]);
 									}
 								}
@@ -689,7 +689,7 @@ $(document).ready(function(){
 			  },
 
 			  error:function(){
-			  	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
+			  	//alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
 				console.log('server error')
 			  }
 			})

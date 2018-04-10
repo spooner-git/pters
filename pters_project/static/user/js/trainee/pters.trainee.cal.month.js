@@ -48,22 +48,7 @@ $(document).ready(function(){
             })
     }
 
-	
-	var date = new Date();
-	var currentYear = date.getFullYear(); //현재 년도
-	var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-	var currentDate = date.getDate(); //오늘 날짜
-	var currentHour = date.getHours(); //현재시간
-	var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
-	var currentPageMonth = currentMonth+1; //현재 달
-	var date2 = new Date();
-	var oriYear = date.getFullYear();
-	var oriMonth = date.getMonth()+1;
-	var oriDate = date.getDate();
 
-	var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시작 시간 (시작)
-	var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
-	var reserveOption = Options.reserve 
 
 
 	//플로팅 버튼
@@ -333,7 +318,7 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
-					for (var i=0; i<=jsondata.pushArray.length; i++){
+					for (var i=0; i<jsondata.pushArray.length; i++){
 						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0]);
 					}
 					ajaxClassTime();
@@ -1028,6 +1013,26 @@ $(document).ready(function(){
 
 
 });//document(ready)
+
+
+
+
+
+var date = new Date();
+var currentYear = date.getFullYear(); //현재 년도
+var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
+var currentDate = date.getDate(); //오늘 날짜
+var currentHour = date.getHours(); //현재시간
+var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
+var currentPageMonth = currentMonth+1; //현재 달
+var date2 = new Date();
+var oriYear = date.getFullYear();
+var oriMonth = date.getMonth()+1;
+var oriDate = date.getDate();
+
+var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시작 시간 (시작)
+var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
+var reserveOption = Options.reserve
 
 function ajaxClassTime(){
 

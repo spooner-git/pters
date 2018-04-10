@@ -246,7 +246,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
         for class_lecture_info in member_lecture_data:
             lecture_info = MemberLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, auth_cd='VIEW', use=1)
             for lecture_info in lecture_info:
-                token_data = PushInfoTb.objects.filter(member_id=member_class_info.member.member_id)
+                token_data = PushInfoTb.objects.filter(member_id=lecture_info.member.member_id)
                 for token_info in token_data:
                     push_token.append(token_info.token)
 
