@@ -464,12 +464,11 @@ if(navigator.serviceWorker){
                   sendTokenToServer(currentToken);
                       console.log('test1')
                   //updateUIForPushEnabled(currentToken);
-                      console.log('test2')
                 } else {
                   // Show permission request.
                   console.log('No Instance ID token available. Request permission to generate one.');
                   // Show permission UI.
-                  updateUIForPushPermissionRequired();
+                  //updateUIForPushPermissionRequired();
                   setTokenSentToServer(false);
                 }
               })
@@ -483,23 +482,6 @@ if(navigator.serviceWorker){
             console.log('서비스워커 등록실패 :', error)
         });
 }
-
-messaging.onTokenRefresh(function() {
-  messaging.getToken()
-  .then(function(refreshedToken) {
-    console.log('Token refreshed.');
-    // Indicate that the new Instance ID token has not yet been sent to the
-    // app server.
-    setTokenSentToServer(false);
-    // Send Instance ID token to app server.
-    sendTokenToServer(refreshedToken);
-    // ...
-  })
-  .catch(function(err) {
-    console.log('Unable to retrieve refreshed token ', err);
-    showToken('Unable to retrieve refreshed token ', err);
-  });
-});
 
  function showToken(currentToken) {
     // Show token in console and UI.
@@ -586,15 +568,6 @@ messaging.onTokenRefresh(function() {
     while (messagesElement.hasChildNodes()) {
       messagesElement.removeChild(messagesElement.lastChild);
     }
-  }
-  function updateUIForPushEnabled(currentToken) {
-    showHideDiv(tokenDivId, true);
-    showHideDiv(permissionDivId, false);
-    showToken(currentToken);
-  }
-  function updateUIForPushPermissionRequired() {
-    showHideDiv(tokenDivId, false);
-    showHideDiv(permissionDivId, true);
   }
 </script>
 
