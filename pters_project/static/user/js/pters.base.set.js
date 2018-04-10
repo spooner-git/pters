@@ -644,6 +644,7 @@ function scrollToDom(dom){
 }
 
 
+//알림창에 얼마전에 뜬 알람인지 계산
 function date_calculator(yyyy_mm_dd_hh_mm_ss){
     var yyyymmdd = Number(date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_mm_dd_hh_mm_ss.split(' ')[0],''))
     var yyyy = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[0])
@@ -680,18 +681,16 @@ function date_calculator(yyyy_mm_dd_hh_mm_ss){
     }
     return message
 }
+//
 
-function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d,resultSplit){
-    var yyyy = String(yyyy_m_d.split('-')[0])
-    var mm = String(yyyy_m_d.split('-')[1])
-    var dd = String(yyyy_m_d.split('-')[2])
-    if(mm.length<2){
-      var mm = '0' + String(yyyy_m_d.split('-')[1])
-    }
-    if(dd.length<2){
-      var dd = '0' + String(yyyy_m_d.split('-')[2])
-    }
-    return yyyy+resultSplit+mm+resultSplit+dd
+//알림창에 변동된 일정 정보를 알아보기 쉽게
+function alarm_change_easy_read(data){ // data : 2018-04-11 02:00:00/2018-04-11 03:00:00
+  var dateInfo = data.split(' ')[0]
+  var startTime = Number(data.split(' ')[1].split(':')[0])
+  var endTime = Number(data.split(' ')[2].split(':')[0])
+  var timeDiff = endTime - startTime
+  var result = date_format_to_user_hangul(data.split('/')[0])+ ' ~ ' + data.split(' ')[2].substr(0,5) + ' (' +timeDiff+' 시간)' 
+  return result
 }
 
 
