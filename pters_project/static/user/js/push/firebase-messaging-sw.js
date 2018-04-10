@@ -51,14 +51,40 @@ self.addEventListener('push', function(event) {
     const options = {
         body: payload.notification.body,
         icon: payload.notification.icon,
-        data: payload.notification.click_action,
-        sound: payload.notification.sound
+        data: payload.notification.click_action
     };
     event.waitUntil(self.registration.showNotification(title, options));
     //testAjaxCall();
-    ajaxClassTime();
+    //ajaxClassTime();
     //document.getElementById('summaryText')
+    //console.log(clients)
+    //clients.postMessage("document.write('javascript:ajaxClassTime()')")
     //window.parent.ajaxClassTime();
+    //console.log('test')
+    //console.log(event)
+    //self.active.postMessage({'event':event});
+    //postMessage({'event':event})
+    // Dispatch/Trigger/Fire the event
+
+});
+/*
+self.addEventListener('message', function(event) {
+  console.log('clear1'); // outputs {'hello':'world'}
+  console.log(event.data); // outputs {'hello':'world'}
+
+  //event.postMessage({'hellott':'world'});
+});
+
+this.clients.matchAll().then(function(clients) {
+    console.log('clear2')
+  clients.forEach(function(client){client.postMessage('hello from the other side')});
+});
+
+this.addEventListener('message', function(event){
+  // do something
+    console.log('messageWorker::'+event.data)
+  event.ports[0].postMessage('private msg back');
+
 });
 
 self.addEventListener('notificationclick', function(event) {
@@ -67,5 +93,5 @@ self.addEventListener('notificationclick', function(event) {
     event.waitUntil(
         clients.openWindow(event.notification.data)
     );
-    console.log('vvvvazzszss')
 });
+*/

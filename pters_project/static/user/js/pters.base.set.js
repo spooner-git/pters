@@ -92,9 +92,9 @@ $(document).ready(function(){
 	setInterval(function(){
 	    if(platform_check=='pc')
         {
-            if (Push.Permission.has()){
+            //if (Push.Permission.has()){
                 //ajaxCheckAlarm();
-            }
+            //}
 		}
 	}, 60000);// 자동 ajax 새로고침(일정가져오기)
 

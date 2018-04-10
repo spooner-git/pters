@@ -11,7 +11,7 @@
     }
 
    // $('.request-btn').click(function () {
-    //    Push.Permission.request(onGranted, onDenied);
+        Push.Permission.request(onGranted, onDenied);
     //   console.log(Push.Permission.get());
 
   var config = {
@@ -40,10 +40,17 @@ Push.FCM().then(function(FCM) {
    throw initError;
 })
 ;*/
+//var firebase_worker;
+
 if(navigator.serviceWorker){
-    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t9')
+
+
+    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t57')
         .then(function(reg){
             console.log('서비스워커 등록성공 :', reg)
+    //firebase_worker = reg.active;
+    //reg.active.postMessage({'hello':'world'});
+    //window.addEventListener('message', function(event){ console.log('client::'+event) }, false);
           messaging.useServiceWorker(reg);
 
            return messaging.getToken()
@@ -71,7 +78,11 @@ if(navigator.serviceWorker){
         .catch(function(error){
             console.log('서비스워커 등록실패 :', error)
         });
+
+
 }
+
+
 
  function showToken(currentToken) {
     // Show token in console and UI.
@@ -151,7 +162,6 @@ if(navigator.serviceWorker){
     dataElement.textContent = JSON.stringify(payload, null, 2);
     messagesElement.appendChild(dataHeaderELement);
     messagesElement.appendChild(dataElement);
-     console.log('vvvvvvvvvvvvv')
   }
   // Clear the messages element of all children.
   function clearMessages() {
@@ -159,7 +169,6 @@ if(navigator.serviceWorker){
     while (messagesElement.hasChildNodes()) {
       messagesElement.removeChild(messagesElement.lastChild);
     }
-     console.log('123123123')
   }
 
   function afterLoad(token) {
