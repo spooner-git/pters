@@ -840,6 +840,8 @@ $(document).ready(function(){
 	          	offTimeArray_start_date = jsondata.offTimeArray_start_date
 	          	offTimeArray_end_date = jsondata.offTimeArray_end_date
 
+	          	$('#countRemainData span').text(jsondata.lecture_avail_count)
+
 	          	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
 	          	$('.classTime,.offTime').parent().html('<div></div>')
 	          	$('.blackballoon, .balloon').html('')
