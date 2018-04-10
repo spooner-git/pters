@@ -11,8 +11,8 @@
     }
 
    // $('.request-btn').click(function () {
-        Push.Permission.request(onGranted, onDenied);
-       console.log(Push.Permission.get());
+    //    Push.Permission.request(onGranted, onDenied);
+    //   console.log(Push.Permission.get());
 
   var config = {
     apiKey: "AIzaSyBj_wmDL1z0suH2znta70mGgUV53hAmBOc",
@@ -41,7 +41,7 @@ Push.FCM().then(function(FCM) {
 })
 ;*/
 if(navigator.serviceWorker){
-    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js')
+    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t9')
         .then(function(reg){
             console.log('서비스워커 등록성공 :', reg)
           messaging.useServiceWorker(reg);
@@ -151,6 +151,7 @@ if(navigator.serviceWorker){
     dataElement.textContent = JSON.stringify(payload, null, 2);
     messagesElement.appendChild(dataHeaderELement);
     messagesElement.appendChild(dataElement);
+     console.log('vvvvvvvvvvvvv')
   }
   // Clear the messages element of all children.
   function clearMessages() {
@@ -158,6 +159,7 @@ if(navigator.serviceWorker){
     while (messagesElement.hasChildNodes()) {
       messagesElement.removeChild(messagesElement.lastChild);
     }
+     console.log('123123123')
   }
 
   function afterLoad(token) {

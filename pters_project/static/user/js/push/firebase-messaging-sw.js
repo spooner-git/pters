@@ -3,6 +3,7 @@
 // If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
+//importScripts('/static/common/js/push/push.min.js');
  firebase.initializeApp({
    'messagingSenderId': '751903262384'
  });
@@ -39,8 +40,32 @@ messaging.setBackgroundMessageHandler(function(payload) {
     body: 'Background Message body.',
     icon: '/static/common/favicon-48.png'
   };
-     console.log('testestsetst')
   return self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
 // [END background_handler]
+
+self.addEventListener('push', function(event) {
+    const payload = event.data.json();
+    const title = payload.notification.title;
+    const options = {
+        body: payload.notification.body,
+        icon: payload.notification.icon,
+        data: payload.notification.click_action,
+        sound: payload.notification.sound
+    };
+    event.waitUntil(self.registration.showNotification(title, options));
+    //testAjaxCall();
+    ajaxClassTime();
+    //document.getElementById('summaryText')
+    //window.parent.ajaxClassTime();
+});
+
+self.addEventListener('notificationclick', function(event) {
+    console.log(event.notification);
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow(event.notification.data)
+    );
+    console.log('vvvvazzszss')
+});

@@ -93,7 +93,7 @@ $(document).ready(function(){
 	    if(platform_check=='pc')
         {
             if (Push.Permission.has()){
-                ajaxCheckAlarm();
+                //ajaxCheckAlarm();
             }
 		}
 	}, 60000);// 자동 ajax 새로고침(일정가져오기)
@@ -115,7 +115,7 @@ $(document).ready(function(){
                 }else{
                 	var update_data_changed = jsondata.data_changed;
 					if(update_data_changed[0]=="1"){
-						ajaxAlarmPush();
+						//ajaxAlarmPush();
 					}
                 }
 
@@ -150,10 +150,10 @@ $(document).ready(function(){
 				var log_info_array = jsondata.log_info_array;
 
 				for(var i=0; i<log_info_array.length; i++){
-					Push.create("PTERS Alarm", {
-						body: log_info_array[i],
-						icon: '/static/common/favicon.ico',
-					});
+					//Push.create("PTERS Alarm", {
+					//	body: log_info_array[i],
+					//	icon: '/static/common/favicon.ico',
+					//});
 				};
 			}
 
