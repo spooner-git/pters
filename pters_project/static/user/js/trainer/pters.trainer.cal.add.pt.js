@@ -508,9 +508,9 @@ $(document).ready(function(){
 					"to": intance_id,
 					"notification": {
 						"title":"PT 일정 알림",
-						"body":message
-					},
-    			    "sound": "default"
+						"body":message,
+    					"sound": "default"
+					}
 				}),
 
 			  beforeSend:function(){
