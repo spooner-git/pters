@@ -15,7 +15,7 @@ self.addEventListener('push', function(event) {
         icon: payload.notification.icon,
         data: payload.notification.click_action
     };
-
+    console.log('pushpush test')
     event.waitUntil(self.registration.showNotification(title, options));
 });
 
