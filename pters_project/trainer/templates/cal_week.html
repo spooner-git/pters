@@ -466,7 +466,11 @@
       </div>
         
       <div id="repeatSetting" class="ptaddbox _REPEAT_ADD">
-        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/offadd/icon-repeat.png" %} style="width:14px;"> 반복 빈도</div>
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/offadd/icon-repeat.png" %} style="width:14px;">
+          <span class="KRtext">반복 일정</span>
+          <span class="JPtext">繰り返し登録</span>
+          <span class="ENtext">Repeat Plan</span>
+        </div>
         <div id="repeattypeSelected" class="dropdown">
           <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
             <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -475,38 +479,54 @@
           </button>
           <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
             <!-- 회원명 DB연동 필요-->
-            <li><a data-repeat="WW">매주</a></li>
-            <li><a data-repeat="2W">격주</a></li>
+            <li><a data-repeat="WW"><span class="KRtext">매주</span><span class="JPtext">毎週</span><span class="ENtext">Every Week</span></a></li>
+            <li><a data-repeat="2W"><span class="KRtext">격주</span><span class="JPtext">隔週</span><span class="ENtext">Bi-Week</span></a></li>
             <!--<li><a data-repeat="DD">매일</a></li>-->
           </ul>
         </div>
       </div>
 
       <div id="daySelect" class="ptaddbox _REPEAT_ADD">
-        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %} style="width:14px;"> 요일별 일정</div>
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %} style="width:14px;">
+          <span class="KRtext">요일별 일정</span>
+          <span class="JPtext">予約日選択</span>
+          <span class="ENtext">Day Select</span>
+        </div>
           <div class="dateButtonGroup" style="width:100%;">
-              <div class="dateButton" data-date="1_SUN">일</div>
-              <div class="dateButton" data-date="2_MON">월</div>
-              <div class="dateButton" data-date="3_TUE">화</div>
-              <div class="dateButton" data-date="4_WED">수</div>
-              <div class="dateButton" data-date="5_THS">목</div>
-              <div class="dateButton" data-date="6_FRI">금</div>
-              <div class="dateButton" data-date="7_SAT">토</div>
+              <div class="dateButton" data-date="1_SUN"><span class="KRtext">일</span><span class="JPtext">日</span><span class="ENtext">Sun</span></div>
+              <div class="dateButton" data-date="2_MON"><span class="KRtext">월</span><span class="JPtext">月</span><span class="ENtext">Mon</span></div>
+              <div class="dateButton" data-date="3_TUE"><span class="KRtext">화</span><span class="JPtext">火</span><span class="ENtext">Tue</span></div>
+              <div class="dateButton" data-date="4_WED"><span class="KRtext">수</span><span class="JPtext">水</span><span class="ENtext">Wed</span></div>
+              <div class="dateButton" data-date="5_THS"><span class="KRtext">목</span><span class="JPtext">木</span><span class="ENtext">Ths</span></div>
+              <div class="dateButton" data-date="6_FRI"><span class="KRtext">금</span><span class="JPtext">金</span><span class="ENtext">Fri</span></div>
+              <div class="dateButton" data-date="7_SAT"><span class="KRtext">토</span><span class="JPtext">土</span><span class="ENtext">Sat</span></div>
           </div>
       </div>
 
       <div id="dateSelector_repeat_start" class="ptaddbox _REPEAT_ADD">
-        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 시작</div>
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}>
+          <span class="KRtext">반복 시작일</span>
+          <span class="JPtext">繰り返し開始日</span>
+          <span class="ENtext">Repeat Start date</span>
+        </div>
         <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_start" placeholder="-" readonly></p>  
       </div>
 
       <div id="dateSelector_repeat_end" class="ptaddbox _REPEAT_ADD">
-        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 종료</div>
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}>
+            <span class="KRtext">반복 종료일</span>
+            <span class="JPtext">繰り返し終了日</span>
+            <span class="ENtext">Repeat End date</span>
+        </div>
         <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_end" placeholder="-" readonly></p>  
       </div>
     
       <div id="repeatStartTime" class="ptaddbox _REPEAT_ADD">
-        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}>
+            <span class="KRtext">시작 시간</span>
+            <span class="JPtext">開始時間</span>
+            <span class="ENtext">Start Time</span>
+        </div>
         <div id="repeatstarttimesSelected" class="dropdown">
           <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
             <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -546,7 +566,11 @@
       </div>
 
       <div id="repeatDurTime" class="ptaddbox _REPEAT_ADD">
-        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}>
+            <span class="KRtext">진행 시간</span>
+            <span class="JPtext">進行時間</span>
+            <span class="ENtext">Class period</span>
+        </div>
         <div id="repeatdurationsSelected" class="dropdown">
           <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
             <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -620,7 +644,11 @@
     <div id="remainCount_mini" class="ptaddbox_mini">
       <div class="ptaddboxtext_mini"></div>
       <!-- 남은 횟수 DB연동 필요 -->
-      <span id="remainCount_mini_text">예약 가능 횟수 :</span>
+      <span id="remainCount_mini_text">
+            <span class="KRtext">예약 가능 횟수 :</span>
+            <span class="JPtext">予約可能回数</span>
+            <span class="ENtext">Reserve. Available count</span>
+      </span>
       <div id="countsSelected" class="dropdown_mini countsSelected" placeholder="ー"></div>
     </div>
 
@@ -701,7 +729,7 @@
     </div>
 
     <div id="classDuration_mini" class="ptaddbox_mini  _MINI_offadd">
-      <div class="ptaddboxtext_mini"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Time</span></div>
+      <div class="ptaddboxtext_mini"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Period</span></div>
       <div id="durationsSelected" class="dropdown_mini">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom_mini" type="button" data-toggle="dropdown" style="width: 184px;">
           <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -759,7 +787,8 @@
     </div>
 
     <div class="ptaddbox" id="addpopup_pc_label_view">
-       <span id="uptext-pc-modify">회원 정보 조회</span><img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_info')">
+       <span id="uptext-pc-modify" class="KRtext">회원 정보 조회</span><span id="uptext-pc-modify" class="JPtext">会員情報</span><span id="uptext-pc-modify" class="ENtext">Member Information</span>
+       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_info')">
     </div>
 
     <div>
@@ -775,7 +804,8 @@
 
         <div class="ptaddbox form-group">
             <label for="memberName_info" class="ptaddboxtext">
-                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명
+                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
+                <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Member Name</span>
                 <span id="npSituationPresent"></span>
             </label>
             <div class="dropdown pters_input_custom">
@@ -786,7 +816,8 @@
 
         <div class="ptaddbox form-group">
             <label for="memberId" class="ptaddboxtext">
-                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 ID
+                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
+                <span class="KRtext"> 회원 ID</span><span class="JPtext"> 会員ID</span><span class="ENtext"> Member ID</span>
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="text" class="dropdown form-control" id="memberId" name="id" readonly>
@@ -795,7 +826,8 @@
 
         <div class="ptaddbox form-group">
             <label for="memberBirthSex_info" class="ptaddboxtext">
-                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 부가정보
+                <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 
+                <span class="KRtext"> 회원 부가정보</span><span class="JPtext"> 追加情報</span><span class="ENtext"> additional Info.</span>
             </label>
             <div id="memberBirth_info">
                 <!--
@@ -832,14 +864,19 @@
                 </select>
             </div>
             <div id="memberSex_info">
-                <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
-                <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
+                <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">
+                  <span class="KRtext">남</span><span class="JPtext">男</span><span class="ENtext">M</span>
+                </div>
+                <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">
+                  <span class="KRtext">여</span><span class="JPtext">女</span><span class="ENtext">F</span>
+                </div>
             </div>
         </div>
 
         <div class="ptaddbox form-group">
             <label for="memberPhone_info" class="ptaddboxtext">
-                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}>
+                <span class="KRtext"> 연락처</span><span class="JPtext"> 連絡先</span><span class="ENtext"> Tel.</span>
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="tel" class="dropdown form-control" id="memberPhone_info" name="phone" required="required" readonly>
@@ -848,7 +885,8 @@
 
         <div class="ptaddbox form-group">
             <label for="memberCount_info" class="ptaddboxtext">
-                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록횟수
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}>
+                <span class="KRtext"> 등록횟수</span><span class="JPtext"> 登録回数</span><span class="ENtext"> Total Count</span>
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="tel" class="dropdown form-control" id="memberRegCount_info" name="counts" readonly>
@@ -858,7 +896,8 @@
 
         <div class="ptaddbox form-group">
             <label for="memberCount_info" class="ptaddboxtext">
-                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 남은횟수
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}>
+                <span class="KRtext"> 남은횟수</span><span class="JPtext"> 残り回数</span><span class="ENtext"> Remain Count</span>
             </label>
             <div class="dropdown pters_input_custom">
                 <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
@@ -888,7 +927,8 @@
             
         <div class="ptaddbox form-group">
             <label for="comment_info" class="ptaddboxtext">
-                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> 특이사항
+                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}>
+                <span class="KRtext"> 특이사항</span><span class="JPtext"> その他</span><span class="ENtext"> etc.</span>
             </label>
             <div class="dropdown pters_input_custom">
                 <textarea class="dropdown form-control" rows="1" id="comment_info" name="contents" readonly></textarea>
@@ -896,14 +936,15 @@
         </div>
 
         <div id="ptrepeat-btn">
-            <span>PT 반복 일정 등록</span>
+            <span class="KRtext">반복 일정</span><span class="JPtext">繰り返し日程</span><span class="ENtext">Repeat Info.</span>
             <img class="icons-next-button" src={% static_url "user/res/ptadd/btn-next.png" %}>
         </div>
     </form>
 
     <div id="memberRegHistory_info_wrap" class="member_info_wrap ptaddbox">
         <label class="ptaddboxtext">
-            <img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
+            <img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">
+            <span class="KRtext">등록 이력</span><span class="JPtext">登録履歴</span><span class="ENtext">Registration History</span>
             <!--<span class="button_add_member_lecture" onclick="pc_add_member(3)">+</span>-->
         </label>
         <div id="memberRegHistory_info">
@@ -913,7 +954,8 @@
 
     <div id="memberLectureHistory_info_wrap" class="member_info_wrap history_view ptaddbox">
         <label for="memberHistory" class="ptaddboxtext">
-                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 활동 내역
+                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}>
+                <span class="KRtext"> 활동 내역</span><span class="JPtext">活動履歴</span><span class="ENtext">Activity History</span>
         </label>
         <div id="memberLectureHistory_info">
                   
@@ -934,16 +976,16 @@
 
     <div id="info_shift_base" class="info_shift_wrap">
         <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-user.png">아이디</label><span id="memberId_info_PC"></span>
+            <label><img src="/static/user/res/member/icon-user.png">ID</label><span id="memberId_info_PC"></span>
         </div>
         <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
+            <label><img src="/static/user/res/member/icon-birth-grey.png"><span class="KRtext">생년월일</span><span class="JPtext">誕生日</span><span class="ENtext">Birthday</span></label>
             <span id="memberBirth_Year_info_PC"></span>
             <span id="memberBirth_Month_info_PC"></span>
             <span id="memberBirth_Date_info_PC"></span>
         </div>
         <div id="memberPhone_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label><span id="memberPhone_info_PC"><span>
+            <label><img src="/static/user/res/member/icon-phone-grey.png"><span class="KRtext">연락처</span><span class="JPtext">連絡先</span><span class="ENtext">Tel.</span></label><span id="memberPhone_info_PC"><span>
         </div>
 
         <div id="memberEmail_info_PC_wrap" class="member_info_PC_wrap">
@@ -964,31 +1006,40 @@
     </div> 
 
     <div id="member_info_type_select">
-        <div class="button_shift_info" id="select_info_shift_lecture">수강 정보</div>
-        <div class="button_shift_info" id="select_info_shift_schedule">반복 일정</div>
-        <div class="button_shift_info" id="select_info_shift_history">일정 이력</div>
+        <div class="button_shift_info" id="select_info_shift_lecture"><span class="KRtext">수강 정보</span><span class="JPtext">受講情報</span><span class="ENtext">Info</span></div>
+        <div class="button_shift_info" id="select_info_shift_schedule"><span class="KRtext">반복 일정</span><span class="JPtext">繰り返し</span><span class="ENtext">Repeat</span></div>
+        <div class="button_shift_info" id="select_info_shift_history"><span class="KRtext">일정 이력</span><span class="JPtext">履歴</span><span class="ENtext">History</span></div>
     </div>
 
     <div id="info_shift_lecture" class="info_shift_wrap">
         <div id="memberRegCount_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록횟수</label>
-            <span id="memberRegCount_info_PC" readonly></span>회
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">
+              <span class="KRtext"> 등록횟수</span><span class="JPtext"> 登録回数</span><span class="ENtext"> Total Count</span>
+            </label>
+            <span id="memberRegCount_info_PC" readonly></span><span class="KRtext">회</span><span class="JPtext">回</span><span class="ENtext"></span>
         </div>
         <div id="memberRemainCount_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">남은횟수</label>
-            <span id="memberRemainCount_info_PC" readonly></span>회
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">
+              <span class="KRtext"> 남은횟수</span><span class="JPtext"> 残り回数</span><span class="ENtext"> Remain Count</span>
+            </label>
+            <span id="memberRemainCount_info_PC" readonly></span><span class="KRtext">회</span><span class="JPtext">回</span><span class="ENtext"></span>
         </div>
 
         <div id="memberAvailCount_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">예약 가능 횟수</label>
-            <span id="memberAvailCount_info_PC" readonly></span>회
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">
+              <span class="KRtext"> 예약 가능 횟수</span><span class="JPtext"> 予約可能回数</span><span class="ENtext"> Available Rsv. Count</span>
+            </label>
+            <span id="memberAvailCount_info_PC" readonly></span><span class="KRtext">회</span><span class="JPtext">回</span><span class="ENtext"></span>
         </div>
         <div id="memberFinishCount_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">완료 횟수</label>
-            <span id="memberFinishCount_info_PC" readonly></span>회
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">
+              <span class="KRtext"> 완료된 횟수</span><span class="JPtext"> 完了回数</span><span class="ENtext"> Completed Count</span>
+            </label>
+            <span id="memberFinishCount_info_PC" readonly></span><span class="KRtext">회</span><span class="JPtext">回</span><span class="ENtext"></span>
         </div>
         <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">
+              <span class="KRtext">등록 이력</span><span class="JPtext">登録履歴</span><span class="ENtext">Registration History</span>
                 <!--<span class="button_add_member_lecture" onclick="pc_add_member(2)">+</span>-->
             </label>
             <div id="memberRegHistory_info_PC">
@@ -999,7 +1050,9 @@
 
     <div id="info_shift_schedule" class="info_shift_wrap">
         <div id="memberRepeat_info_PC_wrap" class="">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">반복 일정</label>
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">
+              <span class="KRtext">반복 일정</span><span class="JPtext">繰り返し日程</span><span class="ENtext">Repeat Info.</span>
+            </label>
             <div id="memberRepeat_info_PC">
                   
             </div>
@@ -1008,7 +1061,9 @@
 
     <div id="info_shift_history" class="info_shift_wrap">
         <div id="memberLectureHistory_info_PC_wrap" class="">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">활동 이력</label>
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">
+              <span class="KRtext"> 활동 내역</span><span class="JPtext">活動履歴</span><span class="ENtext">Activity History</span>
+            </label>
             <div id="memberLectureHistory_info_PC">
                 
             </div>
@@ -1017,9 +1072,9 @@
 
 
     <div class="member_info_PC_buttons_wrap popupBtn_mini">
-        <button class="submitBtn _info_delete" style="display: none;">삭제</button>
-        <button class="submitBtn _info_modify" data-type="view" style="display: none;">수정</button>
-        <button class="submitBtn _btn_close_info_PC" onclick="closePopup('member_info_PC')">닫기</button>
+        <button class="submitBtn _info_delete" style="display: none;"><span class="KRtext">삭제</span><span class="JPtext">削除</span><span class="ENtext">Delete</span></button>
+        <button class="submitBtn _info_modify" data-type="view" style="display: none;"><span class="KRtext">수정</span><span class="JPtext">変更</span><span class="ENtext">Modify</span></button>
+        <button class="submitBtn _btn_close_info_PC" onclick="closePopup('member_info_PC')"><span class="KRtext">닫기</span><span class="JPtext">閉じる</span><span class="ENtext">Close</span></button>
     </div>
 </div>
 
@@ -1030,18 +1085,18 @@
     </div>
     <div class="KRtext confirmText">회원님 등록을 취소하시겠습니까?<br>환불 금액을 입력해 주세요.</div>
     <div class="KRtext confirmText" style="font-size: 12px;height: 35px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.</div>
-    <div class="JPtext confirmText">日程を削除しますか</div>
-    <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
-    <div style="text-align: center;margin-bottom: 10px;"><input type="number" name="refund_price" style="border:1px solid #fe4e65;"> 원</div>
+    <div class="JPtext confirmText">会員登録を取り消ししますか<br>払戻金額を入力してください</div>
+    <div class="ENtext confirmText">Are you sure to delete this member from the list?<br>Please enter a refund</div>
+    <div style="text-align: center;margin-bottom: 10px;"><input type="number" name="refund_price" style="border:1px solid #fe4e65;"> <span class="KRtext">　원</span><span class="JPtext"> 円</span><span class="ENtext">　＄</span></div>
     <div class="popup_inner popup_inner_resend">
         <span style="color:#fe4e65;" class="KRtext refund">환불</span>
-        <span style="color:#fe4e65;" class="JPtext refund">はい</span>
-        <span style="color:#fe4e65;" class="ENtext refund">Yes</span>
+        <span style="color:#fe4e65;" class="JPtext refund">払戻</span>
+        <span style="color:#fe4e65;" class="ENtext refund">Refund</span>
     </div>
     <div class="popup_inner popup_inner_resend">
         <span class="KRtext cancel_refund">취소</span>
-        <span class="JPtext cancel_refund">いいえ</span>
-        <span class="ENtext cancel_refund">No</span>
+        <span class="JPtext cancel_refund">戻す</span>
+        <span class="ENtext cancel_refund">Cancel</span>
     </div>
 </div>
 
@@ -1052,8 +1107,8 @@
     </div>
     <div class="KRtext confirmText">회원님과의 달력 연동상태를 변경하시겠습니까?<br>변경을 원하는 상태를 선택해주세요.</div>
     <div class="KRtext confirmText" style="font-size: 12px;height: 35px;color:#fe4e65;font-weight: normal">※연결해제시 회원님께서 더이상 달력을 볼 수 없게 됩니다.</div>
-    <div class="JPtext confirmText">日程を削除しますか</div>
-    <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
+    <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
+    <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
     <div class="popup_inner popup_inner_resend" data-stat="DELETE">
         <span style="color:#fe4e65;" class="KRtext connectchange">연결해제</span>
         <span style="color:#fe4e65;" class="JPtext connectchange">はい</span>
@@ -1072,8 +1127,8 @@
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_resend_PC" class="_btn_close_resend_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
     <div class="KRtext confirmText">회원님께서 달력연결을 해제하셨습니다.<br>원하는 추가 작업을 선택해주세요.</div>
-    <div class="JPtext confirmText">日程を削除しますか</div>
-    <div class="ENtext confirmText">Are you sure to delete the schedule?</div>
+    <div class="JPtext confirmText">会員が日程連結を切りました<br>追加作業を選択してください</div>
+    <div class="ENtext confirmText">The member disconnect the calendar.</div>
     <div class="popup_inner popup_inner_resend">
         <span style="color:#282828;" class="KRtext resend">재전송</span>
         <span style="color:#282828;" class="JPtext resend">はい</span>

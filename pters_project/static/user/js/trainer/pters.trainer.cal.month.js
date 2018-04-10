@@ -588,141 +588,8 @@ $(document).ready(function(){
 		}
 	}
 
-	function AjaxBeforeSend(){
-		$('html').css("cursor","wait");
-        //$('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-        $('.ajaxloadingPC').show();
 
-	}
 
-	function AjaxCompleteSend(){
-		$('html').css("cursor","auto");
-        //$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-        $('.ajaxloadingPC').hide();
-
-	}
-
-	function ajaxClassTime(){
-			var yyyy = $('#yearText').text()
-			var mm = $('#monthText').text().replace(/월/gi,"")
-			if(mm.length<2){
-				var mm = '0' + mm
-			}
-			var today_form = yyyy+'-'+ mm +'-'+"01"
-
-            $.ajax({
-              url: '/trainer/cal_day_ajax/',
-              type : 'POST',
-			  data : {"date":today_form, "day":46},
-			  dataType : 'html',
-
-              beforeSend:function(){
-              	AjaxBeforeSend();
-              },
-
-              success:function(data){
-              	var jsondata = JSON.parse(data);
-              	if(jsondata.messageArray.length>0){
-              		$('#errorMessageBar').show()
-               		$('#errorMessageText').text(jsondata.messageArray)
-	          	}else{
-	          		classDateArray = []
-	                classStartArray = []
-	                classNameArray = []
-	                countResult = []
-	                dateResult = []
-
-	                classTimeArray_member_name = [];
-	                classArray_lecture_id = [];
-	                scheduleIdArray = [];
-	                offScheduleIdArray = [];
-	                scheduleFinishArray = [];
-					scheduleNoteArray = [];
-	          		memberIdArray = [];
-	                memberLectureIdArray = [];
-	                memberNameArray = [];
-	                memberAvailCountArray = [];
-	                messageArray = [];
-	                dateMessageArray = [];
-	                repeatArray= [];
-	          		offRepeatScheduleIdArray = [];
-				    offRepeatScheduleTypeArray = [];
-				    offRepeatScheduleWeekInfoArray = [];
-				    offRepeatScheduleStartDateArray = [];
-				    offRepeatScheduleEndDateArray = [];
-				    offRepeatScheduleStartTimeArray = [];
-				    offRepeatScheduleTimeDurationArray = [];
-	          		ptRepeatScheduleIdArray = [];
-				    ptRepeatScheduleTypeArray = [];
-				    ptRepeatScheduleWeekInfoArray = [];
-				    ptRepeatScheduleStartDateArray = [];
-				    ptRepeatScheduleEndDateArray = [];
-				    ptRepeatScheduleStartTimeArray = [];
-				    ptRepeatScheduleTimeDurationArray = [];
-	                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
-	                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
-	                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
-	                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
-	                classTimeArray_member_name = jsondata.classTimeArray_member_name
-	                classArray_lecture_id = jsondata.classArray_lecture_id
-	                scheduleIdArray = jsondata.scheduleIdArray
-	                offScheduleIdArray = jsondata.offScheduleIdArray
-	                scheduleFinishArray = jsondata.scheduleFinishArray;
-	                scheduleNoteArray = jsondata.scheduleNoteArray;
-	          		memberIdArray = jsondata.memberIdArray;
-	                memberLectureIdArray = jsondata.memberLectureIdArray;
-	                memberNameArray = jsondata.memberNameArray;
-	                memberAvailCountArray = jsondata.memberAvailCountArray;
-	                messageArray = jsondata.messageArray;
-	                dateMessageArray = jsondata.dateMessageArray;
-	                repeatArray= jsondata.repeatArray;
-	          		offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
-				    offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
-				    offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
-				    offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
-				    offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
-				    offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
-				    offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
-	          		ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
-				    ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
-				    ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
-				    ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
-				    ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
-				    ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
-				    ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
-
-	                /*팝업의 timegraph 업데이트*/
-	                classDateData = []
-	                classTimeData = []
-	                offDateData=[]
-	                offTimeData = []
-	                offAddOkArray = [] //OFF 등록 시작 시간 리스트
-	                durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-	                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
-	                DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
-	                /*팝업의 timegraph 업데이트*/
-
-	                DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
-					DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
-	                DBdataProcessMonthTrainer();
-	                classDatesTrainer();
-
-	                plancheck(clicked_td_date_info)
-	                var countNum = $('.plan_raw').length
-					$('#countNum').text(countNum)
-	          	}
-
-              },
-
-              complete:function(){
-              	AjaxCompleteSend();
-              },
-
-              error:function(){
-                console.log('server error')
-              }
-            })
-     }
 
 	function ajax_received_json_data(json){
 		var jsondata = json
@@ -1333,3 +1200,144 @@ $(document).ready(function(){
 
 
 });//document(ready)
+
+
+
+
+
+function ajaxClassTime(){
+		var yyyy = $('#yearText').text()
+		var mm = $('#monthText').text().replace(/월/gi,"")
+		if(mm.length<2){
+			var mm = '0' + mm
+		}
+		var today_form = yyyy+'-'+ mm +'-'+"01"
+
+		$.ajax({
+		  url: '/trainer/cal_day_ajax/',
+		  type : 'POST',
+		  data : {"date":today_form, "day":46},
+		  dataType : 'html',
+
+		  beforeSend:function(){
+			AjaxBeforeSend();
+		  },
+
+		  success:function(data){
+			var jsondata = JSON.parse(data);
+			if(jsondata.messageArray.length>0){
+				$('#errorMessageBar').show()
+				$('#errorMessageText').text(jsondata.messageArray)
+			}else{
+				classDateArray = []
+				classStartArray = []
+				classNameArray = []
+				countResult = []
+				dateResult = []
+
+				classTimeArray_member_name = [];
+				classArray_lecture_id = [];
+				scheduleIdArray = [];
+				offScheduleIdArray = [];
+				scheduleFinishArray = [];
+				scheduleNoteArray = [];
+				memberIdArray = [];
+				memberLectureIdArray = [];
+				memberNameArray = [];
+				memberAvailCountArray = [];
+				messageArray = [];
+				dateMessageArray = [];
+				repeatArray= [];
+				offRepeatScheduleIdArray = [];
+				offRepeatScheduleTypeArray = [];
+				offRepeatScheduleWeekInfoArray = [];
+				offRepeatScheduleStartDateArray = [];
+				offRepeatScheduleEndDateArray = [];
+				offRepeatScheduleStartTimeArray = [];
+				offRepeatScheduleTimeDurationArray = [];
+				ptRepeatScheduleIdArray = [];
+				ptRepeatScheduleTypeArray = [];
+				ptRepeatScheduleWeekInfoArray = [];
+				ptRepeatScheduleStartDateArray = [];
+				ptRepeatScheduleEndDateArray = [];
+				ptRepeatScheduleStartTimeArray = [];
+				ptRepeatScheduleTimeDurationArray = [];
+				var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
+				var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
+				var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
+				var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
+				classTimeArray_member_name = jsondata.classTimeArray_member_name
+				classArray_lecture_id = jsondata.classArray_lecture_id
+				scheduleIdArray = jsondata.scheduleIdArray
+				offScheduleIdArray = jsondata.offScheduleIdArray
+				scheduleFinishArray = jsondata.scheduleFinishArray;
+				scheduleNoteArray = jsondata.scheduleNoteArray;
+				memberIdArray = jsondata.memberIdArray;
+				memberLectureIdArray = jsondata.memberLectureIdArray;
+				memberNameArray = jsondata.memberNameArray;
+				memberAvailCountArray = jsondata.memberAvailCountArray;
+				messageArray = jsondata.messageArray;
+				dateMessageArray = jsondata.dateMessageArray;
+				repeatArray= jsondata.repeatArray;
+				offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
+				offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
+				offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
+				offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
+				offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
+				offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
+				offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
+				ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
+				ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
+				ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
+				ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
+				ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
+				ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
+				ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
+
+				/*팝업의 timegraph 업데이트*/
+				classDateData = []
+				classTimeData = []
+				offDateData=[]
+				offTimeData = []
+				offAddOkArray = [] //OFF 등록 시작 시간 리스트
+				durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+				DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
+				DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
+				/*팝업의 timegraph 업데이트*/
+
+				DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
+				DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
+				DBdataProcessMonthTrainer();
+				classDatesTrainer();
+
+				plancheck(clicked_td_date_info)
+				var countNum = $('.plan_raw').length
+				$('#countNum').text(countNum)
+			}
+
+		  },
+
+		  complete:function(){
+			AjaxCompleteSend();
+		  },
+
+		  error:function(){
+			console.log('server error')
+		  }
+		})
+ }
+
+
+function AjaxBeforeSend(){
+	$('html').css("cursor","wait");
+	//$('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+	$('.ajaxloadingPC').show();
+
+}
+
+function AjaxCompleteSend(){
+	$('html').css("cursor","auto");
+	//$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+	$('.ajaxloadingPC').hide();
+
+}
