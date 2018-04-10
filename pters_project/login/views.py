@@ -83,6 +83,8 @@ def login_trainer(request):
             except ObjectDoesNotExist:
                 token_exist = False
 
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + str(token_exist))
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + str(token_data))
             if token_exist is False:
                 if keyword is not None and keyword != '':
                     if token_data is not None:
