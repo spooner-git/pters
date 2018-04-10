@@ -1,7 +1,7 @@
 body{
 	padding-top: 0px;
 	overflow-y: hidden;
-	background-image: url("/static/user/res/main/bg-image.png");
+	/*background-image: url("/static/user/res/main/bg-image.png");*/
 	background-repeat: no-repeat;
 	background-position-x:center;
 	background-size:100%;
@@ -172,7 +172,7 @@ body{
 
 @media(min-width: 600px){
 	body{
-		background-image: url("/static/user/res/main/bg-image-pc.jpg");
+		/*background-image: url("/static/user/res/main/bg-image-pc.jpg");*/
 		background-size: auto;
 	}
 

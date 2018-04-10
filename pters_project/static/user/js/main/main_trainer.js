@@ -50,6 +50,32 @@ $(document).ready(function(){
 	$('#loginInfo').find('img').attr('src','/static/user/res/icon-name-white.png')
 	$('.bottomfooter2').find('img').attr('src','/static/user/res/spooner.png')
 
+	var bodywidth = $('body').width()
+	if(class_name == "발레"){
+		if(bodywidth>600){
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-ballet-pc.png")')
+		}else{
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-ballet-mobile.jpg")')
+		}
+	}else if(class_name == "요가"){
+		if(bodywidth>600){
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-yoga-pc.png")')
+		}else{
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-yoga-mobile.jpg")')
+		}
+	}else if(class_name == "웨이트 트레이닝"){
+		if(bodywidth>600){
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-pc.jpg")')
+		}else{
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image.png")')
+		}
+	}else{
+		if(bodywidth>600){
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-brick-pc.png")')
+		}else{
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-brick-mobile.jpg")')
+		}
+	}
 
 });
 
