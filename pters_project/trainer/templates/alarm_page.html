@@ -17,11 +17,12 @@
             {% endif %}
             <span style="font-weight: bold;color:#fe4e65;font-size: 13px;">{{ log_info.log_info }}를
             {{ log_info.log_how }}</span> 했습니다.
-            {% if log_info.log_detail %}
-                {{ log_info.log_detail }}
-            {% endif %}
-            <br/>
-            {{ log_info.reg_dt }}
+            <br>
+            <p style="padding-left: 20px;margin:3px 0 3px 0;color:#282828;">
+                <span style="color:#fe4e65;font-weight: bold;">{{ log_info.log_how }} :</span>
+                <script>document.write(parent.alarm_change_easy_read('{% if log_info.log_detail %}{{ log_info.log_detail }}{% endif %}'))</script>
+            </p>
+            <span style="font-weight: bold;font-size:12px;margin-left:20px;"><script>document.write(parent.date_calculator('{{ log_info.reg_dt }}'))</script></span>
         </span>
     </div>
 

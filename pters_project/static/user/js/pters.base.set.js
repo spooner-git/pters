@@ -274,6 +274,10 @@ $('#alarm_delete').click(function(){
 var date = new Date();
 var currentYear = date.getFullYear(); //현재 년도
 var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
+var currentDate = date.getDate();
+var currentHour = date.getHours();
+var currentMinute = date.getMinutes()
+var todayYYYYMMDD = Number(date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate))
 var multiLanguage = { 'KOR':
                       {'DD':'매일', 'WW':'매주', '2W':'격주',
                        'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
@@ -639,6 +643,55 @@ function scrollToDom(dom){
     }
 }
 
+
+//알림창에 얼마전에 뜬 알람인지 계산
+function date_calculator(yyyy_mm_dd_hh_mm_ss){
+    var yyyymmdd = Number(date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_mm_dd_hh_mm_ss.split(' ')[0],''))
+    var yyyy = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[0])
+    var mm = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[1])
+    var dd = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[2])
+    var hh = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[1].split(':')[0])
+    var mms = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[1].split(':')[1])
+    var today = Number(todayYYYYMMDD)
+
+    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+    if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+        lastDay[1] = 29;
+    }else{
+        lastDay[1] = 28;
+    };
+    if(todayYYYYMMDD - yyyymmdd >= 1){ // 하루이상 지났을 때
+        if(currentYear - yyyy >= 1){
+            var message = (currentYear - yyyy) + ' 년 전'
+        }else if(currentYear - yyyy == 0){
+            if((currentMonth+1)-mm == 1){
+                var message = (lastDay[mm-1] - dd + currentDate) + '일 전'
+            }else if((currentMonth+1)-mm > 1){
+                var message = ((currentMont+1)-mm) + '달 전'
+            }else if((currentMonth+1)-mm == 0){
+                var message = (currentDate - dd) + ' 일 전'
+            }
+        }
+    }else if(todayYYYYMMDD - yyyymmdd == 0){ // 하루가 지나지 않았을 때
+        if(currentHour - hh >= 1){
+            var message = (currentHour - hh) + ' 시간 전'
+        }else if(currentHour - hh == 0){
+            var message = (currentMinute - mms) + ' 분 전'
+        }
+    }
+    return message
+}
+//
+
+//알림창에 변동된 일정 정보를 알아보기 쉽게
+function alarm_change_easy_read(data){ // data : 2018-04-11 02:00:00/2018-04-11 03:00:00
+  var dateInfo = data.split(' ')[0]
+  var startTime = Number(data.split(' ')[1].split(':')[0])
+  var endTime = Number(data.split(' ')[2].split(':')[0])
+  var timeDiff = endTime - startTime
+  var result = date_format_to_user_hangul(data.split('/')[0])+ ' ~ ' + data.split(' ')[2].substr(0,5) + ' (' +timeDiff+' 시간)' 
+  return result
+}
 
 
 
