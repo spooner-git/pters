@@ -1061,9 +1061,6 @@ def add_repeat_schedule_confirm(request):
                 request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
                                                + '~' + str(end_date) + ' PT 반복일정을 등록했습니다'
                 request.session['lecture_id'] = lecture_id
-            else:
-                request.session['push_info'] = ''
-                request.session['lecture_id'] = ''
             information = '반복일정 등록이 완료됐습니다.'
 
     # print(error)
@@ -1184,9 +1181,6 @@ def delete_repeat_schedule_logic(request):
             request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
                                            + '~' + str(end_date) + ' PT 반복일정을 등록했습니다'
             request.session['lecture_id'] = delete_repeat_schedule.lecture_tb_id
-        else:
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
 
         return redirect(next_page)
     else:

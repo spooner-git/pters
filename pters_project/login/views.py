@@ -88,6 +88,7 @@ def login_trainer(request):
                     token_info = PushInfoTb(member_id=user.id, token=keyword)
                     token_info.save()
 
+            request.session['push_token'] = keyword
             # request.session['is_first_login'] = True
             # request.session['member_id'] = member_detail.member_id
 
@@ -157,7 +158,17 @@ class RegisterTypeSelectView(TemplateView):
 # 로그아웃 api
 def logout_trainer(request):
     # logout 끝나면 login page로 이동
+    token = request.session.get('push_token', '')
+
+    if token is not None and token != '':
+        try:
+            token_data = PushInfoTb.objects.get(member_id=request.user.id, token=token)
+            token_data.delete()
+        except ObjectDoesNotExist:
+            None
+
     logout(request)
+
     return redirect('/login/')
 
 
