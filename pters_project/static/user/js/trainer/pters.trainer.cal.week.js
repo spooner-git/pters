@@ -735,7 +735,6 @@ $(document).ready(function(){
 	})
 	//PC버전 새로고침 버튼
 
-
     function ajax_received_json_data(json){
           var jsondata = json
           classTimeArray = [];
@@ -2111,11 +2110,6 @@ $.datepicker.setDefaults({
 
 
 
-
-
-
-
-
 function ajaxClassTime(){
 
 		var $weekNum4 = $('#weekNum_4').attr('data-date')
@@ -2229,6 +2223,7 @@ function ajaxClassTime(){
 		  }
 		})
 }
+
 
 function AjaxBeforeSend(){
 	$('html').css("cursor","wait");
