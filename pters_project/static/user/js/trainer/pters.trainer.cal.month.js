@@ -631,7 +631,7 @@ $(document).ready(function(){
 	                classNameArray = []
 	                countResult = []
 	                dateResult = []
-	                
+
 	                classTimeArray_member_name = [];
 	                classArray_lecture_id = [];
 	                scheduleIdArray = [];
@@ -711,7 +711,7 @@ $(document).ready(function(){
 	                var countNum = $('.plan_raw').length
 					$('#countNum').text(countNum)
 	          	}
-                
+
               },
 
               complete:function(){
@@ -721,7 +721,7 @@ $(document).ready(function(){
               error:function(){
                 console.log('server error')
               }
-            })    
+            })
      }
 
 	function ajax_received_json_data(json){
