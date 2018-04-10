@@ -1018,70 +1018,6 @@ $(document).ready(function(){
 		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
 	}
 
-	function plancheck(dateinfo){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
-		var len = classNameArray.length;
-		var dateplans = []
-		for(var i=0; i<len; i++){
-			var splited = classNameArray[i].split('_');
-			var scheduleID = scheduleIdArray[i]
-			var classLectureID = classArray_lecture_id[i]
-			var scheduleFinish = scheduleFinishArray[i]
-			var memoArray = scheduleNoteArray[i]
-			var yy = splited[0]
-			var mm = splited[1]
-			var dd = splited[2]
-			var stime1 = splited[3]
-			if(stime1.length<2){
-				var stime1 = '0'+stime1
-			}else if(stime1 == '24'){
-				var stime1 = '00'
-			}
-			var stime = stime1+'_'+splited[4]
-			var etime = splited[7]+'_'+splited[8]
-			var name = splited[6]
-			var ymd = yy+'_'+mm+'_'+dd
-			if(ymd==dateinfo){
-				dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_/'+memoArray)
-			}
-		}
-		dateplans.sort();
-		var htmltojoin = []
-		if(dateplans.length>0){
-			for(var i=1;i<=dateplans.length;i++){
-				var splited = dateplans[i-1].split('_')
-				var stime = splited[0]
-				if(stime.substr(0,1)=='0'){
-					var stime = stime.substr(1,1)
-				}
-				var etime = splited[2]
-				var name = splited[4]
-				var morningday = ""
-				if(stime==0 & dateplans[i-2]==undefined){
-					var morningday = "오전"
-				}else if(stime<12 & dateplans[i-2]==undefined){
-					var morningday = "오전"
-				}else if(stime>=12 && dateplans[i-2]!=undefined){
-					var splitedprev = dateplans[i-2].split('_')
-					if(splitedprev[0]<12){
-						var morningday = "오후"	
-					}
-				}else if(stime>=12 && dateplans[i-2]==undefined){
-					var morningday = "오후"
-				}
-				if(splited[10]==1){
-					htmltojoin.push('<div class="plan_raw" title="완료 된 일정" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
-
-				}else if(splited[10] == 0){
-					htmltojoin.push('<div class="plan_raw" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'</span></div>')
-				}
-			}
-		}else{
-			htmltojoin.push('<div class="plan_raw_blank">등록된 일정이 없습니다.</div>')
-
-		}
-		
-		$('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
-	}
 
 
 	function fill_repeat_info_off(){ //반복일정 요약 채우기
@@ -1343,4 +1279,69 @@ function DBdataProcessMonthTrainer(){
 		var dd = splited[2];
 		dateResult[i] = yy+'_'+mm+'_'+dd
 	}
+}
+
+function plancheck(dateinfo){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
+	var len = classNameArray.length;
+	var dateplans = []
+	for(var i=0; i<len; i++){
+		var splited = classNameArray[i].split('_');
+		var scheduleID = scheduleIdArray[i]
+		var classLectureID = classArray_lecture_id[i]
+		var scheduleFinish = scheduleFinishArray[i]
+		var memoArray = scheduleNoteArray[i]
+		var yy = splited[0]
+		var mm = splited[1]
+		var dd = splited[2]
+		var stime1 = splited[3]
+		if(stime1.length<2){
+			var stime1 = '0'+stime1
+		}else if(stime1 == '24'){
+			var stime1 = '00'
+		}
+		var stime = stime1+'_'+splited[4]
+		var etime = splited[7]+'_'+splited[8]
+		var name = splited[6]
+		var ymd = yy+'_'+mm+'_'+dd
+		if(ymd==dateinfo){
+			dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_/'+memoArray)
+		}
+	}
+	dateplans.sort();
+	var htmltojoin = []
+	if(dateplans.length>0){
+		for(var i=1;i<=dateplans.length;i++){
+			var splited = dateplans[i-1].split('_')
+			var stime = splited[0]
+			if(stime.substr(0,1)=='0'){
+				var stime = stime.substr(1,1)
+			}
+			var etime = splited[2]
+			var name = splited[4]
+			var morningday = ""
+			if(stime==0 & dateplans[i-2]==undefined){
+				var morningday = "오전"
+			}else if(stime<12 & dateplans[i-2]==undefined){
+				var morningday = "오전"
+			}else if(stime>=12 && dateplans[i-2]!=undefined){
+				var splitedprev = dateplans[i-2].split('_')
+				if(splitedprev[0]<12){
+					var morningday = "오후"
+				}
+			}else if(stime>=12 && dateplans[i-2]==undefined){
+				var morningday = "오후"
+			}
+			if(splited[10]==1){
+				htmltojoin.push('<div class="plan_raw" title="완료 된 일정" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+
+			}else if(splited[10] == 0){
+				htmltojoin.push('<div class="plan_raw" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':00 - '+etime+':00'+'</span><span class="plancheckname">'+name+'</span></div>')
+			}
+		}
+	}else{
+		htmltojoin.push('<div class="plan_raw_blank">등록된 일정이 없습니다.</div>')
+
+	}
+
+	$('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
 }
