@@ -692,56 +692,7 @@ $(document).ready(function(){
 		};
 	};
 
-	function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
-		console.log(classDateArray)
-		for(var i=0; i<classDateArray.length; i++){
-			var finish = scheduleFinishArray[i]
-			var memo = scheduleNoteArray[i]
-			var arr = classDateArray[i].split('_')
-			var yy = arr[0]
-			var mm = arr[1]
-			var dd = arr[2]
-			var omm = String(oriMonth)
-			var odd = String(oriDate)
-			if(mm.length==1){
-				var mm = '0'+arr[1]
-			}
-			if(dd.length==1){
-				var dd='0'+arr[2]
-			}
-			if(omm.length==1){
-				var omm = '0'+oriMonth
-			}
-			if(odd.length==1){
-				var odd='0'+oriDate
-			}
 
-			var classTime = classStartArray[i]
-			if(classTime == "24:00"){
-				var classTime = "00:00"
-			}
-
-			if(finish == '1'){
-				var finishImg = '<span>'+classTime+'</span><img src="/static/user/res/btn-pt-complete.png">'
-			}else if(finish == '0'){
-				var finishImg = '<span>'+classTime+'</span>'
-			}
-
-			if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
-				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
-				$("td[data-date="+classDateArray[i]+"]").attr('data-schedule-check',scheduleFinishArray[i])
-				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
-				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').html(finishImg)
-				$("td[data-date="+classDateArray[i]+"] div.memo").addClass('greymemo').text(memo)
-			}else{
-				$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
-				$("td[data-date="+classDateArray[i]+"]").attr('data-schedule-check',scheduleFinishArray[i])
-				$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
-				$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').html(finishImg)
-				$("td[data-date="+classDateArray[i]+"] div.memo").text(memo)
-			}
-		};
-	};
 
 	function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
 		for(var i=0; i<krHolidayList.length; i++){
@@ -792,75 +743,7 @@ $(document).ready(function(){
 		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
 	}
 
-	function ajaxClassTime(){
 
-		var yyyy = $('#yearText').text()
-		var mm = $('#monthText').text().replace(/월/gi,"")
-		if(mm.length<2){
-			var mm = '0' + mm
-		}
-		var today_form = yyyy+'-'+ mm +'-'+"01"
-
-        $.ajax({
-          url: '/trainee/read_trainee_schedule_ajax/',
-          type : 'POST',
-		  data : {"date":today_form, "day":46},
-		  dataType : 'html',
-
-          beforeSend:function(){
-          	AjaxBeforeSend();
-          },
-
-          success:function(data){
-          	var jsondata = JSON.parse(data);
-          	if(jsondata.messageArray.length>0){
-          		$('#errorMessageBar').show()
-                $('#errorMessageText').text(jsondata.messageArray)
-          	}else{
-				classTimeArray_start_date = []
-	          	classTimeArray_end_date = []
-	          	scheduleIdArray = []
-	          	scheduleFinishArray = []
-	          	scheduleNoteArray = []
-	          	classTimeArray_member_name = []
-	          	offTimeArray_start_date = []
-	          	offTimeArray_end_date = []
-	          	classDateArray = []
-	          	classStartArray = []
-	          	
-
-	            classTimeArray_start_date = jsondata.classTimeArray_start_date
-	            classTimeArray_end_date = jsondata.classTimeArray_end_date
-	            classTimeArray_start_date = jsondata.classTimeArray_start_date
-	          	classTimeArray_end_date = jsondata.classTimeArray_end_date
-	          	scheduleIdArray = jsondata.scheduleIdArray
-	          	scheduleFinishArray = jsondata.scheduleFinishArray
-	          	scheduleNoteArray = jsondata.scheduleNoteArray
-	          	classTimeArray_member_name = jsondata.classTimeArray_member_name
-	          	offTimeArray_start_date = jsondata.offTimeArray_start_date
-	          	offTimeArray_end_date = jsondata.offTimeArray_end_date
-
-	          	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
-	          	$('.classTime,.offTime').parent().html('<div></div>')
-	          	$('.blackballoon, .balloon').html('')
-	          	$('.blackballoon').removeClass('blackballoon')
-	          	$('.balloon').removeClass('balloon')
-	          	$('.dateMytime').removeClass('dateMytime')
-	          	$('.memo, .greymemo').text('').removeClass('greymemo')
-	          	classDates()
-          	}
-          	
-          },
-
-          complete:function(){
-          	AjaxCompleteSend();
-          },
-
-          error:function(){
-            console.log('server error')
-          }
-        })    
-    }
 
     function ajaxTimeGraphSet(clicked){
             var today_form = date_format_to_yyyymmdd(clicked.attr('data-date'),'-')
@@ -1145,3 +1028,124 @@ $(document).ready(function(){
 
 
 });//document(ready)
+
+function ajaxClassTime(){
+
+	var yyyy = $('#yearText').text()
+	var mm = $('#monthText').text().replace(/월/gi,"")
+	if(mm.length<2){
+		var mm = '0' + mm
+	}
+	var today_form = yyyy+'-'+ mm +'-'+"01"
+
+	$.ajax({
+	  url: '/trainee/read_trainee_schedule_ajax/',
+	  type : 'POST',
+	  data : {"date":today_form, "day":46},
+	  dataType : 'html',
+
+	  beforeSend:function(){
+		AjaxBeforeSend();
+	  },
+
+	  success:function(data){
+		var jsondata = JSON.parse(data);
+		if(jsondata.messageArray.length>0){
+			$('#errorMessageBar').show()
+			$('#errorMessageText').text(jsondata.messageArray)
+		}else{
+			classTimeArray_start_date = []
+			classTimeArray_end_date = []
+			scheduleIdArray = []
+			scheduleFinishArray = []
+			scheduleNoteArray = []
+			classTimeArray_member_name = []
+			offTimeArray_start_date = []
+			offTimeArray_end_date = []
+			classDateArray = []
+			classStartArray = []
+
+
+			classTimeArray_start_date = jsondata.classTimeArray_start_date
+			classTimeArray_end_date = jsondata.classTimeArray_end_date
+			classTimeArray_start_date = jsondata.classTimeArray_start_date
+			classTimeArray_end_date = jsondata.classTimeArray_end_date
+			scheduleIdArray = jsondata.scheduleIdArray
+			scheduleFinishArray = jsondata.scheduleFinishArray
+			scheduleNoteArray = jsondata.scheduleNoteArray
+			classTimeArray_member_name = jsondata.classTimeArray_member_name
+			offTimeArray_start_date = jsondata.offTimeArray_start_date
+			offTimeArray_end_date = jsondata.offTimeArray_end_date
+
+			DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
+			$('.classTime,.offTime').parent().html('<div></div>')
+			$('.blackballoon, .balloon').html('')
+			$('.blackballoon').removeClass('blackballoon')
+			$('.balloon').removeClass('balloon')
+			$('.dateMytime').removeClass('dateMytime')
+			$('.memo, .greymemo').text('').removeClass('greymemo')
+			classDates()
+		}
+
+	  },
+
+	  complete:function(){
+		AjaxCompleteSend();
+	  },
+
+	  error:function(){
+		console.log('server error')
+	  }
+	})
+}
+
+function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
+	console.log(classDateArray)
+	for(var i=0; i<classDateArray.length; i++){
+		var finish = scheduleFinishArray[i]
+		var memo = scheduleNoteArray[i]
+		var arr = classDateArray[i].split('_')
+		var yy = arr[0]
+		var mm = arr[1]
+		var dd = arr[2]
+		var omm = String(oriMonth)
+		var odd = String(oriDate)
+		if(mm.length==1){
+			var mm = '0'+arr[1]
+		}
+		if(dd.length==1){
+			var dd='0'+arr[2]
+		}
+		if(omm.length==1){
+			var omm = '0'+oriMonth
+		}
+		if(odd.length==1){
+			var odd='0'+oriDate
+		}
+
+		var classTime = classStartArray[i]
+		if(classTime == "24:00"){
+			var classTime = "00:00"
+		}
+
+		if(finish == '1'){
+			var finishImg = '<span>'+classTime+'</span><img src="/static/user/res/btn-pt-complete.png">'
+		}else if(finish == '0'){
+			var finishImg = '<span>'+classTime+'</span>'
+		}
+
+		if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
+			$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
+			$("td[data-date="+classDateArray[i]+"]").attr('data-schedule-check',scheduleFinishArray[i])
+			$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
+			$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').html(finishImg)
+			$("td[data-date="+classDateArray[i]+"] div.memo").addClass('greymemo').text(memo)
+		}else{
+			$("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
+			$("td[data-date="+classDateArray[i]+"]").attr('data-schedule-check',scheduleFinishArray[i])
+			$("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
+			$("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').html(finishImg)
+			$("td[data-date="+classDateArray[i]+"] div.memo").text(memo)
+		}
+	};
+};
