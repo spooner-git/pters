@@ -53,13 +53,13 @@ $(document).ready(function(){
 	var bodywidth = $('body').width()
 	if(class_name == "발레"){
 		if(bodywidth>600){
-			$('body').css('background-image', 'url("/static/user/res/main/bg-image-ballet-pc.png")')
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-ballet-pc.jpg")')
 		}else{
 			$('body').css('background-image', 'url("/static/user/res/main/bg-image-ballet-mobile.jpg")')
 		}
 	}else if(class_name == "요가"){
 		if(bodywidth>600){
-			$('body').css('background-image', 'url("/static/user/res/main/bg-image-yoga-pc.png")')
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-yoga-pc.jpg")')
 		}else{
 			$('body').css('background-image', 'url("/static/user/res/main/bg-image-yoga-mobile.jpg")')
 		}
@@ -67,11 +67,11 @@ $(document).ready(function(){
 		if(bodywidth>600){
 			$('body').css('background-image', 'url("/static/user/res/main/bg-image-pc.jpg")')
 		}else{
-			$('body').css('background-image', 'url("/static/user/res/main/bg-image.png")')
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image.jpg")')
 		}
 	}else{
 		if(bodywidth>600){
-			$('body').css('background-image', 'url("/static/user/res/main/bg-image-brick-pc.png")')
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-brick-pc.jpg")')
 		}else{
 			$('body').css('background-image', 'url("/static/user/res/main/bg-image-brick-mobile.jpg")')
 		}
