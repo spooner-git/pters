@@ -803,18 +803,6 @@ $(document).ready(function(){
           //classDatesTrainer();
     }
 
-	function AjaxBeforeSend(){
-		$('html').css("cursor","wait");
-        $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-        $('.ajaxloadingPC').show();
-	}
-
-	function AjaxCompleteSend(){
-		$('html').css("cursor","auto");
-        $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-        $('.ajaxloadingPC').hide();
-	}
-	
 
 	var date = new Date();
 	var currentYear = date.getFullYear(); //현재 년도
@@ -2024,6 +2012,16 @@ $.datepicker.setDefaults({
   yearSuffix: '년',
 });
 
+
+
+
+
+
+
+
+
+
+
 function ajaxClassTime(){
 
 		var $weekNum4 = $('#weekNum_4').attr('data-date')
@@ -2136,4 +2134,16 @@ function ajaxClassTime(){
 			console.log('server error')
 		  }
 		})
+}
+
+function AjaxBeforeSend(){
+	$('html').css("cursor","wait");
+	$('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+	$('.ajaxloadingPC').show();
+}
+
+function AjaxCompleteSend(){
+	$('html').css("cursor","auto");
+	$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+	$('.ajaxloadingPC').hide();
 }
