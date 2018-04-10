@@ -119,16 +119,26 @@ $(document).ready(function(){
 	    $('#page-base-addstyle').fadeOut();
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
-        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
+	    if(Options.language == "KOR"){
+	    	var text1 = '회원명 선택'
+	    	var text2 = '선택'
+	    }else if(Options.language == "JPN"){
+	    	var text1 = '「会員選択」'
+	    	var text2 = '「選択」'
+	    }else if(Options.language == "ENG"){
+	    	var text1 = 'Choose member'
+	    	var text2 = 'Choose'
+	    }
+        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>");
         $("#membersSelected .btn:first-child").val("");
         $("#countsSelected,.countsSelected").text("")
         $("#dateSelector p").removeClass("dropdown_selected");
         $('#timeGraph').hide();
         $("#starttimesSelected button").removeClass("dropdown_selected");
-        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text2+"</span>");
         $("#starttimesSelected .btn:first-child").val("");
         $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text2+"</span>");
         $("#durationsSelected .btn:first-child").val("");
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes").empty();
@@ -138,7 +148,7 @@ $(document).ready(function(){
         $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
         $('.dateButton').removeClass('dateButton_selected')
         $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
-        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
+        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
         //$('#page-addplan form input').val('')
         selectedDayGroup = []
 
@@ -166,16 +176,26 @@ $(document).ready(function(){
 	    $('#memo_mini').val("")
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
-        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
+	    if(Options.language == "KOR"){
+	    	var text1 = '회원명 선택'
+	    	var text2 = '선택'
+	    }else if(Options.language == "JPN"){
+	    	var text1 = '「会員選択」'
+	    	var text2 = '「選択」'
+	    }else if(Options.language == "ENG"){
+	    	var text1 = 'Choose member'
+	    	var text2 = 'Choose'
+	    }
+        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>");
         $("#membersSelected .btn:first-child").val("");
         $("#countsSelected,.countsSelected").text("")
         $("#dateSelector p").removeClass("dropdown_selected");
         $('#timeGraph').hide();
         $("#starttimesSelected button").removeClass("dropdown_selected");
-        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text2+"</span>");
         $("#starttimesSelected .btn:first-child").val("");
         $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text2+"</span>");
         $("#durationsSelected .btn:first-child").val("");
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes").empty();
@@ -194,7 +214,32 @@ $(document).ready(function(){
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
-		$('#popup_planinfo_title').text('PT 일정')
+		var dayobj = new Date(yy,mm-1,dd)
+		var dayraw = dayobj.getDay();
+		var dayarryKR = ['일','월','화','수','목','금','토']
+		var dayarryJP = ['日','月','火','水','木','金','土']
+		var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+		switch(Options.language){
+			case "KOR" :
+			var member = " 회원님의 ";
+			var yourplan = "시 일정";
+			var day = dayarryKR[dayraw];
+			var text = 'PT 일정'
+			break;
+			case "JPN" :
+			var member = "様の ";
+			var yourplan = "時日程";
+			var day = dayarryJP[dayraw];
+			var text = 'PT 日程'
+			break;
+			case "ENG" :
+			var member = "'s schedule at ";
+			var yourplan = ":00";
+			var day = dayarryEN[dayraw];
+			var text = 'PT Plan'
+			break; 
+		}
+		$('#popup_planinfo_title').text(text)
 		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 		$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
 		$('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
@@ -217,28 +262,7 @@ $(document).ready(function(){
 		if(time == 24){
 			var time = 0
 		}
-		var dayobj = new Date(yy,mm-1,dd)
-		var dayraw = dayobj.getDay();
-		var dayarryKR = ['일','월','화','수','목','금','토']
-		var dayarryJP = ['日','月','火','水','木','金','土']
-		var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
-		switch(Options.language){
-			case "KOR" :
-			var member = " 회원님의 ";
-			var yourplan = "시 일정";
-			var day = dayarryKR[dayraw];
-			break;
-			case "JPN" :
-			var member = "様の ";
-			var yourplan = "時日程";
-			var day = dayarryJP[dayraw];
-			break;
-			case "ENG" :
-			var member = "'s schedule at ";
-			var yourplan = ":00";
-			var day = dayarryEN[dayraw];
-			break; 
-		}
+		
 		var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
 		var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+yourplan
 		var infoText3 = $(this).attr('data-memo')
@@ -278,7 +302,32 @@ $(document).ready(function(){
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
-		$('#popup_planinfo_title').text('OFF 일정')
+		var dayobj = new Date(yy,mm-1,dd)
+		var dayraw = dayobj.getDay();
+		var dayarryKR = ['일','월','화','수','목','금','토']
+		var dayarryJP = ['日','月','火','水','木','金','土']
+		var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+		switch(Options.language){
+			case "KOR" :
+			var comment = ""
+			var yourplan = "시 OFF 일정";
+			var day = dayarryKR[dayraw];
+			var text = 'OFF 일정'
+			break;
+			case "JPN" :
+			var comment = ""
+			var yourplan = "時 OFF日程";
+			var day = dayarryJP[dayraw];
+			var text = 'OFF 日程'
+			break;
+			case "ENG" :
+			var comment = "OFF at "
+			var yourplan = ":00";
+			var day = dayarryEN[dayraw];
+			var text = 'OFF'
+			break; 
+		}
+		$('#popup_planinfo_title').text(text)
 		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 		$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
 		$('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
@@ -300,28 +349,6 @@ $(document).ready(function(){
 		var time = info[3]
 		if(time == 24){
 			var time = 0
-		}
-		var dayobj = new Date(yy,mm-1,dd)
-		var dayraw = dayobj.getDay();
-		var dayarryKR = ['일','월','화','수','목','금','토']
-		var dayarryJP = ['日','月','火','水','木','金','土']
-		var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
-		switch(Options.language){
-			case "KOR" :
-			var comment = ""
-			var yourplan = "시 OFF 일정";
-			var day = dayarryKR[dayraw];
-			break;
-			case "JPN" :
-			var comment = ""
-			var yourplan = "時 OFF日程";
-			var day = dayarryJP[dayraw];
-			break;
-			case "ENG" :
-			var comment = "OFF at "
-			var yourplan = ":00";
-			var day = dayarryEN[dayraw];
-			break; 
 		}
 		var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
 		var infoText2 = comment + time + yourplan
@@ -487,7 +514,7 @@ $(document).ready(function(){
 
 	                //통신 실패시 처리
 	                error:function(){
-	                  alert("에러: 서버 통신 실패")
+	                  alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
 	                  close_info_popup('cal_popup_plandelete')
 	                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
 	                  AjaxCompleteSend();
@@ -535,7 +562,7 @@ $(document).ready(function(){
 
 	                //통신 실패시 처리
 	                error:function(){
-	                  alert("에러: 서버 통신 실패")
+	                  alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
 	                  close_info_popup('cal_popup_plandelete')
 	                  //close_info_popup('page-addplan')
 	                  AjaxCompleteSend();
@@ -584,6 +611,7 @@ $(document).ready(function(){
 
 	                    //통신 실패시 처리
 	                    error:function(){
+	                    	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
 	                      console.log("error")
 	                    },
 	                })
@@ -619,6 +647,7 @@ $(document).ready(function(){
 
 	                    //통신 실패시 처리
 	                    error:function(){
+	                    	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
 	                      console.log("error")
 	                    },
 	                })
@@ -660,6 +689,7 @@ $(document).ready(function(){
 			  },
 
 			  error:function(){
+			  	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
 				console.log('server error')
 			  }
 			})
@@ -693,6 +723,7 @@ $(document).ready(function(){
 
             //통신 실패시 처리
             error:function(){
+            	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
             	console.log('sign_image_save_fail')
             },
          })
@@ -813,6 +844,7 @@ $(document).ready(function(){
               },
 
               error:function(){
+              	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
                 console.log('server error')
               }
             })    
@@ -1099,8 +1131,14 @@ $(document).ready(function(){
 			var monthforappend = Number(dataforappend[1])-1
 			var monthdata = monthforappend
 		}
-
-		var fakeElementForBlankPage = '<div class="fake_for_blankpage"><span>등록된 일정이 없습니다.</span></div>'
+		if(Options.language == "KOR"){
+	    	var text1 = "등록된 일정이 없습니다."
+	    }else if(Options.language == "JPN"){
+	    	var text1 = "登録されている日程がありません"
+	    }else if(Options.language == "ENG"){
+	    	var text1 = "No Schedule added"
+	    }
+		var fakeElementForBlankPage = '<div class="fake_for_blankpage"><span>'+text1+'</span></div>'
 		//for(var i=0; i<=23; i++){
 		for(var i=Options.workStartTime; i<Options.workEndTime; i++){
 			var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'" class="time-row">'
@@ -1467,7 +1505,14 @@ $(document).ready(function(){
 		var WeekNum = [weekNum_1,weekNum_2,weekNum_3,weekNum_4,weekNum_5,weekNum_6,weekNum_7]
 
 		for(var i=0; i<7;i++){
-			WeekArry[i].html(WeekArryTarget[i]+'일')
+			if(Options.language == "KOR"){
+	    	var text1 = '일'
+		    }else if(Options.language == "JPN"){
+		    	var text1 = '日'
+		    }else if(Options.language == "ENG"){
+		    	var text1 = ''
+		    }
+			WeekArry[i].html(WeekArryTarget[i]+text1)
 			WeekNum[i].attr('data-date', currentPageDateInfo[i])
 		}
 	}
@@ -1572,13 +1617,23 @@ $(document).ready(function(){
 			var classDate = datasplit[2]
 			var classHour = datasplit[3]
 			var hourType = ""
+			if(Options.language == "KOR"){
+	    		var text1 = '오전'
+	    		var text2 = '오후'
+		    }else if(Options.language == "JPN"){
+		    	var text1 = '午前'
+	    		var text2 = '午後'
+		    }else if(Options.language == "ENG"){
+		    	var text1 = 'AM'
+	    		var text2 = 'PM'
+		    }
 			if(classHour == 24){
-				var hourType = "오전"
+				var hourType = text1
 				var classHour = 0
 			}else if(classHour < 12){
-				var hourType = "오전"
+				var hourType = text1
 			}else{
-				var hourType = "오후"
+				var hourType = text2
 			}
 			var classMinute = datasplit[4]
 			var classDura = datasplit[5];
@@ -1617,13 +1672,23 @@ $(document).ready(function(){
 			var offDate = datasplit[2]
 			var offHour = datasplit[3]
 			var hourType = ""
+			if(Options.language == "KOR"){
+	    		var text1 = '오전'
+	    		var text2 = '오후'
+		    }else if(Options.language == "JPN"){
+		    	var text1 = '午前'
+	    		var text2 = '午後'
+		    }else if(Options.language == "ENG"){
+		    	var text1 = 'AM'
+	    		var text2 = 'PM'
+		    }
 			if(offHour==24){
-				var hourType = "오전"
+				var hourType = text1
 				var offHour = 0
 			}else if(offHour < 12){
-				var hourType = "오전"
+				var hourType = text1
 			}else{
-				var hourType = "오후"
+				var hourType = text2
 			}
 			var offMinute = datasplit[4]
 			var offDura = datasplit[5];
@@ -1923,25 +1988,38 @@ $(document).ready(function(){
         var offOkLen = offAddOkArray.length
         var startTimeList = $('#starttimes,#starttimes_off');
         var timeArray = [];
+        if(Options.language == "KOR"){
+    		var text1 = '오전 '
+    		var text2 = '오후 '
+    		var text3 = '시'
+	    }else if(Options.language == "JPN"){
+	    	var text1 = '午前 '
+    		var text2 = '午後 '
+    		var text3 = '時'
+	    }else if(Options.language == "ENG"){
+	    	var text1 = 'AM '
+    		var text2 = 'PM '
+    		var text3 = ':00'
+	    }
         for(var i=0; i<offOkLen; i++){
           var offHour = offAddOkArray[i];
           if(offHour<12){
-            var offText = '오전 '
+            var offText = text1
             var offHours = offHour;
           }else if(offHour==24){
-            var offText = '오전 '
+            var offText = text1
             var offHours = offHour-12
           }else if(offHour==12){
-            var offText = '오후 '
+            var offText = text2
             var offHours = offHour
           }else{
             var offHours = offHour-12
-            var offText = '오후 '
+            var offText = text2
           }
           if(offHour.length<2){
-            timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
+            timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+text3+'</a></li>'
           }else{
-            timeArray[i] ='<li><a data-trainingtime="'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
+            timeArray[i] ='<li><a data-trainingtime="'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+text3+'</a></li>'
           }
         }
         timeArray[offOkLen]='<li><a data-trainingtime="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>'
@@ -1964,22 +2042,38 @@ $(document).ready(function(){
         var durTimeList = $('#durations')
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
-       if(substr>1){
+        if(Options.language == "KOR"){
+    		var text1 = '오전'
+    		var text2 = '오후'
+    		var text3 = '시'
+    		var text4 = '시간'
+	    }else if(Options.language == "JPN"){
+	    	var text1 = '午前'
+    		var text2 = '午後'
+    		var text3 = '時'
+    		var text4 = '時間'
+	    }else if(Options.language == "ENG"){
+	    	var text1 = 'AM'
+    		var text2 = 'PM'
+    		var text3 = ':00'
+    		var text4 = 'h'
+	    }
+        if(substr>1){
           var fininfo = Number(selectedTime)+1
           if(fininfo>12){
              if(fininfo==25){
-               var fininfo = '오전 1'
+               var fininfo = text1+' 1'
              }else if(fininfo==24){
-               var fininfo = '오전 12'
+               var fininfo = text1+ '12'
              }else{
-               var fininfo = '오후'+(fininfo-12)  
+               var fininfo = text2+(fininfo-12)  
              }
            }else if(fininfo==12){
-             var fininfo = '오후'+fininfo  
+             var fininfo = text2+fininfo  
            }else{
-             var fininfo = '오전'+fininfo
+             var fininfo = text1+fininfo
            }
-          durTimeList.html('<li><a data-dur="1" class="pointerList">1시간'+' (~'+fininfo+'시)'+'</a></li>')
+          durTimeList.html('<li><a data-dur="1" class="pointerList">1'+text4+' (~'+fininfo+text3+')'+'</a></li>')
         }else{
           durTimeList.html('')
           for(var j=index; j<=len; j++){
@@ -1987,40 +2081,40 @@ $(document).ready(function(){
             var fininfo = Number(selectedTime)+(j-index+1)
             if(fininfo>12){
               if(fininfo==25){
-                var fininfo = '오전 1'
+                var fininfo = text1+' 1'
               }else if(fininfo==24){
-                var fininfo = '오전 12'
+                var fininfo = text1+' 12'
               }else{
-                var fininfo = '오후'+(fininfo-12)  
+                var fininfo = text2+(fininfo-12)  
               }
             }else if(fininfo==12){
-              var fininfo = '오후'+fininfo  
+              var fininfo = text2+fininfo  
             }else{
-              var fininfo = '오전'+fininfo
+              var fininfo = text1+fininfo
             }
 
             if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>') 
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>') 
             }
             else if(offAddOkArray[j-1]== null && offAddOkArray[j+1]-offAddOkArray[j]==1){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
             }
             else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
             }
             else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]>=2){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
               break;
             }
             else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
               //break;
             }
             else if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1] == null){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
             }
             else if(offAddOkArray[j-1]==null && offAddOkArray[j+1] == null){
-              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+              durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
             }
           }
         }
