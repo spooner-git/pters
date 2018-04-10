@@ -1154,3 +1154,16 @@ function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates �
 		}
 	};
 };
+
+
+function AjaxBeforeSend(){
+	$('html').css("cursor","wait");
+	$('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+	$('.ajaxloadingPC').show();
+}
+
+function AjaxCompleteSend(){
+	$('html').css("cursor","auto");
+	$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+	$('.ajaxloadingPC').hide();
+}
