@@ -340,7 +340,7 @@
                 <div id="loginInfo" class="centermenu_div" style="float:right;" onclick="openAlarm('pc')">
                     <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
                     <span class="pcwhere">{{ request.session.class_type_name }}</span>
-                    <span class="pcwho" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
+                    <span class="pcwho">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
                 </div>
                 <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
                 <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
