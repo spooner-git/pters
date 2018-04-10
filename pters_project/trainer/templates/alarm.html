@@ -10,15 +10,12 @@
     <script src="https://code.jquery.com/jquery-latest.js"></script>
     <script src="{% static_url "common/js/el-pagination.js" %}"></script>
     <script>
-        $(document).on('scroll touch','#alarm-delete-form',function(e){
-            e.stopPropagation();
-            console.log('propagation')
-        })
 
         $.endlessPaginate({
             paginateOnScrollMargin: 10,
             paginateOnScroll: true
         });
+
 
     </script>
 {% endblock %}
