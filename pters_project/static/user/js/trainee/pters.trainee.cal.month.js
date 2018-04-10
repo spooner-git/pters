@@ -366,7 +366,8 @@ $(document).ready(function(){
             	"to": intance_id,
 				"notification": {
             		"title":"회원 일정 알림",
-					"body":message
+					"body":message,
+					"sound": "default"
             	}
             }),
 
