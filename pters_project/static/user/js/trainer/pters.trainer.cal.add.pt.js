@@ -125,7 +125,14 @@ $(document).ready(function(){
               if(yy0.length<2){var yy0 = '0'+String(tdinfo[0])};
               if(mm0.length<2){var mm0 = '0'+String(tdinfo[1])};
               if(dd0.length<2){var dd0 = '0'+String(tdinfo[2])};
-              $('#datetext_mini').text(yy+'년 '+mm+'월 '+dd+'일 '+hh+':00 ~ '+hh1+':00').val(yy0+'-'+mm0+'-'+dd0)
+              if(Options.language == "KOR"){
+                var text = yy+'년 '+mm+'월 '+dd+'일 '+hh+':00 ~ '+hh1+':00'
+              }else if(Options.language == "JPN"){
+                var text = yy+'年 '+mm+'月 '+dd+'日 '+hh+':00 ~ '+hh1+':00'
+              }else if(Options.language == "ENG"){
+                var text = yy+'. '+mm+'. '+dd+'. '+hh+':00 ~ '+hh1+':00'
+              }
+              $('#datetext_mini').text(text).val(yy0+'-'+mm0+'-'+dd0)
               timeGraphSet("class","pink","mini");  //시간 테이블 채우기
               timeGraphSet("off","grey","mini")
               startTimeSet("mini");  //일정등록 가능한 시작시간 리스트 채우기
@@ -1429,6 +1436,19 @@ function startTimeSet(option){   // offAddOkArray의 값을 가져와서 시작�
       var options = "_mini"
     break;
   }
+  if(Options.language == "KOR"){
+    var text1 = '오전 '
+    var text2 = '오후 '
+    var text3 = '시'
+  }else if(Options.language == "JPN"){
+    var text1 = '午前 '
+    var text2 = '午後 '
+    var text3 = '時'
+  }else if(Options.language == "ENG"){
+    var text1 = 'AM '
+    var text2 = 'PM '
+    var text3 = ':00'
+  }
 
   var offOkLen = offAddOkArray.length
   var startTimeList = $('#starttimes'+options);
@@ -1436,22 +1456,22 @@ function startTimeSet(option){   // offAddOkArray의 값을 가져와서 시작�
   for(var i=0; i<offOkLen; i++){
     var offHour = offAddOkArray[i];
     if(offHour<12){
-      var offText = '오전 '
+      var offText = text1
       var offHours = offHour;
     }else if(offHour==24){
-      var offText = '오전 '
+      var offText = text1
       var offHours = offHour-12
     }else if(offHour==12){
-      var offText = '오후 '
+      var offText = text2
       var offHours = offHour
     }else{
       var offHours = offHour-12
-      var offText = '오후 '
+      var offText = text2
     }
     if(offHour.length<2){
-      timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
+      timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+text3+'</a></li>'
     }else{
-      timeArray[i] ='<li><a data-trainingtime="'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+'시'+'</a></li>'
+      timeArray[i] ='<li><a data-trainingtime="'+offHour+':00:00.000000" class="pointerList">'+offText+offHours+text3+'</a></li>'
     }
   }
   timeArray[offOkLen]='<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>'
@@ -1541,6 +1561,22 @@ function durTimeSet(selectedTime,option){ // durAddOkArray 채우기 : 진행 �
     var durTimeList = $('#durations_mini')
     break;
   }
+  if(Options.language == "KOR"){
+    var text1 = '오전'
+    var text2 = '오후'
+    var text3 = '시'
+    var text4 = '시간'
+  }else if(Options.language == "JPN"){
+    var text1 = '午前'
+    var text2 = '午後'
+    var text3 = '時'
+    var text4 = '時間'
+  }else if(Options.language == "ENG"){
+    var text1 = 'AM'
+    var text2 = 'PM'
+    var text3 = ':00'
+    var text4 = 'h'
+  }
   var len = offAddOkArray.length;
   var index = offAddOkArray.indexOf(Number(selectedTime));
   var substr = offAddOkArray[index+1]-offAddOkArray[index];
@@ -1548,18 +1584,18 @@ function durTimeSet(selectedTime,option){ // durAddOkArray 채우기 : 진행 �
     var fininfo = Number(selectedTime)+1
     if(fininfo>12){
        if(fininfo==25){
-         var fininfo = '오전 1'
+         var fininfo = text1+' 1'
        }else if(fininfo==24){
-         var fininfo = '오전 12'
+         var fininfo = text1+' 12'
        }else{
-         var fininfo = '오후'+(fininfo-12)  
+         var fininfo = text2+(fininfo-12)  
        }
      }else if(fininfo==12){
-       var fininfo = '오후'+fininfo  
+       var fininfo = text2+fininfo  
      }else{
-       var fininfo = '오전'+fininfo
+       var fininfo = text1+fininfo
      }
-    durTimeList.html('<li><a data-dur="1" class="pointerList">1시간'+' (~'+fininfo+'시)'+'</a></li>')
+    durTimeList.html('<li><a data-dur="1" class="pointerList">1'+text4+' (~'+fininfo+text3+')'+'</a></li>')
   
   }else{
 
@@ -1569,40 +1605,40 @@ function durTimeSet(selectedTime,option){ // durAddOkArray 채우기 : 진행 �
       var fininfo = Number(selectedTime)+(j-index+1)
       if(fininfo>12){
         if(fininfo==25){
-          var fininfo = '오전 1'
+          var fininfo = text1+' 1'
         }else if(fininfo==24){
-          var fininfo = '오전 12'
+          var fininfo = text1+' 12'
         }else{
-          var fininfo = '오후'+(fininfo-12)  
+          var fininfo = text2+(fininfo-12)  
         }
       }else if(fininfo==12){
-        var fininfo = '오후'+fininfo  
+        var fininfo = text2+fininfo  
       }else{
-        var fininfo = '오전'+fininfo
+        var fininfo = text1+fininfo
       }
 
       if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>') 
+        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>') 
       }
       else if(offAddOkArray[j-1]== null && offAddOkArray[j+1]-offAddOkArray[j]==1){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
       }
       else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
       }
       else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]>=2){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
         break;
       }
       else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
         //break;
       }
       else if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1] == null){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
       }
       else if(offAddOkArray[j-1]==null && offAddOkArray[j+1] == null){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+'시간'+'  (~'+fininfo+'시)'+'</a></li>')
+        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
       }
     }
   }
@@ -1613,14 +1649,14 @@ function addGraphIndicator(datadur){
   $('.tdgraph').removeClass('graphindicator');
   var starttext = $('#starttimesSelected button').val().split(' ');
   var daymorning = starttext[0];
-  var startnum = starttext[1].replace(/시/gi,"")
-  if(daymorning=='오후'){
+  var startnum = starttext[1].replace(/시|日|:00/gi,"")
+  if(daymorning=='오후'||daymorning=='午後'||daymorning=='PM'){
     if(startnum==12){
       var startnum = startnum
     }else{
       var startnum = Number(startnum)+12  
     }
-  }else if(daymorning=='오전' && startnum==12){
+  }else if((daymorning=='오전'||daymorning=='午前'||daymorning=='AM' )&& startnum==12){
       var startnum = Number(startnum)+12 
   }
   var durnum = datadur

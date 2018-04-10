@@ -728,8 +728,6 @@ $(document).ready(function(){
 		selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
 	}
 
-
-
     function ajaxTimeGraphSet(clicked){
             var today_form = date_format_to_yyyymmdd(clicked.attr('data-date'),'-')
             $.ajax({
@@ -1081,6 +1079,8 @@ function ajaxClassTime(){
 			classTimeArray_member_name = jsondata.classTimeArray_member_name
 			offTimeArray_start_date = jsondata.offTimeArray_start_date
 			offTimeArray_end_date = jsondata.offTimeArray_end_date
+
+			$('#countRemainData span').text(jsondata.lecture_avail_count)
 
 			DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
 			$('.classTime,.offTime').parent().html('<div></div>')

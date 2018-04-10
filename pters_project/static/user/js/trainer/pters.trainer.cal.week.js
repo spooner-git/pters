@@ -214,6 +214,14 @@ $(document).ready(function(){
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
+		var info = $(this).attr('class-time').split('_')
+		var yy=info[0]
+		var mm=info[1]
+		var dd=info[2]
+		var time = info[3]
+		if(time == 24){
+			var time = 0
+		}
 		var dayobj = new Date(yy,mm-1,dd)
 		var dayraw = dayobj.getDay();
 		var dayarryKR = ['일','월','화','수','목','금','토']
@@ -239,6 +247,7 @@ $(document).ready(function(){
 			var text = 'PT Plan'
 			break; 
 		}
+		console.log(day)
 		$('#popup_planinfo_title').text(text)
 		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 		$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
@@ -254,14 +263,7 @@ $(document).ready(function(){
 
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
 		var schedule_finish_check = $(this).attr('data-schedule-check')
-		var info = $(this).attr('class-time').split('_')
-		var yy=info[0]
-		var mm=info[1]
-		var dd=info[2]
-		var time = info[3]
-		if(time == 24){
-			var time = 0
-		}
+		
 		
 		var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
 		var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+yourplan
@@ -302,6 +304,14 @@ $(document).ready(function(){
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
+		var info = $(this).attr('off-time').split('_')
+		var yy=info[0]
+		var mm=info[1]
+		var dd=info[2]
+		var time = info[3]
+		if(time == 24){
+			var time = 0
+		}
 		var dayobj = new Date(yy,mm-1,dd)
 		var dayraw = dayobj.getDay();
 		var dayarryKR = ['일','월','화','수','목','금','토']
@@ -342,14 +352,7 @@ $(document).ready(function(){
 		shade_index(100)
 		closeAlarm('pc')
 
-		var info = $(this).attr('off-time').split('_')
-		var yy=info[0]
-		var mm=info[1]
-		var dd=info[2]
-		var time = info[3]
-		if(time == 24){
-			var time = 0
-		}
+		
 		var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
 		var infoText2 = comment + time + yourplan
 		var infoText3 = $(this).attr('data-memo')
