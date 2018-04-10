@@ -39,7 +39,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
     body: 'Background Message body.',
     icon: '/static/common/favicon-48.png'
   };
-
+     console.log('testestsetst')
   return self.registration.showNotification(notificationTitle,
     notificationOptions);
 });

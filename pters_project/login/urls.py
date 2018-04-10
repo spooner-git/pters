@@ -48,4 +48,7 @@ urlpatterns = [
     # 회원 탈퇴 기능
     url(r'^out_member/$', views.out_member_logic, name='out_member'),
 
+
+    url(r'^add_push_token/$', views.add_push_token_logic, name='add_push_token'),
+
 ]
