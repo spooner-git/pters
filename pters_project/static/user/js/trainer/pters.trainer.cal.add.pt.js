@@ -509,7 +509,8 @@ $(document).ready(function(){
 					"notification": {
 						"title":"PT 일정 알림",
 						"body":message
-					}
+					},
+    			    "sound": "default"
 				}),
 
 			  beforeSend:function(){
