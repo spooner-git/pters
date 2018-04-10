@@ -850,7 +850,7 @@ def pt_add_logic(request):
 
     if error is None:
         lecture_id = get_trainee_schedule_input_lecture(class_id, request.user.id)
-        print(lecture_id)
+        # print(lecture_id)
         if lecture_id is None:
             error = '등록할수 있는 일정이 없습니다.'
         if error is None:
