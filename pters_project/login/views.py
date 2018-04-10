@@ -73,22 +73,18 @@ def login_trainer(request):
                 request.session.set_expiry(0)
 
             token_exist = False
-            token_data = None
             try:
                 token_data = PushInfoTb.objects.get(token=keyword)
                 if token_data.member_id == user.id:
                     token_exist = True
                 else:
+                    token_data.delete()
                     token_exist = False
             except ObjectDoesNotExist:
                 token_exist = False
 
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + str(token_exist))
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + str(token_data))
             if token_exist is False:
                 if keyword is not None and keyword != '':
-                    if token_data is not None:
-                        token_data.delete()
                     token_info = PushInfoTb(member_id=user.id, token=keyword)
                     token_info.save()
 
