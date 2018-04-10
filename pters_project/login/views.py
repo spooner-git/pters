@@ -74,9 +74,11 @@ def login_trainer(request):
 
             token_exist = False
             try:
-                token_data = PushInfoTb.objects.get(token=keyword)
+                token_data = PushInfoTb.objects.get(token=keyword, use=1)
                 if token_data.member_id == user.id:
                     token_exist = True
+                    token_data.last_login = timezone.now()
+                    token_data.save()
                 else:
                     token_data.delete()
                     token_exist = False
@@ -85,7 +87,7 @@ def login_trainer(request):
 
             if token_exist is False:
                 if keyword is not None and keyword != '':
-                    token_info = PushInfoTb(member_id=user.id, token=keyword)
+                    token_info = PushInfoTb(member_id=user.id, token=keyword,last_login=timezone.now(), use=1)
                     token_info.save()
 
             request.session['push_token'] = keyword
