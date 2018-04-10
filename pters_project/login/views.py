@@ -74,9 +74,11 @@ def login_trainer(request):
 
             token_exist = False
             try:
-                token_data = PushInfoTb.objects.get(token=keyword)
+                token_data = PushInfoTb.objects.get(token=keyword, use=1)
                 if token_data.member_id == user.id:
                     token_exist = True
+                    token_data.last_login = timezone.now()
+                    token_data.save()
                 else:
                     token_data.delete()
                     token_exist = False
@@ -85,7 +87,7 @@ def login_trainer(request):
 
             if token_exist is False:
                 if keyword is not None and keyword != '':
-                    token_info = PushInfoTb(member_id=user.id, token=keyword)
+                    token_info = PushInfoTb(member_id=user.id, token=keyword,last_login=timezone.now(), use=1)
                     token_info.save()
 
             request.session['push_token'] = keyword
@@ -159,7 +161,7 @@ class RegisterTypeSelectView(TemplateView):
 def logout_trainer(request):
     # logout 끝나면 login page로 이동
     token = request.session.get('push_token', '')
-
+    # print(token)
     if token is not None and token != '':
         try:
             token_data = PushInfoTb.objects.get(member_id=request.user.id, token=token)
@@ -684,4 +686,36 @@ def out_member_logic(request):
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
+        return redirect(next_page)
+
+@csrf_exempt
+def add_push_token_logic(request):
+    keyword = request.POST.get('keyword', '')
+    next_page = request.POST.get('next_page', '/login/')
+    error = None
+    token_exist = False
+    # print(keyword)
+    try:
+        token_data = PushInfoTb.objects.get(token=keyword, use=1)
+        if token_data.member_id == request.user.id:
+            token_exist = True
+            token_data.last_login = timezone.now()
+            token_data.save()
+        else:
+            token_data.delete()
+            token_exist = False
+    except ObjectDoesNotExist:
+        token_exist = False
+
+    if token_exist is False:
+        if keyword is not None and keyword != '':
+            token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(), use=1)
+            token_info.save()
+
+    request.session['push_token'] = keyword
+
+    if error is None:
+        return redirect(next_page)
+    else:
+        messages.error(request, error)
         return redirect(next_page)
