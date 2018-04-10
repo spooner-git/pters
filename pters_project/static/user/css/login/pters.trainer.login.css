@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 body{
-	font-family: 'Noto Sans KR' !important;
+	font-family: 'Noto Sans KR',sans-serif !important;
 	padding-top: 0px;
 	/*
 	background-image: url("/static/user/res/main/bg-image.png");
@@ -353,7 +353,7 @@ nav.main_nav{
 	.pters_login_promote_box{
 		height: 800px;
 		/*background-image: url("/static/user/res/main/bg-image-pc-login.png");*/
-		background-image: url("/static/user/res/main/bg-image-brick-pc.jpg");
+		background-image: url("/static/user/res/main/bg-image-brick-pc-dark.jpg");
 		background-position-y:unset;
 		background-size: auto;
 	}
