@@ -448,12 +448,10 @@
         function messageCommunicationWithWorker(){
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 registrations.forEach(function (v) {
-                    console.log(v.active)
                     send_message_to_sw(v.active, "hello cal week").then(function (m) {
                         ajaxClassTime();
                         messageCommunicationWithWorker();
                     });
-                    console.log('cal_week_client')
                 });
             });
         }

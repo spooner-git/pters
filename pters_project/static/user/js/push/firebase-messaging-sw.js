@@ -33,6 +33,7 @@ var client;
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 // [START background_handler]
+/*
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
@@ -44,6 +45,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
   return self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
+*/
 // [END background_handler]
 
 self.addEventListener('push', function(event) {
@@ -52,17 +54,19 @@ self.addEventListener('push', function(event) {
     const options = {
         body: payload.notification.body,
         icon: '/static/common/favicon.ico',
-        data: payload.notification.data
+        sound: 'default'
+        //data: payload.notification.data
     };
+
     event.waitUntil(self.registration.showNotification(title, options));
     client.ports[0].postMessage("alarm data receive!!!");
 });
 
 self.addEventListener('notificationclick', function(event) {
     event.notification.close();
-    event.waitUntil(
-        clients.openWindow("https://pters.co.kr")
-    );
+    //event.waitUntil(
+     //   clients.openWindow("https://pters.co.kr")
+    //);
 });
 
 

@@ -37,7 +37,7 @@ function registrationServiceWorker(){
         .then(function() {
             if (navigator.serviceWorker) {
                 if(check_reg_val==0) {
-                    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t80')
+                    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t89')
                         .then(function (reg) {
                             console.log('서비스워커 등록성공 :', reg)
                             //firebase_worker = reg.active;
