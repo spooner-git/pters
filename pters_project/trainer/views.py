@@ -580,7 +580,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         log_data = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).exclude(auth_member_id=self.request.user.id).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).exclude(auth_member_id=self.request.user.id).order_by('read', '-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
@@ -593,7 +593,33 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                     log_info.log_read = 1
                 else:
                     log_info.log_read = 2
+                log_info.time_ago = timezone.now() - log_info.reg_dt
                 log_info.reg_dt = str(log_info.reg_dt).split('.')[0]
+
+                if log_info.log_detail:
+                    before_day = str(log_info.log_detail).split('/')[0]
+                    after_day = str(log_info.log_detail).split('/')[1]
+
+                    if '반복 일정' in log_info.log_detail:
+                        log_info.log_detail = before_day + '~' + after_day
+                    else:
+                        log_info.log_detail = before_day + '~' + after_day.split(' ')[1]
+
+                day = int(log_info.time_ago.days)
+                hour = int(log_info.time_ago.seconds/3600)
+                minute = int(log_info.time_ago.seconds/60)
+                sec = int(log_info.time_ago.seconds)
+
+                if day > 0:
+                    log_info.time_ago = str(day) + '일 전'
+                else:
+                    if hour > 0:
+                        log_info.time_ago = str(hour) + '시간 전'
+                    else:
+                        if minute > 0:
+                            log_info.time_ago = str(minute) + '분 전'
+                        else:
+                            log_info.time_ago = str(sec) + '초 전'
 
         return log_data
 
