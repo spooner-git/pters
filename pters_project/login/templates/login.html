@@ -258,10 +258,7 @@
 {% block local_js_footer %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
-<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
-<link rel="manifest" href={% static_url "manifest.json" %}>
-<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
 <script>
     function goPage(option){
         if(option == 0){
@@ -275,6 +272,24 @@
         $('body, html').animate({scrollTop : offset},400)
     }
 
+    Push.Permission.request(onGranted, onDenied);
+
+    function onDenied() {
+        console.log('알람 거절 상태')
+    }
+    function onGranted() {
+        console.log('알람 승인 상태')
+    }
+
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      registrations.forEach(function(v) {
+          if(v.active){
+              if(v.scope=="http://localhost:8000/static/user/js/push/" || v.scope=="https://pters.co.kr/static/user/js/push/"){
+                  v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')
+              }
+          }
+      });
+    });
 
 </script>
 {% endblock %}

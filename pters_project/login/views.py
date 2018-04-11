@@ -161,7 +161,7 @@ class RegisterTypeSelectView(TemplateView):
 def logout_trainer(request):
     # logout 끝나면 login page로 이동
     token = request.session.get('push_token', '')
-    # print(token)
+
     if token is not None and token != '':
         try:
             token_data = PushInfoTb.objects.get(member_id=request.user.id, token=token)
@@ -688,10 +688,11 @@ def out_member_logic(request):
 
         return redirect(next_page)
 
+
 @csrf_exempt
 def add_push_token_logic(request):
     keyword = request.POST.get('keyword', '')
-    next_page = request.POST.get('next_page', '/login/')
+    next_page = request.POST.get('next_page', '/')
     error = None
     token_exist = False
     # print(keyword)

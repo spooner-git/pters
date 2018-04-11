@@ -8,6 +8,7 @@ importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
    'messagingSenderId': '751903262384'
  });
 var messaging = firebase.messaging();
+var client;
 
 /**
  * Here is is the code snippet to initialize Firebase Messaging in the Service
@@ -32,6 +33,7 @@ var messaging = firebase.messaging();
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 // [START background_handler]
+/*
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
@@ -43,6 +45,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
   return self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
+*/
 // [END background_handler]
 
 self.addEventListener('push', function(event) {
@@ -50,47 +53,25 @@ self.addEventListener('push', function(event) {
     const title = payload.notification.title;
     const options = {
         body: payload.notification.body,
-        icon: payload.notification.icon,
-        data: payload.notification.data
+        icon: '/static/common/favicon.ico',
+        sound: 'default'
+        //data: payload.notification.data
     };
+
     event.waitUntil(self.registration.showNotification(title, options));
-    //testAjaxCall();
-    //ajaxClassTime();
-    //document.getElementById('summaryText')
-    //console.log(clients)
-    //clients.postMessage("document.write('javascript:ajaxClassTime()')")
-    //window.parent.ajaxClassTime();
-    //console.log('test')
-    //console.log(event)
-    //self.active.postMessage({'event':event});
-    //postMessage({'event':event})
-    // Dispatch/Trigger/Fire the event
-
-});
-/*
-self.addEventListener('message', function(event) {
-  console.log('clear1'); // outputs {'hello':'world'}
-  console.log(event.data); // outputs {'hello':'world'}
-
-  //event.postMessage({'hellott':'world'});
+    client.ports[0].postMessage("alarm data receive!!!");
 });
 
-this.clients.matchAll().then(function(clients) {
-    console.log('clear2')
-  clients.forEach(function(client){client.postMessage('hello from the other side')});
-});
-
-this.addEventListener('message', function(event){
-  // do something
-    console.log('messageWorker::'+event.data)
-  event.ports[0].postMessage('private msg back');
-
-});
-*/
 self.addEventListener('notificationclick', function(event) {
-    console.log(event.notification);
     event.notification.close();
-    event.waitUntil(
-        clients.openWindow("https://pters.co.kr")
-    );
+    //event.waitUntil(
+     //   clients.openWindow("https://pters.co.kr")
+    //);
 });
+
+
+self.addEventListener('message', function(event){
+    client = event;
+    //event.ports[0].postMessage("SW Says 'Hello back!'");
+});
+

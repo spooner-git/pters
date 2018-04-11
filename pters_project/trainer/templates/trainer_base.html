@@ -428,30 +428,35 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"> //미니달력</script>
 
-    <script type="text/javascript">
-// var requestButton = document.querySelector(".request-btn");
-
-         this.addEventListener('push', function() {
-            console.log('여기????? ');
-        }, false);
-
-         this.addEventListener('test', function() {
-            console.log('여기???222?? ');
-        }, false);
-        document.addEventListener("name-of-event", function(e) {
-          console.log(e.detail); // Prints "Example of an event"
-        });
-    //});
-    //const messageChannel = new MessageChannel();
-    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }
-    //navigator.serviceWorker.controller.postMessage({'hello':'test'});
-
-    </script>
     <script src={% static_url "common/js/bootstrap.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
+    <link rel="manifest" href={% static_url "manifest.json" %}>
+    <script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
+
+    <script type="text/javascript">
+// var requestButton = document.querySelector(".request-btn");
+
+    //});
+    //const messageChannel = new MessageChannel();
+    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }
+    //navigator.serviceWorker.controller.postMessage({'hello':'test'});
+        function messageCommunicationWithWorker(){
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                registrations.forEach(function (v) {
+                    send_message_to_sw(v.active, "hello cal week").then(function (m) {
+                        ajaxClassTime();
+                        messageCommunicationWithWorker();
+                    });
+                });
+            });
+        }
+        messageCommunicationWithWorker();
+    </script>
     <script>    
             var class_name = '{{ request.session.class_type_name }}'
             open_lecture_select_popup_pc()
