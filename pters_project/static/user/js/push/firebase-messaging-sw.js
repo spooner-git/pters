@@ -51,7 +51,7 @@ self.addEventListener('push', function(event) {
     const options = {
         body: payload.notification.body,
         icon: payload.notification.icon,
-        data: payload.notification.click_action
+        data: payload.notification.data
     };
     event.waitUntil(self.registration.showNotification(title, options));
     //testAjaxCall();
@@ -86,12 +86,11 @@ this.addEventListener('message', function(event){
   event.ports[0].postMessage('private msg back');
 
 });
-
+*/
 self.addEventListener('notificationclick', function(event) {
     console.log(event.notification);
     event.notification.close();
     event.waitUntil(
-        clients.openWindow(event.notification.data)
+        clients.openWindow("https://pters.co.kr")
     );
 });
-*/

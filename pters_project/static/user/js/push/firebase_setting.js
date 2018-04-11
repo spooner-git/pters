@@ -45,7 +45,7 @@ Push.FCM().then(function(FCM) {
 if(navigator.serviceWorker){
 
 
-    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t57')
+    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t59')
         .then(function(reg){
             console.log('서비스워커 등록성공 :', reg)
     //firebase_worker = reg.active;
