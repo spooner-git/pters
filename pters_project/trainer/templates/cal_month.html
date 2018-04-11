@@ -188,6 +188,11 @@
       <span class="ENtext">Add OFF Schedule</span>
     </div>
 
+    <div class="mode_switch_button_wrap"> 
+      <div class="mode_switch_button mode_active" data-page="">일정 등록</div>
+      <div class="mode_switch_button" data-page="repeat">반복 일정</div>
+    </div>
+
     <div id="memberName" class="ptaddbox">
       <div class="ptaddboxtext"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
       <div id="membersSelected" class="dropdown">
@@ -330,20 +335,8 @@
       </div>
 
     </div>
-      <!--반복 일정 개요 박스-->
-      <div id="repeatSchedule" class="ptaddbox repeatbox">
-          <div id="repeatScheduleText" class="ptaddboxtext repeattext">
-            <img src={% static_url "user/res/icon-cal-mini.png" %} class="icons">
-            <span class="KRtext"> 반복 일정</span>
-            <span class="JPtext"> 繰り返し</span>
-            <span class="ENtext"> Repeat Schedule</span>
-            <img class="icons-next-button" src={% static_url "user/res/icon-setting-arrow.png" %}>
-          </div>
-      </div>
-      <!--반복 일정 개요 박스-->
 
     <div class="_REPEAT_ADD_wrap">
-
       <div id="offRepeatSummary" class="ptaddbox _REPEAT_ADD">
           <span id="summaryText KRtext">일정요약</span><span id="summaryText JPtext">現在登録現況</span><span id="summaryText ENtext">Repeat Summary</span>
           <!--
