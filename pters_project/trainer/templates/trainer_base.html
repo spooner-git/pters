@@ -21,7 +21,6 @@
         <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
         <link rel="shortcut icon" href="/static/common/favicon-48.png">
 
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=notosanskr.css">
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
         <!-- Bootstrap core CSS -->
         <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
@@ -445,6 +444,7 @@
     <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
     <script>    
             var class_name = '{{ request.session.class_type_name }}'
+            open_lecture_select_popup_pc()
 
             $('.pshade').click(function(){
                 if($('body').width()>600){
@@ -497,7 +497,7 @@
                     $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
                 }
                 else if(option == 'pc'){
-                    open_lecture_select_popup_pc()
+                    //open_lecture_select_popup_pc()
                     if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
                         $('#alarm_delete').hide()
                     }else{
