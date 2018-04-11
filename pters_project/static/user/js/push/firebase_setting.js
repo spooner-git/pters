@@ -19,6 +19,18 @@ firebase.initializeApp(config);
 const messaging = firebase.messaging();
 
 var check_reg_val = 0;
+var filter = "win16|win32|win64|mac|macintel";
+var platform_check;
+if ( navigator.platform ) {
+    if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
+        //mobile
+        platform_check = 'mobile'
+    }
+    else {
+        //pc
+        platform_check = 'pc'
+    }
+}
 
 function registrationServiceWorker(){
         messaging.requestPermission()
@@ -70,7 +82,8 @@ function registrationServiceWorker(){
 }
    // $('.request-btn').click(function () {
     //   console.log(Push.Permission.get());
-if(check_reg_val == 0){
+
+if(check_reg_val == 0 && platform_check=='pc'){
     registrationServiceWorker();
 }
  function showToken(currentToken) {

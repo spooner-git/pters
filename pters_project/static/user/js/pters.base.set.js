@@ -76,27 +76,15 @@ function shade3(option){
 
 $(document).ready(function(){
 
-	var filter = "win16|win32|win64|mac|macintel";
-	var platform_check;
-	if ( navigator.platform ) {
-		if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
-			//mobile
-			platform_check = 'mobile'
-		}
-		else {
-			//pc
-			platform_check = 'pc'
-		}
-	}
 
-	setInterval(function(){
-	    if(platform_check=='pc')
-        {
+	//setInterval(function(){
+	//    if(platform_check=='pc')
+    //    {
             //if (Push.Permission.has()){
                 //ajaxCheckAlarm();
             //}
-		}
-	}, 60000);// 자동 ajax 새로고침(일정가져오기)
+	//	}
+	//}, 60000);// 자동 ajax 새로고침(일정가져오기)
 
 	function ajaxCheckAlarm(){
             $.ajax({

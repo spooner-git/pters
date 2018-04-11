@@ -440,7 +440,6 @@
                 registrations.forEach(function (v) {
                     console.log(v.active)
                     send_message_to_sw(v.active, "hello cal week").then(function (m) {
-                        console.log(m);
                         ajaxClassTime();
                         messageCommunicationWithWorker();
                     });
