@@ -4,12 +4,8 @@
     {# your code to show the entry #}
     <div style="margin-top:5px;margin-bottom:5px;">
     {% if log_info.log_read == 0 %}
-    <div style="color:#282828;background:#f4f4f4">
+    <div style="color:#ffffff;background:#282828">
         <img src="/static/user/res/main/alarm-on.png" style="width: 15px;">
-    {% else %}
-    <div style="color:#656565;background:#f4f4f4">
-        <img src="/static/user/res/main/alarm-off.png" style="width: 15px;">
-    {% endif %}
         <span style="line-height: 20px;font-size: 12px;">
             <span style="font-weight: bold;font-size: 13px;">{{ log_info.from_member_name }}</span>님이 
             {% if log_info.to_member_name %}
@@ -17,14 +13,36 @@
             {% endif %}
             <span style="font-weight: bold;color:#fe4e65;font-size: 13px;">{{ log_info.log_info }}를
             {{ log_info.log_how }}</span> 했습니다.
+            <span style="font-weight: bold;font-size:12px;margin-left:20px;"><script>document.write(parent.date_calculator('{{ log_info.reg_dt }}'))</script></span>
+            <br>
+            <p style="padding-left: 20px;margin:3px 0 3px 0;color:#ffffff;">
+                <span style="color:#fe4e65;font-weight: bold;">{{ log_info.log_how }} :</span>
+                <script>document.write(parent.alarm_change_easy_read('{% if log_info.log_detail %}{{ log_info.log_detail }}{% endif %}'))</script>
+            </p>
+            
+        </span>
+    </div>
+    {% else %}
+    <div style="color:#656565;background:#f4f4f4">
+        <img src="/static/user/res/main/alarm-off.png" style="width: 15px;">
+        <span style="line-height: 20px;font-size: 12px;">
+            <span style="font-weight: bold;font-size: 13px;">{{ log_info.from_member_name }}</span>님이 
+            {% if log_info.to_member_name %}
+            <span style="font-weight: bold;font-size: 13px;">{{ log_info.to_member_name }}</span>님의
+            {% endif %}
+            <span style="font-weight: bold;color:#fe4e65;font-size: 13px;">{{ log_info.log_info }}를
+            {{ log_info.log_how }}</span> 했습니다.
+            <span style="font-weight: bold;font-size:12px;margin-left:20px;"><script>document.write(parent.date_calculator('{{ log_info.reg_dt }}'))</script></span>
             <br>
             <p style="padding-left: 20px;margin:3px 0 3px 0;color:#282828;">
                 <span style="color:#fe4e65;font-weight: bold;">{{ log_info.log_how }} :</span>
                 <script>document.write(parent.alarm_change_easy_read('{% if log_info.log_detail %}{{ log_info.log_detail }}{% endif %}'))</script>
             </p>
-            <span style="font-weight: bold;font-size:12px;margin-left:20px;"><script>document.write(parent.date_calculator('{{ log_info.reg_dt }}'))</script></span>
+            
         </span>
     </div>
+    {% endif %}
+
 
     </div>
     <input type="hidden" name="log_id_array[]" class="log_id_array" value ="{{ log_info.log_id }}">

@@ -8,25 +8,6 @@ ul a{
 	cursor: pointer;
 }
 
-#page-addplan{
-	display: none;
-	position: absolute;
-	width: 100%;
-	z-index: 150;
-	left: 0%;
-	background: #f4f4f4;
-	top: 50px;
-}
-
-#page-addplan-pc{
-	display: none;
-}
-
-#addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
-	display: none;	
-}
-
-
 
 #inputError, #inputError_info, #inputError_info_PC{
 	position: relative;
@@ -45,6 +26,53 @@ ul a{
 	font-size: 14px;
 	text-align: center;
 }
+
+#page-addplan{
+	display: none;
+	position: absolute;
+	width: 100%;
+	z-index: 150;
+	left: 0%;
+	background: #f4f4f4;
+	top: 50px;
+}
+
+#page-addplan-pc{
+	display: none;
+}
+
+#addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
+	display: none;	
+}
+
+.mode_switch_button_wrap{
+	text-align: left;
+	max-width: 600px;
+	margin:0 auto;
+	padding-left: 12px;
+	border-bottom: 1px solid #cccccc;
+	margin-top: 20px;
+}
+
+.mode_switch_button{
+	display: table-cell;
+	width: 	70px;
+	height: 25px;
+
+	border-top-right-radius: 8px;
+	text-align: center;
+	font-size: 13px;
+	font-weight: bold;
+	cursor: pointer;
+	padding-top: 3px;
+	background:#cccccc;
+	color: 	#ffffff;
+}
+	.mode_active{
+		background:#fe4e65;
+		color: 	#ffffff;
+	}
+
 
 .pters_dropdown_custom{
 	font-family: 'Noto Sans KR';
@@ -795,6 +823,9 @@ option{
 }
 
 @media(min-width: 600px){
+	.mode_switch_button_wrap{
+		margin-top: 0;
+	}
 
 	.ptaddboxtext{
 		display: inline;

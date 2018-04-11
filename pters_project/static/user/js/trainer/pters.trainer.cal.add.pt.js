@@ -13,6 +13,8 @@ $(document).ready(function(){
       //var select_all_check = false;
       var offset_for_canvas;
 
+      
+
       var date = new Date();
       var currentYear = date.getFullYear(); //현재 년도
       var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
