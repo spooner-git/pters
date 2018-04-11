@@ -684,6 +684,7 @@ def pt_delete_logic(request):
                                                    state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
                                                    note=schedule_info.note, member_note=schedule_info.member_note,
                                                    reg_member_id=schedule_info.reg_member_id,
+                                                   del_member_id=request.user.id,
                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
 
                 delete_schedule.save()
