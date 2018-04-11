@@ -51,6 +51,7 @@ ul a{
 	margin:0 auto;
 	padding-left: 12px;
 	border-bottom: 1px solid #cccccc;
+	margin-top: 20px;
 }
 
 .mode_switch_button{
@@ -822,6 +823,9 @@ option{
 }
 
 @media(min-width: 600px){
+	.mode_switch_button_wrap{
+		margin-top: 0;
+	}
 
 	.ptaddboxtext{
 		display: inline;
