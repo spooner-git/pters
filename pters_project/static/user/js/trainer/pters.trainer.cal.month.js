@@ -144,7 +144,7 @@ $(document).ready(function(){
   	})
 
 
-	var clicked_td_date_info;
+	
 	$(document).on('click','#calendar td',function(){
 		closeAlarm('pc')
 		if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
@@ -1074,7 +1074,7 @@ $(document).ready(function(){
 
 
 
-
+var clicked_td_date_info;
 function ajaxClassTime(){
 		var yyyy = $('#yearText').text()
 		var mm = $('#monthText').text().replace(/월/gi,"")

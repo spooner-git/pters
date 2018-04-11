@@ -14,13 +14,13 @@
             <span style="font-weight: bold;color:#fe4e65;font-size: 13px;">{{ log_info.log_info }}를
             {{ log_info.log_how }}</span> 했습니다.
             <span style="font-weight: bold;font-size:12px;margin-left:20px;">
-                <script>{{ log_info.time_ago }}</script>
+                {{ log_info.time_ago }}
             </span>
             <br>
             <p style="padding-left: 20px;margin:3px 0 3px 0;color:#ffffff;">
                 <span style="color:#fe4e65;font-weight: bold;">{{ log_info.log_how }} :</span>
                 {% if log_info.log_detail %}{{ log_info.log_detail }}{% endif %}
-                ({{ log_info.time_ago }})
+                
             </p>
             
         </span>
@@ -36,13 +36,13 @@
             <span style="font-weight: bold;color:#fe4e65;font-size: 13px;">{{ log_info.log_info }}를
             {{ log_info.log_how }}</span> 했습니다.
             <span style="font-weight: bold;font-size:12px;margin-left:20px;">
-                <script>{{ log_info.time_ago }}</script>
+                {{ log_info.time_ago }}
             </span>
             <br>
             <p style="padding-left: 20px;margin:3px 0 3px 0;color:#282828;">
                 <span style="color:#fe4e65;font-weight: bold;">{{ log_info.log_how }} :</span>
                 {% if log_info.log_detail %}{{ log_info.log_detail }}{% endif %}
-                ({{ log_info.time_ago }})
+                
             </p>
             
         </span>
