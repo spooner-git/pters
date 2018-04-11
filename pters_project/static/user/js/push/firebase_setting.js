@@ -2,88 +2,77 @@
  * Created by Hyunki on 2018. 4. 10..
  */
  // Initialize Firebase
-    function onGranted() {
-        console.log('알람 승인 상태')
-    }
 
-    function onDenied() {
-        console.log('알람 거절 상태')
-    }
 
-   // $('.request-btn').click(function () {
-        Push.Permission.request(onGranted, onDenied);
-    //   console.log(Push.Permission.get());
+var config = {
+apiKey: "AIzaSyBj_wmDL1z0suH2znta70mGgUV53hAmBOc",
+authDomain: "pters-b9c4f.firebaseapp.com",
+databaseURL: "https://pters-b9c4f.firebaseio.com",
+projectId: "pters-b9c4f",
+storageBucket: "pters-b9c4f.appspot.com",
+messagingSenderId: "751903262384",
+// serviceWorkerLocation: './',
+};
 
-  var config = {
-    apiKey: "AIzaSyBj_wmDL1z0suH2znta70mGgUV53hAmBOc",
-    authDomain: "pters-b9c4f.firebaseapp.com",
-    databaseURL: "https://pters-b9c4f.firebaseio.com",
-    projectId: "pters-b9c4f",
-    storageBucket: "pters-b9c4f.appspot.com",
-    messagingSenderId: "751903262384",
-   // serviceWorkerLocation: './',
-  };
-//Push.config({
-  //  FCM: config
-//});
-  firebase.initializeApp(config);
+firebase.initializeApp(config);
 
 const messaging = firebase.messaging();
-/*
-Push.FCM().then(function(FCM) {
-    FCM.getToken().then(function(token) {
-        console.log("Initialized with token " + token);
-    }).catch(function(tokenError) {
-       throw tokenError;
-    });
-}).catch(function(initError) {
-   throw initError;
-})
-;*/
-//var firebase_worker;
 
-if(navigator.serviceWorker){
+var check_reg_val = 0;
 
+function registrationServiceWorker(){
+        messaging.requestPermission()
+        .then(function() {
+            if (navigator.serviceWorker) {
+                if(check_reg_val==0) {
+                    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t80')
+                        .then(function (reg) {
+                            console.log('서비스워커 등록성공 :', reg)
+                            //firebase_worker = reg.active;
+                            //reg.active.postMessage({'hello':'world'});
+                            //window.addEventListener('message', function(event){ console.log('client::'+event) }, false);
+                            messaging.useServiceWorker(reg);
 
-    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t59')
-        .then(function(reg){
-            console.log('서비스워커 등록성공 :', reg)
-    //firebase_worker = reg.active;
-    //reg.active.postMessage({'hello':'world'});
-    //window.addEventListener('message', function(event){ console.log('client::'+event) }, false);
-          messaging.useServiceWorker(reg);
-
-           return messaging.getToken()
-              .then(function(currentToken) {
-                  console.log(currentToken)
-                if (currentToken) {
-                  sendTokenToServer(currentToken);
-                  //updateUIForPushEnabled(currentToken);
-                    afterLoad(currentToken);
-
-                } else {
-                  // Show permission request.
-                  console.log('No Instance ID token available. Request permission to generate one.');
-                  // Show permission UI.
-                  //updateUIForPushPermissionRequired();
-                  setTokenSentToServer(false);
+                            return messaging.getToken()
+                                .then(function (currentToken) {
+                                    console.log(currentToken)
+                                    if (currentToken) {
+                                        sendTokenToServer(currentToken);
+                                        //updateUIForPushEnabled(currentToken);
+                                        afterLoad(currentToken);
+                                        check_reg_val=1;
+                                    } else {
+                                        // Show permission request.
+                                        console.log('No Instance ID token available. Request permission to generate one.');
+                                        // Show permission UI.
+                                        //updateUIForPushPermissionRequired();
+                                        setTokenSentToServer(false);
+                                    }
+                                })
+                                .catch(function (err) {
+                                    reg.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')
+                                    console.log('An error occurred while retrieving token. ', err);
+                                    showToken('Error retrieving Instance ID token. ', err);
+                                    setTokenSentToServer(false);
+                                });
+                        })
+                        .catch(function (error) {
+                            console.log('서비스워커 등록실패 :', error)
+                            location.reload()
+                            //registrationServiceWorker();
+                        });
                 }
-              })
-              .catch(function(err) {
-                console.log('An error occurred while retrieving token. ', err);
-                showToken('Error retrieving Instance ID token. ', err);
-                setTokenSentToServer(false);
-              });
+            }
         })
-        .catch(function(error){
-            console.log('서비스워커 등록실패 :', error)
+        .catch(function(err) {
+          console.log('Unable to get permission to notify.', err);
         });
-
-
 }
-
-
-
+   // $('.request-btn').click(function () {
+    //   console.log(Push.Permission.get());
+if(check_reg_val == 0){
+    registrationServiceWorker();
+}
  function showToken(currentToken) {
     // Show token in console and UI.
     var tokenElement = document.querySelector('#token');
@@ -172,6 +161,51 @@ if(navigator.serviceWorker){
   }
 
   function afterLoad(token) {
-    document.getElementById('keyword').value = token;
-    document.getElementById('keyword_pc').value = token;
+    //document.getElementById('keyword').value = token;
+    //document.getElementById('keyword_pc').value = token;
+    $.ajax({
+        url:'/login/add_push_token/',
+        type:'POST',
+        data:{"keyword":token},
+
+        beforeSend:function(){
+            //AjaxBeforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(){
+            console.log('토큰 등록 완료')
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+
+        },
+    });
+
+    messageCommunicationWithWorker();
+}
+
+function send_message_to_sw(worker, msg){
+    return new Promise(function(resolve, reject){
+        // Create a Message Channel
+        var msg_chan = new MessageChannel();
+
+        // Handler for recieving message reply from service worker
+        msg_chan.port1.onmessage = function(event){
+            if(event.data.error){
+                reject(event.data.error);
+            }else{
+                resolve(event.data);
+            }
+        };
+
+        // Send message to service worker along with port for reply
+        worker.postMessage("tell me'"+msg+"'", [msg_chan.port2]);
+    });
 }
