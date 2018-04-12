@@ -18,7 +18,7 @@ $("body").bind("touchend",function(e){
 
 
 function sideGoPage(page){
-    $('.ajaxloadingPC').show()
+    //$('.ajaxloadingPC').show()
     location.href="/trainer/"+page+'/'
 }
 

@@ -85,6 +85,7 @@ function registrationServiceWorker(){
 
 if(check_reg_val == 0 && platform_check=='pc'){
     registrationServiceWorker();
+    alert('pc')
 }
  function showToken(currentToken) {
     // Show token in console and UI.

@@ -256,7 +256,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	.contractread{
 		width: 100%;
 		margin: 0 auto;
-		height: 120px;
+		height: 250px;
 		font-size: 11px;
 		border: 1px solid #282828;
 		overflow-y: scroll;
@@ -434,7 +434,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.contractread{
-		height: 200px;
+		height: 400px;
 	}
 
 	.fixfooter{
