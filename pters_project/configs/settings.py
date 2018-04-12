@@ -198,7 +198,7 @@ LOGGING = {
     },
     'handlers': {
         'default': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': LOG_FILE,
             'maxBytes': 1024*1024*5, # 5 MB
@@ -206,7 +206,7 @@ LOGGING = {
             'backupCount': 5,
         },
         'login_file': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE_LOGIN,
@@ -214,7 +214,7 @@ LOGGING = {
             'backupCount': 5,
         },
         'trainer_file': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE_TRAINER,
@@ -222,7 +222,7 @@ LOGGING = {
             'backupCount': 5,
         },
         'trainee_file': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE_TRAINEE,
@@ -230,7 +230,7 @@ LOGGING = {
             'backupCount': 5,
         },
         'schedule_file': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE_SCHEDULE,
@@ -242,7 +242,7 @@ LOGGING = {
         '': {
             'handlers': ['default'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
         'django': {
             'handlers': ['default'],
@@ -256,19 +256,19 @@ LOGGING = {
         },
         'login': {
             'handlers': ['login_file'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
         'trainer': {
             'handlers': ['trainer_file'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
         'trainee': {
             'handlers': ['trainee_file'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
         'schedule': {
             'handlers': ['schedule_file'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
     }
 }
