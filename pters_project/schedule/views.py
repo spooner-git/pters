@@ -159,7 +159,7 @@ def delete_schedule_logic_func(schedule_info, member_id):
         except ObjectDoesNotExist:
             error = '강사 정보가 존재하지 않습니다'
 
-    print()
+    # print()
     if error is None:
         try:
             with transaction.atomic():
