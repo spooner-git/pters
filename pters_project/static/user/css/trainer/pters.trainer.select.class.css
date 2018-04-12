@@ -16,12 +16,14 @@ body{
 	padding:0 5px 10px 5px;
 }
 button.classAdd{
+	display: block;
 	width: 70px;
 	height: 25px;
 	float: right;
 	background: #fe4e65;
 	border-radius: 1px;
 	border-color: #fe4e65;
+	color: #ffffff;
 	margin-bottom: 5px;
 }
 	#popup_lecture_select label{

@@ -493,7 +493,7 @@
 
   $('div.explainbox ').click(function(){
       if($(this).find('.explaintype').css('height') == '0px'){
-        $(this).find('.explaintype').css('height','220px')
+        $(this).find('.explaintype').css('height','auto')
         $(this).find('button').css('visibility','visible')
         $(this).siblings('.explainbox').find('button').css('visibility','hidden')
         $(this).siblings('.explainbox').find('.explaintype').css('height','0px')
