@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import TemplateView
 
 logger = logging.getLogger(__name__)
 
@@ -88,3 +89,20 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
+class Error404View(TemplateView):
+    template_name = '404_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Error404View, self).get_context_data(**kwargs)
+
+        return context
+
+
+class Error500View(TemplateView):
+    template_name = '505_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Error500View, self).get_context_data(**kwargs)
+
+        return context
