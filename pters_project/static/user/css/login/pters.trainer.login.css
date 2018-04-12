@@ -26,7 +26,21 @@ body{
 	position: relative;
 	text-align: center;
 	min-height: 420px;
+	padding: 60px 3px 60px 3px;
 }
+	.pters_login_promote_box_sub> div:first-child >img{
+		width: 100%;
+		height: auto !important;
+	}
+	.pters_login_promote_box_sub label{
+		font-size: 18px;
+		margin-top: 10px;
+	}
+	.pters_login_promote_box_sub p{
+		font-size: 15px;
+	}
+
+
 
 .button_next_view{
 	position: absolute;
@@ -370,7 +384,8 @@ nav.main_nav{
 			font-size: 18px;
 		}
 		.pters_login_promote_box_sub> div:first-child >img{
-			height: 525px;
+			width: auto;
+			height: 525px !important;
 		}
 
 
