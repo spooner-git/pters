@@ -2125,7 +2125,7 @@ function ajaxClassTime(){
 		  dataType : 'html',
 
 		  beforeSend:function(){
-			AjaxBeforeSend();
+			//AjaxBeforeSend();
 		  },
 
 		  success:function(data){
@@ -2218,7 +2218,7 @@ function ajaxClassTime(){
 		  },
 
 		  complete:function(){
-			AjaxCompleteSend();
+			//AjaxCompleteSend();
 		  },
 
 		  error:function(){

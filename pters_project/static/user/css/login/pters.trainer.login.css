@@ -16,7 +16,7 @@ body{
 	height: 675px;
 	/*background-image: url("/static/user/res/main/bg-image.png");*/
 	background-image: url("/static/user/res/main/bg-image-brick-mobile.jpg");
-	background-repeat: no-repeat;
+	background-repeat: repeat-y;
 	background-position-x:center;
 	background-size:100%;
 	background-color: black !important;
