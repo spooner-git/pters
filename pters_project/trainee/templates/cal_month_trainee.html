@@ -71,7 +71,7 @@
     <div id="ng_popup">
        <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
         <div id="ng_popup_text" style="margin-bottom: 20px;">
-          <p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>
+          <p>일정은 오늘 날짜 기준</p><p>{{ lt_res_05 }}일 앞으로만 설정 가능합니다.</p>
         </div>
     </div>
 
@@ -146,7 +146,7 @@
 
         <div id="offStartTime" class="ptaddbox_nomargin addpopupinner" style="position:relative;">
           <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
-          <div id="starttimesSelected" class="dropdown_trainee_popup dropdown">
+          <div id="starttimesSelected" class="dropdown_trainee_popup">
             <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
             <ul id="starttimes" class="dropdown-menu pters_dropdown_custom" style="max-height: 194px;">
 
@@ -180,7 +180,7 @@
             <div id="monthText"></div>
             <div id="menuName">월간 일정
             </div>
-            <div id="menuDescription">최대 2주 단위로 일정 등록과 취소를 할 수 있습니다.
+            <div id="menuDescription">{{ lt_res_05 }}일 단위로 일정 등록과 취소를 할 수 있습니다.
             </div>
         </div>
     </div>

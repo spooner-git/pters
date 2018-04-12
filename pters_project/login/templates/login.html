@@ -57,8 +57,14 @@
           #errorMessageBar span:nth-child(2){
               position: absolute;
               right: 0;
-              margin-right: 85px;
+              margin-right: 10px;
               cursor: pointer;
+          }
+
+          @media(min-width: 600px){
+                #errorMessageBar span:nth-child(2){
+                    margin-right: 85px;
+                }
           }
 
     </style>
@@ -168,7 +174,7 @@
         <div>
             <img src="/static/user/res/login/promote/pters_weekcal_pc_mobile.png" alt="이미지1">
         </div>
-        <label>PC와 스마트폰 어느곳에서나 가능한 1:1 레슨 일정 관리</label>
+        <label>24시간 언제든 레슨 일정 관리</label>
         <div class="main_title_separate">
             <div></div>
         </div>
@@ -181,7 +187,7 @@
             <img src="/static/user/res/login/promote/pters_weekcal_add_pc_mobile.png" alt="이미지2">
             <img src="/static/user/res/login/promote/pters_sign_pc_mobile.png" alt="이미지2" style="height: 480px;">
         </div>
-        <label>스케쥴과 회원님의 남은 횟수 관리를 보다 간편하게</label>
+        <label>스케쥴과 회원 관리를 간편하게</label>
         <div class="main_title_separate">
             <div></div>
         </div>
@@ -224,7 +230,7 @@
         </div>
         <p>트레이너와 회원 모두에게 무료로 제공됩니다.</p>
         <p>여러분의 시간을 효율적으로 활용해 보세요.</p>
-        <p>일정과 회원관리는 피터스에 맡기고 여러분의 비즈니스의 생산성을 향상 시키세요.</p>
+        <p>일정과 회원관리는 피터스에 맡기고 비즈니스의 생산성을 향상 시키세요.</p>
         <button onclick="goPage(0)" class="singup_button">가입하기</button>
         <div class="button_next_view" style="position: relative;margin-top: 40px;">
             <img src="/static/user/res/btn_next.png" style="transform: rotate(-90deg);" onclick="goSlide(0)">
@@ -295,6 +301,10 @@
     function onGranted() {
         console.log('알람 승인 상태')
     }
+
+    $('#errorMessageBar span:nth-child(2)').click(function(){
+        $('#errorMessageBar').fadeOut('fast')
+    })
 
     navigator.serviceWorker.getRegistrations().then(function(registrations) {
       registrations.forEach(function(v) {
