@@ -139,7 +139,7 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
     return error
 
 
-def delete_schedule_logic_func(schedule_info):
+def delete_schedule_logic_func(schedule_info, member_id):
 
     error = None
     lecture_info = None
@@ -171,6 +171,7 @@ def delete_schedule_logic_func(schedule_info):
                                                    state_cd=schedule_info.state_cd, note=schedule_info.note,
                                                    en_dis_type=schedule_info.en_dis_type, member_note=schedule_info.member_note,
                                                    reg_member_id=schedule_info.reg_member_id,
+                                                   del_member_id=str(member_id),
                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
 
                 delete_schedule.save()
@@ -590,7 +591,7 @@ def delete_schedule_logic(request):
         en_dis_type = schedule_info.en_dis_type
 
     if error is None:
-        error = delete_schedule_logic_func(schedule_info)
+        error = delete_schedule_logic_func(schedule_info, request.user.id)
 
     if error is None:
 
@@ -623,7 +624,7 @@ def finish_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     member_name = request.POST.get('member_name')
     #imgUpload = request.POST.get('upload')
-    class_id = request.session.get('class_id','')
+    class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
     # image upload test - hk.kim 180313
@@ -1020,7 +1021,7 @@ def add_repeat_schedule_confirm(request):
                     # schedule_data.delete()
                     for delete_schedule_info in schedule_data:
                         if delete_schedule_info.state_cd != 'PE':
-                            error = delete_schedule_logic_func(delete_schedule_info)
+                            error = delete_schedule_logic_func(delete_schedule_info, request.user.id)
                         if error is not None:
                             break
 
@@ -1133,7 +1134,7 @@ def delete_repeat_schedule_logic(request):
             with transaction.atomic():
                 for delete_schedule_info in schedule_data:
                     if delete_schedule_info.state_cd != 'PE':
-                        error = delete_schedule_logic_func(delete_schedule_info)
+                        error = delete_schedule_logic_func(delete_schedule_info, request.user.id)
                     if error is not None:
                         break
 
@@ -1266,7 +1267,7 @@ def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='PT '+log_type_name, log_how=log_type_detail,
-                         log_detail=str(start_date) + '/' + str(end_date),
+                         log_detail=str(start_date) + '~' + str(end_date),
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
     else:
@@ -1281,7 +1282,7 @@ def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_
                          from_member_name=user_name,
                          class_tb_id=class_id,
                          log_info='OFF '+log_type_name, log_how=log_type_detail,
-                         log_detail=str(start_date) + '/' + str(end_date),
+                         log_detail=str(start_date) + '~' + str(end_date),
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
 
