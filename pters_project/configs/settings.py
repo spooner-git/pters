@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("PTERS_DJANGO_SECRET", '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False 
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -241,12 +241,12 @@ LOGGING = {
     'loggers': {
         '': {
             'handlers': ['default'],
-            'propagate': True,
+            'propagate': False,
             'level': 'ERROR',
         },
         'django': {
             'handlers': ['default'],
-            'propagate': True,
+            'propagate': False,
             'level': 'ERROR',
         },
         'django.request': {
