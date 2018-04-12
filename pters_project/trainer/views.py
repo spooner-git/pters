@@ -580,7 +580,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         log_data = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).exclude(auth_member_id=self.request.user.id).order_by('read', '-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('read', '-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:

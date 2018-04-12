@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 from configs import views
 
@@ -30,5 +31,6 @@ urlpatterns = [
     url(r'^404_page/$', views.Error404View.as_view(), name='404_page'),
     url(r'^500_page/$', views.Error500View.as_view(), name='500_page'),
     url(r'^admin/', admin.site.urls),
+    url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     # url(r'^static/(?P<path>.*)$', django.views.static.serve, {'document_root': settings.STATIC_URL}),
 ]
