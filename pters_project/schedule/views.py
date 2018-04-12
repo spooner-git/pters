@@ -159,6 +159,7 @@ def delete_schedule_logic_func(schedule_info, member_id):
         except ObjectDoesNotExist:
             error = '강사 정보가 존재하지 않습니다'
 
+    print()
     if error is None:
         try:
             with transaction.atomic():
@@ -539,9 +540,13 @@ def add_schedule_logic(request):
                       class_info.class_id, lecture_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LS01', request)
 
+        push_info_schedule_start_date = str(schedule_start_datetime).split(':')
+        push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
+
         if en_dis_type == '1':
-            request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '+str(schedule_start_datetime)\
-                                           + '~' + str(schedule_end_datetime).split(' ')[1] + ' PT 일정을 등록했습니다'
+            request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
+                                           + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' PT 일정을 등록했습니다'
             request.session['lecture_id'] = lecture_id
         else:
             request.session['push_info'] = ''
@@ -604,9 +609,13 @@ def delete_schedule_logic(request):
         save_log_data(start_date, end_date, class_id, lecture_id, request.user.last_name+request.user.first_name,
                       member_name, en_dis_type, 'LS02', request)
 
+        push_info_schedule_start_date = str(start_date).split(':')
+        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
+
         if en_dis_type == '1':
-            request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '+str(start_date)\
-                                           + '~' + str(end_date).split(' ')[1] + ' PT 일정을 삭제했습니다'
+            request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
+                                           + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 삭제했습니다'
             request.session['lecture_id'] = lecture_id
         else:
             request.session['push_info'] = ''
