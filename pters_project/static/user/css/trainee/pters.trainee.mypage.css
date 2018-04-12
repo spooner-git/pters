@@ -25,7 +25,7 @@ body{
 
 .mode_switch_button_wrap{
 	text-align: left;
-	max-width: 600px;
+	max-width: 700px;
 	margin:0 auto;
 }
 
@@ -55,16 +55,18 @@ body{
 	transition: 1s;
 }
 
+.mypage_page{
+	max-width: 700px;
+}
+
 #summary_wrap{
 	margin:0 auto;
-	max-width: 600px;
 	border: 1px solid #cccccc;
 }
 
 #history_wrap{
 	display: none;
 	margin:0 auto;
-	max-width: 600px;
 	border: 1px solid #cccccc;
 
 	}
@@ -99,13 +101,15 @@ body{
 					width: 7%;
 				}
 				.cell2{
-					width: 40%;
+					/*width: 40%;*/
+					width: 35%;
 				}
 				.cell3{
 					width: 20%;
 				}
 				.cell4{
-					width: 15%;
+					/*width: 15%;*/
+					width: 12%;
 				}
 				.cell5{
 					width: 30%;
@@ -123,7 +127,7 @@ body{
 #yearText{
 	position: relative;
 	display: inline;
-	color : #ffffff;
+	color : transparent;
 	font-size: 15px;
 	width: 100%;
 	margin-right: 5px;
@@ -311,7 +315,7 @@ body{
 	padding-left:15px;
 	padding-right:15px;
 	width: 100%;
-	max-width: 600px;
+	max-width: 700px;
 	margin:0 auto;
 	border-bottom:15px solid #f4f4f4;
 }
@@ -483,7 +487,7 @@ body{
 	}
 
 	#yearText{
-		display: none;
+		display: block;
 		font-size: 26px;
 		top: 15%;
 	}

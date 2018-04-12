@@ -72,6 +72,7 @@ $(document).ready(function(){
 
 
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
+		console.log($(this).attr('schedule-id'))
 		$('#cal_popup').attr('data-date',$(this).attr('data-date'))
 		if($(this).hasClass('available')){
 			$('.cancellimit_time').text(Options.cancellimit+"시간 전")
@@ -215,10 +216,11 @@ $(document).ready(function(){
 				$('#popup_text1 span').addClass("limited")
 
 			}
+		}else if($(this).hasClass('option_notavailable')){
 
 		}else{
 			$('#shade2').css({'display':'block'});
-			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>2주앞만 설정 가능합니다.</p>')
+			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')
 			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
 			//$(this).fadeOut(2800)
 			})
@@ -700,28 +702,32 @@ $(document).ready(function(){
 		// 요소설명
 		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 시작시간'
 		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 마감시간'
-
-		if(currentHour<Endtime && currentHour>=availableStartTime){
-			for(i=currentDate;i<currentDate+Options.availDate;i++){
-				if(i>lastDay[oriMonth-1] && oriMonth<12){
-				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
-				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
-					$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
-				}else{
-				 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('available')
-				}
-			}
+		if(Options.reserve == 1){
+			$('td:not([schedule-id])').addClass('option_notavailable')
+			$('.blackballoon').parent('td').addClass('option_notavailable')
 		}else{
-			for(i=currentDate;i<currentDate+Options.availDate;i++){
-				if(i>lastDay[oriMonth-1] && oriMonth<12){
-				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
-				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
-					$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
-				}else{
-				 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')	
+			if(currentHour<Endtime && currentHour>=availableStartTime){
+				for(i=currentDate;i<currentDate+Options.availDate;i++){
+					if(i>lastDay[oriMonth-1] && oriMonth<12){
+					 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
+					}else if(i>lastDay[oriMonth-1] && oriMonth==12){
+						$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
+					}else{
+					 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('available')
+					}
 				}
-			}
-		}	
+			}else{
+				for(i=currentDate;i<currentDate+Options.availDate;i++){
+					if(i>lastDay[oriMonth-1] && oriMonth<12){
+					 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
+					}else if(i>lastDay[oriMonth-1] && oriMonth==12){
+						$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
+					}else{
+					 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass('notavailable')	
+					}
+				}
+			}	
+		}
 	}
 
 	function ad_month(selector){ // 월간 달력 하단에 광고
