@@ -689,34 +689,35 @@ def out_member_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
-def add_push_token_logic(request):
-    keyword = request.POST.get('keyword', '')
-    next_page = request.POST.get('next_page', '/')
-    error = None
-    token_exist = False
-    # print(keyword)
-    try:
-        token_data = PushInfoTb.objects.get(token=keyword, use=1)
-        if token_data.member_id == request.user.id:
-            token_exist = True
-            token_data.last_login = timezone.now()
-            token_data.save()
-        else:
-            token_data.delete()
-            token_exist = False
-    except ObjectDoesNotExist:
+@method_decorator(csrf_exempt, name='dispatch')
+class AddPushTokenView(View):
+    template_name = 'token_check_ajax.html'
+    error = ''
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        keyword = request.POST.get('keyword', '')
         token_exist = False
+        # print(keyword)
+        try:
+            token_data = PushInfoTb.objects.get(token=keyword, use=1)
+            if token_data.member_id == request.user.id:
+                token_exist = True
+                token_data.last_login = timezone.now()
+                token_data.save()
+            else:
+                token_data.delete()
+                token_exist = False
+        except ObjectDoesNotExist:
+            token_exist = False
 
-    if token_exist is False:
-        if keyword is not None and keyword != '':
-            token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(), use=1)
-            token_info.save()
+        if token_exist is False:
+            if keyword is not None and keyword != '':
+                token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(), use=1)
+                token_info.save()
 
-    request.session['push_token'] = keyword
-
-    if error is None:
-        return redirect(next_page)
-    else:
-        messages.error(request, error)
-        return redirect(next_page)
+        request.session['push_token'] = keyword
+        return render(request, self.template_name, {'token_check': token_exist})

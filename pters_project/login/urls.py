@@ -49,6 +49,6 @@ urlpatterns = [
     url(r'^out_member/$', views.out_member_logic, name='out_member'),
 
 
-    url(r'^add_push_token/$', views.add_push_token_logic, name='add_push_token'),
+    url(r'^add_push_token/$', views.AddPushTokenView.as_view(), name='add_push_token'),
 
 ]
