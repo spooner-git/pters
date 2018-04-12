@@ -152,8 +152,9 @@ nav.main_nav{
 		color: #f4f4f4;
 	}
 
-	.main_title button{
+	.singup_button{
 		width: 	150px;
+		color: #ffffff;
 		font-size: 17px;
 		margin-top: 	80px;
 		background: 	#fe4e65;
