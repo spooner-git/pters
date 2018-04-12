@@ -620,7 +620,6 @@
 
             function ajax_read_lecture_info_from_db(HTMLselector){
                 $.ajax({
-
                       url: ' /trainer/get_class_data/',
                       dataType : 'html',
 
@@ -630,10 +629,11 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
-                        console.log(jsondata)
                         if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show()
                             $('#errorMessageText').text(jsondata.messageArray)
+                        }else if(jsondata.classIdArray.length == 0){
+                            
                         }else{
                             lec_select_classIdArray = jsondata.classIdArray
                             lec_select_centerNameArray = jsondata.centerNameArray;
