@@ -247,7 +247,7 @@ LOGGING = {
         'django': {
             'handlers': ['default'],
             'propagate': True,
-            'level': 'INFO',
+            'level': 'ERROR',
         },
         'django.request': {
             'handlers': ['default'],
