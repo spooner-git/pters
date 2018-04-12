@@ -50,6 +50,7 @@ body{
 }
 	.button_next_view img{
 		cursor: pointer;
+		height: 30px;
 	}
 
 nav.main_nav{
