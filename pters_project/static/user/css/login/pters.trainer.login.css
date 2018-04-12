@@ -136,8 +136,8 @@ nav.main_nav{
 
 	.main_title_separate{
 			height: 3px;
-			margin-top: 50px;
-			margin-bottom: 	50px;
+			margin-top: 10px;
+			margin-bottom: 	35px;
 	}
 		.main_title_separate div{
 			width: 	70px;
@@ -358,8 +358,20 @@ nav.main_nav{
 		background-size: auto;
 	}
 	.pters_login_promote_box_sub{
-		height: 700px;
+		min-height: 840px;
+		padding: 40px;
 	}
+		.pters_login_promote_box_sub label{
+			font-size: 23px;
+			margin: 35px;
+		}
+		.pters_login_promote_box_sub p{
+			font-size: 18px;
+		}
+		.pters_login_promote_box_sub> div:first-child >img{
+			height: 525px;
+		}
+
 
 	.forgotPW{
 		margin-left: 240px;
