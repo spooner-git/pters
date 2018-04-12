@@ -26,6 +26,9 @@ urlpatterns = [
     url(r'^trainer/', include('trainer.urls', namespace='trainer')),
     url(r'^trainee/', include('trainee.urls', namespace='trainee')),
     url(r'^schedule/', include('schedule.urls', namespace='schedule')),
+    url(r'^404_page/', include('schedule.urls', namespace='schedule')),
+    url(r'^404_page/$', views.Error404View.as_view(), name='404_page'),
+    url(r'^500_page/$', views.Error500View.as_view(), name='500_page'),
     url(r'^admin/', admin.site.urls),
     # url(r'^static/(?P<path>.*)$', django.views.static.serve, {'document_root': settings.STATIC_URL}),
 ]
