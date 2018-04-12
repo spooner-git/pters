@@ -57,8 +57,14 @@
           #errorMessageBar span:nth-child(2){
               position: absolute;
               right: 0;
-              margin-right: 85px;
+              margin-right: 10px;
               cursor: pointer;
+          }
+
+          @media(min-width: 600px){
+                #errorMessageBar span:nth-child(2){
+                    margin-right: 85px;
+                }
           }
 
     </style>
@@ -295,6 +301,10 @@
     function onGranted() {
         console.log('알람 승인 상태')
     }
+
+    $('#errorMessageBar span:nth-child(2)').click(function(){
+        $('#errorMessageBar').fadeOut('fast')
+    })
 
     navigator.serviceWorker.getRegistrations().then(function(registrations) {
       registrations.forEach(function(v) {
