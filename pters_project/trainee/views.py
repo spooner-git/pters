@@ -751,8 +751,8 @@ def pt_delete_logic(request):
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
         request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
-                                       + push_info_schedule_start_date[0] + push_info_schedule_start_date[1]\
-                                       + '~' + push_info_schedule_end_date[0] + push_info_schedule_end_date[1] + ' PT 일정을 삭제했습니다'
+                                       + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+                                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 삭제했습니다'
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -878,8 +878,8 @@ def pt_add_logic(request):
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
         request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
-                                       +push_info_schedule_start_date[0] + push_info_schedule_start_date[1]\
-                                       + '~' + push_info_schedule_end_date[0] + push_info_schedule_end_date[1] + ' PT 일정을 등록했습니다'
+                                       +push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+                                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 등록했습니다'
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)

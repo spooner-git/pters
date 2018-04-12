@@ -545,8 +545,8 @@ def add_schedule_logic(request):
 
         if en_dis_type == '1':
             request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
-                                           + push_info_schedule_start_date[0] + push_info_schedule_start_date[1]\
-                                           + '~' + push_info_schedule_end_date[0] + push_info_schedule_end_date[1]+' PT 일정을 등록했습니다'
+                                           + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' PT 일정을 등록했습니다'
             request.session['lecture_id'] = lecture_id
         else:
             request.session['push_info'] = ''
@@ -614,8 +614,8 @@ def delete_schedule_logic(request):
 
         if en_dis_type == '1':
             request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
-                                           + push_info_schedule_start_date[0] + push_info_schedule_start_date[1]\
-                                           + '~' + push_info_schedule_end_date[0] + push_info_schedule_end_date[1] + ' PT 일정을 삭제했습니다'
+                                           + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 삭제했습니다'
             request.session['lecture_id'] = lecture_id
         else:
             request.session['push_info'] = ''
