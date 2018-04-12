@@ -678,6 +678,10 @@ img,a,div,span,p{
 	z-index: -1;
 }
 
+.option_notavailable{
+	z-index: -1;
+}
+
 
 
 .admonth{
