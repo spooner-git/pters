@@ -64,8 +64,13 @@ img,a,div,span,p{
 		float: unset;
 		margin-left: 0;
 	}
-
-
+	.addpopupinner{
+		position: relative;
+		height: 40px;
+	}
+		.ptaddboxtext_trainee_popup{
+			line-height: 40px;
+		}
 #shade{
 	position: fixed;
 	width: 100%;
@@ -624,6 +629,7 @@ img,a,div,span,p{
 	padding: 10px;
 	width: 35px;
 	float: right;
+	cursor: pointer;
 }
 
 .popup_inner{

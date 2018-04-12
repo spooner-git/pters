@@ -503,11 +503,19 @@ ul a{
 
 .dropdown_trainee_popup{
 	display: inline-block;
-	width: 210px;
-	margin-left: 10px;
+	position: absolute;
+	left: 35%;
+	width: 53%;
+	height: 40px;
+	margin-left: 15px;
 	margin-top: 0;
-	height: 50px;
+	box-shadow: unset !important
+	height: 100%;
+	border:0 !important;
 }
+	.dropdown_trainee_popup button{
+		height: 100%;
+	}
 
 
 #submitBtn{
