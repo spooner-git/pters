@@ -2014,7 +2014,7 @@ function refund_member_lecture_data(){
         var userID = $('#memberId').val();
     }
     var lectureID = $('.lectureStateChangePopup').attr('data-leid');
-    var refund_price = $('div.lectureStateChangePopup.popups input[type="number"]').val()
+    var refund_price = $('div.lectureStateChangePopup input[name="refund_price"]').val().replace(/,/gi,'')
     var userName = DB[userID].name
     if(refund_price.length>0){
         $.ajax({

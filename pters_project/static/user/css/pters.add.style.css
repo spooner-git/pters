@@ -542,11 +542,11 @@ button._info_delete_img{
 .ajaxloadingPC{
 	position: fixed;
 	display: none;
-	width: 62px;
+	width: 40px;
 	top: 50%;
 	left: 50%;
 	transform:translate(-50%,-50%);
-	z-index: 202;
+	z-index: 1000;
 }
 
 .submitBtnActivated{
