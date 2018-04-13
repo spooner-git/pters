@@ -2661,7 +2661,13 @@ function initialize_add_member_sheet(){
     $('#birth_month').prop('disabled',false);
     $('#birth_date').prop('disabled',false);
 
-    $('#fast_check').val('')
+    if($('#btnCallSimple').hasClass('selectbox_checked')){
+        $('#fast_check').val('0')
+    }else if($('#btnCallManual').hasClass('selectbox_checked')){
+        $('#fast_check').val('1')
+    }
+    
+
     $('#form_birth').val('')
 
     $('.dropdown_selected').removeClass('dropdown_selected')
