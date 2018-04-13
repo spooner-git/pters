@@ -731,6 +731,7 @@ class ClearBadgeCounterView(TemplateView):
         push_token = self.request.session.get('push_token', '')
         error = None
         token_data = None
+        print(push_token)
         if push_token is None or push_token == '':
             error = 'token 정보를 가져올 수 없습니다'
 
