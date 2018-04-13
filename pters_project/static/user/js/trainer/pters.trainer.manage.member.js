@@ -625,15 +625,13 @@ $(document).ready(function(){
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
     $("#upbutton-check, #pcBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
         if($('#page_addmember').css('display')=='block'){
-            var test = $('#id_search_confirm').val();
-            var $form2 = $('#add-member-id-form');
-            var url2 = '/login/add_member_info_no_email/';
+            var id_search_confirm = $('#id_search_confirm').val();
             if(select_all_check==true){
-                if(test==0){
+                if(id_search_confirm==0){
                     $.ajax({
                         url:'/login/add_member_info_no_email/',
                         type:'POST',
-                        data:$form2.serialize(),
+                        data: $('#add-member-id-form').serialize(),
                         dataType : 'html',
 
                         beforeSend:function(){
@@ -648,7 +646,6 @@ $(document).ready(function(){
                         //통신성공시 처리
                         success:function(data){
                             var jsondata = JSON.parse(data);
-                            console.log('--')
                             ajax_received_json_data_member_manage(data);
                             if(messageArray.length>0){
                                 $('html').css("cursor","auto");
@@ -2342,11 +2339,10 @@ function fill_member_info_by_ID_search(){
 
 //새로운 회원 정보 서버로 보내 등록하기
 function add_member_form_func(){
-    var $form = $('#member-add-form-new');
     $.ajax({
         url:'/trainer/add_member_info/',
         type:'POST',
-        data:$form.serialize(),
+        data: $('#member-add-form-new').serialize(),
         dataType : 'html',
 
         beforeSend:function(){
@@ -2361,7 +2357,6 @@ function add_member_form_func(){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('add_member_form_func')
             ajax_received_json_data_member_manage(data);
             if(messageArray.length>0){
                 $('html').css("cursor","auto")
@@ -2399,6 +2394,7 @@ function add_member_form_func(){
         },
      })
 }
+
 
 //회원을 삭제 요청을 서버로 보낸다.
 function deleteMemberAjax(){

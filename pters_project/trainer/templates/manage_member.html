@@ -41,7 +41,6 @@
     <input type="hidden" name="first_name" id="add_member_form_first_name" value="" >
     <input type="hidden" name="last_name" id="add_member_form_last_name" value="" >
     <input type="hidden" name="name" id="add_member_form_name" value="">
-
 </form>
 
 <form action="{% url 'trainer:delete_member_info' %}" method="POST" class="member-form" id="member-delete-form">
@@ -504,7 +503,7 @@
       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_add')" style="display: none;">
     </div>
 
-    <form action="{% url 'trainer:add_member_info' %}" method="POST" class="member-form" id="member-add-form-new">
+    <form class="member-form" id="member-add-form-new">
     {% csrf_token %}
         <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
         <input type="hidden" name="fast_check" id="fast_check" value="0">
@@ -519,7 +518,7 @@
                     <!--<p class="icons_description"> <br>PTERS에 이미 가입되어있는 회원님의 정보를 가져옵니다.</p>-->
                 </label>
                 <div id="memberSearch" class="dropdown pters_input_custom">
-                    <input  id="memberSearch_add" placeholder="검색할 아이디를 입력해주세요" value="" required>
+                    <input  id="memberSearch_add" placeholder="검색할 아이디를 입력해주세요" value="">
                     <button class="memberSearchButton" id="memberSearchButton">
                     검색
                     </button>
@@ -749,13 +748,6 @@
             <span>PT 반복 일정 등록</span>
             <img class="icons-next-button" src={% static_url "user/res/ptadd/btn-next.png" %}>
         </div>
-        <!--
-        <div id="pcBtn" style="text-align: center;">
-            <div class="submitBtn">
-                <span class="btnok">등록</span>
-            </div>
-        </div>
-        -->
         <div class="member_info_PC_buttons_wrap popupBtn_mini" style="margin-bottom: 6px;">
             <button id="pcBtn" class="submitBtn">등록</button>
             <button class="submitBtn" style="display: none;">수정</button>
