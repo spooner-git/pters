@@ -735,7 +735,6 @@ class ClearBadgeCounterView(TemplateView):
 
 
 def clear_badge_counter_logic(request):
-    template_name = 'token_check_ajax.html'
     push_token = request.session.get('push_token', '')
     error = None
     token_data = None
@@ -753,9 +752,9 @@ def clear_badge_counter_logic(request):
         token_data.save()
 
     if error is None:
-        return render(request, template_name, {'token_check': token_data.token})
+        return render(request, 'token_check_ajax.html', {'token_check': token_data.token})
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
-        return render(request, template_name, {'token_check': error})
+        return render(request, 'token_check_ajax.html', {'token_check': error})
