@@ -747,5 +747,7 @@ class ClearBadgeCounterView(TemplateView):
             context['token_check'] = token_data.token
         else:
             context['token_check'] = error
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+error)
+
+        logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+push_token)
+
         return context
