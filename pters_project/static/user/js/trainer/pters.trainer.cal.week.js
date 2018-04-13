@@ -694,6 +694,8 @@ $(document).ready(function(){
 
 			  error:function(){
 			  	//alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
+				console.log(push_server_id)
+				console.log(intance_id)
 				console.log('server error')
 			  }
 			})
@@ -2241,3 +2243,35 @@ function AjaxCompleteSend(){
 	$('.ajaxloadingPC').hide();
 }
 
+
+function clear_badge_counter(){
+    $.ajax({
+            url:'/login/clear_badge_counter/',
+            type:'POST',
+		    //dataType : 'html',
+
+            beforeSend:function(){
+                //alert('before clear_badge_counter afsavf')
+                console.log('before')
+            },
+
+            //통신성공시 처리
+            success:function(){
+                //alert('test')
+                console.log('sucess')
+
+              },
+
+             //보내기후 팝업창 닫기
+            complete:function(){
+
+              },
+
+            //통신 실패시 처리
+            error:function(){
+                console.log('error')
+                //alert('error clear_badge_counter')
+                //console.log('error:clear_badge_counter')
+            },
+        })
+}
