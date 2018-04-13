@@ -542,7 +542,7 @@ button._info_delete_img{
 .ajaxloadingPC{
 	position: fixed;
 	display: none;
-	width: 40px;
+	width: 18px;
 	top: 50%;
 	left: 50%;
 	transform:translate(-50%,-50%);
@@ -831,6 +831,10 @@ option{
 }
 
 @media(min-width: 600px){
+	.ajaxloadingPC{
+		width: 40px;
+	}
+
 	.mode_switch_button_wrap{
 		margin-top: 0;
 	}
