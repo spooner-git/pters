@@ -648,6 +648,7 @@ $(document).ready(function(){
                         //통신성공시 처리
                         success:function(data){
                             var jsondata = JSON.parse(data);
+                            console.log('--')
                             ajax_received_json_data_member_manage(data);
                             if(messageArray.length>0){
                                 $('html').css("cursor","auto");
@@ -958,11 +959,13 @@ function priceInput(price, type, selector){
         $('#lecturePrice_add'+select).val("").attr('readonly',false);
         $('#lecturePrice_add_value'+loc).val(0);
     }
+    check_dropdown_selected()
 }
 //수동 가격입력
 $('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
     var priceInputValue = $(this).val().replace(/,/g, "");
     $(this).val(numberWithCommas(priceInputValue));
+    check_dropdown_selected()
 });
 
 
@@ -1381,6 +1384,8 @@ function check_dropdown_selected(){
     var countInput = $("#memberCount_add");
     var startInput = $("#datepicker_add");
     var endInput = $("#datepicker2_add");
+    var priceInput_detail = $('#lecturePrice_add').val()
+    var priceInput_fast = $('#lecturePrice_add_2').val()
     //var sexInput = $('#form_sex').val();
     var sexInput = "임시";
 
@@ -1390,7 +1395,7 @@ function check_dropdown_selected(){
     var fast = $('#fast_check').val();
 
     if(fast=='1'){
-        if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true&&(startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true && sexInput.length>0){
+        if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput).hasClass("dropdown_selected")==true && (priceInput_detail).length>0 && (startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true && sexInput.length>0){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;
@@ -1403,7 +1408,7 @@ function check_dropdown_selected(){
         }
     }
     else{
-        if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput_fast).hasClass("dropdown_selected")==true&&(dateInput_fast).hasClass("dropdown_selected")==true && sexInput.length>0){
+        if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (phoneInput).hasClass("dropdown_selected")==true &&(countInput_fast).hasClass("dropdown_selected")==true && (priceInput_fast).length>0 && (dateInput_fast).hasClass("dropdown_selected")==true && sexInput.length>0){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;
@@ -2356,6 +2361,7 @@ function add_member_form_func(){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log('add_member_form_func')
             ajax_received_json_data_member_manage(data);
             if(messageArray.length>0){
                 $('html').css("cursor","auto")
@@ -2655,7 +2661,7 @@ function initialize_add_member_sheet(){
     $('#birth_month').prop('disabled',false);
     $('#birth_date').prop('disabled',false);
 
-    $('#fast_check').val('0')
+    $('#fast_check').val('')
     $('#form_birth').val('')
 
     $('.dropdown_selected').removeClass('dropdown_selected')
