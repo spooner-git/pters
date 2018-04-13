@@ -614,7 +614,7 @@ class NewMemberReSendEmailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(NewMemberReSendEmailView, self).get_context_data(**kwargs)
-        user_name = self.request.session.get('username','')
+        user_name = self.request.session.get('username', '')
         error = None
         user = None
         if user_name is None or user_name == '':
@@ -728,27 +728,35 @@ class ClearBadgeCounterView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ClearBadgeCounterView, self).get_context_data(**kwargs)
-        push_token = self.request.session.get('push_token', '')
-        error = None
-        token_data = None
-        if push_token is None or push_token == '':
-            error = 'token 정보를 가져올 수 없습니다'
-
-        if error is None:
-            try:
-                token_data = PushInfoTb.objects.get(token=push_token, use=1)
-            except ObjectDoesNotExist:
-                error = 'token 정보를 가져올 수 없습니다'
-
-        if error is None:
-            token_data.badge_counter = 0
-            token_data.save()
-
-        if error is None:
-            context['token_check'] = token_data.token
-        else:
-            context['token_check'] = error
 
         logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+push_token)
 
         return context
+
+
+@csrf_exempt
+def clear_badge_counter_logic(request):
+    push_token = request.session.get('push_token', '')
+    error = None
+    token_data = None
+    if push_token is None or push_token == '':
+        error = 'token 정보를 가져올 수 없습니다'
+
+    logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+push_token)
+    if error is None:
+        try:
+            token_data = PushInfoTb.objects.get(token=push_token, use=1)
+        except ObjectDoesNotExist:
+            error = 'token 정보를 가져올 수 없습니다'
+
+    if error is None:
+        token_data.badge_counter = 0
+        token_data.save()
+
+    if error is None:
+        return render(request, 'token_check_ajax.html', {'token_check': token_data.token})
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+        return render(request, 'token_check_ajax.html', {'token_check': error})

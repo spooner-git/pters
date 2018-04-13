@@ -1744,16 +1744,18 @@ class TraineePushAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineePushAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
 
-        push_token = []
+        push_data = []
         member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id,auth_cd='VIEW', use=1)
 
         for member_class_info in member_class_data:
             token_data = PushInfoTb.objects.filter(member_id=member_class_info.member.member_id)
             for token_info in token_data:
-                push_token.append(token_info.token)
+                token_info.badge_counter += 1
+                token_info.save()
+                push_data.append(token_info)
 
         context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
-        context['push_data'] = push_token
+        context['push_data'] = push_data
         return context
 
 

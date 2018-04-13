@@ -1173,3 +1173,4 @@ function AjaxCompleteSend(){
 	$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 	$('.ajaxloadingPC').hide();
 }
+
