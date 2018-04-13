@@ -1181,14 +1181,13 @@ function clear_badge_counter(){
 		    dataType : 'html',
 
             beforeSend:function(){
-                alert('before clear_badge_counter afsavf')
+                //alert('before clear_badge_counter afsavf')
             },
 
             //통신성공시 처리
-            success:function(data){
+            success:function(){
                 alert('test')
-	            var jsondata = JSON.parse(data)
-                alert(jsondata.token_check)
+
               },
 
              //보내기후 팝업창 닫기
