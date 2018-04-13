@@ -687,16 +687,17 @@ function clear_badge_counter(){
     $.ajax({
             url:'/login/clear_badge_counter/',
             type:'POST',
+		    dataType : 'html',
 
             beforeSend:function(){
-
+                alert('before clear_badge_counter')
             },
 
             //통신성공시 처리
             success:function(data){
 	            var jsondata = JSON.parse(data)
-                console.log('clear_badge_counter')
                 alert(jsondata.token_check)
+                console.log('clear_badge_counter')
               },
 
              //보내기후 팝업창 닫기
@@ -706,6 +707,7 @@ function clear_badge_counter(){
 
             //통신 실패시 처리
             error:function(){
+                alert('error clear_badge_counter')
                 console.log('error:clear_badge_counter')
             },
         })
