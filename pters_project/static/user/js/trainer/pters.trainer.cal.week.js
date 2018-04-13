@@ -694,6 +694,8 @@ $(document).ready(function(){
 
 			  error:function(){
 			  	//alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
+				console.log(push_server_id)
+				console.log(intance_id)
 				console.log('server error')
 			  }
 			})

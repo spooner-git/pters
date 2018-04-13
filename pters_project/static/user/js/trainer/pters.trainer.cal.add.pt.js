@@ -537,6 +537,8 @@ $(document).ready(function(){
 			  },
 
 			  error:function(){
+				console.log(push_server_id)
+				console.log(intance_id)
 				console.log('server error')
 			  }
 			})
