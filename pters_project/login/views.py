@@ -736,7 +736,7 @@ class ClearBadgeCounterView(TemplateView):
 
         if error is None:
             try:
-                token_data = PushInfoTb.objects.get(token=push_token, use=1)
+                token_data = PushInfoTb.objects.get(member_id=self.request.user.id, token=push_token, use=1)
             except ObjectDoesNotExist:
                 error = 'token 정보를 가져올 수 없습니다'
 
