@@ -385,7 +385,7 @@ $(document).ready(function(){
 				var drawCanvas = document.getElementById('canvas');
 				var send_data = $pt_finish_form.serializeArray();
 				send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
-				send_memo()
+				
 				if(schedule_on_off==1){
 					//PT 일정 완료 처리시
 					$.ajax({
@@ -403,7 +403,7 @@ $(document).ready(function(){
 			                  	$('#errorMessageBar').show()
 			                  	$('#errorMessageText').text(jsondata.messageArray)
 			                }else{
-
+			                	send_memo()
 			                	signImageSend(send_data);
 			                    close_info_popup('cal_popup_planinfo')
 			                    AjaxCompleteSend();
