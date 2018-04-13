@@ -198,7 +198,7 @@ LOGGING = {
     },
     'handlers': {
         'default': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': LOG_FILE,
             'maxBytes': 1024*1024*5, # 5 MB
@@ -214,7 +214,7 @@ LOGGING = {
             'backupCount': 5,
         },
         'trainer_file': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE_TRAINER,
@@ -222,7 +222,7 @@ LOGGING = {
             'backupCount': 5,
         },
         'trainee_file': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE_TRAINEE,
@@ -230,7 +230,7 @@ LOGGING = {
             'backupCount': 5,
         },
         'schedule_file': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE_SCHEDULE,
@@ -241,13 +241,13 @@ LOGGING = {
     'loggers': {
         '': {
             'handlers': ['default'],
-            'propagate': False,
-            'level': 'ERROR',
+            'propagate': True,
+            'level': 'DEBUG',
         },
         'django': {
             'handlers': ['default'],
-            'propagate': False,
-            'level': 'ERROR',
+            'propagate': True,
+            'level': 'INFO',
         },
         'django.request': {
             'handlers': ['default'],
@@ -260,11 +260,11 @@ LOGGING = {
         },
         'trainer': {
             'handlers': ['trainer_file'],
-            'level': 'ERROR',
+            'level': 'DEBUG',
         },
         'trainee': {
             'handlers': ['trainee_file'],
-            'level': 'ERROR',
+            'level': 'DEBUG',
         },
         'schedule': {
             'handlers': ['schedule_file'],
