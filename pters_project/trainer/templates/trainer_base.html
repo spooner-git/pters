@@ -355,7 +355,13 @@
                       <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
                     </div>
                     <div id="subject-selector"></div>
-                    <div id="alarm-notify"><img id="alarm-on-pc" src="/static/user/res/main/alarm-on.png"><span class="KRtext">새로운 알림이 있습니다.</span><span class="JPtext">新しい通知があります</span><span class="ENtext">New notification arrived</span></div>
+                    <div id="alarm-notify">
+                        <img id="alarm-on-pc" src="/static/user/res/main/alarm-on.png">
+                        <span class="KRtext">알림</span>
+                        <span class="JPtext">新しい通知があります</span>
+                        <span class="ENtext">New notification arrived</span>
+                        <img id="alarm-page-arrow" src="/static/user/res/icon-down-grey.png">
+                    </div>
                     <div id="alarm-iframe-div-pc"></div>
                     <div id="alarm-close-pc"><img src="/static/user/res/icon-down-grey.png"></div>
                 </div>
@@ -476,7 +482,8 @@
                 $('.ajaxloadingPC').hide();
                 if($('body').width()>600){
                     $('#calendar').css('position','relative')
-                    $('#shade, #shade3, .popups').hide();
+                    $('.popups').hide();
+                    shade_index(-100)
                 }else{
                     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 }

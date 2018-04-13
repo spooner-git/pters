@@ -396,6 +396,12 @@
 				margin-right: 10px;
 				cursor: pointer;
 			}
+			#alarm-page-arrow{
+				float: right;
+				margin: 10px;
+				width: 17px;
+				cursor:pointer;
+			}
 		#alarm-iframe-div-pc{
 			background: #f4f4f4;
 			height: 0;

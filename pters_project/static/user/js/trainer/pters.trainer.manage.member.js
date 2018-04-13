@@ -2663,6 +2663,9 @@ function initialize_add_member_sheet(){
         $('#fast_check').val('1')
     }
     
+    $('.ptaddbox input,#memberDue_add_2').val("");
+    $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
+    $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
 
     $('#form_birth').val('')
 
