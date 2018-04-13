@@ -741,6 +741,8 @@ def clear_badge_counter_logic(request):
     if push_token is None or push_token == '':
         error = 'token 정보를 가져올 수 없습니다'
 
+    logger.info('log testtestst')
+    logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+push_token)
     if error is None:
         try:
             token_data = PushInfoTb.objects.get(token=push_token, use=1)
