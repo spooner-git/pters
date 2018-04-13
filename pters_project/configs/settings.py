@@ -206,7 +206,7 @@ LOGGING = {
             'backupCount': 5,
         },
         'login_file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE_LOGIN,
@@ -256,7 +256,7 @@ LOGGING = {
         },
         'login': {
             'handlers': ['login_file'],
-            'level': 'INFO',
+            'level': 'DEBUG',
         },
         'trainer': {
             'handlers': ['trainer_file'],
