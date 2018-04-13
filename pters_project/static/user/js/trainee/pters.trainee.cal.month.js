@@ -1181,7 +1181,7 @@ function clear_badge_counter(){
 		    dataType : 'html',
 
             beforeSend:function(){
-                alert('before clear_badge_counter')
+                alert('before clear_badge_counter afsavf')
             },
 
             //통신성공시 처리
