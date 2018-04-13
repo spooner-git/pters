@@ -743,6 +743,7 @@ class ClearBadgeCounterView(TemplateView):
         if error is None:
             token_data.badge_counter = 0
             token_data.save()
+
         if error is None:
             context['token_check'] = token_data.token
         else:
