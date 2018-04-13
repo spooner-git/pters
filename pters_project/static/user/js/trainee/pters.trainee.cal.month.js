@@ -1178,7 +1178,7 @@ function clear_badge_counter(){
     $.ajax({
             url:'/login/clear_badge_counter/',
             type:'POST',
-		    dataType : 'html',
+		    //dataType : 'html',
 
             beforeSend:function(){
                 //alert('before clear_badge_counter afsavf')
@@ -1186,7 +1186,7 @@ function clear_badge_counter(){
 
             //통신성공시 처리
             success:function(){
-                alert('test')
+                //alert('test')
 
               },
 
@@ -1197,8 +1197,8 @@ function clear_badge_counter(){
 
             //통신 실패시 처리
             error:function(){
-                alert('error clear_badge_counter')
-                console.log('error:clear_badge_counter')
+                //alert('error clear_badge_counter')
+                //console.log('error:clear_badge_counter')
             },
         })
 }
