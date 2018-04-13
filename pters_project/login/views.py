@@ -734,6 +734,7 @@ class ClearBadgeCounterView(TemplateView):
         return context
 
 
+@csrf_exempt
 def clear_badge_counter_logic(request):
     push_token = request.session.get('push_token', '')
     error = None
@@ -741,7 +742,6 @@ def clear_badge_counter_logic(request):
     if push_token is None or push_token == '':
         error = 'token 정보를 가져올 수 없습니다'
 
-    logger.info('log testtestst')
     logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+push_token)
     if error is None:
         try:

@@ -1348,34 +1348,4 @@ function plancheck(dateinfo){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo
 }
 
 
-function clear_badge_counter(){
-    $.ajax({
-            url:'/login/clear_badge_counter/',
-            type:'POST',
-		    dataType : 'html',
-
-            beforeSend:function(){
-                alert('before clear_badge_counter')
-            },
-
-            //통신성공시 처리
-            success:function(data){
-                console.alert('test')
-	            var jsondata = JSON.parse(data)
-                alert(jsondata.token_check)
-                console.log('clear_badge_counter')
-              },
-
-             //보내기후 팝업창 닫기
-            complete:function(){
-
-              },
-
-            //통신 실패시 처리
-            error:function(){
-                alert('error clear_badge_counter')
-                console.log('error:clear_badge_counter')
-            },
-        })
-}
 
