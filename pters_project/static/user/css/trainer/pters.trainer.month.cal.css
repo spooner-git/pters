@@ -133,6 +133,7 @@ img,a,div,span,p{
 	font-weight: 600;
 	color: #ffffff;
 	text-decoration: none;
+	cursor: pointer;
 }
 
 .arrowButtonPC{

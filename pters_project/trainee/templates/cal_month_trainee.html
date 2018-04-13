@@ -169,8 +169,16 @@
   <!-- 월간 달력 -->
     <div id="ymdText">
         <div class='arrowButton'>
-         <a style="left: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
-         <a style="right: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+            <a id="leftArrowButton" style="left: 4%">
+              <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;visibility: hidden;">
+              <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="leftArrowButtonImg">
+              <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;visibility: hidden;" class="_pinkarrowbefore setunVisible">Today</span>
+            </a>
+            <a id="rightArrowButton" style="right: 4%">
+              <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="rightArrowButtonImg">
+              <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;visibility: hidden;">
+              <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;visibility: hidden;" class="_pinkarrowafter setunVisible">Today</span>
+            </a>
         </div>
         <div id="ymdTextWrap">
              <div id="countRemain"><div style="position: absolute;width: 100%;height: 100%;background: #ffffff;opacity: 0.16;"></div>
@@ -273,34 +281,38 @@
         <script>
             var myswiper = new Swiper('.swiper-container',{
                 initialSlide : 1,
-                speed : 50,
+                //speed : 120,
                 preventClicks : true,
-                keyboardControl : true,
-                pagination : '.swiper-pagination'
+                keyboardControl : false,
+                preventClicksPropagation : true,
+                threshold : 50,
+                resistance: 1,
+                onlyExternal: true,
             });
 
             var count = 0 
             var count1 = 0
 
-            $('#ymdText-pc-prev-btn').click(function(){
+            $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(){
               if(count==0){
-                myswiper.slidePrev(100)
+                myswiper.slidePrev(300)
                 count++  
-                setTimeout(function(){count=0},200)
+                setTimeout(function(){count=0},400)
               }else if(count>0){
                 console.log('wait!')
               }
             })
 
-            $('#ymdText-pc-next-btn').click(function(){
+            $('#ymdText-pc-next-btn, #rightArrowButton').click(function(){
               if(count1==0){
-                myswiper.slideNext(100)  
+                myswiper.slideNext(300)  
                 count1++  
-                setTimeout(function(){count1=0},200)
+                setTimeout(function(){count1=0},400)
               }else if(count>0){
                 console.log('wait!')
               }
             })
+
 
         </script>
 
