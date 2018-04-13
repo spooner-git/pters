@@ -1186,10 +1186,9 @@ function clear_badge_counter(){
 
             //통신성공시 처리
             success:function(data){
-                console.alert('test')
+                alert('test')
 	            var jsondata = JSON.parse(data)
                 alert(jsondata.token_check)
-                console.log('clear_badge_counter')
               },
 
              //보내기후 팝업창 닫기
