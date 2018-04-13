@@ -1,74 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-    <title>피터스 - PT 일정 및 회원 관리 무료 서비스</title>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
-    <!-- End Google Tag Manager -->
-    <!--Google Adsense-->
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: "ca-pub-2813455230255515",
-        enable_page_level_ads: true
-      });
-    </script>
-    <!--Google Adsense-->
-{% load static_url %}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta name="description" content="PTERS;피터스 는 피트니스, 일대일 PT, 요가, 필라테스, 피아노, 과외 등 개인 레슨 회원과 수업 강의 일정을 관리하는 무료 서비스 프로그램입니다.">
-    <meta name="description" content="PTERS;피터스 는 피트니스, 일대일 PT, 요가, 필라테스, 피아노, 과외 등 개인 레슨 회원과 수업 강의 일정을 관리하는 무료 서비스 프로그램입니다.">
+        <title>피터스 - PT 일정 및 회원 관리 무료 서비스</title>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
+        <!-- End Google Tag Manager -->
+        <!--Google Adsense-->
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-2813455230255515",
+            enable_page_level_ads: true
+          });
+        </script>
+        <!--Google Adsense-->
+    {% load static_url %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta name="robots" content="index,follow">
+        <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 피아노, 과외등 개인 레슨 회원관리와 강의 일정을 관리하는 무료 서비스 프로그램">
+        <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 피아노, 과외등 개인 레슨 회원관리와 강의 일정을 관리하는 무료 서비스 프로그램">
 
-{% block local_css %}
+    {% block local_css %}
 
-    <meta name="login" content="trainer_login">
-    <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
-    <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
-    <link rel="icon" href="/static/common/favicon.ico">
-    <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
-    <link rel="shortcut icon" href="/static/common/favicon-152.png">
+        <meta name="login" content="trainer_login">
+        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
+        <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
+        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+        <link rel="shortcut icon" href="/static/common/favicon-152.png">
 
-    <link rel="icon" href="/static/common/favicon.ico">
-    <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
-    <link rel="shortcut icon" href="/static/common/favicon-152.png">
-   <style type="text/css">
-      #errorMessageBar{
-          display: block;
-          width: 100%;
-          position: sticky;
-          top: 0;
-          left: 0;
-          height: 35px;
-          text-align: center;
-          background: red;
-          color: #ffffff;
-          font-size: 15px;
-          font-weight: bold;
-          z-index: 1500;
-      }
-          #errorMessageBar span{
-              line-height: 35px;
+        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+        <link rel="shortcut icon" href="/static/common/favicon-152.png">
+        <style type="text/css">
+          #errorMessageBar{
+              display: block;
+              width: 100%;
+              position: sticky;
+              top: 0;
+              left: 0;
+              height: 35px;
+              text-align: center;
+              background: red;
+              color: #ffffff;
+              font-size: 15px;
+              font-weight: bold;
+              z-index: 1500;
           }
-          #errorMessageBar span:nth-child(2){
-              position: absolute;
-              right: 0;
-              margin-right: 10px;
-              cursor: pointer;
-          }
+              #errorMessageBar span{
+                  line-height: 35px;
+              }
+              #errorMessageBar span:nth-child(2){
+                  position: absolute;
+                  right: 0;
+                  margin-right: 10px;
+                  cursor: pointer;
+              }
 
-          @media(min-width: 600px){
-                #errorMessageBar span:nth-child(2){
-                    margin-right: 85px;
-                }
-          }
+              @media(min-width: 600px){
+                    #errorMessageBar span:nth-child(2){
+                        margin-right: 85px;
+                    }
+              }
 
-    </style>
+        </style>
 
 {% endblock %}
     </head>
