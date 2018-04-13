@@ -1034,7 +1034,7 @@ class LanguageSettingView(AccessTestMixin, TemplateView):
 
 
 # 회원가입 api
-def add_member_info_logic_test(request):
+def add_member_info_logic(request):
     fast_check = request.POST.get('fast_check', '0')
     user_id = request.POST.get('user_id')
     name = request.POST.get('name')
