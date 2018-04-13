@@ -1212,23 +1212,26 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
         # update_check 0 : data update 없음
         # update_check 1 : data update 있음
         update_check = 0
-        if group.name == 'trainer':
-            # 강사 정보 가져오기
-            try:
-                class_info = ClassTb.objects.get(class_id=class_id)
-            except ObjectDoesNotExist:
-                error = '강사 정보가 존재하지 않습니다'
+        if class_id is None or class_id == '':
+            error = '강좌 정보를 불러오지 못했습니다.'
+        if error is None:
+            if group.name == 'trainer':
+                # 강사 정보 가져오기
+                try:
+                    class_info = ClassTb.objects.get(class_id=class_id)
+                except ObjectDoesNotExist:
+                    error = '강사 정보가 존재하지 않습니다'
 
-            if error is None:
-                update_check = class_info.schedule_check
+                if error is None:
+                    update_check = class_info.schedule_check
 
-        if group.name == 'trainee':
-            try:
-                lecture_info = LectureTb.objects.get(member=self.request.user.id, use=1)
-            except ObjectDoesNotExist:
-                error = '회원 PT 정보가 존재하지 않습니다'
-            if error is None:
-                update_check = lecture_info.schedule_check
+            if group.name == 'trainee':
+                try:
+                    lecture_info = LectureTb.objects.get(member=self.request.user.id, use=1)
+                except ObjectDoesNotExist:
+                    error = '회원 PT 정보가 존재하지 않습니다'
+                if error is None:
+                    update_check = lecture_info.schedule_check
 
         # print(error)
         context['data_changed'] = update_check

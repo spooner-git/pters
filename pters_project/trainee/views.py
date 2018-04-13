@@ -752,7 +752,7 @@ def pt_delete_logic(request):
 
         request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                        + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-                                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 삭제했습니다'
+                                       + '~' + push_info_schedule_end_date[0] + push_info_schedule_end_date[1] + ' PT 일정을 삭제했습니다'
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -1647,7 +1647,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
 
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(lecture_tb_id=lecture_id, use=1).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(lecture_tb_id=lecture_id, use=1).exclude(auth_member_id=self.request.user.id).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:

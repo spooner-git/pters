@@ -22,10 +22,6 @@ from trainer import views
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^trainer_main/$', views.TrainerMainView.as_view(), name='trainer_main'),
-url(r'^trainer_main/firebase-messaging-sw.min.js', cache_control(max_age=2592000)(TemplateView.as_view(
-    template_name="service-worker.js",
-    content_type='application/javascript',
-)), name='sfirebase-messaging-sw.minr.js'),
     # 강사 - 회원정보 등록 관련
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     url(r'^member_manage_ajax/$', views.ManageMemberViewAjax.as_view(), name='member_manage_ajax'),
