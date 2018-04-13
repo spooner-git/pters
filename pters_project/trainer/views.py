@@ -230,7 +230,8 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
         day = request.session.get('day', '')
         lecture_id = request.session.get('lecture_id', '')
         today = datetime.date.today()
-        push_token = []
+        push_data = []
+        badge_counter = []
 
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -250,10 +251,12 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
                 for lecture_info in lecture_info:
                     token_data = PushInfoTb.objects.filter(member_id=lecture_info.member.member_id)
                     for token_info in token_data:
-                        push_token.append(token_info.token)
+                        token_info.badge_counter += 1
+                        token_info.save()
+                        push_data.append(token_info)
 
         context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
-        context['push_data'] = push_token
+        context['push_data'] = push_data
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):

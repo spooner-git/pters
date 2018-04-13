@@ -89,6 +89,7 @@ class PushInfoTb(models.Model):
     push_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     token = models.CharField(db_column='TOKEN', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
+    badge_counter = models.IntegerField(db_column='BADGE_COUNTER', blank=True, null=True, default='0')  # Field name made lowercase.
     last_login = models.DateTimeField(db_column='LAST_LOGIN', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
