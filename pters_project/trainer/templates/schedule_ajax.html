@@ -82,7 +82,9 @@
       "push_server_id" :
       ["{{ push_server_id }}"],
       "pushArray" :
-      [{% for push_info in push_data %}"{{ push_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for push_info in push_data %}"{{ push_info.token }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "badgeCounterArray" :
+      [{% for push_info in push_data %}"{{ push_info.badge_counter }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "push_info" :
       ["{{ request.session.push_info }}"]
     }
