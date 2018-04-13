@@ -1173,31 +1173,3 @@ function AjaxCompleteSend(){
 	$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 	$('.ajaxloadingPC').hide();
 }
-
-function clear_badge_counter(){
-    $.ajax({
-            url:'/login/clear_badge_counter/',
-            type:'POST',
-
-            beforeSend:function(){
-
-            },
-
-            //통신성공시 처리
-			success:function(data){
-				var jsondata = JSON.parse(data)
-                console.log('clear_badge_counter')
-				alert(jsondata.token_check)
-              },
-
-             //보내기후 팝업창 닫기
-            complete:function(){
-
-              },
-
-            //통신 실패시 처리
-            error:function(){
-                console.log('error:clear_badge_counter')
-            },
-        })
-}

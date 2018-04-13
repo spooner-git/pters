@@ -693,8 +693,10 @@ function clear_badge_counter(){
             },
 
             //통신성공시 처리
-            success:function(){
+            success:function(data){
+	            var jsondata = JSON.parse(data)
                 console.log('clear_badge_counter')
+                alert(jsondata.token_check)
               },
 
              //보내기후 팝업창 닫기
