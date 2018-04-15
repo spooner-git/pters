@@ -36,7 +36,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
     def get(self, request, **kwargs):
 
-        lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
+        lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id, use=1).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
 
         class_counter = 0
         class_data = None
@@ -219,6 +219,36 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         return render(request, self.template_name, context)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class ReadLectureViewByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'class_lecture_data_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(ReadLectureViewByClassAjax, self).get_context_data(**kwargs)
+        class_id = request.GET.get('class_id', '')
+        context['error'] = None
+        context = get_lecture_view_list_by_class_member_id(context, class_id, request.user.id)
+
+        if context['error'] is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
+            messages.error(self.request, context['error'])
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(ReadLectureViewByClassAjax, self).get_context_data(**kwargs)
+        class_id = request.POST.get('class_id', '')
+
+        context['error'] = None
+        context = get_lecture_view_list_by_class_member_id(context, class_id, request.user.id)
+
+        if context['error'] is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
+            messages.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+self.request, context['error'])
+
+        return render(request, self.template_name, context)
+
+
 def get_lecture_list_by_member_id(context, member_id):
 
     error = None
@@ -301,6 +331,59 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
         for lecture_info in lecture_list:
             try:
                 lecture_info_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'),
+                                                                member_id=member_id,
+                                                                lecture_tb=lecture_info.lecture_tb_id)
+            except ObjectDoesNotExist:
+                lecture_info_data = None
+
+            if lecture_info_data is not None:
+                lecture_info_data.lecture_tb.start_date = str(lecture_info_data.lecture_tb.start_date)
+                lecture_info_data.lecture_tb.end_date = str(lecture_info_data.lecture_tb.end_date)
+                lecture_info_data.lecture_tb.mod_dt = str(lecture_info_data.lecture_tb.mod_dt)
+                lecture_info_data.lecture_tb.reg_dt = str(lecture_info_data.lecture_tb.reg_dt)
+                try:
+                    lecture_info_data.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.auth_cd)
+                except ObjectDoesNotExist:
+                    lecture_info_data.auth_cd_name = ''
+                try:
+                    lecture_info_data.lecture_tb.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.lecture_tb.state_cd)
+                except ObjectDoesNotExist:
+                    lecture_info_data.lecture_tb.state_cd_name = ''
+
+                if lecture_info_data.auth_cd == 'WAIT':
+                    np_lecture_counts += 1
+                lecture_counts += 1
+                output_lecture_list.append(lecture_info_data)
+
+    context['lecture_data'] = output_lecture_list
+
+    if error is not None:
+        context['error'] = error
+
+    return context
+
+
+def get_lecture_view_list_by_class_member_id(context, class_id, member_id):
+    error = None
+    context['error'] = None
+    lecture_counts = 0
+    np_lecture_counts = 0
+    output_lecture_list = []
+
+    if class_id is None or class_id == '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if member_id is None or member_id == '':
+        error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                     lecture_tb__member_id=member_id,
+                                                     use=1).order_by('-lecture_tb__start_date')
+
+        for lecture_info in lecture_list:
+            try:
+                lecture_info_data = MemberLectureTb.objects.get(auth_cd='VIEW',
                                                                 member_id=member_id,
                                                                 lecture_tb=lecture_info.lecture_tb_id)
             except ObjectDoesNotExist:
@@ -1466,42 +1549,43 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                     error = None
 
             # PT 스케쥴 정보 셋팅
-            for pt_schedule_datum in pt_schedule_data:
-                # lecture schedule id 셋팅
-                pt_schedule_id.append(pt_schedule_datum.schedule_id)
-                # lecture schedule 에 해당하는 lecture id 셋팅
-                pt_schedule_lecture_id.append(pt_schedule_datum.lecture_tb_id)
-                pt_schedule_member_name.append(user_name)
+            if pt_schedule_data is not None:
+                for pt_schedule_datum in pt_schedule_data:
+                    # lecture schedule id 셋팅
+                    pt_schedule_id.append(pt_schedule_datum.schedule_id)
+                    # lecture schedule 에 해당하는 lecture id 셋팅
+                    pt_schedule_lecture_id.append(pt_schedule_datum.lecture_tb_id)
+                    pt_schedule_member_name.append(user_name)
 
-                if pt_schedule_datum.start_dt > now:
-                    if next_schedule_start_dt is '':
-                        next_schedule_start_dt = pt_schedule_datum.start_dt
-                        next_schedule_end_dt = pt_schedule_datum.end_dt
-                    elif next_schedule_start_dt > pt_schedule_datum.start_dt:
-                        next_schedule_start_dt = pt_schedule_datum.start_dt
-                        next_schedule_end_dt = pt_schedule_datum.end_dt
+                    if pt_schedule_datum.start_dt > now:
+                        if next_schedule_start_dt is '':
+                            next_schedule_start_dt = pt_schedule_datum.start_dt
+                            next_schedule_end_dt = pt_schedule_datum.end_dt
+                        elif next_schedule_start_dt > pt_schedule_datum.start_dt:
+                            next_schedule_start_dt = pt_schedule_datum.start_dt
+                            next_schedule_end_dt = pt_schedule_datum.end_dt
 
-                pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
-                pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
+                    pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
+                    pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
 
-                if pt_schedule_datum.note is None:
-                    pt_schedule_note.append('')
-                else:
-                    pt_schedule_note.append(pt_schedule_datum.note)
-                # 끝난 스케쥴인지 확인
-                if pt_schedule_datum.state_cd == 'PE':
-                    pt_schedule_finish_check.append(1)
-                else:
-                    pt_schedule_finish_check.append(0)
-
-            for pt_repeat_schedule_info in pt_repeat_schedule_data:
-                pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
-                pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
-                pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
-                pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
-                pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
-                pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
-                pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
+                    if pt_schedule_datum.note is None:
+                        pt_schedule_note.append('')
+                    else:
+                        pt_schedule_note.append(pt_schedule_datum.note)
+                    # 끝난 스케쥴인지 확인
+                    if pt_schedule_datum.state_cd == 'PE':
+                        pt_schedule_finish_check.append(1)
+                    else:
+                        pt_schedule_finish_check.append(0)
+            if pt_repeat_schedule_data is not None:
+                for pt_repeat_schedule_info in pt_repeat_schedule_data:
+                    pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
+                    pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
+                    pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
+                    pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
+                    pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
+                    pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
+                    pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
 
     # OFF 일정
     if error is None:
