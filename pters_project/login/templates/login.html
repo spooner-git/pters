@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>피터스 - PT 일정 및 회원 관리 무료 서비스</title>
+        <title>피터스 - PT 일정 및 회원 관리 서비스</title>
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -96,16 +96,16 @@
             <div class="main_nav_bg">   
             </div>
             <div class="main_nav_content">
-                <label><img src="/static/user/res/PTERS_logo_pure.png"> </label>
+                <h1><img src="/static/user/res/PTERS_logo_pure.png" alt="피터스 로고"></h1>
                 <div class="login_form_nav">
                     <form action="{% url 'login:login' %}" id="login-form_nav" method="post">
                         {% csrf_token %}
                         <div id="idinput_nav">
-                            <img src={% static_url "user/res/login/icon-user.png" %} id="idimg">
+                            <img src={% static_url "user/res/login/icon-user.png" %} id="idimg" alt="피터스 아이디">
                             <input type="text" class="loginboxstyle_nav form-control" name="username" placeholder="아이디" autofocus>
                         </div>
                         <div id="pwinput_nav" style="margin-top:5%;">
-                            <img src={% static_url "user/res/login/icon-lock.png" %} id="pwimg">
+                            <img src={% static_url "user/res/login/icon-lock.png" %} id="pwimg" alt="피터스 비밀번호">
                             <input type="password" class="loginboxstyle_nav form-control" name="password" placeholder="비밀번호">
                         </div>
                         <div id="checkbox_nav" class="checkbox" style="margin-top:15px;margin-left:27px;">
@@ -117,14 +117,14 @@
                         <input type="hidden" name="keyword" id="keyword_pc">
                         <input type="hidden" name="next_page" value = '{% url 'home' %}'>
                     </form>
-                    <div class="forgotPW" onclick="goPage(1)">비밀번호를 잊으셨나요?</div>
+                    <a href="/accounts/password/reset/"><div class="forgotPW">비밀번호를 잊으셨나요?</div></a>
                 </div>
             </div>
         </nav>
 
         <div class="loginbox">
             <div class="logintext">
-                <div><img src="/static/user/res/PTERS_logo_pure.png"id="pterstext"><span id="logintext">로그인</span></div>
+                <div><img src="/static/user/res/PTERS_logo_pure.png" id="pterstext" alt="피터스 로고"><span id="logintext">로그인</span></div>
             </div>
             <div id="loginboxbg">
                 
@@ -133,11 +133,11 @@
                 <form action="{% url 'login:login' %}" id="login-form" method="post">
                     {% csrf_token %}
                     <div id="idinput">
-                        <img src={% static_url "user/res/login/icon-user.png" %} id="idimg">
+                        <img src={% static_url "user/res/login/icon-user.png" %} id="idimg" alt="피터스 아이디">
                         <input type="text" class="loginboxstyle form-control" name="username" placeholder="아이디" autofocus>
                     </div>
                     <div id="pwinput" style="margin-top:5%;">
-                        <img src={% static_url "user/res/login/icon-lock.png" %} id="pwimg">
+                        <img src={% static_url "user/res/login/icon-lock.png" %} id="pwimg" alt="피터스 비밀번호">
                         <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
                     </div>
                     <div class="checkbox" style="margin-top:15px;margin-left:27px;">
@@ -148,7 +148,9 @@
                     </div>
                     <input type="hidden" name="keyword" id="keyword">
                     <div class="innerbox">
-                        <div id="registerButton" onclick="goPage(0)">회원 가입</div><div class="seperate_bar"></div><div id="findIDPW" onclick="goPage(1)">PW 초기화</div>
+                        <a href="/accounts/register/"><div id="registerButton">회원 가입</div></a>
+                        <div class="seperate_bar"></div>
+                        <a href="/accounts/password/reset/"><div id="findIDPW">PW 초기화</div></a>
                     </div>
                     <input type="hidden" name="next_page" value = '{% url 'home' %}'>
                 </form>
@@ -157,8 +159,8 @@
 
         <div class="main_title">
             <div class="main_title_up">
-                <p>세상에서 가장 쉬운 일대일 PT 회원/일정 관리 시스템 </p>
-                <p><span><img src="/static/user/res/PTERS_logo_pure.png"></span><span>·피터스</span></p>
+                <h2><p>세상에서 가장 쉬운 일대일 PT 회원/일정 관리 시스템 </p></h2>
+                <p><span><img src="/static/user/res/PTERS_logo_pure.png" alt="피터스 로고"></span><span>·피터스</span></p>
             </div>
             <div class="main_title_separate">
                 <div></div>
@@ -170,14 +172,14 @@
             <p style="font-size:13px;margin-top: 10px;color:#f4f4f4;">피터스는 누구에게나 무료입니다.</p>
         </div>
 
-        <div class="button_next_view"><img src="/static/user/res/btn_next.png" style="transform: rotate(90deg);" onclick="goSlide(800)"></div>
+        <div class="button_next_view"><img src="/static/user/res/btn_next.png" style="transform: rotate(90deg);" onclick="goSlide(780)"></div>
     </div>
 
     <div class="pters_login_promote_box_sub bg-light">
         <div>
-            <img src="/static/user/res/login/promote/pters_weekcal_pc_mobile.png" alt="이미지1">
+            <img src="/static/user/res/login/promote/pters_weekcal_pc_mobile.png" alt="피터스 주간달력 예시">
         </div>
-        <label>24시간 언제든 레슨 일정 관리</label>
+        <h3><label>24시간 언제든 레슨 일정 관리</label></h3>
         <div class="main_title_separate">
             <div></div>
         </div>
@@ -187,10 +189,10 @@
 
     <div class="pters_login_promote_box_sub bg-dark">
         <div>
-            <img src="/static/user/res/login/promote/pters_weekcal_add_pc_mobile.png" alt="이미지2">
-            <img src="/static/user/res/login/promote/pters_sign_pc_mobile.png" alt="이미지2" style="height: 480px;">
+            <img src="/static/user/res/login/promote/pters_weekcal_add_pc_mobile.png" alt="피터스 일정 추가 예시">
+            <img src="/static/user/res/login/promote/pters_sign_pc_mobile.png" alt="피터스 일정 완료 예시" style="height: 480px;">
         </div>
-        <label>스케쥴과 회원 관리를 간편하게</label>
+        <h3><label>스케쥴과 회원 관리를 간편하게</label></h3>
         <div class="main_title_separate">
             <div></div>
         </div>
@@ -200,9 +202,9 @@
     
     <div class="pters_login_promote_box_sub bg-light">
         <div>
-            <img src="/static/user/res/login/promote/pters_trainee_calendar_pc_mobile.png" alt="이미지3">
+            <img src="/static/user/res/login/promote/pters_trainee_calendar_pc_mobile.png" alt="피터스 회원 화면 예시">
         </div>
-        <label>일정 약속도 간편하게</label>
+        <h3><label>일정 약속도 간편하게</label></h3>
         <div class="main_title_separate">
             <div></div>
         </div>
@@ -212,9 +214,9 @@
 
     <div class="pters_login_promote_box_sub bg-dark">
         <div>
-            <img src="/static/user/res/login/promote/pters_trainer_push_notification_pc_mobile.png" alt="이미지2">
+            <img src="/static/user/res/login/promote/pters_trainer_push_notification_pc_mobile.png" alt="피터스 푸시 기능 예시">
         </div>
-        <label>다양한 기기에서 접속</label>
+        <h3><label>다양한 기기에서 접속</label></h3>
         <div class="main_title_separate">
             <div></div>
         </div>
@@ -225,7 +227,7 @@
 
     <div class="pters_login_promote_box_sub bg-light">
         <div>
-            <img src="/static/user/res/login/promote/header.jpg" alt="이미지4">
+            <img src="/static/user/res/login/promote/header.jpg" alt="피터스 무료 설명 background">
         </div>
         <label>피터스는 누구에게나 무료로 제공됩니다.</label>
         <div class="main_title_separate">
@@ -234,8 +236,9 @@
         <p>트레이너와 회원 모두에게 무료로 제공됩니다.</p>
         <p>여러분의 시간을 효율적으로 활용해 보세요.</p>
         <p>일정과 회원관리는 피터스에 맡기고 비즈니스의 생산성을 향상 시키세요.</p>
-        <button onclick="goPage(0)" class="singup_button">가입하기</button>
-        <div class="button_next_view" style="position: relative;margin-top: 40px;">
+        <!--button onclick="goPage(0)" class="singup_button">가입하기</button>-->
+        <a href="/accounts/register/"><button class="singup_button">가입하기</button></a>
+        <div class="button_next_view" style="position: relative;margin-top: 40px;bottom: 0;">
             <img src="/static/user/res/btn_next.png" style="transform: rotate(-90deg);" onclick="goSlide(0)">
         </div>
     </div>
@@ -249,11 +252,11 @@
         </div>
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href="http://www.spooner.co.kr">회사소개</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href="">이용안내</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href="">제휴제안</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href="">개인정보처리방침</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href="">고객센터</a><span style="margin-left:10px;margin-right: 10px;">|</span>
         </div>
     </footer>
 
