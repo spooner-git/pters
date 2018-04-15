@@ -385,9 +385,9 @@ $(document).ready(function(){
 				var drawCanvas = document.getElementById('canvas');
 				var send_data = $pt_finish_form.serializeArray();
 				send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
+				
 				if(schedule_on_off==1){
 					//PT 일정 완료 처리시
-					send_memo()
 					$.ajax({
 	                    url:'/schedule/finish_schedule/',
 	                    type:'POST',
@@ -396,7 +396,6 @@ $(document).ready(function(){
 	                    beforeSend:function(){
 	                    	AjaxBeforeSend();
 	                    },
-
 	                    //통신성공시 처리
 	                    success:function(data){
 	                    	var jsondata = JSON.parse(data)
@@ -404,6 +403,7 @@ $(document).ready(function(){
 			                  	$('#errorMessageBar').show()
 			                  	$('#errorMessageText').text(jsondata.messageArray)
 			                }else{
+			                	send_memo()
 			                	signImageSend(send_data);
 			                    close_info_popup('cal_popup_planinfo')
 			                    AjaxCompleteSend();

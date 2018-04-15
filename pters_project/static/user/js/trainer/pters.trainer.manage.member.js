@@ -38,21 +38,21 @@ $(document).ready(function(){
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
     $('.alignSelect').change(function(){
-        if($(this).val()=="회원명 가나다 순"){
+        if($(this).val()=="회원명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
             memberListSet('current','name');
             memberListSet('finished','name');
             alignType = 'name'
-        }else if($(this).val()=="남은 횟수 많은 순"){
+        }else if($(this).val()=="남은 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
             memberListSet('current','count','yes');
             alignType = 'countH'
-        }else if($(this).val()=="남은 횟수 적은 순"){
+        }else if($(this).val()=="남은 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             memberListSet('current','count');
             alignType = 'countL'
-        }else if($(this).val()=="시작 일자 과거 순"){
+        }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
             memberListSet('current','date');
             memberListSet('finished','date');
             alignType = 'startP'
-        }else if($(this).val()=="시작 일자 최근 순"){
+        }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
             memberListSet('current','date','yes');
             memberListSet('finished','date','yes');
             alignType = 'startR'
@@ -87,8 +87,21 @@ $(document).ready(function(){
         deleteTypeSelect = "memberinfodelete";
         var selectedUserId = $(this).parent('td').siblings('._id').text();
         var selectedUserName = $(this).parent('td').siblings('._tdname').text();
-        $('#popup_delete_title').text('회원 삭제');
-        $('#popup_delete_question').html('<p>정말 '+selectedUserName+' 회원님을 삭제하시겠습니까?<br>삭제하면 복구할 수 없습니다.</p>');
+        if(Options.language == "KOR"){
+            var text = "회원 삭제"
+            var text2 = "정말 "
+            var text3 = " 회원님을 삭제하시겠습니까?<br>삭제하면 복구할 수 없습니다.</p>"
+        }else if(Options.language == "JPN"){
+            var text = "メンバー削除"
+            var text2 = "<p>"
+            var text3 = "様の情報や記録を削除しますか。<br>復旧できません。</p>"
+        }else if(Options.language == "ENG"){
+            var text =　"Delete Member"
+            var text2 = "<p>Are you sure to delete "
+            var text3 = "'s data?</p>"
+        }
+        $('#popup_delete_title').text(text);
+        $('#popup_delete_question').html(text2+selectedUserName+text3);
 
         
         $('#deleteMemberId').val(selectedUserId);
@@ -112,64 +125,15 @@ $(document).ready(function(){
       $('#shade3').fadeIn('fast');
     });
 
-    /* PC 회원정보보기 아이콘
-    $(document).on('click','img._info_view',function(e){
-        e.stopPropagation()
-        var userID = $(this).parent('td').siblings('._id').text()
-        if($('body').width()<600){
-            open_member_info_popup_mobile(userID)
-        }else if($('body').width()>=600){
-            open_member_info_popup_pc(userID)
-            get_indiv_repeat_info(userID)
-            set_member_lecture_list()
-            $('#info_shift_base, #info_shift_lecture').show()
-            $('#info_shift_schedule').hide()
-            $('#select_info_shift_lecture').css('color','#fe4e65')
-            $('#select_info_shift_schedule').css('color','#282828')
-        }
-    })
-    */
-
-    /* PC 회원정보수정 아이콘
-    $(document).on('click','img._info_modify',function(e){
-        e.stopPropagation()
-        var userID = $(this).parent('td').siblings('._id').text()
-        if($('body').width()<600){
-            open_member_info_popup_mobile(userID)
-        }else if($('body').width()>=600){
-            open_member_info_popup_pc(userID)
-            modify_member_info_pc(userID)
-            get_indiv_repeat_info(userID)
-            set_member_lecture_list()
-            $('#memberInfoPopup_PC input').addClass('input_available').attr('disabled',false);
-            $('button._info_modify').text('완료').attr('data-type',"modify")
-            $('#info_shift_base, #info_shift_lecture').show()
-            $('#info_shift_schedule').hide()
-            $('#select_info_shift_lecture').css('color','#fe4e65')
-            $('#select_info_shift_schedule').css('color','#282828')
-        }
-    })
-    */
-
-    /* PC 회원정보수정 팝업내 버튼
-    $(document).on('click','button._info_modify',function(){
-      var userID = $('#memberId_info_PC').text()
-      var lectureID = $(this).parent('div').attr('data-lecid')
-      //modify_member_info_pc(userID)
-      if($(this).attr('data-type')=="view"){
-        $('#memberInfoPopup_PC input').addClass('input_available').attr('disabled',false);
-        $(this).text('완료').attr('data-type',"modify");
-      }else if($(this).attr('data-type')=="modify"){
-        console.log('수정송신')
-        send_member_modified_data_pc()
-      }else if($(this).attr('data-type')=="resend"){
-
-      }
-    })
-    */
-
     //회원 등록이력 수정 버튼
     $(document).on('click','#memberRegHistory_info_PC img, #memberRegHistory_info img',function(){
+        if(Options.language == "KOR"){
+            var text = "완료"
+        }else if(Options.language == "JPN"){
+            var text = "決定"
+        }else if(Options.language == "ENG"){
+            var text =　"OK"
+        }
         $(this).attr('src','/static/user/res/btn-pt-complete.png');
         if($('#currentMemberList').css('display') == "block"){
           var Data = DB;
@@ -191,7 +155,7 @@ $(document).ready(function(){
             var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
             myRow.addClass('input_available').attr('disabled',false);
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide();
-            $(this).text('완료').attr('data-type',"modify");
+            $(this).text(text).attr('data-type',"modify");
         }else if($(this).attr('data-type')=="modify"){
             send_member_modified_data();
         }else if($(this).attr('data-type')=="resend"){
@@ -396,6 +360,16 @@ $(document).ready(function(){
 
 //#####################회원정보 도움말 팝업 //#####################
     $('._regcount, ._remaincount').mouseenter(function(){
+        if(Options.language == "KOR"){
+            var text = '등록횟수는 회원님께서 계약시 등록하신 횟수를 의미합니다.'
+            var text2 = '남은횟수는 회원님의 등록횟수에서 현재까지 진행완료된 강의 횟수를 뺀 값을 의미합니다.'
+        }else if(Options.language == "JPN"){
+            var text = "登録回数はメンバーが契約時に登録した回数です。"
+            var text2 = "残り回数はメンバーの登録回数から現在まで進行完了した授業回数をひいた値です。"
+        }else if(Options.language == "ENG"){
+            var text =　"Regisration Count means total lesson counts."
+            var text2 = "Remain counts = Registration count - completed lesson count"
+        }
         var LOCTOP = $(this).offset().top;
         var LOCLEFT = $(this).offset().left;
         if($('#currentMemberList').width()>=600){
@@ -403,9 +377,9 @@ $(document).ready(function(){
         };
 
         if($(this).hasClass('_regcount')){
-            $('.instructPopup').text('등록횟수는 회원님께서 계약시 등록하신 횟수를 의미합니다.');
+            $('.instructPopup').text(text);
         }else if($(this).hasClass('_remaincount')){
-            $('.instructPopup').text('남은횟수는 회원님의 등록횟수에서 현재까지 진행완료된 강의 횟수를 뺀 값을 의미합니다.');
+            $('.instructPopup').text(text2);
         }
     });
 
@@ -681,9 +655,19 @@ $(document).ready(function(){
     });
 
     $('#upbutton-modify, #infoMemberModify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
+        if(Options.language == "KOR"){
+            var text = '회원 정보 수정'
+            var text2 = '모든 필수 정보를 입력해주세요'
+        }else if(Options.language == "JPN"){
+            var text = 'メンバー情報変更'
+            var text2 = '全ての必修情報を入力してください。'
+        }else if(Options.language == "ENG"){
+            var text = 'Edit Member Info'
+            var text2 = 'Please fill all input field'
+        }
         if($(this).attr('data-type') == "view" ){
-            $('#uptext3').text('회원 정보 수정');
-            $('#uptext-pc-modify').text('회원 정보 수정');
+            $('#uptext3').text(text);
+            $('#uptext-pc-modify').text(text);
             $(this).find('img').attr('src','/static/user/res/ptadd/btn-complete-checked.png');
             $('#upbutton-modify').attr('data-type','modify');
             $(this).attr('data-type','modify');
@@ -761,7 +745,7 @@ $(document).ready(function(){
             }else{
                 scrollToDom($('#memberInfoPopup'));
                 $('#errorMessageBar').show();
-                $('#errorMessageText').text('모든 필수 정보를 입력해주세요');
+                $('#errorMessageText').text(text2);
                 //입력값 확인 메시지 출력 가능
             }
         }      
@@ -785,6 +769,13 @@ $(document).ready(function(){
 
 
 function float_btn_managemember(option){
+    if(Options.language == "KOR"){
+        var text = '신규 회원 등록'
+    }else if(Options.language == "JPN"){
+        var text = '新規会員登録'
+    }else if(Options.language == "ENG"){
+        var text = 'Register New Member'
+    }
     if(option == 0){ //모바일 플로팅 버튼
         //$("#float_btn").animate({opacity:'1'});
         if($('#mshade').css('display')=='none'){
@@ -804,7 +795,7 @@ function float_btn_managemember(option){
         $('#shade3').fadeIn('fast');
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
         $('#float_btn_wrap').fadeOut();
-        $('#uptext2').text('신규 회원 등록');
+        $('#uptext2').text(text);
         
         scrollToDom($('#page_addmember'));
         if($('body').width()<600){
@@ -820,37 +811,27 @@ function float_btn_managemember(option){
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
     }else if(option == 2){
         alert('float_inner2');
-        /*
-        $('#page_addmember').fadeIn('fast')
-        $('#shade').hide()
-        $('#shade3').fadeIn('fast');
-        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
-        $('#uptext2').text('신규 회원 등록')
-        $('#page-base').fadeOut();
-        $('#page-base-addstyle').fadeIn();
-        scrollToDom($('#page_addmember'))
-        if($('body').width()<600){
-          $('#page_managemember').hide();
-        }
-
-        $('#inputError').css('display','none')
-        $('#fast_check').val('0')
-        $('#form_birth').val('')
-        $('#memberBirthDate, #memberBirthDate_info').html('')
-        birth_dropdown_set()
-        */
     }
 }
 
 //PC버전 회원추가 버튼
 
 function pc_add_member(option){
+    if(Options.language == "KOR"){
+        var text = '신규 회원 등록'
+        var text2 = '회원 재등록'
+    }else if(Options.language == "JPN"){
+        var text = '新規会員登録'
+        var text2 = '再登録'
+    }else if(Options.language == "ENG"){
+        var text = 'New Contract'
+        var text2 = 'Re-Contract'
+    }
     shade_index(300)
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
-        $('#uptext2, #uptext2_PC').text('신규 회원 등록');
+        $('#uptext2, #uptext2_PC').text(text);
 
         $('._ADD_MEMBER_NEW').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -862,7 +843,7 @@ function pc_add_member(option){
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
         $('#shade').fadeIn('fast');
-        $('#uptext2, #uptext2_PC').text('회원 연장 등록');
+        $('#uptext2, #uptext2_PC').text(text2);
 
         $('._ADD_MEMBER_NEW').hide();
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -874,7 +855,7 @@ function pc_add_member(option){
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
         $('#shade').fadeIn('fast');
-        $('#uptext2, #uptext2_PC').text('회원 연장 등록');
+        $('#uptext2, #uptext2_PC').text(text2);
 
         $('._ADD_MEMBER_NEW').hide();
         $('#memberBirthDate, #memberBirthDate_info').html('')
@@ -968,37 +949,53 @@ $('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
 
 //생일입력 드랍다운
 function birth_dropdown_set(){
-    var yearoption = ['<option selected disabled hidden>연도</option>'];
+    if(Options.language == "KOR"){
+        var text = '연도'
+        var text2 = '년'
+        var text3 = '월'
+        var text4 = '일'
+    }else if(Options.language == "JPN"){
+        var text = '年'
+        var text2 = '年'
+        var text3 = '月'
+        var text4 = '日'
+    }else if(Options.language == "ENG"){
+        var text = 'Birth'
+        var text2 = '.'
+        var text3 = '.'
+        var text4 = ''
+    }
+    var yearoption = ['<option selected disabled hidden>'+text+'</option>'];
     for(var i=2018; i>=1908; i--){
-        yearoption.push('<option data-year="'+i+'년'+'">'+i+'년</option>');
+        yearoption.push('<option data-year="'+i+text2+'">'+i+text2+'</option>');
     }
     var birth_year_options = yearoption.join('');
     $('#birth_year, #birth_year_info').html(birth_year_options);
 
 
-    var monthoption = ['<option selected disabled hidden>월</option>'];
+    var monthoption = ['<option selected disabled hidden>'+text3+'</option>'];
     for(var i=1; i<=12; i++){
-        monthoption.push('<option data-month="'+i+'월'+'">'+i+'월</option>');
+        monthoption.push('<option data-month="'+i+text3+'">'+i+text3+'</option>');
     }
     var birth_month_options = monthoption.join('');
     $('#birth_month, #birth_month_info').html(birth_month_options);
 
 
-    var dateoption = ['<option selected disabled hidden>일</option>'];
+    var dateoption = ['<option selected disabled hidden>'+text4+'</option>'];
     for(var i=1; i<=31; i++){
-        dateoption.push('<option data-date="'+i+'일'+'">'+i+'일</option>');
+        dateoption.push('<option data-date="'+i+text4+'">'+i+text4+'</option>');
     }
     var birth_date_options = dateoption.join('');
     $('#birth_date, #birth_date_info').html(birth_date_options);
 
 
     $('#birth_month, #birth_month_info').change(function(){
-        var dateoption = ['<option selected disabled hidden>일</option>'];
+        var dateoption = ['<option selected disabled hidden>'+text4+'</option>'];
         $('#birth_date, #birth_date_info').html("");
         var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31];
-        var month = $(this).val().replace(/월/gi,"");
+        var month = $(this).val().replace(/월|月|.|/gi,"");
         for(var i=1; i<=lastDay[month-1]; i++){
-            dateoption.push('<option data-date="'+i+'일'+'">'+i+'일</option>');
+            dateoption.push('<option data-date="'+i+text4+'">'+i+text4+'</option>');
         }
         var birth_date_options = dateoption.join('');
         $('#birth_date, #birth_date_info').html(birth_date_options);
@@ -1007,9 +1004,9 @@ function birth_dropdown_set(){
     $('#birth_year, #birth_month, #birth_date').change(function(){
         $(this).addClass("dropdown_selected");
         $(this).css('color','#282828');
-        var year = $('#birth_year').val().replace(/년/gi,"");
-        var month = $('#birth_month').val().replace(/월/gi,"");
-        var date = $('#birth_date').val().replace(/일/gi,"");
+        var year = $('#birth_year').val().replace(/년|.|年/gi,"");
+        var month = $('#birth_month').val().replace(/월|.|月/gi,"");
+        var date = $('#birth_date').val().replace(/일|日/gi,"");
         var birthdata = year+'-'+month+'-'+date;
         $('#form_birth').attr('value',birthdata);
     });
@@ -1017,9 +1014,9 @@ function birth_dropdown_set(){
     $('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
         $(this).addClass("dropdown_selected");
         $(this).css('color','#282828');
-        var year = $('#birth_year_info').val().replace(/년/gi,"");
-        var month = $('#birth_month_info').val().replace(/월/gi,"");
-        var date = $('#birth_date_info').val().replace(/일/gi,"");
+        var year = $('#birth_year_info').val().replace(/년|.|年/gi,"");
+        var month = $('#birth_month_info').val().replace(/월|.|月/gi,"");
+        var date = $('#birth_date_info').val().replace(/일|日/gi,"");
         var birthdata = year+'-'+month+'-'+date;
         $('#form_birth_modify').attr('value',birthdata);
     });
@@ -1101,6 +1098,19 @@ function DataFormatting(type){
 
 //DB데이터를 사전형태로 만드는 함수
 function DataFormattingDict(Option){
+    if(Options.language == "KOR"){
+        var text = '진행중 : '
+        var text2 = '종료 : '
+        var text3 = '명'
+    }else if(Options.language == "JPN"){
+        var text = '進行中 : '
+        var text2 = '終了 : '
+        var text3 = '名'
+    }else if(Options.language == "ENG"){
+        var text = 'Ongoing : '
+        var text2 = 'Finished : '
+        var text3 = 'Person'
+    }
     switch(Option){
         case 'name':
             var DBlength = nameArray.length;
@@ -1139,8 +1149,8 @@ function DataFormattingDict(Option){
                                         'sex':finishsexArray[j] 
                                     };
             }
-            $('#currentMemberNum').text("진행중 : "+DBlength+"명");
-            $('#finishMemberNum').text("종료 : "+DBendlength+"명");
+            $('#currentMemberNum').text(text+DBlength+text3);
+            $('#finishMemberNum').text(text2+DBendlength+text3);
         break;
 
         case 'ID':
@@ -1181,14 +1191,24 @@ function DataFormattingDict(Option){
                                     'birth':finishbirthdayArray[j], 
                                     'sex':finishsexArray[j] };
             }
-            $('#currentMemberNum').text("진행중 : "+DBlength+"명");
-            $('#finishMemberNum').text("종료 : "+DBendlength+"명");
+            $('#currentMemberNum').text(text+DBlength+text3);
+            $('#finishMemberNum').text(text2+DBendlength+text3);
         break;
     }
 }
 
 //회원목록을 테이블로 화면에 뿌리는 함수
 function memberListSet (type,option,Reverse){
+    if(Options.language == "KOR"){
+        var text = '소진시까지'
+        var text2 = '이번달 신규회원'
+    }else if(Options.language == "JPN"){
+        var text = '残余回数終わるまで'
+        var text2 = '今月新規メンバー'
+    }else if(Options.language == "ENG"){
+        var text = ''
+        var text2 = 'New Member this month'
+    }
     
     var tbodyStart = '<tbody>';
     var tbodyEnd = '</tbody>';
@@ -1287,12 +1307,12 @@ function memberListSet (type,option,Reverse){
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
         var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2);
         if(end == "9999.12.31"){
-            var end = "소진시까지";
+            var end = text;
         }
 
         var newReg = ""
         if(starts.substr(0,4) == currentYear && Number(starts.substr(4,2)) == currentMonth+1){
-            var newReg = '<img src="/static/user/res/icon-new.png" title="이번달 신규회원" class="newRegImg">';
+            var newReg = '<img src="/static/user/res/icon-new.png" title="'+text2+'" class="newRegImg">';
         }
 
 
@@ -1304,9 +1324,9 @@ function memberListSet (type,option,Reverse){
 
         var npCountImg = ""
         if(npCounts == 0 && rjCounts == 0){
-            var npCountImg = '<img src="/static/user/res/icon-link.png" title="연결됨" class="npCountImg_wait">';
+            var npCountImg = '<img src="/static/user/res/icon-link.png" title="Connected" class="npCountImg_wait">';
         }else if(rjCounts > 0){
-            var npCountImg = '<img src="/static/user/res/icon-alert.png" title="연결 취소" class="npCountImg_x">';
+            var npCountImg = '<img src="/static/user/res/icon-alert.png" title="Disconnected" class="npCountImg_x">';
         }
 
         var yetReg = "";
@@ -1327,9 +1347,9 @@ function memberListSet (type,option,Reverse){
         var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
         var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
         var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">';
-        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">';
-        var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정">';
-        var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="정보">';
+        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="Del">';
+        var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
+        var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
         //var nametd = '<td class="_tdname" data-name="'+name+'">'+name+nameimage+npCountImg+'</td>';
         var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+npCountImg+'</td>';
@@ -1420,6 +1440,16 @@ function check_dropdown_selected(){
 
 //빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택
 function autoDateInput(){
+    if(Options.language == "KOR"){
+        var text = '소진시까지'
+        var text2 = '진행기간을 선택해주세요'
+    }else if(Options.language == "JPN"){
+        var text = '残余回数終わるまで'
+        var text2 = '進行期間を選んでください。'
+    }else if(Options.language == "ENG"){
+        var text = 'No cutoff'
+        var text2 = 'Please enter contract period'
+    }
 
     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택///// 
     var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];
@@ -1456,15 +1486,15 @@ function autoDateInput(){
     $('#memberDue_add_2').val(finishDate);
     $('#memberDue_add_2_fast').val(finishDate);
     if(selectedD==99){
-        $('#memberDue_add_2').val("소진시까지");
+        $('#memberDue_add_2').val(text);
         $('#memberDue_add_2_fast').val("9999-12-31");
     }
 
     if(selectedD==undefined){
-        $('#memberDue_add_2').val("진행기간을 선택해주세요");
+        $('#memberDue_add_2').val(text2);
     }
 
-    if($('#memberDue_add_2').val()!="진행기간을 선택해주세요" && $('#memberDue_add_2').val()!="" ){
+    if($('#memberDue_add_2').val()!=text2 && $('#memberDue_add_2').val()!="" ){
         $('#memberDue_add_2').addClass("dropdown_selected");
     }
     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
@@ -1484,6 +1514,20 @@ function limit_char(e){
 //회원정보////////////////////////////////////////////////////////
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
 function open_member_info_popup_pc(userID,jsondata){
+    if(Options.language == "KOR"){
+        var text = ' 회원님'
+        var text2 = '소진시까지'
+        var text3 = ''
+    }else if(Options.language == "JPN"){
+        var text = '　様'
+        var text2 = '残余回数終わるまで'
+        var text3 = ''
+    }else if(Options.language == "ENG"){
+        var text = ''
+        var text2 = ''
+        var text3 = ''
+    }
+
     if($('#currentMemberList').css('display') == "block"){
       var Data = DB;
     }else if($('#finishedMemberList').css('display') == "block"){
@@ -1497,19 +1541,6 @@ function open_member_info_popup_pc(userID,jsondata){
     $('#shade').fadeIn('fast');
 
     var npCountImg = "";
-    /*
-    if(Data[userID].npCount > 0){
-      var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-np-wait.png" style="width:18px;margin:0 0 5px 3px" title="연결 대기중"> (연결 대기중)</span>'
-    }
-    */
-    
-    /*
-    if(Data[userID].npCount == 0 && Data[userID].rjCount == 0){
-      var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:18px;margin:0 0 5px 3px" title="연결됨"> (연결됨)</span>'
-    }else if(Data[userID].rjCount > 0){
-      var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 취소"> (연결 취소)</span>'
-    }
-    */
 
     var yetReg = "";
     var yet = "";
@@ -1523,15 +1554,15 @@ function open_member_info_popup_pc(userID,jsondata){
 
     var member_info_PC = '\'member_info_PC\'';
     if(Data[userID].sex == "M"){
-      var html = '<img src="/static/user/res/member/icon-male-blue.png">'+Data[userID].name+' 회원님<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('+member_info_PC+')">'+npCountImg;
+      var html = '<img src="/static/user/res/member/icon-male-blue.png">'+Data[userID].name+text+'<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="close" onclick="closePopup('+member_info_PC+')">'+npCountImg;
       $('#memberInfoPopup_PC_label').html(html);
       $('#form_sex_modify').val('M');
     }else if(Data[userID].sex == "W"){
-      var html = '<img src="/static/user/res/member/icon-female-pink.png">'+Data[userID].name+' 회원님<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('+member_info_PC+')">'+npCountImg;
+      var html = '<img src="/static/user/res/member/icon-female-pink.png">'+Data[userID].name+text+'<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="close" onclick="closePopup('+member_info_PC+')">'+npCountImg;
       $('#memberInfoPopup_PC_label').html(html);
       $('#form_sex_modify').val('W');
     }else{
-      var html = '<img src="/static/user/res/member/icon-user.png">'+Data[userID].name+' 회원님<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('+member_info_PC+')">'+npCountImg;
+      var html = '<img src="/static/user/res/member/icon-user.png">'+Data[userID].name+text+'<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="close" onclick="closePopup('+member_info_PC+')">'+npCountImg;
       $('#memberInfoPopup_PC_label').html(html);
       $('#form_sex_modify').val('');
     }
@@ -1677,7 +1708,7 @@ function open_member_info_popup_pc(userID,jsondata){
     //$('#memberBirth_Month_info_PC').text(birth_month)
     //$('#memberBirth_Date_info_PC').text(birth_date)
     if(Data[userID].birth != 'None' && Data[userID].birth != '' ){
-      $('#form_birth_modify').val(birth_year.replace(/년/gi,"-")+birth_month.replace(/월/gi,"-")+birth_date.replace(/일/gi,""))
+      $('#form_birth_modify').val(birth_year.replace(/년|年|.|/gi,"-")+birth_month.replace(/월|月|./gi,"-")+birth_date.replace(/일|日/gi,""))
     }else{
       $('#form_birth_modify').val('')
     }
@@ -1694,8 +1725,8 @@ function open_member_info_popup_pc(userID,jsondata){
     $('#memberEmail_info, #memberEmail_info_PC').val(email)
     $('#memberStart_info_PC').text(Data[userID].start)
     var end = Data[userID].end
-    if(end == "9999년 12월 31일"){
-      var end = "소진시까지"
+    if(end == "9999년 12월 31일" ||end == "9999年12月31日"||end == "9999.12.31"){
+      var end = text2
     }else{
       var end = Data[userID].end
     }
@@ -1967,13 +1998,23 @@ function delete_member_reg_data_pc(){
 
 //회원 환불 정보를 전송한다.
 function refund_member_lecture_data(){
+    if(Options.language == "KOR"){
+        var text = ' 회원님 환불 처리 되었습니다.'
+        var text2 = '환불 금액을 입력해주세요.'
+    }else if(Options.language == "JPN"){
+        var text = '　様払い戻ししました。'
+        var text2 = '払戻金額を入力してください。'
+    }else if(Options.language == "ENG"){
+        var text = 'has been refunded.'
+        var text2 = 'Please input refund'
+    }
     if($('#memberInfoPopup_PC').css('display') == "block"){
         var userID = $('#memberId_info_PC').text();
     }else if($('#memberInfoPopup').css('display') == "block"){
         var userID = $('#memberId').val();
     }
     var lectureID = $('.lectureStateChangePopup').attr('data-leid');
-    var refund_price = $('div.lectureStateChangePopup.popups input[type="number"]').val()
+    var refund_price = $('div.lectureStateChangePopup input[name="refund_price"]').val().replace(/,/gi,'')
     var userName = DB[userID].name
     if(refund_price.length>0){
         $.ajax({
@@ -2019,7 +2060,7 @@ function refund_member_lecture_data(){
                       $('div.lectureStateChangePopup.popups input[type="number"]').val('')
                       console.log('success');
 
-                      alert(userName + ' 회원님 환불 처리 되었습니다.')
+                      alert(userName + text)
                     }
                 },
 
@@ -2030,7 +2071,7 @@ function refund_member_lecture_data(){
                 },
             })
     }else{
-        alert('환불 금액을 입력해주세요.')
+        alert(text2)
     }
 }
 
@@ -2261,9 +2302,38 @@ function set_member_history_list(jsondata){
 }
 
 function draw_member_history_list_table(jsondata,targetHTML){
+    console.log('draw')
+    if(Options.language == "KOR"){
+        var text = '수행일자'
+        var text2 = '진행시간'
+        var text3 = '구분'
+        var text4 = '메모'
+        var text5 = '완료'
+        var text6 = '시작전'
+        var text7 = '시작전'
+        var text9 = '시간'
+    }else if(Options.language == "JPN"){
+        var text = '授業日'
+        var text2 = '進行時間'
+        var text3 = '状態'
+        var text4 = 'メモ―'
+        var text5 = '完了'
+        var text6 = '未完了'
+        var text7 = '未完了'
+        var text9 = '時間'
+    }else if(Options.language == "ENG"){
+        var text = 'Date'
+        var text2 = 'Period'
+        var text3 = 'Status'
+        var text4 = 'Memo'
+        var text5 = 'Fin.'
+        var text6 = 'Yet'
+        var text7 = 'Yet'
+        var text9 = 'h'
+    }
     var $regHistory = targetHTML
-    var result_history_html = ['<div><div>수행일자</div><div>진행시간</div><div>구분</div><div>메모</div></div>']
-    var stateCodeDict = {"PE":"완료","NP":"시작전","IP":"시작전"}
+    var result_history_html = ['<div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>']
+    var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7}
     for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay()
         var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2])
@@ -2277,12 +2347,14 @@ function draw_member_history_list_table(jsondata,targetHTML){
         }
         var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleStartDtArray[i].split(' ')[0]+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
-        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration+'시간</div>'
+        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration+text9+'</div>'
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
         result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
     }
+
     var result_history = result_history_html.join('')
     $regHistory.html(result_history)
+    console.log(result_history_html)
 }
 //회원정보////////////////////////////////////////////////////////
 
@@ -2579,6 +2651,16 @@ function ajax_received_json_data_member_manage(data){
 
 //여러종류의 팝업을 닫는다.
 function closePopup(option){
+    if(Options.language == "KOR"){
+        var text = '회원 정보 조회'
+
+    }else if(Options.language == "JPN"){
+        var text = 'メンバー情報'
+
+    }else if(Options.language == "ENG"){
+        var text = 'Member Info.'
+
+    }
     if(option == 'member_info'){
         //if($('body').width()<600){
         $('#page_managemember').show();
@@ -2589,7 +2671,7 @@ function closePopup(option){
         $('#page-base-modifystyle').fadeOut('fast');
         $('#upbutton-modify, #infoMemberModify').find('img').attr('src','/static/user/res/member/icon-edit.png');
         $('#upbutton-modify, #infoMemberModify').attr('data-type','view')
-        $('#uptext-pc-modify').text('회원 정보 조회')
+        $('#uptext-pc-modify').text(text)
 
         $('#memberInfoPopup').fadeOut('fast')
         $('#memberName_info').attr('readonly',true)
@@ -2663,6 +2745,9 @@ function initialize_add_member_sheet(){
         $('#fast_check').val('1')
     }
     
+    $('.ptaddbox input,#memberDue_add_2').val("");
+    $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
+    $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
 
     $('#form_birth').val('')
 
@@ -2733,10 +2818,23 @@ function get_indiv_repeat_info(userID,jsondata){
 
 //서버로부터 받아온 반복일정을 회원정보 팝업에 그린다.
 function set_indiv_repeat_info(){
+    if(Options.language == "KOR"){
+        var text = '시'
+        var text2 = '시간'
+        var text3 = '반복 : '
+    }else if(Options.language == "JPN"){
+        var text = '時'
+        var text2 = '時間'
+        var text3 = '繰り返し : '
+    }else if(Options.language == "ENG"){
+        var text = ''
+        var text2 = 'h'
+        var text3 = 'Repeat : '
+    }
     var repeat_info_dict= { 'KOR':
                               {'DD':'매일', 'WW':'매주', '2W':'격주',
                                'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
-                              'JAP':
+                              'JPN':
                               {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
                                'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
                               'JAP':
@@ -2755,9 +2853,9 @@ function set_indiv_repeat_info(){
     var schedulesHTML = []
     for(var i=0; i<ptRepeatScheduleIdArray.length; i++){
         var repeat_id = repeat_id_array[i]
-        var repeat_type = repeat_info_dict['KOR'][repeat_type_array[i]]
+        var repeat_type = repeat_info_dict[Options.language][repeat_type_array[i]]
         var repeat_start = repeat_start_array[i].replace(/-/gi,".");
-        var repeat_start_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복 : </span>"
+        var repeat_start_text = "<span class='summaryInnerBoxText_Repeatendtext'>"+text3+"</span>"
         //var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
         var repeat_end_text = ""
         var repeat_end = repeat_end_array[i].replace(/-/gi,".");
@@ -2769,17 +2867,17 @@ function set_indiv_repeat_info(){
                             var repeat_day_info = ""
                             if(repeat_day_info_raw.length>1){
                                 for(var j=0; j<repeat_day_info_raw.length; j++){
-                                    var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+                                    var repeat_day_info = repeat_day_info + '/' + repeat_info_dict[Options.language][repeat_day_info_raw[j]].substr(0,1)
                                 }
                             }else if(repeat_day_info_raw.length == 1){
-                                var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+                                var repeat_day_info = repeat_info_dict[Options.language][repeat_day_info_raw[0]]
                             }
                             if(repeat_day_info.substr(0,1) == '/'){
                                 var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
                             }
                               return repeat_day_info
                           };
-        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)'+'</p>'
+        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+text+' ('+repeat_dur +text2+')'+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'

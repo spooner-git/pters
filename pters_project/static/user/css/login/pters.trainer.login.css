@@ -44,7 +44,7 @@ body{
 
 .button_next_view{
 	position: absolute;
-	bottom: 5px;
+	bottom: 130px;
 	text-align: center;
 	width: 100%;
 }
@@ -52,6 +52,11 @@ body{
 		cursor: pointer;
 		height: 30px;
 	}
+@media(min-width:350px){
+	.button_next_view{
+		bottom:80px;
+	}
+}
 
 nav.main_nav{
 	position:sticky;
@@ -73,9 +78,12 @@ nav.main_nav{
 		max-width: 	1920px;
 		margin: 	0 auto;
 	}
-	.main_nav_content label img{
+	.main_nav_content h1{
+		display: inline;
+	}
+	.main_nav_content h1 img{
 		width: 	100px;
-		margin-top: 	10px;
+		margin-top: 	0px;
 		margin-left: 	25px;
 	}
 	.login_form_nav{
@@ -249,7 +257,7 @@ nav.main_nav{
 		display: inline-block;
 		color: #ffffff;
 		/*border: 1px solid #ffffff;*/
-		width: 45% !important;
+		width: 42.5% !important;
 		margin-right: 14px !important;
 		cursor: pointer;
 		height: 100%;
@@ -260,7 +268,7 @@ nav.main_nav{
 		display: inline-block;
 		color: #ffffff;
 		/*border: 1px solid #ffffff;*/
-		width: 45% !important;
+		width: 42.5% !important;
 		margin-left: 14px !important;
 		cursor: pointer;
 		height: 100%;
@@ -475,8 +483,15 @@ nav.main_nav{
 	    color: #ffffff;
 	    font-size: 10px;
 	}
-
-	.bottomfooter2 p{
-	    margin-bottom:1px;
-	}
+		.bottomfooter2 p{
+		    margin-bottom:1px;
+		}
+		.bottomfooter2 a{
+			text-decoration: none;
+			color: #ffffff;
+		}
+			.bottomfooter2 a:hover, .bottomfooter2 a:focus{
+				color: #fe4e65;
+				text-decoration: none;
+			}
 }
