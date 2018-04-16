@@ -736,7 +736,7 @@
 
   var group_type, $form; 
 
-  $('div.explainbox ').click(function(){
+  $('div.explainbox').click(function(){
       if($(this).find('.explaintype').css('height') == '0px'){
         $(this).find('.explaintype').css('height','auto')
         $(this).find('button').css('visibility','visible')
@@ -755,7 +755,7 @@
 
       $('.outerbox_horizontal').attr('data-view',0)
       $('._step2_label span').text($(this).text())
-      if($(this).text() == "일반 회원 가입"){
+      if($(this).text() == "P.T회원 가입"){
         group_type = 'trainee'
         $form = $('#add-member-id-form')
       }else if($(this).text() == "트레이너 가입"){
