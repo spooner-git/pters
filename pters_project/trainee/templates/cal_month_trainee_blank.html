@@ -15,6 +15,15 @@
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="next_page" value = "{% url 'trainee:trainee_push_ajax' %}">
 </form>
+<form action="{% url 'trainee:pt_add_logic' %}" id="pt-add-form" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="class_id" id="id_class_id" value="{{ request.session.class_id }}">
+    <input type="hidden" name="lecture_id" id="id_lecture_id" value="{{ request.session.lecture_id }}">
+    <input type="hidden" name="training_date" id="id_training_date">
+    <input type="hidden" name="time_duration" id="id_time_duration">
+    <input type="hidden" name="training_time" id="id_training_time">
+    <input type="hidden" name="next_page" value="{% url 'trainee:trainee_push_ajax' %}">
+</form>
 
   <div id="blank_member_popup">
       <label>PTERS에 오신걸 환영합니다!</label>
@@ -239,6 +248,17 @@
             var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
 
             //여기를 가져다 써야함 - hkkim 171021;
+            var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        	var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+            var scheduleNoteArray =  [{% for pt_schedule_note_info in pt_schedule_note %}'{{ pt_schedule_note_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+            var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
 
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
             var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
