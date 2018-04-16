@@ -794,7 +794,7 @@
               alert('사용할 수 없는 email입니다.')
               return;
           }else if(duplicate_check_email == 'none'){
-              alert('email 중복을 확ㅇ니해 주세요.')
+              alert('email 중복을 확인해 주세요.')
               return;
           }
       }else if(duplicate_check == 0){
@@ -1127,10 +1127,10 @@
                     if(id_check_message[0].length>0){
                       var error_msg = id_check_message[0]
                       $('.email_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
-                      //$form.find('#id_duplicate_check').val(0)
+                      $form.find('#email_duplicate_check').val(0)
                     }else{
                       $('.email_confirm').text('사용 가능').css({'display':'inline','color':'green'})
-                      //$form.find('#id_duplicate_check').val(1)
+                      $form.find('#email_duplicate_check').val(1)
                     }
                   },
 
