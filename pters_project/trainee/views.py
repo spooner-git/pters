@@ -280,8 +280,8 @@ def get_lecture_list_by_member_id(context, member_id):
 
             for lecture_list_info in lecture_list_data:
                 try:
-                    member_lecture_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id,
-                                                                      lecture_tb=lecture_list_info.lecture_tb_id)
+                    member_lecture_data = MemberLectureTb.objects.get(member_id=member_id,
+                                                                      lecture_tb=lecture_list_info.lecture_tb_id).exclude(auth_cd='DELETE')
                 except ObjectDoesNotExist:
                     error = '수강 정보 조회에 대한 정보가 없습니다.'
 
@@ -334,9 +334,8 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
 
         for lecture_info in lecture_list:
             try:
-                lecture_info_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'),
-                                                                member_id=member_id,
-                                                                lecture_tb=lecture_info.lecture_tb_id)
+                lecture_info_data = MemberLectureTb.objects.get(member_id=member_id,
+                                                                lecture_tb=lecture_info.lecture_tb_id).exclude(auth_cd='DELETE')
             except ObjectDoesNotExist:
                 lecture_info_data = None
 
