@@ -2559,10 +2559,10 @@ class AddClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         error = None
 
-        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=1)
+        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=1).order_by('order')
 
         for class_type_cd_info in class_type_cd_data:
-            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd, use=1)
+            class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd, use=1).order_by('order')
 
         center_list = CenterTrainerTb.objects.filter(member_id=self.request.user.id, use=1)
 
