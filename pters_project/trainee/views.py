@@ -159,10 +159,14 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
 
 class BlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'index.html'
+    template_name = 'cal_month_trainee_blank.html'
 
     def get_context_data(self, **kwargs):
         context = super(BlankView, self).get_context_data(**kwargs)
+        context = get_trainee_setting_data(context, self.request.user.id)
+        holiday = HolidayTb.objects.filter(use=1)
+        self.request.session['setting_language'] = context['lt_lan_01']
+        context['holiday'] = holiday
         return context
 
 
