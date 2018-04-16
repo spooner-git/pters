@@ -7,16 +7,17 @@ body{
 
 #blank_member_popup{
 	position: absolute;
-	width: 80%;
+	width: 90%;
 	max-width: 500px;
-	height: 35%;
-	max-height: 500px;
+	height: 50%;
+	max-height: 400px;
 	background: #f4f4f4;
 	border:1px solid #cccccc;
 	text-align: center;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%,-50%);
+	z-index: 100;
 }
 	#blank_member_popup label{
 		margin-top: 20px;
@@ -25,9 +26,9 @@ body{
 		color: #fe4e65;
 	}
 	#blank_member_popup p{
-		margin-top: 40px;
+		margin-top: 30px;
 		width: 100%;
-		font-size: 17px;
+		font-size: 15px;
 		color: #282828;
 	}
 	#blank_member_popup span{
