@@ -587,8 +587,10 @@ class CheckMemberEmailView(View):
         if user_email == '':
             self.error = 'email를 입력해주세요.'
 
-        if User.objects.filter(email=user_email).exists():
-            self.error = '이미 가입된 회원 입니다.'
+        if self.error == '':
+            if User.objects.filter(email=user_email).exists():
+                self.error = '이미 가입된 회원 입니다.'
+
         return render(request, self.template_name, {'error': self.error})
 
 
