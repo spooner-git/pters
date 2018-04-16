@@ -93,11 +93,11 @@
                 </div>
                 <div id="loginInfo" class="centermenu_div" style="float:right;cursor:pointer;"　
                 onclick="location.href='{% url 'trainee:mypage_trainee_blank' %}'">
-                    <span class="pcwhere"></span>
+                    <span class="pcwhere"></span>}  v0.1712.0000
                     <span class="pcwho">{{ user.last_name }} {{user.first_name}} 회원<span></span></span>
                 </div>
                 <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
-                <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}  v0.1712.0000</span>
+                <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}</span>
             </div>
         </nav>
 
