@@ -145,7 +145,7 @@
             </ul>
         </div>
     {% endfor %}
-    <input type="text" name="subject_detail_nm" id="id_input_subject_detail_nm" placeholder="상세 과목명">
+    <input type="text" name="subject_detail_nm" id="id_input_subject_detail_nm" placeholder="상세 과목명" style="display: none;">
     <button onclick="goNext('0')">다음</button>
     <button onclick="goNext('home')">취소</button>
 </div>
@@ -307,12 +307,12 @@
           /*드랍다운 설정*/
 
           /*과목 선택*/
-          $(document).on('click','a[data-time=PL]',function(){
+          $(document).on('click','a[data-time=TR]',function(){
             $('#dropdown_subject_1').css('display','inline-block')
             $('#dropdown_subject_2').css('display','none')
           })
 
-          $(document).on('click','a[data-time=TR]',function(){
+          $(document).on('click','a[data-time=PL]',function(){
             $('#dropdown_subject_1').css('display','none')
             $('#dropdown_subject_2').css('display','inline-block')
           })
