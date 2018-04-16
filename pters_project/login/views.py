@@ -51,6 +51,7 @@ class IndexView(TemplateView):
         return context
 
 
+@csrf_exempt
 def login_trainer(request):
     # login 완료시 main page로 이동
     username = request.POST.get('username')

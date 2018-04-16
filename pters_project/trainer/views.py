@@ -1354,8 +1354,16 @@ def delete_member_info_logic(request):
                         schedule_data_finish.update(mod_dt=timezone.now(), use=0)
                     # lecture_info.use = 0
                     # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+                    if lecture_info.state_cd == 'IP':
+                        lecture_info.state_cd = 'PE'
+                        lecture_info.mod_dt = timezone.now()
+                        lecture_info.save()
                     # lecture_info.mod_dt = timezone.now()
                     # lecture_info.save()
+                    member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, auth_cd='WAIT')
+                    if len(member_lecture_list) > 0:
+                        member_lecture_list.update(auth_cd='DELETE', mod_member_id=request.user.id, mod_dt=timezone.now())
+
                 class_lecture_data.update(auth_cd='DELETE', mod_member_id=request.user.id, mod_dt=timezone.now())
 
         except ValueError as e:
@@ -1454,6 +1462,7 @@ def delete_member_lecture_info_logic(request):
             error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
+        lecture_info = class_lecture_info.lecture_tb
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
                                                   state_cd='NP')
         schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
@@ -1471,6 +1480,10 @@ def delete_member_lecture_info_logic(request):
         # if lecture_info.state_cd == 'IP':
         #    lecture_info.state_cd = 'PE'
         class_lecture_info.save()
+        if lecture_info.state_cd == 'IP':
+            lecture_info.state_cd = 'PE'
+            lecture_info.mod_dt = timezone.now()
+            lecture_info.save()
 
     if error is None:
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
