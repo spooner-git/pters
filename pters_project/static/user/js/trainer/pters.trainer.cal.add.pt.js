@@ -67,6 +67,11 @@ $(document).ready(function(){
 
       $(document).on('click','.td00',function(){ //주간달력 미니 팝업
             closeAlarm('pc')
+            if($('._MINI_offadd').css('display')=='block'){
+              addTypeSelect = 'offadd'
+            }else if($('._MINI_ptadd').css('display')=="inline"){
+              addTypeSelect = 'ptadd'
+            }
             var toploc = $(this).offset().top;
             var leftloc = $(this).offset().left;
             var tdwidth = $(this).width();
@@ -786,8 +791,8 @@ function clear_pt_off_add_popup(){
     $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
     
     //상단 일반-반복 토글 스위치 초기화
-    $('.mode_switch_button_wrap div').removeClass('mode_active')
-    $('.mode_switch_button_wrap div:first-child').addClass('mode_active')
+    $('.mode_switch_button_wrap_cal div').removeClass('mode_active')
+    $('.mode_switch_button_wrap_cal div:first-child').addClass('mode_active')
 
     //반복일정 요일선택 버튼 초기화
     selectedDayGroup = []

@@ -994,7 +994,6 @@ function birth_dropdown_set(){
         $('#birth_date, #birth_date_info').html("");
         var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31];
         var month = $(this).val().replace(/월|月|\\./gi,"");
-        console.log($(this).val(),month)
         for(var i=1; i<=lastDay[month-1]; i++){
             dateoption.push('<option data-date="'+i+text4+'">'+i+text4+'</option>');
         }
@@ -1005,7 +1004,6 @@ function birth_dropdown_set(){
     $('#birth_year, #birth_month, #birth_date').change(function(){
         $(this).addClass("dropdown_selected");
         $(this).css('color','#282828');
-        console.log($('#birth_year').val(),$('#birth_month').val())
         var year = $('#birth_year').val().replace(/년|\\.|年/gi,"");
         var month = $('#birth_month').val().replace(/월|\\.|月/gi,"");
         var date = $('#birth_date').val().replace(/일|日/gi,"");
