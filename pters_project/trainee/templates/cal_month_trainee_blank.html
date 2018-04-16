@@ -15,15 +15,6 @@
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="next_page" value = "{% url 'trainee:trainee_push_ajax' %}">
 </form>
-<form action="{% url 'trainee:pt_add_logic' %}" id="pt-add-form" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="class_id" id="id_class_id" value="{{ request.session.class_id }}">
-    <input type="hidden" name="lecture_id" id="id_lecture_id" value="{{ request.session.lecture_id }}">
-    <input type="hidden" name="training_date" id="id_training_date">
-    <input type="hidden" name="time_duration" id="id_time_duration">
-    <input type="hidden" name="training_time" id="id_training_time">
-    <input type="hidden" name="next_page" value="{% url 'trainee:trainee_push_ajax' %}">
-</form>
 
   <div id="blank_member_popup">
       <label>PTERS에 오신걸 환영합니다!</label>

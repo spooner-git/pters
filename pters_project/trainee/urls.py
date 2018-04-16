@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^pt_add_logic/$', views.pt_add_logic, name='pt_add_logic'),
     url(r'^pt_add_array_logic/$', views.pt_add_array_logic, name='pt_add_array_logic'),
     url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
+    url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
 
     url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
 

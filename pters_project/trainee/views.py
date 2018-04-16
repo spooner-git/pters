@@ -643,6 +643,15 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'mypage_trainee_blank.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MyPageBlankView, self).get_context_data(**kwargs)
+        error = None
+
+        return context
+
 # pt 일정 삭제
 def pt_delete_logic(request):
     schedule_id = request.POST.get('schedule_id')
