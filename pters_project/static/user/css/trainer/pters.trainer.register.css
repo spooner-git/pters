@@ -223,7 +223,7 @@ div._step1_label, div._step2_label, div._step3_label{
 			color: #ffffff;
 		}
 
-	.pw_confirm,.id_confirm{
+	.pw_confirm,.id_confirm,.email_confirm{
 		display: none;
 		font-size: 12px;
 	}

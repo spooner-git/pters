@@ -102,13 +102,7 @@
            </div>
 
            <div class="outerbox">
-                <input type="password" name="" placeholder="새 비밀번호"  id="pw_input">
-                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re"><span class="pw_confirm"></span>
-                <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
-           </div>
-
-           <div class="outerbox">
-               <input type="" name="" placeholder="이메일"  id="email_input"> @ 
+               <input type="" name="" placeholder="이메일"  id="email_input"> @
                <input type="" name="" placeholder="이메일 뒷부분"  id="email_input_re" readonly>
                <select class="login_dropdown" id="email_option">
                    <option id="optionnone">선택</option>
@@ -117,7 +111,15 @@
                    <option id="daum">daum.net</option>
                    <option id="self">직접 입력</option>
                </select>
+                <button class="register_button" onclick="javascript:check_email();">중복 확인</button>
+                <span class="email_confirm"></span>
            </div>
+           <div class="outerbox">
+                <input type="password" name="" placeholder="새 비밀번호"  id="pw_input">
+                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re"><span class="pw_confirm"></span>
+                <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
+           </div>
+
 
            <div class="outerbox">
                <span>생일</span>
@@ -704,6 +706,7 @@
         <input type="hidden" name="country" id="newcountry" value="" >
         <input type="hidden" name="address" id="newcity" value="" >
         <input type="hidden" id="id_duplicate_check" value="none" >
+        <input type="hidden" id="email_duplicate_check" value="none" >
         <input type="hidden" name="group_type" id="id_group_type" value="trainee">
     </form>
 
@@ -774,21 +777,32 @@
 
   $('button#registerMember').click(function(){
     var duplicate_check = $form.find('#id_duplicate_check').val()
+    var duplicate_check_email = $form.find('#email_duplicate_check').val()
       if(duplicate_check == 1){
-          if(blank_input_check() == 1){
-              $('.registerbox_add').css('transform','translateX(-400%)')
-              $('._step2_label').css('transform','translateX(-400%)')
+          if(duplicate_check_email == 1){
+              if(blank_input_check() == 1){
+                  $('.registerbox_add').css('transform','translateX(-400%)')
+                  $('._step2_label').css('transform','translateX(-400%)')
 
-              $('.promise_wrap').css('transform','translateX(-50%)')
-              $('._step3_label').css('transform','translateX(-50%)')
-              $('.outerbox_horizontal').attr('data-view',1)
-          }else{
-            alert(blank_input_check(),'---')
+                  $('.promise_wrap').css('transform','translateX(-50%)')
+                  $('._step3_label').css('transform','translateX(-50%)')
+                  $('.outerbox_horizontal').attr('data-view',1)
+              }else{
+                alert(blank_input_check(),'---')
+              }
+          }else if(duplicate_check_email == 0){
+              alert('사용할 수 없는 email입니다.')
+              return;
+          }else if(duplicate_check_email == 'none'){
+              alert('email 중복을 확ㅇ니해 주세요.')
+              return;
           }
       }else if(duplicate_check == 0){
-          alert('사용할 수 없는 아이디')
+          alert('사용할 수 없는 아이디입니다.')
+          return;
       }else if(duplicate_check == 'none'){
-          alert('중복 체크 필요')
+          alert('id 중복을 확인해주세요.')
+          return;
       }
 
       
@@ -1095,6 +1109,42 @@
             })
     }
 
+
+    function check_email(){
+        $.ajax({
+                url:'/login/check_member_email/',
+                type:'POST',
+                data:{"email" : $('#id_email').val() },
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    var id_check_message = jsondata.id_check_result
+                    if(id_check_message[0].length>0){
+                      var error_msg = id_check_message[0]
+                      $('.email_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
+                      //$form.find('#id_duplicate_check').val(0)
+                    }else{
+                      $('.email_confirm').text('사용 가능').css({'display':'inline','color':'green'})
+                      //$form.find('#id_duplicate_check').val(1)
+                    }
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                  },
+
+                //통신 실패시 처리
+                error:function(){
+                  alert("에러: 서버 통신 실패")
+                },
+            })
+    }
 
 
 
