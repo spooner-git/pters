@@ -446,9 +446,11 @@ $(document).ready(function(){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray)
                         }else{
-                            if(jsondata.push_info != ''){
-                                for (var i=0; i<jsondata.pushArray.length; i++){
-                                    send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                            if(addTypeSelect=="ptadd") {
+                                if (jsondata.push_info != '') {
+                                    for (var i = 0; i < jsondata.pushArray.length; i++) {
+                                        send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                                    }
                                 }
                             }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
@@ -508,46 +510,7 @@ $(document).ready(function(){
          }
       })
 
-    function send_push(push_server_id, intance_id, message, badge_counter){
 
-			$.ajax({
-			  url: 'https://fcm.googleapis.com/fcm/send',
-			  type : 'POST',
-			  contentType : 'application/json',
-			  dataType: 'json',
-			   headers : {
-					Authorization : 'key=' + push_server_id
-				},
-				data: JSON.stringify({
-					"to": intance_id,
-					"notification": {
-						"title":"PT 일정 알림",
-						"body":message,
-                        "badge": badge_counter,
-    					"sound": "default"
-					}
-				}),
-
-			  beforeSend:function(){
-				console.log('test_ajax')
-
-			  },
-
-			  success:function(response){
-				  console.log(response);
-			  },
-
-			  complete:function(){
-
-			  },
-
-			  error:function(){
-				console.log(push_server_id)
-				console.log(intance_id)
-				console.log('server error')
-			  }
-			})
-		}
 
       //OFF반복일정 확인 팝업 "아니오" 눌렀을때 (선택지: 반복 설정 다시 하겠다)
       $('#popup_btn_repeatconfirm_no').click(function(){
@@ -909,6 +872,11 @@ function ajaxRepeatConfirmSend(){
                   $('#errorMessageText').text(jsondata.messageArray)
                 }else{
 
+                    if(jsondata.push_info != ''){
+                        for (var i=0; i<jsondata.pushArray.length; i++){
+                            send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                        }
+                    }
                   ajax_received_json_data(jsondata)
                 }
               },
@@ -1779,3 +1747,43 @@ function classDatesTrainer(){
   };
 }
 
+function send_push(push_server_id, intance_id, message, badge_counter){
+
+    $.ajax({
+      url: 'https://fcm.googleapis.com/fcm/send',
+      type : 'POST',
+      contentType : 'application/json',
+      dataType: 'json',
+       headers : {
+            Authorization : 'key=' + push_server_id
+        },
+        data: JSON.stringify({
+            "to": intance_id,
+            "notification": {
+                "title":"PT 일정 알림",
+                "body":message,
+                "badge": badge_counter,
+                "sound": "default"
+            }
+        }),
+
+      beforeSend:function(){
+        console.log('test_ajax')
+
+      },
+
+      success:function(response){
+          console.log(response);
+      },
+
+      complete:function(){
+
+      },
+
+      error:function(){
+        console.log(push_server_id)
+        console.log(intance_id)
+        console.log('server error')
+      }
+    })
+}

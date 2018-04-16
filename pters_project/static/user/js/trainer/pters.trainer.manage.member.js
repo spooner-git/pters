@@ -325,6 +325,12 @@ $(document).ready(function(){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray);
                         }else{
+
+								if(jsondata.push_info != ''){
+									for (var i=0; i<jsondata.pushArray.length; i++){
+										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+									}
+								}
                             $('#errorMessageBar').hide();
                             $('#errorMessageText').text('');
                             var userID = $('#memberId_info_PC').text();
