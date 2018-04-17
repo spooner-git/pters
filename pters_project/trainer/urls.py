@@ -71,6 +71,7 @@ urlpatterns = [
     url(r'^sales_setting/$', views.SalesSettingView.as_view(), name='sales_setting'),
     url(r'^class_setting/$', views.ClassSettingView.as_view(), name='class_setting'),
     url(r'^language_setting/$', views.LanguageSettingView.as_view(), name='language_setting'),
+    url(r'^help_setting/$', views.HelpPtersView.as_view(), name='help_setting'),
     url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
     url(r'^trainer_setting_ajax/$', views.TrainerSettingViewAjax.as_view(), name='trainer_setting_ajax'),
 
