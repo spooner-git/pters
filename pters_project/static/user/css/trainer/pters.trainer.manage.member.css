@@ -940,7 +940,7 @@ select:focus > option:checked {
 	}
 
 	.ymdText-pc-add-member-wrap{
-		display: inline;
+		display: inline-block;
 		line-height: 33px;
 		position: relative;
 		margin-left: 10px;
