@@ -292,7 +292,7 @@ def get_lecture_list_by_member_id(context, member_id):
                 else:
                     error = None
 
-            if error is None:
+            if error is None and class_lecture_info.lecture_counts > 0:
                 class_lecture_info.class_type_name = pt_type_name.common_cd_nm
 
                 if class_lecture_info.class_tb.subject_detail_nm is not None and class_lecture_info.class_tb.subject_detail_nm != '':

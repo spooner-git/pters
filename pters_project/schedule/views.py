@@ -1042,6 +1042,15 @@ def add_repeat_schedule_confirm(request):
                         else:
                             lecture_info.state_cd = 'PE'
                         lecture_info.mod_dt = timezone.now()
+
+                        lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+                        if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
+                            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
+                                                               - len(lecture_schedule_data)
+                        else:
+                            error = '예약 가능한 횟수를 확인해주세요.'
+                            raise ValidationError()
+
                         lecture_info.save()
 
             except TypeError as e:
@@ -1056,6 +1065,9 @@ def add_repeat_schedule_confirm(request):
                 error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
             if error is None:
                 information = '반복일정 등록이 취소됐습니다.'
+            request.session['push_info'] = ''
+            request.session['lecture_id'] = ''
+
         else:
             member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
             # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
@@ -1071,6 +1083,9 @@ def add_repeat_schedule_confirm(request):
                 request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
                                                + '~' + str(end_date) + ' PT 반복일정을 등록했습니다'
                 request.session['lecture_id'] = lecture_id
+            else:
+                request.session['push_info'] = ''
+                request.session['lecture_id'] = ''
             information = '반복일정 등록이 완료됐습니다.'
 
     # print(error)
@@ -1189,8 +1204,11 @@ def delete_repeat_schedule_logic(request):
 
         if en_dis_type == '1':
             request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-                                           + '~' + str(end_date) + ' PT 반복일정을 등록했습니다'
+                                           + '~' + str(end_date) + ' PT 반복일정을 삭제했습니다'
             request.session['lecture_id'] = delete_repeat_schedule.lecture_tb_id
+        else:
+            request.session['push_info'] = ''
+            request.session['lecture_id'] = ''
 
         return redirect(next_page)
     else:
