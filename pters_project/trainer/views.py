@@ -658,6 +658,13 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
 
         return context
 
+class HelpPtersView(AccessTestMixin, TemplateView):
+    template_name = 'setting_help.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HelpPtersView, self).get_context_data(**kwargs)
+
+        return context
 
 class DeleteAccountView(AccessTestMixin, TemplateView):
     template_name = 'delete_account_form.html'
