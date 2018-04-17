@@ -221,7 +221,7 @@
                             <a href="{% url 'home' %}" style="width:100%;height: 100%;z-index: 1"></a>
                             <div style="z-index: -1"><img src={% static_url "user/res/icon-pf.png" %} alt="#"></div>
                             <div id="user_name">{{user.last_name}} {{user.first_name}}
-                                <span class="KRtext">코치님</span><span class="JPtext">様</span><span class="ENtext"></span>
+                                <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
                             </div>
                             <div id="welcome">
                                 <span class="KRtext">안녕하세요!</span>
@@ -258,14 +258,14 @@
                             <a class="sidebar_text __calSelect">
                             </a>
                         </div>
-                        <div class="sidebar_div" style="height: 100%;"></div>
-                        <div class="sidebar_div sidebar_div_last">
+                        <div style="height: 100%;border-top:0.5px solid #cccccc;background:#ffffff;"></div>
+                        <div class="sidebar_div_last">
                           <div class="sidebar_div_last1" onclick="sideGoPage('trainer_setting')">
                             <img src="{% static_url "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
                             <a class="sidebar_text __setting">
                             </a>
                           </div>
-                          <div class="sidebar_div_last2">
+                          <div class="sidebar_div_last2" onclick="sideGoPage('help_setting')">
                             <img src={% static_url "user/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon">
                           </div>
                         </div>

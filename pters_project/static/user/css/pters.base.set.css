@@ -156,7 +156,7 @@ a:focus, a:hover{
     background-color: #ffffff;
     cursor: pointer;
 }
-    .sidebar_div:hover,.sidebar_div:active,.sidebar_div:focus{
+    .sidebar_div:hover, .sidebar_div:active, .sidebar_div:focus, .sidebar_div_last1:hover, .sidebar_div_last2:hover,.sidebar_div_last1:active, .sidebar_div_last2:active{
         color: #fe4e65 !important;
         background: #eaeaea !important;
     }
@@ -164,24 +164,31 @@ a:focus, a:hover{
 
 .sidebar_div_last{
    position: absolute;
+   display: table;
    bottom: 0%;
    width: 100%;
    border-top: 0px;
+   background: #ffffff;
 }
 
 .sidebar_div_last1{
+    position: relative;
+    display: table-cell;
     width: 80%;
-    border-top: 0.5px solid #cccccc
+    border-top: 0.5px solid #cccccc;
+    border-right: 5px solid #ffffff;
+    cursor: pointer;
 }
 
 .sidebar_div_last2{
-    position: absolute;
-    right: 0%;
-    top: 0%;
-    width: 16.7%;
+    position: relative;
+    display: table-cell;
+    width: 20%;
     height: 50px;
     margin: auto;
-    border-top: 0.5px solid #cccccc
+    border-top: 0.5px solid #cccccc;
+    border-left: 2px solid #ffffff;
+    cursor: pointer;
 }
 
 .sidebar_icon_setting{
