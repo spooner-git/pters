@@ -9,8 +9,9 @@
 
 
 {% block content %}
-  <form action="/trainer/update_setting_language/" id="update-setting-inquire-form" method="post">
-    <input hidden type="" name="inquire_type" id="id_inquire_type">
+  <form action="/login/question_reg/" id="update-setting-inquire-form" method="post">
+    <input type="hidden" name="next_page" value="/trainer/help_setting/">
+    <input type="hidden" name="inquire_type" id="id_inquire_type">
     <div id="help_label" class="settingMenu wrap800">
       <p class="settingText">PTERS 이용 문의</p>
       <p class="settingText2">도움이 필요하신 분께서는 아래 양식을 작성해주세요.</p>
@@ -24,10 +25,10 @@
           <span>문의 유형 : </span>
           <select>
             <option disabled selected>선택</option>
-            <option>기능 오류</option>
-            <option>사용법 문의</option>
-            <option>기능 제안</option>
-            <option>기타</option>
+            <option value="ERROR">기능 오류</option>
+            <option value="USAGE">사용법 문의</option>
+            <option value="SUGGEST">기능 제안</option>
+            <option value="OTHER">기타</option>
           </select>
         </div>
         <div class="inquire_type_wrap"><p>제목 : </p><input type="" name="inquire_subject" placeholder=" 문의 제목을 입력해주세요."></div>
@@ -67,9 +68,11 @@
           })
 
           $('#upbutton-x, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_setting/"
+            location.href="/login/question_reg/"
           })
 
+          var messageArray = [{% for message in messages %}{% if message.tags == "error" %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endif %}{% endfor %}];
+          var helpInfoArray = [{% for message in messages %}{% if message.tags == "info" %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endif %}{% endfor %}];
 
         </script>
         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.setting.language.js" %}></script>

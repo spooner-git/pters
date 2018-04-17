@@ -51,4 +51,7 @@ urlpatterns = [
     url(r'^add_push_token/$', views.AddPushTokenView.as_view(), name='add_push_token'),
     url(r'^clear_badge_counter/$', views.clear_badge_counter_logic, name='clear_badge_counter'),
 
+
+
+    url(r'^question_reg/$', views.question_reg_logic, name='question_reg'),
 ]

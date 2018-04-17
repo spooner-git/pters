@@ -96,3 +96,17 @@ class PushInfoTb(models.Model):
     class Meta:
         managed = False
         db_table = 'PUSH_INFO_TB'
+
+
+class QATb(models.Model):
+    qa_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    qa_type_cd = models.CharField(db_column='QA_TYPE_CD', max_length=45, blank=True, null=True, default='')  # Field name made lowercase.
+    title = models.CharField(db_column='TITLE', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
+    contents = models.CharField(db_column='CONTENTS', max_length=1000, blank=True, null=True, default='')  # Field name made lowercase.
+    status = models.CharField(db_column='STATUS', max_length=45, blank=True, null=True, default='')  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'QA_TB'

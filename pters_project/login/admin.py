@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 
-from login.models import CommonCdTb, PushInfoTb
+from login.models import CommonCdTb, PushInfoTb, QATb
 from login.models import LogTb
 from login.models import MemberTb
 from login.models import HolidayTb
@@ -47,4 +47,9 @@ class HolidayTbAdmin(admin.ModelAdmin):
 
 @admin.register(PushInfoTb)
 class PushInfoTbAdmin(admin.ModelAdmin):
-    list_display = ('push_info_id', 'member', 'token','badge_counter', 'last_login', 'use')
+    list_display = ('push_info_id', 'member', 'token', 'badge_counter', 'last_login', 'use')
+
+
+@admin.register(QATb)
+class QATbAdmin(admin.ModelAdmin):
+    list_display = ('qa_id', 'member', 'qa_type_cd', 'title', 'contents', 'status', 'use')
