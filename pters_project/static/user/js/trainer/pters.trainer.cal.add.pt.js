@@ -65,7 +65,7 @@ $(document).ready(function(){
               }
       });
 
-      $(document).on('click','.td00',function(){ //주간달력 미니 팝업
+      $(document).on('click','.td00, .td30',function(){ //주간달력 미니 팝업
             closeAlarm('pc')
             if($('._MINI_offadd').css('display')=='block'){
               addTypeSelect = 'offadd'
@@ -107,7 +107,7 @@ $(document).ready(function(){
             //minipopup 위치 보정
 
             if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none')){
-              $('.td00').css('background','transparent')
+              //$('.td00').css('background','transparent')
               closeMiniPopupByChange()
               $(this).find('div').addClass('blankSelected')
               $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
@@ -120,42 +120,84 @@ $(document).ready(function(){
                 $('._MINI_offadd').show()
                 $('._MINI_ptadd').hide()
               }
-              var tdinfo = $(this).attr('id').split('_');
-              var yy = tdinfo[0];
-              var mm = tdinfo[1];
-              var dd = tdinfo[2];
-              var hh = tdinfo[3];
-              var hh1 = Number(tdinfo[3])+1;
-              var yy0 = tdinfo[0];
-              var mm0 = tdinfo[1];
-              var dd0 = tdinfo[2];
-              if(yy0.length<2){var yy0 = '0'+String(tdinfo[0])};
-              if(mm0.length<2){var mm0 = '0'+String(tdinfo[1])};
-              if(dd0.length<2){var dd0 = '0'+String(tdinfo[2])};
-              if(Options.language == "KOR"){
-                var text = yy+'년 '+mm+'월 '+dd+'일 '+hh+':00 ~ '+hh1+':00'
-              }else if(Options.language == "JPN"){
-                var text = yy+'年 '+mm+'月 '+dd+'日 '+hh+':00 ~ '+hh1+':00'
-              }else if(Options.language == "ENG"){
-                var text = yy+'. '+mm+'. '+dd+'. '+hh+':00 ~ '+hh1+':00'
+              if(Options.hourunit == 30){
+                  var tdinfo = $(this).attr('id').split('_');
+                  var yy = tdinfo[0];
+                  var mm = tdinfo[1];
+                  var dd = tdinfo[2];
+                  var hh = tdinfo[3];
+                  var min = tdinfo[4];
+                  if(min == '00'){
+                    var hh1 = Number(tdinfo[3]);
+                    var min1 = '30'
+                  }else if(min == "30"){
+                    var hh1 = Number(tdinfo[3])+1;
+                    var min1 = '00'
+                  }
+                  var yy0 = tdinfo[0];
+                  var mm0 = tdinfo[1];
+                  var dd0 = tdinfo[2];
+                  if(yy0.length<2){var yy0 = '0'+String(tdinfo[0])};
+                  if(mm0.length<2){var mm0 = '0'+String(tdinfo[1])};
+                  if(dd0.length<2){var dd0 = '0'+String(tdinfo[2])};
+                  if(Options.language == "KOR"){
+                    var text = yy+'년 '+mm+'월 '+dd+'일 '+hh+':'+min+' ~ '+hh1+':'+ min1
+                  }else if(Options.language == "JPN"){
+                    var text = yy+'年 '+mm+'月 '+dd+'日 '+hh+':'+min+' ~ '+hh1+':'+ min1
+                  }else if(Options.language == "ENG"){
+                    var text = yy+'. '+mm+'. '+dd+'. '+hh+':'+min+' ~ '+hh1+':'+ min1
+                  }
+                  $('#datetext_mini').text(text).val(yy0+'-'+mm0+'-'+dd0)
+                  timeGraphSet("class","pink","mini");  //시간 테이블 채우기
+                  timeGraphSet("off","grey","mini")
+                  startTimeSet("mini");  //일정등록 가능한 시작시간 리스트 채우기
+                  $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
+                  $("#id_training_time").val(hh+':'+min+':00.000000');
+                  $("#id_time_duration").val(1)
+                  $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
+                  $("#id_training_time_off").val(hh+':'+min+':00.000000');
+                  durTimeSet(hh,"mini");
+              }else if(Options.hourunit == 60){
+                  var tdinfo = $(this).attr('id').split('_');
+                  var yy = tdinfo[0];
+                  var mm = tdinfo[1];
+                  var dd = tdinfo[2];
+                  var hh = tdinfo[3];
+                  var min = tdinfo[4];
+                  var hh1 = Number(tdinfo[3])+1;
+                  var min1 = '00'
+                  var yy0 = tdinfo[0];
+                  var mm0 = tdinfo[1];
+                  var dd0 = tdinfo[2];
+                  if(yy0.length<2){var yy0 = '0'+String(tdinfo[0])};
+                  if(mm0.length<2){var mm0 = '0'+String(tdinfo[1])};
+                  if(dd0.length<2){var dd0 = '0'+String(tdinfo[2])};
+                  if(Options.language == "KOR"){
+                    var text = yy+'년 '+mm+'월 '+dd+'일 '+hh+':'+min+' ~ '+hh1+':'+ min1
+                  }else if(Options.language == "JPN"){
+                    var text = yy+'年 '+mm+'月 '+dd+'日 '+hh+':'+min+' ~ '+hh1+':'+ min1
+                  }else if(Options.language == "ENG"){
+                    var text = yy+'. '+mm+'. '+dd+'. '+hh+':'+min+' ~ '+hh1+':'+ min1
+                  }
+                  $('#datetext_mini').text(text).val(yy0+'-'+mm0+'-'+dd0)
+                  timeGraphSet("class","pink","mini");  //시간 테이블 채우기
+                  timeGraphSet("off","grey","mini")
+                  startTimeSet("mini");  //일정등록 가능한 시작시간 리스트 채우기
+                  $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
+                  $("#id_training_time").val(hh+':'+min+':00.000000');
+                  $("#id_time_duration").val(1)
+                  $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
+                  $("#id_training_time_off").val(hh+':'+min+':00.000000');
+                  durTimeSet(hh,"mini");
               }
-              $('#datetext_mini').text(text).val(yy0+'-'+mm0+'-'+dd0)
-              timeGraphSet("class","pink","mini");  //시간 테이블 채우기
-              timeGraphSet("off","grey","mini")
-              startTimeSet("mini");  //일정등록 가능한 시작시간 리스트 채우기
-              $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
-              $("#id_training_time").val(hh+':00:00.000000');
-              $("#id_time_duration").val(1)
-              $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
-              $("#id_training_time_off").val(hh+':00:00.000000');
-              durTimeSet(hh,"mini");
+              
             }
       })
 
       $('#page-addplan-pc').click(function(){console.log(addTypeSelect)})
 
       if($('#calendar').width()<=600){
-          $(document).off('click','.td00')
+          $(document).off('click','.td00, .td30')
       }
 
       $('#typeSelector .toggleBtnWrap').click(function(){
@@ -198,7 +240,7 @@ $(document).ready(function(){
 
       function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
           var selectedDuration = Number(duration)
-          var selectedTime = $('.blankSelected').parent('.td00').attr('id').split('_')
+          var selectedTime = $('.blankSelected').parent('div').attr('id').split('_')
           var yy = Number(selectedTime[0])
           var mm = Number(selectedTime[1])
           var dd = Number(selectedTime[2])
@@ -213,7 +255,7 @@ $(document).ready(function(){
       function closeMiniPopupByChange(){
         $("#id_time_duration_off").val("")
         $('#page-addplan-pc').fadeOut();
-        $('.td00').find('div').removeClass('blankSelected blankSelected_addview')
+        $('.blankSelected').removeClass('blankSelected blankSelected_addview')
         clear_pt_off_add_popup_mini()
       }
 
@@ -1258,7 +1300,7 @@ function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하
     var planheight = 30;
       if($calendarWidth>=600){
         //var planheight = 46;
-        var planheight = 43;
+        var planheight = 58;
     }
     var classlen = classTimeArray.length;
     $('#calendar').css('display','none');
@@ -1303,7 +1345,7 @@ function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하
 function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   var planheight = 30;
     if($calendarWidth>=600){
-      var planheight = 46;
+      var planheight = 60;
   }
   var offlen = offTimeArray.length;
   $('#calendar').css('display','none');
@@ -1470,7 +1512,8 @@ function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우�
     case "class" :
       var DateDataArray = classDateData;
       var TimeDataArray = classTimeData;
-    $('.tdgraph,.tdgraph_mini').removeClass('greytimegraph').removeClass('pinktimegraph')  
+      //$('.tdgraph_'+Options.hourunit+', .tdgraph_mini').removeClass('greytimegraph').removeClass('pinktimegraph')
+      $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph')
     break;
     case "off" :
       var DateDataArray = offDateData;

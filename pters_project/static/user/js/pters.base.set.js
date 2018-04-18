@@ -606,6 +606,9 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
       }else if(eDate == sDate+1 && eHour == 0){
         var dura = 24-sHour
       }
+      if(Math.abs(etime[0] - stime[0]) == 30){
+        var dura = '0.5'
+      }
 
 
       if(option=="class"){
