@@ -173,14 +173,13 @@ $(document).ready(function(){
 				$('#popup_info2').text(infoText2)
 				$('#popup_text1 span').addClass("limited")
 				$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
-				console.log('if디버깅:',info2[0],currentHour,Options.cancellimit)
 			}else{
 				var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-				var infoText2 = info2[0]+"시 예약 취소 하시겠습니까?"
+				var infoText2 = info2[0]+"시에 예약 되어있습니다. <br> (예약 및 취소는 "+availableStartTime+'시 ~ '+availableEndTime+'시에 가능합니다.)'
 				$('#popup_info').text(infoText)
-				$('#popup_info2').text(infoText2)
+				$('#popup_info2').html(infoText2)
+				$('#popup_sign_img, #popup_text1').css('display','none')
 				$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
-				console.log('else디버깅:',info2[0],currentHour,Options.cancellimit)
 			}
 		}else if($(this).find('div').hasClass('greydateMytime')){
 			$("#cal_popup").fadeIn('fast').css({'z-index':'103'});
