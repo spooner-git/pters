@@ -643,6 +643,9 @@ img,a,div,span,p{
 	font-weight: bold;
 	height: 32px;
 }
+#popup_info2{
+	height: 40px;
+}
 
 #popup_info3_memo{
 	color: #fe4e65 !important;
@@ -689,6 +692,7 @@ img,a,div,span,p{
 	position: relative;
 	height: 50px;
 	border-top: 1px solid #a2a2a2;
+	cursor: pointer;
 }
 
 .popup_inner:hover{
@@ -702,7 +706,6 @@ img,a,div,span,p{
 	line-height: 55px;
 	font-size: 14px;
 	font-weight: bold;
-	cursor: pointer;
 }
 
 .limited{
