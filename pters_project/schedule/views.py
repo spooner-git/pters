@@ -459,7 +459,7 @@ def add_schedule_logic(request):
 
     if error is None:
         # 최초 날짜 값 셋팅
-        time_duration_temp = class_info.class_hour*int(schedule_time_duration)*60
+        time_duration_temp = class_info.class_hour*int(schedule_time_duration)
 
         try:
             schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time, '%Y-%m-%d %H:%M:%S.%f')
@@ -874,7 +874,7 @@ def add_repeat_schedule_logic(request):
                                                                      + ' ' + repeat_schedule_time,
                                                                      '%Y-%m-%d %H:%M:%S.%f')
 
-                time_duration_temp = class_info.class_hour*int(repeat_schedule_time_duration)*60
+                time_duration_temp = class_info.class_hour*int(repeat_schedule_time_duration)
                 schedule_end_datetime = schedule_start_datetime + \
                                         datetime.timedelta(minutes=int(time_duration_temp))
             except ValueError as e:

@@ -895,7 +895,7 @@ def pt_add_logic(request):
             error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
-        time_duration_temp = class_info.class_hour*int(time_duration)*60
+        time_duration_temp = class_info.class_hour*int(time_duration)
         start_date = datetime.datetime.strptime(training_date+' '+training_time, '%Y-%m-%d %H:%M:%S.%f')
         end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
 
@@ -1044,7 +1044,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             error = 'class가 존재하지 않습니다'
 
     if error is None:
-        time_duration_temp = class_info.class_hour*int(pt_schedule_time_duration)*60
+        time_duration_temp = class_info.class_hour*int(pt_schedule_time_duration)
         start_date = datetime.datetime.strptime(pt_schedule_date+' '+pt_schedule_time, '%Y-%m-%d %H:%M:%S.%f')
         end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
 
