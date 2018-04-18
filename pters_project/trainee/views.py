@@ -884,20 +884,20 @@ def pt_add_logic(request):
     elif training_time == '':
         error = '시작 시간을 선택해 주세요.'
 
-    if error is None:
-        if int(time_duration) > 1:
-            error = '진행 시간은 1시간만 선택 가능합니다.'
-
-    if error is None:
-
-        start_date = datetime.datetime.strptime(training_date+' '+training_time, '%Y-%m-%d %H:%M:%S.%f')
-        end_date = start_date + datetime.timedelta(hours=int(time_duration))
+    # if error is None:
+    #    if int(time_duration) > 1:
+    #        error = '진행 시간은 1시간만 선택 가능합니다.'
 
     if error is None:
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
             error = '강좌 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        time_duration_temp = class_info.class_hour*int(time_duration)
+        start_date = datetime.datetime.strptime(training_date+' '+training_time, '%Y-%m-%d %H:%M:%S.%f')
+        end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
 
     if error is None:
         try:
@@ -1038,9 +1038,15 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         error = '시작 시간을 선택해 주세요.'
 
     if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = 'class가 존재하지 않습니다'
 
+    if error is None:
+        time_duration_temp = class_info.class_hour*int(pt_schedule_time_duration)
         start_date = datetime.datetime.strptime(pt_schedule_date+' '+pt_schedule_time, '%Y-%m-%d %H:%M:%S.%f')
-        end_date = start_date + datetime.timedelta(hours=int(pt_schedule_time_duration))
+        end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
 
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=1)
@@ -1068,11 +1074,6 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         if lecture_info.member_id != str(user_id):
             error = '회원 정보가 일치하지 않습니다.'
 
-    if error is None:
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
 
     if error is None:
         if lecture_info.lecture_avail_count == 0:
@@ -1870,7 +1871,7 @@ def get_trainee_schedule_input_lecture(class_id, member_id):
             error = None
             try:
                 MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
-                                            member_id=member_id,auth_cd='VIEW', use=1)
+                                            member_id=member_id, auth_cd='VIEW', use=1)
             except ObjectDoesNotExist:
                 error = 'View 권한 없음'
             if error is None:
