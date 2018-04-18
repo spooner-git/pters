@@ -74,7 +74,7 @@
           })
 
           $('#upbutton-x, ._button_Prev').click(function(){
-            location.href="/login/question_reg/"
+            location.href= document.referrer;
           })
 
           var messageArray = [{% for message in messages %}{% if message.tags == "error" %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endif %}{% endfor %}];
