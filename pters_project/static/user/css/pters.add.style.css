@@ -698,12 +698,12 @@ button._info_delete_img{
 
 #memberSearch_add{
 	display: table-cell;
-	width: 84%;
+	width: 82%;
 }
 
 #memberSearchButton{
 	display: table-cell;
-	width: 40px;
+	width: 45px;
 	height: 35px;
 	background: #282828;
 	color: #ffffff;
@@ -814,6 +814,12 @@ option{
 	border-radius: 10%;
 	cursor: pointer;
 }
+	@media(max-width: 350px){
+		.pricebuttonchild{
+			font-size: 11px;
+			width: 16%;
+		}
+	}
 
 .pricebuttonchild:active{
 	background: #fe4e65;
