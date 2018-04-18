@@ -5,6 +5,19 @@ html,body{
     background: #f4f4f4;
 }
 
+#how_to_use_pters{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background: #f4f4f4;
+    width: 90%;
+    max-width: 600px;
+    height: 90%;
+    max-height: 720px;
+    z-index: -10;
+}
+
 .ajaxloadingPC{
     position: fixed;
     display: none;
@@ -184,7 +197,7 @@ a:focus, a:hover{
     position: relative;
     display: table-cell;
     width: 20%;
-    height: 50px;
+    /*height: 50px;*/
     margin: auto;
     border-top: 0.5px solid #cccccc;
     border-left: 2px solid #ffffff;
@@ -197,7 +210,7 @@ a:focus, a:hover{
 }
 
 .sidebar_icon_info{
-    
+    top: 0;
 }
 
 .sidenav {
