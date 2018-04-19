@@ -2726,7 +2726,7 @@ function closePopup(option){
         $('#page-base').fadeIn();
         $('#page-base-addstyle').fadeOut();
 
-        $('.ptaddbox input,#memberDue_add_2').val("");
+        $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
         $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
         $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
         if($('#memberInfoPopup_PC').css('display')=="block"){
