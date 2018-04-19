@@ -88,6 +88,7 @@ urlpatterns = [
     url(r'^add_class_info/$', views.AddClassInfoView.as_view(), name='add_class_info'),
     url(r'^get_class_data/$', views.GetClassDataViewAjax.as_view(), name='get_class_data'),
     url(r'^delete_class_info/$', views.DeleteClassInfoView.as_view(), name='delete_class_info'),
+    # url(r'^update_class_info/$', views.UpdateClassInfoView.as_view(), name='delete_class_info'),
 
 
     url(r'^trainer_error_info/$', views.TrainerErrorInfoView.as_view(), name='trainer_error_info'),
