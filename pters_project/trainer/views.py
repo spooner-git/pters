@@ -240,7 +240,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
         end_date = today + datetime.timedelta(days=int(47))
 
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
-        context = get_member_data(context, class_id, None)
+        context = get_member_data(context, class_id, None, request.user.id)
 
         if lecture_id is not None and lecture_id != '':
             member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
@@ -273,7 +273,7 @@ class CalDayViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
 
         context = super(CalDayViewAjax, self).get_context_data(**kwargs)
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
-        context = get_member_data(context, class_id, None)
+        context = get_member_data(context, class_id, None, request.user.id)
 
         return render(request, self.template_name, context)
 
@@ -289,7 +289,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         end_date = today + datetime.timedelta(days=19)
 
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
-        context = get_member_data(context, class_id, None)
+        context = get_member_data(context, class_id, None, self.request.user.id)
 
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
@@ -307,7 +307,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=46)
         end_date = today + datetime.timedelta(days=47)
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
-        context = get_member_data(context, class_id, None)
+        context = get_member_data(context, class_id, None, self.request.user.id)
 
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
@@ -330,7 +330,7 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ManageMemberView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        context = get_member_data(context, class_id, None)
+        context = get_member_data(context, class_id, None, self.request.user.id)
         return context
 
 
@@ -340,7 +340,7 @@ class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ManageMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        context = get_member_data(context, class_id, None)
+        context = get_member_data(context, class_id, None, self.request.user.id)
         return context
 
 
@@ -350,12 +350,12 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ManageWorkView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        context = get_member_data(context, class_id, None)
+        context = get_member_data(context, class_id, None, self.request.user.id)
 
         return context
 
 
-def get_member_data(context, class_id, member_id):
+def get_member_data(context, class_id, member_id, user_id):
 
     error = None
     class_info = None
@@ -465,11 +465,12 @@ def get_member_data(context, class_id, member_id):
                         member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
                         member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
                         member_data.lecture_id = lecture_info.lecture_id
-                if member_data.reg_info is None or '':
+                if member_data.reg_info is None or member_data.reg_info != user_id:
                     if lecture_count == 0:
                         member_data.sex = ''
                         member_data.birthday_dt = ''
                         member_data.phone = ''
+                        member_data.user.email = ''
 
                 member_data.start_date = str(member_data.start_date)
                 member_data.end_date = str(member_data.end_date)
@@ -550,11 +551,12 @@ def get_member_data(context, class_id, member_id):
                         member_data_finish.lecture_avail_count_total += lecture_info.lecture_avail_count
                         member_data_finish.lecture_id = lecture_info.lecture_id
 
-                if member_data_finish.reg_info is None or '':
+                if member_data_finish.reg_info is None or member_data_finish.reg_info != user_id:
                     if lecture_finish_count == 0:
                         member_data_finish.sex = ''
                         member_data_finish.birthday_dt = ''
                         member_data_finish.phone = ''
+                        member_data_finish.user.email = ''
 
                 member_data_finish.start_date = str(member_data_finish.start_date)
                 member_data_finish.end_date = str(member_data_finish.end_date)
@@ -1829,12 +1831,17 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 lecture_count += len(member_lecture_list)
 
         if error is None:
-            if member.reg_info is None or member.reg_info == '':
+            if member.reg_info is None or member.reg_info != request.user.id:
                 if lecture_count == 0:
                     member.sex = ''
                     member.birthday_dt = ''
                     member.phone = ''
-            member.birthday_dt = str(member.birthday_dt)
+                    member.user.email = ''
+
+            if member.birthday_dt is None or member.birthday_dt == '':
+                member.birthday_dt = ''
+            else:
+                member.birthday_dt = str(member.birthday_dt)
 
         context['member_info'] = member
         if error is not None:
@@ -1884,7 +1891,7 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
 
         context = get_trainee_repeat_schedule_data_func(context, class_id, None)
         if context['error'] is None:
-            context = get_member_data(context, class_id, None)
+            context = get_member_data(context, class_id, None, request.user.id)
 
         if context['error'] is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
@@ -1899,7 +1906,7 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
         context['error'] = None
         context = get_trainee_repeat_schedule_data_func(context, class_id, member_id)
         if context['error'] is None:
-            context = get_member_data(context, class_id, member_id)
+            context = get_member_data(context, class_id, member_id, request.user.id)
 
         if context['error'] is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
@@ -1919,7 +1926,7 @@ class ReadMemberLectureDataFromSchedule(LoginRequiredMixin, AccessTestMixin, Con
 
         context = get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, None)
         if context['error'] is None:
-            context = get_member_data(context, class_id, None)
+            context = get_member_data(context, class_id, None, request.user.id)
 
         if context['error'] is not None:
             logger.error(
@@ -1936,7 +1943,7 @@ class ReadMemberLectureDataFromSchedule(LoginRequiredMixin, AccessTestMixin, Con
         context['error'] = None
         context = get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, member_id)
         if context['error'] is None:
-            context = get_member_data(context, class_id, member_id)
+            context = get_member_data(context, class_id, member_id, request.user.id)
 
         if context['error'] is not None:
             logger.error(

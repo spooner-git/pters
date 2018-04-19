@@ -1729,7 +1729,7 @@ function open_member_info_popup_pc(userID,jsondata){
     $('#memberRemainCount_info_PC').val(Data[userID].count + yet).text(Data[userID].count + yet)
     $('#memberAvailCount_info_PC').val(Data[userID].availCount).text(Data[userID].availCount)
     $('#memberFinishCount_info_PC').val(Data[userID].regcount-Data[userID].count).text(Data[userID].regcount-Data[userID].count)
-    $('#memberEmail_info, #memberEmail_info_PC').val(email)
+    $('#memberEmail_info, #memberEmail_info_PC').text(email).val(email)
     $('#memberStart_info_PC').text(Data[userID].start)
     var end = Data[userID].end
     if(end == "9999년 12월 31일" ||end == "9999年12月31日"||end == "9999.12.31"){
