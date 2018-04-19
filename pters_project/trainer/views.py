@@ -2537,6 +2537,15 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
                 np_lecture_counts += 1
             lecture_counts += 1
 
+            # for line in lecture_info.note:
+
+            #    if line in ['\n', '\r\n']:
+            #        line
+            #        print('empty line')
+
+            if '\r\n' in lecture_info.note:
+                lecture_info.note = lecture_info.note.replace('\r\n', ' ')
+
     class_data.lecture_counts = lecture_counts
     class_data.np_lecture_counts = np_lecture_counts
     context['class_data'] = class_data
