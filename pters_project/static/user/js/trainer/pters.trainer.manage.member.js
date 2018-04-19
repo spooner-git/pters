@@ -115,12 +115,14 @@ $(document).ready(function(){
       //$('.confirmPopup').fadeIn('fast');
       deleteTypeSelect = "memberinfodelete";
       $('#cal_popup_plandelete').fadeIn('fast');
+      $('#popup_delete_question').text('정말 회원님 정보를 삭제하시겠습니까?')
       $('#shade3').fadeIn('fast');
     })
 
     //Mobile 회원삭제버튼
     $('#infoMemberDelete').click(function(){
       //$('.confirmPopup').fadeIn('fast');
+      deleteTypeSelect = "memberinfodelete";
       $('#cal_popup_plandelete').fadeIn('fast');
       $('#popup_delete_question').text('정말 회원님 정보를 삭제하시겠습니까?')
       $('#shade3').fadeIn('fast');
@@ -356,6 +358,8 @@ $(document).ready(function(){
                 })
             }else if(deleteTypeSelect == "memberinfodelete"){
                 deleteMemberAjax();
+                closePopup('member_info');
+                closePopup('member_info_PC')
             }    
         }
                 
