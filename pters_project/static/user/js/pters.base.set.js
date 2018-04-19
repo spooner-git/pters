@@ -188,6 +188,7 @@ $(document).ready(function(){
       $('.__alarm').text("アラーム")
       $('.__calSelect').text("カレンダー選択")
       $('.__mypage').text("マイページ")
+      $('.__help').text("お問い合わせ")
 
    }else if(Options.language == "ENG"){
       $('.__todayplan').text("Daily")
@@ -203,6 +204,7 @@ $(document).ready(function(){
       $('.__alarm').text("Alarm")
       $('.__calSelect').text("Change Cal.")
       $('.__mypage').text("My page")
+      $('.__help').text("Help")
 
    }else if(Options.language == "KOR"){
       $('.__todayplan').text("오늘 일정")
@@ -218,6 +220,7 @@ $(document).ready(function(){
       $('.__alarm').text("알림")
       $('.__calSelect').text("클래스 선택")
       $('.__mypage').text("마이페이지")
+      $('.__help').text("이용문의")
    }
 
    /*

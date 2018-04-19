@@ -262,6 +262,10 @@
                             <a class="sidebar_text __calSelect">
                             </a>
                         </div>
+                        <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text __help">
+                            </a>
+                        </div>
                         <div style="height: 100%;border-top:0.5px solid #cccccc;background:#ffffff;"></div>
                         <div class="sidebar_div_last">
                           <div class="sidebar_div_last1" onclick="sideGoPage('trainer_setting')">
@@ -334,6 +338,9 @@
                     -->
                     <div class="centermenu_div">
                         <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:help_setting' %}" class="centermenu_text __help"></a>
                     </div>
                     <!--
                     <div class="centermenu_div">
