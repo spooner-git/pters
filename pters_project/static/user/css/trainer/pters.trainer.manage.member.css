@@ -459,6 +459,12 @@ select:focus > option:checked {
 				line-height: 19px;
 				-webkit-text-fill-color:#282828;
 				-webkit-opacity:1;
+				margin-bottom: 0;
+			}
+			.pc_member_note{
+				color: #7d7d7d;
+				padding-left: 6px !important;
+				margin-bottom: 7px !important;
 			}
 			#memberRegHistory_info_PC img, #memberRegHistory_info img{
 					width: 12px;
@@ -803,7 +809,7 @@ select:focus > option:checked {
 	width: 35px;
 	position: absolute;
 	left: 0;
-	margin-left: 5px;
+	margin-left: 0px;
 }
 
 

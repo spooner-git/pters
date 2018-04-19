@@ -122,6 +122,7 @@ $(document).ready(function(){
     $('#infoMemberDelete').click(function(){
       //$('.confirmPopup').fadeIn('fast');
       $('#cal_popup_plandelete').fadeIn('fast');
+      $('#popup_delete_question').text('정말 회원님 정보를 삭제하시겠습니까?')
       $('#shade3').fadeIn('fast');
     });
 
@@ -2183,7 +2184,7 @@ function set_member_lecture_list(jsondata){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log(jsondata)
+            console.log('ㅁㄴㅇㄻㄴㄻㄴㄷㄹ',jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -2245,7 +2246,14 @@ function draw_member_lecture_list_table(jsondata, targetHTML){
         }else if(jsondata.memberViewStateArray[i] == "VIEW"){
             var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
         }
-        result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>')
+        console.log(jsondata.noteArray)
+        if(jsondata.noteArray[i].length>0){
+            var note = '<div class="pc_member_note"><span>특이사항: </span>'+'<span>'+jsondata.noteArray[i]+'</span></div>'
+        }else{
+            var note = '<div class="pc_member_note"></div>'
+        }
+        
+        result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>'+note)
     }
     var result_history = result_history_html.join('')
     $regHistory.html(result_history)
