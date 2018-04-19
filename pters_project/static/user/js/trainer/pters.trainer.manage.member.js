@@ -149,17 +149,33 @@ $(document).ready(function(){
         if($('body').width()<600){
             var userID = $('#memberId').val();
         }
-
         var userName = Data[userID].name;
         var lectureID = $(this).attr('data-leid');
+        /*
         $('#form_member_name').val(userName);
         $('#form_lecture_id').val(lectureID);
+        $('#form_start_date').val(Data[userID].start)
+        $('#form_end_date').val(Data[userID].end)
+        $('form_price').val($('#regPrice').val())
+        $('#form_lecture_reg_count').val(Data[userID].regcount)
+        */
+
         if($(this).attr('data-type')=="view"){
             var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
+            var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
             myRow.addClass('input_available').attr('disabled',false);
+            myNoteRow.addClass('input_available').attr('disabled',false);
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide();
             $(this).text(text).attr('data-type',"modify");
+            $('#form_member_name').val(userName);
+            $('#form_lecture_id').val(lectureID);
+            $('#form_start_date').val($(this).parent('div').siblings('div').find('.lec_start_date').val())
+            $('#form_end_date').val($(this).parent('div').siblings('div').find('.lec_end_date').val())
+            $('#form_price').val($(this).parent('div').siblings('div').find('#regPrice').val())
+            $('#form_lecture_reg_count').val($(this).parent('div').siblings('div').find('.lec_reg_count').val())
+            $('#form_note').val(myNoteRow.val())
         }else if($(this).attr('data-type')=="modify"){
+            $('#form_price').val($('#form_price').val().replace(/,/gi,''))
             send_member_modified_data();
         }else if($(this).attr('data-type')=="resend"){
 
@@ -1831,8 +1847,15 @@ function modify_member_lec_info_pc(){
             $('#form_lecture_reg_count').val($(this).val())
         }else{
             $(this).css('color','red')
-            $('#form_lecture_reg_count').val('')
+            $('#form_lecture_reg_count').val($(this).val())
         }
+    })
+    $(document).on('keyup','#regPrice',function(){
+        $('#form_price').val($(this).val())
+    })
+
+    $(document).on('keyup','#lectureNote',function(){
+        $('#form_note').val($(this).val())
     })
 }
 
@@ -2224,11 +2247,11 @@ function draw_member_lecture_list_table(jsondata, targetHTML){
         var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
         var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
         if($('body').width()>600){
-            var regPrice = '<div>'+numberWithCommas(jsondata.priceArray[i])+'원</div>' 
-            var regUnitPrice = '<div>'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'원</div>' 
+            var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
+            var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
         }else if($('body').width()<=600){
-            var regPrice = '<div>'+numberWithCommas(jsondata.priceArray[i])+'</div>' 
-            var regUnitPrice = '<div>'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+            var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
+            var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
         }
         //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
         //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
@@ -2250,12 +2273,9 @@ function draw_member_lecture_list_table(jsondata, targetHTML){
         }else if(jsondata.memberViewStateArray[i] == "VIEW"){
             var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
         }
-        console.log(jsondata.noteArray)
-        if(jsondata.noteArray[i].length>0){
-            var note = '<div class="pc_member_note"><span>특이사항: </span>'+'<span>'+jsondata.noteArray[i]+'</span></div>'
-        }else{
-            var note = '<div class="pc_member_note"></div>'
-        }
+
+        var note = '<div class="pc_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
+
         
         result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>'+note)
     }

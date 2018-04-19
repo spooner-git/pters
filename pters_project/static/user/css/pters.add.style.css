@@ -276,6 +276,7 @@ ul a{
 	border-radius: 0px;
 	-webkit-border-radius: 0px;
 	height: 100%;
+	resize: none;
 }
 
 

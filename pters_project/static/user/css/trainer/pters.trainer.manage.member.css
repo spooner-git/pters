@@ -605,6 +605,11 @@ select:focus > option:checked {
 					.historyState_NP,.historyState_IP{
 						color: #fe4e65;
 					}
+					#lectureNote{
+						display: inline-block;
+						width: 85% !important;
+						text-align: left !important;
+					}
 
 			#memberRepeat_info_PC > div{
 				position: relative;
