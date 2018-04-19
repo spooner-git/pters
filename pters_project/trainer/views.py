@@ -470,6 +470,7 @@ def get_member_data(context, class_id, member_id, user_id):
                         member_data.sex = ''
                         member_data.birthday_dt = ''
                         member_data.phone = ''
+                        member_data.user.email = ''
 
                 member_data.start_date = str(member_data.start_date)
                 member_data.end_date = str(member_data.end_date)
@@ -555,6 +556,7 @@ def get_member_data(context, class_id, member_id, user_id):
                         member_data_finish.sex = ''
                         member_data_finish.birthday_dt = ''
                         member_data_finish.phone = ''
+                        member_data_finish.user.email = ''
 
                 member_data_finish.start_date = str(member_data_finish.start_date)
                 member_data_finish.end_date = str(member_data_finish.end_date)
@@ -1829,11 +1831,12 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 lecture_count += len(member_lecture_list)
 
         if error is None:
-            if member.reg_info is None or member.reg_info == '':
+            if member.reg_info is None or member.reg_info != request.user.id:
                 if lecture_count == 0:
                     member.sex = ''
                     member.birthday_dt = ''
                     member.phone = ''
+                    member.user.email = ''
 
             if member.birthday_dt is None or member.birthday_dt == '':
                 member.birthday_dt = ''
