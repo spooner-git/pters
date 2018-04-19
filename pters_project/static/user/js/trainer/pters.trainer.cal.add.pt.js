@@ -110,6 +110,7 @@ $(document).ready(function(){
               //$('.td00').css('background','transparent')
               closeMiniPopupByChange()
               $(this).find('div').addClass('blankSelected')
+              //$('.blankSelected').css('height','180%')
               $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
               $('.typeSelected').removeClass('typeSelected')
               $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
@@ -1539,23 +1540,32 @@ function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우�
       var option = "" 
     break;
   }
-
   var date = datepicker.val();
   var Arraylength = DateDataArray.length;
   for(var i=0;i<Arraylength;i++){
     var splitTimeArray = TimeDataArray[i].split("_")
     var targetTime = splitTimeArray[0]
+    var targetMin = splitTimeArray[1]
     if(targetTime == 24){
       var targetTime = 0
     }
     var durTime = splitTimeArray[2]
-    if(date_format_yyyy_m_d_to_yyyy_mm_dd(DateDataArray[i],'-') == date && durTime>1){  //수업시간이 2시간 이상일때 칸 채우기
+    if(date_format_yyyy_m_d_to_yyyy_mm_dd(DateDataArray[i],'-') == date && durTime>=1 && durTime.indexOf('.')==-1){  //수업시간이 1시간 단위 일때 칸 채우기
         for(var j=0; j<durTime; j++){
           var time = Number(targetTime)+j
-          $('#'+(time)+'g'+option).addClass(cssClass)
+          $('#'+(time)+'g_00'+option + ',#'+(time)+'g_30'+option ).addClass(cssClass)
         }
-    }else if(date_format_yyyy_m_d_to_yyyy_mm_dd(DateDataArray[i],'-') == date && durTime==1){ //수업시간이 1시간짜리일때 칸 채우기
-        $('#'+targetTime+'g'+option).addClass(cssClass)
+    }else if(date_format_yyyy_m_d_to_yyyy_mm_dd(DateDataArray[i],'-') == date && durTime>0 && durTime.indexOf('.')){ //수업시간이 0.5 단위일때
+        var length = parseInt(durTime)
+        if(length == 0){
+          var length = 1;
+        }
+        for(var j=0; j<length; j++){  // 1_30_1.5
+          var time = Number(targetTime)+j
+          for(k=0; k<durTime/0.5; k++){
+              $('#'+(time)+'g_'+targetMin+option).addClass(cssClass)
+          }      
+        }
     }
   }
   
@@ -1570,6 +1580,7 @@ function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우�
 
   //timeGraphLimitSet(Options.limit)
 }
+
 
 function durTimeSet(selectedTime,option){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
   switch(option){

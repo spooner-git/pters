@@ -8,8 +8,8 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
  Sunday is 0, Monday is 1 
 
 */
-
 $(document).ready(function(){
+
 
 
 	setInterval(function(){

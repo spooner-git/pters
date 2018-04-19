@@ -600,14 +600,23 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
 
       //["2017", "10", "7", "6", "00", "오전"]
 
-      var dura = etime[0] - stime[0];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+     
+      if(Math.abs(etime[1] - stime[1]) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00 
+          if(etime[0]-stime[0] == 0){
+            var dura = "0.5"
+          }else if(etime[0] > stime[0] && etime[1]-stime[1] == -30 ){
+            var dura = String((etime[0]-stime[0]-1))+'.5'
+          }else if(etime[0] > stime[0] && etime[1]-stime[1] == 30){
+            var dura = String((etime[0]-stime[0]))+'.5'
+          }
+      }else{
+        var dura = etime[0] - stime[0];
+      }
+         //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
       if(eDate == sDate+1 && eHour==sHour){
         var dura = 24
       }else if(eDate == sDate+1 && eHour == 0){
         var dura = 24-sHour
-      }
-      if(Math.abs(etime[0] - stime[0]) == 30){
-        var dura = '0.5'
       }
 
 
