@@ -340,7 +340,24 @@ class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ManageMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
+        lecture_id = self.request.session.get('lecture_id', '')
         context = get_member_data(context, class_id, None, self.request.user.id)
+        push_data = []
+
+        if lecture_id is not None and lecture_id != '':
+            member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
+
+            for class_lecture_info in member_lecture_data:
+                lecture_info = MemberLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, auth_cd='VIEW', use=1)
+                for lecture_info in lecture_info:
+                    token_data = PushInfoTb.objects.filter(member_id=lecture_info.member.member_id)
+                    for token_info in token_data:
+                        token_info.badge_counter += 1
+                        token_info.save()
+                        push_data.append(token_info)
+
+        context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+        context['push_data'] = push_data
         return context
 
 
