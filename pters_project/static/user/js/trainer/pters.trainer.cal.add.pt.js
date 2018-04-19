@@ -463,7 +463,6 @@ $(document).ready(function(){
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
          }
-        console.log(select_all_check,3)
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
                 console.log(sendData)
@@ -1540,8 +1539,6 @@ function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우�
       var option = "" 
     break;
   }
-  console.log(DateDataArray)
-  console.log(TimeDataArray)
 
   var date = datepicker.val();
   var Arraylength = DateDataArray.length;
