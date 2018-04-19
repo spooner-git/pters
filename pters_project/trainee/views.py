@@ -20,7 +20,7 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
-from configs.views import date_check_func, AccessTestMixin, get_client_ip
+from configs.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
 from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, MemberClassTb
 from schedule.models import ClassTb
@@ -840,7 +840,7 @@ def pt_delete_logic(request):
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='PT 일정', log_how='삭제', log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
         push_info_schedule_start_date = str(start_date).split(':')
@@ -1142,7 +1142,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         log_data = LogTb(log_type='LS01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='PT 일정', log_how='등록', log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
     else:
@@ -1714,7 +1714,7 @@ def delete_member_lecture_info_logic(request):
         log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보', log_how='연동 해제',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
 
         log_data.save()
 

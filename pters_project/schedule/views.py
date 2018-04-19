@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
 from configs import settings
-from configs.views import date_check_func, get_client_ip
+from configs.views import date_check_func
 from login.models import LogTb, MemberTb, CommonCdTb
 from schedule.models import LectureTb, ClassLectureTb
 from schedule.models import ClassTb
@@ -1298,7 +1298,7 @@ def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='PT '+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '~' + str(end_date),
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
     else:
         # log_contents = '<span>' + user_name + ' 강사님께서 ' \
@@ -1313,7 +1313,7 @@ def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_
                          class_tb_id=class_id,
                          log_info='OFF '+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '~' + str(end_date),
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
 
@@ -1445,7 +1445,7 @@ def update_memo_schedule_logic(request):
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
                          log_info='일정 메모', log_how='수정',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
 
         log_data.save()
 

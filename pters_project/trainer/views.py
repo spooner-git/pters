@@ -6,7 +6,7 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
@@ -19,12 +19,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin, RedirectView
-from el_pagination.decorators import page_template
 from el_pagination.views import AjaxListView
 
 from center.models import CenterTrainerTb
 from configs import settings
-from configs.views import AccessTestMixin, get_client_ip
+from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
 from schedule.views import get_trainer_schedule_data_func
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb
@@ -1159,7 +1158,7 @@ def add_member_info_logic(request):
         log_data = LogTb(log_type='LB01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='등록',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
 
         log_data.save()
 
@@ -1302,7 +1301,7 @@ def update_member_info_logic(request):
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          log_info='회원 정보', log_how='수정',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -1392,7 +1391,7 @@ def delete_member_info_logic(request):
         log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member.name, class_tb_id=class_id,
                          log_info='수강 정보', log_how='삭제',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -1438,7 +1437,7 @@ def resend_member_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보 연동', log_how='재요청',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -1499,7 +1498,7 @@ def delete_member_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보', log_how='삭제',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
 
         log_data.save()
 
@@ -1548,7 +1547,7 @@ def refund_member_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='환불 처리',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
 
         log_data.save()
 
@@ -1599,7 +1598,7 @@ def update_member_lecture_view_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보 연동', log_how='수정',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
 
         log_data.save()
 
@@ -1664,7 +1663,7 @@ def refund_member_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='환불 처리',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
 
         log_data.save()
 
@@ -1766,7 +1765,7 @@ def update_member_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='수정',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -2030,7 +2029,7 @@ def update_setting_push_logic(request):
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
                          log_info='PUSH 설정 정보', log_how='수정',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -2140,7 +2139,7 @@ def update_setting_reserve_logic(request):
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
                          log_info='예약 관련 설정 정보', log_how='수정',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -2285,7 +2284,7 @@ def update_setting_sales_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
                          log_info='강의 금액 설정 정보', log_how='수정',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -2339,7 +2338,7 @@ def update_setting_language_logic(request):
 
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id, log_info='언어 설정 정보', log_how='수정',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
         return redirect(next_page)
@@ -2711,7 +2710,7 @@ def delete_class_info_logic(request):
         log_data = LogTb(log_type='LC02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
                          log_info='강좌 정보', log_how='연동 해제',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
 
         log_data.save()
 
@@ -2761,7 +2760,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                              class_tb_id=class_id,
                              log_info='강좌 정보', log_how='연동 해제',
-                             reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                             reg_dt=timezone.now(), use=1)
 
             log_data.save()
 
@@ -2875,7 +2874,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              log_info='강좌 정보', log_how='등록',
-                             reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                             reg_dt=timezone.now(), use=1)
 
             log_data.save()
 

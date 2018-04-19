@@ -74,13 +74,12 @@
           })
 
           $('#upbutton-x, ._button_Prev').click(function(){
-            location.href= document.referrer;
+            location.href="/trainer/trainer_main/"
           })
 
           var messageArray = [{% for message in messages %}{% if message.tags == "error" %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endif %}{% endfor %}];
           var helpInfoArray = [{% for message in messages %}{% if message.tags == "info" %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endif %}{% endfor %}];
 
         </script>
-        <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.setting.language.js" %}></script>
         
 {% endblock %}
