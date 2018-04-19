@@ -412,8 +412,6 @@ $(document).ready(function(){
             var serverURL = '/schedule/add_repeat_schedule/'
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
-             console.log('test')
-             console.log(select_all_check,2)
          }
          else if(addTypeSelect=="repeatoffadd"){
             var $form = $('#add-off-repeat-schedule-form')
@@ -421,7 +419,6 @@ $(document).ready(function(){
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
          }
-        console.log(select_all_check,3)
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
                 console.log(sendData)
@@ -531,6 +528,10 @@ $(document).ready(function(){
           
           //$('.popups').hide();
           //$('#calendar').show().css('height','100%');
+          
+          if($('body').width()<600){
+            close_info_popup('page-addplan')
+          }
           close_info_popup('cal_popup_repeatconfirm')
           ajaxRepeatConfirmSend();
           check_dropdown_selected()
@@ -801,7 +802,7 @@ function close_info_popup(option){
   }
   else if(option =="cal_popup_repeatconfirm"){
       $('#'+option).css('display','none')
-      $('#calendar').css('position','relative')
+      //$('#calendar').css('position','relative')
       if($('#pshade').css('z-index') == 200 || $('#mshade').css('z-index') == 200){
         shade_index(100)
       }else{
@@ -810,6 +811,7 @@ function close_info_popup(option){
       if($('body').width()>=600){
           $('#calendar').css('position','relative')
       }else{
+          $('._calmonth').css({'height':'90%','position':'fixed'})
           $('body').css('overflow-y','overlay');
           $('#page-addplan').hide('fast','swing');
           $('#float_btn_wrap').fadeIn();

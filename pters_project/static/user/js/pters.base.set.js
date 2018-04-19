@@ -34,6 +34,8 @@ function shade_index(option){
       if(option<0){
         if($('#page-addplan').css('display') == 'block'){
           $('#mshade_popup').css({'z-index':$('#page-addplan').css('z-index'),'display':'none'});
+        }else{
+          $('#mshade_popup').css({'z-index':option,'display':'none'})
         }
         $('#mshade').css({'z-index':option,'display':'none'});
       }else{
