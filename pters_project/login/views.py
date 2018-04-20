@@ -88,7 +88,8 @@ def login_trainer(request):
 
             if token_exist is False:
                 if keyword is not None and keyword != '':
-                    token_info = PushInfoTb(member_id=user.id, token=keyword,last_login=timezone.now(), use=1)
+                    token_info = PushInfoTb(member_id=user.id, token=keyword,last_login=timezone.now(),
+                                            session_info=request.session.session_key, use=1)
                     token_info.save()
 
             request.session['push_token'] = keyword
@@ -719,7 +720,8 @@ class AddPushTokenView(View):
 
         if token_exist is False:
             if keyword is not None and keyword != '':
-                token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(), use=1)
+                token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(),
+                                        session_info=request.session.session_key, use=1)
                 token_info.save()
 
         request.session['push_token'] = keyword
