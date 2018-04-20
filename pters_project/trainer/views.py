@@ -1695,6 +1695,55 @@ def refund_member_lecture_info_logic(request):
 
 
 @csrf_exempt
+def finish_member_lecture_info_logic(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    member_name = request.POST.get('member_name', '')
+    next_page = request.POST.get('next_page', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+
+    if lecture_id is None or lecture_id == '':
+        error = '회원 수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '회원 수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+        schedule_data.delete()
+        repeat_schedule_data.delete()
+        # lecture_info.use = 0
+        lecture_info.lecture_avail_count = 0
+        lecture_info.lecture_rem_count = 0
+        lecture_info.mod_dt = timezone.now()
+        lecture_info.state_cd = 'PE'
+        lecture_info.save()
+
+    if error is None:
+        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
+        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
+
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         log_info='수강 정보', log_how='완료 처리',
+                         reg_dt=timezone.now(), use=1)
+
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+@csrf_exempt
 def update_member_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
