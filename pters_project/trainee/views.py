@@ -1842,7 +1842,6 @@ class TraineePushAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TraineePushAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        check_session = False
 
         push_data = []
         member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id,auth_cd='VIEW', use=1)
@@ -1851,18 +1850,9 @@ class TraineePushAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
             token_data = PushInfoTb.objects.filter(member_id=member_class_info.member.member_id)
             for token_info in token_data:
-                try:
-                    session = Session.objects.get(session_key=token_info.session_info)
-                    session.get_decoded()[SESSION_KEY]
-                    check_session = True
-                except (Session.DoesNotExist, KeyError):
-                    check_session = False
-                if check_session is True:
-                    token_info.badge_counter += 1
-                    token_info.save()
-                    push_data.append(token_info)
-                else:
-                    token_info.delete()
+                token_info.badge_counter += 1
+                token_info.save()
+                push_data.append(token_info)
 
         context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
         context['push_data'] = push_data

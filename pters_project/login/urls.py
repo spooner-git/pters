@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^out_member/$', views.out_member_logic, name='out_member'),
 
     url(r'^add_push_token/$', views.AddPushTokenView.as_view(), name='add_push_token'),
+    url(r'^delete_push_token/$', views.DeletePushTokenView.as_view(), name='add_push_token'),
     url(r'^clear_badge_counter/$', views.clear_badge_counter_logic, name='clear_badge_counter'),
 
 

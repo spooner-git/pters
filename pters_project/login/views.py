@@ -728,6 +728,27 @@ class AddPushTokenView(View):
         return render(request, self.template_name, {'token_check': token_exist})
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class DeletePushTokenView(View):
+    template_name = 'token_check_ajax.html'
+    error = ''
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        keyword = request.POST.get('keyword', '')
+        try:
+            token_data = PushInfoTb.objects.get(token=keyword, use=1)
+            token_data.delete()
+            token_exist = False
+        except ObjectDoesNotExist:
+            token_exist = False
+
+        return render(request, self.template_name, {'token_check': token_exist})
+
+
 class ClearBadgeCounterView(TemplateView):
     template_name = 'token_check_ajax.html'
 
