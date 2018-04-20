@@ -1151,7 +1151,7 @@ def add_member_info_logic(request):
 
                 lecture_info = add_lecture_info_logic_func(user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
                 member_lecture_info = MemberLectureTb(member_id=user.id, lecture_tb_id=lecture_info.lecture_id,
-                                                      auth_cd='WAIT', mod_member_id=request.user.id,
+                                                      auth_cd='DELETE', mod_member_id=request.user.id,
                                                       reg_dt=timezone.now(), mod_dt=timezone.now(),
                                                       use=1)
                 member_lecture_info.save()
