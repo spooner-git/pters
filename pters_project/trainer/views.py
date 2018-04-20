@@ -2888,6 +2888,72 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'trainer_error_ajax.html'
+
+    def post(self, request, *args, **kwargs):
+        class_id = request.POST.get('class_id', '')
+        subject_cd = request.POST.get('subject_cd', '')
+        subject_detail_nm = request.POST.get('subject_detail_nm', '')
+        start_date = request.POST.get('start_date', '')
+        end_date = request.POST.get('end_date', '')
+        class_hour = request.POST.get('class_hour', '')
+        start_hour_unit = request.POST.get('start_hour_unit', '')
+        class_member_num = request.POST.get('class_member_num', '')
+
+        error = None
+
+        if class_id is None or class_id == '':
+            error = '강좌 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                class_info = MemberClassTb.objects.get(member_id=request.user.id, class_tb_id=class_id)
+            except ObjectDoesNotExist:
+                error = '강좌 정보를 불러오지 못했습니다.'
+
+        if error is None:
+
+            if subject_cd is not None or subject_cd != '':
+                class_info.class_tb.subject_cd = subject_cd
+
+            if class_hour is not None or class_hour != '':
+                class_info.class_tb.class_hour = class_hour
+
+            if start_hour_unit is not None or start_hour_unit != '':
+                class_info.class_tb.start_hour_unit = start_hour_unit
+
+            if start_date is not None or start_date != '':
+                class_info.class_tb.start_date = start_date
+            if end_date is not None and end_date != '':
+                class_info.class_tb.end_date = end_date
+
+            if subject_detail_nm is not None:
+                class_info.class_tb.subject_detail_nm = subject_detail_nm
+
+            if class_member_num is not None or class_member_num != '':
+                class_info.class_tb.class_member_num = class_member_num
+
+        if error is None:
+            class_info.mod_dt = timezone.now()
+            class_info.save()
+
+        if error is None:
+            log_data = LogTb(log_type='LC02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                             class_tb_id=class_id,
+                             log_info='강좌 정보', log_how='수정',
+                             reg_dt=timezone.now(), use=1)
+
+            log_data.save()
+
+        if error is not None:
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+            messages.error(request, error)
+
+        return render(request, self.template_name)
+
+
 class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'trainer_error_ajax.html'
 
@@ -2907,7 +2973,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             error = '스케쥴 타입을 설정해주세요.'
 
         if class_hour is None or class_hour == '':
-            class_hour = 1.0
+            class_hour = 60
 
         if start_hour_unit is None or start_hour_unit == '':
             start_hour_unit = 1.0
