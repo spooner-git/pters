@@ -144,7 +144,7 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes").empty();
         $("#durations").empty();
-        $('.tdgraph').removeClass('graphindicator')
+        $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
 
         $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
         $('.dateButton').removeClass('dateButton_selected')
@@ -201,7 +201,7 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes").empty();
         $("#durations").empty();
-        $('.tdgraph').removeClass('graphindicator')
+        $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
    	}
 
 
@@ -1427,14 +1427,14 @@ $(document).ready(function(){
 		var tr2 = []
 
 		if(option == "30"){
-			for(var i=0; i<=22; i++){
-				tr1[i] = '<td colspan="2">'+(i+1)+'</td>'
-				tr2[i] = '<td id="'+(i+1)+'g_00" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i+1)+'g_30" class="tdgraph_'+option+' tdgraph30"></td>'
+			for(var i=0; i<=23; i++){
+				tr1[i] = '<td colspan="2">'+(i)+'</td>'
+				tr2[i] = '<td id="'+(i)+'g_00" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30" class="tdgraph_'+option+' tdgraph30"></td>'
 			}
 		}else if(option == "60"){
-			for(var i=0; i<=22; i++){
-				tr1[i] = '<td>'+(i+1)+'</td>'
-				tr2[i] = '<td id="'+(i+1)+'g_00" class="tdgraph_'+option+' tdgraph00"></td>'
+			for(var i=0; i<=23; i++){
+				tr1[i] = '<td>'+(i)+'</td>'
+				tr2[i] = '<td id="'+(i)+'g_00" class="tdgraph_'+option+' tdgraph00"></td>'
 			}
 		}
 		var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>'
