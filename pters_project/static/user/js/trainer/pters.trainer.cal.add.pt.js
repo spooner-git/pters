@@ -1559,8 +1559,13 @@ function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리
     for(i=0;i<=23;i++){
       if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
         offAddOkArray.push(i);
-      }else if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
-        offAddOkArray.push(i+0.5)
+      }
+      if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
+        if($('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
+          //
+        }else{
+          offAddOkArray.push(i+0.5)  
+        }
       }
     }
   }else if(Options.classDur == 30){
@@ -1604,7 +1609,6 @@ function startTimeSet(option){   // offAddOkArray의 값을 가져와서 시작�
   var offOkLen = offAddOkArray.length
   var startTimeList = $('#starttimes'+options);
   var timeArray = [];
-  [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 12.5, 13, 13.5, 14, 14.5, 18.5, 20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5]
   for(var i=0; i<offOkLen; i++){
     var offHour = parseInt(offAddOkArray[i]); 
     var offmin = (offAddOkArray[i]%parseInt(offAddOkArray[i]))*60 // 0 or 30
@@ -1750,6 +1754,59 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
     var durTimeList = $('#durations_mini')
     break;
   }
+ 
+  var len = offAddOkArray.length;
+  var index = offAddOkArray.indexOf(Number(selectedTime)+Number(selectedMin)/60);
+  var substr = offAddOkArray[index+1]-offAddOkArray[index];
+  var classDur = Options.classDur/60
+
+  durTimeList.html('')
+
+  //durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+(t)+text4+'  (~ '+selectedHours+':'+selectedMin+')'+'</a></li>')
+console.log(offAddOkArray)
+  //[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5]
+  var t=1
+  for(var i=selectedTime; i<23; i++){  //9:30 [10:30] 11_00(grey)   9:00 9:30 10:00
+      if($('#'+i+'g_00').hasClass('greytimegraph') || $('#'+i+'g_30').hasClass('greytimegraph')){
+          break;
+      }else{
+          if(Options.classDur == 60){
+            var mins = Number(selectedMin)+30
+            if(mins == 0 || mins == "60"){
+              var mins = "00"
+            }
+            console.log('#'+(Number(i)+1)+'g_'+(mins))
+            if($('#'+(Number(i)+1)+'g_'+(mins)).hasClass('greytimegraph')){
+              break;
+            }else{
+              durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+(t)+'  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
+            }
+          }else if(Options.classDur == 30){
+            durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+(t)+'  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
+          }
+      }
+      t++
+  }
+
+
+
+
+   durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>')
+}
+
+/*
+function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
+  switch(option){
+    case "class" :
+    var durTimeList = $('#durations')
+    break;
+    case "off" :
+    var durTimeList = $('#durations_off')
+    break;
+    case "mini" :
+    var durTimeList = $('#durations_mini')
+    break;
+  }
   if(Options.language == "KOR"){
     var text1 = '오전'
     var text2 = '오후'
@@ -1774,7 +1831,11 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
 
   durTimeList.html('')
   var t = 1
+  console.log(offAddOkArray)
   //offAddOkArray =  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12.5, 13, 14, 18.5, 20, 21, 22, 23]
+  //[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11.5, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+  //[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5]
+  console.log(selectedTime,selectedMin)
   for(var j=index; j<len; j++){
       if(classDur == 1){
           var selectedHours = Number(selectedTime)+(j-index+classDur)
@@ -1798,6 +1859,9 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
               }
           }else if(offAddOkArray[j+1]-offAddOkArray[j] == 1.5){
               durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+'선택 가능한 시간이 없습니다.'+'</a></li>')
+              break;
+          }else if(offAddOkArray[j+2]-offAddOkArray[j] == 2){
+              durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+'22'+'</a></li>')
               break;
           }else{
               durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+(t)+text4+'  (~ '+selectedHours+':'+selectedMin+')'+'</a></li>')
@@ -1838,76 +1902,9 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
       }
       t = t + classDur
   }
-
-  
-
-
-  /*
-  if(substr>1){
-    var fininfo = Number(selectedTime)+1
-    if(fininfo>12){
-       if(fininfo==25){
-         var fininfo = text1+' 1'
-       }else if(fininfo==24){
-         var fininfo = text1+' 12'
-       }else{
-         var fininfo = text2+(fininfo-12)  
-       }
-     }else if(fininfo==12){
-       var fininfo = text2+fininfo  
-     }else{
-       var fininfo = text1+fininfo
-     }
-    durTimeList.html('<li><a data-dur="1" class="pointerList">1'+text4+' (~'+fininfo+text3+')'+'</a></li>')
-  
-  }else{
-
-    durTimeList.html('')
-    for(var j=index; j<=len; j++){
-      
-      var fininfo = Number(selectedTime)+(j-index+1)
-      if(fininfo>12){
-        if(fininfo==25){
-          var fininfo = text1+' 1'
-        }else if(fininfo==24){
-          var fininfo = text1+' 12'
-        }else{
-          var fininfo = text2+(fininfo-12)  
-        }
-      }else if(fininfo==12){
-        var fininfo = text2+fininfo  
-      }else{
-        var fininfo = text1+fininfo
-      }
-
-      if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>') 
-      }
-      else if(offAddOkArray[j-1]== null && offAddOkArray[j+1]-offAddOkArray[j]==1){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
-      }
-      else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]==1){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
-      }
-      else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1]-offAddOkArray[j]>=2){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
-        break;
-      }
-      else if(offAddOkArray[j]-offAddOkArray[j-1]==1 && offAddOkArray[j+1] == null){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
-        //break;
-      }
-      else if(offAddOkArray[j]-offAddOkArray[j-1]>1 && offAddOkArray[j+1] == null){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
-      }
-      else if(offAddOkArray[j-1]==null && offAddOkArray[j+1] == null){
-        durTimeList.append('<li><a data-dur="'+(j-index+1)+'" class="pointerList">'+(j-index+1)+text4+'  (~'+fininfo+text3+')'+'</a></li>')
-      }
-    }
-  }
-  */
    durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>')
-}
+}*/
+
 
 function addGraphIndicator(datadur){
   $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
