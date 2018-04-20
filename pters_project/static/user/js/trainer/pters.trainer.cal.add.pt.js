@@ -467,6 +467,7 @@ $(document).ready(function(){
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
          }
+         console.log(serializeArray)
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
                 console.log(sendData)

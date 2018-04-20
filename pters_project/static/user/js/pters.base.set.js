@@ -600,7 +600,6 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
 
       //["2017", "10", "7", "6", "00", "오전"]
 
-     
       if(Math.abs(etime[1] - stime[1]) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00 
           if(etime[0]-stime[0] == 0){
             var dura = "0.5"
@@ -619,7 +618,7 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
         var dura = 24-sHour
       }
 
-
+      console.log(dura)
       if(option=="class"){
         result.push(sYear+"_"+sMonth+"_"+sDate+"_"+sHour+"_"+sMinute+"_"+dura+"_"+classTimeArray_member_name[i]+"_"+eHour+"_"+eMinute);
       }else if(option=="off"){
