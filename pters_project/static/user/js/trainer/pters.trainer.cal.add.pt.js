@@ -311,27 +311,29 @@ $(document).ready(function(){
                   $('#memberName_mini').css('display','inline')
                   $('#remainCount_mini').show('fast')
               })
+              console.log('duration',$("#id_time_duration").val())
               planAddView($("#id_time_duration").val())
           }else if($(this).attr('id').split('_')[1]=="offadd"){
               $('#memberName_mini').hide('fast')
               $('#remainCount_mini').hide('fast',function(){
                   $('#classDuration_mini').show('fast')
               })
+              console.log('duration',$("#id_time_duration_off").val())
               planAddView($("#id_time_duration_off").val())  
           }
           addTypeSelect = $(this).attr('id').split('_')[1]
           check_dropdown_selected();
-          planAddView($("#id_time_duration").val())
+          //planAddView($("#id_time_duration").val())
       })
 
       $(document).on('click',"#durations_mini li a",function(){
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
           if(addTypeSelect == "ptadd"){ //Form 셋팅
-            var durationTime_class =  Number($(this).attr('data-dur'))*(Options.classDur/30)
+            var durationTime_class =  Number($(this).attr('data-dur'))
             $("#id_time_duration").val(durationTime_class);
             planAddView($(this).attr('data-dur'));
           }else if(addTypeSelect == "offadd"){
-            var durationTime = Number($(this).attr('data-dur'))*(Options.classDur/30)
+            var durationTime = Number($(this).attr('data-dur'))
             $("#id_time_duration_off").val(durationTime);
             planAddView($(this).attr('data-dur'));
           }
@@ -343,21 +345,30 @@ $(document).ready(function(){
       })
 
       function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
-          var selectedDuration = Number(duration)
           if(Options.classDur == "60"){
-            var blankSelected = '.blankSelected'
+            var selectedDuration = Number(duration)/2
+            var blankSelected = 'blankSelected'
+            var selectedTime = $('.'+blankSelected).parent('div').attr('id').split('_')
+            var mi = selectedTime[4]
           }else if(Options.classDur == "30"){
-            var blankSelected = '.blankSelected30'
+            var selectedDuration = Number(duration)
+            var blankSelected = 'blankSelected30'
+            var selectedTime = $('.'+blankSelected).parent('div').attr('id').split('_')
+            if(selectedTime[4] == "00"){
+              var mi = "30"
+            }else if(selectedTime[4] =="30"){
+              var mi = "00"
+            }
           }
-          var selectedTime = $(blankSelected).parent('div').attr('id').split('_')
           var yy = Number(selectedTime[0])
           var mm = Number(selectedTime[1])
           var dd = Number(selectedTime[2])
           var hh = Number(selectedTime[3])
-          var mi = "00"
-          $('.blankSelected_addview').removeClass('blankSelected blankSelected30 blankSelected_addview')
+          
+          $('.blankSelected_addview').removeClass(blankSelected+' blankSelected_addview')
           for(i=hh+1; i<hh+selectedDuration; i++){
-            $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass('blankSelected blankSelected30 blankSelected_addview')
+            console.log('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi)
+            $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected+' blankSelected_addview')
           }
       }
 
@@ -1746,12 +1757,15 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
   switch(option){
     case "class" :
     var durTimeList = $('#durations')
+    var options = ""
     break;
     case "off" :
     var durTimeList = $('#durations_off')
+    var options = ""
     break;
     case "mini" :
     var durTimeList = $('#durations_mini')
+    var options = "_mini"
     break;
   }
  
@@ -1762,36 +1776,91 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
 
   durTimeList.html('')
 
-  //durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+(t)+text4+'  (~ '+selectedHours+':'+selectedMin+')'+'</a></li>')
-console.log(offAddOkArray)
-  //[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5]
   var t=1
-  for(var i=selectedTime; i<23; i++){  //9:30 [10:30] 11_00(grey)   9:00 9:30 10:00
-      if($('#'+i+'g_00').hasClass('greytimegraph') || $('#'+i+'g_30').hasClass('greytimegraph')){
+  var tt= 0.5
+  Loop1: for(var i=selectedTime; i<23; i++){  //9:30 [10:30] 11_00(grey)   9:00 9:30 10:00
+      /*
+      if($('#'+i+'g_00'+options).hasClass('greytimegraph') || $('#'+i+'g_30'+options).hasClass('greytimegraph')){
           break;
       }else{
           if(Options.classDur == 60){
-            var mins = Number(selectedMin)+30
-            if(mins == 0 || mins == "60"){
-              var mins = "00"
-            }
-            console.log('#'+(Number(i)+1)+'g_'+(mins))
-            if($('#'+(Number(i)+1)+'g_'+(mins)).hasClass('greytimegraph')){
-              break;
-            }else{
-              durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+(t)+'  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
-            }
+              var mins = Number(selectedMin)+30
+              var Num = Number(i)
+              if(mins == 0 || mins == "60"){
+                var mins = "00"
+                var Num = (Number(i)+1)
+              }
+              if($('#'+Num+'g_'+(mins)+options).hasClass('greytimegraph')){
+                break;
+              }else{
+                durTimeList.append('<li><a data-dur="'+(t)*2+'" class="pointerList">'+(t)+'시간  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
+              }
+              t++
+          // [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5]
           }else if(Options.classDur == 30){
-            durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+(t)+'  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
+              durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
+              tt = tt+0.5
           }
       }
-      t++
+      */
+      if(Options.classDur == 60){
+          if($('#'+i+'g_00'+options).hasClass('greytimegraph') || $('#'+i+'g_30'+options).hasClass('greytimegraph')){
+              break;
+          }else{
+              var mins = Number(selectedMin)+30
+              var Num = Number(i)
+              if(mins == 0 || mins == "60"){
+                var mins = "00"
+                var Num = (Number(i)+1)
+              }
+              if($('#'+Num+'g_'+(mins)+options).hasClass('greytimegraph')){
+                break;
+              }else{
+                durTimeList.append('<li><a data-dur="'+(t)*2+'" class="pointerList">'+(t)+'시간  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
+              }
+              t++
+          }
+      }else if(Options.classDur == 30){  // 0 30  // 30 0 
+          if(selectedMin == "00"){
+            for(var z=1; z<=2; z++){
+              var nums = Number(i)
+              var mins = 30*z // 30 60
+              if(mins == 60){
+                var mins = "00"
+                if(nums==selectedTime){
+                  var nums = Number(i)+1
+                }
+              }
+              if($('#'+nums+'g_'+mins+options).hasClass('greytimegraph')){
+                durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+nums+':'+mins+')'+'</a></li>')
+                break Loop1;
+              }else{
+                durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+nums+':'+mins+')'+'</a></li>')
+              }
+
+              tt = tt+0.5
+            }
+          }else if(selectedMin == "30"){
+            for(var z=2; z>=1; z--){
+              var mins = 30*z  //60 30
+              if(mins == 60){
+                var mins = "00"
+              }
+              if($('#'+(Number(i)+1)+'g_'+mins+options).hasClass('greytimegraph')){
+                durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
+                break Loop1;
+              }else{
+                durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
+              }
+              tt = tt+0.5
+            }
+          }
+          
+
+          
+      }
   }
-
-
-
-
-   durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>')
+  durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>')    
 }
 
 /*
