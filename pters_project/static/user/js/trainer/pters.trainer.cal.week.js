@@ -170,7 +170,7 @@ $(document).ready(function(){
    	function closeMiniPopup(){
    		$("#id_time_duration_off").val("")
 	    $('#page-addplan-pc').fadeOut();
-	    $('.td00').find('div').removeClass('blankSelected blankSelected_addview')
+	    $('.td00').find('div').removeClass('blankSelected blankSelected30 blankSelected_addview')
 	    $('.submitBtn').removeClass('submitBtnActivated')
 	    $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
 	    $('#submitBtn_mini').css('background','#282828')
@@ -844,7 +844,7 @@ $(document).ready(function(){
           DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
           /*팝업의 timegraph 업데이트*/
           
-          $('.blankSelected_addview').removeClass('blankSelected')
+          $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
 
           //월간 달력
           //DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
@@ -903,7 +903,8 @@ $(document).ready(function(){
 	addcurrentTimeIndicator_blackbox()
 	todayFinderArrow();	
 
-	draw_time_graph(Options.hourunit)
+	draw_time_graph(Options.hourunit,'')
+	draw_time_graph(Options.hourunit,'mini')
 	
 
 // ****************************구동시 실행********************************************************************************
@@ -1420,8 +1421,14 @@ $(document).ready(function(){
 		}
 	}
 
-	function draw_time_graph(option){
-		var targetHTML =  $('#timeGraph table')
+	function draw_time_graph(option, type){  //type = '' and mini
+		if(type == 'mini'){
+			var targetHTML =  $('#timeGraph.ptaddbox_mini table')
+			var types = "_mini"
+		}else{
+			var targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table')
+			var types = ''
+		}
 
 		var tr1 = []
 		var tr2 = []
@@ -1429,12 +1436,12 @@ $(document).ready(function(){
 		if(option == "30"){
 			for(var i=0; i<=23; i++){
 				tr1[i] = '<td colspan="2">'+(i)+'</td>'
-				tr2[i] = '<td id="'+(i)+'g_00" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30" class="tdgraph_'+option+' tdgraph30"></td>'
+				tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>'
 			}
 		}else if(option == "60"){
 			for(var i=0; i<=23; i++){
 				tr1[i] = '<td>'+(i)+'</td>'
-				tr2[i] = '<td id="'+(i)+'g_00" class="tdgraph_'+option+' tdgraph00"></td>'
+				tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>'
 			}
 		}
 		var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>'
