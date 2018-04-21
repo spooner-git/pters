@@ -43,7 +43,7 @@ body{
 	box-shadow: 1px 1px 5px 1px #cccccc;
 }
 
-.lectureStateChangePopup, .lectureConnectStateChangePopup{
+.lectureRefundPopup,.lectureStateChangeSelectPopup, .lectureConnectStateChangePopup{
 	display: none;
 	position: fixed;
 	background: #ffffff;
@@ -466,6 +466,7 @@ select:focus > option:checked {
 				color: #7d7d7d;
 				padding-left: 6px !important;
 				margin-bottom: 7px !important;
+				border-bottom: 1px solid #cccccc !important;
 			}
 			#memberRegHistory_info_PC img, #memberRegHistory_info img{
 					width: 12px;
@@ -684,15 +685,26 @@ select:focus > option:checked {
 			}
 			.lecConnectType_PE{
 				color: #282828 !important;
+				text-decoration: underline;
 				cursor: pointer !important;
 			}
 			.lecConnectType_RF{
 				color: orange !important;
+				text-decoration: underline;
 				cursor: pointer !important;
 			}
 			.regHistoryDateInfo{
 				font-size: 11px;
 			}
+
+			._delete{
+				width: 100%;
+			}
+				@media(min-width:600px){
+					._delete{
+						width:50px;	
+					}
+				}
 
 
 	.member_info_PC_buttons_wrap button{

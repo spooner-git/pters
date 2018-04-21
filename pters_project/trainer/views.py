@@ -1711,7 +1711,7 @@ def progress_member_lecture_info_logic(request):
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-        schedule_data_finish = ScheduleTb.objecsts.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
+        schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
         lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
         lecture_info.mod_dt = timezone.now()

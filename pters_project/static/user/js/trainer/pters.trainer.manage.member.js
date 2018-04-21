@@ -230,7 +230,32 @@ $(document).ready(function(){
     });
 
     $(document).on('click','div.lecConnectType_IP',function(){
-        $('.lectureStateChangePopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+                                                                'data-username':$(this).parents('._member_info_popup').attr('data-username'),
+                                                                'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
+        $('._resume, ._delete').css('display','none')
+        if($('body').width()>600){
+            $('._complete, ._refund').css('display','inline-block')
+        }else{
+            $('._complete, ._refund').css('display','block')
+        }
+        $('.lectureStateChangeSelectPopup').find('._explain').html('※진행완료 : 남은 횟수를 0으로 만들고 종료 처리<br>※환불 : 환불 금액을 입력하고 종료 처리')
+        show_shadow_reponsively();
+    });
+
+    $(document).on('click','div.lecConnectType_PE, div.lecConnectType_RF',function(){
+        //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+                                                                'data-username':$(this).parents('._member_info_popup').attr('data-username'),
+                                                                'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
+        $('._complete, ._refund').css('display','none')
+        if($('body').width()>600){
+            $('._resume, ._delete').css('display','inline-block')
+        }else{
+            $('._resume, ._delete').css('display','block')
+        }
+        $('.lectureStateChangeSelectPopup').find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.')
         show_shadow_reponsively();
     });
 
@@ -238,8 +263,6 @@ $(document).ready(function(){
         $('.lectureConnectStateChangePopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
         show_shadow_reponsively();
     });
-
-
 
 
     $('._btn_close_resend_PC, ._btn_close_statechange_PC').click(function(){
@@ -253,27 +276,71 @@ $(document).ready(function(){
         $('#shade3').css('display','none');
     });
 
+    $('span.cancel_resend').parent('div').click(function(){
+        $('.resendPopup').css('display','none');
+        hide_shadow_responsively();
+    });
+
     $('span.delete_resend').parent('div').click(function(){
         delete_member_reg_data_pc();
         $('.resendPopup').css('display','none');
         hide_shadow_responsively();
     });
 
+    //진행 완료 처리 버튼
+    $('.lectureStateChangeSelectPopup ._complete').click(function(){
+        var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+        var userName = $('.lectureStateChangeSelectPopup').attr('data-username')
+        complete_member_reg_data_pc(lectureID, userName)
+        $('.lectureStateChangeSelectPopup').css('display','none')
+    })
+
+    //재개 처리 버튼
+    $('.lectureStateChangeSelectPopup ._resume').click(function(){
+        var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+        var userName = $('.lectureStateChangeSelectPopup').attr('data-username')
+        resume_member_reg_data_pc(lectureID, userName)
+        $('.lectureStateChangeSelectPopup').css('display','none')
+    })
+
+    //삭제 처리 버튼
+    $('.lectureStateChangeSelectPopup ._delete').click(function(){
+        var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+        var userName = $('.lectureStateChangeSelectPopup').attr('data-username')
+        delete_member_reg_data_pc(lectureID, userName);
+        $('.lectureStateChangeSelectPopup').css('display','none')
+    })
+
+    //한불 입력으로 이동 버튼
+    $('.lectureStateChangeSelectPopup ._refund').click(function(){
+        $('.lectureStateChangeSelectPopup').css('display','none')
+        $('.lectureRefundPopup').css('display','block').attr({'data-leid':$('.lectureStateChangeSelectPopup').attr('data-leid'),
+                                                                    'data-username':$('.lectureStateChangeSelectPopup').attr('data-username')})
+    })
+
+    $('.lectureStateChangeSelectPopup ._cancel').click(function(){
+        $('.lectureStateChangeSelectPopup').css('display','none');
+        hide_shadow_responsively();
+    })
+
 
     $('span.refund').parent('div').click(function(){
-        refund_member_lecture_data();
-        $('.lectureStateChangePopup').css('display','none');
+        var lectureID = $('.lectureRefundPopup').attr('data-leid');
+        var refund_price = $('div.lectureRefundPopup input[name="refund_price"]').val().replace(/,/gi,'')
+        var userName = $('.lectureRefundPopup').attr('data-username');
+        refund_member_lecture_data(lectureID, userName, refund_price);
+        $('.lectureRefundPopup').css('display','none');
         //$('#shade3').css('display','none')
     });
 
-    $('.lectureStateChangePopup input').keyup(function(){
+    $('.lectureRefundPopup input').keyup(function(){
         var priceInputValue = Number($(this).val().replace(/,/g, ""));
         $(this).val(numberWithCommas(priceInputValue));
         
     })
 
     $('span.cancel_refund').parent('div').click(function(){
-        $('.lectureStateChangePopup').css('display','none');
+        $('.lectureRefundPopup').css('display','none');
         hide_shadow_responsively();
     });
 
@@ -1564,7 +1631,8 @@ function open_member_info_popup_pc(userID,jsondata){
     }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
         var Data = DBe;
     }
-    $('#memberInfoPopup_PC').fadeIn('fast');
+
+    $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':Data[userID].name,'data-userid':userID});
     $('#shade').fadeIn('fast');
 
     var npCountImg = "";
@@ -1824,7 +1892,7 @@ function open_member_info_popup_mobile(userID,jsondata){
       $('#memberFemale_info').addClass('selectbox_checked')
       $('#form_sex_modify').val('W')
     }
-    $('#memberInfoPopup').fadeIn('fast');
+    $('#memberInfoPopup').fadeIn('fast').attr({'data-username':Data[userID].name,'data-userid':userID});
     $('#memberInfoPopup input').removeClass('input_available').attr('disabled',true);
     $('#shade3').fadeIn('fast');
     scrollToDom($('#page_managemember'));
@@ -1858,6 +1926,24 @@ function modify_member_lec_info_pc(){
         $('#form_note').val($(this).val())
     })
 }
+
+
+function memberRegChange(option){
+    if('send_modified_data'){
+        send_member_modified_data()
+    }else if('resend_connect_request'){
+        resend_member_reg_data_pc()
+    }else if('delete_lecture'){
+        delete_member_reg_data_pc()
+    }else if('complete_lecture'){
+        complete_member_reg_data_pc()
+    }else if('resume_lecture'){
+        resume_member_reg_data_pc()
+    }else if('refund_lecture'){
+        refund_member_lecture_data()
+    }
+}
+
 
 //회원의 수정된 수강정보를 서버로 전송한다.
 function send_member_modified_data(){
@@ -1973,17 +2059,115 @@ function resend_member_reg_data_pc(){
 }
 
 //회원의 수강정보를 삭제한다.
-function delete_member_reg_data_pc(){
-    if($('#memberInfoPopup_PC').css('display') == "block"){
-        var userID = $('#memberId_info_PC').text();
-    }else if($('#memberInfoPopup').css('display') == "block"){
-        var userID = $('#memberId').val();
-    }
-    var lectureID = $('.resendPopup').attr('data-leid');
+function delete_member_reg_data_pc(lectureID,userName){
     $.ajax({
         url:'/trainer/delete_member_lecture_info/', 
         type:'POST',
-        data:{"lecture_id":lectureID,"member_name":DB[userID].name, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID,"member_name":userName, "next_page":'/trainer/member_manage_ajax/'},
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data)
+            ajax_received_json_data_member_manage(data);
+            if(messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(messageArray)
+            }
+            else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                DataFormattingDict('ID');
+                DataFormatting('current');
+                DataFormatting('finished');
+                memberListSet('current','date','yes');
+                memberListSet('finished','date','yes');
+                $('#startR').attr('selected','selected')
+                if($('#memberInfoPopup_PC').css('display') == "block"){
+                    open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                }else if($('#memberInfoPopup').css('display') == "block"){
+                    open_member_info_popup_mobile($('#memberId').val(),jsondata)
+                }
+                set_member_lecture_list(jsondata)
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
+//회원의 수강정보를 완료 처리한다.
+function complete_member_reg_data_pc(lectureID, userName){
+    $.ajax({
+        url:'/trainer/finish_member_lecture_info/', 
+        type:'POST',
+        data:{"lecture_id":lectureID,"member_name":userName, "next_page":'/trainer/member_manage_ajax/'},
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data)
+            ajax_received_json_data_member_manage(data);
+            if(messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(messageArray)
+            }
+            else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                DataFormattingDict('ID');
+                DataFormatting('current');
+                DataFormatting('finished');
+                memberListSet('current','date','yes');
+                memberListSet('finished','date','yes');
+                $('#startR').attr('selected','selected')
+                if($('#memberInfoPopup_PC').css('display') == "block"){
+                    open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                }else if($('#memberInfoPopup').css('display') == "block"){
+                    open_member_info_popup_mobile($('#memberId').val(),jsondata)
+                }
+                set_member_lecture_list(jsondata)
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
+//회원의 수강정보를 진행중으로 처리한다.
+function resume_member_reg_data_pc(lectureID, userName){
+    $.ajax({
+        url:'/trainer/progress_member_lecture_info/', 
+        type:'POST',
+        data:{"lecture_id":lectureID, "member_name":userName, "next_page":'/trainer/member_manage_ajax/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2031,7 +2215,7 @@ function delete_member_reg_data_pc(){
 }
 
 //회원 환불 정보를 전송한다.
-function refund_member_lecture_data(){
+function refund_member_lecture_data(lectureID, userName, refund_price){
     if(Options.language == "KOR"){
         var text = ' 회원님 환불 처리 되었습니다.'
         var text2 = '환불 금액을 입력해주세요.'
@@ -2042,14 +2226,13 @@ function refund_member_lecture_data(){
         var text = 'has been refunded.'
         var text2 = 'Please input refund'
     }
+    /*
     if($('#memberInfoPopup_PC').css('display') == "block"){
         var userID = $('#memberId_info_PC').text();
     }else if($('#memberInfoPopup').css('display') == "block"){
         var userID = $('#memberId').val();
     }
-    var lectureID = $('.lectureStateChangePopup').attr('data-leid');
-    var refund_price = $('div.lectureStateChangePopup input[name="refund_price"]').val().replace(/,/gi,'')
-    var userName = DB[userID].name
+    */
     if(refund_price.length>0){
         $.ajax({
                 url:'/trainer/refund_member_lecture_info/', 
@@ -2091,7 +2274,7 @@ function refund_member_lecture_data(){
                       set_member_lecture_list(jsondata)
 
                       $('#shade3').css('display','none')
-                      $('div.lectureStateChangePopup.popups input[type="number"]').val('')
+                      $('div.lectureRefundPopup.popups input[type="number"]').val('')
                       console.log('success');
 
                       alert(userName + text)
@@ -2159,7 +2342,7 @@ function disconnect_member_lecture_data(stateCode){
                       set_member_lecture_list(jsondata)
 
                       $('#shade3').css('display','none')
-                      $('div.lectureStateChangePopup.popups input[type="number"]').val('')
+                      $('div.lectureRefundPopup.popups input[type="number"]').val('')
                       console.log('success');
 
                     }

@@ -783,7 +783,7 @@
         </ul>
 </div>
 
-<div id="memberInfoPopup" class="infopopup wrap">
+<div id="memberInfoPopup" class="infopopup wrap _member_info_popup">
 
     <div id="inputError_info">
         <div id="errorMsg_info" class="inputErrorInner">
@@ -968,7 +968,7 @@
     </div>
 </div>
 
-<div id="memberInfoPopup_PC" class="infopopup_pc wrap popups">
+<div id="memberInfoPopup_PC" class="infopopup_pc wrap popups _member_info_popup">
     <div id="inputError_info_PC" style="position: absolute;top: 0;left: 0;">
         <div id="errorMsg_info_PC" class="inputErrorInner" style="height: 22px;">
             <p style="line-height: 22px;vertical-align: middle;margin:0;"></p>
@@ -1083,23 +1083,59 @@
     </div>
 </div>
 
-<div class="lectureStateChangePopup popups">
+<div class="lectureStateChangeSelectPopup popups">
     <div style="height: 50px;">
         <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
-    <div class="KRtext confirmText">회원님 등록을 취소하시겠습니까?<br>환불 금액을 입력해 주세요.</div>
-    <div class="KRtext confirmText" style="font-size: 12px;height: 35px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.</div>
+    <div class="KRtext confirmText">등록 진행상태 변경<br>원하는 상태를 선택해주세요.</div>
+    <div class="KRtext confirmText _explain" style="font-size: 12px;height: 50px;color:#fe4e65;font-weight: normal"></div>
+    <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
+    <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
+    <div class="popup_inner _complete" data-stat="complete" style="background:#fe4e65">
+        <span style="color:#ffffff;font-weight: bold;" class="KRtext">진행 완료</span>
+        <span style="color:#ffffff;font-weight: bold;" class="JPtext">はい</span>
+        <span style="color:#ffffff;font-weight: bold;" class="ENtext">Yes</span>
+    </div>
+    <div class="popup_inner _resume" data-stat="resume" style="background:#fe4e65">
+        <span style="color:#ffffff;font-weight: bold;" class="KRtext">재개</span>
+        <span style="color:#ffffff;font-weight: bold;" class="JPtext">はい</span>
+        <span style="color:#ffffff;font-weight: bold;" class="ENtext">Yes</span>
+    </div>
+    <div class="popup_inner _refund" data-stat="refund" style="background:#282828">
+        <span style="color:#ffffff;font-weight: bold;" class="KRtext">환불</span>
+        <span style="color:#ffffff;font-weight: bold;" class="JPtext">はい</span>
+        <span style="color:#ffffff;font-weight: bold;" class="ENtext">Yes</span>
+    </div>
+    <div class="popup_inner _delete" data-stat="delete">
+        <span style="color:#fe4e65;" class="KRtext">삭제</span>
+        <span style="color:#fe4e65;" class="JPtext">はい</span>
+        <span style="color:#fe4e65;" class="ENtext">Yes</span>
+    </div>
+    <div class="popup_inner _cancel">
+        <span class="KRtext">취소</span>
+        <span class="JPtext">いいえ</span>
+        <span class="ENtext">No</span>
+    </div>
+</div>
+
+<div class="lectureRefundPopup popups">
+    <div style="height: 50px;">
+        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
+        <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
+    </div>
+    <div class="KRtext confirmText">회원 등록 환불<br>환불 금액을 입력해 주세요.</div>
+    <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
     <div class="JPtext confirmText">会員登録を取り消ししますか<br>払戻金額を入力してください</div>
     <div class="ENtext confirmText">Are you sure to delete this member from the list?<br>Please enter a refund</div>
     <div style="text-align: center;margin-bottom: 10px;">
-      <input type="number" name="refund_price" style="border:1px solid #fe4e65;"> 
-      <span class="KRtext">　원</span><span class="JPtext"> 円</span><span class="ENtext">　＄</span>
+        <input type="" name="refund_price" style="border:1px solid #fe4e65;">
+        <span class="KRtext">　원</span><span class="JPtext"> 円</span><span class="ENtext">　＄</span>
     </div>
-    <div class="popup_inner popup_inner_resend">
-        <span style="color:#fe4e65;" class="KRtext refund">환불</span>
-        <span style="color:#fe4e65;" class="JPtext refund">払戻</span>
-        <span style="color:#fe4e65;" class="ENtext refund">Refund</span>
+    <div class="popup_inner popup_inner_resend" style="background: #fe4e65">
+        <span style="color:#ffffff;font-weight: bold;" class="KRtext refund">환불</span>
+        <span style="color:#ffffff;font-weight: bold;" class="JPtext refund">はい</span>
+        <span style="color:#ffffff;font-weight: bold;" class="ENtext refund">Yes</span>
     </div>
     <div class="popup_inner popup_inner_resend">
         <span class="KRtext cancel_refund">취소</span>
@@ -1113,14 +1149,14 @@
         <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
-    <div class="KRtext confirmText">회원님과의 달력 연동상태를 변경하시겠습니까?<br>변경을 원하는 상태를 선택해주세요.</div>
-    <div class="KRtext confirmText" style="font-size: 12px;height: 35px;color:#fe4e65;font-weight: normal">※연결해제시 회원님께서 더이상 달력을 볼 수 없게 됩니다.</div>
+    <div class="KRtext confirmText">회원 달력 연동상태 변경<br>변경을 원하는 상태를 선택해주세요.</div>
+    <div class="KRtext confirmText" style="font-size: 11px;height: 50px;color:#fe4e65;font-weight: normal">※연결해제시 회원님께서 더이상 내 일정을 볼 수 없게 됩니다.<br>'연결' 되면 회원님이 강사님의 달력을 보고있는 상태를 의미합니다.</div>
     <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
     <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
-    <div class="popup_inner popup_inner_resend" data-stat="DELETE">
-        <span style="color:#fe4e65;" class="KRtext connectchange">연결해제</span>
-        <span style="color:#fe4e65;" class="JPtext connectchange">はい</span>
-        <span style="color:#fe4e65;" class="ENtext connectchange">Yes</span>
+    <div class="popup_inner popup_inner_resend" data-stat="DELETE" style="background: #fe4e65">
+        <span style="color:#ffffff;font-weight: bold;" class="KRtext connectchange">연결해제</span>
+        <span style="color:#ffffff;font-weight: bold;" class="JPtext connectchange">はい</span>
+        <span style="color:#ffffff;font-weight: bold;" class="ENtext connectchange">Yes</span>
     </div>
     <div class="popup_inner popup_inner_resend">
         <span class="KRtext cancel_connectchange">취소</span>
@@ -1134,19 +1170,27 @@
         <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:5px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_resend_PC" class="_btn_close_resend_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
-    <div class="KRtext confirmText">회원님께서 달력연결을 해제하셨습니다.<br>원하는 추가 작업을 선택해주세요.</div>
+    <div class="KRtext confirmText">회원님과 연결되어있지 않습니다.<br>원하는 추가 작업을 선택해주세요.<br></div>
+    <p class="KRtext"><span style="font-size:11px;color:#fe4e65">※회원님께서 연동 확인을 완료 후 연결상태로 전환됩니다.<br>'연결' 되면 회원님이 강사님의 달력을 보고있는 상태를 의미합니다.</span></p>
     <div class="JPtext confirmText">会員が日程連結を切りました<br>追加作業を選択してください</div>
     <div class="ENtext confirmText">The member disconnected the calendar.</div>
-    <div class="popup_inner popup_inner_resend">
-        <span style="color:#282828;" class="KRtext resend">연결요청</span>
-        <span style="color:#282828;" class="JPtext resend">連結要請</span>
-        <span style="color:#282828;" class="ENtext resend">Send Request</span>
+    <div class="popup_inner popup_inner_resend" style="background: #fe4e65">
+        <span style="color:#ffffff;font-weight: bold;" class="KRtext resend">연결요청</span>
+        <span style="color:#ffffff;font-weight: bold;" class="JPtext resend">連結要請</span>
+        <span style="color:#ffffff;font-weight: bold;" class="ENtext resend">Send Request</span>
     </div>
+    <div class="popup_inner popup_inner_resend">
+        <span class="KRtext cancel_resend">취소</span>
+        <span class="JPtext cancel_resend">いいえ</span>
+        <span class="ENtext cancel_resend">No</span>
+    </div>
+    <!--
     <div class="popup_inner popup_inner_resend">
         <span class="KRtext delete_resend">이력 삭제</span>
         <span class="JPtext delete_resend">履歴削除</span>
         <span class="ENtext delete_resend">Delete History</span>
     </div>
+    -->
 </div>
 
 <form action="{% url 'trainer:update_member_lecture_info' %}" method="POST" class="member-form" id="update_member_lecture_info">
