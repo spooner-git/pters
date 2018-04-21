@@ -350,25 +350,39 @@ $(document).ready(function(){
             var blankSelected = 'blankSelected'
             var selectedTime = $('.'+blankSelected).parent('div').attr('id').split('_')
             var mi = selectedTime[4]
+            var yy = Number(selectedTime[0])
+            var mm = Number(selectedTime[1])
+            var dd = Number(selectedTime[2])
+            var hh = Number(selectedTime[3])
+            
+            $('.blankSelected_addview').removeClass(blankSelected+' blankSelected_addview')
+            for(i=hh+1; i<hh+selectedDuration; i++){
+              $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected+' blankSelected_addview')
+            }
           }else if(Options.classDur == "30"){
             var selectedDuration = Number(duration)
             var blankSelected = 'blankSelected30'
             var selectedTime = $('.'+blankSelected).parent('div').attr('id').split('_')
             if(selectedTime[4] == "00"){
               var mi = "30"
+              var hh = Number(selectedTime[3])
             }else if(selectedTime[4] =="30"){
               var mi = "00"
+              var hh = Number(selectedTime[3])+1
             }
-          }
-          var yy = Number(selectedTime[0])
-          var mm = Number(selectedTime[1])
-          var dd = Number(selectedTime[2])
-          var hh = Number(selectedTime[3])
-          
-          $('.blankSelected_addview').removeClass(blankSelected+' blankSelected_addview')
-          for(i=hh+1; i<hh+selectedDuration; i++){
-            console.log('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi)
-            $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected+' blankSelected_addview')
+            var yy = Number(selectedTime[0])
+            var mm = Number(selectedTime[1])
+            var dd = Number(selectedTime[2])
+            var hh_ = Number(selectedTime[3])
+            $('.blankSelected_addview').removeClass(blankSelected+' blankSelected_addview')
+            for(i=hh; i<hh+selectedDuration-1; i++){
+              if(mi == 60 || mi == 0){
+                var mi = "00"
+                var hh_ = hh_ + 1
+              }
+              $('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi).find('div').addClass(blankSelected+' blankSelected_addview')
+              mi = Number(mi) + 30
+            }
           }
       }
 
@@ -1779,30 +1793,6 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
   var t=1
   var tt= 0.5
   Loop1: for(var i=selectedTime; i<23; i++){  //9:30 [10:30] 11_00(grey)   9:00 9:30 10:00
-      /*
-      if($('#'+i+'g_00'+options).hasClass('greytimegraph') || $('#'+i+'g_30'+options).hasClass('greytimegraph')){
-          break;
-      }else{
-          if(Options.classDur == 60){
-              var mins = Number(selectedMin)+30
-              var Num = Number(i)
-              if(mins == 0 || mins == "60"){
-                var mins = "00"
-                var Num = (Number(i)+1)
-              }
-              if($('#'+Num+'g_'+(mins)+options).hasClass('greytimegraph')){
-                break;
-              }else{
-                durTimeList.append('<li><a data-dur="'+(t)*2+'" class="pointerList">'+(t)+'시간  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
-              }
-              t++
-          // [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5]
-          }else if(Options.classDur == 30){
-              durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
-              tt = tt+0.5
-          }
-      }
-      */
       if(Options.classDur == 60){
           if($('#'+i+'g_00'+options).hasClass('greytimegraph') || $('#'+i+'g_30'+options).hasClass('greytimegraph')){
               break;
@@ -1827,9 +1817,7 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
               var mins = 30*z // 30 60
               if(mins == 60){
                 var mins = "00"
-                if(nums==selectedTime){
-                  var nums = Number(i)+1
-                }
+                var nums = Number(i)+1
               }
               if($('#'+nums+'g_'+mins+options).hasClass('greytimegraph')){
                 durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+nums+':'+mins+')'+'</a></li>')
