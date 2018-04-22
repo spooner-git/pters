@@ -1794,7 +1794,7 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
   var tt= 0.5
   Loop1: for(var i=selectedTime; i<23; i++){  //9:30 [10:30] 11_00(grey)   9:00 9:30 10:00
       if(Options.classDur == 60){
-          if($('#'+i+'g_00'+options).hasClass('greytimegraph') || $('#'+i+'g_30'+options).hasClass('greytimegraph')){
+          if($('#'+i+'g_00'+options).hasClass('greytimegraph') || $('#'+i+'g_30'+options).hasClass('greytimegraph') || $('#'+i+'g_00'+options).hasClass('pinktimegraph') || $('#'+i+'g_30'+options).hasClass('pinktimegraph')){
               break;
           }else{
               var mins = Number(selectedMin)+30
@@ -1819,7 +1819,8 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
                 var mins = "00"
                 var nums = Number(i)+1
               }
-              if($('#'+nums+'g_'+mins+options).hasClass('greytimegraph')){
+              var $nextTime = $('#'+nums+'g_'+mins+options)
+              if($nextTime.hasClass('greytimegraph') || $nextTime.hasClass('pinktimegraph')){
                 durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+nums+':'+mins+')'+'</a></li>')
                 break Loop1;
               }else{
@@ -1834,7 +1835,8 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
               if(mins == 60){
                 var mins = "00"
               }
-              if($('#'+(Number(i)+1)+'g_'+mins+options).hasClass('greytimegraph')){
+              var $nextTime = $('#'+(Number(i)+1)+'g_'+mins+options)
+              if($nextTime.hasClass('greytimegraph') || $nextTime.hasClass('pinktimegraph')){
                 durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
                 break Loop1;
               }else{
