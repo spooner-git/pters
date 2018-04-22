@@ -87,6 +87,10 @@ button.classAdd{
 		}
 		.table_lecture_status{
 			width: 10%;
+			display: none;
+		}
+		.table_class_unit{
+			display: none;
 		}
 
 		.table_start_date{
@@ -190,6 +194,10 @@ button.classAdd{
 		width: 10%;
 	}
 	.lecture_selection{
+		display: table-cell;
+		width: 10%;
+	}
+	.table_class_unit{
 		display: table-cell;
 		width: 10%;
 	}
