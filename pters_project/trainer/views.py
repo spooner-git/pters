@@ -2799,24 +2799,24 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
 
-            if subject_cd is not None or subject_cd != '':
+            if subject_cd is not None and subject_cd != '':
                 class_info.subject_cd = subject_cd
 
-            if class_hour is not None or class_hour != '':
+            if class_hour is not None and class_hour != '':
                 class_info.class_hour = class_hour
 
-            if start_hour_unit is not None or start_hour_unit != '':
+            if start_hour_unit is not None and start_hour_unit != '':
                 class_info.start_hour_unit = start_hour_unit
 
-            if start_date is not None or start_date != '':
+            if start_date is not None and start_date != '':
                 class_info.start_date = start_date
             if end_date is not None and end_date != '':
                 class_info.end_date = end_date
 
-            if subject_detail_nm is not None:
+            if subject_detail_nm is not None and subject_detail_nm != '':
                 class_info.subject_detail_nm = subject_detail_nm
 
-            if class_member_num is not None or class_member_num != '':
+            if class_member_num is not None and class_member_num != '':
                 class_info.class_member_num = class_member_num
 
         if error is None:
