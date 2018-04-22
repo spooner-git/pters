@@ -231,7 +231,8 @@
             })
 
             $(document).on('change','.pters_table_row select',function(){
-                var selectedClassUnit = $(this).val().replace(/시간|분|時間|分|h|m/gi,'')
+                var selectedUnit = $(this).val()
+                var selectedClassUnit = selectedUnit.replace(/시간|분|時間|分|h|m/gi,'')
                 var class_id = $(this).attr('data-classid')
                 if(selectedClassUnit == '1'){
                   var classUnit = "60"
@@ -256,6 +257,7 @@
                             $('#errorMessageText').text(jsondata.messageArray)
                         }else{
                             console.log(jsondata)
+                            alert('강의 시간 단위가 '+selectedUnit+'으로 변경 되었습니다.')
                         }
                       },
 
