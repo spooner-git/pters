@@ -671,6 +671,9 @@
                             lec_select_stateCodeArray = jsondata.stateCodeArray;
                             lec_select_subjectCodeArray= jsondata.subjectCodeArray;
                             lec_select_currentClassId = jsondata.currentClassId;
+
+                            Options.classDur = lec_select_classHourArray[lec_select_classIdArray.indexOf(lec_select_currentClassId[0])]
+
                             if(lec_select_classIdArray.length == 0){
                                 location.href="{% url 'trainer:add_class' %}"
                             }else{

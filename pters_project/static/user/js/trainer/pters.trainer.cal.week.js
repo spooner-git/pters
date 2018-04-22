@@ -1434,12 +1434,12 @@ $(document).ready(function(){
 		var tr2 = []
 
 		if(option == "30"){
-			for(var i=0; i<=23; i++){
+			for(var i=Options.workStartTime; i<Options.workEndTime; i++){
 				tr1[i] = '<td colspan="2">'+(i)+'</td>'
 				tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>'
 			}
 		}else if(option == "60"){
-			for(var i=0; i<=23; i++){
+			for(var i=Options.workStartTime; i<Options.workEndTime; i++){
 				tr1[i] = '<td>'+(i)+'</td>'
 				tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>'
 			}

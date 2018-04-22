@@ -345,7 +345,7 @@ $(document).ready(function(){
       })
 
       function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
-          if(Options.classDur == "60"){
+          if(Options.classDur == 60){
             var selectedDuration = Number(duration)/2
             var blankSelected = 'blankSelected'
             var selectedTime = $('.'+blankSelected).parent('div').attr('id').split('_')
@@ -359,7 +359,7 @@ $(document).ready(function(){
             for(i=hh+1; i<hh+selectedDuration; i++){
               $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected+' blankSelected_addview')
             }
-          }else if(Options.classDur == "30"){
+          }else if(Options.classDur == 30){
             var selectedDuration = Number(duration)
             var blankSelected = 'blankSelected30'
             var selectedTime = $('.'+blankSelected).parent('div').attr('id').split('_')
@@ -380,6 +380,7 @@ $(document).ready(function(){
                 var mi = "00"
                 var hh_ = hh_ + 1
               }
+              console.log('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi)
               $('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi).find('div').addClass(blankSelected+' blankSelected_addview')
               mi = Number(mi) + 30
             }
@@ -1581,7 +1582,7 @@ function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리
   }
   offAddOkArray = []
   if(Options.classDur == 60){
-    for(i=0;i<=23;i++){
+    for(i=Options.workStartTime;i<Options.workEndTime;i++){
       if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
         offAddOkArray.push(i);
       }
@@ -1594,7 +1595,7 @@ function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리
       }
     }
   }else if(Options.classDur == 30){
-    for(i=0;i<=23;i++){
+    for(i=Options.workStartTime;i<Options.workEndTime;i++){
       if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
         offAddOkArray.push(i);
       }
@@ -1810,7 +1811,7 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
 
   var t=1
   var tt= 0.5
-  Loop1: for(var i=selectedTime; i<23; i++){  //9:30 [10:30] 11_00(grey)   9:00 9:30 10:00
+  Loop1: for(var i=selectedTime; i<Options.workEndTime; i++){  //9:30 [10:30] 11_00(grey)   9:00 9:30 10:00
       if(Options.classDur == 60){
           if($('#'+i+'g_00'+options).hasClass('greytimegraph') || $('#'+i+'g_30'+options).hasClass('greytimegraph') || $('#'+i+'g_00'+options).hasClass('pinktimegraph') || $('#'+i+'g_30'+options).hasClass('pinktimegraph')){
               break;
@@ -1858,7 +1859,11 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
                 durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
                 break Loop1;
               }else{
-                durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
+                if(Options.workEndTime == (Number(i)+1) && mins == "30"){
+
+                }else{
+                  durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
+                }
               }
               tt = tt+0.5
             }
@@ -2007,13 +2012,14 @@ function addGraphIndicator(datadur){
 
   var min = startmin
   var time = Number(starthour)
-
-  if(Options.classDur == "30"){
+  console.log('addGraphIndicator',Options.classDur)
+  if(Options.classDur == 30){
     for(var i=0; i<datadur/(30/Options.classDur); i++){
       if(min == 60){
         var min = '00'
         var time = time +1
       }
+      console.log('#'+time+'g_'+min)
       if(i==starthour){
         $('#'+time+'g_'+min).addClass('graphindicator_leftborder')
       }else{
@@ -2021,12 +2027,13 @@ function addGraphIndicator(datadur){
       }
       min = Number(min)+30
     }
-  }else if(Options.classDur == "60"){
+  }else if(Options.classDur == 60){
     for(var i=0; i<datadur/(30/Options.classDur); i++){
       if(min == 60){
         var min = '00'
         var time = time +1
       }
+      console.log('#'+time+'g_'+min)
       if(i==starthour){
         $('#'+time+'g_'+min).addClass('graphindicator_leftborder')
       }else{
