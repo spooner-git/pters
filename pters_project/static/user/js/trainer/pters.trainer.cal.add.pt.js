@@ -1755,13 +1755,31 @@ function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우�
     }
   }
   
-  /*업무시간 설정*/
-  for(var j=0; j<Options.workStartTime; j++){
-    $('#'+j+'g'+option).addClass('greytimegraph')
+  
+
+  /*업무시간 설정 수업시간 30분 단위일때*/
+  if(Options.hourunit == 30){
+    for(var j=0; j<Options.workStartTime; j++){
+      $('#'+j+'g_00'+option).addClass('greytimegraph')
+      $('#'+j+'g_30'+option).addClass('greytimegraph')
+    }
+
+
+    for(var t=Options.workEndTime; t<24; t++){
+      $('#'+t+'g_00'+option).addClass('greytimegraph')
+      $('#'+t+'g_30'+option).addClass('greytimegraph')
+    }  
+  }else{
+    /*업무시간 설정*/
+    for(var j=0; j<Options.workStartTime; j++){
+      $('#'+j+'g'+option).addClass('greytimegraph')
+    }
+    for(var t=Options.workEndTime; t<24; t++){
+      $('#'+t+'g'+option).addClass('greytimegraph')
+    }
+    /*업무시간 설정*/
   }
-  for(var t=Options.workEndTime; t<24; t++){
-    $('#'+t+'g'+option).addClass('greytimegraph')
-  }
+  
   /*업무시간 설정*/
 
   //timeGraphLimitSet(Options.limit)

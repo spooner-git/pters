@@ -189,10 +189,12 @@
                           var currentClass = 'currentClass'
                           var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'
                           var selectionText = '<a style="cursor:default;">-</a>'
+                          var classUnitDropdown = '<select data-classid="'+lec_select_classIdArray[i]+'"><option>30분</option><option>1시간</option></select>'
                       }else{
                           var currentClass = ""
                           var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
                           var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'" style="cursor:pointer;">이동</a>'
+                          var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+lec_select_classIdArray[i]+'"><option>30분</option><option>1시간</option></select>'
                       }
                       var table = '<div class="pters_table pters_table_at_setting_page" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                       var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>'
@@ -205,9 +207,15 @@
                       var del = '<div class="pters_table_cell lecture_delete"  data-classid="'+lec_select_classIdArray[i]+'">'+manageIcon2+'</div>'
                       var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
 
-                      var testrow = '<div class="pters_table_row">'+'개강일 '+ date_format_to_yyyymmdd(lec_select_startDateArray[i],'.') +'&nbsp; &nbsp; |&nbsp; &nbsp; '+  '수강생 '+lec_select_classInProgressMemberNumArray[i]+' 명</div>'
 
-                      var sum = table + centerName + lectureName + traineeNum + startDate + status + del + selection + '</div>' + testrow
+                      
+                      var additionalRow = '<div class="pters_table_row">'+ 
+                                        '클래스 단위 ' + classUnitDropdown+' 명' +
+                                        '&nbsp;  | &nbsp; ' + '개강일 '+ date_format_to_yyyymmdd(lec_select_startDateArray[i],'.') +
+                                        '&nbsp;  | &nbsp; ' + '수강생 '+lec_select_classInProgressMemberNumArray[i]  + '</div>'
+                      
+
+                      var sum = table + centerName + lectureName + traineeNum + startDate + status + del + selection + '</div>' + additionalRow
                       list_table_to_join.push(sum)
 
                 }
@@ -220,6 +228,46 @@
             $('.button_close_popup').click(function(){
                 $(this).parents('div.popups').fadeOut('fast')
                 $('#shade,#shade3').hide()
+            })
+
+            $(document).on('change','.pters_table_row select',function(){
+                var selectedClassUnit = $(this).val().replace(/시간|분|時間|分|h|m/gi,'')
+                var class_id = $(this).attr('data-classid')
+                if(selectedClassUnit == '1'){
+                  var classUnit = "60"
+                }else if(selectedClassUnit == '30'){
+                  var classUnit = "30"
+                }
+                console.log(class_id, classUnit)
+                $.ajax({
+                      url: '/trainer/update_class_info/',
+                      data:{"class_id":class_id, "class_hour":classUnit},
+                      dataType : 'html',
+                      type:'POST',
+
+                      beforeSend:function(){
+                        
+                      },
+
+                      success:function(data){
+                        var jsondata = JSON.parse(data);
+                        if(jsondata.messageArray.length>0){
+                            $('#errorMessageBar').show()
+                            $('#errorMessageText').text(jsondata.messageArray)
+                        }else{
+                            console.log(jsondata)
+                        }
+                      },
+
+                      complete:function(){
+                        
+                      },
+
+                      error:function(){
+                          $('#errorMessageBar').show()
+                          $('#errorMessageText').text('통신 에러: 관리자 문의')
+                      }
+                    })
             })
 
 

@@ -170,7 +170,7 @@ $(document).ready(function(){
    	function closeMiniPopup(){
    		$("#id_time_duration_off").val("")
 	    $('#page-addplan-pc').fadeOut();
-	    $('.td00').find('div').removeClass('blankSelected blankSelected30 blankSelected_addview')
+	    $('.blankSelected, .blankSelected30').removeClass('blankSelected blankSelected30 blankSelected_addview')
 	    $('.submitBtn').removeClass('submitBtnActivated')
 	    $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
 	    $('#submitBtn_mini').css('background','#282828')
