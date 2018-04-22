@@ -127,6 +127,8 @@
                             lec_select_stateCodeArray = jsondata.stateCodeArray;
                             lec_select_subjectCodeArray= jsondata.subjectCodeArray;
                             lec_select_currentClassId = jsondata.currentClassId;
+                            lec_select_classHour = jsondata.classHourArray;
+
                             if(lec_select_classIdArray.length == 0){
                                 location.href="{% url 'trainer:add_class' %}"
                             }else{
@@ -189,12 +191,26 @@
                           var currentClass = 'currentClass'
                           var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'
                           var selectionText = '<a style="cursor:default;">-</a>'
-                          var classUnitDropdown = '<select data-classid="'+lec_select_classIdArray[i]+'"><option>30분</option><option>1시간</option></select>'
+                          if(Number(lec_select_classHour[i]) == 60){
+                            var selected30 = ""
+                            var selected60 = "selected"
+                          }else if(Number(lec_select_classHour[i]) == 30){
+                            var selected30 = "selected"
+                            var selected60 = ""
+                          }
+                          var classUnitDropdown = '<select data-classid="'+lec_select_classIdArray[i]+'"><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                       }else{
                           var currentClass = ""
                           var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
                           var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'" style="cursor:pointer;">이동</a>'
-                          var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+lec_select_classIdArray[i]+'"><option>30분</option><option>1시간</option></select>'
+                          if(Number(lec_select_classHour[i]) == 60){
+                            var selected30 = ""
+                            var selected60 = "selected"
+                          }else if(Number(lec_select_classHour[i]) == 30){
+                            var selected30 = "selected"
+                            var selected60 = ""
+                          }
+                          var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+lec_select_classIdArray[i]+'"><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                       }
                       var table = '<div class="pters_table pters_table_at_setting_page" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                       var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>'
