@@ -751,6 +751,7 @@ $(document).ready(function(){
 	monthText(); //상단에 연, 월 표시
 	//availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
 	krHoliday(); //대한민국 공휴일
+	draw_time_graph(Options.hourunit,'')
 
 
 	//다음페이지로 슬라이드 했을때 액션
@@ -962,6 +963,35 @@ $(document).ready(function(){
 		$('#monthText, #ymdText-pc-month').text(textMonth+'월');
 		todayFinderArrow(textYear,textMonth);
 	};
+
+
+	function draw_time_graph(option, type){  //type = '' and mini
+		if(type == 'mini'){
+			var targetHTML =  $('#timeGraph.ptaddbox_mini table')
+			var types = "_mini"
+		}else{
+			var targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table')
+			var types = ''
+		}
+
+		var tr1 = []
+		var tr2 = []
+
+		if(option == "30"){
+			for(var i=Options.workStartTime; i<Options.workEndTime; i++){
+				tr1[i] = '<td colspan="2">'+(i)+'</td>'
+				tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>'
+			}
+		}else if(option == "60"){
+			for(var i=Options.workStartTime; i<Options.workEndTime; i++){
+				tr1[i] = '<td>'+(i)+'</td>'
+				tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>'
+			}
+		}
+		var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>'
+		targetHTML.html(tbody)
+	}
+
 
 	function todayFinderArrow(Year,Month){
 		var currentYY = String(oriYear)

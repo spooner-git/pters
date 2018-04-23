@@ -1542,7 +1542,7 @@ $(document).ready(function(){
 	}
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-		var planheight = 30;
+		var planheight = 60;
 			if($calendarWidth>=600){
 				var planheight = 58;
 				//var planheight = 43;
@@ -1598,7 +1598,7 @@ $(document).ready(function(){
 	};
 
 	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-		var planheight = 30;
+		var planheight = 60;
 			if($calendarWidth>=600){
 				//var planheight = 46;
 				var planheight = 60;
