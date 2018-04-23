@@ -65,7 +65,6 @@ def login_trainer(request):
     if next_page is None:
         next_page = '/trainer/'
 
-    print(request)
 
     if not error:
         user = authenticate(username=username, password=password)
