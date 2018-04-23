@@ -25,7 +25,7 @@ from django.views.generic.base import ContextMixin
 from configs import settings
 from configs.views import date_check_func
 from login.models import LogTb, MemberTb, CommonCdTb
-from schedule.models import LectureTb, ClassLectureTb
+from schedule.models import LectureTb, ClassLectureTb, MemberLectureTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
 
@@ -1244,12 +1244,12 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
                     update_check = class_info.schedule_check
 
             if group.name == 'trainee':
-                try:
-                    lecture_info = LectureTb.objects.get(member=self.request.user.id, use=1)
-                except ObjectDoesNotExist:
-                    error = '회원 PT 정보가 존재하지 않습니다'
-                if error is None:
-                    update_check = lecture_info.schedule_check
+                lecture_data = MemberLectureTb.objects.filter(member=self.request.user.id, use=1)
+
+                if len(lecture_data) > 0:
+                    for lecture_info in lecture_data:
+                        if lecture_info.lecture_tb.schedule_check == 1:
+                            update_check = 1
 
         # print(error)
         context['data_changed'] = update_check
@@ -1379,13 +1379,14 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
 
         finish_schedule_list = None
         if lecture_id is None or lecture_id == '':
-            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
-            if len(lecture_list) > 0:
-                for idx, lecture_info in enumerate(lecture_list):
+            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
+
+            if len(class_lecture_list) > 0:
+                for idx, class_lecture_info in enumerate(class_lecture_list):
                     if idx == 0:
-                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
                     else:
-                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
         else:
             finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
 
@@ -1401,14 +1402,14 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
 
         finish_schedule_list = None
         if lecture_id is None or lecture_id == '':
-            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
+            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
 
-            if len(lecture_list) > 0:
-                for idx, lecture_info in enumerate(lecture_list):
+            if len(class_lecture_list) > 0:
+                for idx, class_lecture_info in enumerate(class_lecture_list):
                     if idx == 0:
-                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
                     else:
-                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
         else:
             finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
 
@@ -1430,13 +1431,20 @@ class GetDeleteScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
 
         delete_schedule_list = None
         if lecture_id is None or lecture_id == '':
-            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
-            if len(lecture_list) > 0:
-                for idx, lecture_info in enumerate(lecture_list):
-                    if idx == 0:
-                        delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).order_by('-end_dt')
-                    else:
-                        delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).order_by('-end_dt')
+            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
+
+            if len(class_lecture_list) > 0:
+                for idx, class_lecture_info in enumerate(class_lecture_list):
+                    error = None
+                    try:
+                        MemberLectureTb.objects.get(member_id=member_id, lecture_tb_id=class_lecture_info.lecture_tb_id, use=1)
+                    except ObjectDoesNotExist:
+                        error = '수강정보를 불러오지 못했습니다.'
+                    if error is None:
+                        if idx == 0:
+                            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
+                        else:
+                            delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
         else:
             delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_id).order_by('-end_dt')
 
@@ -1452,14 +1460,20 @@ class GetDeleteScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
 
         delete_schedule_list = None
         if lecture_id is None or lecture_id == '':
-            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
+            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
 
-            if len(lecture_list) > 0:
-                for idx, lecture_info in enumerate(lecture_list):
-                    if idx == 0:
-                        delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).order_by('-end_dt')
-                    else:
-                        delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).order_by('-end_dt')
+            if len(class_lecture_list) > 0:
+                for idx, class_lecture_info in enumerate(class_lecture_list):
+                    error = None
+                    try:
+                        MemberLectureTb.objects.get(member_id=member_id, lecture_tb_id=class_lecture_info.lecture_tb_id, use=1)
+                    except ObjectDoesNotExist:
+                        error = '수강정보를 불러오지 못했습니다.'
+                    if error is None:
+                        if idx == 0:
+                            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
+                        else:
+                            delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
         else:
             delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_id).order_by('-end_dt')
 
