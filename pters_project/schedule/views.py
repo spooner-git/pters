@@ -1417,6 +1417,57 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
         return render(request, self.template_name, context)
 
 
+# hkkim - 2018.04.23
+@method_decorator(csrf_exempt, name='dispatch')
+class GetDeleteScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
+    template_name = 'delete_schedule_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
+
+        lecture_id = request.GET.get('lecture_id', '')
+        member_id = request.GET.get('member_id', '')
+
+        delete_schedule_list = None
+        if lecture_id is None or lecture_id == '':
+            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
+            if len(lecture_list) > 0:
+                for idx, lecture_info in enumerate(lecture_list):
+                    if idx == 0:
+                        delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).order_by('-end_dt')
+                    else:
+                        delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).order_by('-end_dt')
+        else:
+            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_id).order_by('-end_dt')
+
+        context['delete_schedule_list'] = delete_schedule_list
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
+
+        lecture_id = request.POST.get('lecture_id', '')
+        member_id = request.POST.get('member_id', '')
+
+        delete_schedule_list = None
+        if lecture_id is None or lecture_id == '':
+            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
+
+            if len(lecture_list) > 0:
+                for idx, lecture_info in enumerate(lecture_list):
+                    if idx == 0:
+                        delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).order_by('-end_dt')
+                    else:
+                        delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).order_by('-end_dt')
+        else:
+            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_id).order_by('-end_dt')
+
+        context['delete_schedule_list'] = delete_schedule_list
+
+        return render(request, self.template_name, context)
+
+
 # 메모 수정
 @csrf_exempt
 def update_memo_schedule_logic(request):
