@@ -987,7 +987,7 @@ $(document).ready(function(){
 	    break;
 	  }
 	  offAddOkArray = []
-	  if(Options.classDur == 60){
+	  if(Number(classHourArray[0]) == 60){
 	    for(i=Options.workStartTime;i<Options.workEndTime;i++){
 	      if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
 	        if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') && !$('#'+i+'g_30'+option).hasClass('greytimegraph') && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft'))
@@ -1004,7 +1004,7 @@ $(document).ready(function(){
 	        }
 	      }
 	    }
-	  }else if(Options.classDur == 30){
+	  }else if(Number(classHourArray[0]) == 30){
 	    for(i=Options.workStartTime;i<Options.workEndTime;i++){
 	      if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
 	        offAddOkArray.push(i);
@@ -1141,7 +1141,7 @@ $(document).ready(function(){
 
 	  var min = startmin
 	  var time = Number(starthour)
-	  if(Options.classDur == 30){
+	  if(Number(classHourArray[0]) == 30){
 	    for(var i=0; i<datadur; i++){
 	      if(min == 60){
 	        var min = '00'
@@ -1154,7 +1154,7 @@ $(document).ready(function(){
 	      }
 	      min = Number(min)+30
 	    }
-	  }else if(Options.classDur == 60){
+	  }else if(Number(classHourArray[0]) == 60){
 	    for(var i=0; i<datadur*2; i++){
 	      if(min == 60){
 	        var min = '00'

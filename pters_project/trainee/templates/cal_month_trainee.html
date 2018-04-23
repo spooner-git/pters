@@ -215,7 +215,7 @@
             var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
             var classHourArray = ['{{ class_info.class_hour }}'];
-
+  
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
             var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
