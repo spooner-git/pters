@@ -309,7 +309,7 @@ $(document).ready(function(){
 			  type:'POST',
 
 	          beforeSend:function(){
-	          	//AjaxBeforeSend();
+	          	AjaxBeforeSend();
 	          },
 
 	          success:function(data){
@@ -329,7 +329,7 @@ $(document).ready(function(){
 			  },
 
 	          complete:function(){
-	          	
+	          	AjaxCompleteSend()
 	          },
 
 	          error:function(){
@@ -476,7 +476,7 @@ $(document).ready(function(){
 	})
 
 	function close_reserve_popup(){
-		$('.tdgraph').removeClass('graphindicator_leftborder')
+		$('#timeGraph td').removeClass('graphindicator_leftborder')
 		$('#starttimes').remove('li')
 		$('#durations').remove('li')
 		$("#starttimesSelected button").removeClass("dropdown_selected");
@@ -823,9 +823,6 @@ $(document).ready(function(){
 
 	}
 
-
-
-
     function timeGraphSet(option,CSStheme, Page){ //가능 시간 그래프 채우기
 	  //1. option인자 : "class", "off"
 	  //2. CSS테마인자 : "grey", "pink"
@@ -1001,7 +998,7 @@ $(document).ready(function(){
 	          //
 	        }else{
 	        	if(i+1 < Options.workEndTime){
-	        		offAddOkArray.push(i+0.5)
+	        		//offAddOkArray.push(i+0.5)
 	        	}
 	          
 	        }
@@ -1019,6 +1016,8 @@ $(document).ready(function(){
 	  }
 	  console.log(offAddOkArray)
 	}
+
+
 
 
 	function startTimeSet(option){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
