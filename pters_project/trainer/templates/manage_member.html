@@ -332,7 +332,7 @@
        <button id="infoMemberDelete"><img src={% static_url "user/res/member/icon-delete-black.png" %}></button>
        <button id="infoMemberModify" data-type="view"><img src={% static_url "user/res/member/icon-edit.png" %}></button>
     </div>
-    
+
     <form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
         {% csrf_token %}
         <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
@@ -389,7 +389,7 @@
                         
                     </ul>
                 </div>
-                --> 
+                -->
                 <select class="dropdown_birth dropdown_birth_info" id="birth_year_info" disabled>
                 </select>
                 <select class="dropdown_birth dropdown_birth_info" id="birth_month_info" disabled>
@@ -430,7 +430,7 @@
                 <input type="tel" class="dropdown form-control" id="memberCount_info" name="counts" readonly>
             </div>
         </div>
-            
+
 
         <div class="ptaddbox form-group">
             <label for="memberEmail_info" class="ptaddboxtext">
