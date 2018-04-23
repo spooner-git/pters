@@ -2009,14 +2009,12 @@ function addGraphIndicator(datadur){
 
   var min = startmin
   var time = Number(starthour)
-  console.log('addGraphIndicator',Options.classDur)
   if(Options.classDur == 30){
-    for(var i=0; i<datadur/(30/Options.classDur); i++){
+    for(var i=0; i<datadur; i++){
       if(min == 60){
         var min = '00'
         var time = time +1
       }
-      console.log('#'+time+'g_'+min)
       if(i==starthour){
         $('#'+time+'g_'+min).addClass('graphindicator_leftborder')
       }else{
@@ -2025,12 +2023,11 @@ function addGraphIndicator(datadur){
       min = Number(min)+30
     }
   }else if(Options.classDur == 60){
-    for(var i=0; i<datadur/(30/Options.classDur); i++){
+    for(var i=0; i<datadur; i++){
       if(min == 60){
         var min = '00'
         var time = time +1
       }
-      console.log('#'+time+'g_'+min)
       if(i==starthour){
         $('#'+time+'g_'+min).addClass('graphindicator_leftborder')
       }else{
