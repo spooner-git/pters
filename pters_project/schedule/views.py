@@ -615,7 +615,7 @@ def delete_schedule_logic(request):
         if en_dis_type == '1':
             request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 삭제했습니다'
+                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 취소했습니다'
             request.session['lecture_id'] = lecture_id
         else:
             request.session['push_info'] = ''
@@ -1204,7 +1204,7 @@ def delete_repeat_schedule_logic(request):
 
         if en_dis_type == '1':
             request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-                                           + '~' + str(end_date) + ' PT 반복일정을 삭제했습니다'
+                                           + '~' + str(end_date) + ' PT 반복일정을 취소했습니다'
             request.session['lecture_id'] = delete_repeat_schedule.lecture_tb_id
         else:
             request.session['push_info'] = ''
