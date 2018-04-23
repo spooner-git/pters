@@ -20,14 +20,14 @@ from django.views.generic import TemplateView
 from configs import views
 
 urlpatterns = [
-    url(r'^$', views.HomeView.as_view(), name='home'),
+    url(r'^$', views.index, name='index'),
+    url(r'^check/$', views.CheckView.as_view(), name='check'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^login/', include('login.urls', namespace='login')),
     url(r'^center/', include('center.urls', namespace='center')),
     url(r'^trainer/', include('trainer.urls', namespace='trainer')),
     url(r'^trainee/', include('trainee.urls', namespace='trainee')),
     url(r'^schedule/', include('schedule.urls', namespace='schedule')),
-    url(r'^404_page/', include('schedule.urls', namespace='schedule')),
     # url(r'^404_page/$', views.Error404View.as_view(), name='404_page'),
     url(r'^404\.html$', TemplateView.as_view(template_name='404.html', content_type='text/html')),
     # url(r'^500_page/$', views.Error500View.as_view(), name='500_page'),

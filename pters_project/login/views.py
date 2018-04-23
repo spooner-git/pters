@@ -65,7 +65,6 @@ def login_trainer(request):
     if next_page is None:
         next_page = '/trainer/'
 
-
     if not error:
         user = authenticate(username=username, password=password)
 
@@ -174,7 +173,7 @@ def logout_trainer(request):
 
     logout(request)
 
-    return redirect('/login/')
+    return redirect('/')
 
 
 # 회원가입 api

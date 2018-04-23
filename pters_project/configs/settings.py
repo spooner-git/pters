@@ -145,7 +145,7 @@ STATICFILES_DIRS = (
 STATIC_ROOT = '/static/'
 
 # LOGIN URL
-LOGIN_URL = '/login/'
+LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/trainer/index/'
 
 # Registration

@@ -43,8 +43,8 @@
                         <span class="icon-bar" style="width: 20px;"></span>
                     </button>
                     {% block nav_center_img %}
-                        <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.last_name }} {{ user.first_name }}  코치님 일정</a>-->
-                        <a id="uptext" class="uptext" href="{% url 'home' %}">{{ user.last_name }} {{ user.first_name }}  <span></span></a>
+                        <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name }} {{ user.first_name }}  코치님 일정</a>-->
+                        <a id="uptext" class="uptext" href="{% url 'index' %}">{{ user.last_name }} {{ user.first_name }}  <span></span></a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
                         <a href="{% url 'trainer:alarm' %}"><img src={% static_url "user/res/main/alarm-on.png" %} style="width:20px;"></a>
@@ -57,8 +57,8 @@
                     
                     <div id="inner_Sidenav" class="sidenav">
                         
-                        <div class="sidebar_upper" onclick="location.href='{% url 'home' %}'">
-                            <a href="{% url 'home' %}" style="width:100%;height: 100%;z-index: 1"></a>
+                        <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
+                            <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
                             <div style="z-index: -1"><img src={% static_url "user/res/icon-pf.png" %} alt="#"></div>
                             <div id="user_name">{{ user.last_name }} {{user.first_name}}
                                 <span class="KRtext">코치님</span><span class="JPtext">様</span><span class="ENtext"></span>
@@ -137,7 +137,7 @@
         
         <nav class="navbar navbar-fixed-top" id="pcver">
             <div class="centermenu">
-                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
+                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
                 <div class="centermenu_box">
                     <div class="centermenu_div" style="display: none;">
                         <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>

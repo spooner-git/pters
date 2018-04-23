@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render, redirect
 from django.views.generic import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView
@@ -11,7 +12,22 @@ from django.views.generic import TemplateView
 logger = logging.getLogger(__name__)
 
 
-class HomeView(LoginRequiredMixin, RedirectView):
+def index(request):
+    # login 완료시 main page로 이동
+    template_name = 'index.html'
+
+    if request.user.is_authenticated():
+        next_page = '/check/'
+    else:
+        next_page = ''
+
+    if next_page == '':
+        return render(request, template_name)
+    else:
+        return redirect(next_page)
+
+
+class CheckView(LoginRequiredMixin, RedirectView):
 
     def get(self, request, **kwargs):
         user_for_group = User.objects.get(id=request.user.id)
@@ -26,10 +42,10 @@ class HomeView(LoginRequiredMixin, RedirectView):
             self.url = '/center/'
         else:
             self.url = ''
-        return super(HomeView, self).get(request, **kwargs)
+        return super(CheckView, self).get(request, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
-        return super(HomeView, self).get_redirect_url(*args, **kwargs)
+        return super(CheckView, self).get_redirect_url(*args, **kwargs)
 
 
 class AccessTestMixin(UserPassesTestMixin):
