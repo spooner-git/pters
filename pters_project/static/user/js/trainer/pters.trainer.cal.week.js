@@ -223,6 +223,15 @@ $(document).ready(function(){
 		if(time == 24){
 			var time = 0
 		}
+		var minute = info[4]
+		var classdur = info[5]
+		var classdurTime = parseInt(info[5]) + "시간 "
+		if(classdur.indexOf('.')){
+			var classdurMin = "30분"
+		}else{
+			var classdurMin = ""
+		}
+		var dur = '('+classdurTime + classdurMin+')'
 		var dayobj = new Date(yy,mm-1,dd)
 		var dayraw = dayobj.getDay();
 		var dayarryKR = ['일','월','화','수','목','금','토']
@@ -231,19 +240,19 @@ $(document).ready(function(){
 		switch(Options.language){
 			case "KOR" :
 			var member = " 회원님의 ";
-			var yourplan = "시 일정";
+			var yourplan = " 일정";
 			var day = dayarryKR[dayraw];
 			var text = 'PT 일정'
 			break;
 			case "JPN" :
 			var member = "様の ";
-			var yourplan = "時日程";
+			var yourplan = " 日程";
 			var day = dayarryJP[dayraw];
 			var text = 'PT 日程'
 			break;
 			case "ENG" :
 			var member = "'s schedule at ";
-			var yourplan = ":00";
+			var yourplan = "";
 			var day = dayarryEN[dayraw];
 			var text = 'PT Plan'
 			break; 
@@ -267,7 +276,7 @@ $(document).ready(function(){
 		
 		
 		var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
-		var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+yourplan
+		var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+':'+minute+yourplan
 		var infoText3 = $(this).attr('data-memo')
 		if($(this).attr('data-memo') == undefined){
 			var infoText3 = ""
@@ -313,6 +322,7 @@ $(document).ready(function(){
 		if(time == 24){
 			var time = 0
 		}
+		var minute = info[4]
 		var dayobj = new Date(yy,mm-1,dd)
 		var dayraw = dayobj.getDay();
 		var dayarryKR = ['일','월','화','수','목','금','토']
@@ -321,19 +331,19 @@ $(document).ready(function(){
 		switch(Options.language){
 			case "KOR" :
 			var comment = ""
-			var yourplan = "시 OFF 일정";
+			var yourplan = " OFF 일정";
 			var day = dayarryKR[dayraw];
 			var text = 'OFF 일정'
 			break;
 			case "JPN" :
 			var comment = ""
-			var yourplan = "時 OFF日程";
+			var yourplan = " OFF日程";
 			var day = dayarryJP[dayraw];
 			var text = 'OFF 日程'
 			break;
 			case "ENG" :
 			var comment = "OFF at "
-			var yourplan = ":00";
+			var yourplan = "";
 			var day = dayarryEN[dayraw];
 			var text = 'OFF'
 			break; 
@@ -355,7 +365,7 @@ $(document).ready(function(){
 
 		
 		var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
-		var infoText2 = comment + time + yourplan
+		var infoText2 = comment + time +':'+minute+ yourplan
 		var infoText3 = $(this).attr('data-memo')
 		if($(this).attr('data-memo') == undefined){
 			var infoText3 = ""
@@ -1577,11 +1587,11 @@ $(document).ready(function(){
 			var tdClassStart = $("#"+classStart+" div");
 			var tdClass = $("#"+classStart);
 			tdClass.parent('div').siblings('.fake_for_blankpage').css('display','none')
-
+			console.log(Number(classDura * planheight + (classDura - 1)))
 			if(scheduleFinishArray[i]=="0") {
-                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
             }else {
-                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
             }
 		};
 		$('#calendar').css('display','block');

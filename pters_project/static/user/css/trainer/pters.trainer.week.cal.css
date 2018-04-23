@@ -675,7 +675,7 @@ img,a,div,span,p{
 	}
 
 	.classTime{
-		top: 1px;
+		top: 0.5px;
 		left: 1px;
 	}
 
@@ -692,8 +692,8 @@ img,a,div,span,p{
 		width:100%;
 		text-align: center;
 		left: 0%;
-		margin-top: 6px;
-		font-size: 18px;
+		margin-top: px;
+		font-size: 16px;
 		letter-spacing: -0.3px;
 		color: black;
 		cursor: pointer;
@@ -815,8 +815,8 @@ img,a,div,span,p{
 		position: absolute;
 		left: 5px;
 		font-weight: 300;
-		margin-top: 6px;
-		font-size: 13px;
+		margin-top: 0px;
+		font-size: 12px;
 		letter-spacing: -0.3px;
 		color: black;
 		cursor: pointer;
@@ -896,7 +896,7 @@ img,a,div,span,p{
 
 @media(min-width: 850px){
 	.memberName{
-		font-size: 21px;
+		font-size: 18px;
 	}
 }
 
