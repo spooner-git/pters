@@ -227,7 +227,9 @@
                 var worktimeEnd = ''
              }
 
-             var Options = {  "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
+             var Options = {  "hourunit" : 30, // 30 or 60
+                              "classDur" : 60, // 30 or 60
+                              "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
                               "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
                               "limit":Number('{{ lt_res_02 }}'),      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
                               "reserve":Number('{{ lt_res_03 }}'),    //회원 일정 기능을 enable 1/disable 0
@@ -289,6 +291,7 @@
 
                       success:function(data){
                         var jsondata = JSON.parse(data);
+                        console.log(jsondata)
                         if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show()
                             $('#errorMessageText').text(jsondata.messageArray)

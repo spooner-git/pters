@@ -8,8 +8,8 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
  Sunday is 0, Monday is 1 
 
 */
-
 $(document).ready(function(){
+
 
 
 	setInterval(function(){
@@ -144,7 +144,7 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes").empty();
         $("#durations").empty();
-        $('.tdgraph').removeClass('graphindicator')
+        $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
 
         $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
         $('.dateButton').removeClass('dateButton_selected')
@@ -170,7 +170,7 @@ $(document).ready(function(){
    	function closeMiniPopup(){
    		$("#id_time_duration_off").val("")
 	    $('#page-addplan-pc').fadeOut();
-	    $('.td00').find('div').removeClass('blankSelected blankSelected_addview')
+	    $('.blankSelected, .blankSelected30').removeClass('blankSelected blankSelected30 blankSelected_addview')
 	    $('.submitBtn').removeClass('submitBtnActivated')
 	    $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
 	    $('#submitBtn_mini').css('background','#282828')
@@ -201,7 +201,7 @@ $(document).ready(function(){
         $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
         $("#starttimes").empty();
         $("#durations").empty();
-        $('.tdgraph').removeClass('graphindicator')
+        $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
    	}
 
 
@@ -223,6 +223,15 @@ $(document).ready(function(){
 		if(time == 24){
 			var time = 0
 		}
+		var minute = info[4]
+		var classdur = info[5]
+		var classdurTime = parseInt(info[5]) + "시간 "
+		if(classdur.indexOf('.')){
+			var classdurMin = "30분"
+		}else{
+			var classdurMin = ""
+		}
+		var dur = '('+classdurTime + classdurMin+')'
 		var dayobj = new Date(yy,mm-1,dd)
 		var dayraw = dayobj.getDay();
 		var dayarryKR = ['일','월','화','수','목','금','토']
@@ -231,19 +240,19 @@ $(document).ready(function(){
 		switch(Options.language){
 			case "KOR" :
 			var member = " 회원님의 ";
-			var yourplan = "시 일정";
+			var yourplan = " 일정";
 			var day = dayarryKR[dayraw];
 			var text = 'PT 일정'
 			break;
 			case "JPN" :
 			var member = "様の ";
-			var yourplan = "時日程";
+			var yourplan = " 日程";
 			var day = dayarryJP[dayraw];
 			var text = 'PT 日程'
 			break;
 			case "ENG" :
 			var member = "'s schedule at ";
-			var yourplan = ":00";
+			var yourplan = "";
 			var day = dayarryEN[dayraw];
 			var text = 'PT Plan'
 			break; 
@@ -267,7 +276,7 @@ $(document).ready(function(){
 		
 		
 		var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
-		var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+yourplan
+		var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+':'+minute+yourplan
 		var infoText3 = $(this).attr('data-memo')
 		if($(this).attr('data-memo') == undefined){
 			var infoText3 = ""
@@ -313,6 +322,7 @@ $(document).ready(function(){
 		if(time == 24){
 			var time = 0
 		}
+		var minute = info[4]
 		var dayobj = new Date(yy,mm-1,dd)
 		var dayraw = dayobj.getDay();
 		var dayarryKR = ['일','월','화','수','목','금','토']
@@ -321,19 +331,19 @@ $(document).ready(function(){
 		switch(Options.language){
 			case "KOR" :
 			var comment = ""
-			var yourplan = "시 OFF 일정";
+			var yourplan = " OFF 일정";
 			var day = dayarryKR[dayraw];
 			var text = 'OFF 일정'
 			break;
 			case "JPN" :
 			var comment = ""
-			var yourplan = "時 OFF日程";
+			var yourplan = " OFF日程";
 			var day = dayarryJP[dayraw];
 			var text = 'OFF 日程'
 			break;
 			case "ENG" :
 			var comment = "OFF at "
-			var yourplan = ":00";
+			var yourplan = "";
 			var day = dayarryEN[dayraw];
 			var text = 'OFF'
 			break; 
@@ -355,7 +365,7 @@ $(document).ready(function(){
 
 		
 		var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
-		var infoText2 = comment + time + yourplan
+		var infoText2 = comment + time +':'+minute+ yourplan
 		var infoText3 = $(this).attr('data-memo')
 		if($(this).attr('data-memo') == undefined){
 			var infoText3 = ""
@@ -844,7 +854,7 @@ $(document).ready(function(){
           DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
           /*팝업의 timegraph 업데이트*/
           
-          $('.blankSelected_addview').removeClass('blankSelected')
+          $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
 
           //월간 달력
           //DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
@@ -903,7 +913,8 @@ $(document).ready(function(){
 	addcurrentTimeIndicator_blackbox()
 	todayFinderArrow();	
 
-	draw_time_graph(Options.hourunit)
+	draw_time_graph(Options.hourunit,'')
+	draw_time_graph(Options.hourunit,'mini')
 	
 
 // ****************************구동시 실행********************************************************************************
@@ -1420,21 +1431,27 @@ $(document).ready(function(){
 		}
 	}
 
-	function draw_time_graph(option){
-		var targetHTML =  $('#timeGraph table')
+	function draw_time_graph(option, type){  //type = '' and mini
+		if(type == 'mini'){
+			var targetHTML =  $('#timeGraph.ptaddbox_mini table')
+			var types = "_mini"
+		}else{
+			var targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table')
+			var types = ''
+		}
 
 		var tr1 = []
 		var tr2 = []
 
 		if(option == "30"){
-			for(var i=0; i<=22; i++){
-				tr1[i] = '<td colspan="2">'+(i+1)+'</td>'
-				tr2[i] = '<td id="'+(i+1)+'g_00" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i+1)+'g_30" class="tdgraph_'+option+' tdgraph30"></td>'
+			for(var i=Options.workStartTime; i<Options.workEndTime; i++){
+				tr1[i] = '<td colspan="2">'+(i)+'</td>'
+				tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>'
 			}
 		}else if(option == "60"){
-			for(var i=0; i<=22; i++){
-				tr1[i] = '<td>'+(i+1)+'</td>'
-				tr2[i] = '<td id="'+(i+1)+'g_00" class="tdgraph_'+option+' tdgraph00"></td>'
+			for(var i=Options.workStartTime; i<Options.workEndTime; i++){
+				tr1[i] = '<td>'+(i)+'</td>'
+				tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>'
 			}
 		}
 		var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>'
@@ -1525,7 +1542,7 @@ $(document).ready(function(){
 	}
 
 	function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-		var planheight = 30;
+		var planheight = 60;
 			if($calendarWidth>=600){
 				var planheight = 58;
 				//var planheight = 43;
@@ -1570,18 +1587,18 @@ $(document).ready(function(){
 			var tdClassStart = $("#"+classStart+" div");
 			var tdClass = $("#"+classStart);
 			tdClass.parent('div').siblings('.fake_for_blankpage').css('display','none')
-
+			console.log(Number(classDura * planheight + (classDura - 1)))
 			if(scheduleFinishArray[i]=="0") {
-                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
             }else {
-                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight - 1) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
             }
 		};
 		$('#calendar').css('display','block');
 	};
 
 	function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-		var planheight = 30;
+		var planheight = 60;
 			if($calendarWidth>=600){
 				//var planheight = 46;
 				var planheight = 60;
