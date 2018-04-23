@@ -164,7 +164,7 @@ $(document).ready(function(){
                       startTimeSet("mini");  //일정등록 가능한 시작시간 리스트 채우기
                       $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
                       $("#id_training_time").val(hh+':'+min+':00.000000');
-                      $("#id_time_duration").val(1*(Options.classDur/30))
+                      $("#id_time_duration").val(1*(Options.classDur/60))
                       $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
                       $("#id_training_time_off").val(hh+':'+min+':00.000000');
                       durTimeSet(hh,min,"mini");
@@ -327,11 +327,11 @@ $(document).ready(function(){
       $(document).on('click',"#durations_mini li a",function(){
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
           if(addTypeSelect == "ptadd"){ //Form 셋팅
-            var durationTime_class =  Number($(this).attr('data-dur'))
+            var durationTime_class =  Number($(this).attr('data-dur'))*(30/Options.classDur)
             $("#id_time_duration").val(durationTime_class);
             planAddView($(this).attr('data-dur'));
           }else if(addTypeSelect == "offadd"){
-            var durationTime = Number($(this).attr('data-dur'))
+            var durationTime = Number($(this).attr('data-dur'))*(30/Options.classDur)
             $("#id_time_duration_off").val(durationTime);
             planAddView($(this).attr('data-dur'));
           }
@@ -437,11 +437,11 @@ $(document).ready(function(){
           $("#durationsSelected .btn:first-child").val("").html("<span style='color:#cccccc;'>선택</span>");
           $('#durationsSelected button').addClass("dropdown_selected").text($('#durations li:first-child a').text()).val($('#durations li:first-child a').attr('data-dur'))
           if(addTypeSelect == "ptadd"){
-            var durationTime_class = Number($('#durationsSelected button').val())*(Options.classDur/30)
+            var durationTime_class = Number($('#durationsSelected button').val())*(30/Options.classDur)
             $("#id_time_duration").val(durationTime_class);
             addGraphIndicator($('#durationsSelected button').val())
           }else if(addTypeSelect == "offadd"){
-            var durationTime = Number($('#durationsSelected button').val())*(Options.classDur/30)
+            var durationTime = Number($('#durationsSelected button').val())*(30/Options.classDur)
             $("#id_time_duration_off").val(durationTime);
             addGraphIndicator($('#durationsSelected button').val())
           }else if(addTypeSelect == "repeatptadd"){
@@ -457,11 +457,11 @@ $(document).ready(function(){
       $(document).on('click',"#durations li a, #repeatdurations li a",function(){
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
           if(addTypeSelect == "ptadd"){
-            var durationTime_class = Number($(this).attr('data-dur'))*(Options.classDur/30)
+            var durationTime_class = Number($(this).attr('data-dur'))*(30/Options.classDur)
             $("#id_time_duration").val(durationTime_class);
             addGraphIndicator($(this).attr('data-dur'))
           }else if(addTypeSelect == "offadd"){
-            var durationTime = Number($(this).attr('data-dur'))*(Options.classDur/30)
+            var durationTime = Number($(this).attr('data-dur'))*(30/Options.classDur)
             $("#id_time_duration_off").val(durationTime);
             addGraphIndicator($(this).attr('data-dur'))
           }else if(addTypeSelect == "repeatptadd"){
@@ -1812,8 +1812,9 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
   var tt= 0.5
   Loop1: for(var i=selectedTime; i<Options.workEndTime; i++){  //9:30 [10:30] 11_00(grey)   9:00 9:30 10:00
       if(Options.classDur == 60){
-          if($('#'+i+'g_00'+options).hasClass('greytimegraph') || $('#'+i+'g_30'+options).hasClass('greytimegraph') || $('#'+i+'g_00'+options).hasClass('pinktimegraph') || $('#'+i+'g_30'+options).hasClass('pinktimegraph')){
-              break;
+          if( i!=selectedTime && ($('#'+i+'g_00'+options).hasClass('greytimegraph') || $('#'+i+'g_30'+options).hasClass('greytimegraph') || $('#'+i+'g_00'+options).hasClass('pinktimegraph') || $('#'+i+'g_30'+options).hasClass('pinktimegraph'))){
+              console.log('#'+i+'g_00'+options,' | ','#'+i+'g_30'+options,' | ','#'+i+'g_00'+options,' | ','#'+i+'g_30'+options)
+              break Loop1;
           }else{
               var mins = Number(selectedMin)+30
               var Num = Number(i)
@@ -1821,7 +1822,7 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
                 var mins = "00"
                 var Num = (Number(i)+1)
               }
-              if($('#'+Num+'g_'+(mins)+options).hasClass('greytimegraph')){
+              if($('#'+Num+'g_'+(mins)+options).hasClass('greytimegraph')  || $('#'+Num+'g_'+(mins)+options).hasClass('pinktimegraph')   ){
                 break;
               }else{
                 durTimeList.append('<li><a data-dur="'+(t)*2+'" class="pointerList">'+(t)+'시간  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
@@ -1866,10 +1867,7 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
               }
               tt = tt+0.5
             }
-          }
-          
-
-          
+          }   
       }
   }
   durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>')    
