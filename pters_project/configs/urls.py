@@ -22,6 +22,7 @@ from configs import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^check/$', views.CheckView.as_view(), name='check'),
+    url(r'^privacy/$', views.PrivacyView.as_view(), name='privacy'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^login/', include('login.urls', namespace='login')),
     url(r'^center/', include('center.urls', namespace='center')),

@@ -48,6 +48,14 @@ class CheckView(LoginRequiredMixin, RedirectView):
         return super(CheckView, self).get_redirect_url(*args, **kwargs)
 
 
+class PrivacyView(TemplateView):
+    template_name = 'privacy.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PrivacyView, self).get_context_data(**kwargs)
+        return context
+
+
 class AccessTestMixin(UserPassesTestMixin):
     def test_func(self):
         test_result = False
