@@ -233,7 +233,15 @@
 <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.promote.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
 <script>
-
+    var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
+    if(varUA.match('android') != null){
+        var devicetext = '브라우저, Android 앱으로'
+    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        var devicetext = '브라우저, iOS 앱으로'
+    }else{
+        var devicetext = '브라우저, iOS, Android 앱으로'
+    }
+    $('#connectedDevice').html(devicetext)
 
 
     var page = 0
@@ -374,20 +382,7 @@
         });
     }
 
-
     
-
-    var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
-
-    if(varUA.match('android') != null){
-        var devicetext = '브라우저, Android 앱으로'
-    }else if(varUA.indexOf('iphone')>-1 || varUA.indexOf('ipad')>-1 || varUA.indexOf('ipod')>-1){
-        var devicetext = '브라우저, iOS 앱으로'
-    }else{
-        var devicetext = '브라우저, iOS, Android 앱으로'
-    }
-
-    $('#connectedDevice').text(devicetext)
 
 </script>
 {% endblock %}
