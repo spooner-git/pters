@@ -567,7 +567,7 @@ body{
 	}
 
 	.fixfooter{
-		position: relative;
+		position: fixed;
 		margin-top: 50px;
 	}
 	.bottomfooter2 a{

@@ -436,10 +436,10 @@ a:focus, a:hover{
     color: #7d7d7d;
     font-size: 12px;
     font-weight: 400;
-    width: 512px;
+    width: 100%;
     max-width: 1000px;
     margin:0 auto;
-    height: 50px;
+    height: 20px;
 }
 
 .bottomfooter1 span{
@@ -462,9 +462,31 @@ a:focus, a:hover{
 .bottomfooter2 a{
     color: #ffffff;
 }
-    .bottomfooter2 a:hover{
-        color:#fe4e65;
-    }
+
+.bottomfooter2 a:hover{
+    color:#fe4e65;
+}
+
+.bottomfooter3{
+    width: 300px;
+    max-width: 300px;
+    margin:0 auto;
+    color: #282828;
+    font-size: 10px;
+    display: none;
+}
+
+.bottomfooter3 p{
+    margin-bottom:1px;
+}
+
+.bottomfooter3 a{
+    color: #ffffff;
+}
+
+.bottomfooter3 a:hover{
+    color:#fe4e65;
+}
 
 .footergap{
 
@@ -592,7 +614,7 @@ a:focus, a:hover{
 
     .fixfooter{
         display: block;
-        position: absolute;
+        position: fixed;
         bottom: 0;
         width: 100%;
         /*height: 150px;*/
@@ -616,13 +638,7 @@ a:focus, a:hover{
     }
 }
 
-@media(max-height: 820px){
-    .fixfooter{
-        visibility: hidden;
-    }
-}
-
-@media(min-width:970px){
+@media(min-width:760px){
     #loginInfo{
         display: inline-block;
     }

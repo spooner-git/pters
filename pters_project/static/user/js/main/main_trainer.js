@@ -49,6 +49,7 @@ $(document).ready(function(){
 
 	$('#loginInfo').find('img').attr('src','/static/user/res/icon-name-white.png')
 	$('.bottomfooter2').find('img').attr('src','/static/user/res/spooner.png')
+	$('.bottomfooter3').find('img').attr('src','/static/user/res/spooner.png')
 
 	var bodywidth = $('body').width()
 	if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match(/バレエ/)){

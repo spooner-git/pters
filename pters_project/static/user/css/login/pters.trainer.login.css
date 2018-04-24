@@ -452,7 +452,7 @@ nav.main_nav{
 	}
 
 	.fixfooter{
-		position: relative;
+		position: fixed;
 	    display: block;
 	    background: rgba(40, 40, 40, 0.50);
 	    width: 100%;
