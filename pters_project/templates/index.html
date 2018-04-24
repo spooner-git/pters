@@ -176,7 +176,7 @@
                 <p>PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등</p>
                 <p><span class="pink_strong">다양한 기기</span>에서 <span class="pink_strong">접속</span>이 <span class="pink_strong">가능</span>합니다.</p>
                 <br>
-                <p>브라우저, IOS, Android 앱으로</p>
+                <p id="connectedDevice"></p>
                 <p><span class="pink_strong">실시간 일정 변경</span> 푸시 알림을 받아 보세요.</p>
                 <p>전체 일정 관리가 <span class="pink_strong">쉽게</span> 가능해 집니다.</p>
                 <p style="font-size: 12px;position: absolute;bottom: 0;">※iOS 앱 4월중 출시 예정</p> 
@@ -373,6 +373,21 @@
             },
         });
     }
+
+
+    
+
+    var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
+
+    if(varUA.match('android') != null){
+        var devicetext = '브라우저, Android 앱으로'
+    }else if(varUA.indexOf('iphone')>-1 || varUA.indexOf('ipad')>-1 || varUA.indexOf('ipod')>-1){
+        var devicetext = '브라우저, iOS 앱으로'
+    }else{
+        var devicetext = '브라우저, iOS, Android 앱으로'
+    }
+
+    $('#connectedDevice').text(devicetext)
 
 </script>
 {% endblock %}
