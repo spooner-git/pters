@@ -11,7 +11,7 @@ body{
 		background:#f4f4f4;
 		border:3px solid #fe4e65;
 		border-radius: 5px;
-		z-index: 150;
+		z-index: 100;
 		bottom: 100px;
 		right: 30px;
 		display: none;
