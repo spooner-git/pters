@@ -30,8 +30,7 @@
     {% block local_css %}
 
         <meta name="login" content="trainer_login">
-        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
-        <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
+        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.promote.css" %}>
         <link rel="icon" href="/static/common/favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
@@ -40,35 +39,7 @@
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
         <style type="text/css">
-          #errorMessageBar{
-              display: block;
-              width: 100%;
-              position: sticky;
-              top: 0;
-              left: 0;
-              height: 35px;
-              text-align: center;
-              background: red;
-              color: #ffffff;
-              font-size: 15px;
-              font-weight: bold;
-              z-index: 1500;
-          }
-              #errorMessageBar span{
-                  line-height: 35px;
-              }
-              #errorMessageBar span:nth-child(2){
-                  position: absolute;
-                  right: 0;
-                  margin-right: 10px;
-                  cursor: pointer;
-              }
-
-              @media(min-width: 600px){
-                    #errorMessageBar span:nth-child(2){
-                        margin-right: 85px;
-                    }
-              }
+          
 
         </style>
 
@@ -76,223 +47,200 @@
     </head>
 {% block content %}
     <body>
-
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-        {% for message in messages %}
-            {% if message.tags == "error" %}
 
-        <div id="errorMessageBar">
-            <span id="errorMessageText">{{ message }}</span><span>닫기</span>
-        </div>
+<nav class="upperbar">
+    <div>
+        <img src="/static/user/res/PTERS_logo_pure.png">
+        <a href="/login"><span>LOGIN</span></a>
+    </div>
+</nav>
 
-            {% endif %}
-        {% endfor %}
+<div class="pagination">
+    <div id="page1" class="pagination_bar pagination_active"></div>
+    <div id="page2" class="pagination_bar"></div>
+    <div id="page3" class="pagination_bar"></div>
+    <div id="page4" class="pagination_bar"></div>
+    <div id="page5" class="pagination_bar"></div>
+    <div id="page6" class="pagination_bar"></div>
+</div>
+
+<div class="socialnetwork">
     
-    <div class="pters_login_promote_box">
-        <nav class="main_nav">   
-            <div class="main_nav_bg">   
-            </div>
-            <div class="main_nav_content">
-                <h1><img src="/static/user/res/PTERS_logo_pure.png" alt="피터스 로고"></h1>
-                <div class="login_form_nav">
-                    <form action="{% url 'login:login' %}" id="login-form_nav" method="post">
-                        {% csrf_token %}
-                        <div id="idinput_nav">
-                            <img src={% static_url "user/res/login/icon-user.png" %} id="idimg" alt="피터스 아이디">
-                            <input type="text" class="loginboxstyle_nav form-control" name="username" placeholder="아이디" autofocus>
-                        </div>
-                        <div id="pwinput_nav" style="margin-top:5%;">
-                            <img src={% static_url "user/res/login/icon-lock.png" %} id="pwimg" alt="피터스 비밀번호">
-                            <input type="password" class="loginboxstyle_nav form-control" name="password" placeholder="비밀번호">
-                        </div>
-                        <div id="checkbox_nav" class="checkbox" style="margin-top:15px;margin-left:27px;">
-                            <label><input type="checkbox" name="auto_login_check" value="1" >자동 로그인</label>
-                        </div>
-                        <div id="login-button_nav">
-                            <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
-                        </div>
-                        <input type="hidden" name="keyword" id="keyword_pc">
-                        <input type="hidden" name="next_page" value = '{% url 'index' %}'>
-                    </form>
-                    <a href="/accounts/password/reset/"><div class="forgotPW">비밀번호를 잊으셨나요?</div></a>
-                </div>
-            </div>
-        </nav>
+</div>
 
-        <div class="loginbox">
-            <div class="logintext">
-                <div><img src="/static/user/res/PTERS_logo_pure.png" id="pterstext" alt="피터스 로고"><span id="logintext">로그인</span></div>
-            </div>
-            <div id="loginboxbg">
+<div class="album_wrap">
+    <div class="album" id="promote_1">
+        <div class="explain_wrap">
+            <div class="explain_main">
+                <h2>세상에서 가장 쉬운</h2>
+                <h1>1:1 PT 일정/회원 관리 시스템</h1>
                 
+                <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><span class="pters_logo_text"> 피터스</span></div>
+
+                <p>일정 관리는 쉽고 빠르게</p>
+                <p>회원의 만족도는 업!</p> 
             </div>
-            <div>
-                <form action="{% url 'login:login' %}" id="login-form" method="post">
-                    {% csrf_token %}
-                    <div id="idinput">
-                        <img src={% static_url "user/res/login/icon-user.png" %} id="idimg" alt="피터스 아이디">
-                        <input type="text" class="loginboxstyle form-control" name="username" placeholder="아이디" autofocus>
-                    </div>
-                    <div id="pwinput" style="margin-top:5%;">
-                        <img src={% static_url "user/res/login/icon-lock.png" %} id="pwimg" alt="피터스 비밀번호">
-                        <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
-                    </div>
-                    <div class="checkbox" style="margin-top:15px;margin-left:27px;">
-                        <label><input type="checkbox" name="auto_login_check" value="1" checked>다음부터 자동 로그인</label>
-                    </div>
-                    <div>
-                        <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
-                    </div>
-                    <input type="hidden" name="keyword" id="keyword">
-                    <div class="innerbox">
-                        <a href="/accounts/register/"><div id="registerButton">회원 가입</div></a>
-                        <div class="seperate_bar"></div>
-                        <a href="/accounts/password/reset/"><div id="findIDPW">PW 초기화</div></a>
-                    </div>
-                    <input type="hidden" name="next_page" value = '{% url 'index' %}'>
-                </form>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
             </div>
-        </div>
-
-        <div class="main_title">
-            <div class="main_title_up">
-                <h2><p>세상에서 가장 쉬운 일대일 PT 회원/일정 관리 시스템 </p></h2>
-                <p><span><img src="/static/user/res/PTERS_logo_pure.png" alt="피터스 로고"></span><span>·피터스</span></p>
-            </div>
-            <div class="main_title_separate">
-                <div></div>
-            </div>
-            <div class="main_title_down">
-                <p>일정 관리는 쉽고 빨라지고, 회원의 만족도는 높아집니다.</p>
-            </div>
-            <button onclick="goPage(0)" class="singup_button">가입하기</button>
-            <p style="font-size:13px;margin-top: 10px;color:#f4f4f4;">피터스는 누구에게나 무료입니다.</p>
-        </div>
-
-        <div class="button_next_view"><img src="/static/user/res/btn_next.png" style="transform: rotate(90deg);" onclick="goSlide(780)"></div>
-    </div>
-
-    <div class="pters_login_promote_box_sub bg-light">
-        <div>
-            <img src="/static/user/res/login/promote/pters_weekcal_pc_mobile.png" alt="피터스 주간달력 예시">
-        </div>
-        <h3><label>24시간 언제든 레슨 일정 관리</label></h3>
-        <div class="main_title_separate">
-            <div></div>
-        </div>
-        <p>종이와 볼펜, 수정펜은 넣어두세요.</p>
-        <p>언제 어디서라도 간편하게 나의 수업일정을 확인하세요!</p>
-    </div>
-
-    <div class="pters_login_promote_box_sub bg-dark">
-        <div>
-            <img src="/static/user/res/login/promote/pters_weekcal_add_pc_mobile.png" alt="피터스 일정 추가 예시">
-            <img src="/static/user/res/login/promote/pters_sign_pc_mobile.png" alt="피터스 일정 완료 예시" style="height: 480px;">
-        </div>
-        <h3><label>스케쥴과 회원 관리를 간편하게</label></h3>
-        <div class="main_title_separate">
-            <div></div>
-        </div>
-        <p>간편하게 클릭과 터치로 일정을 등록하세요.</p>
-        <p>일정을 완료하면 횟수도 자동으로 차감 계산됩니다.</p>
-    </div>
-    
-    <div class="pters_login_promote_box_sub bg-light">
-        <div>
-            <img src="/static/user/res/login/promote/pters_trainee_calendar_pc_mobile.png" alt="피터스 회원 화면 예시">
-        </div>
-        <h3><label>일정 약속도 간편하게</label></h3>
-        <div class="main_title_separate">
-            <div></div>
-        </div>
-        <p>회원님이 트레이너의 예약 가능한 시간을 확인하고 선택하면 예약 끝</p>
-        <p>트레이너는 업무시간과 OFF시간 설정등 다양한 설정으로 나만의 예약 가능시간을 만들 수 있습니다.</p>
-    </div>
-
-    <div class="pters_login_promote_box_sub bg-dark">
-        <div>
-            <img src="/static/user/res/login/promote/pters_trainer_push_notification_pc_mobile.png" alt="피터스 푸시 기능 예시">
-        </div>
-        <h3><label>다양한 기기에서 접속</label></h3>
-        <div class="main_title_separate">
-            <div></div>
-        </div>
-        <p>피터스는 PC 웹브라우저(크롬, 파이어폭스, 엣지, 사파리)와 스마트폰, 태블릿 등 다양한 기기에서 접속이 가능합니다.</p>
-        <p style="margin-bottom: 20px;">브라우저, iOS, 안드로이드 앱을 사용하면 일정변경사항을 실시간 푸시로 알림을 받을 수 있습니다.</p>
-        <!--
-        <a href="https://play.google.com/store/apps/details?id=kr.co.spooner.pters"><img src="/static/user/res/pters_android_download.png" style="width: 150px;" alt="pters 안드로이드 다운로드"></a>
-        <p style="font-size: 12px;color:#cccccc">※iOS앱 4월중 출시 예정</p>
-        -->
-    </div>
-
-    <div class="pters_login_promote_box_sub bg-light">
-        <div>
-            <img src="/static/user/res/login/promote/header.jpg" alt="피터스 무료 설명 background">
-        </div>
-        <label>피터스는 누구에게나 무료로 제공됩니다.</label>
-        <div class="main_title_separate">
-            <div></div>
-        </div>
-        <p>트레이너와 회원 모두에게 무료로 제공됩니다.</p>
-        <p>여러분의 시간을 효율적으로 활용해 보세요.</p>
-        <p>일정과 회원관리는 피터스에 맡기고 비즈니스의 생산성을 향상 시키세요.</p>
-        <!--button onclick="goPage(0)" class="singup_button">가입하기</button>-->
-        <a href="/accounts/register/"><button class="singup_button">가입하기</button></a>
-        <div class="button_next_view" style="position: relative;margin-top: 40px;bottom: 0;">
-            <img src="/static/user/res/btn_next.png" style="transform: rotate(-90deg);" onclick="goSlide(0)">
         </div>
     </div>
 
-
-    <footer class="fixfooter bottomzero">
-        <div class="bottomfooter1">
-        <!--
-            <span>English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        </div>
-        -->
-        <div class="bottomfooter2">
-            <span><img src="/static/user/res/spooner.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <a href="http://www.spooner.co.kr">회사소개</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <a href="">이용안내</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <a href="">제휴제안</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <a href="">개인정보처리방침</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <a href="">고객센터</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <p style="line-height: 0px;font-size:12px;">문의 support@pters.co.kr</p>
-        </div>
-    </footer>
-
-    <!--
-    <footer class="fixfooter">
-            <div class="bottomfooter1">
-                <span><img src="/static/user/res/spooner.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-                <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+    <div class="album" id="promote_2">
+        <div class="explain_wrap">
+            <div class="explain_main">
+                <br>
+                <h2></h2>
+                <br>
+                <h1>24시간, 어디서든 편리한 일정 관리</h1>
+                <br>
+                <br>
+                <p>종이와 수정펜은 넣어두세요.</p>
+                <br>
+                <br>
+                <p>언제 어디서라도 간편하게 <span class="pink_strong">원터치 방식</span>으로</p>
+                <p>나의 <span class="pink_strong">수업 일정을 확인</span>하고 <span class="pink_strong">관리</span> 해보세요.</p> 
             </div>
-            <div class="bottomfooter2">
-                <p>스푸너(SPOONER) 통신판매업 신고 : 제 2017-서울동작-0672호, 사업자등록번호 : 463-56-00284, 대표자 : OOO,XXX</p>
-                <p>Tel : xxxx-xxxx, Fax : xxxx-xxxx, 주소 : 서울특별시 동작구 신대방동 보라매로 5가길 7 캐릭터그린빌 오피스텔 x층 XXX호</p>
-                <p>이용 및 제휴문의 : skkim@spooner.co.kr</p>
-                <p>- </p>
-                <p>Copyright(C) SPOONER All rights reserved.</p>
-                <p> </p>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
             </div>
-    </footer>
--->
+        </div>
+    </div>
+
+    <div class="album" id="promote_3">
+        <div class="explain_wrap">
+            <div class="explain_main">
+                <br>
+                <h2></h2>
+                <h1>나의 일정과 회원 관리를 한번에!</h1>
+                <br>
+                <br>
+                <p><span class="pink_strong">주간, 월간</span>으로 편리하게 일정을 확인하고</p>
+                <p>회원 관리도 쉽게 가능합니다.</p>
+                <br>
+                <br>
+                <p><span class="pink_strong">한 번의 터치</span>로 일정을 등록하세요.</p>
+                <p>일정 완료 사인을 하면 자동으로 횟수가 차감 됩니다.</p> 
+            </div>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="album" id="promote_4"> 
+        <div class="explain_wrap">
+            <div class="explain_main">
+                <br>
+                <h2></h2>
+                <h1>일정 예약도 회원이 직접 바로 바로!</h1>
+                <br>
+                <br>
+                <p>회원이 트레이너의 <span class="pink_strong">예약 가능 시간</span>을 <span class="pink_strong">확인</span>한 후</p>
+                <p><span class="pink_strong">시간을 선택</span>하기만 하면 <span class="pink_strong">예약 끝!</span></p>
+                <br>
+                <br>
+                <p>트레이너가 업무 시간과 OFF시간을 설정하면</p>
+                <p>그 시간 내에서만 일정 예약이 가능합니다.</p> 
+            </div>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="album" id="promote_5">
+        <div class="explain_wrap">
+            <div class="explain_main">
+                <br>
+                <h2></h2>
+                <h1>다양한 기기에서 한 번에 관리</h1>
+                <br>
+                <p><img src="/static/user/res/PTERS_logo_pure.png" style="height: 20px;">는</p>
+                <p>PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등</p>
+                <p><span class="pink_strong">다양한 기기</span>에서 <span class="pink_strong">접속</span>이 <span class="pink_strong">가능</span>합니다.</p>
+                <br>
+                <p>브라우저, IOS, Android 앱으로</p>
+                <p><span class="pink_strong">실시간 일정 변경</span> 푸시 알림을 받아 보세요.</p>
+                <p>전체 일정 관리가 <span class="pink_strong">쉽게</span> 가능해 집니다.</p>
+                <p style="font-size: 12px;position: absolute;bottom: 0;">※iOS 앱 4월중 출시 예정</p> 
+            </div>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="album" id="promote_6">
+        <div class="explain_wrap">
+            <div class="explain_main">
+                <br>
+                <br>
+                <h2></h2>
+                <h1><img src="/static/user/res/PTERS_logo_pure.png" style="height: 25px;">는 누구나 무료!</h1>
+                <br>
+                <br>
+                <p>트레이너, 회원 모두에게 <span class="pink_strong">무료로 제공</span>됩니다.</p>
+                <p>여러분의 시간을 효율적으로 활용해 보세요.</p>
+                <p>일정과 회원은 <span class="pink_strong">피터스 하나로 쉽게 관리</span> 하면서</p>
+                <p>비즈니스의 생산성을 향상 시키세요!</p>
+                <br>
+                <br>
+            </div>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        
 {% endblock %}
 
 {% block local_js_footer %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/login/pters.trainer.promote.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
 <script>
+
+
+
+    var page = 0
+    var scroll = true
+    $('html,body').on('mousewheel',function(e){
+        e.preventDefault()
+       var direction = e.originalEvent.wheelDelta
+       console.log(direction)
+       if(direction<0 && scroll == true){
+            page++
+            if(page>5){
+                page = 5
+            }
+            $('body, html').animate({scrollTop : 1000*page},400)
+            $('.pagination_active').removeClass('pagination_active')
+            $('#page'+(page+1)).addClass('pagination_active')
+            scroll = false
+            setTimeout(function(){scroll = true}, 500)
+       }else if(direction>0 && scroll == true){
+            page--
+            if(page < 0){
+                page = 0
+            }
+            $('body, html').animate({scrollTop : 1000*page},400)
+            $('.pagination_active').removeClass('pagination_active')
+            $('#page'+(page+1)).addClass('pagination_active')
+            scroll = false
+            setTimeout(function(){scroll = true}, 500)
+       }
+    })
+
+
+
     function goPage(option){
         if(option == 0){
             location.href="/accounts/register/";
@@ -358,20 +306,6 @@
 </script>
 {% endblock %}
 
-<!--
-
-2017.8.3업데이트 내역
-
-1.Navigation Bar의 Bell ,메뉴 버튼 크기 및 위치 조정
-2.Navigation Bar의 Bell 이미지 변경
-
-3.파일명 변경 및 코드 분리
-    skstyle.css ->> pters.month.cal.css 월간 달력 css
-    skcalendar.js ->> pters.month.cal.js 월간 달력 js
-    sidebar.css ->> pters.base.set.css 상단바,사이드바 css
-    skstyle.js ->> pters.base.set.js 상단바, 사이드바 js
-
--->
     </body>
 
 
