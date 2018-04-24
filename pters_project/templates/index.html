@@ -173,7 +173,7 @@
                 <h1>다양한 기기에서 한 번에 관리</h1>
                 <br>
                 <p><img src="/static/user/res/PTERS_logo_pure.png" style="height: 20px;">는</p>
-                <p>PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등</p>
+                <p id="connectedMethod"></p>
                 <p><span class="pink_strong">다양한 기기</span>에서 <span class="pink_strong">접속</span>이 <span class="pink_strong">가능</span>합니다.</p>
                 <br>
                 <p id="connectedDevice"></p>
@@ -236,12 +236,16 @@
     var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
     if(varUA.match('android') != null){
         var devicetext = '브라우저, Android 앱으로'
+        var methodtext = 'PC, 스마트폰, 태블릿 등'
     }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
         var devicetext = '브라우저, iOS 앱으로'
+        var methodtext = 'PC, 스마트폰, 태블릿 등'
     }else{
         var devicetext = '브라우저, iOS, Android 앱으로'
+        var methodtext = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등'
     }
-    $('#connectedDevice').html(devicetext)
+    $('#connectedMethod').html(methodtext);
+    $('#connectedDevice').html(devicetext);
 
 
     var page = 0
