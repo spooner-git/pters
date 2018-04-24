@@ -1461,7 +1461,18 @@ function memberListSet (type,option,Reverse){
         arrayResult[i] = td;
     }
 
+
     var resultToAppend = arrayResult.join("");
+    if(type=='current' && len == 0){
+        var resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>'
+        if($('body').width()>600){
+            $('#please_add_member_pc').fadeIn()
+        }else{
+            $('#please_add_member').fadeIn()
+        }
+    }else if(type=="finished" && len ==0){
+        var resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>'
+    }
     var result = tbodyStart + resultToAppend + tbodyEnd;
     $tabletbody.remove();
     $table.append(result);
