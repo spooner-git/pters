@@ -1,4 +1,9 @@
 @import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+html,body{
+	height: 100%;
+}
+
 body{
 	font-family: 'Noto Sans KR',sans-serif !important;
 	padding-top: 0px;
@@ -13,7 +18,7 @@ body{
 
 .pters_login_promote_box{
 	position: relative;
-	height: 675px;
+	height: 100%;
 	/*background-image: url("/static/user/res/main/bg-image.png");*/
 	background-image: url("/static/user/res/main/bg-image-brick-mobile.jpg");
 	background-repeat: repeat-y;
@@ -381,7 +386,7 @@ nav.main_nav{
 	}
 
 	.pters_login_promote_box{
-		height: 800px;
+		height: 100%;
 		/*background-image: url("/static/user/res/main/bg-image-pc-login.png");*/
 		background-image: url("/static/user/res/main/bg-image-brick-pc-dark.jpg");
 		background-position-y:unset;
@@ -409,9 +414,7 @@ nav.main_nav{
 		cursor: pointer;
 	}
 
-	.loginbox{
-		display: none;
-	}
+
 
 	.main_title{
 		display: block;
