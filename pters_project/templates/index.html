@@ -252,11 +252,8 @@
     var scroll = true
     $('html,body').on('mousewheel',function(e){
         var loc_1 = $('#promote_1').height()
-
-
         e.preventDefault()
        var direction = e.originalEvent.wheelDelta
-       console.log(direction)
        if(direction<0 && scroll == true){
             page++
             if(page>5){
