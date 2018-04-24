@@ -133,7 +133,7 @@ nav.upperbar{
 }
 
 
-@media(min-width:720px){
+@media(min-width:1024px){
 	#promote_1{
 		background-image: url('/static/common/promote_pc/1.png');
 		background-repeat: no-repeat;
@@ -254,7 +254,7 @@ nav.upperbar{
 	color: #fe4e65;
 }
 
-@media(min-width: 720px){
+@media(min-width: 1024px){
 
 	nav.upperbar div{
 		max-width: 1900px;

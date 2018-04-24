@@ -274,7 +274,7 @@
 
     })
 
-    if($('body').width()<720){
+    if($('body').width()<1025){
         $(document).on('touchend','.album_wrap',function(e){
             var endX = e.originalEvent.changedTouches[0].clientX;
             if(endX-initX > 5 && touch == true){
