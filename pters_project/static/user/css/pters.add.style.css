@@ -710,6 +710,8 @@ button._info_delete_img{
 	color: #ffffff;
 	border: 0;
 	font-size: 12px;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 
