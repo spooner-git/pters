@@ -41,6 +41,10 @@
           .bottomfooter2 a{
             color:  #7d7d7d;
           }
+          .bottomfooter3 a{
+            color:  #7d7d7d;
+          }
+
         </style>
 
     </head>
@@ -159,7 +163,7 @@
                 <a class="JPtext">会社紹介</a>
                 <a class="ENtext">About us</a>
                 <span style="margin-left:10px;margin-right: 10px;">|</span>
-                <a class="KRtext" href="{% url 'trainer:help_setting' %}">이용문의</a>
+                <a class="KRtext" href="">이용문의</a>
                 <a class="JPtext">利用案内</a>
                 <a class="ENtext">Help</a>
                 <span style="margin-left:10px;margin-right: 10px;">|</span>
@@ -167,7 +171,7 @@
                 <a class="JPtext _company">提携</a>
                 <a class="ENtext _company">Partnership</a>
                 <span style="margin-left:10px;margin-right: 10px;" class="_company">|</span>
-                <a class="KRtext" href="'{% url 'privacy' %}'">개인정보처리방침</a>
+                <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
                 <a class="JPtext">個人情報処理方針</a>
                 <a class="ENtext">Privacy Policy</a>
                 <span style="margin-left:10px;margin-right: 10px;">|</span>
@@ -176,6 +180,19 @@
                 <a class="ENtext _company">Customer Service</a>
                 <span style="margin-left:10px;margin-right: 10px;" class="_company">|</span>
             </div>
+
+            <div class="bottomfooter3">
+                <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+                <span style="margin-left:10px;margin-right: 10px; color:#7d7d7d;">|</span>
+                <a class="KRtext" href="">이용문의</a>
+                <a class="JPtext">利用案内</a>
+                <a class="ENtext">Help</a>
+                <span style="margin-left:10px;margin-right: 10px; color:#7d7d7d;" class="_company">|</span>
+                <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
+                <a class="JPtext">個人情報処理方針</a>
+                <a class="ENtext">Privacy Policy</a>
+            </div>
+
         </footer>
 
     
