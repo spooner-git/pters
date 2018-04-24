@@ -130,8 +130,8 @@ class DeleteScheduleTb(models.Model):
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, null=True)
     member_note = models.CharField(db_column='MEMBER_NOTE', max_length=255, blank=True, null=True)
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-    del_member_id = models.CharField(db_column='DEL_MEMBER_ID', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='REG_MEMBER_ID')  # Field name made lowercase.
+    del_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='DEL_MEMBER_ID')  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.

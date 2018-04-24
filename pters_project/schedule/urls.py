@@ -32,6 +32,7 @@ urlpatterns = [
 
     # 수정 필요 - hkkim - 2018.03.28
     url(r'^get_finish_schedule/$', views.GetFinishScheduleViewAjax.as_view(), name='get_finish_schedule'),
+    url(r'^get_delete_schedule/$', views.GetDeleteScheduleViewAjax.as_view(), name='get_finish_schedule'),
 
     url(r'^update_memo_schedule/$', views.update_memo_schedule_logic, name='update_memo_schedule'),
 
