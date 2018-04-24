@@ -37,7 +37,12 @@
         <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
         {% block local_css %}
         {% endblock %}
-    
+        <style>
+          .bottomfooter2 a{
+            color:  #7d7d7d;
+          }
+        </style>
+
     </head>
     <body>
 
@@ -136,6 +141,7 @@
     {% endblock %}
 
     <footer class="fixfooter bottomzero">
+            <!--
             <div class="bottomfooter1">
                 <form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
                     {% csrf_token %}
@@ -146,13 +152,29 @@
                 <span class="language_set" onclick="languageSet('KOR')">한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
                 <span class="language_set" onclick="languageSet('JPN')">日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
             </div>
+            -->
             <div class="bottomfooter2">
                 <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-                <a href="http://www.spooner.co.kr">회사소개</a><a class="JPtext">会社紹介</a><a class="ENtext">About us</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <a class="KRtext">이용안내</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <a class="KRtext">제휴제안</a><a class="JPtext">提携</a><a class="ENtext">Partnership</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <a class="KRtext">개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <a class="KRtext">고객센터</a><a class="JPtext">ヘルプ</a><a class="ENtext">Customer Service</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <a href="http://www.spooner.co.kr" class="_company">회사소개</a>
+                <a class="JPtext">会社紹介</a>
+                <a class="ENtext">About us</a>
+                <span style="margin-left:10px;margin-right: 10px;">|</span>
+                <a class="KRtext" href="{% url 'trainer:help_setting' %}">이용문의</a>
+                <a class="JPtext">利用案内</a>
+                <a class="ENtext">Help</a>
+                <span style="margin-left:10px;margin-right: 10px;">|</span>
+                <a class="KRtext _company">제휴제안</a>
+                <a class="JPtext _company">提携</a>
+                <a class="ENtext _company">Partnership</a>
+                <span style="margin-left:10px;margin-right: 10px;" class="_company">|</span>
+                <a class="KRtext" href="'{% url 'privacy' %}'">개인정보처리방침</a>
+                <a class="JPtext">個人情報処理方針</a>
+                <a class="ENtext">Privacy Policy</a>
+                <span style="margin-left:10px;margin-right: 10px;">|</span>
+                <a class="KRtext _company">고객센터</a>
+                <a class="JPtext _company">ヘルプ</a>
+                <a class="ENtext _company">Customer Service</a>
+                <span style="margin-left:10px;margin-right: 10px;" class="_company">|</span>
             </div>
         </footer>
 
@@ -256,6 +278,14 @@
               }else if(Options.language=="KOR"){
                 $(".ENtext, .JPtext").remove();
                 $(".KRtext").show();
+              }
+              var varUA = navigator.userAgent.toLowerCase()
+              if(varUA.match('android') != null){
+                  $('._company').css('display','none')
+              }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+                $('._company').css('display','none')
+              }else{
+                 
               }
             ///********************* 회원 월간 달력 옵션*************************************///
             ///********************* 회원 월간 달력 옵션*************************************///

@@ -267,7 +267,7 @@
         -->
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <a href="http://www.spooner.co.kr">회사소개</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href="http://www.spooner.co.kr" class="_company">회사소개</a><span style="margin-left:10px;margin-right: 10px;">|</span>
             <a href="">이용안내</a><span style="margin-left:10px;margin-right: 10px;">|</span>
             <a href="">제휴제안</a><span style="margin-left:10px;margin-right: 10px;">|</span>
             <a href='{% url 'privacy' %}'>개인정보처리방침</a><span style="margin-left:10px;margin-right: 10px;">|</span>
@@ -303,6 +303,16 @@
 <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
 <script>
+    var varUA = navigator.userAgent.toLowerCase()
+    if(varUA.match('android') != null){
+        $('._company').css('display','none')
+    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        $('._company').css('display','none')
+    }else{
+                
+    }
+
+
     function goPage(option){
         if(option == 0){
             location.href="/accounts/register/";

@@ -870,7 +870,7 @@
         </div>
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <span class="_company">회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
             <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
             <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
             <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
@@ -884,6 +884,15 @@
 {% block local_js_footer %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
+
+  var varUA = navigator.userAgent.toLowerCase()
+  if(varUA.match('android') != null){
+      $('._company').css('display','none')
+  }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+    $('._company').css('display','none')
+  }else{
+                
+  }
 
   var group_type, $form; 
 
