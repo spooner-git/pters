@@ -174,12 +174,11 @@ body{
 	}
 }
 
-@media(max-height:630px){
+@media(max-height:630px) and (min-width:600px){
 	html,body{
 		height: auto;
 	}
 }
-
 
 @media(min-width: 600px){
 	body{

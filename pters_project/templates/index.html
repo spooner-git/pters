@@ -239,6 +239,9 @@
     var page = 0
     var scroll = true
     $('html,body').on('mousewheel',function(e){
+        var loc_1 = $('#promote_1').height()
+
+
         e.preventDefault()
        var direction = e.originalEvent.wheelDelta
        console.log(direction)
@@ -247,7 +250,7 @@
             if(page>5){
                 page = 5
             }
-            $('body, html').animate({scrollTop : 1000*page},400)
+            $('body, html').animate({scrollTop : loc_1*page},400)
             $('.pagination_active').removeClass('pagination_active')
             $('#page'+(page+1)).addClass('pagination_active')
             scroll = false
@@ -257,7 +260,7 @@
             if(page < 0){
                 page = 0
             }
-            $('body, html').animate({scrollTop : 1000*page},400)
+            $('body, html').animate({scrollTop : loc_1*page},400)
             $('.pagination_active').removeClass('pagination_active')
             $('#page'+(page+1)).addClass('pagination_active')
             scroll = false
