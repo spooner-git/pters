@@ -409,7 +409,7 @@
             </div>
             <div class="bottomfooter2">
                 <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-                <a href="http://www.spooner.co.kr" class="KRtext">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext">About us</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <a href="http://www.spooner.co.kr" class="KRtext _company">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext _company">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext _company">About us</a><span style="margin-left:10px;margin-right: 10px;">|</span>
                 <a class="KRtext" href='{% url 'trainer:help_setting' %}'>이용문의</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:10px;margin-right: 10px;">|</span>
                 <a class="KRtext">제휴제안</a><a class="JPtext">提携</a><a class="ENtext">Partnership</a><span style="margin-left:10px;margin-right: 10px;">|</span>
                 <a class="KRtext" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
@@ -417,7 +417,7 @@
             </div>
             <div class="bottomfooter3">
                 <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-                 <a href="http://www.spooner.co.kr" class="KRtext">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext">About us</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+                 <a href="http://www.spooner.co.kr" class="KRtext _company">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext _company">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext _company">About us</a><span style="margin-left:10px;margin-right: 10px;">|</span>
                <a class="KRtext" href='{% url 'trainer:help_setting' %}'>이용문의</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:10px;margin-right: 10px;">|</span>
                 <a class="KRtext" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a>
             </div>
@@ -467,6 +467,7 @@
       }
     </script>
     <script type="text/javascript">
+        
 // var requestButton = document.querySelector(".request-btn");
 
     //});
@@ -629,6 +630,15 @@
                 $(".ENtext, .JPtext").remove();
                 $(".KRtext").show();
               }
+
+              var varUA = navigator.userAgent.toLowerCase()
+                if(varUA.match('android') != null){
+                    $('._company').css('display','none')
+                }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+                    $('._company').css('display','none')
+                }else{
+                    
+                }
 
               function languageSet(language){
                     $('#id_setting_language').val(language)
