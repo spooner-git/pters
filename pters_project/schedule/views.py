@@ -1308,7 +1308,7 @@ def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='PT '+log_type_name, log_how=log_type_detail,
-                         log_detail=str(start_date) + '~' + str(end_date),
+                         log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
     else:
@@ -1323,7 +1323,7 @@ def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_
                          from_member_name=user_name,
                          class_tb_id=class_id,
                          log_info='OFF '+log_type_name, log_how=log_type_detail,
-                         log_detail=str(start_date) + '~' + str(end_date),
+                         log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
         log_data.save()
 

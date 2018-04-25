@@ -1761,11 +1761,11 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                 log_info.time_ago = timezone.now() - log_info.reg_dt
                 log_info.reg_dt = str(log_info.reg_dt).split('.')[0]
 
-                if log_info.log_detail:
+                if log_info.log_detail != '' and log_info.log_detail is not None:
                     before_day = str(log_info.log_detail).split('/')[0]
                     after_day = str(log_info.log_detail).split('/')[1]
 
-                    if '반복 일정' in log_info.log_detail:
+                    if '반복 일정' in log_info.log_info:
                         log_info.log_detail = before_day + '~' + after_day
                     else:
                         log_info.log_detail = before_day + '~' + after_day.split(' ')[1]
