@@ -148,14 +148,18 @@ $(document).ready(function(){
                       var mm = tdinfo[1];
                       var dd = tdinfo[2];
                       var hh = tdinfo[3];
-                      var min = tdinfo[4];
+                      //var min = tdinfo[4];
+                      var min = '00'
+                      /*
                       if(min == '00'){
                         var hh1 = Number(tdinfo[3]);
                         var min1 = '30'
                       }else if(min == "30"){
                         var hh1 = Number(tdinfo[3])+1;
                         var min1 = '00'
-                      }
+                      }*/
+                      var hh1 = Number(tdinfo[3])+1;
+                      var min1 = '00'
                       var yy0 = tdinfo[0];
                       var mm0 = tdinfo[1];
                       var dd0 = tdinfo[2];
@@ -179,7 +183,7 @@ $(document).ready(function(){
                       $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
                       $("#id_training_time_off").val(hh+':'+min+':00.000000');
                       //durTimeSet(hh,min,"mini");
-                      durTimeSet(hh,'00',"mini");
+                      durTimeSet(hh,min1,"mini");
                   }else if(Options.hourunit == 60){
                       var tdinfo = $(this).attr('id').split('_');
                       var yy = tdinfo[0];

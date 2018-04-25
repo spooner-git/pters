@@ -1256,14 +1256,12 @@ $(document).ready(function(){
 					toAppend2 = '<div class="slidegap"><span class="_morningday">오후 </span>'+i+'<div></div></div>'+td30
 			};
 
-			/*
+			
 			if(Options.classDur == 30){
-				var sum = textToAppend+toAppend1+textToAppend_+toAppend2
 			}else if(Options.classDur == 60){
-				var sum = textToAppend+toAppend1
-				$('.td00').css('height','59px')
+				$('.time-row').css('border-bottom','0')
 			}
-			*/
+			
 			var sum = textToAppend+toAppend1+textToAppend_+toAppend2
 			slideIndex.append(sum);
 
@@ -1907,6 +1905,12 @@ $(document).ready(function(){
 			var indicator_Location = $('#hour'+realTimeHour).position().top
 			var minute_adjust = 45*(realTimeMin/60)
 			$('#timeIndicatorBar').css('top',indicator_Location+minute_adjust)
+			if(realTimeMin<10){
+				var realTimeMin = '0' + realTimeMin
+			}
+			if(realTimeHour<10){
+				var realTimeHour = '0' + realTimeHour
+			}
 			$('#timeIndicatorBar').fadeIn('fast').html('<span class="timeindicator_rightfloat">'+realTimeHour+':'+realTimeMin+'</span>')
 		}else{
 			$('.hour').removeClass('currentTimeBlackBox');
