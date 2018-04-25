@@ -178,7 +178,8 @@ $(document).ready(function(){
                       $("#id_time_duration").val(1*(Options.classDur/60))
                       $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
                       $("#id_training_time_off").val(hh+':'+min+':00.000000');
-                      durTimeSet(hh,min,"mini");
+                      //durTimeSet(hh,min,"mini");
+                      durTimeSet(hh,'00',"mini");
                   }else if(Options.hourunit == 60){
                       var tdinfo = $(this).attr('id').split('_');
                       var yy = tdinfo[0];

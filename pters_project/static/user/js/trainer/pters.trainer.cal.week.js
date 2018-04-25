@@ -14,7 +14,8 @@ $(document).ready(function(){
 
 	setInterval(function(){
 		ajaxCheckSchedule();
-		todayFinderArrow()
+		//todayFinderArrow()
+		addcurrentTimeIndicator_blackbox()
 	}, 60000)// 자동 ajax 새로고침(일정가져오기)
 
 
@@ -1898,12 +1899,15 @@ $(document).ready(function(){
 	})
 
 	function addcurrentTimeIndicator_blackbox(){ //현재 시간에 밑줄 긋기
-		if($('.today').length && currentHour < Options.workEndTime && currentHour >= Options.workStartTime){
-			$('#hour'+currentHour).addClass('currentTimeBlackBox');
-			var indicator_Location = $('#hour'+currentHour).position().top
-			var minute_adjust = 45*(currentMinute/60)
+		var realTime = new Date()
+		var realTimeHour = realTime.getHours();
+		var realTimeMin = realTime.getMinutes();
+		if($('.today').length && realTimeHour < Options.workEndTime && realTimeHour >= Options.workStartTime){
+			$('#hour'+realTimeHour).addClass('currentTimeBlackBox');
+			var indicator_Location = $('#hour'+realTimeHour).position().top
+			var minute_adjust = 45*(realTimeMin/60)
 			$('#timeIndicatorBar').css('top',indicator_Location+minute_adjust)
-			$('#timeIndicatorBar').fadeIn('fast')
+			$('#timeIndicatorBar').fadeIn('fast').html('<span class="timeindicator_rightfloat">'+realTimeHour+':'+realTimeMin+'</span>')
 		}else{
 			$('.hour').removeClass('currentTimeBlackBox');
 			$('#timeIndicatorBar').fadeOut('fast')
