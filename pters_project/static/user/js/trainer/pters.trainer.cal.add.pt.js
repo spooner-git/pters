@@ -112,7 +112,7 @@ $(document).ready(function(){
               var next30ID = '#'+thisIDSplitArray[0]+'_'+thisIDSplitArray[1]+'_'+thisIDSplitArray[2]+'_'+thisIDSplitArray[3]+'_30'
             }
             if(Options.classDur == 60){
-                if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none') && !$(next30ID).find('div').hasClass('classTime') && !$(next30ID).find('div').hasClass('offTime')){
+                if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none') && !$(next30ID).find('div').hasClass('classTime') && !$(next30ID).find('div').hasClass('offTime') && !$(this).hasClass('_on')){
                   //$('.td00').css('background','transparent')
                   closeMiniPopupByChange()
                   if(Options.classDur == 30){
@@ -120,10 +120,11 @@ $(document).ready(function(){
                     $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
                   }else if(Options.classDur == 60){
                     if($(this).attr('id').split('_')[4]=='30'){
-                      if(!$('#'+$(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]+'_'+$(this).attr('id').split('_')[3]+'_00').hasClass('_on')){
-                        $('#'+$(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]+'_'+$(this).attr('id').split('_')[3]+'_00').find('div').addClass('blankSelected')
+                      //if(!$('#'+$(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]+'_'+$(this).attr('id').split('_')[3]+'_00').hasClass('_on')){
+                        //$('#'+$(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]+'_'+$(this).attr('id').split('_')[3]+'_00').find('div').addClass('blankSelected')
+                        $(this).find('div').addClass('blankSelected')
                         $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
-                      }
+                      //}
                       
                     }else{
                       $(this).find('div').addClass('blankSelected')
@@ -148,18 +149,19 @@ $(document).ready(function(){
                       var mm = tdinfo[1];
                       var dd = tdinfo[2];
                       var hh = tdinfo[3];
-                      //var min = tdinfo[4];
-                      var min = '00'
-                      /*
+                      var min = tdinfo[4];
+                      //var min = '00'
+                      //var hh1 = Number(tdinfo[3])+1;
+                      //var min1 = '00'
+                      
                       if(min == '00'){
-                        var hh1 = Number(tdinfo[3]);
-                        var min1 = '30'
-                      }else if(min == "30"){
                         var hh1 = Number(tdinfo[3])+1;
                         var min1 = '00'
-                      }*/
-                      var hh1 = Number(tdinfo[3])+1;
-                      var min1 = '00'
+                      }else if(min == "30"){
+                        var hh1 = Number(tdinfo[3])+1;
+                        var min1 = '30'
+                      }
+                      
                       var yy0 = tdinfo[0];
                       var mm0 = tdinfo[1];
                       var dd0 = tdinfo[2];
@@ -183,7 +185,7 @@ $(document).ready(function(){
                       $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
                       $("#id_training_time_off").val(hh+':'+min+':00.000000');
                       //durTimeSet(hh,min,"mini");
-                      durTimeSet(hh,min1,"mini");
+                      durTimeSet(hh,min,"mini");
                   }else if(Options.hourunit == 60){
                       var tdinfo = $(this).attr('id').split('_');
                       var yy = tdinfo[0];
@@ -1644,24 +1646,29 @@ function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리
   offAddOkArray = []
   if(Options.classDur == 60){
     for(i=Options.workStartTime;i<Options.workEndTime;i++){
-
-      /* 1시간 단위일때도 시작일자 리스트는 30분단위로 세밀하게 보여주기
+      // 1시간 단위일때도 시작일자 리스트는 30분단위로 세밀하게 보여주기
       if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
-        offAddOkArray.push(i);
-      }
-      if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
+        if($('#'+i+'g_30'+option).hasClass('pinktimegraph') == true || $('#'+i+'g_30'+option).hasClass('greytimegraph') == true || $('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true || $('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
+
+        }else{
+          offAddOkArray.push(i);
+        }
+        
+      }else if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
         if($('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
           //
         }else{
           offAddOkArray.push(i+0.5)  
         }
       }
-      */
+      
 
+      /*
       if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true &&
         !$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
         offAddOkArray.push(i);
       }
+      */
 
     }
   }else if(Options.classDur == 30){
@@ -1893,22 +1900,27 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
                 var Num = (Number(i)+1)
               }
 
-              /*
+              
               // 더 상세하게 설정. 8:00, 8:30, 9:00, 9:30  1시간 단위일때도 30분단위로 리스트 채워주기
-              if($('#'+Num+'g_'+(mins)+options).hasClass('greytimegraph')  || $('#'+Num+'g_'+(mins)+options).hasClass('pinktimegraph')   ){
+              if($('#'+Num+'g_'+(mins)+options).hasClass('greytimegraph')  || $('#'+Num+'g_'+(mins)+options).hasClass('pinktimegraph')){
                 break;
               }else{
-                durTimeList.append('<li><a data-dur="'+(t)*2+'" class="pointerList">'+(t)+'시간  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
+                if((Number(i)+1) == Options.workEndTime && selectedMin== '30'){
+                    break;
+                }else{
+                  durTimeList.append('<li><a data-dur="'+(t)*2+'" class="pointerList">'+(t)+'시간  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
+                }
+                
               }
-              */
               
               
+              /*
               if($('#'+Num+'g_'+'00'+options).hasClass('greytimegraph')  || $('#'+Num+'g_'+'00'+options).hasClass('pinktimegraph')   ){
                 break;
               }else{
                 durTimeList.append('<li><a data-dur="'+(t)*2+'" class="pointerList">'+(t)+'시간  (~ '+(Number(i)+1)+':00'+')'+'</a></li>')
               }
-              
+              */
               t++
           }
       }else if(Options.classDur == 30){  // 0 30  // 30 0 
