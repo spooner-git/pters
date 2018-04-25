@@ -48,6 +48,14 @@ class CheckView(LoginRequiredMixin, RedirectView):
         return super(CheckView, self).get_redirect_url(*args, **kwargs)
 
 
+class SiteUsePolicyView(TemplateView):
+    template_name = 'policy.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SiteUsePolicyView, self).get_context_data(**kwargs)
+        return context
+
+
 class PrivacyView(TemplateView):
     template_name = 'privacy.html'
 
