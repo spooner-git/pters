@@ -8,6 +8,10 @@ ul a{
 	cursor: pointer;
 }
 
+._on{
+	
+}
+
 
 #inputError, #inputError_info, #inputError_info_PC{
 	position: relative;
@@ -857,7 +861,7 @@ option{
 	background: #fe4e65;
 	color: #ffffff;
 }
-/*
+
 .blankSelected{
 	position: absolute;
 	top: 0;
@@ -867,7 +871,7 @@ option{
 	margin-left: 3px;
 	margin-top: 2px;
 }
-*/
+/*
 .blankSelected{
 	position: absolute;
 	top: 0;
@@ -877,6 +881,7 @@ option{
 	margin-left: 3px;
 	margin-top: 2px;
 }
+*/
 .blankSelected30{
 	position: absolute;
 	top: 0;

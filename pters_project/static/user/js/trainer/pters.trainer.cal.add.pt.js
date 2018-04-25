@@ -117,11 +117,22 @@ $(document).ready(function(){
                   closeMiniPopupByChange()
                   if(Options.classDur == 30){
                     $(this).find('div').addClass('blankSelected30')
+                    $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
                   }else if(Options.classDur == 60){
-                    $(this).find('div').addClass('blankSelected')
-                    //$(this).find('div').addClass('blankSelected30')
+                    if($(this).attr('id').split('_')[4]=='30'){
+                      if(!$('#'+$(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]+'_'+$(this).attr('id').split('_')[3]+'_00').hasClass('_on')){
+                        $('#'+$(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]+'_'+$(this).attr('id').split('_')[3]+'_00').find('div').addClass('blankSelected')
+                        $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
+                      }
+                      
+                    }else{
+                      $(this).find('div').addClass('blankSelected')
+                      $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
+                      //$(this).find('div').addClass('blankSelected30')
+                    }
+                    
                   }
-                  $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
+                  //$('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
                   $('.typeSelected').removeClass('typeSelected')
                   $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
                   if(addTypeSelect == "ptadd"){
@@ -1202,6 +1213,7 @@ function ajax_received_json_data(json){
     DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
     DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
     $('.classTime,.offTime').parent().html('<div></div>')
+    $('._on').removeClass('_on')
     classTime();
     offTime();
     addPtMemberListSet();
@@ -1471,10 +1483,21 @@ function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하
       tdClass.parent('div').siblings('.fake_for_blankpage').css('display','none')
 
       if(scheduleFinishArray[i]=="0") {
-                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
-            }else {
-                tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
-            }
+          tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+      }else {
+          tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+      }
+      var hhh = Number(classHour)
+      var mmm = classMinute
+
+      for(var j=0; j<classDura/0.5; j++){
+        if(mmm == 60){
+          hhh = hhh + 1
+          mmm = '00'
+        }
+        $('#'+classYear+'_'+classMonth+'_'+classDate+'_'+hhh+'_'+mmm).addClass('_on')
+        mmm = Number(mmm) + 30
+      }
     };
     $('#calendar').css('display','block');
 };
@@ -1519,6 +1542,19 @@ function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하�
     tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
     
     tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).attr('data-memo',memoArray).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
+    
+    var hhh = Number(offHour)
+    var mmm = offMinute
+
+    for(var j=0; j<offDura/0.5; j++){
+      if(mmm == 60){
+        hhh = hhh + 1
+        mmm = '00'
+      }
+      $('#'+offYear+'_'+offMonth+'_'+offDate+'_'+hhh+'_'+mmm).addClass('_on')
+      mmm = Number(mmm) + 30
+    }
+
   };
   $('#calendar').css('display','block');
 };
@@ -1582,6 +1618,8 @@ function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리
   offAddOkArray = []
   if(Options.classDur == 60){
     for(i=Options.workStartTime;i<Options.workEndTime;i++){
+
+      /* 1시간 단위일때도 시작일자 리스트는 30분단위로 세밀하게 보여주기
       if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
         offAddOkArray.push(i);
       }
@@ -1592,6 +1630,13 @@ function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리
           offAddOkArray.push(i+0.5)  
         }
       }
+      */
+
+      if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true &&
+        !$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
+        offAddOkArray.push(i);
+      }
+
     }
   }else if(Options.classDur == 30){
     for(i=Options.workStartTime;i<Options.workEndTime;i++){
@@ -1821,11 +1866,23 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
                 var mins = "00"
                 var Num = (Number(i)+1)
               }
+
+              /*
+              // 더 상세하게 설정. 8:00, 8:30, 9:00, 9:30  1시간 단위일때도 30분단위로 리스트 채워주기
               if($('#'+Num+'g_'+(mins)+options).hasClass('greytimegraph')  || $('#'+Num+'g_'+(mins)+options).hasClass('pinktimegraph')   ){
                 break;
               }else{
                 durTimeList.append('<li><a data-dur="'+(t)*2+'" class="pointerList">'+(t)+'시간  (~ '+(Number(i)+1)+':'+selectedMin+')'+'</a></li>')
               }
+              */
+              
+              
+              if($('#'+Num+'g_'+'00'+options).hasClass('greytimegraph')  || $('#'+Num+'g_'+'00'+options).hasClass('pinktimegraph')   ){
+                break;
+              }else{
+                durTimeList.append('<li><a data-dur="'+(t)*2+'" class="pointerList">'+(t)+'시간  (~ '+(Number(i)+1)+':00'+')'+'</a></li>')
+              }
+              
               t++
           }
       }else if(Options.classDur == 30){  // 0 30  // 30 0 

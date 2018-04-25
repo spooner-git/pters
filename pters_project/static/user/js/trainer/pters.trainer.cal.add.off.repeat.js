@@ -176,7 +176,7 @@ $(document).ready(function(){
           var selectedTime = $('#repeatstarttimesSelected button').val().split(':')[0]
           var durTimeList = []
           for(var i=1; i<=end-(selectedTime); i++){
-              durTimeList.push('<li><a data-dur="'+i+'">'+i+'시간</a></li>')
+              durTimeList.push('<li><a data-dur="'+i*(60/Options.classDur)+'">'+i+'시간</a></li>')
           }
           $('#repeatdurations').html(durTimeList.join(''))
       }

@@ -839,6 +839,7 @@ $(document).ready(function(){
           DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
           DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
           $('.classTime,.offTime').parent().html('<div></div>')
+          $('._on').removeClass('_on')
           classTime();
           offTime();
           addPtMemberListSet();
@@ -913,6 +914,7 @@ $(document).ready(function(){
 	addcurrentTimeIndicator_blackbox()
 	todayFinderArrow();	
 
+	/*
 	if(Options.classDur == 30){
 		draw_time_graph(30,'')
 		draw_time_graph(30,'mini')
@@ -920,6 +922,10 @@ $(document).ready(function(){
 		draw_time_graph(60,'')
 		draw_time_graph(60,'mini')
 	}
+	*/
+
+	draw_time_graph(30,'')
+	draw_time_graph(30,'mini')
 	
 	
 
@@ -1249,12 +1255,15 @@ $(document).ready(function(){
 					toAppend2 = '<div class="slidegap"><span class="_morningday">오후 </span>'+i+'<div></div></div>'+td30
 			};
 
+			/*
 			if(Options.classDur == 30){
 				var sum = textToAppend+toAppend1+textToAppend_+toAppend2
 			}else if(Options.classDur == 60){
 				var sum = textToAppend+toAppend1
 				$('.td00').css('height','59px')
 			}
+			*/
+			var sum = textToAppend+toAppend1+textToAppend_+toAppend2
 			slideIndex.append(sum);
 
 		};
@@ -1606,6 +1615,20 @@ $(document).ready(function(){
             }else {
                 tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
             }
+
+            var hhh = Number(classHour)
+            var mmm = classMinute
+
+            for(var j=0; j<classDura/0.5; j++){
+				if(mmm == 60){
+					hhh = hhh + 1
+					mmm = '00'
+				}
+				$('#'+classYear+'_'+classMonth+'_'+classDate+'_'+hhh+'_'+mmm).addClass('_on')
+				mmm = Number(mmm) + 30
+            }
+		
+
 		};
 		$('#calendar').css('display','block');
 	};
@@ -1661,6 +1684,19 @@ $(document).ready(function(){
 			tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
 			
 			tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).attr('data-memo',memoArray).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
+		
+			var hhh = Number(offHour)
+            var mmm = offMinute
+
+            for(var j=0; j<offDura/0.5; j++){
+				if(mmm == 60){
+					hhh = hhh + 1
+					mmm = '00'
+				}
+				$('#'+offYear+'_'+offMonth+'_'+offDate+'_'+hhh+'_'+mmm).addClass('_on')
+				mmm = Number(mmm) + 30
+            }
+
 		};
 		$('#calendar').css('display','block');
 	};
@@ -2126,6 +2162,7 @@ function ajaxClassTime(){
 				DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classTimeArray,"class");
 				DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
 				$('.classTime,.offTime').parent().html('<div></div>')
+				$('._on').removeClass('_on')
 				classTime();
 				offTime();
 				addPtMemberListSet();
