@@ -14,9 +14,27 @@ body{
 	border-radius: 5px;
 	top: 100px;
 	right: 30px;
-	padding: 20px 30px 0px 30px;
+	padding: 20px 10px 0px 10px;
 	box-shadow: 1px 1px 1px 1px #fe4e65;
 	display: none;
+}
+
+
+@media(min-width: 600px){
+	#how_to_add_member{
+		position: absolute;
+		z-index: 300;
+		width: 90%;
+		height: 195px;
+		background:#f4f4f4;
+		border:3px solid #fe4e65;
+		border-radius: 5px;
+		top: 100px;
+		right: 30px;
+		padding: 20px 30px 0px 30px;
+		box-shadow: 1px 1px 1px 1px #fe4e65;
+		display: none;
+	}
 }
 
 #please_add_member{
