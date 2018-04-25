@@ -183,6 +183,7 @@ $(document).ready(function(){
 			
 			var selectedDate = $('.popup_ymdText').text()
 			var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
+			var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0]
 			var selectedPerson = '<span class="memberNameForInfoView" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
 			var selectedMemo = $(this).attr('data-memo')
 			if($(this).attr('data-memo') == undefined){
@@ -192,7 +193,7 @@ $(document).ready(function(){
 			$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
 			$('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
 			$('#popup_info').text(selectedDate);
-			$('#popup_info2').html(selectedPerson+'의 '+ selectedTime + '시 일정');
+			$('#popup_info2').html(selectedPerson+'의 '+ selectedTime+':'+selectedMinute + ' 일정');
 			$('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
 
 			$('#canvas').hide().css({'border-color':'#282828'})
@@ -1350,7 +1351,6 @@ function plancheck(dateinfo){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo
 			dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_/'+memoArray)
 		}
 	}
-	console.log(dateplans)
 	dateplans.sort();
 	var htmltojoin = []
 	if(dateplans.length>0){
