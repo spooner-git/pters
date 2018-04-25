@@ -550,7 +550,10 @@ img,a,div,span,p{
 	width: 100%;
 	height: 100%;
 	top: 0;
+}
 
+.timeindicator_rightfloat{
+	display: none;
 }
 
 #float_btn_wrap{
@@ -681,6 +684,7 @@ img,a,div,span,p{
 		opacity: 0.4;
 	}
 	.timeindicator_rightfloat{
+		display: inline;
 		position: absolute;
 		right: 0;
 		top: -20px;
