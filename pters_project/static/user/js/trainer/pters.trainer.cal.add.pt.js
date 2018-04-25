@@ -1362,9 +1362,30 @@ function fill_repeat_info(option){ //반복일정 요약 채우기
       var repeat_end_text_small = "<span class='summaryInnerBoxText_Repeatendtext_small'>~</span>"
       var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
       var repeat_end = repeat_end_array[i].replace(/-/gi,".");
-      var repeat_time = Number(repeat_time_array[i].split(':')[0])+0
-      var repeat_dur = repeat_dur_array[i]
+      var repeat_time = Number(repeat_time_array[i].split(':')[0]) // 06 or 18
+      var repeat_min = Number(repeat_time_array[i].split(':')[1])  // 00 or 30
+      if(repeat_min == "30"){
+        var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
+      }
+      var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
       var repeat_sum = Number(repeat_time) + Number(repeat_dur)
+
+      var repeat_end_time_hour = parseInt(repeat_sum)
+      if(parseInt(repeat_sum)<10){
+        var repeat_end_time_hour = '0'+parseInt(repeat_sum)
+      }
+      if((repeat_sum%parseInt(repeat_sum))*60 == 0){
+        var repeat_end_time_min = '00'
+      }else if((repeat_sum%parseInt(repeat_sum))*60 == 30){
+        var repeat_end_time_min = '30'
+      }
+    
+      var repeat_start_time = repeat_time_array[i].split(':')[0] +':'+ repeat_time_array[i].split(':')[1]
+      var repeat_end_time = repeat_end_time_hour + ':' + repeat_end_time_min
+
+      
+
+
       var repeat_day =  function(){
                           var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
                           var repeat_day_info = ""
@@ -1381,7 +1402,7 @@ function fill_repeat_info(option){ //반복일정 요약 채우기
                             return repeat_day_info
                         };
 
-      var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)</span>'
+      var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +'시간)</span>'
       var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>'
       var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
       schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'

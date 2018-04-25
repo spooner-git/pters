@@ -2318,6 +2318,7 @@ function draw_member_history_list_table(jsondata,targetHTML){
         var text6 = '시작전'
         var text7 = '시작전'
         var text9 = '시간'
+        var text10 = '회차'
     }else if(Options.language == "JPN"){
         var text = '授業日'
         var text2 = '進行時間'
@@ -2327,6 +2328,7 @@ function draw_member_history_list_table(jsondata,targetHTML){
         var text6 = '未完了'
         var text7 = '未完了'
         var text9 = '時間'
+        var text10 = 'No.'
     }else if(Options.language == "ENG"){
         var text = 'Date'
         var text2 = 'Period'
@@ -2336,26 +2338,30 @@ function draw_member_history_list_table(jsondata,targetHTML){
         var text6 = 'Yet'
         var text7 = 'Yet'
         var text9 = 'h'
+        var text10 = 'No.'
     }
     var $regHistory = targetHTML
-    var result_history_html = ['<div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>']
+    var result_history_html = ['<div><div>'+text10+'</div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>']
     var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7}
     for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay()
         var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2])
         var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2])
-        var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0])
-        var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])
+        var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60
+        var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60
+        console.log(startTime,'startTime')
+        console.log(endTime,'endTime',Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1]))
         if( endDate == startDate+1 && endTime==0){
             var duration = 24 - startTime
         }else{
             var duration = endTime - startTime
         }
+        var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+(jsondata.ptScheduleStartDtArray.length-i)+'</div>'
         var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleStartDtArray[i].split(' ')[0]+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
         var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration+text9+'</div>'
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
-        result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
+        result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleNo+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
     }
 
     var result_history = result_history_html.join('')
@@ -2865,9 +2871,30 @@ function set_indiv_repeat_info(){
         //var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
         var repeat_end_text = ""
         var repeat_end = repeat_end_array[i].replace(/-/gi,".");
-        var repeat_time = Number(repeat_time_array[i].split(':')[0])+0
-        var repeat_dur = repeat_dur_array[i]
+        var repeat_time = Number(repeat_time_array[i].split(':')[0]) // 06 or 18
+        var repeat_min = Number(repeat_time_array[i].split(':')[1])  // 00 or 30
+
+        if(repeat_min == "30"){
+            var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
+        }
+        var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
         var repeat_sum = Number(repeat_time) + Number(repeat_dur)
+
+        var repeat_end_time_hour = parseInt(repeat_sum)
+        if(parseInt(repeat_sum)<10){
+            var repeat_end_time_hour = '0'+parseInt(repeat_sum)
+        }
+        if((repeat_sum%parseInt(repeat_sum))*60 == 0){
+            var repeat_end_time_min = '00'
+        }else if((repeat_sum%parseInt(repeat_sum))*60 == 30){
+            var repeat_end_time_min = '30'
+        }
+
+        var repeat_start_time = repeat_time_array[i].split(':')[0] +':'+ repeat_time_array[i].split(':')[1]
+        var repeat_end_time = repeat_end_time_hour + ':' + repeat_end_time_min
+
+
+
         var repeat_day =  function(){
                             var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
                             var repeat_day_info = ""
@@ -2883,7 +2910,7 @@ function set_indiv_repeat_info(){
                             }
                               return repeat_day_info
                           };
-        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+text+' ('+repeat_dur +text2+')'+'</p>'
+        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +text2+')'+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'

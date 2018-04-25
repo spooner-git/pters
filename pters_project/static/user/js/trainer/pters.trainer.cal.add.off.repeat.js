@@ -190,12 +190,22 @@ $(document).ready(function(){
           var start = Options.workStartTime;
           var end   = Options.workEndTime;
           var selectedTime = $('#repeatstarttimesSelected button').val().split(':')[0]
+          var selectedMin = $('#repeatstarttimesSelected button').val().split(':')[1]
           var durTimeList = []
           
           if(Options.classDur == 30){
-            for(var i=1; i<end-(selectedTime); i++){
-                durTimeList.push('<li><a data-dur="'+i*(60/Options.classDur)+'">'+i+'시간</a></li><li><a data-dur="'+(i*(60/Options.classDur)+1)+'">'+(i+0.5)+'시간</a></li>')
-            }
+            var tengo=0.5
+              if(selectedMin == "30"){
+                for(var i=0; i<(end-(selectedTime))*2-1; i++){
+                  durTimeList.push('<li><a data-dur="'+(i+1)+'">'+tengo+'시간</a></li>')
+                  tengo = tengo + 0.5
+                }
+              }else if(selectedMin == "00"){
+                for(var i=0; i<(end-(selectedTime))*2; i++){
+                  durTimeList.push('<li><a data-dur="'+(i+1)+'">'+tengo+'시간</a></li>')
+                  tengo = tengo + 0.5
+                }
+              }
           }else if(Options.classDur == 60){
             for(var i=1; i<=end-(selectedTime); i++){
                 durTimeList.push('<li><a data-dur="'+i*(60/Options.classDur)+'">'+i+'시간</a></li>')
