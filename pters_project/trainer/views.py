@@ -2838,6 +2838,8 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
             messages.error(request, error)
+        else:
+            request.session['class_hour'] = class_info.class_hour
 
         return render(request, self.template_name)
 
