@@ -193,7 +193,7 @@ $(document).ready(function(){
           var durTimeList = []
           
           if(Options.classDur == 30){
-            for(var i=1; i<=end-(selectedTime); i++){
+            for(var i=1; i<end-(selectedTime); i++){
                 durTimeList.push('<li><a data-dur="'+i*(60/Options.classDur)+'">'+i+'시간</a></li><li><a data-dur="'+(i*(60/Options.classDur)+1)+'">'+(i+0.5)+'시간</a></li>')
             }
           }else if(Options.classDur == 60){
