@@ -218,7 +218,7 @@ $(document).ready(function(){
       $('._nameAttach').text("님")
       //$('.pcwhere').text("PTERS 트레이닝센터")
       $('.pclogout').text("로그아웃")
-      $('#uptext span').text("코치님 일정")
+      $('#uptext span').text("님 일정")
       $('.__alarm').text("알림")
       $('.__calSelect').text("클래스 선택")
       $('.__mypage').text("마이페이지")
