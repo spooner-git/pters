@@ -53,6 +53,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     self.request.session['class_id'] = class_info.class_tb_id
                     class_type_name = ''
                     class_name = None
+                    self.request.session['class_hour'] = class_info.class_tb.class_hour
+
                     try:
                         class_name = CommonCdTb.objects.get(common_cd=class_info.class_tb.subject_cd)
                     except ObjectDoesNotExist:
@@ -2652,6 +2654,8 @@ def class_processing_logic(request):
         class_type_name = ''
         class_name = None
 
+        request.session['class_hour'] = class_info.class_hour
+
         try:
             class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
         except ObjectDoesNotExist:
@@ -2913,6 +2917,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             request.session['class_id'] = class_info.class_id
+            request.session['class_hour'] = class_info.class_hour
             class_type_name = ''
             class_name = None
             try:
