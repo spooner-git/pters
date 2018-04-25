@@ -727,7 +727,7 @@ button._info_delete_img{
 	vertical-align: middle;
 }
 
-#memberSex, #memberSex_info{
+#memberSex{
 	display: table-cell;
 	vertical-align: middle;
 	min-width: 70px;
@@ -736,7 +736,8 @@ button._info_delete_img{
 	background:#ffffff;
 }
 
-#memberMale,#memberFemale, #memberMale_info, #memberFemale_info{
+
+#memberMale,#memberFemale{
 	line-height: 38px;
 	border-bottom:1.5px solid #cccccc;
 }
@@ -891,11 +892,11 @@ option{
 		height: 26px;
 	}
 
-	#memberSex, #memberSex_info{
+	#memberSex{
 		height: 26px;
 	}
 
-	#memberMale,#memberFemale, #memberMale_info, #memberFemale_info{
+	#memberMale,#memberFemale{
 		line-height: 24px;
 	}
 

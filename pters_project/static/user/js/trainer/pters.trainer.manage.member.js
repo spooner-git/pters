@@ -66,12 +66,12 @@ $(document).ready(function(){
         shade_index(100)
         if($('body').width()<600){
             open_member_info_popup_mobile(userID);
-            get_indiv_repeat_info(userID);
+            get_indiv_repeat_info();
             set_member_lecture_list();
             set_member_history_list();
         }else if($('body').width()>=600){
             open_member_info_popup_pc(userID);
-            get_indiv_repeat_info(userID);
+            get_indiv_repeat_info();
             set_member_lecture_list();
             set_member_history_list();
             $('#info_shift_base, #info_shift_lecture').show();
@@ -79,6 +79,7 @@ $(document).ready(function(){
             $('#select_info_shift_lecture').addClass('button_active')
             $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active')
         }
+        shade_index(100)
     });
 
     //PC 회원삭제버튼
@@ -217,6 +218,35 @@ $(document).ready(function(){
         $(this).siblings('.button_shift_info').removeClass('button_active')
     });
 
+    $('#select_info_shift_lecture_mobile').click(function(){
+        $('#mobile_lecture_info').show();
+        $('#mobile_repeat_info').hide();
+        $('#mobile_history_info').hide();
+        //$(this).css({'color':'#ffffff','background':'#fe4e65'});
+        //$(this).siblings('.button_shift_info').css({'color':'#888888','background':'#f1f1f1'});\
+        $(this).addClass('button_active')
+        $(this).siblings('.button_shift_info').removeClass('button_active')
+    });
+
+    $('#select_info_shift_schedule_mobile').click(function(){
+        $('#mobile_lecture_info').hide();
+        $('#mobile_repeat_info').show();
+        $('#mobile_history_info').hide();
+        //$(this).css({'color':'#ffffff','background':'#fe4e65'});
+        //$(this).siblings('.button_shift_info').css({'color':'#888888','background':'#f1f1f1'});
+        $(this).addClass('button_active')
+        $(this).siblings('.button_shift_info').removeClass('button_active')
+    });
+
+    $('#select_info_shift_history_mobile').click(function(){
+        $('#mobile_lecture_info').hide();
+        $('#mobile_repeat_info').hide();
+        $('#mobile_history_info').show();
+        //$(this).css({'color':'#ffffff','background':'#fe4e65'});
+        //$(this).siblings('.button_shift_info').css({'color':'#888888','background':'#f1f1f1'});
+        $(this).addClass('button_active')
+        $(this).siblings('.button_shift_info').removeClass('button_active')
+    });
     
 
     $(document).on('click','div.lectureType_RJ',function(){
@@ -420,10 +450,11 @@ $(document).ready(function(){
                             $('#errorMessageBar').hide();
                             $('#errorMessageText').text('');
                             var userID = $('#memberId_info_PC').text();
-                            get_indiv_repeat_info(userID);
+                            get_indiv_repeat_info();
                             set_member_lecture_list(jsondata);
                             set_member_history_list(jsondata);
                             closePopup('member_delete');
+                            close_info_popup('cal_popup_plandelete')
                             deleteTypeSelect = "memberinfodelete";
                         }
                       },
@@ -2384,9 +2415,11 @@ function set_member_lecture_list(jsondata){
     if($('#memberInfoPopup_PC').css('display')=="block"){
         var userID = $('#memberId_info_PC').text()
         var $regHistory = $('#memberRegHistory_info_PC')
+        var option = "pc"
     }else if($('#memberInfoPopup').css('display')=="block"){
         var userID = $('#memberId').val()
         var $regHistory = $('#memberRegHistory_info')
+        var option = "mobile"
     }
     if($('#currentMemberList').css('display') == "block"){
       var Data = DB
@@ -2424,7 +2457,7 @@ function set_member_lecture_list(jsondata){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-               draw_member_lecture_list_table(jsondata,$regHistory) 
+               draw_member_lecture_list_table(jsondata,$regHistory,option) 
             }
             
         },
@@ -2438,55 +2471,116 @@ function set_member_lecture_list(jsondata){
 }
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
-function draw_member_lecture_list_table(jsondata, targetHTML){
+function draw_member_lecture_list_table(jsondata, targetHTML, option){
     var $regHistory = targetHTML
-    var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
-    for(var i=0; i<jsondata.lectureIdArray.length; i++){
-        var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
-        var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
-        var lectureType = '<div>'+jsondata.lectureStateArray[i]+'</div>'
-        var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-        var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateArray[i]+'</div>'
-        var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-        var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
-        //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
-        var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
-        var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
-        if($('body').width()>600){
-            var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
-            var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
-        }else if($('body').width()<=600){
-            var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
-            var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
-        }
-        //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
-        //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
-        var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
-        var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
-        var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
-        var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
-        if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-            var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-        }else if(jsondata.lectureStateArray[i] == "PE"){
-            var lectureTypeName = '<div class="lecConnectType_PE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-        }else if(jsondata.lectureStateArray[i] == "RF"){
-            var lectureTypeName = '<div class="lecConnectType_RF" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-        }
-        if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
-            var lectureConnectTypeName = '<div class="lectureType_WAIT" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-        }else if(jsondata.memberViewStateArray[i] == "DELETE"){
-            var lectureConnectTypeName = '<div class="lectureType_DELETE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-        }else if(jsondata.memberViewStateArray[i] == "VIEW"){
-            var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-        }
+    if(option == "pc"){
+        var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
+        for(var i=0; i<jsondata.lectureIdArray.length; i++){
+            var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
+            var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
+            var lectureType = '<div>'+jsondata.lectureStateArray[i]+'</div>'
+            var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateArray[i]+'</div>'
+            var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
+            //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
+            var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
+            var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
+            if($('body').width()>600){
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
+                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+            }else if($('body').width()<=600){
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
+                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+            }
+            //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
+            //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
+            var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
+            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
+            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
+            var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
+            if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
+                var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            }else if(jsondata.lectureStateArray[i] == "PE"){
+                var lectureTypeName = '<div class="lecConnectType_PE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            }else if(jsondata.lectureStateArray[i] == "RF"){
+                var lectureTypeName = '<div class="lecConnectType_RF" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            }
+            if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
+                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            }else if(jsondata.memberViewStateArray[i] == "DELETE"){
+                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            }else if(jsondata.memberViewStateArray[i] == "VIEW"){
+                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            }
 
-        var note = '<div class="pc_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
+            var note = '<div class="pc_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
+            result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>'+note)
+        }
+        var result_history = result_history_html.join('')
+        $regHistory.html(result_history)
+    }else if(option == "mobile"){
+        var result_history_html = []
+        var result_history_html2 = []
+        //시작, 종료, 등록횟수, 남은횟수, 
+        //등록금액, 회당 금액, 전행상태, 연결상태, 수정
+        for(var i=0; i<jsondata.lectureIdArray.length; i++){
+            var table_title1 = '<div><div class="regHistory_table_title">시작</div><div class="regHistory_table_title">종료</div><div class="regHistory_table_title">등록횟수</div><div class="regHistory_table_title">남은횟수</div></div>'
+            var table_title2 = '<div><div class="regHistory_table_title">등록금액</div><div class="regHistory_table_title">회당금액</div><div class="regHistory_table_title">진행상태</div><div class="regHistory_table_title">연결상태</div></div>'
 
-        
-        result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>'+note)
+            var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
+            var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
+            var lectureType = '<div>'+jsondata.lectureStateArray[i]+'</div>'
+            var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateArray[i]+'</div>'
+            var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
+            //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
+            var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
+            var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
+            if($('body').width()>600){
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
+                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+            }else if($('body').width()<=600){
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
+                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+            }
+            //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
+            //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
+            var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
+            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
+            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
+            var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
+            var howManyReg = '<div style="border:0;font-weight:bold;font-size:14px;color:#fe4e65;">'+(jsondata.lectureIdArray.length-i)+'회차 등록</div>'
+            if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
+                var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            }else if(jsondata.lectureStateArray[i] == "PE"){
+                var lectureTypeName = '<div class="lecConnectType_PE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            }else if(jsondata.lectureStateArray[i] == "RF"){
+                var lectureTypeName = '<div class="lecConnectType_RF" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            }
+            if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
+                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            }else if(jsondata.memberViewStateArray[i] == "DELETE"){
+                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            }else if(jsondata.memberViewStateArray[i] == "VIEW"){
+                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            }
+
+            var note = '<div class="mobile_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
+
+            result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+' style="text-align:right;">'+howManyReg+'수정: '+modifyActiveBtn+'</div>'+
+                                    table_title1+
+                                    '<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+'</div>'+
+                                    table_title2+
+                                    '<div data-leid='+jsondata.lectureIdArray[i]+'>'+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+'</div>'+
+                                    note)
+        }
+        var result_history = result_history_html.join('')
+        $regHistory.html(result_history)
     }
-    var result_history = result_history_html.join('')
-    $regHistory.html(result_history)
+    
+
 }
 
 function set_member_history_list(jsondata){
@@ -2545,7 +2639,7 @@ function set_member_history_list(jsondata){
     })
 }
 
-function draw_member_history_list_table(jsondata,targetHTML){
+function draw_member_history_list_table(jsondata,targetHTML,option){
     console.log('draw')
     if(Options.language == "KOR"){
         var text = '수행일자'
@@ -2556,6 +2650,7 @@ function draw_member_history_list_table(jsondata,targetHTML){
         var text6 = '시작전'
         var text7 = '시작전'
         var text9 = '시간'
+        var text10 = '회차'
     }else if(Options.language == "JPN"){
         var text = '授業日'
         var text2 = '進行時間'
@@ -2565,6 +2660,7 @@ function draw_member_history_list_table(jsondata,targetHTML){
         var text6 = '未完了'
         var text7 = '未完了'
         var text9 = '時間'
+        var text10 = 'No.'
     }else if(Options.language == "ENG"){
         var text = 'Date'
         var text2 = 'Period'
@@ -2574,9 +2670,10 @@ function draw_member_history_list_table(jsondata,targetHTML){
         var text6 = 'Yet'
         var text7 = 'Yet'
         var text9 = 'h'
+        var text10 = 'No.'
     }
     var $regHistory = targetHTML
-    var result_history_html = ['<div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>']
+    var result_history_html = ['<div><div>'+text10+'</div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>']
     var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7}
     for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay()
@@ -2589,11 +2686,12 @@ function draw_member_history_list_table(jsondata,targetHTML){
         }else{
             var duration = endTime - startTime
         }
+        var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+(i+1)+'</div>'
         var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleStartDtArray[i].split(' ')[0]+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
         var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration+text9+'</div>'
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
-        result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
+        result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleNo+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
     }
 
     var result_history = result_history_html.join('')
@@ -3003,7 +3101,16 @@ function initialize_add_member_sheet(){
 }
 
 //서버로부터 회원의 반복일정 정보를 받아온다.
-function get_indiv_repeat_info(userID,jsondata){
+function get_indiv_repeat_info(jsondata){
+    if($('#memberInfoPopup_PC').css('display')=="block"){
+        var userID = $('#memberId_info_PC').text()
+        var $regHistory = $('#memberRegHistory_info_PC')
+        var option = "pc"
+    }else if($('#memberInfoPopup').css('display')=="block"){
+        var userID = $('#memberId').val()
+        var $regHistory = $('#memberRegHistory_info')
+        var option = "mobile"
+    }
     if($('#currentMemberList').css('display') == "block"){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
@@ -3062,6 +3169,13 @@ function get_indiv_repeat_info(userID,jsondata){
 
 //서버로부터 받아온 반복일정을 회원정보 팝업에 그린다.
 function set_indiv_repeat_info(){
+    if($('#memberInfoPopup_PC').css('display')=="block"){
+        var userID = $('#memberId_info_PC').text()
+        var $regHistory =  $('#memberRepeat_info_PC')
+    }else if($('#memberInfoPopup').css('display')=="block"){
+        var userID = $('#memberId').val()
+        var $regHistory = $('#memberRepeat_info')
+    }
     if(Options.language == "KOR"){
         var text = '시'
         var text2 = '시간'
@@ -3126,7 +3240,7 @@ function set_indiv_repeat_info(){
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
     }
-    $('#memberRepeat_info_PC').html(schedulesHTML.join(''))
+    $regHistory.html(schedulesHTML.join(''))
 }
 //회원등록////////////////////////////////////////////////////////
 

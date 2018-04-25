@@ -773,6 +773,7 @@ function clear_pt_off_add_popup(){
     $('._REPEAT_ADD_wrap').css('display','none')
 }
 
+/*
 //일정 정보창 닫기
 function close_info_popup(option){
   if(option=="cal_popup_planinfo"){
@@ -825,7 +826,7 @@ function close_info_popup(option){
       shade_index(-100)
   }
 }
-
+*/
 
 
 

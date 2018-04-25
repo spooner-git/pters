@@ -45,11 +45,65 @@ function shade_index(option){
         if($('#float_btn_wrap').css('display')=='block' && !$('#float_btn').hasClass('rotate_btn')){
           $('#float_btn_wrap').hide()
         }
+        if($('#memberInfoPopup').css('display')=='block'){
+          $('#mshade_popup').css({'z-index':$('#memberInfoPopup').css('z-index'),'display':'block'});
+        }
         $('#mshade').css({'z-index':option,'display':'block'});
       }
     }
 }
 
+function close_info_popup(option){
+  if(option=="cal_popup_planinfo"){
+      $("#"+option).css({'display':'none'})
+      if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
+        shade_index(100)
+      }else{
+        shade_index(-100)
+      }
+      //$('body').css('overflow-y','overlay');
+  }
+  else if(option =="cal_popup_plandelete"){
+      $("#"+option).css({'display':'none'})
+      console.log($('#pshade').css('z-index'))
+      if($('#pshade').css('z-index')==200 || $('#mshade').css('z-index') == 200){
+        shade_index(100)
+      }else{
+        shade_index(-100)
+      }
+      
+      //$('body').css('overflow-y','overlay');
+  }
+  else if(option =="page-addplan"){
+      $('#'+option).css('display','none')
+      $('#calendar').css('position','relative')
+      shade_index(-100)
+  }
+  else if(option =="cal_popup_repeatconfirm"){
+      $('#'+option).css('display','none')
+      //$('#calendar').css('position','relative')
+      if($('#pshade').css('z-index') == 200 || $('#mshade').css('z-index') == 200){
+        shade_index(100)
+      }else{
+        shade_index(-100)
+      }
+      if($('body').width()>=600){
+          $('#calendar').css('position','relative')
+      }else{
+          $('._calmonth').css({'height':'90%','position':'fixed'})
+          $('body').css('overflow-y','overlay');
+          $('#page-addplan').hide('fast','swing');
+          $('#float_btn_wrap').fadeIn();
+          $('#float_btn').removeClass('rotate_btn');
+          $('#page-base').show();
+          $('#page-base-addstyle').hide();
+      }
+  }
+  else if(option = "cal_popup_plancheck"){
+      $('#'+option).css('display','none')
+      shade_index(-100)
+  }
+}
 
 
 function shade1(option){
