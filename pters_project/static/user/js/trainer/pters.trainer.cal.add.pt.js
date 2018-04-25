@@ -111,7 +111,6 @@ $(document).ready(function(){
             }else if(thisIDSplitArray[4]=="00"){
               var next30ID = '#'+thisIDSplitArray[0]+'_'+thisIDSplitArray[1]+'_'+thisIDSplitArray[2]+'_'+thisIDSplitArray[3]+'_30'
             }
-            console.log('$('+next30ID+')')
             if(Options.classDur == 60){
                 if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none') && !$(next30ID).find('div').hasClass('classTime') && !$(next30ID).find('div').hasClass('offTime')){
                   //$('.td00').css('background','transparent')
@@ -120,6 +119,7 @@ $(document).ready(function(){
                     $(this).find('div').addClass('blankSelected30')
                   }else if(Options.classDur == 60){
                     $(this).find('div').addClass('blankSelected')
+                    //$(this).find('div').addClass('blankSelected30')
                   }
                   $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
                   $('.typeSelected').removeClass('typeSelected')

@@ -913,8 +913,14 @@ $(document).ready(function(){
 	addcurrentTimeIndicator_blackbox()
 	todayFinderArrow();	
 
-	draw_time_graph(Options.hourunit,'')
-	draw_time_graph(Options.hourunit,'mini')
+	if(Options.classDur == 30){
+		draw_time_graph(30,'')
+		draw_time_graph(30,'mini')
+	}else if(Options.classDur == 60){
+		draw_time_graph(60,'')
+		draw_time_graph(60,'mini')
+	}
+	
 	
 
 // ****************************구동시 실행********************************************************************************
@@ -1242,8 +1248,15 @@ $(document).ready(function(){
 					toAppend1 = '<div class="slidegap"><span class="_morningday">오후 </span>'+i+'<div></div></div>'+td00
 					toAppend2 = '<div class="slidegap"><span class="_morningday">오후 </span>'+i+'<div></div></div>'+td30
 			};
-			var sum = textToAppend+toAppend1+textToAppend_+toAppend2
+
+			if(Options.classDur == 30){
+				var sum = textToAppend+toAppend1+textToAppend_+toAppend2
+			}else if(Options.classDur == 60){
+				var sum = textToAppend+toAppend1
+				$('.td00').css('height','59px')
+			}
 			slideIndex.append(sum);
+
 		};
 		slideIndex.append(fakeElementForBlankPage);
 		weekNum_Set(Index)
