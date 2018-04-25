@@ -8,6 +8,10 @@ ul a{
 	cursor: pointer;
 }
 
+.link-icon{
+	width: 17px;
+	margin-bottom: 4px;
+}
 
 #inputError, #inputError_info, #inputError_info_PC{
 	position: relative;

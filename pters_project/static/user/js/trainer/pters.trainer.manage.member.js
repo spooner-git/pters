@@ -903,6 +903,11 @@ function float_btn_managemember(option){
 
         $('#memberSearchButton').attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
+        if($('._nomember').length>0){
+            $('#how_to_add_member').fadeIn()
+        }else{
+            $('#how_to_add_member').css('display','none')
+        }
     }else if(option == 2){
         alert('float_inner2');
     }
@@ -933,6 +938,13 @@ function pc_add_member(option){
 
         $('#memberSearchButton').attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
+        if($('._nomember').length>0){
+            $('#how_to_add_member').fadeIn()
+        }else{
+            $('#how_to_add_member').css('display','none')
+        }
+
+
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
@@ -1464,7 +1476,7 @@ function memberListSet (type,option,Reverse){
 
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
-        var resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>'
+        var resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>'
         if($('body').width()>600){
             $('#please_add_member_pc').fadeIn()
         }else{
