@@ -432,6 +432,7 @@ def add_schedule_logic(request):
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
+    class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -529,7 +530,7 @@ def add_schedule_logic(request):
         except IntegrityError as e:
             error = error
         except ValidationError as e:
-            error = error + '등록 일정이 겹칩니다.'
+            error += '등록 일정이 겹칩니다.'
         except InternalError as e:
             error = error
 
@@ -548,12 +549,15 @@ def add_schedule_logic(request):
         push_info_schedule_start_date = str(schedule_start_datetime).split(':')
         push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
 
+    if error is None:
         if en_dis_type == '1':
+            request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
             request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
                                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' PT 일정을 등록했습니다'
             request.session['lecture_id'] = lecture_id
         else:
+            request.session['push_title'] = ''
             request.session['push_info'] = ''
             request.session['lecture_id'] = ''
 
@@ -574,11 +578,13 @@ def delete_schedule_logic(request):
     day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
+    class_type_name = request.session.get('class_type_name', '')
 
     error = None
     request.session['date'] = date
     request.session['day'] = day
     lecture_id = ''
+    class_info = None
 
     if en_dis_type == '1':
         schedule_id = pt_schedule_id
@@ -592,7 +598,7 @@ def delete_schedule_logic(request):
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
-            error = '스케쥴 정보가 존재하지 않습니다'
+            error = '스케쥴 정보를 불러오지 못했습니다.'
 
     if error is None:
         lecture_id = schedule_info.lecture_tb_id
@@ -618,11 +624,13 @@ def delete_schedule_logic(request):
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
         if en_dis_type == '1':
+            request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
             request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
                                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 취소했습니다'
             request.session['lecture_id'] = lecture_id
         else:
+            request.session['push_title'] = ''
             request.session['push_info'] = ''
             request.session['lecture_id'] = ''
 
@@ -981,6 +989,7 @@ def add_repeat_schedule_confirm(request):
     day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
+    class_type_name = request.session.get('class_type_name', '')
 
     error = None
     repeat_schedule_data = None
@@ -1070,6 +1079,7 @@ def add_repeat_schedule_confirm(request):
                 error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
             if error is None:
                 information = '반복일정 등록이 취소됐습니다.'
+            request.session['push_title'] = ''
             request.session['push_info'] = ''
             request.session['lecture_id'] = ''
 
@@ -1085,10 +1095,12 @@ def add_repeat_schedule_confirm(request):
                           member_name, en_dis_type, 'LR01', request)
 
             if en_dis_type == '1':
+                request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
                 request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
                                                + '~' + str(end_date) + ' PT 반복일정을 등록했습니다'
                 request.session['lecture_id'] = lecture_id
             else:
+                request.session['push_title'] = ''
                 request.session['push_info'] = ''
                 request.session['lecture_id'] = ''
             information = '반복일정 등록이 완료됐습니다.'
@@ -1114,6 +1126,7 @@ def delete_repeat_schedule_logic(request):
     day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
+    class_type_name = request.session.get('class_type_name', '')
 
     error = None
     schedule_data = None
@@ -1208,10 +1221,12 @@ def delete_repeat_schedule_logic(request):
                       member_name, en_dis_type, 'LR02', request)
 
         if en_dis_type == '1':
+            request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
             request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
                                            + '~' + str(end_date) + ' PT 반복일정을 취소했습니다'
             request.session['lecture_id'] = delete_repeat_schedule.lecture_tb_id
         else:
+            request.session['push_title'] = ''
             request.session['push_info'] = ''
             request.session['lecture_id'] = ''
 

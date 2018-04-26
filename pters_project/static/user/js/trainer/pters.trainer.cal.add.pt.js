@@ -446,7 +446,7 @@ $(document).ready(function(){
                             if(addTypeSelect=="ptadd") {
                                 if (jsondata.push_info != '') {
                                     for (var i = 0; i < jsondata.pushArray.length; i++) {
-                                        send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                                        send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
                                     }
                                 }
                             }
@@ -882,7 +882,7 @@ function ajaxRepeatConfirmSend(){
 
                     if(jsondata.push_info != ''){
                         for (var i=0; i<jsondata.pushArray.length; i++){
-                            send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                            send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
                         }
                     }
                   ajax_received_json_data(jsondata)
@@ -1755,7 +1755,7 @@ function classDatesTrainer(){
   };
 }
 
-function send_push(push_server_id, intance_id, message, badge_counter){
+function send_push(push_server_id, intance_id,title, message, badge_counter){
 
     $.ajax({
       url: 'https://fcm.googleapis.com/fcm/send',
@@ -1768,7 +1768,7 @@ function send_push(push_server_id, intance_id, message, badge_counter){
         data: JSON.stringify({
             "to": intance_id,
             "notification": {
-                "title":"PT 일정 알림",
+                "title":title,
                 "body":message,
                 "badge": badge_counter,
                 "sound": "default"

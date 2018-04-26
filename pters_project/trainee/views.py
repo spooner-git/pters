@@ -660,6 +660,7 @@ def pt_delete_logic(request):
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
+    class_type_name = request.session.get('class_type_name', '')
 
     error = None
     lecture_info = None
@@ -848,7 +849,7 @@ def pt_delete_logic(request):
 
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-
+        request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
         request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                        + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
                                        + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 취소했습니다'
@@ -868,6 +869,7 @@ def pt_add_logic(request):
     time_duration = request.POST.get('time_duration', '')
     training_time = request.POST.get('training_time', '')
     next_page = request.POST.get('next_page')
+    class_type_name = request.session.get('class_type_name', '')
 
     error = None
     lecture_info = None
@@ -976,6 +978,7 @@ def pt_add_logic(request):
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
+        request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
         request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                        +push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
                                        + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 등록했습니다'
