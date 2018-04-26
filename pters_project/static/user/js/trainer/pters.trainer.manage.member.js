@@ -2700,7 +2700,7 @@ function draw_member_history_list_table(jsondata,targetHTML,option){
     var $regHistory = targetHTML
     var result_history_html = ['<div><div>'+text10+'</div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>']
     var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7}
-    for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
+    for(var i=jsondata.ptScheduleStartDtArray.length-1; i>=0; i--){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay()
         var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2])
         var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2])
@@ -2711,7 +2711,7 @@ function draw_member_history_list_table(jsondata,targetHTML,option){
         }else{
             var duration = endTime - startTime
         }
-        var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+(i+1)+'</div>'
+        var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleIdxArray[i]+'</div>'
         var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleStartDtArray[i].split(' ')[0]+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
         var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration+text9+'</div>'
