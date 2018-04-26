@@ -602,7 +602,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         log_data = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).exclude(auth_member_id=self.request.user.id).order_by('read', '-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, use=1).order_by('read', '-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
@@ -619,11 +619,11 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                 log_info.reg_dt = str(log_info.reg_dt).split('.')[0]
                 # log_info.time_ago = str(log_info.time_ago).split('.')[0]
 
-                if log_info.log_detail:
+                if log_info.log_detail is not None and log_info.log_detail != '':
                     before_day = str(log_info.log_detail).split('/')[0]
                     after_day = str(log_info.log_detail).split('/')[1]
 
-                    if '반복 일정' in log_info.log_detail:
+                    if '반복 일정' in log_info.log_info:
                         log_info.log_detail = before_day + '~' + after_day
                     else:
                         log_info.log_detail = before_day + '~' + after_day.split(' ')[1]
