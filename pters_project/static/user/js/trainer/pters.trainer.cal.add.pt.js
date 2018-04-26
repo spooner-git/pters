@@ -616,10 +616,6 @@ $(document).ready(function(){
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
          }
-<<<<<<< HEAD
-         console.log(serializeArray)
-=======
->>>>>>> 39964615be0ddc6470f603873824c6330d57d80b
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
                 console.log(sendData)
