@@ -611,21 +611,45 @@ $(document).ready(function(){
         $('#id_email').val($('#memberEmail_add').val());
     });
 
-    $("#memberLastName_add, #memberFirstName_add").keyup(function(){  //이름 입력시 하단에 핑크선
-        if($(this).val().length>=1){
-            limit_char(this);
-            $(this).addClass("dropdown_selected");
-            check_dropdown_selected();
-        }else{
-            limit_char(this);
-            $(this).removeClass("dropdown_selected");
-            check_dropdown_selected();
-        }
-        $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
-        $('#add_member_form_first_name').val($('#memberFirstName_add').val());
-        $('#add_member_form_last_name').val($('#memberLastName_add').val());
-        $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
-    });
+    if(varUA.match('firefox')){
+        console.log('firefox')
+        $("#memberLastName_add, #memberFirstName_add").bind("keydown",function(e){  //이름 입력시 하단에 핑크선
+            var keyCode = e.which || e.keyCode;
+            if(keyCode === 13 || keyCode === 9){
+                if($(this).val().length>=1){
+                limit_char(this);
+                $(this).addClass("dropdown_selected");
+                check_dropdown_selected();
+            }else{
+                limit_char(this);
+                $(this).removeClass("dropdown_selected");
+                check_dropdown_selected();
+            }
+            $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+            $('#add_member_form_first_name').val($('#memberFirstName_add').val());
+            $('#add_member_form_last_name').val($('#memberLastName_add').val());
+            $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+            }
+        }); 
+    }else{
+        console.log('else')
+       $("#memberLastName_add, #memberFirstName_add").keyup(function(){  //이름 입력시 하단에 핑크선
+            if($(this).val().length>=1){
+                limit_char(this);
+                $(this).addClass("dropdown_selected");
+                check_dropdown_selected();
+            }else{
+                limit_char(this);
+                $(this).removeClass("dropdown_selected");
+                check_dropdown_selected();
+            }
+            $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+            $('#add_member_form_first_name').val($('#memberFirstName_add').val());
+            $('#add_member_form_last_name').val($('#memberLastName_add').val());
+            $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+        }); 
+    }
+    
 
     $(document).on('click','#memberSex .selectboxopt',function(){
         if($('#memberSearchButton').attr('data-type') == "searched"){
@@ -1726,6 +1750,7 @@ function open_member_info_popup_pc(userID,jsondata){
         }
         $('#id_email').val($('#memberEmail_add').val());
     });
+
 
     $("#memberLastName_add, #memberFirstName_add").keyup(function(){  //이름 입력시 하단에 핑크선
         if($(this).val().length>=1){
