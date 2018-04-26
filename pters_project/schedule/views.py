@@ -1526,6 +1526,7 @@ def update_memo_schedule_logic(request):
         schedule_info.save()
 
     if error is None:
+        '''
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
@@ -1533,7 +1534,7 @@ def update_memo_schedule_logic(request):
                          reg_dt=timezone.now(), use=1)
 
         log_data.save()
-
+        '''
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
