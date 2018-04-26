@@ -629,7 +629,7 @@ select:focus > option:checked {
 			#memberBirth_Year_info_PC{
 				/*width: 29%;*/
 			
-				width: 100%:;
+				width: 100%;
 			}
 			#memberBirth_Month_info_PC,#memberBirth_Date_info_PC{
 				width: 20%;
