@@ -34,6 +34,8 @@ function shade_index(option){
       if(option<0){
         if($('#page-addplan').css('display') == 'block'){
           $('#mshade_popup').css({'z-index':$('#page-addplan').css('z-index'),'display':'none'});
+        }else{
+          $('#mshade_popup').css({'z-index':option,'display':'none'})
         }
         $('#mshade').css({'z-index':option,'display':'none'});
       }else{
@@ -43,11 +45,65 @@ function shade_index(option){
         if($('#float_btn_wrap').css('display')=='block' && !$('#float_btn').hasClass('rotate_btn')){
           $('#float_btn_wrap').hide()
         }
+        if($('#memberInfoPopup').css('display')=='block'){
+          $('#mshade_popup').css({'z-index':$('#memberInfoPopup').css('z-index'),'display':'block'});
+        }
         $('#mshade').css({'z-index':option,'display':'block'});
       }
     }
 }
 
+function close_info_popup(option){
+  if(option=="cal_popup_planinfo"){
+      $("#"+option).css({'display':'none'})
+      if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
+        shade_index(100)
+      }else{
+        shade_index(-100)
+      }
+      //$('body').css('overflow-y','overlay');
+  }
+  else if(option =="cal_popup_plandelete"){
+      $("#"+option).css({'display':'none'})
+      console.log($('#pshade').css('z-index'))
+      if($('#pshade').css('z-index')==200 || $('#mshade').css('z-index') == 200){
+        shade_index(100)
+      }else{
+        shade_index(-100)
+      }
+      
+      //$('body').css('overflow-y','overlay');
+  }
+  else if(option =="page-addplan"){
+      $('#'+option).css('display','none')
+      $('#calendar').css('position','relative')
+      shade_index(-100)
+  }
+  else if(option =="cal_popup_repeatconfirm"){
+      $('#'+option).css('display','none')
+      //$('#calendar').css('position','relative')
+      if($('#pshade').css('z-index') == 200 || $('#mshade').css('z-index') == 200){
+        shade_index(100)
+      }else{
+        shade_index(-100)
+      }
+      if($('body').width()>=600){
+          $('#calendar').css('position','relative')
+      }else{
+          $('._calmonth').css({'height':'90%','position':'fixed'})
+          $('body').css('overflow-y','overlay');
+          $('#page-addplan').hide('fast','swing');
+          $('#float_btn_wrap').fadeIn();
+          $('#float_btn').removeClass('rotate_btn');
+          $('#page-base').show();
+          $('#page-base-addstyle').hide();
+      }
+  }
+  else if(option = "cal_popup_plancheck"){
+      $('#'+option).css('display','none')
+      shade_index(-100)
+  }
+}
 
 
 function shade1(option){
@@ -188,6 +244,7 @@ $(document).ready(function(){
       $('.__alarm').text("アラーム")
       $('.__calSelect').text("カレンダー選択")
       $('.__mypage').text("マイページ")
+      $('.__help').text("お問い合わせ")
 
    }else if(Options.language == "ENG"){
       $('.__todayplan').text("Daily")
@@ -203,6 +260,7 @@ $(document).ready(function(){
       $('.__alarm').text("Alarm")
       $('.__calSelect').text("Change Cal.")
       $('.__mypage').text("My page")
+      $('.__help').text("Help")
 
    }else if(Options.language == "KOR"){
       $('.__todayplan').text("오늘 일정")
@@ -214,10 +272,11 @@ $(document).ready(function(){
       $('._nameAttach').text("님")
       //$('.pcwhere').text("PTERS 트레이닝센터")
       $('.pclogout').text("로그아웃")
-      $('#uptext span').text("코치님 일정")
+      $('#uptext span').text("님 일정")
       $('.__alarm').text("알림")
       $('.__calSelect').text("클래스 선택")
       $('.__mypage').text("마이페이지")
+      $('.__help').text("이용문의")
    }
 
    /*

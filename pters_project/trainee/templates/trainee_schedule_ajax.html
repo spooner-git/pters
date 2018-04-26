@@ -12,6 +12,8 @@
 
       "scheduleNoteArray":
       [{% for pt_schedule_note_info in pt_schedule_note %}"{{ pt_schedule_note_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "scheduleIdxArray":
+      [{% for pt_schedule_idx_info in pt_schedule_idx %}"{{ pt_schedule_idx_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "offTimeArray_start_date" :
       [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}"{{ off_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

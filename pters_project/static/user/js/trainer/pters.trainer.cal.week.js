@@ -82,12 +82,12 @@ $(document).ready(function(){
 		        console.log(jsondata,'-----')
 		        if($('body').width()<600){
 		            open_member_info_popup_mobile(userID,jsondata)
-		            get_indiv_repeat_info(userID,jsondata)
+		            get_indiv_repeat_info(jsondata)
 		            set_member_lecture_list(jsondata)
 		            set_member_history_list(jsondata)
 		        }else if($('body').width()>=600){
 		            open_member_info_popup_pc(userID,jsondata)
-		            get_indiv_repeat_info(userID,jsondata)
+		            get_indiv_repeat_info(jsondata)
 		            set_member_lecture_list(jsondata)
 		            set_member_history_list(jsondata)
 		            $('#info_shift_base, #info_shift_lecture').show()
@@ -560,7 +560,6 @@ $(document).ready(function(){
 			                  	$('#errorMessageBar').show()
 			                  	$('#errorMessageText').text(jsondata.messageArray)
 				          }else{
-
 								if(jsondata.push_info != ''){
 									for (var i=0; i<jsondata.pushArray.length; i++){
 										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
@@ -568,7 +567,7 @@ $(document).ready(function(){
 								}
 		                  		var userID = $('#memberId_info_PC').text()
 		                  		open_member_info_popup_pc(userID,jsondata)
-		                  		get_indiv_repeat_info(userID,jsondata)
+		                  		get_indiv_repeat_info(jsondata)
 		                  		set_member_lecture_list(jsondata)
                         		set_member_history_list(jsondata)
 		                  		close_info_popup('cal_popup_plandelete')

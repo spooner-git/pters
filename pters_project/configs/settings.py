@@ -24,6 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("PTERS_DJANGO_SECRET", '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -144,7 +145,7 @@ STATICFILES_DIRS = (
 STATIC_ROOT = '/static/'
 
 # LOGIN URL
-LOGIN_URL = '/login/'
+LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/trainer/index/'
 
 # Registration

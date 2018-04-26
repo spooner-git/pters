@@ -92,6 +92,7 @@
         {% endfor %}
     
     <div class="pters_login_promote_box">
+        <!--
         <nav class="main_nav">   
             <div class="main_nav_bg">   
             </div>
@@ -109,22 +110,23 @@
                             <input type="password" class="loginboxstyle_nav form-control" name="password" placeholder="비밀번호">
                         </div>
                         <div id="checkbox_nav" class="checkbox" style="margin-top:15px;margin-left:27px;">
-                            <label><input type="checkbox" name="auto_login_check" value="1">자동 로그인</label>
+                            <label><input type="checkbox" name="auto_login_check" value="1" >자동 로그인</label>
                         </div>
                         <div id="login-button_nav">
                             <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
                         </div>
                         <input type="hidden" name="keyword" id="keyword_pc">
-                        <input type="hidden" name="next_page" value = '{% url 'home' %}'>
+                        <input type="hidden" name="next_page" value = '{% url 'index' %}'>
                     </form>
                     <a href="/accounts/password/reset/"><div class="forgotPW">비밀번호를 잊으셨나요?</div></a>
                 </div>
             </div>
         </nav>
+        -->
 
         <div class="loginbox">
             <div class="logintext">
-                <div><img src="/static/user/res/PTERS_logo_pure.png" id="pterstext" alt="피터스 로고"><span id="logintext">로그인</span></div>
+                <div><img src="/static/user/res/PTERS_logo_pure.png" id="pterstext" alt="피터스 로고"  onclick="location.href='{% url 'index' %}'"><span id="logintext">로그인</span></div>
             </div>
             <div id="loginboxbg">
                 
@@ -141,7 +143,7 @@
                         <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
                     </div>
                     <div class="checkbox" style="margin-top:15px;margin-left:27px;">
-                        <label><input type="checkbox" name="auto_login_check" value="1">다음부터 자동 로그인</label>
+                        <label><input type="checkbox" name="auto_login_check" value="1" checked>다음부터 자동 로그인</label>
                     </div>
                     <div>
                         <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
@@ -152,11 +154,12 @@
                         <div class="seperate_bar"></div>
                         <a href="/accounts/password/reset/"><div id="findIDPW">PW 초기화</div></a>
                     </div>
-                    <input type="hidden" name="next_page" value = '{% url 'home' %}'>
+                    <input type="hidden" name="next_page" value = '{% url 'index' %}'>
                 </form>
             </div>
         </div>
 
+        <!--
         <div class="main_title">
             <div class="main_title_up">
                 <h2><p>세상에서 가장 쉬운 일대일 PT 회원/일정 관리 시스템 </p></h2>
@@ -172,9 +175,12 @@
             <p style="font-size:13px;margin-top: 10px;color:#f4f4f4;">피터스는 누구에게나 무료입니다.</p>
         </div>
 
+
         <div class="button_next_view"><img src="/static/user/res/btn_next.png" style="transform: rotate(90deg);" onclick="goSlide(780)"></div>
+        -->
     </div>
 
+    <!--
     <div class="pters_login_promote_box_sub bg-light">
         <div>
             <img src="/static/user/res/login/promote/pters_weekcal_pc_mobile.png" alt="피터스 주간달력 예시">
@@ -222,10 +228,15 @@
         </div>
         <p>피터스는 PC 웹브라우저(크롬, 파이어폭스, 엣지, 사파리)와 스마트폰, 태블릿 등 다양한 기기에서 접속이 가능합니다.</p>
         <p style="margin-bottom: 20px;">브라우저, iOS, 안드로이드 앱을 사용하면 일정변경사항을 실시간 푸시로 알림을 받을 수 있습니다.</p>
+    </div>
+    -->
+
+    <!--
         <a href="https://play.google.com/store/apps/details?id=kr.co.spooner.pters"><img src="/static/user/res/pters_android_download.png" style="width: 150px;" alt="pters 안드로이드 다운로드"></a>
         <p style="font-size: 12px;color:#cccccc">※iOS앱 4월중 출시 예정</p>
-    </div>
+    -->
 
+    <!--
     <div class="pters_login_promote_box_sub bg-light">
         <div>
             <img src="/static/user/res/login/promote/header.jpg" alt="피터스 무료 설명 background">
@@ -237,12 +248,13 @@
         <p>트레이너와 회원 모두에게 무료로 제공됩니다.</p>
         <p>여러분의 시간을 효율적으로 활용해 보세요.</p>
         <p>일정과 회원관리는 피터스에 맡기고 비즈니스의 생산성을 향상 시키세요.</p>
-        <!--button onclick="goPage(0)" class="singup_button">가입하기</button>-->
+
         <a href="/accounts/register/"><button class="singup_button">가입하기</button></a>
         <div class="button_next_view" style="position: relative;margin-top: 40px;bottom: 0;">
             <img src="/static/user/res/btn_next.png" style="transform: rotate(-90deg);" onclick="goSlide(0)">
         </div>
     </div>
+    -->
 
 
     <footer class="fixfooter bottomzero">
@@ -255,10 +267,10 @@
         -->
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <a href="http://www.spooner.co.kr">회사소개</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href="http://www.spooner.co.kr" class="_company">회사소개</a><span style="margin-left:10px;margin-right: 10px;">|</span>
             <a href="">이용안내</a><span style="margin-left:10px;margin-right: 10px;">|</span>
             <a href="">제휴제안</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <a href="">개인정보처리방침</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href='{% url 'privacy' %}'>개인정보처리방침</a><span style="margin-left:10px;margin-right: 10px;">|</span>
             <a href="">고객센터</a><span style="margin-left:10px;margin-right: 10px;">|</span>
             <p style="line-height: 0px;font-size:12px;">문의 support@pters.co.kr</p>
         </div>
@@ -291,6 +303,16 @@
 <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
 <script>
+    var varUA = navigator.userAgent.toLowerCase()
+    if(varUA.match('android') != null){
+        $('._company').css('display','none')
+    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        $('._company').css('display','none')
+    }else{
+                
+    }
+
+
     function goPage(option){
         if(option == 0){
             location.href="/accounts/register/";
@@ -325,6 +347,33 @@
           }
       });
     });
+
+    function deleteToken(){
+     $.ajax({
+            url:'/login/delete_push_token/',
+            type:'POST',
+            data:{"keyword": document.getElementById('keyword').value},
+
+            beforeSend:function(){
+                //AjaxBeforeSend();
+            },
+
+            //통신성공시 처리
+            success:function(){
+                console.log('토큰 삭제 완료')
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신 실패시 처리
+            error:function(){
+
+            },
+        });
+    }
 
 </script>
 {% endblock %}

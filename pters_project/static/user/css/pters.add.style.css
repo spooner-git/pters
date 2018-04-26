@@ -12,6 +12,10 @@ ul a{
 	
 }
 
+.link-icon{
+	width: 17px;
+	margin-bottom: 4px;
+}
 
 #inputError, #inputError_info, #inputError_info_PC{
 	position: relative;
@@ -280,6 +284,7 @@ ul a{
 	border-radius: 0px;
 	-webkit-border-radius: 0px;
 	height: 100%;
+	resize: none;
 }
 
 
@@ -305,11 +310,11 @@ ul a{
 	height: 23px;
 	margin-left: 12px;
 }
-
-#memo_mini::placeholder{
+/*
+#memo_mini:placeholder{
 	color: #cccccc;
 }
-
+*/
 #pcaddpopup_mini{
 	margin-bottom: 4px;
 }
@@ -745,6 +750,8 @@ button._info_delete_img{
 	color: #ffffff;
 	border: 0;
 	font-size: 12px;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 
@@ -756,7 +763,7 @@ button._info_delete_img{
 	vertical-align: middle;
 }
 
-#memberSex, #memberSex_info{
+#memberSex{
 	display: table-cell;
 	vertical-align: middle;
 	min-width: 70px;
@@ -765,7 +772,8 @@ button._info_delete_img{
 	background:#ffffff;
 }
 
-#memberMale,#memberFemale, #memberMale_info, #memberFemale_info{
+
+#memberMale,#memberFemale{
 	line-height: 38px;
 	border-bottom:1.5px solid #cccccc;
 }
@@ -803,7 +811,7 @@ button._info_delete_img{
 .dropdown_birth{
 	height: 40px;
 	border: 0;
-	box-shadow: : 0 1px 0 0 #a2a2a2;
+	box-shadow: 0 1px 0 0 #a2a2a2;
 	-webkit-box-shadow : 0 1px 0 0 #a2a2a2;
 	border-radius: 0;
 	background-color: #ffffff;
@@ -940,11 +948,11 @@ option{
 		height: 26px;
 	}
 
-	#memberSex, #memberSex_info{
+	#memberSex{
 		height: 26px;
 	}
 
-	#memberMale,#memberFemale, #memberMale_info, #memberFemale_info{
+	#memberMale,#memberFemale{
 		line-height: 24px;
 	}
 

@@ -2,10 +2,10 @@ body{
 	padding-top: 50px;
 }
 
-.fixfooter{
-	position: absolute;
-}
 	.bottomfooter2 a{
+		color: #7d7d7d;
+	}
+	.bottomfooter3 a{
 		color: #7d7d7d;
 	}
 
@@ -202,4 +202,7 @@ button.classAdd{
 		width: 10%;
 	}
 
+	.fixfooter{
+		position: fixed;
+	}
 }

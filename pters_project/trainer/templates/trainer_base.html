@@ -207,8 +207,8 @@
                         <span class="icon-bar" style="width: 20px;"></span>
                     </button>
                     {% block nav_center_img %}
-                        <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'home' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
-                        <a id="uptext" class="uptext" href="{% url 'home' %}">{{ user.last_name}} {{user.first_name }}  <span></span></a>
+                        <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
+                        <a id="uptext" class="uptext" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  <span></span></a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="openAlarm('mobile')">
                         <a><img src={% static_url "user/res/main/alarm-on.png" %} style="width:20px;"></a>
@@ -221,8 +221,8 @@
                     
                     <div id="inner_Sidenav" class="sidenav">
                         
-                        <div class="sidebar_upper" onclick="location.href='{% url 'home' %}'">
-                            <a href="{% url 'home' %}" style="width:100%;height: 100%;z-index: 1"></a>
+                        <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
+                            <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
                             <div style="z-index: -1"><img src={% static_url "user/res/icon-pf.png" %} alt="#"></div>
                             <div id="user_name">{{user.last_name}} {{user.first_name}}
                                 <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
@@ -260,6 +260,10 @@
                         -->
                         <div class="sidebar_div" onclick="open_lecture_select_popup()"><img src={% static_url "user/res/member/icon-repeat.png" %} class="sidebar_icon" alt="#">
                             <a class="sidebar_text __calSelect">
+                            </a>
+                        </div>
+                        <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text __help">
                             </a>
                         </div>
                         <div style="height: 100%;border-top:0.5px solid #cccccc;background:#ffffff;"></div>
@@ -313,7 +317,7 @@
         
         <nav class="navbar navbar-fixed-top" id="pcver">
             <div class="centermenu">
-                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'home' %}'" style="cursor: pointer;">
+                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
                 <div class="centermenu_box">
                     <div class="centermenu_div" style="display: none;">
                         <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
@@ -334,6 +338,9 @@
                     -->
                     <div class="centermenu_div">
                         <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
+                    </div>
+                    <div class="centermenu_div">
+                        <a href="{% url 'trainer:help_setting' %}" class="centermenu_text __help"></a>
                     </div>
                     <!--
                     <div class="centermenu_div">
@@ -389,7 +396,6 @@
     
     {% block content %}
     {% endblock %}
-
         <footer class="fixfooter bottomzero">
             <div class="bottomfooter1">
                 <form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
@@ -397,20 +403,26 @@
                     <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
                     <input type="hidden" name = "next_page" value="/trainer/trainer_main">
                 </form>
-                <span class="language_set" onclick="languageSet('ENG')">English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span class="language_set" onclick="languageSet('KOR')">한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span class="language_set" onclick="languageSet('JPN')">日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span class="language_set" onclick="languageSet('ENG')" hidden>English</span><span style="margin-left:10px;margin-right: 10px;" hidden>|</span>
+                <span class="language_set" onclick="languageSet('KOR')" hidden>한국어</span><span style="margin-left:10px;margin-right: 10px;" hidden>|</span>
+                <span class="language_set" onclick="languageSet('JPN')" hidden>日本語</span><span style="margin-left:10px;margin-right: 10px;" hidden>|</span>
             </div>
             <div class="bottomfooter2">
                 <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-                <a href="http://www.spooner.co.kr" class="KRtext">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext">About us</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <a class="KRtext" href='{% url 'trainer:help_setting' %}'>이용안내</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <a href="http://www.spooner.co.kr" class="KRtext _company">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext _company">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext _company">About us</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <a class="KRtext" href='{% url 'trainer:help_setting' %}'>문의하기</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:10px;margin-right: 10px;">|</span>
                 <a class="KRtext">제휴제안</a><a class="JPtext">提携</a><a class="ENtext">Partnership</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <a class="KRtext">개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <a class="KRtext" href='{% url 'policy' %}'>이용약관</a><a class="JPtext">利用案内</a><a class="ENtext">Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <a class="KRtext" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
                 <a class="KRtext">고객센터</a><a class="JPtext">ヘルプ</a><a class="ENtext">Customer Service</a><span style="margin-left:10px;margin-right: 10px;">|</span>
             </div>
+            <div class="bottomfooter3">
+                <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
+               <a class="KRtext" href='{% url 'trainer:help_setting' %}'>문의하기</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:5px;margin-right: 5px;">|</span>
+               <a class="KRtext" href='{% url 'policy' %}'>이용약관</a><a class="JPtext">利用案内</a><a class="ENtext">Policy</a><span style="margin-left:5px;margin-right: 5px;">|</span>
+                <a class="KRtext" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a>
+            </div>
         </footer>
-        
         <!--
         <footer class="fixfooter">
             <div class="bottomfooter1">
@@ -456,6 +468,7 @@
       }
     </script>
     <script type="text/javascript">
+        
 // var requestButton = document.querySelector(".request-btn");
 
     //});
@@ -621,6 +634,15 @@
                 $(".ENtext, .JPtext").remove();
                 $(".KRtext").show();
               }
+
+              var varUA = navigator.userAgent.toLowerCase()
+                if(varUA.match('android') != null){
+                    $('._company').css('display','none')
+                }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+                    $('._company').css('display','none')
+                }else{
+                    
+                }
 
               function languageSet(language){
                     $('#id_setting_language').val(language)

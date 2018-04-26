@@ -21,7 +21,7 @@ body{
 }
 	#blank_member_popup label{
 		margin-top: 20px;
-		width: 100%:;
+		width: 100%;
 		font-size: 19px;
 		color: #fe4e65;
 	}
@@ -546,7 +546,7 @@ body{
 		font-size: 14px;
 	}
 
-	#menuName,{
+	#menuName{
 		display: block;
 		color : #fe4e65;
 		font-size: 24px;
@@ -567,10 +567,13 @@ body{
 	}
 
 	.fixfooter{
-		position: relative;
+		position: fixed;
 		margin-top: 50px;
 	}
 	.bottomfooter2 a{
+		color: #7d7d7d;
+	}
+	.bottomfooter3 a{
 		color: #7d7d7d;
 	}
 }

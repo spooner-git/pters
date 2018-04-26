@@ -210,12 +210,15 @@
             var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
             var scheduleNoteArray =  [{% for pt_schedule_note_info in pt_schedule_note %}'{{ pt_schedule_note_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var scheduleIdxArray =  [{% for pt_schedule_idx_info in pt_schedule_idx %}'{{ pt_schedule_idx_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
             var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
             var classHourArray = ['{{ class_info.class_hour }}'];
-  
+
+
+
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
             var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
@@ -260,6 +263,25 @@
                 console.log('wait!')
               }
             })
+
+            function left_page(){
+                if(count==0){
+                    myswiper.slidePrev(300)
+                    count++
+                    setTimeout(function(){count=0},400)
+                  }else if(count>0){
+                    console.log('wait!')
+                  }
+            }
+            function right_page(){
+                if(count1==0){
+                myswiper.slideNext(300)
+                count1++
+                setTimeout(function(){count1=0},400)
+              }else if(count>0){
+                console.log('wait!')
+              }
+            }
 
 
         </script>

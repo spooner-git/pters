@@ -420,7 +420,9 @@ body{
 
 
 
-
+.fixfooter {
+	display: none;
+}
 
 
 
@@ -475,7 +477,7 @@ body{
 	}
 
 	.fixfooter{
-		position: relative;
+		position: fixed;
 		margin-top: 50px;
 	}
 }
