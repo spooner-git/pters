@@ -543,7 +543,7 @@ $(document).ready(function(){
 	                  AjaxCompleteSend();
 	                },
 	            })
-			}else if(deleteTypeSelect=='repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){ //회원정보창의 반복일정 삭제
+			}/*else if(deleteTypeSelect=='repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){ //회원정보창의 반복일정 삭제
 				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
 				$.ajax({
 	                url:'/schedule/delete_repeat_schedule/',
@@ -596,7 +596,7 @@ $(document).ready(function(){
 	                  AjaxCompleteSend();
 	                },
 	            })
-			}else if(deleteTypeSelect == "ptoffdelete"){
+			}*/else if(deleteTypeSelect == "ptoffdelete"){
 				var $ptdelform = $('#daily-pt-delete-form');
 				var $offdelform = $('#daily-off-delete-form');
 				$('body').css('overflow-y','overlay');

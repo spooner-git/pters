@@ -164,8 +164,16 @@ $(document).ready(function(){
         if($(this).attr('data-type')=="view"){
             var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
             var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
+            if($('body').width()<600){
+               var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
+               var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input') 
+            }else if($('body').width()>=600){
+
+            }
             myRow.addClass('input_available').attr('disabled',false);
             myNoteRow.addClass('input_available').attr('disabled',false);
+
+
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide();
             $(this).text(text).attr('data-type',"modify");
             $('#form_member_name').val(userName);
@@ -427,6 +435,7 @@ $(document).ready(function(){
         //if($('#calendar').length==0){
            if(deleteTypeSelect == "repeatinfodelete"){
                 var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id');
+                console.log(repeat_schedule_id)
                 $.ajax({
                     url:'/schedule/delete_repeat_schedule/',
                     type:'POST',
@@ -443,6 +452,7 @@ $(document).ready(function(){
                         if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray);
+                            console.log('???????????')
                         }else{
 
 								if(jsondata.push_info != ''){

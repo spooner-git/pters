@@ -920,9 +920,9 @@ select:focus > option:checked {
 		}
 
 .input_available{
-	background: #ffffff !important;
+	background: #f4f4f4 !important;
 	color: #fe4e65 !important;
-	border-color: #282828 !important;
+	border: 1px solid #282828 !important;
 }
 
 #member_info_type_select{
@@ -1108,6 +1108,12 @@ select:focus > option:checked {
 }
 
 @media(min-width: 600px){
+
+	.input_available{
+		background: #ffffff !important;
+		color: #fe4e65 !important;
+		border-color: #282828 !important;
+	}
 
 	.newRegImg{
 		display: block;

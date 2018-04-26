@@ -25,7 +25,12 @@ function sideGoPage(page){
 function shade_index(option){
     if($('body').width()>600){
       if(option<0){
-        $('#pshade').css({'z-index':option,'display':'none'});
+        if($('#memberInfoPopup_PC').css('display')=="block" && $('._calmonth').css('display')=="block"){
+          $('#pshade').css({'z-index':150,'display':'block'});
+        }else{
+          $('#pshade').css({'z-index':option,'display':'none'});
+        }
+        
       }else{
         $('#pshade').css({'z-index':option,'display':'block'});
       }
