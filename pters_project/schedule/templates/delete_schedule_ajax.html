@@ -1,0 +1,16 @@
+{
+    "deleteScheduleIdArray" :
+    [{% for finish_schedule_info in finish_schedule_list %}"{{ finish_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "deleteScheduleStartDTArray" :
+    [{% for finish_schedule_info in finish_schedule_list %}"{{ finish_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "deleteScheduleEndDTArray" :
+    [{% for finish_schedule_info in finish_schedule_list %}"{{ finish_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "deleteScheduleNoteArray" :
+    [{% for finish_schedule_info in finish_schedule_list %}"{{ finish_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "deleteScheduleModArray" :
+    [{% for finish_schedule_info in finish_schedule_list %}"{{ finish_schedule_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "deleteScheduleRegArray" :
+    [{% for finish_schedule_info in finish_schedule_list %}"{{ finish_schedule_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+
+
+}

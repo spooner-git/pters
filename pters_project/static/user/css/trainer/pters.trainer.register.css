@@ -444,11 +444,11 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.contractread{
-		height: 400px;
+		height: 200px;
 	}
 
 	.fixfooter{
-		position: absolute;
+		position: fixed;
 	    display: block;
 	    background: rgba(40, 40, 40, 0.50);
 	    width: 100%;

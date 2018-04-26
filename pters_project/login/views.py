@@ -88,7 +88,8 @@ def login_trainer(request):
 
             if token_exist is False:
                 if keyword is not None and keyword != '':
-                    token_info = PushInfoTb(member_id=user.id, token=keyword,last_login=timezone.now(), use=1)
+                    token_info = PushInfoTb(member_id=user.id, token=keyword,last_login=timezone.now(),
+                                            session_info=request.session.session_key, use=1)
                     token_info.save()
 
             request.session['push_token'] = keyword
@@ -113,6 +114,7 @@ def login_trainer(request):
                     error = '이미 탈퇴한 회원입니다.'
         else:
             error = 'ID/비밀번호를 확인해주세요.'
+            next_page = '/login/'
             # logger.error(error)
 
     if error is None:
@@ -172,7 +174,7 @@ def logout_trainer(request):
 
     logout(request)
 
-    return redirect('/login/')
+    return redirect('/')
 
 
 # 회원가입 api
@@ -719,10 +721,32 @@ class AddPushTokenView(View):
 
         if token_exist is False:
             if keyword is not None and keyword != '':
-                token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(), use=1)
+                token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(),
+                                        session_info=request.session.session_key, use=1)
                 token_info.save()
 
         request.session['push_token'] = keyword
+        return render(request, self.template_name, {'token_check': token_exist})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeletePushTokenView(View):
+    template_name = 'token_check_ajax.html'
+    error = ''
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        keyword = request.POST.get('keyword', '')
+        try:
+            token_data = PushInfoTb.objects.get(token=keyword, use=1)
+            token_data.delete()
+            token_exist = False
+        except ObjectDoesNotExist:
+            token_exist = False
+
         return render(request, self.template_name, {'token_check': token_exist})
 
 

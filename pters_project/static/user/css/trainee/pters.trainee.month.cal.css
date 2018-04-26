@@ -24,7 +24,7 @@ body{
 }
 	#blank_member_popup label{
 		margin-top: 20px;
-		width: 100%:;
+		width: 100%;
 		font-size: 19px;
 		color: #fe4e65;
 	}
@@ -899,9 +899,46 @@ img,a,div,span,p{
 	}
 }
 
+.fixfooter{
+	display: block;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	padding-bottom: 15px;
+	z-index: 1;
+}
+
+.bottomfooter2 {
+	color: #ffffff;
+}
+
+.bottomfooter3 {
+	color: #ffffff;
+}
+
+@media(max-width:599px){
+	.bottomfooter2{
+		display:none;
+	}
+	.bottomfooter3{
+		display:block;
+	}
+	.fixfooter{
+		position:fixed;
+	}
+}
 /*미디어 쿼리*/
 
 @media(min-width: 600px){
+	.bottomfooter2{
+		display:block;
+	}
+	.bottomfooter3{
+		display:none;
+	}
+	.fixfooter{
+		position:relative;
+	}
 	.pcwho:hover{
 		color: #fe4e65;
 	}
@@ -1224,6 +1261,13 @@ img,a,div,span,p{
 
 	.today{
 		color: transparent;
+	}
+
+	.bottomfooter2{
+		display:block;
+	}
+	.bottomfooter3{
+		display:none;
 	}
 }
 

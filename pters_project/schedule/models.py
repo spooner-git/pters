@@ -14,7 +14,7 @@ from login.models import MemberTb
 class ClassTb(models.Model):
     class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-    center_tb = models.ForeignKey(CenterTb, on_delete=models.CASCADE, null=True)
+    center_tb = models.ForeignKey(CenterTb, on_delete=models.SET_NULL, null=True)
     subject_cd = models.CharField(db_column='SUBJECT_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     subject_detail_nm = models.CharField(db_column='SUBJECT_DETAIL_NM', max_length=20, blank=True, null=True)  # Field name made lowercase.
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
@@ -130,8 +130,8 @@ class DeleteScheduleTb(models.Model):
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, null=True)
     member_note = models.CharField(db_column='MEMBER_NOTE', max_length=255, blank=True, null=True)
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-    del_member_id = models.CharField(db_column='DEL_MEMBER_ID', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='REG_MEMBER_ID')  # Field name made lowercase.
+    del_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='DEL_MEMBER_ID')  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.

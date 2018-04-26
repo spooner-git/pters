@@ -200,8 +200,8 @@ $(document).ready(function(){
     						'<div class="cell5">노트</div>'+
     					   '</div>'
     	var html = []
-    	for(var i=0; i<jsondata.ptScheduleStateCdArray.length; i++){
-    		var number 	     = '<div class="cell1">'+(jsondata.ptScheduleStateCdArray.length-i)+'</div>'
+    	for(var i=jsondata.ptScheduleStateCdArray.length-1; i>=0; i--){
+    		var number 	     = '<div class="cell1">'+jsondata.ptScheduleIdxArray[i]+'</div>'
     		if($('body').width()>600){
     			var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i])
     		}else if($('body').width()<=600){

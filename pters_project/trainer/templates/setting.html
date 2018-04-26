@@ -37,7 +37,8 @@
     <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
   </div>
 
-  <div id="languageSetting" class="settingMenu" onclick="location.href='{% url 'trainer:language_setting' %}'">
+  <!--<div id="languageSetting" class="settingMenu" onclick="location.href='{% url 'trainer:language_setting' %}'">-->
+  <div id="languageSetting" class="settingMenu" style="opacity: 0.5;">
     <img src="/static/user/res/icon-earth.png" alt="" class="settingImg">
     <span class="settingText">Language/言語/언어</span>
     <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
@@ -59,6 +60,10 @@
         <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.setting.js" %}></script>
         <script>
+
+          $('#languageSetting').click(function(){
+              alert("영어/일본어 서비스를 준비중입니다.")
+          })
           
         </script>
 {% endblock %}

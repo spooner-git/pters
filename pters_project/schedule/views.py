@@ -23,9 +23,9 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
 from configs import settings
-from configs.views import date_check_func, get_client_ip
+from configs.views import date_check_func
 from login.models import LogTb, MemberTb, CommonCdTb
-from schedule.models import LectureTb, ClassLectureTb
+from schedule.models import LectureTb, ClassLectureTb, MemberLectureTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
 
@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 
 class IndexView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'index_schedule.html'
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -272,6 +272,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     pt_schedule_member_id = []
     pt_schedule_finish_check = []
     pt_schedule_note = []
+    pt_schedule_idx = []
     off_repeat_schedule_id = []
     off_repeat_schedule_type = []
     off_repeat_schedule_week_info = []
@@ -354,10 +355,12 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
                                                                        en_dis_type='1',
                                                                        start_dt__gte=start_date,
-                                                                       start_dt__lt=end_date, use=1)
+                                                                       start_dt__lt=end_date, use=1).order_by('start_dt')
             # PT 스케쥴 정보 셋팅
+            idx = 0
             for pt_schedule_datum in lecture_datum.pt_schedule_data:
                 # lecture schedule id 셋팅
+                idx += 1
                 pt_schedule_id.append(pt_schedule_datum.schedule_id)
                 # lecture schedule 에 해당하는 lecture id 셋팅
                 pt_schedule_lecture_id.append(lecture_datum.lecture_id)
@@ -365,6 +368,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
                 pt_schedule_member_id.append(member_data.member_id)
                 pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
                 pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
+                pt_schedule_idx.append(idx)
                 if pt_schedule_datum.note is None:
                     pt_schedule_note.append('')
                 else:
@@ -392,6 +396,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
     context['pt_schedule_note'] = pt_schedule_note
+    context['pt_schedule_idx'] = pt_schedule_idx
 
     context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
     context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
@@ -617,7 +622,7 @@ def delete_schedule_logic(request):
         if en_dis_type == '1':
             request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 삭제했습니다'
+                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 취소했습니다'
             request.session['lecture_id'] = lecture_id
         else:
             request.session['push_info'] = ''
@@ -1215,7 +1220,7 @@ def delete_repeat_schedule_logic(request):
 
         if en_dis_type == '1':
             request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-                                           + '~' + str(end_date) + ' PT 반복일정을 삭제했습니다'
+                                           + '~' + str(end_date) + ' PT 반복일정을 취소했습니다'
             request.session['lecture_id'] = delete_repeat_schedule.lecture_tb_id
         else:
             request.session['push_info'] = ''
@@ -1255,12 +1260,12 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
                     update_check = class_info.schedule_check
 
             if group.name == 'trainee':
-                try:
-                    lecture_info = LectureTb.objects.get(member=self.request.user.id, use=1)
-                except ObjectDoesNotExist:
-                    error = '회원 PT 정보가 존재하지 않습니다'
-                if error is None:
-                    update_check = lecture_info.schedule_check
+                lecture_data = MemberLectureTb.objects.filter(member=self.request.user.id, use=1)
+
+                if len(lecture_data) > 0:
+                    for lecture_info in lecture_data:
+                        if lecture_info.lecture_tb.schedule_check == 1:
+                            update_check = 1
 
         # print(error)
         context['data_changed'] = update_check
@@ -1309,7 +1314,7 @@ def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='PT '+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
     else:
         # log_contents = '<span>' + user_name + ' 강사님께서 ' \
@@ -1324,7 +1329,7 @@ def save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_
                          class_tb_id=class_id,
                          log_info='OFF '+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
         log_data.save()
 
 
@@ -1390,13 +1395,14 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
 
         finish_schedule_list = None
         if lecture_id is None or lecture_id == '':
-            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
-            if len(lecture_list) > 0:
-                for idx, lecture_info in enumerate(lecture_list):
+            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
+
+            if len(class_lecture_list) > 0:
+                for idx, class_lecture_info in enumerate(class_lecture_list):
                     if idx == 0:
-                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
                     else:
-                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
         else:
             finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
 
@@ -1412,18 +1418,82 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
 
         finish_schedule_list = None
         if lecture_id is None or lecture_id == '':
-            lecture_list = LectureTb.objects.filter(member_id=member_id, use=1)
+            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
 
-            if len(lecture_list) > 0:
-                for idx, lecture_info in enumerate(lecture_list):
+            if len(class_lecture_list) > 0:
+                for idx, class_lecture_info in enumerate(class_lecture_list):
                     if idx == 0:
-                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
                     else:
-                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE').order_by('-end_dt')
+                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
         else:
             finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
 
         context['finish_schedule_list'] = finish_schedule_list
+
+        return render(request, self.template_name, context)
+
+
+# hkkim - 2018.04.23
+@method_decorator(csrf_exempt, name='dispatch')
+class GetDeleteScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
+    template_name = 'delete_schedule_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
+
+        lecture_id = request.GET.get('lecture_id', '')
+        member_id = request.GET.get('member_id', '')
+
+        delete_schedule_list = None
+        if lecture_id is None or lecture_id == '':
+            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
+
+            if len(class_lecture_list) > 0:
+                for idx, class_lecture_info in enumerate(class_lecture_list):
+                    error = None
+                    try:
+                        MemberLectureTb.objects.get(member_id=member_id, lecture_tb_id=class_lecture_info.lecture_tb_id, use=1)
+                    except ObjectDoesNotExist:
+                        error = '수강정보를 불러오지 못했습니다.'
+                    if error is None:
+                        if idx == 0:
+                            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
+                        else:
+                            delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
+        else:
+            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_id).order_by('-end_dt')
+
+        context['delete_schedule_list'] = delete_schedule_list
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
+
+        lecture_id = request.POST.get('lecture_id', '')
+        member_id = request.POST.get('member_id', '')
+
+        delete_schedule_list = None
+        if lecture_id is None or lecture_id == '':
+            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
+
+            if len(class_lecture_list) > 0:
+                for idx, class_lecture_info in enumerate(class_lecture_list):
+                    error = None
+                    try:
+                        MemberLectureTb.objects.get(member_id=member_id, lecture_tb_id=class_lecture_info.lecture_tb_id, use=1)
+                    except ObjectDoesNotExist:
+                        error = '수강정보를 불러오지 못했습니다.'
+                    if error is None:
+                        if idx == 0:
+                            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
+                        else:
+                            delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
+        else:
+            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_id).order_by('-end_dt')
+
+        context['delete_schedule_list'] = delete_schedule_list
 
         return render(request, self.template_name, context)
 
@@ -1456,7 +1526,7 @@ def update_memo_schedule_logic(request):
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
                          log_info='일정 메모', log_how='수정',
-                         reg_dt=timezone.now(), ip=get_client_ip(request), use=1)
+                         reg_dt=timezone.now(), use=1)
 
         log_data.save()
 
