@@ -1645,8 +1645,10 @@ function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리
   }
   offAddOkArray = []
   if(Options.classDur == 60){
+    console.log('-----------6060')
     for(i=Options.workStartTime;i<Options.workEndTime;i++){
       // 1시간 단위일때도 시작일자 리스트는 30분단위로 세밀하게 보여주기
+      /*
       if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
         if($('#'+i+'g_30'+option).hasClass('pinktimegraph') == true || $('#'+i+'g_30'+option).hasClass('greytimegraph') == true || $('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true || $('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
 
@@ -1661,6 +1663,23 @@ function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리
           offAddOkArray.push(i+0.5)  
         }
       }
+      */
+
+      if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
+        if($('#'+i+'g_30'+option).hasClass('pinktimegraph') == true || $('#'+i+'g_30'+option).hasClass('greytimegraph') == true || $('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true || $('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
+
+        }else{
+          offAddOkArray.push(i);
+        }
+        
+      }
+      if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
+        if(i != (Options.workEndTime)-1 && (!$('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+(i+1)+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+(i+1)+'g_00'+option).hasClass('greytimegraph_greyleft') == true)){
+          offAddOkArray.push(i+0.5)  
+        }else{
+          
+        }
+      }
       
 
       /*
@@ -1670,7 +1689,7 @@ function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리
       }
       */
 
-    }
+    }console.log(offAddOkArray)
   }else if(Options.classDur == 30){
     for(i=Options.workStartTime;i<Options.workEndTime;i++){
       if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
