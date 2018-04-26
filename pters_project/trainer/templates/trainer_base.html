@@ -768,6 +768,7 @@
             function fill_lecture_select_popup(HTMLselector){
                 var len = lec_select_subjectNameArray.length;
                 var list_table_to_join = []
+                var center_counter = 0;
                 for(var i=0; i<len; i++){
                   //if(lec_select_npLectureCountsArray[i] == '0'){
                       if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
@@ -788,9 +789,16 @@
                       //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
                     var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>'
                       list_table_to_join.push(sum)
+                        if(lec_select_centerNameArray[i] != ''){
+                              center_counter += 1;
+                        }
                 }
                 var list_table = list_table_to_join.join('')
                 HTMLselector.html(list_table)
+
+                if(center_counter==0){
+                    $('.table_center_name').css('display', 'none')
+                }
                 //$('.lecture_select_table_list').html(list_table)
             }
 

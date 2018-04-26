@@ -89,6 +89,10 @@ button.classAdd{
 			width: 10%;
 		}
 
+		.table_trainee_number{
+			display: none;
+			width: 15%;
+		}
 		.table_start_date{
 			display: none;
 			width: 15%;
@@ -184,6 +188,10 @@ button.classAdd{
 	.table_start_date{
 		display: table-cell;
 		width: 15%;
+	}
+	.table_trainee_number{
+		display: table-cell;
+		width: 10%;
 	}
 	.table_trainee_num{
 		display: table-cell;

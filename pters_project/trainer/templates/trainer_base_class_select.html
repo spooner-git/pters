@@ -511,6 +511,7 @@
             function fill_lecture_select_popup(){
                 var len = lec_select_subjectNameArray.length;
                 var list_table_to_join = []
+                var center_counter = 0;
                 for(var i=0; i<len; i++){
                   //if(lec_select_npLectureCountsArray[i] == '0'){
                       var table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'>'
@@ -521,9 +522,16 @@
                       var status = '<div class="pters_table_cell table_lecture_status">'+lec_select_stateNameArray[i]+'</div>'
                       var sum = table + centerName + lectureName + traineeNum + startDate + status +'</div>'
                       list_table_to_join.push(sum)
+                        if(lec_select_centerNameArray[i] != ''){
+                              center_counter += 1;
+                        }
                 }
                 var list_table = list_table_to_join.join('')
                 $('.lecture_select_table_list').html(list_table)
+
+                if(center_counter==0){
+                    $('.table_center_name').css('display', 'none')
+                }
             }
 
 
