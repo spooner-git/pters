@@ -71,7 +71,7 @@
                     <a><img src={% static_url "user/res/icon-user-setting.png" %} style="width:25px;"></a>
                  </button> 
                  {% block nav_center_img %}
-                 <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:cal_month' %}'">{{ user.last_name }}{{ user.first_name }} 회원님 월간 PT 일정</span>
+                 <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:cal_month' %}'">{{ user.last_name }}{{ user.first_name }}님 일정 - {{ request.session.class_type_name }} </span>
                 {% endblock %}
                  <!--
                  <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">
