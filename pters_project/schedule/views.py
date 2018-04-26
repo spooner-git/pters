@@ -272,6 +272,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     pt_schedule_member_id = []
     pt_schedule_finish_check = []
     pt_schedule_note = []
+    pt_schedule_idx = []
     off_repeat_schedule_id = []
     off_repeat_schedule_type = []
     off_repeat_schedule_week_info = []
@@ -354,10 +355,12 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
                                                                        en_dis_type='1',
                                                                        start_dt__gte=start_date,
-                                                                       start_dt__lt=end_date, use=1)
+                                                                       start_dt__lt=end_date, use=1).order_by('start_dt')
             # PT 스케쥴 정보 셋팅
+            idx = 0
             for pt_schedule_datum in lecture_datum.pt_schedule_data:
                 # lecture schedule id 셋팅
+                idx += 1
                 pt_schedule_id.append(pt_schedule_datum.schedule_id)
                 # lecture schedule 에 해당하는 lecture id 셋팅
                 pt_schedule_lecture_id.append(lecture_datum.lecture_id)
@@ -365,6 +368,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
                 pt_schedule_member_id.append(member_data.member_id)
                 pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
                 pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
+                pt_schedule_idx.append(idx)
                 if pt_schedule_datum.note is None:
                     pt_schedule_note.append('')
                 else:
@@ -392,6 +396,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
     context['pt_schedule_note'] = pt_schedule_note
+    context['pt_schedule_idx'] = pt_schedule_idx
 
     context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
     context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
