@@ -1082,7 +1082,9 @@ function ajaxRepeatConfirmSend(){
                             send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
                         }
                     }
-                  ajax_received_json_data(jsondata)
+                  //ajax_received_json_data(jsondata)
+                  ajaxClassTime()
+                  console.log(jsondata)
                 }
               },
 

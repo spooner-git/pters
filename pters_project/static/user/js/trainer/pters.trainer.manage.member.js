@@ -419,9 +419,12 @@ $(document).ready(function(){
           $btn.find('img').css({'display':'none'});
     });
 
+    $('body').click(function(){
+        console.log(deleteTypeSelect)
+    })
     
     $('#popup_delete_btn_yes').click(function(){
-        if($('#calendar').length==0){
+        //if($('#calendar').length==0){
            if(deleteTypeSelect == "repeatinfodelete"){
                 var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id');
                 $.ajax({
@@ -462,6 +465,9 @@ $(document).ready(function(){
                     //보내기후 팝업창 닫기
                     complete:function(){
                         completeSend();
+                        if($('#calendar').length!=0){
+                            ajaxClassTime()
+                        }
                     },
 
                     //통신 실패시 처리
@@ -475,7 +481,7 @@ $(document).ready(function(){
                 closePopup('member_info');
                 closePopup('member_info_PC')
             }    
-        }
+        //}
                 
     });
     
@@ -2450,9 +2456,9 @@ function set_member_lecture_list(jsondata){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if(jsondata.idArray.indexOf(userID)!=-1){
+    }else if(idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
+    }else if(finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     var dbId = Data[userID].dbId
@@ -2620,9 +2626,9 @@ function set_member_history_list(jsondata){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if(jsondata.idArray.indexOf(userID)!=-1){
+    }else if(idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
+    }else if(finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     var dbId = Data[userID].dbId
@@ -3062,6 +3068,10 @@ function closePopup(option){
         }else{
             shade_index(-100)
         }
+        if($('._calmonth').css('display')=="block"){
+            close_info_popup('cal_popup_plancheck')
+            close_info_popup('cal_popup_planinfo')
+        }
     }else if(option == 'member_info_PC'){
         $('#memberInfoPopup_PC').fadeOut('fast')
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
@@ -3128,7 +3138,7 @@ function initialize_add_member_sheet(){
 }
 
 //서버로부터 회원의 반복일정 정보를 받아온다.
-function get_indiv_repeat_info(jsondata){
+function get_indiv_repeat_info(){
     if($('#memberInfoPopup_PC').css('display')=="block"){
         var userID = $('#memberId_info_PC').text()
         var $regHistory = $('#memberRegHistory_info_PC')
@@ -3142,9 +3152,9 @@ function get_indiv_repeat_info(jsondata){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if(jsondata.idArray.indexOf(userID)!=-1){
+    }else if(idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
+    }else if(finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     var dbId = Data[userID].dbId

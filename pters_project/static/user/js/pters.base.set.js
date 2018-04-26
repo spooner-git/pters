@@ -48,6 +48,9 @@ function shade_index(option){
         if($('#memberInfoPopup').css('display')=='block'){
           $('#mshade_popup').css({'z-index':$('#memberInfoPopup').css('z-index'),'display':'block'});
         }
+        if($('#cal_popup_planinfo').css('display')=="block"){
+          $('#mshade_popup').css({'display':'none'});
+        }
         $('#mshade').css({'z-index':option,'display':'block'});
       }
     }
@@ -65,7 +68,6 @@ function close_info_popup(option){
   }
   else if(option =="cal_popup_plandelete"){
       $("#"+option).css({'display':'none'})
-      console.log($('#pshade').css('z-index'))
       if($('#pshade').css('z-index')==200 || $('#mshade').css('z-index') == 200){
         shade_index(100)
       }else{
@@ -677,7 +679,6 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
         var dura = 24-sHour
       }
 
-      console.log(dura)
       if(option=="class"){
         result.push(sYear+"_"+sMonth+"_"+sDate+"_"+sHour+"_"+sMinute+"_"+dura+"_"+classTimeArray_member_name[i]+"_"+eHour+"_"+eMinute);
       }else if(option=="off"){

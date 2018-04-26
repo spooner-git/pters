@@ -294,6 +294,10 @@ ul a{
 	margin-top: 5%;
 }
 
+#scheduleMemo, #repeatDurTime{  /*20180426*/
+	margin-bottom: 30px;
+}
+
 .ptaddbox_mini{
 	display: inline;
 	padding-left: 5%;

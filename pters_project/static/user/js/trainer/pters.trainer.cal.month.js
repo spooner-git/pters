@@ -80,6 +80,7 @@ $(document).ready(function(){
 		            get_indiv_repeat_info(jsondata)
 		            set_member_lecture_list(jsondata)
 		            set_member_history_list(jsondata)
+		            $('#mshade_popup').css({'display':'block','z-index':'150'})
 		        }else if($('body').width()>=600){
 		            open_member_info_popup_pc(userID,jsondata)
 		            get_indiv_repeat_info(jsondata)
@@ -231,6 +232,7 @@ $(document).ready(function(){
 
 		//일정 삭제 버튼 클릭
 		$("#popup_btn_delete").click(function(){
+			deleteTypeSelect = "ptoffdelete"
 			shade_index(200)
 			$('#cal_popup_planinfo').hide()
 			$('#cal_popup_plandelete').fadeIn('fast')
@@ -252,7 +254,6 @@ $(document).ready(function(){
 
 		//일정삭제 확인 팝업 예 버튼
 		$('#popup_delete_btn_yes').click(function(){
-			console.log(deleteTypeSelect)
 			if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
 				$.ajax({
 	                url:'/schedule/delete_repeat_schedule/',
@@ -299,7 +300,6 @@ $(document).ready(function(){
 	                },
 	            })
 			}else if(deleteTypeSelect=='repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){ //회원정보창의 반복일정 삭제
-				console.log('repeatinfodelete')
 				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
 				$.ajax({
 	                url:'/schedule/delete_repeat_schedule/',
@@ -353,7 +353,7 @@ $(document).ready(function(){
 	                  AjaxCompleteSend();
 	                },
 	            })	
-			}else{
+			}else if(deleteTypeSelect == "ptoffdelete"){
 				var $ptdelform = $('#daily-pt-delete-form');
 				var $offdelform = $('#daily-off-delete-form');
 				$('body').css('overflow-y','overlay');

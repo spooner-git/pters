@@ -85,6 +85,7 @@ $(document).ready(function(){
 		            get_indiv_repeat_info(jsondata)
 		            set_member_lecture_list(jsondata)
 		            set_member_history_list(jsondata)
+		            shade_index(100)
 		        }else if($('body').width()>=600){
 		            open_member_info_popup_pc(userID,jsondata)
 		            get_indiv_repeat_info(jsondata)
@@ -443,6 +444,7 @@ $(document).ready(function(){
 
 		//일정 삭제 기능 추가 - hk.kim 171007
 		$("#popup_btn_delete").click(function(){  //일정 삭제 버튼 클릭
+			deleteTypeSelect = "ptoffdelete"
 			$('#cal_popup_planinfo').hide();
 			$('#cal_popup_plandelete').fadeIn('fast');
 		})
@@ -594,7 +596,7 @@ $(document).ready(function(){
 	                  AjaxCompleteSend();
 	                },
 	            })
-			}else{
+			}else if(deleteTypeSelect == "ptoffdelete"){
 				var $ptdelform = $('#daily-pt-delete-form');
 				var $offdelform = $('#daily-off-delete-form');
 				$('body').css('overflow-y','overlay');
