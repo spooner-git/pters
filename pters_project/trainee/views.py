@@ -53,6 +53,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     class_data |= ClassLectureTb.objects.filter(lecture_tb=lecture_info.lecture_tb,
                                                                 use=1).order_by('-lecture_tb__start_date')
 
+
         if class_data is None or len(class_data) == 0:
             self.url = '/trainee/blank/'
         elif len(class_data) == 1:
@@ -70,29 +71,32 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 if lecture_auth_info is not None:
                     if lecture_auth_info.auth_cd == 'WAIT':
                         self.url = '/trainee/lecture_select/'
-                else:
-                    class_type_name = ''
-                    class_name = None
-                    try:
-                        class_name = CommonCdTb.objects.get(common_cd=lecture_info_data.class_tb.class_tb.subject_cd)
-                    except ObjectDoesNotExist:
-                        error = '강좌 과목 정보를 불러오지 못했습니다.'
-                    if error is None:
-                        if lecture_info_data.class_tb.subject_detail_nm is None or lecture_info_data.class_tb.subject_detail_nm == '':
-                            class_type_name = class_name.common_cd_nm
-                        else:
-                            class_type_name = lecture_info_data.class_tb.subject_detail_nm
-
-                    if error is None:
-                        self.request.session['class_type_name'] = class_type_name
+                    elif lecture_auth_info.auth_cd == 'DELETE':
+                        self.url = '/trainee/blank/'
                     else:
-                        self.request.session['class_type_name'] = ''
-
-                    if error is None:
-                        if lecture_info_data.class_tb.center_tb is None or lecture_info_data.class_tb.center_tb == '':
-                            self.request.session['class_center_name'] = ''
+                        class_type_name = ''
+                        class_name = None
+                        try:
+                            class_name = CommonCdTb.objects.get(common_cd=lecture_info_data.class_tb.subject_cd)
+                        except ObjectDoesNotExist:
+                            error = '강좌 과목 정보를 불러오지 못했습니다.'
+                        if error is None:
+                            if lecture_info_data.class_tb.subject_detail_nm is None or lecture_info_data.class_tb.subject_detail_nm == '':
+                                class_type_name = class_name.common_cd_nm
+                            else:
+                                class_type_name = lecture_info_data.class_tb.subject_detail_nm
+                        if error is None:
+                            self.request.session['class_type_name'] = class_type_name
                         else:
-                            self.request.session['class_center_name'] = lecture_info_data.class_tb.center_tb.center_name
+                            self.request.session['class_type_name'] = ''
+
+                        if error is None:
+                            if lecture_info_data.class_tb.center_tb is None or lecture_info_data.class_tb.center_tb == '':
+                                self.request.session['class_center_name'] = ''
+                            else:
+                                self.request.session['class_center_name'] = lecture_info_data.class_tb.center_tb.center_name
+                else:
+                    self.url = '/trainee/blank/'
 
         else:
             class_id_comp = ''
@@ -142,7 +146,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                             class_type_name = class_name.common_cd_nm
                         else:
                             class_type_name = class_info.subject_detail_nm
-
+                    print('test'+class_type_name)
                     if error is None:
                         self.request.session['class_type_name'] = class_type_name
                     else:
