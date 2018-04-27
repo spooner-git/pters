@@ -52,4 +52,4 @@ class PushInfoTbAdmin(admin.ModelAdmin):
 
 @admin.register(QATb)
 class QATbAdmin(admin.ModelAdmin):
-    list_display = ('qa_id', 'member', 'qa_type_cd', 'title', 'contents', 'status', 'use')
+    list_display = ('qa_id', 'member', 'qa_type_cd', 'title', 'contents', 'status', 'mod_dt', 'reg_dt', 'use')
