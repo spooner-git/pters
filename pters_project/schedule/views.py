@@ -521,7 +521,8 @@ def add_schedule_logic(request):
                         break
                 '''
                 if error is not None:
-                    raise ValidationError()
+                    if '-' in error:
+                        error += ' 일정이 중복되었습니다. '
 
         except TypeError as e:
             error = error
@@ -529,8 +530,6 @@ def add_schedule_logic(request):
             error = error
         except IntegrityError as e:
             error = error
-        except ValidationError as e:
-            error += '등록 일정이 겹칩니다.'
         except InternalError as e:
             error = error
 

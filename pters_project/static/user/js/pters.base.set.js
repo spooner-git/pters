@@ -4,18 +4,26 @@ $("body").bind("touchstart",function(e){
 ts = e.originalEvent.touches[0].clientY;
 });
 
-$("body").bind("touchend",function(e){
+$(document).on("touchend",'html',function(e){
   var te = e.originalEvent.changedTouches[0].clientY;
   if(ts>te+5 && $('#mshade').css('z-index')<0){
-    $("#float_btn_wrap").fadeOut('fast')
+      downTouchEvent();
   }else if(ts<te-5){
-    if($('#mshade').css('z-index')<0){
-      $("#float_btn_wrap").show()  
-    }
+      upTouchEvent();
   }
 });
 //플로팅 버튼 스크롤시 숨기기 End
 
+function upTouchEvent(){
+    if($('#mshade').css('z-index')<0){
+      $("#float_btn_wrap").show()
+    }
+
+}
+function downTouchEvent(){
+    $("#float_btn_wrap").fadeOut('fast')
+
+}
 
 function sideGoPage(page){
     //$('.ajaxloadingPC').show()

@@ -963,6 +963,9 @@ def pt_add_logic(request):
         if error is None:
             error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, request.user.last_name+request.user.first_name, lecture_id, class_id, request)
 
+        if error is not None:
+            if '-' in error:
+                error += ' 일정이 중복되었습니다. '
     # print(error)
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
