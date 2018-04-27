@@ -155,17 +155,33 @@ $(document).ready(function(){
           var start = Options.workStartTime;
           var end   = Options.workEndTime;
           var startTimeList = []
-          for(var i=start; i<end; i++){
-            if(i == 24){
-              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li>')
-            }else if(i<12){
-              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li>')
-            }else if(i>12){
-              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li>')
-            }else if(i==12){
-              startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li>')
+
+          if(Options.classDur == 30){
+            for(var i=start; i<end; i++){
+              if(i == 24){
+                startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+'12'+'시 30분</a></li>')
+              }else if(i<12){
+                startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+i+'시 30분</a></li>')
+              }else if(i>12){
+                startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+(i-12)+'시 30분</a></li>')
+              }else if(i==12){
+                startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+'12'+'시 30분</a></li>')
+              }
+            }
+          }else if(Options.classDur == 60){
+            for(var i=start; i<end; i++){
+              if(i == 24){
+                startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li>')
+              }else if(i<12){
+                startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li>')
+              }else if(i>12){
+                startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li>')
+              }else if(i==12){
+                startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li>')
+              }
             }
           }
+
           $('#repeatstarttimes').html(startTimeList.join(''))
           $('#repeatdurations').html('')
       }
@@ -174,10 +190,29 @@ $(document).ready(function(){
           var start = Options.workStartTime;
           var end   = Options.workEndTime;
           var selectedTime = $('#repeatstarttimesSelected button').val().split(':')[0]
+          var selectedMin = $('#repeatstarttimesSelected button').val().split(':')[1]
           var durTimeList = []
-          for(var i=1; i<=end-(selectedTime); i++){
-              durTimeList.push('<li><a data-dur="'+i+'">'+i+'시간</a></li>')
+          
+          if(Options.classDur == 30){
+            var tengo=0.5
+              if(selectedMin == "30"){
+                for(var i=0; i<(end-(selectedTime))*2-1; i++){
+                  durTimeList.push('<li><a data-dur="'+(i+1)+'">'+tengo+'시간</a></li>')
+                  tengo = tengo + 0.5
+                }
+              }else if(selectedMin == "00"){
+                for(var i=0; i<(end-(selectedTime))*2; i++){
+                  durTimeList.push('<li><a data-dur="'+(i+1)+'">'+tengo+'시간</a></li>')
+                  tengo = tengo + 0.5
+                }
+              }
+          }else if(Options.classDur == 60){
+            for(var i=1; i<=end-(selectedTime); i++){
+                durTimeList.push('<li><a data-dur="'+i*(60/Options.classDur)+'">'+i+'시간</a></li>')
+            }
           }
+
+
           $('#repeatdurations').html(durTimeList.join(''))
       }
 

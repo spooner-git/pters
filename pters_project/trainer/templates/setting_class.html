@@ -28,8 +28,11 @@
     <div class="pters_table_cell_head table_trainee_num">수강생</div>
     <div class="pters_table_cell_head table_start_date">개강일</div>
     <div class="pters_table_cell_head table_lecture_status">상태</div>
+    <div class="pters_table_cell_head table_class_unit">클래스 단위</div>
     <div class="pters_table_cell_head lecture_delete">관리</div>
+    <!--
     <div class="pters_table_cell_head lecture_selection">이동</div>
+    -->
   </div>
   <div class="lecture_select_table_list">
   </div>
@@ -52,8 +55,8 @@
               if($('body').width()<600){
                 $('#page-base').css('display','none')
                 $('#page-base-modifystyle').css('display','block')
-                $('#uptext3').text('강의 관리')
-                $('#uptext').text("강의 관리")
+                $('#uptext3').text('클래스 설정')
+                $('#uptext').text("클래스 설정")
                 $('#upbutton-modify').hide()
               }
               
@@ -127,6 +130,8 @@
                             lec_select_stateCodeArray = jsondata.stateCodeArray;
                             lec_select_subjectCodeArray= jsondata.subjectCodeArray;
                             lec_select_currentClassId = jsondata.currentClassId;
+                            lec_select_classHour = jsondata.classHourArray;
+
                             if(lec_select_classIdArray.length == 0){
                                 location.href="{% url 'trainer:add_class' %}"
                             }else{
@@ -164,7 +169,7 @@
                             $('#errorMessageBar').show()
                             $('#errorMessageText').text(jsondata.messageArray)
                         }else{
-                            ajax_read_lecture_info_from_db()
+                            ajax_read_lecture_info_from_db_PAGE()
                         }
                       },
 
@@ -186,28 +191,55 @@
                 for(var i=0; i<len; i++){
                   //if(lec_select_npLectureCountsArray[i] == '0'){
                       if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
+                          var table = '<div class="pters_table pters_table_at_setting_page" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                           var currentClass = 'currentClass'
                           var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'
                           var selectionText = '<a style="cursor:default;">-</a>'
+                          if(Number(lec_select_classHour[i]) == 60){
+                            var selected30 = ""
+                            var selected60 = "selected"
+                          }else if(Number(lec_select_classHour[i]) == 30){
+                            var selected30 = "selected"
+                            var selected60 = ""
+                          }
+                          var classUnitDropdown = '<select data-classid="'+lec_select_classIdArray[i]+'"><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                       }else{
+                          var table = '<div class="pters_table pters_table_at_setting_page _selection" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'"onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">'
                           var currentClass = ""
                           var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
                           var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'" style="cursor:pointer;">이동</a>'
+                          if(Number(lec_select_classHour[i]) == 60){
+                            var selected30 = ""
+                            var selected60 = "selected"
+                          }else if(Number(lec_select_classHour[i]) == 30){
+                            var selected30 = "selected"
+                            var selected60 = ""
+                          }
+                          var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+lec_select_classIdArray[i]+'"><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                       }
-                      var table = '<div class="pters_table pters_table_at_setting_page" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
-                      var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>'
+                      var centerName__ = lec_select_centerNameArray[i]
+                      if(lec_select_centerNameArray[i] == ""){
+                        var centerName__ = '-'
+                      }
+                      var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+centerName__+'</div>'
                       var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>'
                       var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>'
                       var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
                       var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>'
+                      var unitSelect = '<div class="pters_table_cell table_class_unit '+currentClass+'">'+classUnitDropdown+'</div>'
                       var manageIcon = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _icon_modify">'
                       
                       var del = '<div class="pters_table_cell lecture_delete"  data-classid="'+lec_select_classIdArray[i]+'">'+manageIcon2+'</div>'
                       var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
 
-                      var testrow = '<div class="pters_table_row">'+'개강일 '+ date_format_to_yyyymmdd(lec_select_startDateArray[i],'.') +'&nbsp; &nbsp; |&nbsp; &nbsp; '+  '수강생 '+lec_select_classInProgressMemberNumArray[i]+' 명</div>'
 
-                      var sum = table + centerName + lectureName + traineeNum + startDate + status + del + selection + '</div>' + testrow
+                      var additionalRow = '<div class="pters_table_row">'+ 
+                                        '클래스 단위 ' + classUnitDropdown+
+                                        '&nbsp;  | &nbsp; ' + '개강일 '+ date_format_to_yyyymmdd(lec_select_startDateArray[i],'.') +
+                                        '&nbsp;  | &nbsp; ' + '수강생 '+lec_select_classInProgressMemberNumArray[i]+' 명'  + '</div>'
+                      
+
+                      var sum = table + centerName + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
                       list_table_to_join.push(sum)
 
                 }
@@ -220,6 +252,48 @@
             $('.button_close_popup').click(function(){
                 $(this).parents('div.popups').fadeOut('fast')
                 $('#shade,#shade3').hide()
+            })
+
+            $(document).on('change','.pters_table_row select, .table_class_unit select',function(){
+                var selectedUnit = $(this).val()
+                var selectedClassUnit = selectedUnit.replace(/시간|분|時間|分|h|m/gi,'')
+                var class_id = $(this).attr('data-classid')
+                if(selectedClassUnit == '1'){
+                  var classUnit = "60"
+                }else if(selectedClassUnit == '30'){
+                  var classUnit = "30"
+                }
+                console.log(class_id, classUnit)
+                $.ajax({
+                      url: '/trainer/update_class_info/',
+                      data:{"class_id":class_id, "class_hour":classUnit},
+                      dataType : 'html',
+                      type:'POST',
+
+                      beforeSend:function(){
+                        
+                      },
+
+                      success:function(data){
+                        var jsondata = JSON.parse(data);
+                        if(jsondata.messageArray.length>0){
+                            $('#errorMessageBar').show()
+                            $('#errorMessageText').text(jsondata.messageArray)
+                        }else{
+                            console.log(jsondata)
+                            alert('강의 시간 단위가 '+selectedUnit+'으로 변경 되었습니다.')
+                        }
+                      },
+
+                      complete:function(){
+                        
+                      },
+
+                      error:function(){
+                          $('#errorMessageBar').show()
+                          $('#errorMessageText').text('통신 에러: 관리자 문의')
+                      }
+                    })
             })
 
 

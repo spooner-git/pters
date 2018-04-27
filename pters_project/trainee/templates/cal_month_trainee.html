@@ -83,65 +83,12 @@
         <div id="dateInfo"></div>
         </div>
 
-        <div id="timeGraph" class="paddingside15px tdgraph_trainee_popup" style="display: block;">
+        <div id="timeGraph" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph" style="display: block;">
           <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">예약 가능 시간 <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
           <table class="timegraphtext">
-            <tbody>
-              <tr>
-                <td>00</td>
-                <td>01</td>
-                <td>02</td>
-                <td>03</td>
-                <td>04</td>
-                <td>05</td>
-                <td>06</td>
-                <td>07</td>
-                <td>08</td>
-                <td>09</td>
-                <td>10</td>
-                <td>11</td>
-                <td>12</td>
-                <td>13</td>
-                <td>14</td>
-                <td>15</td>
-                <td>16</td>
-                <td>17</td>
-                <td>18</td>
-                <td>19</td>
-                <td>20</td>
-                <td>21</td>
-                <td>22</td>
-                <td>23</td>
-              </tr>
-              <tr>
-                <td id="0g" class="tdgraph"></td>
-                <td id="1g" class="tdgraph"></td>
-                <td id="2g" class="tdgraph"></td>
-                <td id="3g" class="tdgraph"></td>
-                <td id="4g" class="tdgraph"></td>
-                <td id="5g" class="tdgraph"></td>
-                <td id="6g" class="tdgraph"></td>
-                <td id="7g" class="tdgraph"></td>
-                <td id="8g" class="tdgraph"></td>
-                <td id="9g" class="tdgraph"></td>
-                <td id="10g" class="tdgraph"></td>
-                <td id="11g" class="tdgraph"></td>
-                <td id="12g" class="tdgraph"></td>
-                <td id="13g" class="tdgraph"></td>
-                <td id="14g" class="tdgraph"></td>
-                <td id="15g" class="tdgraph"></td>
-                <td id="16g" class="tdgraph"></td>
-                <td id="17g" class="tdgraph"></td>
-                <td id="18g" class="tdgraph"></td>
-                <td id="19g" class="tdgraph"></td>
-                <td id="20g" class="tdgraph"></td>
-                <td id="21g" class="tdgraph"></td>
-                <td id="22g" class="tdgraph"></td>
-                <td id="23g" class="tdgraph"></td>
-              </tr>
-            </tbody>
+
           </table>
-          <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! <span class="cancellimit_time"></span>까지만 취소가 가능합니다.</p>
+          <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
         </div>
 
         <div id="offStartTime" class="ptaddbox_nomargin addpopupinner" style="position:relative;">
@@ -269,6 +216,7 @@
             var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
             var classHourArray = ['{{ class_info.class_hour }}'];
+
 
 
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array

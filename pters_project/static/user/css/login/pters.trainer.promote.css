@@ -249,6 +249,18 @@ nav.upperbar{
 		font-weight: 500;
 		cursor: pointer;
 	}
+.brower_site{
+	background:#f4f4f4 !important;
+	box-shadow: unset !important;
+	border: 1px solid #fe4e65 !important;
+	color: #fe4e65 !important;
+	height: 50px;
+	width: 130px !important;
+	margin: 5px;
+	font-weight: 300 !important;
+	font-size: 15px;
+	cursor: pointer;
+}
 
 .pink_strong{
 	color: #fe4e65;
@@ -326,7 +338,7 @@ nav.upperbar{
 	.explain_wrap{
 		position: absolute;
 		top: 50%;
-		right: 0%;
+		left: 55% !important;
 		transform: translateY(-50%);
 		color: #ffffff;
 		width: 45%;
@@ -337,20 +349,23 @@ nav.upperbar{
 		width: 75%;
 		min-width: 420px;
 		height: 305px;
-		padding: 50px 0 50px 0;
+		padding: 90px 0 90px 0;
 		border-top:1px solid #ffffff;
 		border-bottom: 1px solid #ffffff;
+		text-align: left;
 	}
 		.explain_main h1{
+			font-size: 32px;
 			margin: 0;
 			font-weight:500;
 		}
 		.explain_main h2{
+			font-size: 24px;
 			margin: 0;
 			font-weight: 500;
 		}
 		.explain_main p{
-			font-size: 17px;
+			font-size: 19px;
 			margin: 0;
 			font-weight: 400;
 		}

@@ -34,6 +34,9 @@ $(document).ready(function(){
     $(document).on('click','#upbutton-x, #upbutton-x-modify',function(){
         closePopup('member_info');
         closePopup('member_add');
+        if($('body').width()<600){
+            $('#calendar').css('display','block')
+        }
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
@@ -164,8 +167,16 @@ $(document).ready(function(){
         if($(this).attr('data-type')=="view"){
             var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
             var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
+            if($('body').width()<600){
+               var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
+               var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input') 
+            }else if($('body').width()>=600){
+
+            }
             myRow.addClass('input_available').attr('disabled',false);
             myNoteRow.addClass('input_available').attr('disabled',false);
+
+
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide();
             $(this).text(text).attr('data-type',"modify");
             $('#form_member_name').val(userName);
@@ -419,11 +430,15 @@ $(document).ready(function(){
           $btn.find('img').css({'display':'none'});
     });
 
+    $('body').click(function(){
+        console.log(deleteTypeSelect)
+    })
     
     $('#popup_delete_btn_yes').click(function(){
-        if($('#calendar').length==0){
+        //if($('#calendar').length==0){
            if(deleteTypeSelect == "repeatinfodelete"){
                 var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id');
+                console.log(repeat_schedule_id)
                 $.ajax({
                     url:'/schedule/delete_repeat_schedule/',
                     type:'POST',
@@ -440,6 +455,7 @@ $(document).ready(function(){
                         if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray);
+                            console.log('???????????')
                         }else{
 
 								if(jsondata.push_info != ''){
@@ -462,6 +478,9 @@ $(document).ready(function(){
                     //보내기후 팝업창 닫기
                     complete:function(){
                         completeSend();
+                        if($('#calendar').length!=0){
+                            ajaxClassTime()
+                        }
                     },
 
                     //통신 실패시 처리
@@ -475,7 +494,7 @@ $(document).ready(function(){
                 closePopup('member_info');
                 closePopup('member_info_PC')
             }    
-        }
+        //}
                 
     });
     
@@ -1936,6 +1955,8 @@ function open_member_info_popup_mobile(userID,jsondata){
     $('#comment_info').val(Data[userID].contents);
     $('#memberRegCount_info').val(Data[userID].regcount);
     $('#memberCount_info').val(Data[userID].count);
+    $('#memberAvailCount_info').val(Data[userID].availCount).text(Data[userID].availCount)
+    $('#memberFinishCount_info').val(Data[userID].regcount-Data[userID].count).text(Data[userID].regcount-Data[userID].count)
     $('#memberEmail_info').val(Data[userID].email);
     $('#datepicker_info').val(Data[userID].start);
     $('#datepicker2_info').val(Data[userID].end);
@@ -2450,9 +2471,9 @@ function set_member_lecture_list(jsondata){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if(jsondata.idArray.indexOf(userID)!=-1){
+    }else if(idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
+    }else if(finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     var dbId = Data[userID].dbId
@@ -2620,9 +2641,9 @@ function set_member_history_list(jsondata){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if(jsondata.idArray.indexOf(userID)!=-1){
+    }else if(idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
+    }else if(finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     var dbId = Data[userID].dbId
@@ -2704,8 +2725,10 @@ function draw_member_history_list_table(jsondata,targetHTML,option){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay()
         var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2])
         var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2])
-        var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0])
-        var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])
+        var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60
+        var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60
+        console.log(startTime,'startTime')
+        console.log(endTime,'endTime',Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1]))
         if( endDate == startDate+1 && endTime==0){
             var duration = 24 - startTime
         }else{
@@ -3060,6 +3083,10 @@ function closePopup(option){
         }else{
             shade_index(-100)
         }
+        if($('._calmonth').css('display')=="block"){
+            close_info_popup('cal_popup_plancheck')
+            close_info_popup('cal_popup_planinfo')
+        }
     }else if(option == 'member_info_PC'){
         $('#memberInfoPopup_PC').fadeOut('fast')
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
@@ -3126,7 +3153,7 @@ function initialize_add_member_sheet(){
 }
 
 //서버로부터 회원의 반복일정 정보를 받아온다.
-function get_indiv_repeat_info(jsondata){
+function get_indiv_repeat_info(){
     if($('#memberInfoPopup_PC').css('display')=="block"){
         var userID = $('#memberId_info_PC').text()
         var $regHistory = $('#memberRegHistory_info_PC')
@@ -3140,9 +3167,9 @@ function get_indiv_repeat_info(jsondata){
       var Data = DB
     }else if($('#finishedMemberList').css('display') == "block"){
        var Data = DBe
-    }else if(jsondata.idArray.indexOf(userID)!=-1){
+    }else if(idArray.indexOf(userID)!=-1){
         var Data = DB
-    }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
+    }else if(finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
     var dbId = Data[userID].dbId
@@ -3242,9 +3269,30 @@ function set_indiv_repeat_info(){
         //var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
         var repeat_end_text = ""
         var repeat_end = repeat_end_array[i].replace(/-/gi,".");
-        var repeat_time = Number(repeat_time_array[i].split(':')[0])+0
-        var repeat_dur = repeat_dur_array[i]
+        var repeat_time = Number(repeat_time_array[i].split(':')[0]) // 06 or 18
+        var repeat_min = Number(repeat_time_array[i].split(':')[1])  // 00 or 30
+
+        if(repeat_min == "30"){
+            var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
+        }
+        var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
         var repeat_sum = Number(repeat_time) + Number(repeat_dur)
+
+        var repeat_end_time_hour = parseInt(repeat_sum)
+        if(parseInt(repeat_sum)<10){
+            var repeat_end_time_hour = '0'+parseInt(repeat_sum)
+        }
+        if((repeat_sum%parseInt(repeat_sum))*60 == 0){
+            var repeat_end_time_min = '00'
+        }else if((repeat_sum%parseInt(repeat_sum))*60 == 30){
+            var repeat_end_time_min = '30'
+        }
+
+        var repeat_start_time = repeat_time_array[i].split(':')[0] +':'+ repeat_time_array[i].split(':')[1]
+        var repeat_end_time = repeat_end_time_hour + ':' + repeat_end_time_min
+
+
+
         var repeat_day =  function(){
                             var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
                             var repeat_day_info = ""
@@ -3260,7 +3308,7 @@ function set_indiv_repeat_info(){
                             }
                               return repeat_day_info
                           };
-        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+text+' ('+repeat_dur +text2+')'+'</p>'
+        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +text2+')'+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
@@ -3282,10 +3330,6 @@ function completeSend(){
     $('html').css("cursor","auto");
     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
     $('.ajaxloadingPC').hide();
-    if($('body').width()<=600){
-       $('#shade').hide();
-       $('#calendar').show(); 
-    }
     //alert('complete: 일정 정상 등록')
 }
 

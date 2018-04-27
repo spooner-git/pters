@@ -51,6 +51,13 @@ button.classAdd{
 		border-bottom: 0;
 		background: #ffffff;
 	}
+	._selection{
+		cursor: pointer;
+	}
+		._selection:hover,._selection:active,._selection:focus{
+			background:#fe4e65 !important;
+			color: #ffffff !important;
+		}
 	.pters_table{
 		display: table;
 		width: 100%;
@@ -65,7 +72,7 @@ button.classAdd{
 		}
 		.pters_table_cell{
 			display: table-cell;
-			background:#ffffff;
+			/*background:#ffffff;*/
 			/*border-bottom: 1px solid #f4f4f4;*/
 			line-height: 30px;
 			font-size: 13px;
@@ -75,7 +82,7 @@ button.classAdd{
 			display: block;
 			padding-left: 20px;
 			background: #ffffff;
-			color: #b3b3b3;
+			color: #5d5d5d;
 			font-size: 12.5px;
 			padding-bottom: 7px;
 		}
@@ -87,6 +94,10 @@ button.classAdd{
 		}
 		.table_lecture_status{
 			width: 10%;
+			display: none;
+		}
+		.table_class_unit{
+			display: none;
 		}
 
 		.table_trainee_number{
@@ -198,6 +209,10 @@ button.classAdd{
 		width: 10%;
 	}
 	.lecture_selection{
+		display: table-cell;
+		width: 10%;
+	}
+	.table_class_unit{
 		display: table-cell;
 		width: 10%;
 	}

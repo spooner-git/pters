@@ -8,6 +8,10 @@ ul a{
 	cursor: pointer;
 }
 
+._on{
+	
+}
+
 .link-icon{
 	width: 17px;
 	margin-bottom: 4px;
@@ -290,6 +294,10 @@ ul a{
 	margin-top: 5%;
 }
 
+#scheduleMemo, #repeatDurTime{  /*20180426*/
+	margin-bottom: 30px;
+}
+
 .ptaddbox_mini{
 	display: inline;
 	padding-left: 5%;
@@ -306,11 +314,11 @@ ul a{
 	height: 23px;
 	margin-left: 12px;
 }
-
-#memo_mini::placeholder{
+/*
+#memo_mini:placeholder{
 	color: #cccccc;
 }
-
+*/
 #pcaddpopup_mini{
 	margin-bottom: 4px;
 }
@@ -379,7 +387,7 @@ ul a{
 }
 
 #classDuration_mini{
-	display: none;
+	display: block;
 }
 
 
@@ -430,13 +438,23 @@ ul a{
 	width: 100%;
 }
 
-.tdgraph{
+.tdgraph_60{
 	width : 4.15% !important;
 	height: 8px;
 	/*background: #cacaca;*/
 	background: #ffffff;
 	/*background: #282828;*/
 	border-left : 0.5px solid #f4f4f4;
+}
+.tdgraph_30{
+	width : 2% !important;
+	height: 8px;
+	background: #ffffff;
+	border-left : 0.5px solid #f4f4f4;
+}
+
+.tdgraph30{
+	border-left-color: #ffffff;
 }
 
 .tdgraph_trainee_popup{
@@ -455,15 +473,29 @@ ul a{
 	animation-duration: 1s;
 	animation-iteration-count: infinite;
 }
+	.graphindicator_leftborder{
+		border-left-color:#fe4e65;
+		background: #fe4e65;
+		-webkit-animation-name:blink;
+		-webkit-animation-duration:1s;
+		animation-name: blink;
+		animation-duration: 1s;
+		animation-iteration-count: infinite;
+	}
+
 
 @keyframes blink {
-    from {background-color: #fe4e65;}
-    to {background-color: #ffffff;}
+    from {background-color: #fe4e65;
+    	  border-left-color:#fe4e65;}
+    to {background-color: #ffffff;
+    	border-left-color:#ffffff;}
 }
 
 @-webkit-keyframes blink {
-    from {background-color: #fe4e65;}
-    to {background-color: #ffffff;}
+    from {background-color: #fe4e65;
+          border-left-color:#fe4e65;}
+    to {background-color: #ffffff;
+        border-left-color:#ffffff;}
 }
 
 .noktimegraph{
@@ -471,14 +503,22 @@ ul a{
 }
 
 .pinktimegraph{
-	background: #f37787;
+	background: #ffc9d0;
 }
+	.pinktimegraph_pinkleft{
+		background: #ffc9d0;
+		border-left-color:#ffc9d0;
+	}
 
 .greytimegraph{
 	background: #616161;
 	/*background: #cccccc;
 	background: #e3e3e3;*/
 }
+	.greytimegraph_greyleft{
+		background: #616161;
+		border-left-color:#616161;
+	}
 
 .pointerList{
 	cursor: pointer;
@@ -514,7 +554,7 @@ ul a{
 	height: 40px;
 	margin-left: 15px;
 	margin-top: 0;
-	box-shadow: unset !important
+	box-shadow: unset !important;
 	height: 100%;
 	border:0 !important;
 }
@@ -835,6 +875,26 @@ option{
 }
 
 .blankSelected{
+	position: absolute;
+	top: 0;
+	width: 97%;
+	height: 190%;
+	border:2px solid #fe4e65;
+	margin-left: 3px;
+	margin-top: 2px;
+}
+/*
+.blankSelected{
+	position: absolute;
+	top: 0;
+	width: 97%;
+	height: 90%;
+	border:2px solid #fe4e65;
+	margin-left: 3px;
+	margin-top: 2px;
+}
+*/
+.blankSelected30{
 	position: absolute;
 	top: 0;
 	width: 97%;

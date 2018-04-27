@@ -72,7 +72,7 @@
     
 </div>
 
-<div class="album_wrap">
+<div class="album_wrap" id="album_wrap">
     <div class="album" id="promote_1">
         <div class="explain_wrap">
             <div class="explain_main">
@@ -207,7 +207,7 @@
                 <!--
                 <p style="font-size: 12px;">※지금 가입하는 ID에 한해 향후 유료컨텐츠가 추가될 시에도 <br>모든 컨텐츠를 무료로 이용할 수 있습니다. (2018년 4월 현재)</p>
                 -->
-                <p style="font-size: 12px;">※2018년 4월 현재</p>
+                <p style="font-size: 14px;">2018년 4월 현재</p>
             </div>
             <div class="gotoSignIn_pc">
                 <a href="/accounts/register/"><button>가입하기</button></a>
@@ -227,6 +227,36 @@
     </div>
 </div>
 
+
+<div class="album_wrap" id="IE_block_explain" style="display: none;">
+    <div class="album" id="promote_1">
+        <div class="explain_wrap">
+            <div class="explain_main">
+                <h2>세상에서 가장 쉬운</h2>
+                <h1>1:1 PT 일정/회원 관리 시스템</h1>
+                
+                <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><span class="pters_logo_text"> 피터스</span></div>
+
+                <p>일정 관리는 쉽고 빠르게</p>
+                <p>회원의 만족도는 업!</p> 
+            </div>
+            <div class="gotoSignIn_pc">
+                <p><span class="pink_strong">피터스</span>는 아래의 브라우저를 지원합니다.</p>
+                <p>MS 익스플로러로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
+                <a href="https://www.google.co.kr/chrome/index.html"><button class="brower_site">구글 Chrome</button></a>
+                <a href="https://www.mozilla.org/ko/firefox/"><button class="brower_site">Firefox</button></a>
+                <a href="https://www.microsoft.com/ko-kr/windows/microsoft-edge"><button class="brower_site">MS Edge</button></a>
+            </div>
+        </div>
+        <div class="gotoSignIn" style="top: 65%;color: #ffffff;">
+            <p><span class="pink_strong">피터스</span>는 아래의 브라우저를 지원합니다.</p>
+            <p>MS 익스플로러로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
+            <a href="https://www.google.co.kr/chrome/index.html"><button class="brower_site">구글 Chrome</button></a>
+            <a href="https://www.mozilla.org/ko/firefox/"><button class="brower_site">Firefox</button></a>
+            <a href="https://www.microsoft.com/ko-kr/windows/microsoft-edge"><button class="brower_site">MS Edge</button></a>
+        </div>
+    </div>
+</div>
 
         
 {% endblock %}
@@ -249,6 +279,12 @@
     }
     $('#connectedMethod').html(methodtext);
     $('#connectedDevice').html(devicetext);
+
+    console.log(varUA)
+    if(varUA.match('MSIE') != null || varUA.match('rv:11.0')){
+        $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none')
+        $('#IE_block_explain').css('display','block')
+    }
 
 
     var page = 0

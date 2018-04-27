@@ -103,6 +103,10 @@
 	border-bottom: 1px solid #282828;
 	cursor: pointer;
 }
+	.memberNameForInfoView:hover, .memberNameForInfoView:focus, .memberNameForInfoView:active{
+		color: #fe4e65;
+		border-bottom-color: #fe4e65;
+	}
 
 #cal_popup_plandelete, #cal_popup_repeatconfirm{
 	display: none;

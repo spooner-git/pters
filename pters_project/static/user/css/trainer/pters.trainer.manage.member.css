@@ -4,6 +4,10 @@ body{
 	font-family: 'Noto Sans KR';
 }
 
+#page-base-addstyle{ /*20180426*/
+	z-index: 351;
+}
+
 #how_to_add_member{
 	position: absolute;
 	z-index: 300;
@@ -449,6 +453,8 @@ select:focus > option:checked {
 			-webkit-appearance:none;
 			border-radius: 0;
 			color: #282828 !important;
+			-webkit-text-fill-color:#282828 !important;
+			-webkit-opacity:1;
 		}
 		.mobileinfo_birth{
 			border: 0;
@@ -759,7 +765,7 @@ select:focus > option:checked {
 					}
 					#memberLectureHistory_info_PC > div > div:nth-child(2), #memberLectureHistory_info > div > div:nth-child(2){
 						display: table-cell;
-						width: 30%;
+						width: 27%;
 						height: 20px;
 						padding: 0;
 						text-align: center;
@@ -916,9 +922,9 @@ select:focus > option:checked {
 		}
 
 .input_available{
-	background: #ffffff !important;
+	background: #f4f4f4 !important;
 	color: #fe4e65 !important;
-	border-color: #282828 !important;
+	border: 1px solid #282828 !important;
 }
 
 #member_info_type_select{
@@ -1104,6 +1110,13 @@ select:focus > option:checked {
 }
 
 @media(min-width: 600px){
+
+	.input_available{
+		background: #ffffff !important;
+		color: #fe4e65 !important;
+		border-color: #282828 !important;
+	}
+
 	.newRegImg{
 		display: block;
 	}
