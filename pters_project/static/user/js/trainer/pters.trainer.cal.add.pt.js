@@ -1525,7 +1525,9 @@ function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하
       var classMinute = datasplit[4]
       var classDura = datasplit[5];
       var memberName = datasplit[6];
-      if($('body').width()>600){
+
+      
+      if($calendarWidth>=600){
         if(memberName.length>5){
           var memberName = memberName.substr(0,5) + ".."
         }
@@ -1535,28 +1537,21 @@ function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하
         }
       }
       
-
+      
       if(classMinute == '00'){
         if(Options.workStartTime>classHour && classDura > Options.workStartTime - classHour){
-          
           var classDura = classDura - (Options.workStartTime - classHour) // 2 - (10 - 8)
           var classHour = Options.workStartTime
-          console.log(indexArray,classHour,classDura)
-           //2018_4_22_8_30_2_OFF_10_30 
         }
       }else if(classMinute == '30'){
-          //(10>8)  (2>=10-8)
         if(Options.workStartTime>classHour && classDura >= Options.workStartTime - classHour){
-          
           var classDura = classDura - (Options.workStartTime - classHour)+0.5 // 2 - (10 - 8)
           var classHour = Options.workStartTime
           var classMinute = '00'
-          console.log(indexArray,classHour,classDura)
-           //2018_4_22_8_30_2_OFF_10_30 
         }
       }
-
       
+
       var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
       var classStart = classStartArr.join("_")
       var tdClassStart = $("#"+classStart+" div");
@@ -1654,6 +1649,7 @@ function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하�
   };
   $('#calendar').css('display','block');
 };
+
 
 function beforeSend(){
   $('html').css("cursor","wait");
