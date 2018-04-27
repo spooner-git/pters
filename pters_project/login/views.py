@@ -567,11 +567,26 @@ class CheckMemberIdView(View):
 
     def post(self, request, *args, **kwargs):
         user_id = request.POST.get('id', '')
-        if user_id == '':
+        form = RegistrationForm(request.POST, request.FILES)
+        if user_id is None or user_id == '':
             self.error = 'id를 입력해주세요.'
+        else:
+            if form.is_valid():
+                if User.objects.filter(username=user_id).exists():
+                    self.error = '이미 가입된 회원 입니다.'
+            else:
+                for field in form:
+                    if field.errors:
+                        for err in field.errors:
+                            if self.error is None:
+                                if field.name == 'username':
+                                    self.error = err
+                                else:
+                                    self.error = ''
+                            else:
+                                if field.name == 'username':
+                                    self.error += err
 
-        if User.objects.filter(username=user_id).exists():
-            self.error = '이미 가입된 회원 입니다.'
         return render(request, self.template_name, {'error': self.error})
 
 

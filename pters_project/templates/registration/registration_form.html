@@ -100,6 +100,7 @@
                 <input type="text" name="" placeholder="새로운 ID" id="id_input">
                 <button class="register_button" onclick="javascript:check_id();">중복 확인</button>
                 <span class="id_confirm"></span>
+               <p class="pw_notice">150자 이하 문자, 숫자 그리고 @/./+/-/_만 가능합니다.</p>
            </div>
 
            <div class="outerbox">
@@ -1238,10 +1239,13 @@
 
 
     function check_id(){
+      var $form = $('#add-member-id-form')
+      var serializeArray = $form.serializeArray();
         $.ajax({
                 url:'/login/check_member_id/',
                 type:'POST',
-                data:{"id" : $('#id_input').val() },
+                //data:{"id" : $('#id_input').val() },
+                  data:serializeArray,
                 dataType : 'html',
 
                 beforeSend:function(){
