@@ -34,6 +34,9 @@ $(document).ready(function(){
     $(document).on('click','#upbutton-x, #upbutton-x-modify',function(){
         closePopup('member_info');
         closePopup('member_add');
+        if($('body').width()<600){
+            $('#calendar').css('display','block')
+        }
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
@@ -1952,6 +1955,8 @@ function open_member_info_popup_mobile(userID,jsondata){
     $('#comment_info').val(Data[userID].contents);
     $('#memberRegCount_info').val(Data[userID].regcount);
     $('#memberCount_info').val(Data[userID].count);
+    $('#memberAvailCount_info').val(Data[userID].availCount).text(Data[userID].availCount)
+    $('#memberFinishCount_info').val(Data[userID].regcount-Data[userID].count).text(Data[userID].regcount-Data[userID].count)
     $('#memberEmail_info').val(Data[userID].email);
     $('#datepicker_info').val(Data[userID].start);
     $('#datepicker2_info').val(Data[userID].end);
@@ -3325,10 +3330,6 @@ function completeSend(){
     $('html').css("cursor","auto");
     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
     $('.ajaxloadingPC').hide();
-    if($('body').width()<=600){
-       $('#shade').hide();
-       $('#calendar').show(); 
-    }
     //alert('complete: 일정 정상 등록')
 }
 

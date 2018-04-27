@@ -453,6 +453,8 @@ select:focus > option:checked {
 			-webkit-appearance:none;
 			border-radius: 0;
 			color: #282828 !important;
+			-webkit-text-fill-color:#282828 !important;
+			-webkit-opacity:1;
 		}
 		.mobileinfo_birth{
 			border: 0;

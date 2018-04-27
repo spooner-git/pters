@@ -59,7 +59,7 @@ $(document).ready(function(){
 			  dataType : 'html',
 
               beforeSend:function(){
-              	//AjaxBeforeSend();
+              	AjaxBeforeSend();
               },
 
               success:function(data){
@@ -77,6 +77,7 @@ $(document).ready(function(){
 		        DataFormattingDict('ID');
 		        if($('body').width()<600){
 		            open_member_info_popup_mobile(userID,jsondata)
+		            $('#calendar').css('display','none')
 		            get_indiv_repeat_info(jsondata)
 		            set_member_lecture_list(jsondata)
 		            set_member_history_list(jsondata)
@@ -94,7 +95,7 @@ $(document).ready(function(){
 			  },
 
               complete:function(){
-              	//AjaxCompleteSend();
+              	AjaxCompleteSend();
               },
 
               error:function(){
