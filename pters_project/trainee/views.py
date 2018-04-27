@@ -74,14 +74,14 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     class_type_name = ''
                     class_name = None
                     try:
-                        class_name = CommonCdTb.objects.get(common_cd=lecture_info_data.class_tb_id.class_tb.subject_cd)
+                        class_name = CommonCdTb.objects.get(common_cd=lecture_info_data.class_tb.class_tb.subject_cd)
                     except ObjectDoesNotExist:
                         error = '강좌 과목 정보를 불러오지 못했습니다.'
                     if error is None:
-                        if lecture_info_data.class_tb_id.subject_detail_nm is None or lecture_info_data.class_tb_id.subject_detail_nm == '':
+                        if lecture_info_data.class_tb.subject_detail_nm is None or lecture_info_data.class_tb.subject_detail_nm == '':
                             class_type_name = class_name.common_cd_nm
                         else:
-                            class_type_name = lecture_info_data.class_tb_id.subject_detail_nm
+                            class_type_name = lecture_info_data.class_tb.subject_detail_nm
 
                     if error is None:
                         self.request.session['class_type_name'] = class_type_name
@@ -89,10 +89,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         self.request.session['class_type_name'] = ''
 
                     if error is None:
-                        if lecture_info_data.class_tb_id.center_tb is None or lecture_info_data.class_tb_id.center_tb == '':
+                        if lecture_info_data.class_tb.center_tb is None or lecture_info_data.class_tb.center_tb == '':
                             self.request.session['class_center_name'] = ''
                         else:
-                            self.request.session['class_center_name'] = lecture_info_data.class_tb_id.center_tb.center_name
+                            self.request.session['class_center_name'] = lecture_info_data.class_tb.center_tb.center_name
 
         else:
             class_id_comp = ''
