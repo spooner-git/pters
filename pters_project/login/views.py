@@ -587,6 +587,9 @@ class CheckMemberIdView(View):
                                 if field.name == 'username':
                                     self.error += err
 
+        if self.error != '':
+            self.error = self.error.replace("이름", "ID")
+
         return render(request, self.template_name, {'error': self.error})
 
 
@@ -859,7 +862,8 @@ def question_reg_logic(request):
         error = '문의 유형을 선택해주세요.'
 
     if error is None:
-        qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents, status='0', use=1)
+        qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents,
+                       status='0', mod_dt=timezone.now(), reg_dt=timezone.now(), use=1)
         qa_info.save()
 
     if error is None:
