@@ -601,12 +601,61 @@ class CheckMemberEmailView(View):
 
     def post(self, request, *args, **kwargs):
         user_email = request.POST.get('email', '')
-        if user_email == '':
-            self.error = 'email를 입력해주세요.'
+        form = RegistrationForm(request.POST, request.FILES)
 
-        if self.error == '':
-            if User.objects.filter(email=user_email).exists():
-                self.error = '이미 가입된 회원 입니다.'
+        if user_email is None or user_email == '':
+            self.error = 'email를 입력해주세요.'
+        else:
+            if form.is_valid():
+                if User.objects.filter(email=user_email).exists():
+                    self.error = '이미 가입된 회원 입니다.'
+            else:
+                for field in form:
+                    if field.errors:
+                        for err in field.errors:
+                            if self.error is None:
+                                if field.name == 'email':
+                                    self.error = err
+                                else:
+                                    self.error = ''
+                            else:
+                                if field.name == 'email':
+                                    self.error += err
+
+        return render(request, self.template_name, {'error': self.error})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CheckMemberPasswordView(View):
+    template_name = 'id_check_ajax.html'
+    error = ''
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        user_email = request.POST.get('password', '')
+        form = RegistrationForm(request.POST, request.FILES)
+
+        if user_email is None or user_email == '':
+            self.error = 'email를 입력해주세요.'
+        else:
+            if form.is_valid():
+                if User.objects.filter(email=user_email).exists():
+                    self.error = '이미 가입된 회원 입니다.'
+            else:
+                for field in form:
+                    if field.errors:
+                        for err in field.errors:
+                            if self.error is None:
+                                if field.name == 'email':
+                                    self.error = err
+                                else:
+                                    self.error = ''
+                            else:
+                                if field.name == 'email':
+                                    self.error += err
 
         return render(request, self.template_name, {'error': self.error})
 
