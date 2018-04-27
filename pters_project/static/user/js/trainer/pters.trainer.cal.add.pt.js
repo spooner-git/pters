@@ -67,7 +67,7 @@ $(document).ready(function(){
 
       $(document).on('click','.td00, .td30',function(){ //주간달력 미니 팝업
             closeAlarm('pc')
-            if($('._MINI_ptadd').css('display')=='block'){
+            if($('._MINI_ptadd').css('display')=='inline'){
               addTypeSelect = 'ptadd'
             }else if($('._MINI_ptadd').css('display')=="none"){
               addTypeSelect = 'offadd'
@@ -588,6 +588,7 @@ $(document).ready(function(){
         console.log('page-addplan',select_all_check)
       })
 
+      var ajax_block_during_submit = true
       $("#upbutton-check, #submitBtn_pt, #submitBtn_mini").click(function(e){
          e.preventDefault();
          console.log(select_all_check,0)
@@ -618,8 +619,9 @@ $(document).ready(function(){
          }
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
-                console.log(sendData)
-                 $.ajax({
+            if(ajax_block_during_submit == true){
+                ajax_block_during_submit = false;
+                $.ajax({
                     url: serverURL,
                     type:'POST',
                     data:sendData,
@@ -683,7 +685,7 @@ $(document).ready(function(){
 
                     //보내기후 팝업창 닫기
                     complete:function(){
-                      
+                      ajax_block_during_submit = true
                     },
 
                     //통신 실패시 처리
@@ -692,10 +694,12 @@ $(document).ready(function(){
                         $('#errorMessageText').text('통신 에러: 관리자 문의')
                     },
                  })
+            }
+                 
 
          }else{
             if($('#countsSelected').text() == 0){
-              alert('회원님의 남은 예약 가능 횟수가 없습니다.')
+              //alert('회원님의 남은 예약 가능 횟수가 없습니다.')
             }
             console.log('else')
           //alert('빠진 항목 체크해봐야함')
@@ -707,32 +711,39 @@ $(document).ready(function(){
 
 
       //OFF반복일정 확인 팝업 "아니오" 눌렀을때 (선택지: 반복 설정 다시 하겠다)
+      var ajax_block_during_repeat_confirm = true;
       $('#popup_btn_repeatconfirm_no').click(function(){
-        $('#id_repeat_confirm').val(0);
-        close_info_popup('cal_popup_repeatconfirm')
-        ajaxRepeatConfirmSend();
-        check_dropdown_selected()
+        if(ajax_block_during_repeat_confirm == true){
+            $('#id_repeat_confirm').val(0);
+            close_info_popup('cal_popup_repeatconfirm')
+            ajaxRepeatConfirmSend();
+            check_dropdown_selected()
+        }
+        
       })
 
       $('#popup_btn_repeatconfirm_yes').click(function(){
-          //addTypeSelect = "ptadd";
-          $('#id_repeat_confirm').val(1);
-          /*
-          if($('body').width>=600){
-              $('#calendar').css('position','relative')
-          }
-          */
-          
-          //$('.popups').hide();
-          //$('#calendar').show().css('height','100%');
-          
-          if($('body').width()<600){
-            close_info_popup('page-addplan')
-          }
-          close_info_popup('cal_popup_repeatconfirm')
-          ajaxRepeatConfirmSend();
-          check_dropdown_selected()
-          get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
+        console.log(ajax_block_during_repeat_confirm)
+        if(ajax_block_during_repeat_confirm == true){
+            //addTypeSelect = "ptadd";
+            $('#id_repeat_confirm').val(1);
+            /*
+            if($('body').width>=600){
+                $('#calendar').css('position','relative')
+            }
+            */
+            
+            //$('.popups').hide();
+            //$('#calendar').show().css('height','100%');
+            
+            if($('body').width()<600){
+              close_info_popup('page-addplan')
+            }
+            close_info_popup('cal_popup_repeatconfirm')
+            ajaxRepeatConfirmSend();
+            check_dropdown_selected()
+            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
+        }
       })
       
 
@@ -1058,6 +1069,7 @@ function addPtMemberListSet(){
 
 
 function ajaxRepeatConfirmSend(){
+            ajax_block_during_repeat_confirm = false
             var $form = $('#confirm-repeat-schedule-form')
             var serverURL = '/schedule/add_repeat_schedule_confirm/'
             $.ajax({
@@ -1090,6 +1102,8 @@ function ajaxRepeatConfirmSend(){
 
               complete:function(){
                 completeSend(); //ajax 로딩이미지 숨기기
+                ajax_block_during_repeat_confirm = true
+                console.log(ajax_block_during_repeat_confirm)
               },
 
               error:function(){

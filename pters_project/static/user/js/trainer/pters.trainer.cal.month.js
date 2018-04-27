@@ -253,195 +253,204 @@ $(document).ready(function(){
 	  	}
 
 		//일정삭제 확인 팝업 예 버튼
+		var ajax_block_during_delete_monthcal = true
 		$('#popup_delete_btn_yes').click(function(){
-			if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
-				$.ajax({
-	                url:'/schedule/delete_repeat_schedule/',
-	                type:'POST',
-	                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
-	                dataType:'html',
+			if(ajax_block_during_delete_monthcal == true){
+				ajax_block_during_delete_monthcal = false;
+				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
+					$.ajax({
+		                url:'/schedule/delete_repeat_schedule/',
+		                type:'POST',
+		                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
+		                dataType:'html',
 
-	                beforeSend:function(){
-	                 	AjaxBeforeSend();
-	                },
+		                beforeSend:function(){
+		                 	AjaxBeforeSend();
+		                },
 
-	                //통신성공시 처리
-	                success:function(data){
-		                  var jsondata = JSON.parse(data);
-		                  if(jsondata.messageArray.length>0){
-			              		$('#errorMessageBar').show()
-			               		$('#errorMessageText').text(jsondata.messageArray)
-				          }else{
+		                //통신성공시 처리
+		                success:function(data){
+			                  var jsondata = JSON.parse(data);
+			                  if(jsondata.messageArray.length>0){
+				              		$('#errorMessageBar').show()
+				               		$('#errorMessageText').text(jsondata.messageArray)
+					          }else{
 
-								if(jsondata.push_info != ''){
-									for (var i=0; i<jsondata.pushArray.length; i++){
-										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+									if(jsondata.push_info != ''){
+										for (var i=0; i<jsondata.pushArray.length; i++){
+											send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+										}
 									}
-								}
-				           	close_info_popup('cal_popup_plandelete')
-		                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
-		                  	ajax_received_json_data(jsondata)
-		                  	AjaxCompleteSend();
-				          }
-	                  },
-
-	                //보내기후 팝업창 닫기
-	                complete:function(){
-	                	$('#id_repeat_schedule_id_confirm').val('')
-	                	//fill_repeat_info_off()
-	                  },
-
-	                //통신 실패시 처리
-	                error:function(){
-	                  alert("에러: 서버 통신 실패")
-	                  close_info_popup('cal_popup_plandelete')
-	                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
-	                  AjaxCompleteSend();
-	                },
-	            })
-			}/*else if(deleteTypeSelect=='repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){ //회원정보창의 반복일정 삭제
-				var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
-				$.ajax({
-	                url:'/schedule/delete_repeat_schedule/',
-	                type:'POST',
-	                //data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/member_manage_ajax/'},
-	                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
-	                dataType:'html',
-
-	                beforeSend:function(){
-	                 	AjaxBeforeSend();
-	                },
-
-	                //통신성공시 처리
-	                success:function(data){
-		                  var jsondata = JSON.parse(data);
-		                  if(jsondata.messageArray.length>0){
-			                  	$('#errorMessageBar').show()
-			                  	$('#errorMessageText').text(jsondata.messageArray)
-				          }else{
-
-								if(jsondata.push_info != ''){
-									for (var i=0; i<jsondata.pushArray.length; i++){
-										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-									}
-								}
-		                  		var userID = $('#memberId_info_PC').text()
-		                  		open_member_info_popup_pc(userID,jsondata)
-		                  		get_indiv_repeat_info(jsondata)
-		                  		set_member_lecture_list(jsondata)
-                        		set_member_history_list(jsondata)
-		                  		closeDeletePopup();
-			                  	closeAddPlanPopup();
+					           	close_info_popup('cal_popup_plandelete')
+			                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
+			                  	ajax_received_json_data(jsondata)
 			                  	AjaxCompleteSend();
-			                  	ajaxClassTime()			                  	
-				          }
-	                  },
+					          }
+		                  },
 
-	                //보내기후 팝업창 닫기
-	                complete:function(){
-	                	if($('body').width()>=600){
-	                		$('#calendar').css('position','relative')	
-	                	}
-	                	//deleteTypeSelect = ''
-	  					addTypeSelect = 'ptadd'
-	                  },
+		                //보내기후 팝업창 닫기
+		                complete:function(){
+		                	ajax_block_during_delete_monthcal = true;
+		                	$('#id_repeat_schedule_id_confirm').val('')
+		                	//fill_repeat_info_off()
+		                  },
 
-	                //통신 실패시 처리
-	                error:function(){
-	                  alert("에러: 서버 통신 실패")
-	                  closeDeletePopup();
-	                  closeAddPlanPopup()
-	                  AjaxCompleteSend();
-	                },
-	            })	
-			}*/else if(deleteTypeSelect == "ptoffdelete"){
-				var $ptdelform = $('#daily-pt-delete-form');
-				var $offdelform = $('#daily-off-delete-form');
-				$('body').css('overflow-y','overlay');
-				if(schedule_on_off==1){
-					//PT 일정 삭제시
+		                //통신 실패시 처리
+		                error:function(){
+		                  alert("에러: 서버 통신 실패")
+		                  close_info_popup('cal_popup_plandelete')
+		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
+		                  AjaxCompleteSend();
+		                },
+		            })
+				}/*else if(deleteTypeSelect=='repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){ //회원정보창의 반복일정 삭제
+					var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
 					$.ajax({
-	                    url:'/schedule/delete_schedule/',
-	                    type:'POST',
-	                    data:$ptdelform.serialize(),
+		                url:'/schedule/delete_repeat_schedule/',
+		                type:'POST',
+		                //data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/member_manage_ajax/'},
+		                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
+		                dataType:'html',
 
-	                    beforeSend:function(){
-	                     	AjaxBeforeSend();
-	                    },
+		                beforeSend:function(){
+		                 	AjaxBeforeSend();
+		                },
 
-	                    //통신성공시 처리
-	                    success:function(data){
-	                    	var jsondata = JSON.parse(data)
-	                    	if(jsondata.messageArray.length>0){
-			              		$('#errorMessageBar').show()
-			               		$('#errorMessageText').text(jsondata.messageArray)
-				          	}else{
+		                //통신성공시 처리
+		                success:function(data){
+			                  var jsondata = JSON.parse(data);
+			                  if(jsondata.messageArray.length>0){
+				                  	$('#errorMessageBar').show()
+				                  	$('#errorMessageText').text(jsondata.messageArray)
+					          }else{
 
-								if(jsondata.push_info != ''){
-									for (var i=0; i<jsondata.pushArray.length; i++){
-										send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+									if(jsondata.push_info != ''){
+										for (var i=0; i<jsondata.pushArray.length; i++){
+											send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+										}
 									}
-								}
-				          		close_info_popup('cal_popup_plandelete')
-		                      	AjaxCompleteSend();
-		                      	ajaxClassTime()
-		                      	//fake_show()
-		                      	console.log('success')
-				          	}
-	                      },
+			                  		var userID = $('#memberId_info_PC').text()
+			                  		open_member_info_popup_pc(userID,jsondata)
+			                  		get_indiv_repeat_info(jsondata)
+			                  		set_member_lecture_list(jsondata)
+	                        		set_member_history_list(jsondata)
+			                  		closeDeletePopup();
+				                  	closeAddPlanPopup();
+				                  	AjaxCompleteSend();
+				                  	ajaxClassTime()			                  	
+					          }
+		                  },
 
-	                    //보내기후 팝업창 닫기
-	                    complete:function(){
-	                    	shade_index(100)
-	                      },
+		                //보내기후 팝업창 닫기
+		                complete:function(){
+		                	if($('body').width()>=600){
+		                		$('#calendar').css('position','relative')	
+		                	}
+		                	//deleteTypeSelect = ''
+		  					addTypeSelect = 'ptadd'
+		                  },
 
-	                    //통신 실패시 처리
-	                    error:function(){
-	                      console.log("error")
-	                    },
-	                 })
-				}
-				else{
-					$.ajax({
-	                    url:'/schedule/delete_schedule/',
-	                    type:'POST',
-	                    data:$offdelform.serialize(),
+		                //통신 실패시 처리
+		                error:function(){
+		                  alert("에러: 서버 통신 실패")
+		                  closeDeletePopup();
+		                  closeAddPlanPopup()
+		                  AjaxCompleteSend();
+		                },
+		            })	
+				}*/else if(deleteTypeSelect == "ptoffdelete"){
+					var $ptdelform = $('#daily-pt-delete-form');
+					var $offdelform = $('#daily-off-delete-form');
+					$('body').css('overflow-y','overlay');
+					if(schedule_on_off==1){
+						//PT 일정 삭제시
+						$.ajax({
+		                    url:'/schedule/delete_schedule/',
+		                    type:'POST',
+		                    data:$ptdelform.serialize(),
 
-	                    beforeSend:function(){
-	                    	AjaxBeforeSend();
-	                    },
+		                    beforeSend:function(){
+		                     	AjaxBeforeSend();
+		                    },
 
-	                    //통신성공시 처리
-	                    success:function(data){
-	                    	var jsondata = JSON.parse(data)
-	                    	if(jsondata.messageArray.length>0){
-			              		$('#errorMessageBar').show()
-			               		$('#errorMessageText').text(jsondata.messageArray)
-				          	}else{
-				          		close_info_popup('cal_popup_plandelete')
-			                    AjaxCompleteSend();
-			                    ajaxClassTime()
-			                    //fake_show()
-			                    console.log('success')
-				          	}
-	                      },
+		                    //통신성공시 처리
+		                    success:function(data){
+		                    	var jsondata = JSON.parse(data)
+		                    	if(jsondata.messageArray.length>0){
+				              		$('#errorMessageBar').show()
+				               		$('#errorMessageText').text(jsondata.messageArray)
+					          	}else{
 
-	                     //보내기후 팝업창 닫기
-	                    complete:function(){
-	                      	
-	                      },
+									if(jsondata.push_info != ''){
+										for (var i=0; i<jsondata.pushArray.length; i++){
+											send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+										}
+									}
+					          		close_info_popup('cal_popup_plandelete')
+			                      	AjaxCompleteSend();
+			                      	ajaxClassTime()
+			                      	//fake_show()
+			                      	console.log('success')
+					          	}
+		                      },
 
-	                    //통신 실패시 처리
-	                    error:function(){
-	                      console.log("error")
-	                    },
-	                 })
+		                    //보내기후 팝업창 닫기
+		                    complete:function(){
+		                    	ajax_block_during_delete_monthcal = true;
+		                    	shade_index(100)
+		                      },
+
+		                    //통신 실패시 처리
+		                    error:function(){
+		                      console.log("error")
+		                    },
+		                 })
+					}
+					else{
+						$.ajax({
+		                    url:'/schedule/delete_schedule/',
+		                    type:'POST',
+		                    data:$offdelform.serialize(),
+
+		                    beforeSend:function(){
+		                    	AjaxBeforeSend();
+		                    },
+
+		                    //통신성공시 처리
+		                    success:function(data){
+		                    	var jsondata = JSON.parse(data)
+		                    	if(jsondata.messageArray.length>0){
+				              		$('#errorMessageBar').show()
+				               		$('#errorMessageText').text(jsondata.messageArray)
+					          	}else{
+					          		close_info_popup('cal_popup_plandelete')
+				                    AjaxCompleteSend();
+				                    ajaxClassTime()
+				                    //fake_show()
+				                    console.log('success')
+					          	}
+		                      },
+
+		                     //보내기후 팝업창 닫기
+		                    complete:function(){
+		                      	ajax_block_during_delete_monthcal = true;
+		                      },
+
+		                    //통신 실패시 처리
+		                    error:function(){
+		                      console.log("error")
+		                    },
+		                 })
+					}
 				}
 			}
+			
 		})
 
 		//일정 완료 버튼 클릭
-		$("#popup_btn_complete").click(function(){  
+		var ajax_block_during_complete_monthcal = true
+		$("#popup_btn_complete").click(function(){
+
 			if($(this).val()!="filled"){
 				$('#canvas').show()
 				$('#canvasWrap').animate({'height':'200px'},200)
@@ -451,53 +460,58 @@ $(document).ready(function(){
 				var drawCanvas = document.getElementById('canvas');
 				var send_data = $pt_finish_form.serializeArray();
 				send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
-				if(schedule_on_off==1){
-					//PT 일정 완료 처리시
-					send_memo()
-					$.ajax({
-	                    url:'/schedule/finish_schedule/',
-	                    type:'POST',
-	                    data:$pt_finish_form.serialize(),
+				if(ajax_block_during_complete_monthcal == true){
+					ajax_block_during_complete_monthcal = false
+					if(schedule_on_off==1){
+						//PT 일정 완료 처리시
+						send_memo()
+						$.ajax({
+		                    url:'/schedule/finish_schedule/',
+		                    type:'POST',
+		                    data:$pt_finish_form.serialize(),
 
 
-	                    beforeSend:function(){
-	                      AjaxBeforeSend();
-	                    },
+		                    beforeSend:function(){
+		                      AjaxBeforeSend();
+		                    },
 
-	                    //통신성공시 처리
-	                    success:function(data){
-	                    	var jsondata = JSON.parse(data)
-	                    	if(jsondata.messageArray.length>0){
-			                  	$('#errorMessageBar').show()
-			                  	$('#errorMessageText').text(jsondata.messageArray)
-				          	}else{
-				          		signImageSend(send_data);
-				          		close_info_popup('cal_popup_planinfo')
-			                    AjaxCompleteSend();
-			                    ajaxClassTime()
-			                    //send_memo()
-				          	}
-	                      },
+		                    //통신성공시 처리
+		                    success:function(data){
+		                    	var jsondata = JSON.parse(data)
+		                    	if(jsondata.messageArray.length>0){
+				                  	$('#errorMessageBar').show()
+				                  	$('#errorMessageText').text(jsondata.messageArray)
+					          	}else{
+					          		signImageSend(send_data);
+					          		close_info_popup('cal_popup_planinfo')
+				                    AjaxCompleteSend();
+				                    ajaxClassTime()
+				                    //send_memo()
+					          	}
+		                      },
 
-	                    //보내기후 팝업창 닫기
-	                    complete:function(){
-	             			if($('body').width()>600){
-								$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
-							}else{
-								$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
-							}
-	                    	$('#canvas').hide().css({'border-color':'#282828'})
-	                    	$('#canvasWrap span').hide();
-							$('#canvasWrap').css({'height':'0px'})
-							$('body').css('overflow-y','overlay');
-							shade_index(100)
-	                      },
+		                    //보내기후 팝업창 닫기
+		                    complete:function(){
+		                    	ajax_block_during_complete_monthcal = true
+		             			if($('body').width()>600){
+									$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
+								}else{
+									$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
+								}
+		                    	$('#canvas').hide().css({'border-color':'#282828'})
+		                    	$('#canvasWrap span').hide();
+								$('#canvasWrap').css({'height':'0px'})
+								$('body').css('overflow-y','overlay');
+								shade_index(100)
+		                      },
 
-	                    //통신 실패시 처리
-	                    error:function(){
-	                    },
-	                })
+		                    //통신 실패시 처리
+		                    error:function(){
+		                    },
+		                })
+					}
 				}
+				
 			}
 		})
 

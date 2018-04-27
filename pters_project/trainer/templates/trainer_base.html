@@ -502,6 +502,7 @@
             })
 
             $('#errorMessageBar span:nth-child(2)').click(function(){
+                window.location.reload()
                 $('#errorMessageBar').fadeOut();
                 $('#errorMessageText').text('');
                 $('html').css("cursor","auto");
@@ -600,7 +601,6 @@
                 var worktimeStart = ''
                 var worktimeEnd = ''
              }
-             console.log(class_hour)
 
             var Options = {   "hourunit" : 30, // 30 or 60
                               "classDur" : Number('{{ request.session.class_hour }}'), // 30 or 60
