@@ -277,7 +277,9 @@ $(document).ready(function(){
         //durTimeSet(arry[0]);
         addGraphIndicator(1)
         check_dropdown_selected();
-        var selected_start_time = Number($('td.graphindicator_leftborder').attr('id').replace(/g/gi,""))
+        //var selected_start_time = Number($('td.graphindicator_leftborder').attr('id').replace(/g/gi,""))
+        var selected_start_time = Number($(this).attr('data-trainingtime').split(':')[0])
+        console.log(selected_start_time,Options.cancellimit,';;;;')
         $('.cancellimit_time').text(Options.cancellimit+"시간 전("+(selected_start_time-Options.cancellimit)+":00)")
     })
 
@@ -292,11 +294,17 @@ $(document).ready(function(){
     	}
     }
 
+    var ajax_block_during_sending_send_reservation = true
     $("#submitBtn").click(function(){
+    	check_dropdown_selected()
         if(select_all_check==true){
             //document.getElementById('pt-add-form').submit();
-        	send_reservation()
+            if(ajax_block_during_sending_send_reservation == true){
+            	ajax_block_during_sending_send_reservation = false
+            	send_reservation()
+            }
         }else{
+        	alert('시작 시간을 선택 해주세요.')
             //입력값 확인 메시지 출력 가능
         }
     })
@@ -330,12 +338,20 @@ $(document).ready(function(){
 
 	          complete:function(){
 	          	AjaxCompleteSend()
+	          	ajax_block_during_sending_send_reservation = true
 	          },
 
 	          error:function(){
 	            console.log('server error')
 	          }
         })
+    }
+
+    function initialize_member_form(){
+    	$('#id_schedule_id').val('') //delete
+    	$('#id_training_date').val('') //add
+    	$('#id_time_duration').val('') //add
+    	$('#id_training_time').val('') //add
     }
 
 	function send_push(push_server_id, intance_id, message, badge_counter){
@@ -393,9 +409,13 @@ $(document).ready(function(){
 		}
 	})
 
+    var ajax_block_during_sending_send_delete = true
 	$('#popup_text3').click(function(){
-		//document.getElementById('pt-delete-form').submit();
-		send_delete()
+		if(ajax_block_during_sending_send_delete == true){
+			ajax_block_during_sending_send_delete = false
+			send_delete()
+		}
+		
 	})
 
 	function send_delete(){
@@ -425,7 +445,7 @@ $(document).ready(function(){
 			  },
 
 	          complete:function(){
-	          	
+	          	ajax_block_during_sending_send_delete = true
 	          },
 
 	          error:function(){
