@@ -587,6 +587,9 @@ class CheckMemberIdView(View):
                                 if field.name == 'username':
                                     self.error += err
 
+        if self.error != '':
+            self.error = self.error.replace("이름", "ID")
+
         return render(request, self.template_name, {'error': self.error})
 
 
