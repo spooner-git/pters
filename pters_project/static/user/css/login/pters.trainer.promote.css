@@ -338,7 +338,7 @@ nav.upperbar{
 	.explain_wrap{
 		position: absolute;
 		top: 50%;
-		right: 0%;
+		left: 55% !important;
 		transform: translateY(-50%);
 		color: #ffffff;
 		width: 45%;
@@ -349,20 +349,23 @@ nav.upperbar{
 		width: 75%;
 		min-width: 420px;
 		height: 305px;
-		padding: 50px 0 50px 0;
+		padding: 90px 0 90px 0;
 		border-top:1px solid #ffffff;
 		border-bottom: 1px solid #ffffff;
+		text-align: left;
 	}
 		.explain_main h1{
+			font-size: 32px;
 			margin: 0;
 			font-weight:500;
 		}
 		.explain_main h2{
+			font-size: 24px;
 			margin: 0;
 			font-weight: 500;
 		}
 		.explain_main p{
-			font-size: 17px;
+			font-size: 19px;
 			margin: 0;
 			font-weight: 400;
 		}
