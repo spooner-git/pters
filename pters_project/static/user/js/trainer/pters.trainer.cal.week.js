@@ -215,6 +215,7 @@ $(document).ready(function(){
 
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
+		$('.pt_memo_guide_popup').css('display','block')
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
 		var info = $(this).attr('class-time').split('_')
@@ -314,6 +315,7 @@ $(document).ready(function(){
 	
 	//Off 일정 클릭시 팝업 Start
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
+		$('.pt_memo_guide_popup').css('display','none')
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
 		var info = $(this).attr('off-time').split('_')
