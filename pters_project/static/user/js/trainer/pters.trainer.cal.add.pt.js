@@ -137,11 +137,11 @@ $(document).ready(function(){
                   $('.typeSelected').removeClass('typeSelected')
                   $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
                   if(addTypeSelect == "ptadd"){
-                    $('._MINI_ptadd').show()
+                    $('._MINI_ptadd').css('display','inline')
                     //$('._MINI_offadd').hide()
                   }else if(addTypeSelect == "offadd"){
                     //$('._MINI_offadd').show()
-                    $('._MINI_ptadd').hide()
+                    $('._MINI_ptadd').css('display','none')
                   }
                   if(Options.hourunit == 30){
                       var tdinfo = $(this).attr('id').split('_');
@@ -233,11 +233,11 @@ $(document).ready(function(){
                   $('.typeSelected').removeClass('typeSelected')
                   $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
                   if(addTypeSelect == "ptadd"){
-                    $('._MINI_ptadd').show()
+                    $('._MINI_ptadd').css('display','inline')
                     //$('._MINI_offadd').hide()
                   }else if(addTypeSelect == "offadd"){
                     //$('._MINI_offadd').show()
-                    $('._MINI_ptadd').hide()
+                    $('._MINI_ptadd').css('display','none')
                   }
                   if(Options.hourunit == 30){
                       var tdinfo = $(this).attr('id').split('_');
@@ -330,12 +330,14 @@ $(document).ready(function(){
               $("#durationsSelected .btn:first-child").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>"+'선택'+"</span>").val("");
               $("#id_time_duration").val('')
               planAddView($("#id_time_duration").val())
+              $('.pt_memo_guide_mini').css('visibility','unset')
           }else if($(this).attr('id').split('_')[1]=="offadd"){
               $('#memberName_mini').hide('fast')
               $('#remainCount_mini').hide('fast')
               $("#durationsSelected .btn:first-child").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>"+'선택'+"</span>").val("");
               $("#id_time_duration_off").val('')
               planAddView($("#id_time_duration_off").val())  
+              $('.pt_memo_guide_mini').css('visibility','hidden')
           }
           addTypeSelect = $(this).attr('id').split('_')[1]
           check_dropdown_selected();
@@ -417,7 +419,7 @@ $(document).ready(function(){
           //$('.tdgraph').removeClass('graphindicator')
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
       		$("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
-          $('#remainCount_mini_text').show()
+          $('#remainCount_mini_text').css('display','inline-block')
       		$("#id_lecture_id").val($(this).attr('data-lectureid'));
       		$("#id_member_id").val($(this).attr('data-memberid'));
           $("#id_member_name").val($(this).text());
@@ -916,6 +918,7 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
           $('#addpopup_pc_label_pt').show()
           $('#addpopup_pc_label_off').hide()
         }
+        $(".pt_memo_guide").css('display','block')
     }else if(option == "offadd"){
         $('#memberName,#remainCount').css('display','none');
         $('#uptext2').text('OFF 일정 등록')
@@ -926,6 +929,7 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
           $('#addpopup_pc_label_off').show()
           $('#addpopup_pc_label_pt').hide()
         }
+        $(".pt_memo_guide").css('display','none')
     }
 
     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder') //선택된 시간 반짝이

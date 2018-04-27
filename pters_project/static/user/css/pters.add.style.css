@@ -121,6 +121,7 @@ ul a{
 }
 
 #memberName_mini button{
+	width: 185px;
 	border: 1px solid #cccccc;
 	overflow-x: hidden;
 }
@@ -172,11 +173,11 @@ ul a{
 }
 
 #durations_mini{
-	left: 87px;
+	left: 93px;
 }
 
 #members_pc{
-	left: 70px;
+	left: 93px;
 	overflow-x: hidden;
 }
 
@@ -375,6 +376,7 @@ ul a{
 
 #remainCount_mini_text{
 	display: none;
+	margin-left: 97px;
 }
 
 
@@ -939,6 +941,22 @@ option{
 		width: 20%;
 		height: 28px;
 		margin-top: 5px;
+	}
+
+	#membersSelected{
+		margin-left: 15px;
+	}
+
+	#memberName_mini .dropdown_mini{
+		margin-left: 23px;
+	}
+
+	#durationsSelected{
+		
+	}
+
+	#classDuration_mini #durationsSelected{
+		margin-left: 7px;
 	}
 
 	#memberName_reg{
