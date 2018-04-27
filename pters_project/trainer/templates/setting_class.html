@@ -73,7 +73,8 @@
 
               ajax_read_lecture_info_from_db_PAGE()
 
-              $(document).on('click','._icon_del',function(){
+              $(document).on('click','._icon_del',function(e){
+                  e.stopPropagation()
                   var class_id = $(this).parent('div').attr('data-classid')
                   if(class_id != lec_select_currentClassId[0]){
                     $('#cal_popup_plandelete').fadeIn('fast')
@@ -203,9 +204,10 @@
                             var selected30 = "selected"
                             var selected60 = ""
                           }
+                          var goToLecture = ""
                           var classUnitDropdown = '<select data-classid="'+lec_select_classIdArray[i]+'"><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                       }else{
-                          var table = '<div class="pters_table pters_table_at_setting_page _selection" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'"onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">'
+                          var table = '<div class="pters_table pters_table_at_setting_page _selection" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                           var currentClass = ""
                           var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
                           var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'" style="cursor:pointer;">이동</a>'
@@ -216,17 +218,18 @@
                             var selected30 = "selected"
                             var selected60 = ""
                           }
+                          var goToLecture = '"onclick="lecture_check('+lec_select_classIdArray[i]+')"'
                           var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+lec_select_classIdArray[i]+'"><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                       }
                       var centerName__ = lec_select_centerNameArray[i]
                       if(lec_select_centerNameArray[i] == ""){
                         var centerName__ = '-'
                       }
-                      var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+centerName__+'</div>'
-                      var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>'
-                      var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>'
-                      var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
-                      var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>'
+                      var centerName = '<div class="pters_table_cell table_center_name '+currentClass+goToLecture+'">'+centerName__+'</div>'
+                      var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+goToLecture+'">'+lec_select_subjectNameArray[i]+'</div>'
+                      var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+goToLecture+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>'
+                      var startDate = '<div class="pters_table_cell table_start_date '+currentClass+goToLecture+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
+                      var status = '<div class="pters_table_cell table_lecture_status '+currentClass+goToLecture+'">'+lec_select_stateNameArray[i]+'</div>'
                       var unitSelect = '<div class="pters_table_cell table_class_unit '+currentClass+'">'+classUnitDropdown+'</div>'
                       var manageIcon = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _icon_modify">'
                       
