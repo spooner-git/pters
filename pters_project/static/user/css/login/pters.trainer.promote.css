@@ -249,6 +249,18 @@ nav.upperbar{
 		font-weight: 500;
 		cursor: pointer;
 	}
+.brower_site{
+	background:#f4f4f4 !important;
+	box-shadow: unset !important;
+	border: 1px solid #fe4e65 !important;
+	color: #fe4e65 !important;
+	height: 50px;
+	width: 130px !important;
+	margin: 5px;
+	font-weight: 300 !important;
+	font-size: 15px;
+	cursor: pointer;
+}
 
 .pink_strong{
 	color: #fe4e65;
