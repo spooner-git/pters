@@ -1614,9 +1614,31 @@ $(document).ready(function(){
 			var classMinute = datasplit[4]
 			var classDura = datasplit[5];
 			var memberName = datasplit[6];
-			if(memberName.length>3){
-				var memberName = memberName.substr(0,3) + ".."
+			if(memberName.length>5){
+				var memberName = memberName.substr(0,5) + ".."
 			}
+
+			if(classMinute == '00'){
+				if(Options.workStartTime>classHour && classDura > Options.workStartTime - classHour){
+					
+					var classDura = classDura - (Options.workStartTime - classHour) // 2 - (10 - 8)
+					var classHour = Options.workStartTime
+					console.log(indexArray,classHour,classDura)
+					 //2018_4_22_8_30_2_OFF_10_30	
+				}
+			}else if(classMinute == '30'){
+					//(10>8)  (2>=10-8)
+				if(Options.workStartTime>classHour && classDura >= Options.workStartTime - classHour){
+					
+					var classDura = classDura - (Options.workStartTime - classHour)+0.5 // 2 - (10 - 8)
+					var classHour = Options.workStartTime
+					var classMinute = '00'
+					console.log(indexArray,classHour,classDura)
+					 //2018_4_22_8_30_2_OFF_10_30	
+				}
+			}
+
+
 			var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
 			var classStart = classStartArr.join("_")
 			var tdClassStart = $("#"+classStart+" div");
@@ -1685,16 +1707,32 @@ $(document).ready(function(){
 			var offDura = datasplit[5];
 			var memberName = datasplit[6];
 
-			if(Options.workStartTime>offHour && offDura > Options.workStartTime - offHour){
-				var offHour = Options.workStartTime
-				var offDura = offDura - (Options.workStartTime - offHour)
-			} //만약 8시~23시까지 OFF로 설정해두고, 업무시간을 9~23시로 했을때 8시에 배치가 안되서 off일정이 안보이는 현상을 해결
+			if(offMinute == '00'){
+				if(Options.workStartTime>offHour && offDura > Options.workStartTime - offHour){
+					
+					var offDura = offDura - (Options.workStartTime - offHour) // 2 - (10 - 8)
+					var offHour = Options.workStartTime
+					console.log(indexArray,offHour,offDura)
+					 //2018_4_22_8_30_2_OFF_10_30	
+				}
+			}else if(offMinute == '30'){
+					//(10>8)  (2>=10-8)
+				if(Options.workStartTime>offHour && offDura >= Options.workStartTime - offHour){
+					
+					var offDura = offDura - (Options.workStartTime - offHour)+0.5 // 2 - (10 - 8)
+					var offHour = Options.workStartTime
+					var offMinute = '00'
+					console.log(indexArray,offHour,offDura)
+					 //2018_4_22_8_30_2_OFF_10_30	
+				}
+			}
 			
 			var offStartArr = [offYear,offMonth,offDate,offHour,offMinute]
 			var offStart = offStartArr.join("_")
 			var tdOffStart = $("#"+offStart+" div");
 			var tdOff = $("#"+offStart);
 			tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
+
 			
 			tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).attr('data-memo',memoArray).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
 		
