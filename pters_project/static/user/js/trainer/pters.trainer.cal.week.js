@@ -1614,9 +1614,16 @@ $(document).ready(function(){
 			var classMinute = datasplit[4]
 			var classDura = datasplit[5];
 			var memberName = datasplit[6];
-			if(memberName.length>5){
-				var memberName = memberName.substr(0,5) + ".."
+			if($('body').width()>600){
+				if(memberName.length>5){
+					var memberName = memberName.substr(0,5) + ".."
+				}
+			}else{
+				if(memberName.length>3){
+					var memberName = memberName.substr(0,3) + ".."
+				}
 			}
+			
 
 			if(classMinute == '00'){
 				if(Options.workStartTime>classHour && classDura > Options.workStartTime - classHour){
