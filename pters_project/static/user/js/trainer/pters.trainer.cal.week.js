@@ -908,11 +908,11 @@ $(document).ready(function(){
 
 // ############################구동시 실행################################################################################
 // ****************************구동시 실행********************************************************************************
-	calTable_Set(1,currentYear,currentPageMonth,currentDate,-14); // 이번주-2
-	calTable_Set(2,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
-	calTable_Set(3,currentYear,currentPageMonth,currentDate,0); // 이번주
-	calTable_Set(4,currentYear,currentPageMonth,currentDate,7); // 이번주+1
-	calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
+	//calTable_Set(1,currentYear,currentPageMonth,currentDate,-14); // 이번주-2
+	calTable_Set(1,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
+	calTable_Set(2,currentYear,currentPageMonth,currentDate,0); // 이번주
+	calTable_Set(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
+	//calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
 
 	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray,"off");
@@ -976,31 +976,7 @@ $(document).ready(function(){
 	});
 
 	
-	//너무 빠르게 스와이프 하는 것을 방지
-	/*
-	myswiper.on('onTransitionStart',function(){
-		myswiper.params.onlyExternal = true;
-	})
 
-	myswiper.on('onTransitionEnd',function(){
-		setTimeout(function(){
-			myswiper.params.onlyExternal = false;
-		}, 400)
-		
-	})
-	*/
-
-	
-	//너무 빠르게 스와이프 하는 것을 방지
-
-	//아래로 스크롤중 스와이프 했을때, jquery.swipe에서 stopPropagation Error발생하여 스와이프 불가하는 현상 방지
-	//스크롤중 swipe 기능막고, 스크롤 종료감지하여 종료 20ms 이후에 swipe 기능 살려주는 함수 
-	
-	/*
-	$('.swiper-container').on('scroll touchmove mousewheel',function(event){
-		event.stopPropagation();
-	});
-	*/
 	
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {
@@ -1059,8 +1035,12 @@ $(document).ready(function(){
 		var monthdata = currentMonth
 
 		if(append==0){
+
 			var currentDay_ = 0;
-			var dataforappend = $('.swiper-slide-prev').find('.td00').attr('id').split('_')
+			//var dataforappend = $('.swiper-slide-prev').find('.td00').attr('id').split('_')
+			var currentSlideNum = Number($('.swiper-slide-active').attr('id').replace(/slide/gi,''))
+			var dataforappend = $('#slide'+(currentSlideNum)).find('.td00').attr('id').split('_')
+
 			var monthforappend = Number(dataforappend[1])-1
 			var monthdata = monthforappend
 		}
