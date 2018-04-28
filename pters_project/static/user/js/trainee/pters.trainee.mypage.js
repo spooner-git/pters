@@ -209,7 +209,25 @@ $(document).ready(function(){
     		}
     		var date         = '<div class="cell2">'+dateFormat+'</div>'
     		var durationcalc = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0])
-    		var duration     = '<div class="cell3">'+durationcalc+'시간'+'</div>'
+    		var durationcalc_minute = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])
+
+    		console.log('끝:',Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]), durationcalc_minute)
+    		console.log('시작:',Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]),durationcalc_minute)
+    		console.log('durationcalc',durationcalc)
+
+    		if(durationcalc == 1 && durationcalc_minute == -30){
+    			var durationText = Math.abs(durationcalc_minute)+'분'
+    		}else if(durationcalc == 0 && durationcalc_minute == 30){
+    			var durationText = Math.abs(durationcalc_minute)+'분'
+    		}else if(durationcalc > 1 && durationcalc_minute == -30){
+    			var durationText = (durationcalc-1)+'시간'+Math.abs(durationcalc_minute)+'분'
+    		}else if(durationcalc >= 1 && durationcalc_minute == 30){
+    			var durationText = durationcalc+'시간'+Math.abs(durationcalc_minute)+'분'
+    		}else if(durationcalc >=1 && durationcalc_minute == 0){
+    			var durationText = durationcalc+'시간'
+    		}
+
+    		var duration     = '<div class="cell3">'+durationText+'</div>'
     		var state        = '<div class="cell4 state_'+jsondata.ptScheduleStateCdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
     		var memo         = '<div class="cell5">'+jsondata.ptScheduleNoteArray[i]+'</div>'
     		html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')

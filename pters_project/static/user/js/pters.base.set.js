@@ -33,7 +33,12 @@ function sideGoPage(page){
 function shade_index(option){
     if($('body').width()>600){
       if(option<0){
-        $('#pshade').css({'z-index':option,'display':'none'});
+        if($('#memberInfoPopup_PC').css('display')=="block" && $('._calmonth').css('display')=="block"){
+          $('#pshade').css({'z-index':150,'display':'block'});
+        }else{
+          $('#pshade').css({'z-index':option,'display':'none'});
+        }
+        
       }else{
         $('#pshade').css({'z-index':option,'display':'block'});
       }
@@ -56,6 +61,9 @@ function shade_index(option){
         if($('#memberInfoPopup').css('display')=='block'){
           $('#mshade_popup').css({'z-index':$('#memberInfoPopup').css('z-index'),'display':'block'});
         }
+        if($('#cal_popup_planinfo').css('display')=="block"){
+          $('#mshade_popup').css({'display':'none'});
+        }
         $('#mshade').css({'z-index':option,'display':'block'});
       }
     }
@@ -73,7 +81,6 @@ function close_info_popup(option){
   }
   else if(option =="cal_popup_plandelete"){
       $("#"+option).css({'display':'none'})
-      console.log($('#pshade').css('z-index'))
       if($('#pshade').css('z-index')==200 || $('#mshade').css('z-index') == 200){
         shade_index(100)
       }else{
@@ -667,13 +674,23 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
 
       //["2017", "10", "7", "6", "00", "오전"]
 
-      var dura = etime[0] - stime[0];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+      if(Math.abs(etime[1] - stime[1]) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00 
+          if(etime[0]-stime[0] == 0){
+            var dura = "0.5"
+          }else if(etime[0] > stime[0] && etime[1]-stime[1] == -30 ){
+            var dura = String((etime[0]-stime[0]-1))+'.5'
+          }else if(etime[0] > stime[0] && etime[1]-stime[1] == 30){
+            var dura = String((etime[0]-stime[0]))+'.5'
+          }
+      }else{
+        var dura = etime[0] - stime[0];
+      }
+         //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
       if(eDate == sDate+1 && eHour==sHour){
         var dura = 24
       }else if(eDate == sDate+1 && eHour == 0){
         var dura = 24-sHour
       }
-
 
       if(option=="class"){
         result.push(sYear+"_"+sMonth+"_"+sDate+"_"+sHour+"_"+sMinute+"_"+dura+"_"+classTimeArray_member_name[i]+"_"+eHour+"_"+eMinute);

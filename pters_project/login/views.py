@@ -567,11 +567,29 @@ class CheckMemberIdView(View):
 
     def post(self, request, *args, **kwargs):
         user_id = request.POST.get('id', '')
-        if user_id == '':
+        form = RegistrationForm(request.POST, request.FILES)
+        if user_id is None or user_id == '':
             self.error = 'id를 입력해주세요.'
+        else:
+            if form.is_valid():
+                if User.objects.filter(username=user_id).exists():
+                    self.error = '이미 가입된 회원 입니다.'
+            else:
+                for field in form:
+                    if field.errors:
+                        for err in field.errors:
+                            if self.error is None or self.error == '':
+                                if field.name == 'username':
+                                    self.error = err
+                                else:
+                                    self.error = ''
+                            else:
+                                if field.name == 'username':
+                                    self.error += err
 
-        if User.objects.filter(username=user_id).exists():
-            self.error = '이미 가입된 회원 입니다.'
+        if self.error != '':
+            self.error = self.error.replace("이름", "ID")
+
         return render(request, self.template_name, {'error': self.error})
 
 
@@ -586,13 +604,55 @@ class CheckMemberEmailView(View):
 
     def post(self, request, *args, **kwargs):
         user_email = request.POST.get('email', '')
-        if user_email == '':
+        form = RegistrationForm(request.POST, request.FILES)
+
+        if user_email is None or user_email == '':
             self.error = 'email를 입력해주세요.'
+        else:
+            if form.is_valid():
+                if User.objects.filter(email=user_email).exists():
+                    self.error = '이미 가입된 회원 입니다.'
+            else:
+                for field in form:
+                    if field.errors:
+                        for err in field.errors:
+                            if self.error is None or self.error == '':
+                                if field.name == 'email':
+                                    self.error = err
+                                else:
+                                    self.error = ''
+                            else:
+                                if field.name == 'email':
+                                    self.error += err
 
-        if self.error == '':
-            if User.objects.filter(email=user_email).exists():
-                self.error = '이미 가입된 회원 입니다.'
+        return render(request, self.template_name, {'error': self.error})
 
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CheckMemberValidationView(View):
+    template_name = 'id_check_ajax.html'
+    error = ''
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        form = RegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            self.error = ''
+        else:
+            for field in form:
+                if field.errors:
+                    for err in field.errors:
+                        if self.error is None or self.error == '':
+                            if field.name == 'username':
+                                self.error = '사용할수 없는 ID 입니다.'
+                            else:
+                                self.error = err
+                        else:
+                            if field.name != 'username':
+                                self.error += err
         return render(request, self.template_name, {'error': self.error})
 
 
@@ -802,7 +862,8 @@ def question_reg_logic(request):
         error = '문의 유형을 선택해주세요.'
 
     if error is None:
-        qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents, status='0', use=1)
+        qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents,
+                       status='0', mod_dt=timezone.now(), reg_dt=timezone.now(), use=1)
         qa_info.save()
 
     if error is None:

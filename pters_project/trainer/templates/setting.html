@@ -6,8 +6,6 @@
         <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
 {% endblock %}
 
-
-
 {% block content %}
 <div id="upperImg">
         <span class="KRtext">서비스 설정</span><span class="JPtext">サービス設定</span><span class="ENtext">Settings</span>
@@ -21,7 +19,7 @@
 
   <div id="salesSetting" class="settingMenu" onclick="location.href='{% url 'trainer:class_setting' %}'">
     <img src="/static/user/res/icon-money.png" alt="" class="settingImg">
-    <span class="settingText"><span class="KRtext">업무 설정</span><span class="JPtext">業務設定</span><span class="ENtext">Work</span></span>
+    <span class="settingText"><span class="KRtext">클래스 설정</span><span class="JPtext">業務設定</span><span class="ENtext">Work</span></span>
     <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
   </div>
 

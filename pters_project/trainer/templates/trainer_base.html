@@ -105,6 +105,7 @@
                 <p id="popup_info2"></p>
                 <input id="popup_info3_memo" type="text" maxlength="15" readonly>
                 <img src="/static/user/res/icon-pencil.png" style="width: 12px;cursor:pointer;margin-left: 5px;" title="메모 수정" id="popup_info3_memo_modify" data-type="view">
+                <p style="font-size:10px;color:#282828;opacity:0.6;text-align: center;" class="pt_memo_guide_popup">PT일정의 메모는 회원님께 공유됩니다.</p>
             </div>
             <div id="popup_btn_complete" class="popup_inner popup_inner_finish popup_inner_x3">
                 <span class="KRtext">일정 완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
@@ -502,6 +503,7 @@
             })
 
             $('#errorMessageBar span:nth-child(2)').click(function(){
+                window.location.reload()
                 $('#errorMessageBar').fadeOut();
                 $('#errorMessageText').text('');
                 $('html').css("cursor","auto");
@@ -574,7 +576,7 @@
                 $('#alarm-close-pc').fadeOut()
             })
 
-
+            var class_hour = '{{ request.session.class_hour }}';
 
 
             var worktime = '{{ request.session.setting_trainer_work_time_available }}'
@@ -601,7 +603,9 @@
                 var worktimeEnd = ''
              }
 
-             var Options = {  "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
+            var Options = {   "hourunit" : 30, // 30 or 60
+                              "classDur" : Number('{{ request.session.class_hour }}'), // 30 or 60
+                              "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
                               "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
                               "limit":'{{ request.session.setting_member_reserve_time_prohibition }}',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
                               "reserve":'{{ request.session.setting_member_reserve_prohibition }}',    //회원 일정 기능을 enable 1/disable 0
@@ -690,6 +694,9 @@
                             lec_select_stateCodeArray = jsondata.stateCodeArray;
                             lec_select_subjectCodeArray= jsondata.subjectCodeArray;
                             lec_select_currentClassId = jsondata.currentClassId;
+
+                            //Options.classDur = lec_select_classHourArray[lec_select_classIdArray.indexOf(lec_select_currentClassId[0])]
+
                             if(lec_select_classIdArray.length == 0){
                                 location.href="{% url 'trainer:add_class' %}"
                             }else{

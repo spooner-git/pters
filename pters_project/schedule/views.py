@@ -465,9 +465,11 @@ def add_schedule_logic(request):
 
     if error is None:
         # 최초 날짜 값 셋팅
+        time_duration_temp = class_info.class_hour*int(schedule_time_duration)
+
         try:
             schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time, '%Y-%m-%d %H:%M:%S.%f')
-            schedule_end_datetime = schedule_start_datetime + datetime.timedelta(hours=int(schedule_time_duration))
+            schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError as e:
@@ -823,6 +825,12 @@ def add_repeat_schedule_logic(request):
             lecture_id = ''
 
     if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+
+    if error is None:
         # 반복 일정 데이터 등록
         repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
                                                 repeat_type_cd=repeat_type,
@@ -877,7 +885,10 @@ def add_repeat_schedule_logic(request):
                 schedule_start_datetime = datetime.datetime.strptime(str(check_date).split(' ')[0]
                                                                      + ' ' + repeat_schedule_time,
                                                                      '%Y-%m-%d %H:%M:%S.%f')
-                schedule_end_datetime = schedule_start_datetime + datetime.timedelta(hours=int(repeat_schedule_time_duration))
+
+                time_duration_temp = class_info.class_hour*int(repeat_schedule_time_duration)
+                schedule_end_datetime = schedule_start_datetime + \
+                                        datetime.timedelta(minutes=int(time_duration_temp))
             except ValueError as e:
                 error = '등록 값에 문제가 있습니다.'
             except IntegrityError as e:

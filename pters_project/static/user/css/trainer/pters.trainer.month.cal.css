@@ -3,6 +3,7 @@ body{
 	padding-top: 50px;
 	width: 100%;
 	background: #f7f7f7;
+	position: relative;
 }
 
 .swiper-container{
