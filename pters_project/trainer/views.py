@@ -125,6 +125,14 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if class_id is None or class_id == '':
             error = '강사 정보가 존재하지 않습니다'
 
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다'
+
+        if error is None:
+            self.request.session['class_hour'] = class_info.class_hour
+
         if error is None:
             all_member = MemberTb.objects.filter().order_by('name')
 
@@ -165,7 +173,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     if 0 < member_lecture_rem_count < 4:
                         to_be_end_member_num += 1
 
-        if error is None:
+        if error is None :
             # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
             context['total_member_num'] = total_member_num
             # 남은 횟수 1개 이상 3개 미만인 경우 - 180314 hk.kim
@@ -292,9 +300,18 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         today = datetime.date.today()
         start_date = today - datetime.timedelta(days=18)
         end_date = today + datetime.timedelta(days=19)
+        class_info = None
 
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
         context = get_member_data(context, class_id, None, self.request.user.id)
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다'
+
+        if error is None:
+            self.request.session['class_hour'] = class_info.class_hour
 
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
@@ -313,6 +330,15 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         end_date = today + datetime.timedelta(days=47)
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
         context = get_member_data(context, class_id, None, self.request.user.id)
+        class_info = None
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다'
+
+        if error is None:
+            self.request.session['class_hour'] = class_info.class_hour
 
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
