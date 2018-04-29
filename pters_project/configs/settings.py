@@ -243,12 +243,12 @@ LOGGING = {
         '': {
             'handlers': ['default'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
         'django': {
             'handlers': ['default'],
             'propagate': True,
-            'level': 'INFO',
+            'level': 'ERROR',
         },
         'django.request': {
             'handlers': ['default'],
