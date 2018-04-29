@@ -53,7 +53,6 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     class_data |= ClassLectureTb.objects.filter(lecture_tb=lecture_info.lecture_tb,
                                                                 use=1).order_by('-lecture_tb__start_date')
 
-
         if class_data is None or len(class_data) == 0:
             self.url = '/trainee/blank/'
         elif len(class_data) == 1:
@@ -76,6 +75,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     else:
                         class_type_name = ''
                         class_name = None
+                        self.request.session['class_hour'] = lecture_info_data.class_tb.class_hour
                         try:
                             class_name = CommonCdTb.objects.get(common_cd=lecture_info_data.class_tb.subject_cd)
                         except ObjectDoesNotExist:
@@ -135,6 +135,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         class_info = ClassTb.objects.get(class_id=class_id_comp)
                     except ObjectDoesNotExist:
                         error = '강좌 정보를 불러오지 못했습니다.'
+                    self.request.session['class_hour'] = class_info.class_hour
 
                     if error is None:
                         try:
@@ -146,7 +147,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                             class_type_name = class_name.common_cd_nm
                         else:
                             class_type_name = class_info.subject_detail_nm
-                    print('test'+class_type_name)
+
                     if error is None:
                         self.request.session['class_type_name'] = class_type_name
                     else:
@@ -606,6 +607,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             context = get_trainee_setting_data(context, self.request.user.id)
             self.request.session['setting_language'] = context['lt_lan_01']
 
+            self.request.session['class_hour'] = class_info.class_hour
         # 강사 setting 값 로드
         if error is None:
             context = get_trainer_setting_data(context, class_info.member_id, class_id)

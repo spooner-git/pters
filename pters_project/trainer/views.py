@@ -115,6 +115,8 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         to_be_end_member_num = 0
         np_member_num = 0
 
+        class_info = None
+
         context['total_member_num'] = 0
         context['to_be_end_member_num'] = 0
         context['today_schedule_num'] = 0
@@ -122,6 +124,14 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         if class_id is None or class_id == '':
             error = '강사 정보가 존재하지 않습니다'
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다'
+
+        if error is None:
+            self.request.session['class_hour'] = class_info.class_hour
 
         if error is None:
             all_member = MemberTb.objects.filter().order_by('name')
@@ -294,6 +304,15 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
         context = get_member_data(context, class_id, None, self.request.user.id)
 
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다'
+
+        if error is None:
+            self.request.session['class_hour'] = class_info.class_hour
+
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
 
@@ -311,6 +330,14 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         end_date = today + datetime.timedelta(days=47)
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
         context = get_member_data(context, class_id, None, self.request.user.id)
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보가 존재하지 않습니다'
+
+        if error is None:
+            self.request.session['class_hour'] = class_info.class_hour
 
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
