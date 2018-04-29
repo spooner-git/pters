@@ -304,7 +304,6 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
         context = get_member_data(context, class_id, None, self.request.user.id)
 
-
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
