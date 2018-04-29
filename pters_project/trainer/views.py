@@ -301,6 +301,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=18)
         end_date = today + datetime.timedelta(days=19)
         class_info = None
+        error = None
 
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
         context = get_member_data(context, class_id, None, self.request.user.id)
@@ -331,6 +332,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
         context = get_member_data(context, class_id, None, self.request.user.id)
         class_info = None
+        error = None
 
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
