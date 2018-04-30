@@ -717,6 +717,10 @@ $(document).ready(function(){
       $('#popup_btn_repeatconfirm_no').click(function(){
         if(ajax_block_during_repeat_confirm == true){
             $('#id_repeat_confirm').val(0);
+            if($('body').width()<600){
+              shade_index(-100) //20180430
+              $('#calendar').show() //20180430
+            }
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend();
             check_dropdown_selected()
@@ -727,19 +731,11 @@ $(document).ready(function(){
       $('#popup_btn_repeatconfirm_yes').click(function(){
         console.log(ajax_block_during_repeat_confirm)
         if(ajax_block_during_repeat_confirm == true){
-            //addTypeSelect = "ptadd";
             $('#id_repeat_confirm').val(1);
-            /*
-            if($('body').width>=600){
-                $('#calendar').css('position','relative')
-            }
-            */
-            
-            //$('.popups').hide();
-            //$('#calendar').show().css('height','100%');
-            
             if($('body').width()<600){
               close_info_popup('page-addplan')
+              shade_index(-100) //20180430
+              $('#calendar').show() //20180430
             }
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend();
@@ -1107,7 +1103,6 @@ function ajaxRepeatConfirmSend(){
               complete:function(){
                 completeSend(); //ajax 로딩이미지 숨기기
                 ajax_block_during_repeat_confirm = true
-                console.log(ajax_block_during_repeat_confirm)
               },
 
               error:function(){
@@ -1505,10 +1500,10 @@ function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하
     var planheight = 60;
       if($calendarWidth>=600){
         //var planheight = 46;
-        var planheight = 58;
+        var planheight = 60;
     }
     var classlen = classTimeArray.length;
-    $('#calendar').css('display','none');
+    //$('#calendar').css('display','none');
     for(var i=0; i<classlen; i++){
       var indexArray = classTimeArray[i]
       var memoArray = scheduleNoteArray[i]
@@ -1563,9 +1558,11 @@ function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하
       tdClass.parent('div').siblings('.fake_for_blankpage').css('display','none')
 
       if(scheduleFinishArray[i]=="0") {
-          tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+          tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime')
+          .css({'height': Number(classDura * planheight - 1.5) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
       }else {
-          tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked').css({'height': Number(classDura * planheight + (classDura - 1)) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
+          tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked')
+          .css({'height': Number(classDura * planheight - 1.5) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
       }
       var hhh = Number(classHour)
       var mmm = classMinute
@@ -1579,7 +1576,7 @@ function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하
         mmm = Number(mmm) + 30
       }
     };
-    $('#calendar').css('display','block');
+    //$('#calendar').css('display','block');
 };
 
 function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
@@ -1588,7 +1585,7 @@ function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하�
       var planheight = 60;
   }
   var offlen = offTimeArray.length;
-  $('#calendar').css('display','none');
+  //$('#calendar').css('display','none');
   for(var i=0; i<offlen; i++){
     var indexArray = offTimeArray[i]
     var memoArray = offScheduleNoteArray[i]
@@ -1651,7 +1648,7 @@ function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하�
     }
 
   };
-  $('#calendar').css('display','block');
+  //$('#calendar').css('display','block');
 };
 
 
@@ -1668,7 +1665,7 @@ function completeSend(){
 }
 
 function closeAddPopup(){
-  $('body').css('overflow-y','overlay');
+  //$('body').css('overflow-y','overlay');
   $('#page-addplan').hide('fast','swing');
   $('#float_btn_wrap').fadeIn();
   $('#float_btn').removeClass('rotate_btn');
