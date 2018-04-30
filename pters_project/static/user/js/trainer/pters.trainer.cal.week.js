@@ -436,7 +436,7 @@ $(document).ready(function(){
 			                    	$('#canvas').hide().css({'border-color':'#282828'})
 			                    	$('#canvasWrap span').hide();
 									$('#canvasWrap').css({'height':'0px'})
-									$('body').css('overflow-y','overlay');
+									//$('body').css('overflow-y','overlay');
 									shade_index(-100)
 			                      },
 
@@ -611,7 +611,7 @@ $(document).ready(function(){
 				}*/else if(deleteTypeSelect == "ptoffdelete"){
 					var $ptdelform = $('#daily-pt-delete-form');
 					var $offdelform = $('#daily-off-delete-form');
-					$('body').css('overflow-y','overlay');
+					//$('body').css('overflow-y','overlay');
 					if(schedule_on_off==1){
 						//PT 일정 삭제시
 						$.ajax({
