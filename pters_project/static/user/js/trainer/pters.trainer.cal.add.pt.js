@@ -69,8 +69,10 @@ $(document).ready(function(){
             closeAlarm('pc')
             if($('._MINI_ptadd').css('display')=='inline'){
               addTypeSelect = 'ptadd'
+              var compensate_off = 0
             }else if($('._MINI_ptadd').css('display')=="none"){
               addTypeSelect = 'offadd'
+              var compensate_off = +30
             }
             /*
             var toploc = $(this).offset().top;
@@ -115,15 +117,17 @@ $(document).ready(function(){
             var minipopupheight = 250;
             var splitID = $(this).attr('id').split('_')
             var weekID = $(this).attr('data-week')
+            
+      
             //minipopup 위치 보정
-            if(splitID[3]>=(Options.workEndTime-4)){
+            if(splitID[3]>=(Options.workEndTime-5)){
               //$('.dropdown_mini').addClass('dropup')
               if(splitID[3]== (Options.workEndTime-1)){
                 console.log('1')
-                var toploc = toploc - minipopupheight
+                var toploc = toploc - minipopupheight + compensate_off
               }else{
                 console.log('3')
-                var toploc = toploc - minipopupheight
+                var toploc = toploc - minipopupheight + compensate_off
               }
             }else{
               $('.dropdown_mini').removeClass('dropup')
@@ -137,7 +141,7 @@ $(document).ready(function(){
             if(weekID>=4){
               var leftloc = leftloc-300-tdwidth
             }else if(weekID==3){
-              var leftloc = leftloc-tdwidth/2
+              var leftloc = leftloc
             }
             //minipopup 위치 보정
             var thisIDSplitArray = $(this).attr('id').split('_')

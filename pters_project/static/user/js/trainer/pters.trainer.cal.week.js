@@ -1747,6 +1747,7 @@ $(document).ready(function(){
 		var realTimeHour = realTime.getHours();
 		var realTimeMin = realTime.getMinutes();
 		if($('.today').length && realTimeHour < Options.workEndTime && realTimeHour >= Options.workStartTime){
+			$('.currentTimeBlackBox').addClass('currentTimeBlackBox');
 			$('#hour'+realTimeHour).addClass('currentTimeBlackBox');
 			var indicator_Location = $('#hour'+realTimeHour).position().top
 			var minute_adjust = 45*(realTimeMin/60)
