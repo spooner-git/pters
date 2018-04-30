@@ -2727,8 +2727,6 @@ function draw_member_history_list_table(jsondata,targetHTML,option){
         var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2])
         var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60
         var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60
-        console.log(startTime,'startTime')
-        console.log(endTime,'endTime',Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1]))
         if( endDate == startDate+1 && endTime==0){
             var duration = 24 - startTime
         }else{
@@ -2744,7 +2742,6 @@ function draw_member_history_list_table(jsondata,targetHTML,option){
 
     var result_history = result_history_html.join('')
     $regHistory.html(result_history)
-    console.log(result_history_html)
 }
 //회원정보////////////////////////////////////////////////////////
 
