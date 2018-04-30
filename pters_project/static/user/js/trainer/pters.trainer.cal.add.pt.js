@@ -7,8 +7,11 @@ $(document).ready(function(){
       })
       //유저가 터치인지 마우스 사용인지 알아낸다
 
+      //초기에 미니 timegraph를 채워주기 위한 DBdataprocess 
       DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
       DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
+      //초기에 미니 timegraph를 채워주기 위한 DBdataprocess 
+
 
       //var select_all_check = false;
       var offset_for_canvas;
