@@ -2023,7 +2023,12 @@ function modify_member_lec_info_pc(){
     })
 
     $(document).on('keyup','#lectureNote',function(){
-        $('#form_note').val($(this).val())
+        if($(this).val()==''){
+            $('#form_note').val(' ')
+        }else{
+            $('#form_note').val($(this).val())
+        }
+        
     })
 }
 
