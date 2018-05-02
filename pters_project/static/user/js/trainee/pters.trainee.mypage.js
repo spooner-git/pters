@@ -282,7 +282,7 @@ $(document).ready(function(){
     					   '</div>'
     	var html = []
     	for(var i=0; i<jsondata.countArray.length; i++){
-    		var number 	     = '<div class="cell1">'+(i+1)+'</div>'
+    		var number 	     = '<div class="cell1">'+(jsondata.countArray.length-i)+'</div>'
     		if($('body').width()>600){
     			var sdateFormat = date_format_to_hangul(jsondata.startArray[i])
     			var edateFormat = date_format_to_hangul(jsondata.endArray[i])
