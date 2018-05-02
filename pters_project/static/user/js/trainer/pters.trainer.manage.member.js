@@ -724,7 +724,7 @@ $(document).ready(function(){
         $('#simpleReg').fadeIn('fast');
         $(this).addClass('selectbox_checked');
         $('#btnCallManual').removeClass('selectbox_checked');
-        $('p').removeClass("dropdown_selected");
+        $('p, .datepicktext input').removeClass("dropdown_selected");
         $('#memberCount_add_fast').removeClass('dropdown_selected');
         $('#datepicker_add,#datepicker2_add,#memberCount_add,#lecturePrice_add_2').val("");
         $('#fast_check').val('0');
@@ -738,8 +738,10 @@ $(document).ready(function(){
         $('#btnCallSimple').removeClass('selectbox_checked');
         $('._due div.checked').removeClass('checked ptersCheckboxInner');
         $('._count div.checked').removeClass('checked ptersCheckboxInner');
-        $('p').removeClass("dropdown_selected");
+        $('p, .datepicktext input').removeClass("dropdown_selected");
         $('#datepicker_fast,#lecturePrice_add,#memberDue_add_2').val("");
+        $("#datepicker2_add").datepicker('option','minDate',$("#datepicker_add").val());
+        $("#datepicker_add").datepicker('option','maxDate',$("#datepicker2_add").val());
         $('#fast_check').val('1');
         check_dropdown_selected();
     });
