@@ -646,16 +646,17 @@ def delete_schedule_logic(request):
 def finish_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     member_name = request.POST.get('member_name')
-    #imgUpload = request.POST.get('upload')
+    # imgUpload = request.POST.get('upload')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
+    class_type_name = request.session.get('class_type_name', '')
 
     # image upload test - hk.kim 180313
     # format, imgstr = imgUpload.split(';base64,')
     # ext = format.split('/')[-1]
     # data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
 
-    #print(str(imgUpload))
+    # print(str(imgUpload))
     error = None
     schedule_info = None
     lecture_info = None
@@ -743,6 +744,17 @@ def finish_schedule_logic(request):
     if error is None:
         save_log_data(start_date, end_date, class_id, lecture_info.lecture_id, request.user.last_name+request.user.first_name,
                       member_name, '1', 'LS03', request)
+
+        push_info_schedule_start_date = str(start_date).split(':')
+        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
+
+    if error is None:
+        request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
+        request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 '\
+                                       + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+                                       + '~' + push_info_schedule_end_date[0] + ':'\
+                                       + push_info_schedule_end_date[1] + ' PT 일정을 완료 처리했습니다'
+        request.session['lecture_id'] = schedule_info.lecture_tb_id
 
         return redirect(next_page)
     else:
