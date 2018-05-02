@@ -199,7 +199,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
                     error = '비밀번호를 입력해주세요.'
                 else:
                     if len(password) < 8:
-                        error = '비밀번호는 8자 이상 입력햇주세요.'
+                        error = '비밀번호는 8자 이상 입력해주세요.'
 
         if error is None:
             if member_type == 'new':
@@ -569,7 +569,7 @@ class CheckMemberIdView(View):
         user_id = request.POST.get('id', '')
         form = RegistrationForm(request.POST, request.FILES)
         if user_id is None or user_id == '':
-            self.error = 'id를 입력해주세요.'
+            self.error = 'ID를 입력해주세요.'
         else:
             if form.is_valid():
                 if User.objects.filter(username=user_id).exists():
@@ -827,14 +827,14 @@ def clear_badge_counter_logic(request):
     error = None
     token_data = None
     if push_token is None or push_token == '':
-        error = 'token 정보를 가져올 수 없습니다'
+        error = '푸시 정보를 가져올 수 없습니다'
 
     logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+push_token)
     if error is None:
         try:
             token_data = PushInfoTb.objects.get(token=push_token, use=1)
         except ObjectDoesNotExist:
-            error = 'token 정보를 가져올 수 없습니다'
+            error = '푸시 정보를 가져올 수 없습니다'
 
     if error is None:
         token_data.badge_counter = 0
@@ -844,7 +844,7 @@ def clear_badge_counter_logic(request):
         return render(request, 'token_check_ajax.html', {'token_check': token_data.token})
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
+        # messages.error(request, error)
 
         return render(request, 'token_check_ajax.html', {'token_check': error})
 

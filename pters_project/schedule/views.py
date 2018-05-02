@@ -57,16 +57,16 @@ def add_schedule_logic_func(schedule_date, schedule_start_datetime, schedule_end
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '강좌 정보를 불러오지 못했습니다.'
 
     if en_dis_type == '1':
         if error is None:
             try:
                 member_lecture_info = LectureTb.objects.get(lecture_id=int(lecture_id), use=1)
             except ObjectDoesNotExist:
-                error = '회원 수강 정보를 불러오지 못했습니다.'
+                error = '회원 수강정보를 불러오지 못했습니다.'
             except ValueError:
-                error = '회원 수강 정보를 불러오지 못했습니다.'
+                error = '회원 수강정보를 불러오지 못했습니다.'
         if error is None:
             if member_lecture_info.lecture_avail_count == 0:
                 error = '예약 가능한 횟수를 확인해주세요.'
@@ -150,14 +150,7 @@ def delete_schedule_logic_func(schedule_info, member_id):
             try:
                 lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
-                error = '회원 PT 정보가 존재하지 않습니다'
-
-    if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(class_id=schedule_info.class_tb_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
+                error = '회원 수강정보를 불러오지 못했습니다.'
 
     # print()
     if error is None:
@@ -295,7 +288,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강사 정보가 존재하지 않습니다'
+        error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
@@ -461,7 +454,7 @@ def add_schedule_logic(request):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         # 최초 날짜 값 셋팅
@@ -555,7 +548,7 @@ def add_schedule_logic(request):
             request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
             request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' PT 일정을 등록했습니다'
+                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' 일정을 등록했습니다'
             request.session['lecture_id'] = lecture_id
         else:
             request.session['push_title'] = ''
@@ -628,7 +621,7 @@ def delete_schedule_logic(request):
             request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
             request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 취소했습니다'
+                                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다'
             request.session['lecture_id'] = lecture_id
         else:
             request.session['push_title'] = ''
@@ -681,7 +674,7 @@ def finish_schedule_logic(request):
         try:
             lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
         except ObjectDoesNotExist:
-            error = '회원 PT 정보를 불러오지 못했습니다.'
+            error = '회원 수강정보를 불러오지 못했습니다.'
 
     # if error is None:
     #    if lecture_info.state_cd == 'NP':
@@ -753,7 +746,7 @@ def finish_schedule_logic(request):
         request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 '\
                                        + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
                                        + '~' + push_info_schedule_end_date[0] + ':'\
-                                       + push_info_schedule_end_date[1] + ' PT 일정을 완료 처리했습니다'
+                                       + push_info_schedule_end_date[1] + ' 일정을 완료 처리했습니다'
         request.session['lecture_id'] = schedule_info.lecture_tb_id
 
         return redirect(next_page)
@@ -1047,13 +1040,13 @@ def add_repeat_schedule_confirm(request):
             try:
                 lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_data.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
-                error = '회원 PT 정보가 존재하지 않습니다'
+                error = '회원 수강정보를 불러오지 못했습니다.'
 
             if error is None:
                 try:
                     member_info = MemberTb.objects.get(member_id=lecture_info.member_id)
                 except ObjectDoesNotExist:
-                    error = '회원 정보가 존재하지 않습니다'
+                    error = '회원 정보를 불러오지 못했습니다.'
             if error is None:
                 lecture_id = lecture_info.lecture_id
                 member_name = member_info.name
@@ -1119,7 +1112,7 @@ def add_repeat_schedule_confirm(request):
             if en_dis_type == '1':
                 request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
                 request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-                                               + '~' + str(end_date) + ' PT 반복일정을 등록했습니다'
+                                               + '~' + str(end_date) + ' 반복일정을 등록했습니다'
                 request.session['lecture_id'] = lecture_id
             else:
                 request.session['push_title'] = ''
@@ -1181,12 +1174,12 @@ def delete_repeat_schedule_logic(request):
             try:
                 lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_info.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
-                error = '회원 PT 정보가 존재하지 않습니다.'
+                error = '회원 수강정보를 불러오지 못했습니다.'
             if error is None:
                 try:
                     member_info = MemberTb.objects.get(member_id=lecture_info.member_id)
                 except ObjectDoesNotExist:
-                    error = '회원 정보가 존재하지 않습니다.'
+                    error = '회원 정보를 불러오지 못했습니다.'
             if error is None:
                 member_name = member_info.name
 
@@ -1245,7 +1238,7 @@ def delete_repeat_schedule_logic(request):
         if en_dis_type == '1':
             request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
             request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-                                           + '~' + str(end_date) + ' PT 반복일정을 취소했습니다'
+                                           + '~' + str(end_date) + ' 반복일정을 취소했습니다'
             request.session['lecture_id'] = delete_repeat_schedule.lecture_tb_id
         else:
             request.session['push_title'] = ''
@@ -1280,7 +1273,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
                 try:
                     class_info = ClassTb.objects.get(class_id=class_id)
                 except ObjectDoesNotExist:
-                    error = '강사 정보가 존재하지 않습니다'
+                    error = '강좌 정보를 불러오지 못했습니다.'
 
                 if error is None:
                     update_check = class_info.schedule_check
@@ -1540,7 +1533,7 @@ def update_memo_schedule_logic(request):
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
-            error = '스케쥴 정보가 존재하지 않습니다'
+            error = '스케쥴 정보를 불러오지 못했습니다.'
 
     if error is None:
         schedule_info.note = note
