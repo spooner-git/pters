@@ -1442,8 +1442,10 @@ def delete_member_info_logic(request):
 
                     class_lecture_data.delete()
                     if member.reg_info == str(request.user.id):
-                        member.delete()
-                        user.delete()
+                        member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
+                        if len(member_lecture_list_confirm) == 0:
+                            member.delete()
+                            user.delete()
 
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
