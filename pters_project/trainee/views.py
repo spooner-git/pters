@@ -65,7 +65,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     lecture_auth_info = MemberLectureTb.objects.get(member_id=self.request.user.id,
                                                                     lecture_tb=lecture_info.lecture_id)
                 except ObjectDoesNotExist:
-                    error = '수강 조회 정보를 불러오지 못했습니다.'
+                    error = '수강정보를 불러오지 못했습니다.'
 
                 if lecture_auth_info is not None:
                     if lecture_auth_info.auth_cd == 'WAIT':
@@ -80,7 +80,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         try:
                             class_name = CommonCdTb.objects.get(common_cd=lecture_info_data.class_tb.subject_cd)
                         except ObjectDoesNotExist:
-                            error = '강좌 과목 정보를 불러오지 못했습니다.'
+                            error = '강좌 정보를 불러오지 못했습니다.'
                         if error is None:
                             if lecture_info_data.class_tb.subject_detail_nm is None or lecture_info_data.class_tb.subject_detail_nm == '':
                                 class_type_name = class_name.common_cd_nm
@@ -109,7 +109,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 try:
                     lecture_auth_info = MemberLectureTb.objects.get(member_id=self.request.user.id, lecture_tb=lecture_info.lecture_id)
                 except ObjectDoesNotExist:
-                    error = '수강 조회 정보를 불러오지 못했습니다.'
+                    error = '수강정보를 불러오지 못했습니다.'
                 if lecture_auth_info is not None:
                     if lecture_auth_info.auth_cd == 'WAIT':
                         lecture_np_counter += 1
@@ -144,7 +144,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         try:
                             class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
                         except ObjectDoesNotExist:
-                            error = '강좌 과목 정보를 불러오지 못했습니다.'
+                            error = '강좌 정보를 불러오지 못했습니다.'
                     if error is None:
                         if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
                             class_type_name = class_name.common_cd_nm
@@ -280,7 +280,7 @@ def get_lecture_list_by_member_id(context, member_id):
                 try:
                     pt_type_name = CommonCdTb.objects.get(common_cd=class_lecture_info.class_tb.subject_cd)
                 except ObjectDoesNotExist:
-                    error = '강좌 type 없음'
+                    error = '강좌 정보를 불러오지 못했습니다.'
 
             lecture_list_data = ClassLectureTb.objects.filter(class_tb_id=class_lecture_info.class_tb_id,
                                                               lecture_tb__member_id=member_id)
@@ -293,7 +293,7 @@ def get_lecture_list_by_member_id(context, member_id):
                     member_lecture_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id,
                                                                       lecture_tb=lecture_list_info.lecture_tb_id)
                 except ObjectDoesNotExist:
-                    error = '수강 정보 조회에 대한 정보가 없습니다.'
+                    error = '수강 정보를 불러오지 못했습니다.'
 
                 if error is None:
                     class_lecture_info.lecture_counts += 1
@@ -450,7 +450,7 @@ def lecture_processing(request):
             lecture_info = MemberLectureTb.objects.get(member=request.user.id, lecture_tb=lecture_id)
             # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '수강정보가 존재하지 않습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         if check == '1':
@@ -719,7 +719,7 @@ def pt_delete_logic(request):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         if lecture_info.member_id != str(request.user.id):
@@ -869,7 +869,7 @@ def pt_delete_logic(request):
         request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
         request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                        + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-                                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 취소했습니다'
+                                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다'
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -1001,7 +1001,7 @@ def pt_add_logic(request):
         request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
         request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
                                        +push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-                                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' PT 일정을 등록했습니다'
+                                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다'
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -1067,7 +1067,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = 'class가 존재하지 않습니다'
+            error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         time_duration_temp = class_info.class_hour*int(pt_schedule_time_duration)
@@ -1099,7 +1099,6 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
     if error is None:
         if lecture_info.member_id != str(user_id):
             error = '회원 정보가 일치하지 않습니다.'
-
 
     if error is None:
         if lecture_info.lecture_avail_count == 0:
@@ -1196,7 +1195,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강사 정보가 존재하지 않습니다'
+        error = '강좌 정보를 불러오지 못했습니다.'
 
     # 수강 정보 불러 오기
     if error is None:
@@ -1280,7 +1279,7 @@ def get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, membe
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강사 정보가 존재하지 않습니다'
+        error = '강좌 정보를 불러오지 못했습니다.'
 
     # 수강 정보 불러 오기
     if error is None:
@@ -1516,13 +1515,13 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 불러오지 못했습니다'
+            error = '강사 정보를 불러오지 못했습니다'
 
     if error is None:
         try:
             class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 불러오지 못했습니다.'
+            error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
@@ -1540,7 +1539,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                     lecture_info_data = MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id,
                                                                     lecture_tb=lecture_info.lecture_id)
                 except ObjectDoesNotExist:
-                    error = '수강 정보 조회에 대한 정보가 없습니다.'
+                    error = '수강정보를 불러오지 못했습니다.'
 
                 if error is None:
                     lecture_counts += 1
@@ -1726,14 +1725,14 @@ def delete_member_lecture_info_logic(request):
     error = None
 
     if lecture_id is None or lecture_id == '':
-        error = '회원 수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             lecture_info = MemberLectureTb.objects.get(member_id=request.user.id, lecture_tb=lecture_id)
             # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         lecture_info.auth_cd = 'DELETE'
@@ -1768,7 +1767,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         log_data = None
 
         if lecture_id is None or lecture_id == '':
-            error = '수강 정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
         if error is None:
             lecture_data = LectureTb.objects.filter(lecture_id=lecture_id)
@@ -1841,7 +1840,7 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강사 정보가 존재하지 않습니다'
+        error = '강좌 정보를 불러오지 못했습니다.'
 
     # 수강 정보 불러 오기
     if error is None:
@@ -1853,30 +1852,39 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
         if len(lecture_list) > 0:
             for idx, lecture_list_info in enumerate(lecture_list):
                 lecture_info = lecture_list_info.lecture_tb
-                pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                             en_dis_type='1', use=1).order_by('start_dt')
+                try:
+                    lecture_info_data = MemberLectureTb.objects.get(auth_cd='VIEW', member_id=member_id,
+                                                                    lecture_tb=lecture_info.lecture_id)
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
 
-                if pt_schedule_data is not None and len(pt_schedule_data) > 0:
-                    idx = 0
-                    for pt_schedule_info in pt_schedule_data:
-                        idx += 1
-                        # lecture schedule id 셋팅
-                        pt_schedule_id.append(pt_schedule_info.schedule_id)
-                        # lecture schedule 에 해당하는 lecture id 셋팅
-                        pt_schedule_lecture_id.append(pt_schedule_info.lecture_tb_id)
+                if error is None:
+                    pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                 en_dis_type='1', use=1).order_by('start_dt')
 
-                        pt_schedule_start_datetime.append(str(pt_schedule_info.start_dt))
-                        pt_schedule_end_datetime.append(str(pt_schedule_info.end_dt))
-                        pt_schedule_reg_datetime.append(str(pt_schedule_info.mod_dt))
-                        pt_schedule_mod_datetime.append(str(pt_schedule_info.reg_dt))
-                        pt_schedule_idx.append(idx)
+                    if pt_schedule_data is not None and len(pt_schedule_data) > 0:
+                        idx = 0
+                        for pt_schedule_info in pt_schedule_data:
+                            idx += 1
+                            # lecture schedule id 셋팅
+                            pt_schedule_id.append(pt_schedule_info.schedule_id)
+                            # lecture schedule 에 해당하는 lecture id 셋팅
+                            pt_schedule_lecture_id.append(pt_schedule_info.lecture_tb_id)
 
-                        if pt_schedule_info.note is None:
-                            pt_schedule_note.append('')
-                        else:
-                            pt_schedule_note.append(pt_schedule_info.note)
-                        # 끝난 스케쥴인지 확인
-                        pt_schedule_state_cd.append(str(pt_schedule_info.state_cd))
+                            pt_schedule_start_datetime.append(str(pt_schedule_info.start_dt))
+                            pt_schedule_end_datetime.append(str(pt_schedule_info.end_dt))
+                            pt_schedule_reg_datetime.append(str(pt_schedule_info.mod_dt))
+                            pt_schedule_mod_datetime.append(str(pt_schedule_info.reg_dt))
+                            pt_schedule_idx.append(idx)
+
+                            if pt_schedule_info.note is None:
+                                pt_schedule_note.append('')
+                            else:
+                                pt_schedule_note.append(pt_schedule_info.note)
+                            # 끝난 스케쥴인지 확인
+                            pt_schedule_state_cd.append(str(pt_schedule_info.state_cd))
+                else:
+                    error = None
 
     context['pt_schedule_id'] = pt_schedule_id
     context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
@@ -1933,7 +1941,7 @@ def get_trainee_schedule_input_lecture(class_id, member_id):
                 MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
                                             member_id=member_id, auth_cd='VIEW', use=1)
             except ObjectDoesNotExist:
-                error = 'View 권한 없음'
+                error = '수강정보를 불러오지 못했습니다.'
             if error is None:
                 lecture_id = lecture_info.lecture_tb.lecture_id
 

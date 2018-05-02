@@ -123,12 +123,12 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['new_member_num'] = 0
 
         if class_id is None or class_id == '':
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강사 정보를 불러오지 못했습니다.'
 
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
             self.request.session['class_hour'] = class_info.class_hour
@@ -309,7 +309,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
             self.request.session['class_hour'] = class_info.class_hour
@@ -337,7 +337,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
             self.request.session['class_hour'] = class_info.class_hour
@@ -416,7 +416,7 @@ def get_member_data(context, class_id, member_id, user_id):
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강사 정보가 존재하지 않습니다'
+        error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
         if member_id is None or member_id == '':
@@ -709,6 +709,7 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
 
         return context
 
+
 class HelpPtersView(AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'
 
@@ -716,6 +717,7 @@ class HelpPtersView(AccessTestMixin, TemplateView):
         context = super(HelpPtersView, self).get_context_data(**kwargs)
 
         return context
+
 
 class DeleteAccountView(AccessTestMixin, TemplateView):
     template_name = 'delete_account_form.html'
@@ -767,7 +769,7 @@ class MyPageView(AccessTestMixin, TemplateView):
         context['new_member_num'] = 0
 
         if class_id is None or class_id == '':
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
@@ -922,7 +924,7 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
         context['new_member_num'] = 0
 
         if class_id is None or class_id == '':
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
@@ -1161,13 +1163,6 @@ def add_member_info_logic(request):
                     input_end_date = '9999-12-31'
                 else:
                     input_end_date = end_date
-
-    if error is None:
-
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 강좌 정보가 없습니다.'
 
     if error is None:
         try:
@@ -1472,7 +1467,7 @@ def resend_member_lecture_info_logic(request):
             lecture_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_id)
             # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         # lecture_info.state_cd = 'NP'
@@ -1510,14 +1505,14 @@ def delete_member_lecture_info_logic(request):
     error = None
 
     if lecture_id is None or lecture_id == '':
-        error = '회원 수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             class_lecture_info = ClassLectureTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id)
             # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         lecture_info = class_lecture_info.lecture_tb
@@ -1572,13 +1567,13 @@ def refund_member_lecture_info_logic(request):
     error = None
 
     if lecture_id is None or lecture_id == '':
-        error = '회원 수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
@@ -1622,18 +1617,18 @@ def update_member_lecture_view_info_logic(request):
     error = None
 
     if lecture_id is None or lecture_id == '':
-        error = '회원 수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         if auth_cd != 'VIEW' and auth_cd != 'WAIT' and auth_cd != 'DELETE':
-            error = '회원 상태 코드가 맞지 않습니다.'
+            error = '수강정보 연결 상태를 불러오지 못했습니다.'
 
     if error is None:
         try:
             member_lecture_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_id)
             # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         member_lecture_info.auth_cd = auth_cd
@@ -1674,7 +1669,7 @@ def refund_member_lecture_info_logic(request):
     error = None
 
     if lecture_id is None or lecture_id == '':
-        error = '회원 수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         if refund_price is None or refund_price == 0:
@@ -1684,7 +1679,7 @@ def refund_member_lecture_info_logic(request):
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -1733,13 +1728,13 @@ def progress_member_lecture_info_logic(request):
     error = None
 
     if lecture_id is None or lecture_id == '':
-        error = '회원 수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
@@ -1776,13 +1771,13 @@ def finish_member_lecture_info_logic(request):
     error = None
 
     if lecture_id is None or lecture_id == '':
-        error = '회원 수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
@@ -1839,7 +1834,7 @@ def update_member_lecture_info_logic(request):
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
 
@@ -1930,7 +1925,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
         error = None
 
         if user_id == '':
-            error = 'id를 입력해주세요.'
+            error = '회원 ID를 입력해주세요.'
         if error is None:
             try:
                 user = User.objects.get(username=user_id)
@@ -2001,7 +1996,7 @@ def alarm_delete_logic(request):
             try:
                 log_info = LogTb.objects.get(log_id=delete_log_id[i])
             except ObjectDoesNotExist:
-                error = 'log가 존재하지 않습니다'
+                error = '로그를 불러오지 못했습니다.'
             if error is None:
                 log_info.use = 0
                 log_info.mod_dt = timezone.now()
@@ -2645,7 +2640,7 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
         try:
             class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.subject_cd)
         except ObjectDoesNotExist:
-            error = '강좌 type을 불러오지 못했습니다.'
+            error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
@@ -2661,18 +2656,18 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             try:
                 lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
             except ObjectDoesNotExist:
-                error = '상태 코드를 가져오지 못했습니다.'
+                error = '수강정보를 불러오지 못했습니다.'
             try:
                 lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
             except ObjectDoesNotExist:
-                error = '회원의 수강정보 조회 정보를 불러오지 못했습니다.'
+                error = '수강정보를 불러오지 못했습니다.'
 
             lecture_info.auth_cd = lecture_test.auth_cd
 
             try:
                 lecture_info.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.auth_cd)
             except ObjectDoesNotExist:
-                error = '상태 코드를 가져오지 못했습니다.'
+                error = '수강정보를 불러오지 못했습니다.'
 
             if lecture_info.auth_cd == 'WAIT':
                 np_lecture_counts += 1
@@ -2806,7 +2801,7 @@ def class_processing_logic(request):
         try:
             class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
         except ObjectDoesNotExist:
-            error = '강좌 과목 정보를 불러오지 못했습니다.'
+            error = '강좌 정보를 불러오지 못했습니다.'
 
         if error is None:
             if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
@@ -3073,7 +3068,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         error = None
 
         if subject_cd is None or subject_cd == '':
-            error = '스케쥴 타입을 설정해주세요.'
+            error = '강좌 종류를 설정해주세요.'
 
         if class_hour is None or class_hour == '':
             class_hour = 60
@@ -3138,7 +3133,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             try:
                 class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
             except ObjectDoesNotExist:
-                error = '강좌 과목 정보를 불러오지 못했습니다.'
+                error = '강좌 정보를 불러오지 못했습니다.'
 
             if error is None:
                 if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
@@ -3224,13 +3219,13 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강사 정보가 존재하지 않습니다'
+        error = '강좌 정보를 불러오지 못했습니다.'
 
     # 수강 정보 불러 오기
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                      lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                     lecture_tb__use='1', auth_cd='VIEW', use=1).order_by('lecture_tb__start_date')
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
@@ -3317,7 +3312,6 @@ class AlarmCheckView(LoginRequiredMixin, TemplateView):
         # update_check 1 : data update 있음
         update_check = 0
 
-
         error = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
@@ -3388,7 +3382,7 @@ class GetOffRepeatScheduleDataViewAjax(LoginRequiredMixin, AccessTestMixin, Temp
         try:
             ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보가 존재하지 않습니다'
+            error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
             # 강사 클래스의 반복일정 불러오기
@@ -3407,7 +3401,7 @@ class GetOffRepeatScheduleDataViewAjax(LoginRequiredMixin, AccessTestMixin, Temp
                 try:
                     state_cd_name = CommonCdTb.objects.get(common_cd=off_repeat_schedule_info.state_cd)
                 except ObjectDoesNotExist:
-                    error = '반복일정의 상태를 불러오지 못했습니다.'
+                    error = '반복일정 정보를 불러오지 못했습니다.'
                 if error is None:
                     off_repeat_schedule_state_cd_nm.append(state_cd_name.common_cd_nm)
 

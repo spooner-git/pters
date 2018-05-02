@@ -279,7 +279,7 @@ $(document).ready(function(){
 
 									if(jsondata.push_info != ''){
 										for (var i=0; i<jsondata.pushArray.length; i++){
-											send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                                        	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 										}
 									}
 					           	close_info_popup('cal_popup_plandelete')
@@ -384,7 +384,7 @@ $(document).ready(function(){
 
 									if(jsondata.push_info != ''){
 										for (var i=0; i<jsondata.pushArray.length; i++){
-											send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                                        	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 										}
 									}
 					          		close_info_popup('cal_popup_plandelete')
@@ -483,6 +483,12 @@ $(document).ready(function(){
 				                  	$('#errorMessageBar').show()
 				                  	$('#errorMessageText').text(jsondata.messageArray)
 					          	}else{
+
+									if(jsondata.push_info != ''){
+										for (var i=0; i<jsondata.pushArray.length; i++){
+                                        	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+										}
+									}
 					          		signImageSend(send_data);
 					          		close_info_popup('cal_popup_planinfo')
 				                    AjaxCompleteSend();
@@ -559,7 +565,7 @@ $(document).ready(function(){
         })
 	}
 
-	function send_push(push_server_id, intance_id,title, message, badge_counter){
+	function send_push(push_server_id, intance_id, title, message, badge_counter){
 
         $.ajax({
           url: 'https://fcm.googleapis.com/fcm/send',
