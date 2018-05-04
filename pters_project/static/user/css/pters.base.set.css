@@ -677,7 +677,7 @@ a:focus, a:hover{
     display: none;
     top: 215px;
     right: 0;
-    background: #cccccc;
+    
     width: 160px;
     height:600px;
 }
@@ -685,7 +685,7 @@ a:focus, a:hover{
 .ads_cal_insideTop{
     width: 100%;
     height: 250px;
-    background: #cccccc;
+    background: #f7f7f7;
 }
 
 
