@@ -2736,9 +2736,7 @@ class AddClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AddClassView, self).get_context_data(**kwargs)
 
-        error = None
-
-        class_type_cd_data = CommonCdTb.objects.filter(upper_common_cd='02', use=1).order_by('order')
+        class_type_cd_data = CommonCdTb.objects.filter(common_cd='TR', use=1).order_by('order')
 
         for class_type_cd_info in class_type_cd_data:
             class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03', group_cd=class_type_cd_info.common_cd, use=1).order_by('order')
