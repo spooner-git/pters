@@ -301,12 +301,13 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 	.explaintype{
 		height: 0px;
+		height: auto;
 		overflow-y:hidden;
 		transition: 1s;
 		-webkit-transition: 1s;
 	}
 	.explaintype button{
-		visibility: hidden;
+		/*visibility: hidden;*/
 		transition: 0.5s;
 		-webkit-transition: 0.5s;
 	}
