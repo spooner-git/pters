@@ -5,7 +5,10 @@ html,body{
     background: #f4f4f4;
 }
 
+
+
 #how_to_use_pters{
+    display: none;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -668,8 +671,27 @@ a:focus, a:hover{
 }
 
 
-@media(min-width:1200px){
-    #float_AD{
-        display: block;
-    }
+
+.ads_cal_side{
+    position: fixed;
+    display: none;
+    top: 215px;
+    right: 0;
+    background: #cccccc;
+    width: 160px;
+    height:600px;
 }
+
+.ads_cal_insideTop{
+    width: 100%;
+    height: 250px;
+    background: #cccccc;
+}
+
+
+    @media(min-width:1470px){
+        .ads_cal_side{
+            display: block;
+            right: 1%;
+        }
+    }
