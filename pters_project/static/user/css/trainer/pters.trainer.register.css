@@ -6,6 +6,13 @@ html{
 	height: 100%;
 }
 
+select{
+	-webkit-appearance:none;
+	background:#ffffff;
+	height: 27px;
+	color: #282828;
+}
+
 .ajaxloadingPC{
     position: fixed;
     display: none;
