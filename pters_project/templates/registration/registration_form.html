@@ -106,13 +106,16 @@
            <div class="outerbox">
                <input type="" name="" placeholder="이메일"  id="email_input"> @
                <input type="" name="" placeholder="이메일 뒷부분"  id="email_input_re" readonly>
-               <select class="login_dropdown" id="email_option">
-                   <option id="optionnone">선택</option>
-                   <option id="gmail">gmail.com</option>
-                   <option id="naver">naver.com</option>
-                   <option id="daum">daum.net</option>
-                   <option id="self">직접 입력</option>
-               </select>
+               <div style="display: inline-block;">
+                <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:14px;margin-left:59px;opacity: 0.5;">
+                 <select class="login_dropdown" id="email_option">
+                     <option id="optionnone">선택</option>
+                     <option id="gmail">gmail.com</option>
+                     <option id="naver">naver.com</option>
+                     <option id="daum">daum.net</option>
+                     <option id="self">직접 입력</option>
+                 </select>
+               </div>
                 <button class="register_button" onclick="javascript:check_email();">중복 확인</button>
                 <span class="email_confirm"></span>
                 <p class="pw_notice">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
@@ -126,6 +129,9 @@
 
            <div class="outerbox">
                <span>생일</span>
+               <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:14px;margin-left:59px;opacity: 0.5;">
+               <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:14px;margin-left:146px;opacity: 0.5;">
+               <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:14px;margin-left:231px;opacity: 0.5;">
                <select class="login_dropdown" id="birth_year">
                </select>
                <select class="login_dropdown" id="birth_month">
@@ -137,7 +143,8 @@
 
            <div class="outerbox" id="country">
                <span>국가</span>
-               <select class="login_dropdown"  id="country_input">
+               <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:14px;margin-left:133px;opacity: 0.5;">
+               <select class="login_dropdown"  id="country_input" style="width: 150px;">
                   <option selected disabled>선택</option>
                   <option value="USA">United States</option>
                   <option value="KOR">대한민국</option>
@@ -417,10 +424,12 @@
 
            <div class="buttongroup">
                 <button id="cancelMember" onclick="goPrev()">
+                    <img src="/static/user/res/btn-today-left.png">
                    <span>이전</span>
                 </button>
                 <button id="registerMember">
                     <span>다음</span>
+                    <img src="/static/user/res/btn-today-right.png">
                 </button>
            </div>
         </div>

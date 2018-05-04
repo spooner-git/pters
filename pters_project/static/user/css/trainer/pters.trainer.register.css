@@ -9,7 +9,8 @@ html{
 select{
 	-webkit-appearance:none;
 	background:#ffffff;
-	height: 27px;
+	height: 33px;
+	width: 80px;
 	color: #282828;
 }
 
@@ -252,6 +253,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.register_button{
+		margin-top:9px;
 		margin-left: 5px;
 		line-height: 27px;
 		background: #fe4e65;
@@ -260,7 +262,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.login_dropdown{
-		height: 27px;
+		
 	}
 
 	.registerbox_smalllabel{
@@ -339,6 +341,23 @@ div._step1_label, div._step2_label, div._step3_label{
 	text-align: center;
 	margin-top: 30px;
 }
+	.buttongroup button{
+		border-radius: 0;
+		width: 75px;
+		height: 28px;
+		font-weight: bold;
+	}
+	.buttongroup img{
+		width: 8px;
+	}
+	.buttongroup #registerMember, .buttongroup #registerMemberFinal{
+		background:#ffffff;
+		color: #282828;
+	}
+	.buttongroup #cancelMember{
+		background:#282828;
+		color: #fe4e65;
+	}
 
 .bg-pink{
 	background-color: #fe4e65;
@@ -444,7 +463,6 @@ div._step1_label, div._step2_label, div._step3_label{
 				line-height: 28px;
 				width: 140px;
 				font-size: 15px;
-				border-radius: 3px;
 			}
 
 	.promise_wrap{
