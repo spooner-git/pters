@@ -121,13 +121,20 @@ $(document).ready(function(){
             var splitID = $(this).attr('id').split('_')
             var weekID = $(this).attr('data-week')
             
-      
+          
             //minipopup 위치 보정
             if(splitID[3]>=(Options.workEndTime-5)){
               //$('.dropdown_mini').addClass('dropup')
               if(splitID[3]== (Options.workEndTime-1)){
                 console.log('1')
-                var toploc = toploc - minipopupheight + compensate_off
+                if(Options.workEndTime - Options.workStartTime < 5){
+                  var toploc = toploc
+                }else{
+                  var toploc = toploc - minipopupheight + compensate_off
+                }
+              }else if(splitID[3] <= (Options.workStartTime+3)){
+                console.log('splitID[3] <= (Options.workStartTime+1)')
+                var toploc = toploc
               }else{
                 console.log('3')
                 var toploc = toploc - minipopupheight + compensate_off
