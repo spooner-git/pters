@@ -904,6 +904,8 @@ img,a,div,span,p{
 	position: fixed;
 	bottom: 0;
 	width: 100%;
+	padding-bottom: 10px;
+	padding-top: 10px;
 	/*padding-bottom: 15px;*/
 	z-index: 1;
 }
