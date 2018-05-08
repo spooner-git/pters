@@ -37,7 +37,7 @@ class CheckView(LoginRequiredMixin, RedirectView):
         elif group.name == 'trainer':
             self.url = '/trainer/'
         elif group.name == 'admin':
-            self.url = '/trainer/'
+            self.url = '/spooner_adm/'
         elif group.name == 'center':
             self.url = '/center/'
         else:
