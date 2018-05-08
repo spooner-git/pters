@@ -499,8 +499,8 @@ body{
 
 .button_trainee_logout{
 	color: #fe4e65;
-	/*margin-top: 40px;*/
-	margin-bottom: 100px;
+	margin-top: 40px;
+	margin-bottom: 200px;
 	text-align: center;
 }
 	.button_trainee_logout span{
