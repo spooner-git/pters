@@ -511,7 +511,7 @@ select:focus > option:checked {
 		margin:0 auto;
 		margin-top: 6px;
 	}
-	#memberRegHistory_info > div {
+	#memberRegHistory_info > div > div {
 				display: table;
 				width: 100%;
 				padding: 0;
@@ -542,26 +542,26 @@ select:focus > option:checked {
 					font-weight: bold;
 					height: 22px !important;
 				}
-				#memberRegHistory_info > div > div{
+				#memberRegHistory_info > div > div > div{
 					display: table-cell;
 					width: 15.6%;
 					padding: 0;
 					height: 30px;
 					text-align: center;
 				}
-					#memberRegHistory_info > div > div:nth-child(1){
+					#memberRegHistory_info > div > div > div:nth-child(1){
 						width: 25%;
 						border-right:1px solid #cccccc;
 					}
-					#memberRegHistory_info > div > div:nth-child(2){
+					#memberRegHistory_info > div > div > div:nth-child(2){
 						width: 25%;
 						border-right:1px solid #cccccc;
 					}
-					#memberRegHistory_info > div > div:nth-child(3){
+					#memberRegHistory_info > div > div > div:nth-child(3){
 						width: 25%;
 						border-right:1px solid #cccccc;
 					}
-					#memberRegHistory_info > div > div:nth-child(4){
+					#memberRegHistory_info > div > div > div:nth-child(4){
 						width: 25%;
 					}
 		.member_info_wrap input{
