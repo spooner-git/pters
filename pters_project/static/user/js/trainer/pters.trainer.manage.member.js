@@ -347,7 +347,7 @@ $(document).ready(function(){
     //삭제 처리 버튼
     $('.lectureStateChangeSelectPopup ._delete').click(function(){
         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var userName = $('.lectureStateChangeSelectPopup').attr('data-username')
+        var userName = $('.lectureStateChangeSelectPopup').attr('data-username');
         delete_member_reg_data_pc(lectureID, userName);
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
