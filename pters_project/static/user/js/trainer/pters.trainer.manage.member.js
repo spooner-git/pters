@@ -141,6 +141,7 @@ $(document).ready(function(){
         }else if(Options.language == "ENG"){
             var text =　"OK"
         }
+
         $(this).attr('src','/static/user/res/btn-pt-complete.png');
         if($('#currentMemberList').css('display') == "block"){
           var Data = DB;
@@ -347,7 +348,7 @@ $(document).ready(function(){
     //삭제 처리 버튼
     $('.lectureStateChangeSelectPopup ._delete').click(function(){
         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var userName = $('.lectureStateChangeSelectPopup').attr('data-username')
+        var userName = $('.lectureStateChangeSelectPopup').attr('data-username');
         delete_member_reg_data_pc(lectureID, userName);
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
@@ -2622,12 +2623,12 @@ function draw_member_lecture_list_table(jsondata, targetHTML, option){
 
             var note = '<div class="mobile_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
 
-            result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+' style="text-align:right;">'+howManyReg+'수정: '+modifyActiveBtn+'</div>'+
+            result_history_html.push('<div class="wraps"><div data-leid='+jsondata.lectureIdArray[i]+' style="text-align:right;">'+howManyReg+'수정: '+modifyActiveBtn+'</div>'+
                                     table_title1+
                                     '<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+'</div>'+
                                     table_title2+
                                     '<div data-leid='+jsondata.lectureIdArray[i]+'>'+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+'</div>'+
-                                    note)
+                                    note+'</div>')
         }
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
