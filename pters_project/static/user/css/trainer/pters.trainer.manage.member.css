@@ -1109,6 +1109,13 @@ select:focus > option:checked {
 	width: 100%;
 }
 
+.ymdText-pc-add-member{
+	display:none;
+}
+.ymdText-pc-add-member-again{
+	display:none;
+}
+
 @media(min-width: 600px){
 
 	.input_available{

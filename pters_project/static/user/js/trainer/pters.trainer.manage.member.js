@@ -9,6 +9,31 @@ $(document).ready(function(){
     //#####################페이지 들어오면 초기 시작 함수//#####################
     */
 
+var filter = "win16|win32|win64|mac|macintel";
+var platform_check;
+var browser_check;
+var agent = navigator.userAgent.toLowerCase();
+if ( navigator.platform ) {
+    if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
+        //mobile
+        platform_check = 'mobile'
+    }
+    else {
+        //pc
+        platform_check = 'pc'
+    }
+}
+
+if (agent.indexOf("safari") != -1) {
+    browser_check = 'safari'
+}
+if (agent.indexOf("chrome") != -1) {
+    browser_check = 'chrome'
+}
+if (agent.indexOf("firefox") != -1) {
+    browser_check = 'firefox'
+}
+
     $(".btn-group > .btn").click(function(){
  		$(this).addClass("active").siblings().removeClass("active");
 	});
@@ -90,8 +115,12 @@ $(document).ready(function(){
         e.stopPropagation()
         var memberID = $(this).parent('td').siblings('.id').text()
         var dbID = $(this).parent('td').siblings('._id').attr('data-dbid')
-        location.href="/trainer/export_excel_member_info/?member_id="+dbID
-        console.log('t1')
+        if(platform_check == 'mobile'){
+            alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.')
+        }else{
+            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+            location.href="/trainer/export_excel_member_info/?member_id="+dbID
+        }
         /*
         $.ajax({
             url:'/trainer/export_excel_schedule_list/',
@@ -133,8 +162,12 @@ $(document).ready(function(){
     $(document).on('click','button._info_download',function(){
         var memberID = $('#memberInfoPopup_PC').attr('data-userid')
         var dbID = $('#memberInfoPopup_PC').attr('data-dbid')
-        location.href="/trainer/export_excel_member_info/?member_id="+dbID
-        console.log('t2')
+        if(platform_check == 'mobile'){
+            alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.')
+        }else {
+            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+            location.href = "/trainer/export_excel_member_info/?member_id=" + dbID
+        }
         /*
         $.ajax({
             url:'',
@@ -173,8 +206,13 @@ $(document).ready(function(){
 
     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 진행중 멤버)
     $(document).on('click','#currentMemberList div._info_download',function(){
-        location.href="/trainer/export_excel_member_list/?finish_flag=0"
-        console.log('t3')
+
+        if(platform_check == 'mobile'){
+            alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.')
+        }else {
+            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+            location.href = "/trainer/export_excel_member_list/?finish_flag=0"
+        }
         /*
         $.ajax({
             url:'/trainer/export_excel_schedule_list/',
@@ -209,8 +247,13 @@ $(document).ready(function(){
 
     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 종료된 멤버)
     $(document).on('click','#finishedMemberList div._info_download',function(){
-        location.href="/trainer/export_excel_member_list/?finish_flag=1"
-        console.log('t4')
+
+        if(platform_check == 'mobile'){
+            alert('엑셀 다운로드는 PC에서만 사용 가능합니다.')
+        }else {
+            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+            location.href = "/trainer/export_excel_member_list/?finish_flag=1"
+        }
         /*
         $.ajax({
             url:'ex',
