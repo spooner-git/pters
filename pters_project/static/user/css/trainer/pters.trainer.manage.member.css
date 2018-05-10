@@ -621,7 +621,7 @@ select:focus > option:checked {
 			width: 100%;
 		}
 		#memberLectureHistory_info_PC_wrap{
-			max-height: 190px;
+			max-height: 255px;
 			overflow-y: auto;
 		}
 			.member_info_PC_wrap label{
@@ -962,13 +962,13 @@ select:focus > option:checked {
 	display: none;
 	width: 100%;
 }
-	#memberRepeat_info_PC_wrap,#memberLectureHistory_info_PC_wrap{
-		height: 190px;
+	#memberRepeat_info_PC_wrap, #memberLectureHistory_info_PC_wrap{
+		height: 280px;
 		overflow-y: auto;
 	}
 
 #info_shift_lecture, #info_shift_schedule, #info_shift_history{
-	height: 230px;
+	height: 280px;
 	overflow: auto;
 	padding-top: 10px;
 	padding-bottom: 10px;
