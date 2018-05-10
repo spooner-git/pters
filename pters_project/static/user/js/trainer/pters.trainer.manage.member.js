@@ -85,7 +85,7 @@ $(document).ready(function(){
         shade_index(100)
     });
 
-    //PC 엑셀 다운로드 버튼 (회원목록에서)
+    //PC 회원 이력 엑셀 다운로드 버튼 (회원목록에서)
     $(document).on('click','img._info_download',function(e){
         e.stopPropagation()
         var memberID = $(this).parent('td').siblings('.id').text()
@@ -125,7 +125,7 @@ $(document).ready(function(){
         });
     })
 
-    //PC 엑셀 다운로드 버튼 (회원정보창에서)
+    //PC 회원 이력 엑셀 다운로드 버튼 (회원정보창에서)
     $(document).on('click','button._info_download',function(){
         var memberID = $('#memberInfoPopup_PC').attr('data-userid')
         var dbID = $('#memberInfoPopup_PC').attr('data-dbid')
@@ -162,6 +162,80 @@ $(document).ready(function(){
             },
         });
     })
+
+    //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 진행중 멤버)
+    $(document).on('click','#currentMemberList ._info_download',function(){
+        $.ajax({
+            url:'',
+            type:'POST',
+            data: {'id':dbID},
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    alert('진행중인 회원 리스트 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('서버 요청 실패');
+            },
+        });
+    })
+
+    //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 종료된 멤버)
+    $(document).on('click','#finishedMemberList ._info_download',function(){
+        $.ajax({
+            url:'',
+            type:'POST',
+            data: {'id':dbID},
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    alert('종료된 회원 리스트 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('서버 요청 실패');
+            },
+        });
+    })
+
+
 
     //PC 회원삭제버튼 (회원목록에서)
     $(document).on('click','img._info_delete',function(e){
