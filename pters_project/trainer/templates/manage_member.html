@@ -623,6 +623,9 @@
         <div class="button_shift_info  button_active" id="select_info_shift_lecture">수강 정보</div>
         <div class="button_shift_info" id="select_info_shift_schedule">반복 일정</div>
         <div class="button_shift_info" id="select_info_shift_history">일정 이력</div>
+        <button class="submitBtn _info_download _info_download_img">
+                <img src="/static/user/res/member/pters-download.png" style="margin-bottom: 4px;height:17px;">
+            </button>
         <button class="submitBtn _info_delete _info_delete_img">
             <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:20px;">
         </button>
@@ -972,6 +975,7 @@
 
 {% block local_js_footer %}
          <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
+         <script type="text/javascript" src={% static_url "user/js/trainer/jquery.techbytarun.excelexportjs.min.js" %}></script>
          <script>
             $('#uptext').text("회원 관리")
             $('footer').hide()

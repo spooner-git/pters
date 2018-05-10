@@ -579,12 +579,22 @@ button._info_delete_img{
 	right: 0;
 	background: transparent;
 }
-	button._info_delete_img:focus{
+	button._info_delete_img:focus, button._info_download_img:focus{
 		outline: 0;
 	}
-	button._info_delete_img:active{
+	button._info_delete_img:active, button._info_download_img:focus{
 		background: unset;
 	}
+button._info_download_img{
+	position: absolute;
+	width: unset;
+	height: unset;
+	border: 0;
+	top: 0;
+	right: 30px;
+	background: transparent;
+}
+
 
 .ajaxloadingPC{
 	position: fixed;

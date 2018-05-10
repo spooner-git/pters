@@ -85,7 +85,85 @@ $(document).ready(function(){
         shade_index(100)
     });
 
-    //PC 회원삭제버튼
+    //PC 엑셀 다운로드 버튼 (회원목록에서)
+    $(document).on('click','img._info_download',function(e){
+        e.stopPropagation()
+        var memberID = $(this).parent('td').siblings('.id').text()
+        var dbID = $(this).parent('td').siblings('.id').attr('data-dbid')
+        $.ajax({
+            url:'',
+            type:'POST',
+            data: {'id':dbID},
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+                }
+                
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('서버 요청 실패');
+            },
+        });
+    })
+
+    //PC 엑셀 다운로드 버튼 (회원정보창에서)
+    $(document).on('click','button._info_download',function(){
+        var memberID = $('#memberInfoPopup_PC').attr('data-userid')
+        var dbID = $('#memberInfoPopup_PC').attr('data-dbid')
+        $.ajax({
+            url:'',
+            type:'POST',
+            data: {'id':dbID},
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('서버 요청 실패');
+            },
+        });
+    })
+
+    //PC 회원삭제버튼 (회원목록에서)
     $(document).on('click','img._info_delete',function(e){
         e.stopPropagation();
         deleteTypeSelect = "memberinfodelete";
@@ -114,7 +192,7 @@ $(document).ready(function(){
         $('#shade3').fadeIn('fast');
     })
 
-    //PC 회원삭제버튼
+    //PC 회원삭제버튼 (회원정보창에서)
     $(document).on('click','button._info_delete',function(){
       //$('.confirmPopup').fadeIn('fast');
       deleteTypeSelect = "memberinfodelete";
@@ -1530,7 +1608,9 @@ function memberListSet (type,option,Reverse){
         var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
         var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
         var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">';
-        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="Del">';
+        var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드">';
+        var pcprintimage = '<img src="/static/user/res/member/pters-print.png" class="pcmanageicon _info_print" title="프린트">';
+        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">';
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
@@ -1543,7 +1623,7 @@ function memberListSet (type,option,Reverse){
         var startdatetd = '<td class="_startdate">'+start+'</td>';
         var enddatetd = '<td class="_finday">'+end+'</td>';
         var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>';
-        var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdeleteimage+'</td>';
+        var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
         var scrolltd = '<td class="forscroll"></td>';
 
         var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
@@ -1732,7 +1812,7 @@ function open_member_info_popup_pc(userID,jsondata){
         var Data = DBe;
     }
 
-    $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':Data[userID].name,'data-userid':userID});
+    $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':Data[userID].name,'data-userid':userID,'data-dbid':Data[userID].dbId});
     $('#shade').fadeIn('fast');
 
     var npCountImg = "";
