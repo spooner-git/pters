@@ -89,8 +89,8 @@ $(document).ready(function(){
     $(document).on('click','img._info_download',function(e){
         e.stopPropagation()
         var memberID = $(this).parent('td').siblings('.id').text()
-        var dbID = $(this).parent('td').siblings('.id').attr('data-dbid')
-
+        var dbID = $(this).parent('td').siblings('._id').attr('data-dbid')
+        console.log(memberID, dbID)
         location.href="/trainer/export_excel_schedule_list/?member_id="+dbID
         /*
         $.ajax({
@@ -168,7 +168,7 @@ $(document).ready(function(){
     })
 
     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 진행중 멤버)
-    $(document).on('click','#currentMemberList ._info_download',function(){
+    $(document).on('click','#currentMemberList div._info_download',function(){
         var dbID = $('#memberInfoPopup_PC').attr('data-dbid')
         $.ajax({
             url:'/trainer/export_excel_schedule_list/',
@@ -201,7 +201,7 @@ $(document).ready(function(){
     })
 
     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 종료된 멤버)
-    $(document).on('click','#finishedMemberList ._info_download',function(){
+    $(document).on('click','#finishedMemberList div._info_download',function(){
         $.ajax({
             url:'ex',
             type:'POST',
@@ -584,9 +584,6 @@ $(document).ready(function(){
           $btn.find('img').css({'display':'none'});
     });
 
-    $('body').click(function(){
-        console.log(deleteTypeSelect)
-    })
     
     $('#popup_delete_btn_yes').click(function(){
         //if($('#calendar').length==0){
