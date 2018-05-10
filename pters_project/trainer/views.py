@@ -3,6 +3,7 @@ import copy
 import datetime
 
 import logging
+import urllib
 from collections import OrderedDict
 
 from django.contrib import messages
@@ -23,6 +24,7 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin, RedirectView
 from el_pagination.views import AjaxListView
 from openpyxl import Workbook
+from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
 from center.models import CenterTrainerTb
@@ -3466,16 +3468,286 @@ class GetOffRepeatScheduleDataViewAjax(LoginRequiredMixin, AccessTestMixin, Temp
 
 
 @csrf_exempt
-def export_excel_schedule_list_logic(request):
+def export_excel_member_list_logic(request):
 
-    lecture_id = request.POST.get('lecture_id', '')
-    member_name = request.POST.get('member_name', '')
     class_id = request.session.get('class_id', '')
-    member_id = request.GET.get('member_id', '')
-    next_page = request.POST.get('next_page', '')
+    finish_flag = request.GET.get('finish_flag', '0')
 
     error = None
-    class_data = None
+    class_info = None
+    member_id = None
+    member_list = []
+    member_finish_list = []
+    # 강사 정보 가져오기
+    try:
+        class_info = ClassTb.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_id is None or member_id == '':
+            all_member = MemberTb.objects.filter().order_by('name')
+        else:
+            all_member = MemberTb.objects.filter(member_id=member_id).order_by('name')
+
+        for member_info in all_member:
+            member_data = copy.copy(member_info)
+            member_data_finish = copy.copy(member_info)
+            lecture_finish_check = 0
+            # 강좌에 해당하는 수강/회원 정보 가져오기
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                         lecture_tb__member_id=member_data.member_id,
+                                                         lecture_tb__state_cd='IP', auth_cd='VIEW',
+                                                         lecture_tb__use=1, use=1)
+
+            lecture_finish_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                lecture_tb__member_id=member_data.member_id,
+                                                                auth_cd='VIEW', lecture_tb__use=1,
+                                                                use=1).exclude(lecture_tb__state_cd='IP')
+
+            if len(lecture_list) == 0:
+                if len(lecture_finish_list) > 0:
+                    lecture_finish_check = 1
+
+            if len(lecture_list) > 0:
+                lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                             lecture_tb__member_id=member_data.member_id,
+                                                             auth_cd='VIEW', lecture_tb__use=1, use=1)
+
+                member_data.rj_lecture_counts = 0
+                member_data.np_lecture_counts = 0
+
+                member_data.lecture_reg_count_yet = 0
+                member_data.lecture_rem_count_yet = 0
+                member_data.lecture_avail_count_yet = 0
+
+                member_data.lecture_counts = len(lecture_list)
+                member_data.lecture_reg_count = 0
+                member_data.lecture_rem_count = 0
+                member_data.lecture_avail_count = 0
+
+                member_data.lecture_reg_count_total = 0
+                member_data.lecture_rem_count_total = 0
+                member_data.lecture_avail_count_total = 0
+
+                member_data.start_date = None
+                member_data.end_date = None
+                member_data.mod_dt = None
+
+                lecture_count = 0
+
+                for lecture_info_data in lecture_list:
+                    # if lecture_info.state_cd == 'RJ':
+                    lecture_info = lecture_info_data.lecture_tb
+                    if lecture_info_data.auth_cd == 'DELETE':
+                        member_data.rj_lecture_counts += 1
+                    # if lecture_info.state_cd == 'NP':
+                    if lecture_info_data.auth_cd == 'WAIT':
+                        member_data.np_lecture_counts += 1
+
+                    lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                                                                    lecture_tb=lecture_info.lecture_id,
+                                                                    auth_cd='VIEW', lecture_tb__use=1, use=1).count()
+
+                    if lecture_info.use != 0:
+                        # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                        if lecture_info.state_cd == 'IP':
+                            member_data.lecture_reg_count += lecture_info.lecture_reg_count
+                            member_data.lecture_rem_count += lecture_info.lecture_rem_count
+                            member_data.lecture_avail_count += lecture_info.lecture_avail_count
+                            member_data.end_date = lecture_info.end_date
+                            if member_data.start_date is None or member_data.start_date == '':
+                                member_data.start_date = lecture_info.start_date
+                            else:
+                                if member_data.start_date > lecture_info.start_date:
+                                    member_data.start_date = lecture_info.start_date
+                            if member_data.end_date is None or member_data.end_date == '':
+                                member_data.end_date = lecture_info.end_date
+                            else:
+                                if member_data.end_date < lecture_info.end_date:
+                                    member_data.end_date = lecture_info.end_date
+
+                        # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
+                        #    member_data.lecture_reg_count_yet += lecture_info.lecture_reg_count
+                        #    member_data.lecture_rem_count_yet += lecture_info.lecture_rem_count
+                        #    member_data.lecture_avail_count_yet += lecture_info.lecture_avail_count
+
+                        if member_data.mod_dt is None or member_data.mod_dt == '':
+                            member_data.mod_dt = lecture_info.mod_dt
+                        else:
+                            if member_data.mod_dt > lecture_info.mod_dt:
+                                member_data.mod_dt = lecture_info.mod_dt
+                        member_data.lecture_reg_count_total += lecture_info.lecture_reg_count
+                        member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
+                        member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
+                        member_data.lecture_id = lecture_info.lecture_id
+                if member_data.reg_info is None or member_data.reg_info != request.user.id:
+                    if lecture_count == 0:
+                        member_data.sex = ''
+                        member_data.birthday_dt = ''
+                        member_data.phone = ''
+                        member_data.user.email = ''
+
+                member_data.start_date = str(member_data.start_date)
+                member_data.end_date = str(member_data.end_date)
+                member_data.mod_dt = str(member_data.mod_dt)
+                if member_data.birthday_dt is None or member_data.birthday_dt == '':
+                    member_data.birthday_dt = ''
+                else:
+                    member_data.birthday_dt = str(member_data.birthday_dt)
+                member_list.append(member_data)
+
+            if lecture_finish_check > 0:
+                member_data_finish.rj_lecture_counts = 0
+                member_data_finish.np_lecture_counts = 0
+
+                member_data_finish.lecture_reg_count_yet = 0
+                member_data_finish.lecture_rem_count_yet = 0
+                member_data_finish.lecture_avail_count_yet = 0
+
+                member_data_finish.lecture_counts = len(lecture_finish_list)
+                member_data_finish.lecture_reg_count = 0
+                member_data_finish.lecture_rem_count = 0
+                member_data_finish.lecture_avail_count = 0
+
+                member_data_finish.lecture_reg_count_total = 0
+                member_data_finish.lecture_rem_count_total = 0
+                member_data_finish.lecture_avail_count_total = 0
+                member_data_finish.start_date = None
+                member_data_finish.end_date = None
+                member_data_finish.mod_dt = None
+
+                lecture_finish_count = 0
+
+                for lecture_info_data in lecture_finish_list:
+                    # if lecture_info.state_cd == 'RJ':
+                    lecture_info = lecture_info_data.lecture_tb
+                    if lecture_info_data.auth_cd == 'DELETE':
+                        member_data_finish.rj_lecture_counts += 1
+                    # if lecture_info.state_cd == 'NP':
+                    if lecture_info_data.auth_cd == 'WAIT':
+                        member_data_finish.np_lecture_counts += 1
+
+                    lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                                                                           lecture_tb=lecture_info.lecture_id,
+                                                                           auth_cd='VIEW', lecture_tb__use=1, use=1).count()
+
+                    if lecture_info.use != 0:
+                        # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                        # if lecture_info.state_cd == 'IP':
+                        member_data_finish.lecture_reg_count += lecture_info.lecture_reg_count
+                        member_data_finish.lecture_rem_count += lecture_info.lecture_rem_count
+                        member_data_finish.lecture_avail_count += lecture_info.lecture_avail_count
+                        member_data_finish.end_date = lecture_info.end_date
+                        if member_data_finish.start_date is None or member_data_finish.start_date == '':
+                            member_data_finish.start_date = lecture_info.start_date
+                        else:
+                            if member_data_finish.start_date > lecture_info.start_date:
+                                member_data_finish.start_date = lecture_info.start_date
+
+                        if member_data_finish.end_date is None or member_data_finish.end_date == '':
+                            member_data_finish.end_date = lecture_info.end_date
+                        else:
+                            if member_data_finish.end_date < lecture_info.end_date:
+                                member_data_finish.end_date = lecture_info.end_date
+
+                        # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
+                        #    member_data_finish.lecture_reg_count_yet += lecture_info.lecture_reg_count
+                        #    member_data_finish.lecture_rem_count_yet += lecture_info.lecture_rem_count
+                        #    member_data_finish.lecture_avail_count_yet += lecture_info.lecture_avail_count
+
+                        if member_data_finish.mod_dt is None or member_data_finish.mod_dt == '':
+                            member_data_finish.mod_dt = lecture_info.mod_dt
+                        else:
+                            if member_data_finish.mod_dt > lecture_info.mod_dt:
+                                member_data_finish.mod_dt = lecture_info.mod_dt
+
+                        member_data_finish.lecture_reg_count_total += lecture_info.lecture_reg_count
+                        member_data_finish.lecture_rem_count_total += lecture_info.lecture_rem_count
+                        member_data_finish.lecture_avail_count_total += lecture_info.lecture_avail_count
+                        member_data_finish.lecture_id = lecture_info.lecture_id
+
+                if member_data_finish.reg_info is None or member_data_finish.reg_info != request.user.id:
+                    if lecture_finish_count == 0:
+                        member_data_finish.sex = ''
+                        member_data_finish.birthday_dt = ''
+                        member_data_finish.phone = ''
+                        member_data_finish.user.email = ''
+
+                member_data_finish.start_date = str(member_data_finish.start_date)
+                member_data_finish.end_date = str(member_data_finish.end_date)
+                member_data_finish.mod_dt = str(member_data_finish.mod_dt)
+                if member_data_finish.birthday_dt is None or member_data_finish.birthday_dt == '':
+                    member_data_finish.birthday_dt = ''
+                else:
+                    member_data_finish.birthday_dt = str(member_data_finish.birthday_dt)
+                member_finish_list.append(member_data_finish)
+
+    wb = Workbook()
+    ws1 = wb.active
+    start_raw = 3
+
+    ws1['A1'] = '회원정보'
+    ws1['A1'].font = Font(bold=True, size=15)
+    ws1['A2'] = '회원명'
+    ws1['B2'] = '회원 ID'
+    ws1['C2'] = '등록 횟수'
+    ws1['D2'] = '남은 횟수'
+    ws1['E2'] = '시작 일자'
+    ws1['F2'] = '종료 일자'
+    ws1['G2'] = '연락처'
+
+    if finish_flag == '0':
+        ws1.title = "진행중 회원"
+        for member_info in member_list:
+            ws1['A'+str(start_raw)] = member_info.name
+            ws1['B'+str(start_raw)] = member_info.user.username
+            ws1['C'+str(start_raw)] = member_info.lecture_reg_count
+            ws1['D'+str(start_raw)] = member_info.lecture_rem_count
+            ws1['E'+str(start_raw)] = member_info.start_date
+            if member_info.end_date == '9999-12-31':
+                ws1['F' + str(start_raw)] = '소진시까지'
+            else:
+                ws1['F'+str(start_raw)] = member_info.end_date
+            ws1['G'+str(start_raw)] = member_info.phone
+            start_raw += 1
+    else:
+        ws1.title = "완료된 회원"
+        for member_info in member_finish_list:
+            ws1['A'+str(start_raw)] = member_info.name
+            ws1['B'+str(start_raw)] = member_info.user.username
+            ws1['C'+str(start_raw)] = member_info.lecture_reg_count
+            ws1['D'+str(start_raw)] = member_info.lecture_rem_count
+            ws1['E'+str(start_raw)] = member_info.start_date
+            if member_info.end_date == '9999-12-31':
+                ws1['F' + str(start_raw)] = '소진시까지'
+            else:
+                ws1['F'+str(start_raw)] = member_info.end_date
+            ws1['G'+str(start_raw)] = member_info.phone
+            start_raw += 1
+
+    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="member_list.xlsx"'
+
+    # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
+
+    if error is None:
+
+        return response
+    else:
+
+        return response
+
+
+@csrf_exempt
+def export_excel_member_info_logic(request):
+
+    class_id = request.session.get('class_id', '')
+    member_id = request.GET.get('member_id', '')
+
+    error = None
+    class_info = None
     lecture_counts = 0
     np_lecture_counts = 0
 
@@ -3484,70 +3756,128 @@ def export_excel_schedule_list_logic(request):
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
-    if error is None:
-        try:
-            class_data = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
 
-    if error is None:
-        try:
-            class_data.trainer_info = MemberTb.objects.get(member_id=class_data.member_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
-
-    if error is None:
-        try:
-            class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.subject_cd)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
-    if error is None:
-        '''
-        lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
-                                                     lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
-
-        for lecture_info_data in lecture_data:
-            lecture_info = lecture_info_data.lecture_tb
-            lecture_info.start_date = str(lecture_info.start_date)
-            lecture_info.end_date = str(lecture_info.end_date)
-            lecture_info.mod_dt = str(lecture_info.mod_dt)
-            lecture_info.reg_dt = str(lecture_info.reg_dt)
-            try:
-                lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
-            except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
-            try:
-                lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
-            except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
-
-            lecture_info.auth_cd = lecture_test.auth_cd
-
-            try:
-                lecture_info.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.auth_cd)
-            except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
-
-            if lecture_info.auth_cd == 'WAIT':
-                np_lecture_counts += 1
-            lecture_counts += 1
-
-            # for line in lecture_info.note:
-
-            #    if line in ['\n', '\r\n']:
-            #        line
-            #        print('empty line')
-
-            if '\r\n' in lecture_info.note:
-                lecture_info.note = lecture_info.note.replace('\r\n', ' ')
-        '''
     wb = Workbook()
     ws1 = wb.active
-    ws1.title = "Sheet1_test"
-    ws1["A1"] = "Hello Excel"
-    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="foo.xlsx"'
 
+    try:
+        class_info = ClassTb.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        error = '강좌 정보를 불러오지 못했습니다.'
+
+    # 수강 정보 불러 오기
+    if error is None:
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                     lecture_tb__member_id=member_id,
+                                                     lecture_tb__use='1', auth_cd='VIEW', use=1).order_by('-lecture_tb__start_date')
+    if error is None:
+        # 강사 클래스의 반복일정 불러오기
+        if len(lecture_list) > 0:
+
+            for idx, lecture_list_info in enumerate(lecture_list):
+                lecture_info = lecture_list_info.lecture_tb
+                lecture_info.start_date = str(lecture_info.start_date)
+                lecture_info.end_date = str(lecture_info.end_date)
+                lecture_info.mod_dt = str(lecture_info.mod_dt)
+                lecture_info.reg_dt = str(lecture_info.reg_dt)
+
+                start_raw = 7
+                ws1.title = lecture_info.start_date + ' 수강정보'
+                ws1['A1'] = '수강 정보'
+                ws1['A1'].font = Font(bold=True, size=15)
+                ws1['A2'] = '시작일자'
+                ws1['B2'] = '종료일자'
+                ws1['C2'] = '등록횟수'
+                ws1['D2'] = '남은횟수'
+                ws1['E2'] = '등록금액'
+                ws1['F2'] = '진행상태'
+                ws1['G2'] = '연결상태'
+                ws1['H2'] = '특이사항'
+
+                ws1['A5'] = '수강 이력'
+                ws1['A5'].font = Font(bold=True, size=15)
+                ws1['A6'] = '회차'
+                ws1['B6'] = '시작일자'
+                ws1['C6'] = '진행시간'
+                ws1['D6'] = '구분'
+                ws1['E6'] = '메모'
+
+                try:
+                    lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
+                try:
+                    lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
+
+                lecture_info.auth_cd = lecture_test.auth_cd
+
+                try:
+                    lecture_info.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.auth_cd)
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
+
+                if lecture_info.auth_cd == 'WAIT':
+                    np_lecture_counts += 1
+                lecture_counts += 1
+
+                # for line in lecture_info.note:
+
+                #    if line in ['\n', '\r\n']:
+                #        line
+                #        print('empty line')
+
+                if '\r\n' in lecture_info.note:
+                    lecture_info.note = lecture_info.note.replace('\r\n', ' ')
+
+                ws1['A3'] = lecture_info.start_date
+                ws1['B3'] = lecture_info.end_date
+                ws1['C3'] = lecture_info.lecture_reg_count
+                ws1['D3'] = lecture_info.lecture_rem_count
+                ws1['E3'] = lecture_info.price
+                ws1['F3'] = lecture_info.state_cd_name.common_cd_nm
+                ws1['G3'] = lecture_info.auth_cd_name.common_cd_nm
+                ws1['H3'] = lecture_info.note
+
+                pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                             en_dis_type='1', use=1).order_by('-start_dt')
+
+                if pt_schedule_data is not None and len(pt_schedule_data) > 0:
+                    schedule_idx = len(pt_schedule_data)
+                    for pt_schedule_info in pt_schedule_data:
+
+                        ws1['A' + str(start_raw)] = str(schedule_idx)
+                        start_date_temp = str(pt_schedule_info.start_dt).split(':')
+                        ws1['B' + str(start_raw)] = start_date_temp[0]+':'+start_date_temp[1]
+
+                        time_duration_temp = pt_schedule_info.end_dt-pt_schedule_info.start_dt
+                        time_duration = str(time_duration_temp).split(':')
+                        time_duration_str = ''
+                        if time_duration[0] != '00' and time_duration[0] != '0':
+                            time_duration_str += time_duration[0]+'시간'
+                        if time_duration[1] != '00' and time_duration[1] != '0':
+                            time_duration_str += time_duration[1]+'분'
+
+                        ws1['C' + str(start_raw)] = time_duration_str
+                        if pt_schedule_info.state_cd == 'PE':
+                            ws1['D' + str(start_raw)] = '완료'
+                        else:
+                            ws1['D' + str(start_raw)] = '시작전'
+
+                        if pt_schedule_info.note is None:
+                            ws1['E' + str(start_raw)] = ''
+                        else:
+                            ws1['E' + str(start_raw)] = pt_schedule_info.note
+                        start_raw += 1
+                        schedule_idx -= 1
+
+                ws1 = wb.create_sheet()
+    filename = '테스트.xlsx'.encode('utf-8')
+    # test_str = urllib.parse.unquote('한글')
+    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename*=UTF-8'+urllib.parse.quote(filename)
+    # filename="'+test_str+'.xlsx"'
     # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
 

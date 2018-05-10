@@ -104,5 +104,6 @@ urlpatterns = [
 
     url(r'^get_off_repeat_schedule_ajax/$', views.GetOffRepeatScheduleDataViewAjax.as_view(), name='get_off_repeat_schedule_ajax'),
 
-    url(r'^export_excel_schedule_list/$', views.export_excel_schedule_list_logic, name='export_excel_schedule_list'),
+    url(r'^export_excel_member_list/$', views.export_excel_member_list_logic, name='export_excel_member_list'),
+    url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
 ]

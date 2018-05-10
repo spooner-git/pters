@@ -90,8 +90,8 @@ $(document).ready(function(){
         e.stopPropagation()
         var memberID = $(this).parent('td').siblings('.id').text()
         var dbID = $(this).parent('td').siblings('._id').attr('data-dbid')
-        console.log(memberID, dbID)
-        location.href="/trainer/export_excel_schedule_list/?member_id="+dbID
+        location.href="/trainer/export_excel_member_info/?member_id="+dbID
+        console.log('t1')
         /*
         $.ajax({
             url:'/trainer/export_excel_schedule_list/',
@@ -133,6 +133,9 @@ $(document).ready(function(){
     $(document).on('click','button._info_download',function(){
         var memberID = $('#memberInfoPopup_PC').attr('data-userid')
         var dbID = $('#memberInfoPopup_PC').attr('data-dbid')
+        location.href="/trainer/export_excel_member_info/?member_id="+dbID
+        console.log('t2')
+        /*
         $.ajax({
             url:'',
             type:'POST',
@@ -165,11 +168,14 @@ $(document).ready(function(){
                 $('#errorMessageText').text('서버 요청 실패');
             },
         });
+        */
     })
 
     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 진행중 멤버)
     $(document).on('click','#currentMemberList div._info_download',function(){
-        var dbID = $('#memberInfoPopup_PC').attr('data-dbid')
+        location.href="/trainer/export_excel_member_list/?finish_flag=0"
+        console.log('t3')
+        /*
         $.ajax({
             url:'/trainer/export_excel_schedule_list/',
             type:'POST',
@@ -198,10 +204,14 @@ $(document).ready(function(){
                 $('#errorMessageText').text('서버 요청 실패');
             },
         });
+        */
     })
 
     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 종료된 멤버)
     $(document).on('click','#finishedMemberList div._info_download',function(){
+        location.href="/trainer/export_excel_member_list/?finish_flag=1"
+        console.log('t4')
+        /*
         $.ajax({
             url:'ex',
             type:'POST',
@@ -234,6 +244,7 @@ $(document).ready(function(){
                 $('#errorMessageText').text('서버 요청 실패');
             },
         });
+        */
     })
 
 
