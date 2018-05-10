@@ -3721,9 +3721,9 @@ def export_excel_member_list_logic(request):
             ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
             start_raw += 1
     else:
-        ws1.title = "완료된 회원"
-        filename_temp += '완료된_회원목록'
-        ws1['A1'] = '완료된 회원정보'
+        ws1.title = "종료된 회원"
+        filename_temp += '종료된_회원목록'
+        ws1['A1'] = '종료된 회원정보'
         ws1['A1'].font = Font(bold=True, size=15)
         for member_info in member_finish_list:
             ws1['A'+str(start_raw)] = member_info.name
