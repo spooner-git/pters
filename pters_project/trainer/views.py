@@ -3820,7 +3820,7 @@ def export_excel_member_info_logic(request):
                 ws1['D2'] = '남은횟수'
                 ws1['E2'] = '등록금액'
                 ws1['F2'] = '진행상태'
-                ws1['G2'] = '연결상태'
+                ws1['G2'] = '회원님과 연결상태'
                 ws1['H2'] = '특이사항'
 
                 ws1['A5'] = '수강 이력'
