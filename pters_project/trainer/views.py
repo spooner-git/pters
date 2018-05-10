@@ -3737,10 +3737,19 @@ def export_excel_member_list_logic(request):
                 ws1['F'+str(start_raw)] = member_info.end_date
             ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
             start_raw += 1
+
+    user_agent = request.META['HTTP_USER_AGENT']
     filename_temp += '.xlsx'
     filename = filename_temp.encode('utf-8')
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
+    if 'chrome' in str(user_agent) or 'Chrome' in str(user_agent):
+        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
+    elif 'safari' in str(user_agent) or 'Safari' in str(user_agent):
+        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
+    elif 'firefox' in str(user_agent) or 'Firefox' in str(user_agent):
+        response['Content-Disposition'] = 'attachment; filename*="'+urllib.parse.quote(filename)+'"'
+    else:
+        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
 
     # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
@@ -3902,11 +3911,18 @@ def export_excel_member_info_logic(request):
                         schedule_idx -= 1
 
                 ws1 = wb.create_sheet()
-
+    user_agent = request.META['HTTP_USER_AGENT']
     filename = str(member_info.name+'_회원님_수강정보.xlsx').encode('utf-8')
     # test_str = urllib.parse.unquote('한글')
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
+    if 'chrome' in str(user_agent) or 'Chrome' in str(user_agent):
+        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
+    elif 'safari' in str(user_agent) or 'Safari' in str(user_agent):
+        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
+    elif 'firefox' in str(user_agent) or 'Firefox' in str(user_agent):
+        response['Content-Disposition'] = 'attachment; filename*="'+urllib.parse.quote(filename)+'"'
+    else:
+        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
     # filename="'+test_str+'.xlsx"'
     # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
