@@ -3873,7 +3873,7 @@ def export_excel_member_info_logic(request):
                         schedule_idx -= 1
 
                 ws1 = wb.create_sheet()
-    filename = '테스트.xlsx'.encode('utf-8')
+    filename = 'member_info.xlsx'.encode('utf-8')
     # test_str = urllib.parse.unquote('한글')
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename*=UTF-8'+urllib.parse.quote(filename)
