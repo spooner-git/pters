@@ -103,4 +103,6 @@ urlpatterns = [
     url(r'^read_push_alarm/$', views.AlarmPushView.as_view(), name='read_push_alarm'),
 
     url(r'^get_off_repeat_schedule_ajax/$', views.GetOffRepeatScheduleDataViewAjax.as_view(), name='get_off_repeat_schedule_ajax'),
+
+    url(r'^export_excel_schedule_list/$', views.export_excel_schedule_list_logic, name='export_excel_schedule_list'),
 ]

@@ -90,10 +90,13 @@ $(document).ready(function(){
         e.stopPropagation()
         var memberID = $(this).parent('td').siblings('.id').text()
         var dbID = $(this).parent('td').siblings('.id').attr('data-dbid')
+
+        location.href="/trainer/export_excel_schedule_list/?member_id="+dbID
+        /*
         $.ajax({
-            url:'',
+            url:'/trainer/export_excel_schedule_list/',
             type:'POST',
-            data: {'id':dbID},
+            data: {'member_id':dbID},
             dataType : 'html',
 
             beforeSend:function(){
@@ -107,14 +110,14 @@ $(document).ready(function(){
 
             //통신성공시 처리
             success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show();
-                    $('#errorMessageText').text(jsondata.messageArray);
-                }else{
+                //var jsondata = JSON.parse(data);
+                //if(jsondata.messageArray.length>0){
+                //    $('#errorMessageBar').show();
+                //    $('#errorMessageText').text(jsondata.messageArray);
+                //}else{
                     alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
-                }
-                
+                //}
+
             },
 
             //통신 실패시 처리
@@ -123,6 +126,7 @@ $(document).ready(function(){
                 $('#errorMessageText').text('서버 요청 실패');
             },
         });
+        */
     })
 
     //PC 회원 이력 엑셀 다운로드 버튼 (회원정보창에서)
@@ -132,7 +136,7 @@ $(document).ready(function(){
         $.ajax({
             url:'',
             type:'POST',
-            data: {'id':dbID},
+            data: {'member_id':dbID},
             dataType : 'html',
 
             beforeSend:function(){
@@ -165,14 +169,15 @@ $(document).ready(function(){
 
     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 진행중 멤버)
     $(document).on('click','#currentMemberList ._info_download',function(){
+        var dbID = $('#memberInfoPopup_PC').attr('data-dbid')
         $.ajax({
-            url:'',
+            url:'/trainer/export_excel_schedule_list/',
             type:'POST',
-            data: {'id':dbID},
-            dataType : 'html',
+            data: {'member_id':dbID},
 
             beforeSend:function(){
                 beforeSend();
+                console.log('test')
             },
 
             //보내기후 팝업창 닫기
@@ -182,13 +187,9 @@ $(document).ready(function(){
 
             //통신성공시 처리
             success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show();
-                    $('#errorMessageText').text(jsondata.messageArray);
-                }else{
-                    alert('진행중인 회원 리스트 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
-                }
+                console.log('test2')
+                alert('진행중인 회원 리스트 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+
             },
 
             //통신 실패시 처리
@@ -202,9 +203,9 @@ $(document).ready(function(){
     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 종료된 멤버)
     $(document).on('click','#finishedMemberList ._info_download',function(){
         $.ajax({
-            url:'',
+            url:'ex',
             type:'POST',
-            data: {'id':dbID},
+            data: {'member_id':dbID},
             dataType : 'html',
 
             beforeSend:function(){

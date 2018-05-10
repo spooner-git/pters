@@ -3,6 +3,7 @@ import copy
 import datetime
 
 import logging
+from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -20,6 +22,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin, RedirectView
 from el_pagination.views import AjaxListView
+from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
 
 from center.models import CenterTrainerTb
 from configs import settings
@@ -3460,3 +3464,96 @@ class GetOffRepeatScheduleDataViewAjax(LoginRequiredMixin, AccessTestMixin, Temp
 
         return context
 
+
+@csrf_exempt
+def export_excel_schedule_list_logic(request):
+
+    lecture_id = request.POST.get('lecture_id', '')
+    member_name = request.POST.get('member_name', '')
+    class_id = request.session.get('class_id', '')
+    member_id = request.GET.get('member_id', '')
+    next_page = request.POST.get('next_page', '')
+
+    error = None
+    class_data = None
+    lecture_counts = 0
+    np_lecture_counts = 0
+
+    if class_id is None or class_id == '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if member_id is None or member_id == '':
+        error = '회원 정보를 불러오지 못했습니다.'
+    if error is None:
+        try:
+            class_data = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_data.trainer_info = MemberTb.objects.get(member_id=class_data.member_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.subject_cd)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+    if error is None:
+        '''
+        lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
+                                                     lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
+
+        for lecture_info_data in lecture_data:
+            lecture_info = lecture_info_data.lecture_tb
+            lecture_info.start_date = str(lecture_info.start_date)
+            lecture_info.end_date = str(lecture_info.end_date)
+            lecture_info.mod_dt = str(lecture_info.mod_dt)
+            lecture_info.reg_dt = str(lecture_info.reg_dt)
+            try:
+                lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+            try:
+                lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+
+            lecture_info.auth_cd = lecture_test.auth_cd
+
+            try:
+                lecture_info.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.auth_cd)
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+
+            if lecture_info.auth_cd == 'WAIT':
+                np_lecture_counts += 1
+            lecture_counts += 1
+
+            # for line in lecture_info.note:
+
+            #    if line in ['\n', '\r\n']:
+            #        line
+            #        print('empty line')
+
+            if '\r\n' in lecture_info.note:
+                lecture_info.note = lecture_info.note.replace('\r\n', ' ')
+        '''
+    wb = Workbook()
+    ws1 = wb.active
+    ws1.title = "Sheet1_test"
+    ws1["A1"] = "Hello Excel"
+    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="foo.xlsx"'
+
+    # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
+
+    if error is None:
+
+        return response
+    else:
+
+        return response
