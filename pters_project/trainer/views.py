@@ -3478,6 +3478,7 @@ def export_excel_member_list_logic(request):
     member_id = None
     member_list = []
     member_finish_list = []
+    filename_temp = ''
     # 강사 정보 가져오기
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
@@ -3687,8 +3688,6 @@ def export_excel_member_list_logic(request):
     ws1 = wb.active
     start_raw = 3
 
-    ws1['A1'] = '회원정보'
-    ws1['A1'].font = Font(bold=True, size=15)
     ws1['A2'] = '회원명'
     ws1['B2'] = '회원 ID'
     ws1['C2'] = '등록 횟수'
@@ -3696,9 +3695,19 @@ def export_excel_member_list_logic(request):
     ws1['E2'] = '시작 일자'
     ws1['F2'] = '종료 일자'
     ws1['G2'] = '연락처'
-
+    ws1.column_dimensions['A'].width = 10
+    ws1.column_dimensions['B'].width = 20
+    ws1.column_dimensions['C'].width = 10
+    ws1.column_dimensions['D'].width = 10
+    ws1.column_dimensions['E'].width = 15
+    ws1.column_dimensions['F'].width = 15
+    ws1.column_dimensions['G'].width = 20
+    filename_temp = request.user.last_name+request.user.first_name+'님_'
     if finish_flag == '0':
+        filename_temp += '진행중_회원목록'
         ws1.title = "진행중 회원"
+        ws1['A1'] = '진행중 회원정보'
+        ws1['A1'].font = Font(bold=True, size=15)
         for member_info in member_list:
             ws1['A'+str(start_raw)] = member_info.name
             ws1['B'+str(start_raw)] = member_info.user.username
@@ -3709,10 +3718,13 @@ def export_excel_member_list_logic(request):
                 ws1['F' + str(start_raw)] = '소진시까지'
             else:
                 ws1['F'+str(start_raw)] = member_info.end_date
-            ws1['G'+str(start_raw)] = member_info.phone
+            ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
             start_raw += 1
     else:
         ws1.title = "완료된 회원"
+        filename_temp += '완료된_회원목록'
+        ws1['A1'] = '완료된 회원정보'
+        ws1['A1'].font = Font(bold=True, size=15)
         for member_info in member_finish_list:
             ws1['A'+str(start_raw)] = member_info.name
             ws1['B'+str(start_raw)] = member_info.user.username
@@ -3723,11 +3735,12 @@ def export_excel_member_list_logic(request):
                 ws1['F' + str(start_raw)] = '소진시까지'
             else:
                 ws1['F'+str(start_raw)] = member_info.end_date
-            ws1['G'+str(start_raw)] = member_info.phone
+            ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
             start_raw += 1
-
+    filename_temp += '.xlsx'
+    filename = filename_temp.encode('utf-8')
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="member_list.xlsx"'
+    response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
 
     # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
@@ -3748,6 +3761,7 @@ def export_excel_member_info_logic(request):
 
     error = None
     class_info = None
+    member_info = None
     lecture_counts = 0
     np_lecture_counts = 0
 
@@ -3764,6 +3778,12 @@ def export_excel_member_info_logic(request):
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
         error = '강좌 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
 
     # 수강 정보 불러 오기
     if error is None:
@@ -3801,6 +3821,15 @@ def export_excel_member_info_logic(request):
                 ws1['C6'] = '진행시간'
                 ws1['D6'] = '구분'
                 ws1['E6'] = '메모'
+
+                ws1.column_dimensions['A'].width = 15
+                ws1.column_dimensions['B'].width = 20
+                ws1.column_dimensions['C'].width = 10
+                ws1.column_dimensions['D'].width = 10
+                ws1.column_dimensions['E'].width = 20
+                ws1.column_dimensions['F'].width = 10
+                ws1.column_dimensions['G'].width = 10
+                ws1.column_dimensions['H'].width = 20
 
                 try:
                     lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
@@ -3873,10 +3902,11 @@ def export_excel_member_info_logic(request):
                         schedule_idx -= 1
 
                 ws1 = wb.create_sheet()
-    filename = 'member_info.xlsx'.encode('utf-8')
+
+    filename = str(member_info.name+'_회원님_수강정보.xlsx').encode('utf-8')
     # test_str = urllib.parse.unquote('한글')
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename*=UTF-8'+urllib.parse.quote(filename)
+    response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
     # filename="'+test_str+'.xlsx"'
     # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
