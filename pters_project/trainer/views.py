@@ -521,7 +521,7 @@ def get_member_data(context, class_id, member_id, user_id):
                         member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
                         member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
                         member_data.lecture_id = lecture_info.lecture_id
-                if member_data.reg_info is None or member_data.reg_info != user_id:
+                if member_data.reg_info is None or str(member_data.reg_info) != str(user_id):
                     if lecture_count == 0:
                         member_data.sex = ''
                         member_data.birthday_dt = ''
@@ -607,7 +607,7 @@ def get_member_data(context, class_id, member_id, user_id):
                         member_data_finish.lecture_avail_count_total += lecture_info.lecture_avail_count
                         member_data_finish.lecture_id = lecture_info.lecture_id
 
-                if member_data_finish.reg_info is None or member_data_finish.reg_info != user_id:
+                if member_data_finish.reg_info is None or str(member_data_finish.reg_info) != str(user_id):
                     if lecture_finish_count == 0:
                         member_data_finish.sex = ''
                         member_data_finish.birthday_dt = ''
@@ -3582,7 +3582,7 @@ def export_excel_member_list_logic(request):
                         member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
                         member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
                         member_data.lecture_id = lecture_info.lecture_id
-                if member_data.reg_info is None or member_data.reg_info != request.user.id:
+                if member_data.reg_info is None or str(member_data.reg_info) != str(request.user.id):
                     if lecture_count == 0:
                         member_data.sex = ''
                         member_data.birthday_dt = ''
@@ -3668,7 +3668,7 @@ def export_excel_member_list_logic(request):
                         member_data_finish.lecture_avail_count_total += lecture_info.lecture_avail_count
                         member_data_finish.lecture_id = lecture_info.lecture_id
 
-                if member_data_finish.reg_info is None or member_data_finish.reg_info != request.user.id:
+                if member_data_finish.reg_info is None or str(member_data_finish.reg_info) != str(request.user.id):
                     if lecture_finish_count == 0:
                         member_data_finish.sex = ''
                         member_data_finish.birthday_dt = ''
