@@ -21,6 +21,9 @@ const messaging = firebase.messaging();
 var check_reg_val = 0;
 var filter = "win16|win32|win64|mac|macintel";
 var platform_check;
+var browser_check;
+var agent = navigator.userAgent.toLowerCase();
+console.log(agent)
 if ( navigator.platform ) {
     if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
         //mobile
@@ -30,6 +33,16 @@ if ( navigator.platform ) {
         //pc
         platform_check = 'pc'
     }
+}
+
+if (agent.indexOf("safari") != -1) {
+    browser_check = 'safari'
+}
+if (agent.indexOf("chrome") != -1) {
+    browser_check = 'chrome'
+}
+if (agent.indexOf("firefox") != -1) {
+    browser_check = 'firefox'
 }
 
 function registrationServiceWorker(){
@@ -83,7 +96,7 @@ function registrationServiceWorker(){
    // $('.request-btn').click(function () {
     //   console.log(Push.Permission.get());
 
-if(check_reg_val == 0 && platform_check=='pc'){
+if(check_reg_val == 0 && platform_check=='pc' && browser_check != 'safari'){
     registrationServiceWorker();
 }
  function showToken(currentToken) {

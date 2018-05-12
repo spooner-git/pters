@@ -9,6 +9,31 @@ $(document).ready(function(){
     //#####################페이지 들어오면 초기 시작 함수//#####################
     */
 
+var filter = "win16|win32|win64|mac|macintel";
+var platform_check;
+var browser_check;
+var agent = navigator.userAgent.toLowerCase();
+if ( navigator.platform ) {
+    if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
+        //mobile
+        platform_check = 'mobile'
+    }
+    else {
+        //pc
+        platform_check = 'pc'
+    }
+}
+
+if (agent.indexOf("safari") != -1) {
+    browser_check = 'safari'
+}
+if (agent.indexOf("chrome") != -1) {
+    browser_check = 'chrome'
+}
+if (agent.indexOf("firefox") != -1) {
+    browser_check = 'firefox'
+}
+
     $(".btn-group > .btn").click(function(){
  		$(this).addClass("active").siblings().removeClass("active");
 	});
@@ -85,7 +110,189 @@ $(document).ready(function(){
         shade_index(100)
     });
 
-    //PC 회원삭제버튼
+    //PC 회원 이력 엑셀 다운로드 버튼 (회원목록에서)
+    $(document).on('click','img._info_download',function(e){
+        e.stopPropagation()
+        var memberID = $(this).parent('td').siblings('.id').text()
+        var dbID = $(this).parent('td').siblings('._id').attr('data-dbid')
+        if(platform_check == 'mobile'){
+            alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.')
+        }else{
+            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+            location.href="/trainer/export_excel_member_info/?member_id="+dbID
+        }
+        /*
+        $.ajax({
+            url:'/trainer/export_excel_schedule_list/',
+            type:'POST',
+            data: {'member_id':dbID},
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                //var jsondata = JSON.parse(data);
+                //if(jsondata.messageArray.length>0){
+                //    $('#errorMessageBar').show();
+                //    $('#errorMessageText').text(jsondata.messageArray);
+                //}else{
+                    alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+                //}
+
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('서버 요청 실패');
+            },
+        });
+        */
+    })
+
+    //PC 회원 이력 엑셀 다운로드 버튼 (회원정보창에서)
+    $(document).on('click','button._info_download',function(){
+        var memberID = $('#memberInfoPopup_PC').attr('data-userid')
+        var dbID = $('#memberInfoPopup_PC').attr('data-dbid')
+        if(platform_check == 'mobile'){
+            alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.')
+        }else {
+            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+            location.href = "/trainer/export_excel_member_info/?member_id=" + dbID
+        }
+        /*
+        $.ajax({
+            url:'',
+            type:'POST',
+            data: {'member_id':dbID},
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('서버 요청 실패');
+            },
+        });
+        */
+    })
+
+    //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 진행중 멤버)
+    $(document).on('click','#currentMemberList div._info_download',function(){
+
+        if(platform_check == 'mobile'){
+            alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.')
+        }else {
+            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+            location.href = "/trainer/export_excel_member_list/?finish_flag=0"
+        }
+        /*
+        $.ajax({
+            url:'/trainer/export_excel_schedule_list/',
+            type:'POST',
+            data: {'member_id':dbID},
+
+            beforeSend:function(){
+                beforeSend();
+                console.log('test')
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                console.log('test2')
+                alert('진행중인 회원 리스트 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('서버 요청 실패');
+            },
+        });
+        */
+    })
+
+    //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 종료된 멤버)
+    $(document).on('click','#finishedMemberList div._info_download',function(){
+
+        if(platform_check == 'mobile'){
+            alert('엑셀 다운로드는 PC에서만 사용 가능합니다.')
+        }else {
+            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+            location.href = "/trainer/export_excel_member_list/?finish_flag=1"
+        }
+        /*
+        $.ajax({
+            url:'ex',
+            type:'POST',
+            data: {'member_id':dbID},
+            dataType : 'html',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    alert('종료된 회원 리스트 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('서버 요청 실패');
+            },
+        });
+        */
+    })
+
+
+
+    //PC 회원삭제버튼 (회원목록에서)
     $(document).on('click','img._info_delete',function(e){
         e.stopPropagation();
         deleteTypeSelect = "memberinfodelete";
@@ -114,7 +321,7 @@ $(document).ready(function(){
         $('#shade3').fadeIn('fast');
     })
 
-    //PC 회원삭제버튼
+    //PC 회원삭제버튼 (회원정보창에서)
     $(document).on('click','button._info_delete',function(){
       //$('.confirmPopup').fadeIn('fast');
       deleteTypeSelect = "memberinfodelete";
@@ -431,9 +638,6 @@ $(document).ready(function(){
           $btn.find('img').css({'display':'none'});
     });
 
-    $('body').click(function(){
-        console.log(deleteTypeSelect)
-    })
     
     $('#popup_delete_btn_yes').click(function(){
         //if($('#calendar').length==0){
@@ -1530,7 +1734,9 @@ function memberListSet (type,option,Reverse){
         var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
         var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
         var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">';
-        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="Del">';
+        var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드">';
+        var pcprintimage = '<img src="/static/user/res/member/pters-print.png" class="pcmanageicon _info_print" title="프린트">';
+        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">';
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
@@ -1543,7 +1749,7 @@ function memberListSet (type,option,Reverse){
         var startdatetd = '<td class="_startdate">'+start+'</td>';
         var enddatetd = '<td class="_finday">'+end+'</td>';
         var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>';
-        var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdeleteimage+'</td>';
+        var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
         var scrolltd = '<td class="forscroll"></td>';
 
         var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
@@ -1732,7 +1938,7 @@ function open_member_info_popup_pc(userID,jsondata){
         var Data = DBe;
     }
 
-    $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':Data[userID].name,'data-userid':userID});
+    $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':Data[userID].name,'data-userid':userID,'data-dbid':Data[userID].dbId});
     $('#shade').fadeIn('fast');
 
     var npCountImg = "";
@@ -2735,17 +2941,25 @@ function draw_member_history_list_table(jsondata,targetHTML,option){
         var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2])
         var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60
         var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60
-        if( endDate == startDate+1 && endTime==0){
+        
+        if(endDate == startDate+1 && endTime==0){
+            var duration = 24 - startTime
+        }else if(endTime==0 && endDate == 1){
             var duration = 24 - startTime
         }else{
             var duration = endTime - startTime
         }
+
         var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleIdxArray[i]+'</div>'
         var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleStartDtArray[i].split(' ')[0]+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
         var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration+text9+'</div>'
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
-        result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleNo+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
+        if(jsondata.ptScheduleIdxArray[i] == "1" && i!=0){
+            result_history_html.push('<div style="border-bottom:1px solid #cccccc;" data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleNo+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
+        }else{
+            result_history_html.push('<div data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleNo+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
+        }
     }
 
     var result_history = result_history_html.join('')
