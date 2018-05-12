@@ -1454,7 +1454,7 @@ def delete_member_info_logic(request):
                             member_lecture_list.delete()
 
                     class_lecture_data.delete()
-                    if member.reg_info == str(request.user.id):
+                    if str(member.reg_info) == str(request.user.id):
                         member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
                         if len(member_lecture_list_confirm) == 0:
                             member.delete()
