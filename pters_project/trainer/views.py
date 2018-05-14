@@ -1275,36 +1275,40 @@ def update_member_info_logic(request):
     input_phone = ''
     input_sex = ''
     input_birthday_dt = ''
+    if error is None:
+        if user.is_active:
+            error = '회원 정보를 수정할수 없습니다.'
 
-    if first_name is None or first_name == '':
-        input_first_name = user.first_name
-    else:
-        input_first_name = first_name
-
-    if last_name is None or last_name == '':
-        input_last_name = user.last_name
-    else:
-        input_last_name = last_name
-
-    if sex is None or sex == '':
-        input_sex = member.sex
-    else:
-        input_sex = sex
-
-    if birthday_dt is None or birthday_dt == '':
-        input_birthday_dt = member.birthday_dt
-    else:
-        input_birthday_dt = birthday_dt
-
-    if phone is None or phone == '':
-        input_phone = member.phone
-    else:
-        if len(phone) != 11 and len(phone) != 10:
-            error = '연락처를 확인해 주세요.'
-        elif not phone.isdigit():
-            error = '연락처를 확인해 주세요.'
+    if error is None:
+        if first_name is None or first_name == '':
+            input_first_name = user.first_name
         else:
-            input_phone = phone
+            input_first_name = first_name
+
+        if last_name is None or last_name == '':
+            input_last_name = user.last_name
+        else:
+            input_last_name = last_name
+
+        if sex is None or sex == '':
+            input_sex = member.sex
+        else:
+            input_sex = sex
+
+        if birthday_dt is None or birthday_dt == '':
+            input_birthday_dt = member.birthday_dt
+        else:
+            input_birthday_dt = birthday_dt
+
+        if phone is None or phone == '':
+            input_phone = member.phone
+        else:
+            if len(phone) != 11 and len(phone) != 10:
+                error = '연락처를 확인해 주세요.'
+            elif not phone.isdigit():
+                error = '연락처를 확인해 주세요.'
+            else:
+                input_phone = phone
 
     if error is None:
         try:
