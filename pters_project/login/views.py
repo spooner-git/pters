@@ -503,30 +503,25 @@ class AddMemberNoEmailView(View):
         # contents = request.POST.get('contents', '')
 
         error = None
-
-        if User.objects.filter(username=phone).exists():
-            error = '이미 가입된 회원 입니다.'
-        # elif User.objects.filter(email=email).exists():
-        #    error = '이미 가입된 회원 입니다.'
-        elif name == '':
+        if name == '':
             error = '이름을 입력해 주세요.'
-        elif phone == '':
-            error = '연락처를 입력해 주세요.'
-        elif len(phone) != 11 and len(phone) != 10:
-            error = '연락처를 확인해 주세요.'
-        elif not phone.isdigit():
-            error = '연락처를 확인해 주세요.'
+        else:
+            name = name.replace(' ', '')
 
         if error is None:
-            if len(phone) == 11:
-                password = phone[7:]
-            elif len(phone) == 10:
-                password = phone[6:]
+            username = name
+            password = '0000'
+        if error is None:
+            count = MemberTb.objects.filter(name=username).count()
+            if count != 0:
+                username += str(count+1)
+        # elif User.objects.filter(email=email).exists():
+        #    error = '이미 가입된 회원 입니다.'
 
         if error is None:
             try:
                 with transaction.atomic():
-                    user = User.objects.create_user(username=phone, first_name=first_name, last_name=last_name, password=password, is_active=0)
+                    user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password, is_active=0)
                     group = Group.objects.get(name='trainee')
                     user.groups.add(group)
                     if birthday_dt == '':
