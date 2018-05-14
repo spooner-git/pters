@@ -427,6 +427,7 @@ select:focus > option:checked {
 }
 
 	#mobile_basic_info{
+		position: relative;
 		background: #ffffff;
 		width: 97%;
 		border:1px solid #cccccc;
@@ -606,11 +607,19 @@ select:focus > option:checked {
 		width: 17px;
 		margin:0 5px 5px 0;
 	}
-	.infopopup_pc > label img:nth-child(2){
+	.infopopup_pc > label img:nth-child(3){
 		width: 15px;
 		float: right;
 		margin-top: 5px;
 		cursor: pointer;
+	}
+	#memberName_info_PC{
+		border:0;
+		background: #ffffff;
+		width: auto;
+		max-width: 300px;
+		text-align: left;
+		padding-left:10px;
 	}
 		.member_info_PC_wrap{
 			display: inline-block;
@@ -632,16 +641,23 @@ select:focus > option:checked {
 				font-weight: 500;
 				margin-bottom: 0px;
 			}
-			#memberBirth_Year_info_PC{
-				/*width: 29%;*/
-			
-				width: 100%;
+			#memberBirth_select_wrap{
+				display: inline-block;
+				width: 275px;
+			}
+			#memberBirth_select_wrap select{
+				-webkit-appearance:none;
+				-moz-appearance:none;
+				appearance:none;
+				border-color:#ffffff;
+				padding-left: 15px;
+			}
+			#memberBirth_Year_info_PC{		
+				width: 35%;
 			}
 			#memberBirth_Month_info_PC,#memberBirth_Date_info_PC{
-				width: 20%;
+				width: 25%;
 				margin-left: 1px;
-
-				display: none;
 			}
 			.member_info_PC_wrap input, .member_info_PC_wrap> span, .member_info_PC_wrap > div{
 				display: inline-block;
@@ -975,9 +991,18 @@ select:focus > option:checked {
 }
 
 #info_shift_base{
+	position: relative;
 	padding-top: 10px;
 	margin-bottom: 10px;
 }
+	.member_info_tool{
+		position: absolute;
+		width: 30%;
+		height: 30px;
+		text-align: right;
+		right: 0;
+		bottom: 0;
+	}
 
 
 /*-----------------PC 회원정보 팝업-----------------------*/
