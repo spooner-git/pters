@@ -104,6 +104,9 @@ urlpatterns = [
 
     url(r'^get_off_repeat_schedule_ajax/$', views.GetOffRepeatScheduleDataViewAjax.as_view(), name='get_off_repeat_schedule_ajax'),
 
+    # 엑셀 export/import 기능
     url(r'^export_excel_member_list/$', views.export_excel_member_list_logic, name='export_excel_member_list'),
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
+    url(r'^import_excel_member_list/$', views.import_excel_member_list_logic, name='import_excel_member_list'),
+    url(r'^import_excel_member_info/$', views.import_excel_member_info_logic, name='import_excel_member_info'),
 ]
