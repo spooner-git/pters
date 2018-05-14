@@ -1022,6 +1022,7 @@ if (agent.indexOf("firefox") != -1) {
 
 function send_modified_member_base_data(){
 	var $form = $('#member-add-form-modify');
+	console.log($form.serialize())
 	$.ajax({
         url:'/trainer/update_member_info/',
         type:'POST',
@@ -1929,7 +1930,7 @@ function open_member_info_popup_pc(userID,jsondata){
     //$('#memberBirth_Year_info_PC').text(birth_year)
     //$('#memberBirth_Month_info_PC').text(birth_month)
     //$('#memberBirth_Date_info_PC').text(birth_date)
-    var yearoption = [];
+    var yearoption = ['<option selected disabled hidden>'+'연도'+'</option>'];
     for(var i=2018; i>=1908; i--){
         yearoption.push('<option data-year="'+i+'년'+'">'+i+'년'+'</option>');
     }
@@ -1937,7 +1938,7 @@ function open_member_info_popup_pc(userID,jsondata){
     $('#memberBirth_Year_info_PC').html(birth_year_options);
 
 
-    var monthoption = [];
+    var monthoption = ['<option selected disabled hidden>'+'월'+'</option>'];
     for(var i=1; i<=12; i++){
         monthoption.push('<option data-month="'+i+'월'+'">'+i+'월'+'</option>');
     }
@@ -1945,16 +1946,20 @@ function open_member_info_popup_pc(userID,jsondata){
     $('#memberBirth_Month_info_PC').html(birth_month_options);
 
 
-    var dateoption = [];
+    var dateoption = ['<option selected disabled hidden>'+'일'+'</option>'];
     for(var i=1; i<=31; i++){
         dateoption.push('<option data-date="'+i+'일'+'">'+i+'일'+'</option>');
     }
     var birth_date_options = dateoption.join('');
     $('#memberBirth_Date_info_PC').html(birth_date_options);
+    if(birth_year != '-'){
+    	$('#memberBirth_Year_info_PC option[data-year="'+birth_year+'"]').prop('selected',true)
+    	$('#memberBirth_Month_info_PC option[data-month="'+birth_month+'"]').prop('selected',true)
+    	$('#memberBirth_Date_info_PC option[data-date="'+birth_date+'"]').prop('selected',true)
+    }else{
 
-    $('#memberBirth_Year_info_PC option[data-year="'+birth_year+'"]').prop('selected',true)
-    $('#memberBirth_Month_info_PC option[data-year="'+birth_month+'"]').prop('selected',true)
-    $('#memberBirth_Date_info_PC option[data-year="'+birth_date+'"]').prop('selected',true)
+    }
+    
 
 
     if(Data[userID].birth != 'None' && Data[userID].birth != '' ){
@@ -2701,8 +2706,6 @@ function draw_member_lecture_list_table(jsondata, targetHTML, option){
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
     }
-    
-
 }
 
 function set_member_history_list(jsondata){
