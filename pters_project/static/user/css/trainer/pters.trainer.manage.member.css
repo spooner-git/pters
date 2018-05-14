@@ -465,6 +465,17 @@ select:focus > option:checked {
 			border-radius: 0;
 			text-align-last: center;
 		}
+
+		#memberName_info{
+
+		}
+		#memberName_info_lastName, #memberName_info_firstName{
+			display: none;
+			width: 35%;
+			background: #ffffff;
+		}
+
+
 		#memberSex_info{
 			position: absolute;
 			display: inline-block;
@@ -626,7 +637,7 @@ select:focus > option:checked {
 		width: 17px;
 		margin:0 5px 5px 5px;
 	}
-	.infopopup_pc > label img:nth-child(3){
+	.infopopup_pc > label > img{
 		width: 15px;
 		float: right;
 		margin-top: 5px;
@@ -640,6 +651,13 @@ select:focus > option:checked {
 		text-align: left;
 		padding-left:10px;
 	}
+	#memberName_info_lastName_PC, #memberName_info_firstName_PC{
+		width: 100px;
+		background: #ffffff;
+		display: none;
+	}
+
+
 		.member_info_PC_wrap{
 			display: inline-block;
 			width: 47%;

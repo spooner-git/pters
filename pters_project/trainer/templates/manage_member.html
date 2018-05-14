@@ -68,6 +68,8 @@
     <input type="hidden" name="sex" id="form_sex_modify">
     <input type="hidden" name="birthday" id="form_birth_modify">
     <input type="hidden" name="name" id="form_name_modify">
+    <input type="hidden" name="first_name" id="form_firstname_modify">
+    <input type="hidden" name="last_name" id="form_lastname_modify">
     <input type="hidden" name="phone" id="form_phone_modify">
     <input type="hidden" name="member_id" id="form_dbid_modify">
 </form>
@@ -386,6 +388,8 @@
                 </label>
                 <div class="mobileinfo">
                     <input type="text" class="mobileinfo_input" id="memberName_info" name="name" disabled>
+                    <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled>
+                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" disabled>
                     <div id="memberSex_info">
                         <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
                         <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
@@ -523,7 +527,9 @@
             <div id="memberMale_info_PC" class="selectboxopt selectboxopt_left selectbox_disable" value="M"><img src="/static/user/res/member/icon-male-blue.png" style="margin-top: 2px;"></div>
             <div id="memberFemale_info_PC" class="selectboxopt selectboxopt_right selectbox_disable" value="W"><img src="/static/user/res/member/icon-female-pink.png"></div>
         </div>
-        <input id="memberName_info_PC">
+        <input type="" name="" id="memberName_info_PC">
+        <input type="" name="" id="memberName_info_lastName_PC" maxlength="4">
+        <input type="" name="" id="memberName_info_firstName_PC" maxlength="4">
         <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('member_info_PC')">
     </label>
 
