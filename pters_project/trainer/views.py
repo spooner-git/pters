@@ -31,7 +31,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 from center.models import CenterTrainerTb
 from configs import settings
 from configs.views import AccessTestMixin
-from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
+from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb, BoardTb
 from schedule.views import get_trainer_schedule_data_func
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb
 from schedule.models import ClassTb
@@ -4231,5 +4231,14 @@ class GetNoticeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(GetNoticeInfoView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
+
+        board_list = BoardTb.objects.filter(board_type_cd='NOTICE', to_member_type_cd='ALL', use=1).order_by('mod_dt')
+        board_list |= BoardTb.objects.filter(board_type_cd='NOTICE', to_member_type_cd='TRAINEE', use=1).order_by('mod_dt')
+        board_list.order_by('mod_dt')
+        for board_info in board_list:
+            board_info.hits += 1
+            board_info.save()
+
+        context['board_list'] = board_list
 
         return context
