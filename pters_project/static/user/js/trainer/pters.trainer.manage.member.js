@@ -195,24 +195,36 @@ if (agent.indexOf("firefox") != -1) {
 
     modify_member_base_info_eventGroup()
     function modify_member_base_info_eventGroup(){
-    	/*
-    	$('#memberName_info, #memberName_info_PC').keyup(function(){
-	        $('#form_name_modify').val($(this).val())
-	    })
-	    */
+    	if(varUA.match('firefox')){
+    		console.log('fireeeeee')
+	        $('#memberName_info_lastName_PC, #memberName_info_lastName').bind('keydown',function(e){
+	        	var keyCode = e.which || e.keyCode;
+	            if(keyCode === 13 || keyCode === 9){
+	            	$('#form_lastname_modify').val($(this).val())
+	            }
+		    })
 
-	    $('#memberName_info_lastName_PC, #memberName_info_lastName').keyup(function(){
-	    	$('#form_lastname_modify').val($(this).val())
-	    })
+		    $('#memberName_info_firstName_PC, #memberName_info_firstName').bind('keydown',function(e){
+		    	var keyCode = e.which || e.keyCode;
+	            if(keyCode === 13 || keyCode === 9){
+	                $('#form_firstname_modify').val($(this).val())
+	            }
+		    })
+	    }else{
+	        $('#memberName_info_lastName_PC, #memberName_info_lastName').keyup(function(){
+		    	$('#form_lastname_modify').val($(this).val())
+		    })
 
-	    $('#memberName_info_firstName_PC, #memberName_info_firstName').keyup(function(){
-	    	$('#form_firstname_modify').val($(this).val())
-	    })
+		    $('#memberName_info_firstName_PC, #memberName_info_firstName').keyup(function(){
+		    	$('#form_firstname_modify').val($(this).val())
+		    })
+	    }
 
-    	$('#memberPhone_info, #memberPhone_info_PC').keyup(function(){
+	    $('#memberPhone_info, #memberPhone_info_PC').keyup(function(){
     		$('#form_phone_modify').val($(this).val())
     	})
-    	
+    
+
     	//Mobile 버전 회원정보창 생년월입 드랍다운
     	$('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
     		var birth = $('#birth_year_info').val().replace(/년/gi,'')+'-'+$('#birth_month_info').val().replace(/월/gi,'')+'-'+$('#birth_date_info').val().replace(/일/gi,'')
@@ -774,18 +786,18 @@ if (agent.indexOf("firefox") != -1) {
             var keyCode = e.which || e.keyCode;
             if(keyCode === 13 || keyCode === 9){
                 if($(this).val().length>=1){
-                limit_char(this);
-                $(this).addClass("dropdown_selected");
-                check_dropdown_selected();
-            }else{
-                limit_char(this);
-                $(this).removeClass("dropdown_selected");
-                check_dropdown_selected();
-            }
-            $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
-            $('#add_member_form_first_name').val($('#memberFirstName_add').val());
-            $('#add_member_form_last_name').val($('#memberLastName_add').val());
-            $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+	                limit_char(this);
+	                $(this).addClass("dropdown_selected");
+	                check_dropdown_selected();
+	            }else{
+	                limit_char(this);
+	                $(this).removeClass("dropdown_selected");
+	                check_dropdown_selected();
+	            }
+	            $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+	            $('#add_member_form_first_name').val($('#memberFirstName_add').val());
+	            $('#add_member_form_last_name').val($('#memberLastName_add').val());
+	            $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
             }
         }); 
     }else{
@@ -805,6 +817,7 @@ if (agent.indexOf("firefox") != -1) {
             $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
         }); 
     }
+
     
 
     $(document).on('click','#memberSex .selectboxopt',function(){
@@ -1511,8 +1524,8 @@ function DataFormattingDict(Option){
                                         'birth':finishbirthdayArray[j], 
                                         'sex':finishsexArray[j],
                                         'activation':activationArray[j],
-                                        'firstName':firstNameArray[j],
-                                		'lastName':lastNameArray[j]
+                                        'firstName':finishFirstNameArray[j],
+                                		'lastName':finishLastNameArray[j]
                                     };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
@@ -1560,8 +1573,8 @@ function DataFormattingDict(Option){
                                     'birth':finishbirthdayArray[j], 
                                     'sex':finishsexArray[j],
                                     'activation':activationArray[j],
-                                    'firstName':firstNameArray[j],
-                                	'lastName':lastNameArray[j]
+                                    'firstName':finishFirstNameArray[j],
+                                	'lastName':finishLastNameArray[j]
                                      };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
@@ -1935,6 +1948,7 @@ function open_member_info_popup_pc(userID,jsondata){
     $('#memberName_info_lastName_PC, #form_lastname_modify').val(Data[userID].lastName)
     $('#memberName_info_firstName_PC, #form_firstname_modify').val(Data[userID].firstName)
 
+
     //var member_info_PC = '\'member_info_PC\'';
     $('#memberSex_info_PC .selectboxopt').removeClass('selectbox_checked')
     $('#memberMale_info_PC, #memberFemale_info_PC').hide()
@@ -2041,7 +2055,9 @@ function open_member_info_popup_pc(userID,jsondata){
     }
     $('#memberEnd_info_PC').text(end)
     $('#comment_info, #memberComment_info_PC').val(Data[userID].contents)
-    $('#memberInfoPopup_PC input, #memberInfoPopup_PC select').removeClass('input_available').attr('disabled',true);
+    $('#memberInfoPopup_PC input, #memberInfoPopup_PC select, #memberName_info_lastName_PC, #memberName_info_firstName_PC').removeClass('input_available').attr('disabled',true);
+    $('#memberName_info_PC').show()
+    $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide()
     //$('button._info_modify').text('수정').attr('data-type',"view")
 
     $('#memberRegHistory_info_PC img').text('수정').attr('data-type',"view")
@@ -2129,6 +2145,8 @@ function open_member_info_popup_mobile(userID,jsondata){
     }
     $('#memberInfoPopup').fadeIn('fast').attr({'data-username':Data[userID].name,'data-userid':userID});
     $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
+    $('#memberName_info').show()
+    $('#memberName_info_lastName, #memberName_info_firstName').hide()
     $('#shade3').fadeIn('fast');
     scrollToDom($('#page_managemember'));
     if($('body').width()<600){
@@ -3109,6 +3127,9 @@ function ajax_received_json_data_member_manage(data){
     rjLectureCountsArray = [];
     yetCountArray = []
     yetRegCountArray = []
+    firstNameArray = []
+    lastNameArray = []
+    activationArray = []
 
     finishDidArray = [];
     finishIdArray = [];
@@ -3125,6 +3146,9 @@ function ajax_received_json_data_member_manage(data){
     finishRjLectureCountsArray = [];
     finishYetCountArray = []
     finishYetRegCountArray = []
+    finishFirstNameArray = []
+    finishLastNameArray = []
+    finishActivationArray = []
 
     finishRegCountArray = [];
     finishAvailCountArray = [];
@@ -3152,6 +3176,9 @@ function ajax_received_json_data_member_manage(data){
     rjLectureCountsArray = jsondata.rjLectureCountsArray;
     yetCountArray = jsondata.yetCountArray
     yetRegCountArray = jsondata.yetRegCountArray
+    firstNameArray = jsondata.firstNameArray
+    lastNameArray = jsondata.lastNameArray
+    activationArray = jsondata.activationArray
 
     finishDidArray = jsondata.finishDidArray;
     finishIdArray = jsondata.finishIdArray;
@@ -3168,6 +3195,9 @@ function ajax_received_json_data_member_manage(data){
     finishRjLectureCountsArray = jsondata.finishRjLectureCountsArray;
     finishYetCountArray = jsondata.finishYetCountArray;
     finishYetRegCountArray = jsondata.finishYetRegCountArray;
+    finishFirstNameArray = jsondata.finishFirstNameArray
+    finishLastNameArray = jsondata.finishLastNameArray
+    finishActivationArray = jsondata.finishActivationArray
 
     finishRegCountArray = jsondata.finishRegCountArray;
     finishAvailCountArray = jsondata.finishAvailCountArray;
