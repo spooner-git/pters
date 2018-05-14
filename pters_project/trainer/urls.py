@@ -112,4 +112,8 @@ urlpatterns = [
     url(r'^check_import_excel_member_list/$', views.check_import_excel_member_list_logic, name='check_import_excel_member_list'),
     url(r'^check_import_excel_member_info/$', views.check_import_excel_member_info_logic, name='check_import_excel_member_info'),
 
+    # 공지사항 조회
+    url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(),name='get_off_repeat_schedule_ajax'),
+
+
 ]

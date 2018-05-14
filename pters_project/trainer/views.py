@@ -4224,3 +4224,13 @@ def check_import_excel_member_info_logic(request):
     else:
 
         return response
+
+
+class GetNoticeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'notice_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetNoticeInfoView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+
+        return context
