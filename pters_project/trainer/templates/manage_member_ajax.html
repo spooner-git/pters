@@ -7,6 +7,10 @@
     [{% for member_info in member_data %}"{{ member_info.user.email }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "nameArray" :
     [{% for member_info in member_data %}"{{ member_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "firstNameArray" :
+    [{% for member_info in member_data %}"{{ member_info.user.first_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "lastNameArray" :
+    [{% for member_info in member_data %}"{{ member_info.user.last_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "phoneArray" :
     [{% for member_info in member_data %}"{{ member_info.phone }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "birthdayArray" :
@@ -55,6 +59,10 @@
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.user.email }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "finishnameArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "finishFirstNameArray" :
+    [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.user.first_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "finishLastNameArray" :
+    [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.user.last_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "finishphoneArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.phone }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "finishbirthdayArray" :
