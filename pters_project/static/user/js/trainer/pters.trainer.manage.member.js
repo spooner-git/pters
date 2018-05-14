@@ -1511,8 +1511,8 @@ function DataFormattingDict(Option){
                                         'birth':finishbirthdayArray[j], 
                                         'sex':finishsexArray[j],
                                         'activation':activationArray[j],
-                                        'firstName':firstNameArray[j],
-                                		'lastName':lastNameArray[j]
+                                        'firstName':finishFirstNameArray[j],
+                                		'lastName':finishLastNameArray[j]
                                     };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
@@ -1560,8 +1560,8 @@ function DataFormattingDict(Option){
                                     'birth':finishbirthdayArray[j], 
                                     'sex':finishsexArray[j],
                                     'activation':activationArray[j],
-                                    'firstName':firstNameArray[j],
-                                	'lastName':lastNameArray[j]
+                                    'firstName':finishFirstNameArray[j],
+                                	'lastName':finishLastNameArray[j]
                                      };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
@@ -1935,6 +1935,7 @@ function open_member_info_popup_pc(userID,jsondata){
     $('#memberName_info_lastName_PC, #form_lastname_modify').val(Data[userID].lastName)
     $('#memberName_info_firstName_PC, #form_firstname_modify').val(Data[userID].firstName)
 
+
     //var member_info_PC = '\'member_info_PC\'';
     $('#memberSex_info_PC .selectboxopt').removeClass('selectbox_checked')
     $('#memberMale_info_PC, #memberFemale_info_PC').hide()
@@ -2041,7 +2042,9 @@ function open_member_info_popup_pc(userID,jsondata){
     }
     $('#memberEnd_info_PC').text(end)
     $('#comment_info, #memberComment_info_PC').val(Data[userID].contents)
-    $('#memberInfoPopup_PC input, #memberInfoPopup_PC select').removeClass('input_available').attr('disabled',true);
+    $('#memberInfoPopup_PC input, #memberInfoPopup_PC select, #memberName_info_lastName_PC, #memberName_info_firstName_PC').removeClass('input_available').attr('disabled',true);
+    $('#memberName_info_PC').show()
+    $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide()
     //$('button._info_modify').text('수정').attr('data-type',"view")
 
     $('#memberRegHistory_info_PC img').text('수정').attr('data-type',"view")
@@ -2129,6 +2132,8 @@ function open_member_info_popup_mobile(userID,jsondata){
     }
     $('#memberInfoPopup').fadeIn('fast').attr({'data-username':Data[userID].name,'data-userid':userID});
     $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
+    $('#memberName_info').show()
+    $('#memberName_info_lastName, #memberName_info_firstName').hide()
     $('#shade3').fadeIn('fast');
     scrollToDom($('#page_managemember'));
     if($('body').width()<600){
@@ -3109,6 +3114,9 @@ function ajax_received_json_data_member_manage(data){
     rjLectureCountsArray = [];
     yetCountArray = []
     yetRegCountArray = []
+    firstNameArray = []
+    lastNameArray = []
+    activationArray = []
 
     finishDidArray = [];
     finishIdArray = [];
@@ -3125,6 +3133,9 @@ function ajax_received_json_data_member_manage(data){
     finishRjLectureCountsArray = [];
     finishYetCountArray = []
     finishYetRegCountArray = []
+    finishFirstNameArray = []
+    finishLastNameArray = []
+    finishActivationArray = []
 
     finishRegCountArray = [];
     finishAvailCountArray = [];
@@ -3152,6 +3163,9 @@ function ajax_received_json_data_member_manage(data){
     rjLectureCountsArray = jsondata.rjLectureCountsArray;
     yetCountArray = jsondata.yetCountArray
     yetRegCountArray = jsondata.yetRegCountArray
+    firstNameArray = jsondata.firstNameArray
+    lastNameArray = jsondata.lastNameArray
+    activationArray = jsondata.activationArray
 
     finishDidArray = jsondata.finishDidArray;
     finishIdArray = jsondata.finishIdArray;
@@ -3168,6 +3182,9 @@ function ajax_received_json_data_member_manage(data){
     finishRjLectureCountsArray = jsondata.finishRjLectureCountsArray;
     finishYetCountArray = jsondata.finishYetCountArray;
     finishYetRegCountArray = jsondata.finishYetRegCountArray;
+    finishFirstNameArray = jsondata.finishFirstNameArray
+    finishLastNameArray = jsondata.finishLastNameArray
+    finishActivationArray = jsondata.finishActivationArray
 
     finishRegCountArray = jsondata.finishRegCountArray;
     finishAvailCountArray = jsondata.finishAvailCountArray;
