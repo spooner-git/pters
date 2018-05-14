@@ -1321,7 +1321,21 @@ def update_member_info_logic(request):
 
                     count = MemberTb.objects.filter(name=username).count()
                     if count != 0:
-                        username += str(count + 1)
+                        # username += str(count + 1)
+                        test = False
+                        i = count + 1
+
+                        while True:
+                            username = user.last_name + user.first_name + str(i)
+                            try:User.objects.get(username=username)
+
+                            except:
+                                test = True
+
+                            if test:
+                                break
+                            else:
+                                i += 1
 
                     user.username = username
                     user.save()
