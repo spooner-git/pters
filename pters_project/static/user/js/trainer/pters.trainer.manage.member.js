@@ -957,10 +957,14 @@ if (agent.indexOf("firefox") != -1) {
             $(this).attr('data-view','edit')
             $(this).find('img').attr('src','/static/user/res/btn-pt-complete.png')
             $('#memberPhone_info_PC, #memberBirth_select_wrap select, #memberName_info_PC').addClass('input_available').attr('disabled',false);
+            $('#memberSex_info_PC .selectboxopt').show()
+  			$('#memberSex_info_PC .selectboxopt[value="'+$('#form_sex_modify').val()+'"]').addClass('selectbox_checked')
         }else if($(this).attr('data-view') == 'edit'){
             $(this).attr('data-view','view')
             $(this).find('img').attr('src','/static/user/res/icon-pencil.png')
             $('#memberPhone_info_PC, #memberBirth_select_wrap select, #memberName_info_PC').removeClass('input_available').attr('disabled',true);
+            $('#memberSex_info_PC .selectboxopt').hide()
+            $('#memberSex_info_PC .selectbox_checked').show().removeClass('selectbox_checked')
             send_modified_member_base_data()
         }
     })
@@ -1462,7 +1466,8 @@ function DataFormattingDict(Option){
                                 'npCount':npLectureCountsArray[i],
                                 'rjCount':rjLectureCountsArray[i],
                                 'yetRegCount':yetRegCountArray[i],
-                                'yetCount':yetCountArray[i]
+                                'yetCount':yetCountArray[i],
+                                'activation':activationArray[i]
                               };
             }
             var DBendlength = finishnameArray.length;
@@ -1478,7 +1483,8 @@ function DataFormattingDict(Option){
                                         'start':finishstartArray[j],
                                         'end':finishendArray[j], 
                                         'birth':finishbirthdayArray[j], 
-                                        'sex':finishsexArray[j] 
+                                        'sex':finishsexArray[j],
+                                        'activation':activationArray[j]
                                     };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
@@ -1504,7 +1510,8 @@ function DataFormattingDict(Option){
                               'npCount':npLectureCountsArray[i],
                               'rjCount':rjLectureCountsArray[i],
                               'yetRegCount':yetRegCountArray[i],
-                              'yetCount':yetCountArray[i]
+                              'yetCount':yetCountArray[i],
+                              'activation':activationArray[i]
                             };
             }
             var DBendlength = finishIdArray.length;
@@ -1521,7 +1528,9 @@ function DataFormattingDict(Option){
                                     'start':finishstartArray[j],
                                     'end':finishendArray[j], 
                                     'birth':finishbirthdayArray[j], 
-                                    'sex':finishsexArray[j] };
+                                    'sex':finishsexArray[j],
+                                    'activation':activationArray[j]
+                                     };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
             $('#finishMemberNum').text(text2+DBendlength+text3);
@@ -1884,26 +1893,33 @@ function open_member_info_popup_pc(userID,jsondata){
     }
 
     $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':Data[userID].name,'data-userid':userID,'data-dbid':Data[userID].dbId});
+    if(Data[userID].activation == 'True'){
+    	$('button._info_baseedit').hide()
+    }else{
+    	$('button._info_baseedit').show()
+    }
+    
+    $('#memberName_info_PC').val(Data[userID].name)
 
-    var member_info_PC = '\'member_info_PC\'';
-    var nameInput = '<input id="memberName_info_PC" value="'+Data[userID].name+'">'
+    //var member_info_PC = '\'member_info_PC\'';
+    $('#memberSex_info_PC .selectboxopt').removeClass('selectbox_checked')
+    $('#memberMale_info_PC, #memberFemale_info_PC').hide()
     if(Data[userID].sex == "M"){
-      var html = '<img src="/static/user/res/member/icon-male-blue.png">'+nameInput+text+'<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="close" onclick="closePopup('+member_info_PC+')">'
-      $('#memberInfoPopup_PC_label').html(html);
+      $('#memberMale_info_PC').show()
+      $('#memberFemale_info_PC').hide()
       $('#form_sex_modify').val('M');
     }else if(Data[userID].sex == "W"){
-      var html = '<img src="/static/user/res/member/icon-female-pink.png">'+nameInput+text+'<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="close" onclick="closePopup('+member_info_PC+')">'
-      $('#memberInfoPopup_PC_label').html(html);
+      $('#memberFemale_info_PC').show()
+      $('#memberMale_info_PC').hide()
       $('#form_sex_modify').val('W');
     }else{
-      var html = '<img src="/static/user/res/member/icon-user.png">'+nameInput+text+'<img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="close" onclick="closePopup('+member_info_PC+')">'
-      $('#memberInfoPopup_PC_label').html(html);
       $('#form_sex_modify').val('');
     }
 
 
-    $(document).on('click','#memberSex_info .selectboxopt',function(){
-        if($('#upbutton-modify').attr('data-type') == "modify"){
+
+    $(document).on('click','#memberSex_info_PC .selectboxopt',function(){
+        if($('button._info_baseedit').attr('data-view') == "edit"){
             $(this).addClass('selectbox_checked');
             $(this).siblings().removeClass('selectbox_checked');
             $('#form_sex_modify').attr('value',$(this).attr('value'));
@@ -2011,6 +2027,13 @@ function open_member_info_popup_mobile(userID,jsondata){
     }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
         var Data = DBe
     }
+
+    if(Data[userID].activation == 'True'){
+    	$('#upbutton-modify').hide()
+    }else{
+    	$('#upbutton-modify').show()
+    }
+
     birth_dropdown_set()
     $('#float_btn_wrap').fadeOut();
     $('#page-base').fadeOut('fast');
