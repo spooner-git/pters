@@ -686,8 +686,10 @@ select:focus > option:checked {
 				-webkit-appearance:none;
 				-moz-appearance:none;
 				appearance:none;
-				border-color:#ffffff;
+				/*border-color:#ffffff;*/
 				padding-left: 15px;
+				background:#ffffff;
+				border:0;
 			}
 			#memberBirth_Year_info_PC{		
 				width: 35%;
@@ -1247,6 +1249,7 @@ select:focus > option:checked {
 		line-height: 33px;
 		position: relative;
 		margin-left: 10px;
+		width: 200px;
 	}
 
 	#please_add_member_pc{

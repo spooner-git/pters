@@ -195,24 +195,36 @@ if (agent.indexOf("firefox") != -1) {
 
     modify_member_base_info_eventGroup()
     function modify_member_base_info_eventGroup(){
-    	/*
-    	$('#memberName_info, #memberName_info_PC').keyup(function(){
-	        $('#form_name_modify').val($(this).val())
-	    })
-	    */
+    	if(varUA.match('firefox')){
+    		console.log('fireeeeee')
+	        $('#memberName_info_lastName_PC, #memberName_info_lastName').bind('keydown',function(e){
+	        	var keyCode = e.which || e.keyCode;
+	            if(keyCode === 13 || keyCode === 9){
+	            	$('#form_lastname_modify').val($(this).val())
+	            }
+		    })
 
-	    $('#memberName_info_lastName_PC, #memberName_info_lastName').keyup(function(){
-	    	$('#form_lastname_modify').val($(this).val())
-	    })
+		    $('#memberName_info_firstName_PC, #memberName_info_firstName').bind('keydown',function(e){
+		    	var keyCode = e.which || e.keyCode;
+	            if(keyCode === 13 || keyCode === 9){
+	                $('#form_firstname_modify').val($(this).val())
+	            }
+		    })
+	    }else{
+	        $('#memberName_info_lastName_PC, #memberName_info_lastName').keyup(function(){
+		    	$('#form_lastname_modify').val($(this).val())
+		    })
 
-	    $('#memberName_info_firstName_PC, #memberName_info_firstName').keyup(function(){
-	    	$('#form_firstname_modify').val($(this).val())
-	    })
+		    $('#memberName_info_firstName_PC, #memberName_info_firstName').keyup(function(){
+		    	$('#form_firstname_modify').val($(this).val())
+		    })
+	    }
 
-    	$('#memberPhone_info, #memberPhone_info_PC').keyup(function(){
+	    $('#memberPhone_info, #memberPhone_info_PC').keyup(function(){
     		$('#form_phone_modify').val($(this).val())
     	})
-    	
+    
+
     	//Mobile 버전 회원정보창 생년월입 드랍다운
     	$('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
     		var birth = $('#birth_year_info').val().replace(/년/gi,'')+'-'+$('#birth_month_info').val().replace(/월/gi,'')+'-'+$('#birth_date_info').val().replace(/일/gi,'')
@@ -774,18 +786,18 @@ if (agent.indexOf("firefox") != -1) {
             var keyCode = e.which || e.keyCode;
             if(keyCode === 13 || keyCode === 9){
                 if($(this).val().length>=1){
-                limit_char(this);
-                $(this).addClass("dropdown_selected");
-                check_dropdown_selected();
-            }else{
-                limit_char(this);
-                $(this).removeClass("dropdown_selected");
-                check_dropdown_selected();
-            }
-            $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
-            $('#add_member_form_first_name').val($('#memberFirstName_add').val());
-            $('#add_member_form_last_name').val($('#memberLastName_add').val());
-            $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+	                limit_char(this);
+	                $(this).addClass("dropdown_selected");
+	                check_dropdown_selected();
+	            }else{
+	                limit_char(this);
+	                $(this).removeClass("dropdown_selected");
+	                check_dropdown_selected();
+	            }
+	            $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+	            $('#add_member_form_first_name').val($('#memberFirstName_add').val());
+	            $('#add_member_form_last_name').val($('#memberLastName_add').val());
+	            $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
             }
         }); 
     }else{
@@ -805,6 +817,7 @@ if (agent.indexOf("firefox") != -1) {
             $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
         }); 
     }
+
     
 
     $(document).on('click','#memberSex .selectboxopt',function(){
