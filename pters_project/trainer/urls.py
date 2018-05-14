@@ -109,4 +109,7 @@ urlpatterns = [
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
     url(r'^import_excel_member_list/$', views.import_excel_member_list_logic, name='import_excel_member_list'),
     url(r'^import_excel_member_info/$', views.import_excel_member_info_logic, name='import_excel_member_info'),
+    url(r'^check_import_excel_member_list/$', views.check_import_excel_member_list_logic, name='check_import_excel_member_list'),
+    url(r'^check_import_excel_member_info/$', views.check_import_excel_member_info_logic, name='check_import_excel_member_info'),
+
 ]

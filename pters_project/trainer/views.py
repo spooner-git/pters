@@ -6,6 +6,7 @@ import logging
 import urllib
 from collections import OrderedDict
 
+import openpyxl
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -4180,6 +4181,42 @@ def import_excel_member_info_logic(request):
     # filename="'+test_str+'.xlsx"'
     # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
+
+    if error is None:
+
+        return response
+    else:
+
+        return response
+
+
+@csrf_exempt
+def check_import_excel_member_list_logic(request):
+
+    class_id = request.session.get('class_id', '')
+    member_id = request.GET.get('member_id', '')
+
+    error = None
+    response = None
+
+    if error is None:
+
+        return response
+    else:
+
+        return response
+
+
+@csrf_exempt
+def check_import_excel_member_info_logic(request):
+
+    class_id = request.session.get('class_id', '')
+    member_id = request.GET.get('member_id', '')
+
+    error = None
+    excel_document = openpyxl.load_workbook('sample.xlsx')
+    response = None
+    # response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     if error is None:
 
