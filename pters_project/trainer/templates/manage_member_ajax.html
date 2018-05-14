@@ -44,6 +44,8 @@
     [{% for member_info in member_data %}"{{ member_info.lecture_reg_count_yet }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "yetAvailCountArray" :
     [{% for member_info in member_data %}"{{ member_info.lecture_avail_count_yet }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "activationArray" :
+    [{% for member_info in member_data %}"{{ member_info.is_active }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
     "finishDidArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.user.id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -90,6 +92,8 @@
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.lecture_reg_count_yet }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "finishYetAvailCountArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.lecture_avail_count_yet }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "finishActivationArray" :
+    [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.is_active }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
 
     "messageArray" :
