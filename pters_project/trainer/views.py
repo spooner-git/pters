@@ -1313,10 +1313,19 @@ def update_member_info_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                user.first_name = input_first_name
-                user.last_name = input_last_name
-                user.save()
-                member.name = input_last_name+input_first_name
+                if user.first_name != input_first_name or user.last_name != input_last_name:
+                    user.first_name = input_first_name
+                    user.last_name = input_last_name
+                    member.name = input_last_name + input_first_name
+                    username = user.last_name + user.first_name
+
+                    count = MemberTb.objects.filter(name=username).count()
+                    if count != 0:
+                        username += str(count + 1)
+
+                    user.username = username
+                    user.save()
+
                 member.phone = input_phone
                 member.sex = input_sex
                 if input_birthday_dt is not None and input_birthday_dt != '':
