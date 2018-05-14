@@ -431,8 +431,15 @@ def get_member_data(context, class_id, member_id, user_id):
             all_member = MemberTb.objects.filter(member_id=member_id).order_by('name')
 
         for member_info in all_member:
+
             member_data = copy.copy(member_info)
             member_data_finish = copy.copy(member_info)
+            try:
+                user = User.objects.get(id=member_data.member_id)
+                member_data.is_active = user.is_active
+                member_data_finish.is_active = user.is_active
+            except ObjectDoesNotExist:
+                error = None
             lecture_finish_check = 0
             # 강좌에 해당하는 수강/회원 정보 가져오기
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
@@ -1240,20 +1247,15 @@ def add_lecture_info_logic_func(member_id, state_cd, counts, price, start_date, 
 
 # 회원수정 api
 def update_member_info_logic(request):
-    member_id = request.POST.get('id')
-    email = request.POST.get('email', '')
+    member_id = request.POST.get('member_id')
     first_name = request.POST.get('first_name', '')
     last_name = request.POST.get('last_name', '')
     phone = request.POST.get('phone', '')
-    contents = request.POST.get('contents', '')
-    country = request.POST.get('country', '')
-    address = request.POST.get('address', '')
     sex = request.POST.get('sex', '')
     birthday_dt = request.POST.get('birthday', '')
     next_page = request.POST.get('next_page')
 
     error = None
-    member_id = request.user.id
     if member_id == '':
         error = '회원 ID를 확인해 주세요.'
 
@@ -1264,79 +1266,61 @@ def update_member_info_logic(request):
             error = '회원 ID를 확인해 주세요.'
 
         try:
-            member = MemberTb.objects.get(user_id=user.id)
+            member = MemberTb.objects.get(user_id=member_id)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
     input_first_name = ''
     input_last_name = ''
     input_phone = ''
-    input_contents = ''
-    input_country = ''
-    input_address = ''
     input_sex = ''
     input_birthday_dt = ''
+    if error is None:
+        if user.is_active:
+            error = '회원 정보를 수정할수 없습니다.'
 
-    if first_name is None or first_name == '':
-        input_first_name = user.first_name
-    else:
-        input_first_name = first_name
-
-    if last_name is None or last_name == '':
-        input_last_name = user.last_name
-    else:
-        input_last_name = last_name
-
-    if contents is None or contents == '':
-        input_contents = member.contents
-    else:
-        input_contents = contents
-
-    if country is None or country == '':
-        input_country = member.country
-    else:
-        input_country = country
-
-    if address is None or address == '':
-        input_address = member.address
-    else:
-        input_address = address
-
-    if sex is None or sex == '':
-        input_sex = member.sex
-    else:
-        input_sex = sex
-
-    if birthday_dt is None or birthday_dt == '':
-        input_birthday_dt = member.birthday_dt
-    else:
-        input_birthday_dt = birthday_dt
-
-    if phone is None or phone == '':
-        input_phone = member.phone
-    else:
-        if len(phone) != 11 and len(phone) != 10:
-            error = '연락처를 확인해 주세요.'
-        elif not phone.isdigit():
-            error = '연락처를 확인해 주세요.'
+    if error is None:
+        if first_name is None or first_name == '':
+            input_first_name = user.first_name
         else:
-            input_phone = phone
+            input_first_name = first_name
+
+        if last_name is None or last_name == '':
+            input_last_name = user.last_name
+        else:
+            input_last_name = last_name
+
+        if sex is None or sex == '':
+            input_sex = member.sex
+        else:
+            input_sex = sex
+
+        if birthday_dt is None or birthday_dt == '':
+            input_birthday_dt = member.birthday_dt
+        else:
+            input_birthday_dt = birthday_dt
+
+        if phone is None or phone == '':
+            input_phone = member.phone
+        else:
+            if len(phone) != 11 and len(phone) != 10:
+                error = '연락처를 확인해 주세요.'
+            elif not phone.isdigit():
+                error = '연락처를 확인해 주세요.'
+            else:
+                input_phone = phone
 
     if error is None:
         try:
             with transaction.atomic():
                 user.first_name = input_first_name
                 user.last_name = input_last_name
-                # user.email = email
                 user.save()
                 member.name = input_last_name+input_first_name
                 member.phone = input_phone
-                member.contents = input_contents
                 member.sex = input_sex
                 if input_birthday_dt is not None and input_birthday_dt != '':
                     member.birthday_dt = input_birthday_dt
-                member.country = input_country
-                member.address = input_address
                 member.mod_dt = timezone.now()
                 member.save()
 
@@ -1932,9 +1916,10 @@ def update_member_lecture_info_logic(request):
         lecture_info.price = input_price
         lecture_info.refund_price = input_refund_price
         lecture_info.note = note
-        lecture_info.lecture_reg_count = input_lecture_reg_count
-        lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
-        lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
+        if lecture_info.state_cd == 'IP':
+            lecture_info.lecture_reg_count = input_lecture_reg_count
+            lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
+            lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
 

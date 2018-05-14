@@ -959,6 +959,7 @@
             var yetCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_rem_count_yet}}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var yetRegCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_reg_count_yet }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var yetAvailCountArray = [{% for member_info in member_data %} '{{ member_info.lecture_avail_count_yet }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var activationArray = [{% for member_info in member_data %} '{{ member_info.is_active }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
             var finishDidArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user.id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var finishIdArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
@@ -983,6 +984,7 @@
             var finishYetCountArray = [{% for member_finish_info in member_finish_data %} '{{ member_finish_info.lecture_rem_count_yet}}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var finishYetRegCountArray = [{% for member_finish_info in member_finish_data %} '{{ member_finish_info.lecture_reg_count_yet }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var finishYetAvailCountArray = [{% for member_finish_info in member_finish_data %} '{{ member_finish_info.lecture_avail_count_yet }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var finishActivationArray = [{% for member_finish_info in member_finish_data %} '{{ member_finish_info.is_active }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
             var messageArray = [{% for message in messages %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endfor %}]
 
