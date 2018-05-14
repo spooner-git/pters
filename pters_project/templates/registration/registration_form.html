@@ -49,27 +49,27 @@
         <div class="outerbox_horizontal" data-view="init">
           <div class="explainbox _type_trainer">
             <img src="/static/user/res/login/icon-reg-trainer.png" style="height: 20px;margin-bottom: 5px;margin-top: 20px;">
-            <p>P.T업무 일정 및 회원 관리<br><span class="font-pink">퍼스널 트레이너</span></p>
+            <p>레슨 업무 일정 및 회원 관리<br><span class="font-pink">트레이너</span></p>
             <div class="explaintype">
               <p class="explain_subject">나의 일정 관리</p> 
               <p class="explain_descript">언제 어디서든 내 수업 일정을 관리</p>
               <p class="explain_subject">간편한 일정 등록과 변경</p> 
               <p class="explain_descript">강사는 업무에 집중 가능</p>
               <p class="explain_subject">회원 특성별 맞춤 관리</p>
-              <p class="explain_descript">회원 정보와 P.T정보를 연계하여 효과적 활용</p>
+              <p class="explain_descript">회원 정보와 수업이력의 효과적 활용</p>
               <button class="" >트레이너 가입</button>
             </div>
           </div>
           <div class="explainbox _type_trainee">
             <img src="/static/user/res/login/icon-reg-user.png">
-            <p>P.T 일정 예약 관리 <br><span class="font-pink">P.T 회원</span></p>
+            <p>일정 예약 및 운동 관리 <br><span class="font-pink">수강 회원</span></p>
             <div class="explaintype">
               <p class="explain_subject">일정 확인을 간편하게</p>
               <p class="explain_descript">일정 확인과 예약, 취소를 터치 한번으로</p>
               <p class="explain_subject">나의 현황 실시간 확인</p>
               <p class="explain_descript">남은 횟수와 지난 이력을 한눈에 확인</p>
-              <p class="explain_descript" style="font-size: 11px;color: #fe4e65;">※P.T를 등록하였을 경우에 한해 사용이 가능합니다.</p>
-              <button class="" >P.T회원 가입</button>
+              <p class="explain_descript" style="font-size: 11px;color: #fe4e65;">※트레이너에게 수강 등록하였을 경우에 모든 기능 사용이 가능합니다.</p>
+              <button class="" >수강 회원 가입</button>
             </div>
           </div>
           
@@ -80,7 +80,7 @@
               <p class="explain_subject">트레이너 일정을 한눈에 확인</p> 
               <p class="explain_descript">시각화된 스케쥴 화면으로 간단히 파악</p>
               <p class="explain_subject">소속 트레이너 변동사항 관리</p>
-              <p class="explain_descript">변동사항 발생시 PT회원 정보 이관의 편리성</p>
+              <p class="explain_descript">변동사항 발생시 회원 정보 이관의 편리성</p>
               <button class="" >센터사업자 가입</button>
             </div>
           </div>
@@ -926,7 +926,7 @@
 
       $('.outerbox_horizontal').attr('data-view',0)
       $('._step2_label span').text($(this).text())
-      if($(this).text() == "P.T회원 가입"){
+      if($(this).text() == "수강 회원 가입"){
         group_type = 'trainee'
         $form = $('#add-member-id-form')
       }else if($(this).text() == "트레이너 가입"){
