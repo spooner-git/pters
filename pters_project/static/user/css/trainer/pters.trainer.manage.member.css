@@ -465,13 +465,38 @@ select:focus > option:checked {
 			border-radius: 0;
 			text-align-last: center;
 		}
+
+		#memberName_info{
+
+		}
+		#memberName_info_lastName, #memberName_info_firstName{
+			display: none;
+			width: 35%;
+			background: #ffffff;
+		}
+
+
 		#memberSex_info{
 			position: absolute;
 			display: inline-block;
 			min-width: 40px;
 			height: 22px;
-			right: 5px;
+			right: 0px;
 			top: 0;
+		}
+		#memberSex_info_PC{
+			position: relative;
+			display: inline-block;
+			width: auto;
+			height: 28px;
+			right: 0px;
+			top: 0;
+			padding-top: 8px;
+
+		}
+		#memberSex_info_PC img{
+			width: 20px;
+			height: 20px;
 		}
 			#memberSex_info	.selectboxopt{
 				line-height: 22px;
@@ -479,6 +504,11 @@ select:focus > option:checked {
 				border-top:0;
 				border-left:0;
 				border-right:0;
+			}
+			#memberSex_info_PC	.selectboxopt{
+				line-height: 22px;
+				border:0;
+				background: #ffffff;
 			}
 
 	#mobile_lecture_info{
@@ -605,9 +635,9 @@ select:focus > option:checked {
 }
 	.infopopup_pc > label img:nth-child(1){
 		width: 17px;
-		margin:0 5px 5px 0;
+		margin:0 5px 5px 5px;
 	}
-	.infopopup_pc > label img:nth-child(3){
+	.infopopup_pc > label > img{
 		width: 15px;
 		float: right;
 		margin-top: 5px;
@@ -621,6 +651,13 @@ select:focus > option:checked {
 		text-align: left;
 		padding-left:10px;
 	}
+	#memberName_info_lastName_PC, #memberName_info_firstName_PC{
+		width: 100px;
+		background: #ffffff;
+		display: none;
+	}
+
+
 		.member_info_PC_wrap{
 			display: inline-block;
 			width: 47%;
