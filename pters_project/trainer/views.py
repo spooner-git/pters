@@ -1132,18 +1132,14 @@ def add_member_info_logic(request):
     input_counts = 0
     input_price = 0
     lecture_info = None
+    username = name
 
     if search_confirm == '0':
         if name == '':
             error = '이름을 입력해 주세요.'
-        elif phone == '':
-            error = '연락처를 입력해 주세요.'
-        elif len(phone) != 11 and len(phone) != 10:
-            error = '연락처를 확인해 주세요.'
-        elif not phone.isdigit():
-            error = '연락처를 확인해 주세요.'
 
     if error is None:
+        username = name.replace(' ', '')
         if fast_check == '0':
             if counts_fast == '':
                 error = '남은 횟수를 입력해 주세요.'
@@ -1179,8 +1175,11 @@ def add_member_info_logic(request):
                     input_end_date = end_date
 
     if error is None:
+        count = MemberTb.objects.filter(name=username).count()
+        if count > 1:
+            username += str(count)
         try:
-            user = User.objects.get(username=user_id)
+            user = User.objects.get(username=username)
 
         except ObjectDoesNotExist:
             error = '가입되지 않은 회원입니다.'

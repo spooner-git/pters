@@ -1312,7 +1312,7 @@
       var inputLimit = /^[A-Za-z]+[a-z0-9.-_]{3,19}$/g;
       var userIDinput = $('#id_input').val()
       if(inputLimit.test(userIDinput)!=true){
-        alert('3자이상 20자 이내 영문과 숫자, 허용된 특수문자만 입력해주세요. \n 아이디는 반드시 영문으로 시작 해야합니다.')
+        alert('4자이상 20자 이내 영문과 숫자, 허용된 특수문자만 입력해주세요. \n 아이디는 반드시 영문으로 시작 해야합니다.')
         $('.id_confirm').text('사용 불가').css({'display':'inline','color':'#fe4e65'})
         $('#add-member-id-form').find('#id_duplicate_check').val(0)
       }else{
