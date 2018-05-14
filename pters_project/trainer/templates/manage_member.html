@@ -940,6 +940,8 @@
             var idArray =[{% for member_info in member_data %}'{{ member_info.user }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var emailArray = [{% for member_info in member_data %}'{{ member_info.user.email }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var nameArray =[{% for member_info in member_data %}'{{ member_info.name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var firstNameArray =[{% for member_info in member_data %}'{{ member_info.user.first_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var lastNameArray =[{% for member_info in member_data %}'{{ member_info.user.last_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var phoneArray = [{% for member_info in member_data %}'{{ member_info.phone }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var birthdayArray = [{% for member_info in member_data %}'{{ member_info.birthday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var sexArray = [{% for member_info in member_data %}'{{ member_info.sex }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
@@ -965,6 +967,8 @@
             var finishIdArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var finishemailArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user.email }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var finishnameArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var finishFirstNameArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user.first_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+            var finishLastNameArray =[{% for member_finish_info in member_finish_data %}'{{ member_finish_info.user.last_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var finishphoneArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.phone }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var finishbirthdayArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.birthday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
             var finishsexArray = [{% for member_finish_info in member_finish_data %}'{{ member_finish_info.sex }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
