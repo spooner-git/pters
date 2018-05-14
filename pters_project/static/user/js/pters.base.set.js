@@ -463,7 +463,7 @@ function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd){
     var yyyy = String(yyyy_mm_dd.split('-')[0])
     var mm = Number(yyyy_mm_dd.split('-')[1])
     var dd = Number(yyyy_mm_dd.split('-')[2])
-    return yyyy+'_'+mm+'_'+dd
+    return yyyy+'-'+mm+'-'+dd
 }
 
 function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d,resultSplit){

@@ -195,7 +195,7 @@ if (agent.indexOf("firefox") != -1) {
 
     modify_member_base_info_eventGroup()
     function modify_member_base_info_eventGroup(){
-    	$('#memberName_info').keyup(function(){
+    	$('#memberName_info, #memberName_info_PC').keyup(function(){
 	        $('#form_name_modify').val($(this).val())
 	    })
 
@@ -205,7 +205,7 @@ if (agent.indexOf("firefox") != -1) {
     	
     	//Mobile 버전 회원정보창 생년월입 드랍다운
     	$('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
-    		var birth = $('#birth_year_info').val().replace(/년/gi,'')+'_'+$('#birth_month_info').val().replace(/월/gi,'')+'_'+$('#birth_date_info').val().replace(/일/gi,'')
+    		var birth = $('#birth_year_info').val().replace(/년/gi,'')+'-'+$('#birth_month_info').val().replace(/월/gi,'')+'-'+$('#birth_date_info').val().replace(/일/gi,'')
     		if($('#birth_year_info').val().length < 1 || $('#birth_month_info').val().length < 1 || $('#birth_date_info').val().length < 1){
     			$('#form_birth_modify').val('')
     		}else{
@@ -215,7 +215,7 @@ if (agent.indexOf("firefox") != -1) {
 
     	//PC버전 회원정보창 생년월입 드랍다운
     	$('#memberBirth_Year_info_PC, #memberBirth_Month_info_PC, #memberBirth_Date_info_PC').change(function(){
-    		var birth = $('#memberBirth_Year_info_PC').val().replace(/년/gi,'')+'_'+$('#memberBirth_Month_info_PC').val().replace(/월/gi,'')+'_'+$('#memberBirth_Date_info_PC').val().replace(/일/gi,'')
+    		var birth = $('#memberBirth_Year_info_PC').val().replace(/년/gi,'')+'-'+$('#memberBirth_Month_info_PC').val().replace(/월/gi,'')+'-'+$('#memberBirth_Date_info_PC').val().replace(/일/gi,'')
     		$('#form_birth_modify').val(birth)
     		
     	})
@@ -1052,9 +1052,10 @@ function send_modified_member_base_data(){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 
-                closePopup('member_info');
+                
 
                 if($('body').width()<600){
+                	closePopup('member_info');
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto");
