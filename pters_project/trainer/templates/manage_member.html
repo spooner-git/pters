@@ -595,17 +595,35 @@
     </label>
 
     <div id="info_shift_base" class="info_shift_wrap">
+        <div class="member_info_tool">
+            <button class="submitBtn _info_baseedit _info_baseedit_img">
+                <img src="/static/user/res/icon-pencil.png" style="margin-bottom: 4px;height:15px;">
+            </button>
+            <button class="submitBtn _info_download _info_download_img">
+                <img src="/static/user/res/member/pters-download.png" style="margin-bottom: 4px;height:15px;">
+            </button>
+            <button class="submitBtn _info_delete _info_delete_img">
+                <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:17px;">
+            </button>
+        </div>
         <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-user.png">아이디</label><span id="memberId_info_PC"></span>
+            <label><img src="/static/user/res/member/icon-user.png">아이디</label>
+            <!--<span id="memberId_info_PC"></span>-->
+            <input id="memberId_info_PC">
         </div>
         <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
             <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
-            <span id="memberBirth_Year_info_PC"></span>
-            <span id="memberBirth_Month_info_PC"></span>
-            <span id="memberBirth_Date_info_PC"></span>
+            <!--<span id="memberBirth_Year_info_PC"></span>-->
+            <!--<span id="memberBirth_Month_info_PC"></span>-->
+            <!--<span id="memberBirth_Date_info_PC"></span>-->
+            <select id="memberBirth_Year_info_PC"></select>
+            <select id="memberBirth_Month_info_PC"></select>
+            <select id="memberBirth_Date_info_PC"></select>
         </div>
         <div id="memberPhone_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label><span id="memberPhone_info_PC"></span>
+            <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label>
+            <!--<span id="memberPhone_info_PC"></span>-->
+            <input id="memberPhone_info_PC">
         </div>
 
         <!--
@@ -629,12 +647,14 @@
         <div class="button_shift_info  button_active" id="select_info_shift_lecture">수강 정보</div>
         <div class="button_shift_info" id="select_info_shift_schedule">반복 일정</div>
         <div class="button_shift_info" id="select_info_shift_history">일정 이력</div>
+        <!--
         <button class="submitBtn _info_download _info_download_img">
                 <img src="/static/user/res/member/pters-download.png" style="margin-bottom: 4px;height:17px;">
             </button>
         <button class="submitBtn _info_delete _info_delete_img">
             <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:20px;">
         </button>
+        -->
     </div>
 
     <div id="info_shift_lecture" class="info_shift_wrap">

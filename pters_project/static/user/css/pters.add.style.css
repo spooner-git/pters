@@ -579,10 +579,10 @@ button._info_delete_img{
 	right: 0;
 	background: transparent;
 }
-	button._info_delete_img:focus, button._info_download_img:focus{
+	button._info_delete_img:focus, button._info_download_img:focus, button._info_baseedit_img:focus{
 		outline: 0;
 	}
-	button._info_delete_img:active, button._info_download_img:focus{
+	button._info_delete_img:active, button._info_download_img:active, button._info_baseedit_img:active{
 		background: unset;
 	}
 button._info_download_img{
@@ -592,6 +592,16 @@ button._info_download_img{
 	border: 0;
 	top: 0;
 	right: 30px;
+	background: transparent;
+}
+
+button._info_baseedit_img{
+	position: absolute;
+	width: unset;
+	height: unset;
+	border: 0;
+	top: 0;
+	right: 67px;
 	background: transparent;
 }
 

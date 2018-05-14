@@ -291,6 +291,16 @@ if (agent.indexOf("firefox") != -1) {
     })
 
 
+    //PC 회원기본 정보 수정 버튼 (회원정보창에서)
+    $(document).on('click','button._info_baseedit',function(){
+      //$('.confirmPopup').fadeIn('fast');
+      deleteTypeSelect = "memberinfodelete";
+      $('#cal_popup_plandelete').fadeIn('fast');
+      $('#popup_delete_question').text('정말 회원님 정보를 삭제하시겠습니까?')
+      $('#shade3').fadeIn('fast');
+    })
+
+
 
     //PC 회원삭제버튼 (회원목록에서)
     $(document).on('click','img._info_delete',function(e){
@@ -357,7 +367,7 @@ if (agent.indexOf("firefox") != -1) {
         }else if($('#calendar').length>0){
             var Data = DB;
         }
-        var userID = $('#memberId_info_PC').text();
+        var userID = $('#memberId_info_PC').val();
         if($('body').width()<600){
             var userID = $('#memberId').val();
         }
@@ -401,6 +411,8 @@ if (agent.indexOf("firefox") != -1) {
 
         }
     });
+
+
 
 
     $('#popup_delete_btn_no, #cal_popup_plandelete .popup_close_x_button').click(function(){
@@ -670,7 +682,7 @@ if (agent.indexOf("firefox") != -1) {
 								}
                             $('#errorMessageBar').hide();
                             $('#errorMessageText').text('');
-                            var userID = $('#memberId_info_PC').text();
+                            var userID = $('#memberId_info_PC').val();
                             get_indiv_repeat_info();
                             set_member_lecture_list(jsondata);
                             set_member_history_list(jsondata);
@@ -1252,7 +1264,7 @@ function pc_add_member(option){
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         if($('#memberInfoPopup_PC').css('display') == 'block'){
-            var userID = $('#memberId_info_PC').text();
+            var userID = $('#memberId_info_PC').val();
             $('#memberSearch_add').val(userID);
         }
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
@@ -2118,8 +2130,8 @@ function open_member_info_popup_pc(userID,jsondata){
     $('#deleteMemberId').val(userID);
     $('#memberName_info').val(Data[userID].name)
     $('#memberId').text(userID).val(userID).attr('data-dbid',Data[userID].dbId);
-    $('#memberId_info_PC').text(userID).attr('data-dbid',Data[userID].dbId);
-    $('#memberPhone_info, #memberPhone_info_PC').text(Data[userID].phone).val(Data[userID].phone);
+    $('#memberId_info_PC').val(userID).attr('data-dbid',Data[userID].dbId);
+    $('#memberPhone_info, #memberPhone_info_PC').val(Data[userID].phone).val(Data[userID].phone);
     $('#memberRegCount_info_PC').val(Data[userID].regcount + yetReg).text(Data[userID].regcount + yetReg)
     $('#memberRemainCount_info_PC').val(Data[userID].count + yet).text(Data[userID].count + yet)
     $('#memberAvailCount_info_PC').val(Data[userID].availCount).text(Data[userID].availCount)
@@ -2295,7 +2307,7 @@ function send_member_modified_data(){
                     $('#startR').attr('selected','selected')
                     $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
                     if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                        open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
                         set_member_lecture_list(jsondata)
                     }else if($('#memberInfoPopup').css('display') == "block"){
                         open_member_info_popup_mobile($('#memberId').val(),jsondata)
@@ -2316,7 +2328,7 @@ function send_member_modified_data(){
 //회원에게 재연결 요청을 전송한다.
 function resend_member_reg_data_pc(){
     if($('#memberInfoPopup_PC').css('display') == "block"){
-        var userID = $('#memberId_info_PC').text();
+        var userID = $('#memberId_info_PC').val();
     }else if($('#memberInfoPopup').css('display') == "block"){
         var userID = $('#memberId').val();
     }
@@ -2355,7 +2367,7 @@ function resend_member_reg_data_pc(){
               memberListSet('finished','date','yes');
               $('#startR').attr('selected','selected')
               if($('#memberInfoPopup_PC').css('display') == "block"){
-                open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
               }else if($('#memberInfoPopup').css('display') == "block"){
                 open_member_info_popup_mobile($('#memberId').val(),jsondata)
               }
@@ -2407,7 +2419,7 @@ function delete_member_reg_data_pc(lectureID,userName){
                 memberListSet('finished','date','yes');
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                    open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     open_member_info_popup_mobile($('#memberId').val(),jsondata)
                 }
@@ -2459,7 +2471,7 @@ function complete_member_reg_data_pc(lectureID, userName){
                 memberListSet('finished','date','yes');
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                    open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     open_member_info_popup_mobile($('#memberId').val(),jsondata)
                 }
@@ -2511,7 +2523,7 @@ function resume_member_reg_data_pc(lectureID, userName){
                 memberListSet('finished','date','yes');
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                    open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     open_member_info_popup_mobile($('#memberId').val(),jsondata)
                 }
@@ -2581,7 +2593,7 @@ function refund_member_lecture_data(lectureID, userName, refund_price){
                       memberListSet('finished','date','yes');
                       $('#startR').attr('selected','selected')
                       if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                        open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
                       }else if($('#memberInfoPopup').css('display') == "block"){
                         open_member_info_popup_mobile($('#memberId').val(),jsondata)
                       }
@@ -2609,7 +2621,7 @@ function refund_member_lecture_data(lectureID, userName, refund_price){
 //회원의 진행상태 연결해제를 한다.
 function disconnect_member_lecture_data(stateCode){
     if($('#memberInfoPopup_PC').css('display') == "block"){
-        var userID = $('#memberId_info_PC').text();
+        var userID = $('#memberId_info_PC').val();
     }else if($('#memberInfoPopup').css('display') == "block"){
         var userID = $('#memberId').val();
     }
@@ -2648,7 +2660,7 @@ function disconnect_member_lecture_data(stateCode){
                       memberListSet('finished','date','yes');
                       $('#startR').attr('selected','selected')
                       if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc($('#memberId_info_PC').text(),jsondata)
+                        open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
                       }else if($('#memberInfoPopup').css('display') == "block"){
                         open_member_info_popup_mobile($('#memberId').val(),jsondata)
                       }
@@ -2673,7 +2685,7 @@ function disconnect_member_lecture_data(stateCode){
 //회원의 등록 이력을 서버로부터 받아온다.
 function set_member_lecture_list(jsondata){
     if($('#memberInfoPopup_PC').css('display')=="block"){
-        var userID = $('#memberId_info_PC').text()
+        var userID = $('#memberId_info_PC').val()
         var $regHistory = $('#memberRegHistory_info_PC')
         var option = "pc"
     }else if($('#memberInfoPopup').css('display')=="block"){
@@ -2845,7 +2857,7 @@ function draw_member_lecture_list_table(jsondata, targetHTML, option){
 
 function set_member_history_list(jsondata){
     if($('#memberInfoPopup_PC').css('display')=="block"){
-        var userID = $('#memberId_info_PC').text()
+        var userID = $('#memberId_info_PC').val()
         var $regHistory = $('#memberLectureHistory_info_PC')
     }else if($('#memberInfoPopup').css('display')=="block"){
         var userID = $('#memberId').val()
@@ -3374,7 +3386,7 @@ function initialize_add_member_sheet(){
 //서버로부터 회원의 반복일정 정보를 받아온다.
 function get_indiv_repeat_info(){
     if($('#memberInfoPopup_PC').css('display')=="block"){
-        var userID = $('#memberId_info_PC').text()
+        var userID = $('#memberId_info_PC').val()
         var $regHistory = $('#memberRegHistory_info_PC')
         var option = "pc"
     }else if($('#memberInfoPopup').css('display')=="block"){
@@ -3441,7 +3453,7 @@ function get_indiv_repeat_info(){
 //서버로부터 받아온 반복일정을 회원정보 팝업에 그린다.
 function set_indiv_repeat_info(){
     if($('#memberInfoPopup_PC').css('display')=="block"){
-        var userID = $('#memberId_info_PC').text()
+        var userID = $('#memberId_info_PC').val()
         var $regHistory =  $('#memberRepeat_info_PC')
     }else if($('#memberInfoPopup').css('display')=="block"){
         var userID = $('#memberId').val()
