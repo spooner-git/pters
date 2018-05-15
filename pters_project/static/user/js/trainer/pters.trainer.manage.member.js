@@ -869,11 +869,11 @@ if (agent.indexOf("firefox") != -1) {
 
     
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
-    $('#btnCallSimple').click(function(){
-        $('#manualReg').hide();
-        $('#simpleReg').fadeIn('fast');
+    $('.btnCallSimple').click(function(){
+        $(this).parent('div').siblings('.manualReg').hide()
+        $(this).parent('div').siblings('.simpleReg').fadeIn('fast');
         $(this).addClass('selectbox_checked');
-        $('#btnCallManual').removeClass('selectbox_checked');
+        $(this).siblings('.btnCallManual').removeClass('selectbox_checked');
         $('p, .datepicktext input').removeClass("dropdown_selected");
         $('#memberCount_add_fast').removeClass('dropdown_selected');
         $('#datepicker_add,#datepicker2_add,#memberCount_add,#lecturePrice_add_2').val("");
@@ -881,11 +881,11 @@ if (agent.indexOf("firefox") != -1) {
         check_dropdown_selected();
     });
 
-    $('#btnCallManual').click(function(){
-        $('#simpleReg').hide();
-        $('#manualReg').fadeIn('fast');
+    $('.btnCallManual').click(function(){
+        $(this).parent('div').siblings('.simpleReg').hide()
+        $(this).parent('div').siblings('.manualReg').fadeIn('fast');
         $(this).addClass('selectbox_checked');
-        $('#btnCallSimple').removeClass('selectbox_checked');
+        $(this).siblings('.btnCallSimple').removeClass('selectbox_checked');
         $('._due div.checked').removeClass('checked ptersCheckboxInner');
         $('._count div.checked').removeClass('checked ptersCheckboxInner');
         $('p, .datepicktext input').removeClass("dropdown_selected");
@@ -1192,7 +1192,8 @@ function pc_add_member(option){
         $('#page_addmember').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text);
 
-        $('._ADD_MEMBER_NEW').show();
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW').show();
+        $('._ADD_GROUP_NEW').hide();
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
@@ -1211,7 +1212,8 @@ function pc_add_member(option){
         $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
-        $('._ADD_MEMBER_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._SEARCH_MEMBER_NEW').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
@@ -1223,7 +1225,8 @@ function pc_add_member(option){
         $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
-        $('._ADD_MEMBER_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._SEARCH_MEMBER_NEW').show();
         $('#memberBirthDate, #memberBirthDate_info').html('')
         birth_dropdown_set();
 
@@ -1247,13 +1250,31 @@ function pc_add_member(option){
         float_btn_managemember(1);
         
 
-        $('._ADD_MEMBER_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._SEARCH_MEMBER_NEW').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
         $('#memberSearchButton').attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
         
+    }else if(option == 'group'){
+        initialize_add_member_sheet();
+        $('#page_addmember').fadeIn('fast');
+        $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
+
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW').hide();
+        $('._ADD_GROUP_NEW').show();
+        $('#memberBirthDate, #memberBirthDate_info').html('');
+        birth_dropdown_set();
+
+        $('#memberSearchButton').attr('data-type','');
+        $('#memberSex .selectboxopt').removeClass('selectbox_disable');
+        if($('._nomember').length>0){
+            $('#how_to_add_member').fadeIn()
+        }else{
+            $('#how_to_add_member').css('display','none')
+        }
     }
 }
 
@@ -3290,9 +3311,31 @@ function closePopup(option){
         else{
             shade_index(-100)
         }
-    }else if(option = 'member_delete'){
+    }else if(option == 'member_delete'){
         //$('.confirmPopup').fadeOut('fast');
         $('#cal_popup_plandelete').fadeOut('fast');
+    }else if(option == 'group_add'){
+        if($('body').width()<600){
+            $('#page_managemember').show();
+            $('#float_btn_wrap').show();
+            $('#float_btn').removeClass('rotate_btn');
+        }
+        $('#page_addgroup').fadeOut('fast');
+        
+        $('#float_btn').fadeIn('fast');
+        $('#page-base').fadeIn();
+        $('#page-base-addstyle').fadeOut();
+
+        $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
+
+        if($('#memberInfoPopup_PC').css('display')=="block"){
+            shade_index(100)
+        }else if($('#mshade').css('z-index')==150){
+            shade_index(150)
+        }
+        else{
+            shade_index(-100)
+        }
     }
 };
 
@@ -3306,9 +3349,9 @@ function initialize_add_member_sheet(){
     $('#birth_month').prop('disabled',false);
     $('#birth_date').prop('disabled',false);
 
-    if($('#btnCallSimple').hasClass('selectbox_checked')){
+    if($('#page_addmember .btnCallSimple').hasClass('selectbox_checked')){
         $('#fast_check').val('0')
-    }else if($('#btnCallManual').hasClass('selectbox_checked')){
+    }else if($('#page_addmember .btnCallManual').hasClass('selectbox_checked')){
         $('#fast_check').val('1')
     }
     
@@ -3323,7 +3366,15 @@ function initialize_add_member_sheet(){
     $('.ptersCheckboxInner').removeClass('ptersCheckboxInner')
     $('#memberSex div').removeClass('selectbox_checked')
     $('.submitBtnActivated').removeClass('submitBtnActivated')
+
+    //그룹추가관련 입력 초기화
+    $('.subpopup_addGroup').hide()
+    $('#addedMemberListBox div').remove()
+    $('#addedMemberListBox span').text('0 명')
+    added_New_Member_Num = 0
+    //그룹추가관련 입력 초기화
 }
+
 
 //서버로부터 회원의 반복일정 정보를 받아온다.
 function get_indiv_repeat_info(){

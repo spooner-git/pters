@@ -1199,6 +1199,7 @@
           var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
           var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
 
+          
           //PT 일정 등록시 필요한 정보
           var memberIdArray =[{% for member_info in member_data %}'{{ member_info.user.id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           var memberUserIdArray =[{% for member_info in member_data %}'{{ member_info.user }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
@@ -1252,6 +1253,7 @@
           var ptRepeatScheduleTimeDurationArray =  [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}'{{ pt_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           var ptRepeatScheduleStateCdArray =  [{% for pt_repeat_schedule_state_cd_info in pt_repeat_schedule_state_cd %}'{{ pt_repeat_schedule_state_cd_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
           var ptRepeatScheduleStateCdNameArray =  [{% for pt_repeat_schedule_state_cd_nm_info in pt_repeat_schedule_state_cd_nm %}'{{ pt_repeat_schedule_state_cd_nm_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+          
 
           var classTimeArray = [];
           var offTimeArray = [];

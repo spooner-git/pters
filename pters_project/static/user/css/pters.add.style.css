@@ -255,11 +255,13 @@ ul a{
 	-webkit-border-radius: 0px;
 }
 
+/*
 .pters_input_namefield{
 	width: 48%;
 	display: inline-block;
 	height: 40px;
 }
+*/
 
 .pters_input_custom{
 	border: 0px;
@@ -276,7 +278,7 @@ ul a{
 	border-radius: 0px;
 	-webkit-border-radius: 0px;	
 	height: 100%;
-	font-size: 16px;
+	font-size: 13px;
 }
 
 .pters_input_custom textarea{
@@ -714,6 +716,7 @@ button._info_baseedit_img{
 	width: 91.67%;
 	margin:0 auto;
 	border: 1px solid #cccccc;
+	background: #e3e3e3;
 }
 
 #simpleReg{
@@ -988,6 +991,7 @@ option{
 	}
 
 	#memberLastName_add, #memberFirstName_add{
+		display: inline-block;
 		width: 48% !important;
 		border:1px solid #282828;
 		height: 26px;

@@ -77,41 +77,6 @@ $(document).ready(function(){
               addTypeSelect = 'offadd'
               var compensate_off = +30
             }
-            /*
-            var toploc = $(this).offset().top;
-            var leftloc = $(this).offset().left;
-            var tdwidth = $(this).width();
-            var tdheight = $(this).height();
-            var minipopupwidth = 300;
-            var minipopupheight = 131;
-            var splitID = $(this).attr('id').split('_')
-            var weekID = $(this).attr('data-week')
-            //minipopup 위치 보정
-            if(splitID[3]>=20){
-              $('.dropdown_mini').addClass('dropup')
-              if(splitID[3]==24 && weekID!=3){
-                var toploc = toploc - tdheight*2
-              }else if(weekID==3){
-                var toploc = toploc-minipopupheight
-              }else{
-                var toploc = toploc - tdheight*(24-splitID[3])  
-              }
-            }else{
-              $('.dropdown_mini').removeClass('dropup')
-              if(weekID==3){
-                var toploc = toploc + tdheight
-              }else{
-                var toploc = toploc + 30
-              }
-            }
-
-            if(weekID>=4){
-              var leftloc = leftloc-300-tdwidth
-            }else if(weekID==3){
-              var leftloc = leftloc-tdwidth/2
-            }
-            //minipopup 위치 보정
-            */
             var toploc = $(this).offset().top;
             var leftloc = $(this).offset().left;
             var tdwidth = $(this).width();
@@ -1289,8 +1254,8 @@ function ajax_received_json_data(json){
     DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offTimeArray,"off");
     $('.classTime,.offTime').parent().html('<div></div>')
     $('._on').removeClass('_on')
-    classTime();
-    offTime();
+    scheduleTime('class')
+    scheduleTime('off')
     addPtMemberListSet();
 
     /*팝업의 timegraph 업데이트*/
@@ -1538,158 +1503,96 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 }
 
 
-function classTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-    var planheight = 60;
-      if($calendarWidth>=600){
-        //var planheight = 46;
-        var planheight = 60;
-    }
-    var classlen = classTimeArray.length;
-    //$('#calendar').css('display','none');
-    for(var i=0; i<classlen; i++){
-      var indexArray = classTimeArray[i]
-      var memoArray = scheduleNoteArray[i]
-      var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
-      var classYear = datasplit[0]
-      var classMonth = datasplit[1]
-      var classDate = datasplit[2]
-      var classHour = datasplit[3]
-      var hourType = ""
-      if(classHour == 24){
-        var hourType = "오전"
-        var classHour = 0
-      }else if(classHour < 12){
-        var hourType = "오전"
-      }else{
-        var hourType = "오후"
-      }
-      var classMinute = datasplit[4]
-      var classDura = datasplit[5];
-      var memberName = datasplit[6];
+function scheduleTime(option){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+  switch(option){
+    case 'class':
+      var plan = option
+      var planArray = classTimeArray
+      var planScheduleIdArray = scheduleIdArray
+      var planNoteArray = scheduleNoteArray
+      var planColor = 'classTime'
+    break;
+    case 'off':
+      var plan = option
+      var planArray = offTimeArray
+      var planScheduleIdArray = offScheduleIdArray
+      var planNoteArray = offScheduleNoteArray
+      var planColor = 'offTime'
+    break;
+    case 'group':
+      var plan = option
+      var planArray = groupTimeArray
+      var planScheduleIdArray = groupScheduleIdArray
+      var planNoteArray = groupScheduleNoteArray
+      var planColor = 'groupTime'
+    break;
+  }
 
-      
-      if($calendarWidth>=600){
-        if(memberName.length>5){
-          var memberName = memberName.substr(0,5) + ".."
-        }
-      }else{
-        if(memberName.length>3){
-          var memberName = memberName.substr(0,3) + ".."
-        }
-      }
-      
-      
-      if(classMinute == '00'){
-        if(Options.workStartTime>classHour && classDura > Options.workStartTime - classHour){
-          var classDura = classDura - (Options.workStartTime - classHour) // 2 - (10 - 8)
-          var classHour = Options.workStartTime
-        }
-      }else if(classMinute == '30'){
-        if(Options.workStartTime>classHour && classDura >= Options.workStartTime - classHour){
-          var classDura = classDura - (Options.workStartTime - classHour)+0.5 // 2 - (10 - 8)
-          var classHour = Options.workStartTime
-          var classMinute = '00'
-        }
-      }
-      
 
-      var classStartArr = [classYear,classMonth,classDate,classHour,classMinute]
-      var classStart = classStartArr.join("_")
-      var tdClassStart = $("#"+classStart+" div");
-      var tdClass = $("#"+classStart);
-      tdClass.parent('div').siblings('.fake_for_blankpage').css('display','none')
-
-      if(scheduleFinishArray[i]=="0") {
-          tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime')
-          .css({'height': Number(classDura * planheight - 1.5) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' +'<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
-      }else {
-          tdClassStart.attr('schedule-id', scheduleIdArray[i]).attr('data-schedule-check',scheduleFinishArray[i]).attr('data-lectureId', classArray_lecture_id[i]).attr('data-memberName', memberName).attr('class-time', indexArray).attr('data-memo',memoArray).addClass('classTime classTime_checked')
-          .css({'height': Number(classDura * planheight - 1.5) + 'px'}).html('<span class="memberName">' + memberName + ' </span>' + '<span class="memberTime">' + '<p class="hourType">' +hourType+'</p>' + classHour + ':' + classMinute + '</span>');
-      }
-      var hhh = Number(classHour)
-      var mmm = classMinute
-
-      for(var j=0; j<classDura/0.5; j++){
-        if(mmm == 60){
-          hhh = hhh + 1
-          mmm = '00'
-        }
-        $('#'+classYear+'_'+classMonth+'_'+classDate+'_'+hhh+'_'+mmm).addClass('_on')
-        mmm = Number(mmm) + 30
-      }
-    };
-    //$('#calendar').css('display','block');
-};
-
-function offTime(){ //수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   var planheight = 60;
     if($calendarWidth>=600){
       var planheight = 60;
   }
-  var offlen = offTimeArray.length;
-  //$('#calendar').css('display','none');
-  for(var i=0; i<offlen; i++){
-    var indexArray = offTimeArray[i]
-    var memoArray = offScheduleNoteArray[i]
-    var datasplit = indexArray.split('_');  //2017_8_15_6_00_3
-    var offYear = datasplit[0]
-    var offMonth = datasplit[1]
-    var offDate = datasplit[2]
-    var offHour = datasplit[3]
+  var len = planArray.length;
+  for(var i=0; i<len; i++){
+    var planYear = planArray[i].split('_')[0]
+    var planMonth = planArray[i].split('_')[1]
+    var planDate = planArray[i].split('_')[2]
+    var planHour = planArray[i].split('_')[3]
     var hourType = ""
-    if(offHour==24){
+    if(planHour==24){
       var hourType = "오전"
-      var offHour = 0
-    }else if(offHour < 12){
+      var planHour = 0
+    }else if(planHour < 12){
       var hourType = "오전"
     }else{
       var hourType = "오후"
     }
-    var offMinute = datasplit[4]
-    var offDura = datasplit[5];
-    var memberName = datasplit[6];
+    var planMinute = planArray[i].split('_')[4]
+    var planDura = planArray[i].split('_')[5];
+    var memberName = planArray[i].split('_')[6];
 
-    if(offMinute == '00'){
-      if(Options.workStartTime>offHour && offDura > Options.workStartTime - offHour){
+    if(planMinute == '00'){
+      if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
         
-        var offDura = offDura - (Options.workStartTime - offHour) // 2 - (10 - 8)
-        var offHour = Options.workStartTime
+        var planDura = planDura - (Options.workStartTime - planHour) // 2 - (10 - 8)
+        var planHour = Options.workStartTime
          //2018_4_22_8_30_2_OFF_10_30 
       }
-    }else if(offMinute == '30'){
+    }else if(planMinute == '30'){
         //(10>8)  (2>=10-8)
-      if(Options.workStartTime>offHour && offDura >= Options.workStartTime - offHour){
+      if(Options.workStartTime>planHour && planDura >= Options.workStartTime - planHour){
         
-        var offDura = offDura - (Options.workStartTime - offHour)+0.5 // 2 - (10 - 8)
-        var offHour = Options.workStartTime
-        var offMinute = '00'
+        var planDura = planDura - (Options.workStartTime - planHour)+0.5 // 2 - (10 - 8)
+        var planHour = Options.workStartTime
+        var planMinute = '00'
          //2018_4_22_8_30_2_OFF_10_30 
       }
     }
     
-    var offStartArr = [offYear,offMonth,offDate,offHour,offMinute]
-    var offStart = offStartArr.join("_")
-    var tdOffStart = $("#"+offStart+" div");
-    var tdOff = $("#"+offStart);
-    tdOff.parent('div').siblings('.fake_for_blankpage').css('display','none')
+    var planStartArr = [planYear, planMonth, planDate, planHour, planMinute]
+    var planStart = planStartArr.join("_")
+    var tdPlanStart = $("#"+planStart+" div");
+    var tdPlan = $("#"+planStart);
+    tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none')
     
-    tdOffStart.attr('off-time',indexArray).attr('off-schedule-id',offScheduleIdArray[i]).attr('data-memo',memoArray).addClass('offTime').css({'height':Number(offDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + offHour+':'+offMinute+'</span>');
+    tdPlanStart.attr('off-time',planArray[i]).attr('off-schedule-id',planScheduleIdArray[i]).attr('data-memo',planNoteArray[i]).addClass(planColor).css({'height':Number(planDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
     
-    var hhh = Number(offHour)
-    var mmm = offMinute
+    var hhh = Number(planHour)
+    var mmm = planMinute
 
-    for(var j=0; j<offDura/0.5; j++){
+    for(var j=0; j<planDura/0.5; j++){
       if(mmm == 60){
         hhh = hhh + 1
         mmm = '00'
       }
-      $('#'+offYear+'_'+offMonth+'_'+offDate+'_'+hhh+'_'+mmm).addClass('_on')
+      $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on')
       mmm = Number(mmm) + 30
     }
 
   };
-  //$('#calendar').css('display','block');
 };
+
 
 
 function beforeSend(){

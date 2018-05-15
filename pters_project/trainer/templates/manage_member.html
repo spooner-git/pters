@@ -3,6 +3,7 @@
 
 {% block local_css %}
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.group.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
 {% endblock %}
@@ -257,6 +258,11 @@
             <span class="JPtext">再登録</span>
             <span class="ENtext">Re-Contract</span>
         </div>
+        <div class="ymdText-pc-add-member-again" onclick="pc_add_member('group')">
+            <span class="KRtext">그룹 추가</span>
+            <span class="JPtext">再登録</span>
+            <span class="ENtext">Re-Contract</span>
+        </div>
       </div>
 
       <select class="alignSelect">
@@ -368,7 +374,7 @@
 </div>
 
 
-<div id="memberInfoPopup" class="infopopup wrap _member_info_popup">
+<div id="memberInfoPopup" class="infopopup wrap _member_info_popup" style="display: none;">
 
     <div id="inputError_info">
         <div id="errorMsg_info" class="inputErrorInner">
@@ -515,7 +521,7 @@
 
 
 
-<div id="memberInfoPopup_PC" class="infopopup_pc wrap popups _member_info_popup">
+<div id="memberInfoPopup_PC" class="infopopup_pc wrap popups _member_info_popup" style="display: none;">
     <div id="inputError_info_PC" style="position: absolute;top: 0;left: 0;">
         <div id="errorMsg_info_PC" class="inputErrorInner" style="height: 22px;">
             <p style="line-height: 22px;vertical-align: middle;margin:0;"></p>
@@ -652,7 +658,7 @@
     </div>
 </div>
 
-<div id="page_addmember" class="wrap popups">
+<div id="page_addmember" class="wrap popups" style="display: none;">
     <div id="how_to_add_member">
         <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;margin-top:5px;">
             <img src="/static/user/res/PTERS_logo_pure.png" style="height: 20px;margin-bottom: 3px;"> Tip!
@@ -684,8 +690,8 @@
         <input type="hidden" name="search_confirm" id="id_search_confirm" value="0">
 
         <div>
-            <p class="icons_description">※등록하고자하는 회원님이 이미 PTERS 회원인 경우에는 아이디를 검색하여 추가하여 사용해주세요.</p>
-            <div class="ptaddbox form-group" style="height: 50px;">
+            <p class="icons_description _SEARCH_MEMBER_NEW">※등록하고자하는 회원님이 이미 PTERS 회원인 경우에는 아이디를 검색하여 추가하여 사용해주세요.</p>
+            <div class="ptaddbox form-group _SEARCH_MEMBER_NEW" style="height: 50px;">
                 <label for="memberSearch" class="ptaddboxtext">
                     <img class="icons"  style="width:13px;" src={% static_url "user/res/icon-earth.png" %}> 회원 아이디 검색
                     <!--<p class="icons_description"> <br>PTERS에 이미 가입되어있는 회원님의 정보를 가져옵니다.</p>-->
@@ -696,7 +702,6 @@
                     검색
                     </button>
                 </div>
-                
             </div>
 
             <div class="ptaddbox form-group _ADD_MEMBER_NEW">
@@ -782,15 +787,80 @@
             </div>
             -->
 
+
+            <div class="ptaddbox _ADD_GROUP_NEW">
+                <label class="ptaddboxtext">
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 신규 그룹 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
+                </label>
+                <div id="groupNameInput">
+                    <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹 이름을 입력해주세요." maxlength="10">
+                    <input type="hidden" name="grouptype" id="form_grouptype">
+                    <select id="grouptype">
+                        <option selected disabled>그룹 타입</option>
+                        <option value="specifiedgroup">정기 그룹</option>
+                        <option value="commongroup">비정기 그룹</option>
+                    </select>
+                    <select id="groupcapacity">
+                        <option selected disabled>정원</option>
+                        <option value="2">2명</option>
+                        <option value="3">3명</option>
+                        <option value="4">4명</option>
+                        <option value="5">5명</option>
+                        <option value="6">6명</option>
+                        <option value="7">7명</option>
+                        <option value="8">8명</option>
+                        <option value="9">9명</option>
+                        <option value="10">10명</option>
+                        <option value="11">11명</option>
+                        <option value="12">12명</option>
+                        <option value="13">13명</option>
+                        <option value="14">14명</option>
+                        <option value="15">15명</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="ptaddbox _ADD_GROUP_NEW">
+                <label class="ptaddboxtext">
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 추가 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
+                </label>
+                <div class="groupMemberAddBox">
+                    <div class="buttonGroup">
+                        <button id="addByNew">신규 회원으로 추가</button>
+                        <button id="addByList">리스트에서 추가</button>
+                        <button id="addBySearch">PTERS 검색으로 추가</button>
+                    </div>
+                    <div id="addedMemberListBox">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+
+                <div id="subpopup_addByList" class="subpopup_addGroup wrap">
+                    
+                </div>
+                <div id="subpopup_addBySearch" class="subpopup_addGroup wrap">
+                    <div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">PTERS 검색으로 추가<span>닫기</span></div>
+                    <input type="text" name="searchID" id="addBySearch_input">
+                    <button id="addBySearch_search">찾기</button>
+                    <div id="searchedMemberListBox">
+
+                        
+                    </div>
+                </div>
+
+
+
+
             <label for="" class="ptaddboxtext" style="padding-right: 5%;padding-left: 5%;">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> PT등록정보 <span style="color: #fe4e65;">*</span>
             </label>
             <div id="selectBox2" class="selectbox">
-                <div id="btnCallSimple" href="#" class="selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
-                <div id="btnCallManual" href="#" class="selectboxopt selectboxopt_right">세부 설정 방식</div>
+                <div id="btnCallSimple" href="#" class="btnCallSimple selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
+                <div id="btnCallManual" href="#" class="btnCallManual selectboxopt selectboxopt_right">세부 설정 방식</div>
             </div>
 
-            <div id="manualReg"> <!-- 세부 설정 방식 -->
+            <div id="manualReg" class="manualReg"> <!-- 세부 설정 방식 -->
                 <div class="ptaddbox form-group">
                     <label for="memberCount" class="ptaddboxtext">
                         <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록횟수
@@ -806,7 +876,7 @@
                     </label>
                     <div class="dropdown pters_input_custom">
                         <input type="hidden" id="lecturePrice_add_value" name="price" value="0">
-                        <input type="tel" class="form-control" id="lecturePrice_add" required="required" placeholder="숫자만 입력해주세요." maxlength="11">
+                        <input type="tel" class="form-control" id="lecturePrice_add" placeholder="숫자만 입력해주세요." maxlength="11">
                         <span class="inputunit">원</span>
                     </div>
                     <div class="pricebutton">
@@ -830,7 +900,7 @@
                 </div>
             </div>
 
-            <div id="simpleReg"> <!-- 빠른 입력 방식 -->
+            <div id="simpleReg" class="simpleReg"> <!-- 빠른 입력 방식 -->
                 <div class="ptaddbox form-group _count">
                     <label for="memberCount" class="ptaddboxtext">
                         <input type="hidden" id="memberCount_add_fast" name="counts_fast" >
@@ -858,7 +928,7 @@
                     </label>
                     <div class="dropdown pters_input_custom">
                         <input type="hidden" id="lecturePrice_add_value_fast" name="price_fast" value="0">
-                        <input type="tel" class="form-control" id="lecturePrice_add_2" required="required" placeholder="숫자만 입력해주세요." maxlength="11">
+                        <input type="tel" class="form-control" id="lecturePrice_add_2" placeholder="숫자만 입력해주세요." maxlength="11">
                         <span class="inputunit">원</span>
                     </div>
                     <div class="pricebutton">
@@ -936,12 +1006,16 @@
     </form>
 </div>
 
+
+
+
 {% endblock %}
 
 
 
 {% block local_js_footer %}
          <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
+         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script>
          <script>
             $('#uptext').text("회원 관리")
             $('footer').hide()
