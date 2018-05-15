@@ -353,11 +353,11 @@
                 targetID.val($(this).val())
             })
 
-            /*
+            
             send_modified_member_info()
             function send_modified_member_info(){
                 $.ajax({
-                  url:'/trainer/update_member_info/',
+                  url:'/trainee/update_trainee_info/',
                   type:'POST',
                   data : $('#modify-member-id-form').serialize(),
                   dataType : 'html',
@@ -368,7 +368,7 @@
                   //통신성공시 처리
                   success:function(data){
                       var jsondata = JSON.parse(data)
-                      console.log(jsondata)
+                      //console.log('data',jsondata)
                       fill_recieved_member_info(jsondata)
                     },
 
@@ -382,7 +382,13 @@
                   },
               })
             }
-            */
+
+            function fill_recieved_member_info(jsondata){
+                $('span._nameInfo').text(jsondata.last_name+jsondata.first_name)
+                $('span._phoneInfo').text(jsondata.phone)
+                $('span._birthInfo').text(jsondata.birthday_dt)
+            }
+            
 
 
             function birthChangeEventGroup(){

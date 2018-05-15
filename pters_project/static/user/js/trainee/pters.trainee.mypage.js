@@ -95,7 +95,6 @@ $(document).ready(function(){
 	}
 	///////////////////////////그래프
 	fill_member_repeat_info(); // 회원 반복일정 채우기
-	fill_member_base_info(); // 회원의 기본 가입정보 채우기
 
 	function fill_member_repeat_info(){
 		var repeat_info_dict= { 'KOR':
@@ -149,15 +148,6 @@ $(document).ready(function(){
 		    $('._Repeat_Info span').text(trainee_repeat_end)
 	    }
 	}
-
-	function fill_member_base_info(){
-		$('span._nameInfo').text(classTimeArray_member_name[0]) //이름
-		$('span._birthInfo').text()								//생일
-		$('span._phoneInfo').text()								//연락처
-	}
-
-	 
-
 
     $('.mode_switch_button').click(function(){
     	var page = $(this).attr('data-page')
