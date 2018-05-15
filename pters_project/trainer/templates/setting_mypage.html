@@ -597,7 +597,7 @@
             send_modified_member_info()
             function send_modified_member_info(){
                 $.ajax({
-                  url:'/trainer/update_member_info/',
+                  url:'/trainer/update_trainer_info/',
                   type:'POST',
                   data : $('#modify-member-id-form').serialize(),
                   dataType : 'html',

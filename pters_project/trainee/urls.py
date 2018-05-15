@@ -46,11 +46,11 @@ urlpatterns = [
     # 회원정보로 수강 정보 list 조회
     url(r'^read_trainee_lecture_by_class_ajax/$', views.ReadLectureByClassAjax.as_view(), name='read_trainee_lecture_by_class_ajax'),
 
-    url(r'^read_trainee_lecture_view_by_class_ajax/$', views.ReadLectureViewByClassAjax.as_view(),
-        name='read_trainee_lecture_view_by_class_ajax'),
+    url(r'^read_trainee_lecture_view_by_class_ajax/$', views.ReadLectureViewByClassAjax.as_view(), name='read_trainee_lecture_view_by_class_ajax'),
 
-    url(r'^trainee_push_ajax/$', views.TraineePushAjax.as_view(),
-        name='trainee_push_ajax'),
+    url(r'^trainee_push_ajax/$', views.TraineePushAjax.as_view(), name='trainee_push_ajax'),
+
+    url(r'^update_trainee_info/$', views.update_trainee_info_logic, name='update_trainee_info'),
 
 ]
 
