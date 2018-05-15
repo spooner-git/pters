@@ -7,6 +7,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import password_reset, password_reset_done
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth import authenticate, logout, login
+from django.core.mail import EmailMessage
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
@@ -862,6 +863,10 @@ def question_reg_logic(request):
         qa_info.save()
 
     if error is None:
+        email = EmailMessage(request.user.last_name+request.user.first_name+' 회원 질문-'+title,
+                             contents + '\n' + timezone.now(), to=['support@pters.co.kr'])
+        email.send()
+
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)

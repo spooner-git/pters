@@ -53,6 +53,9 @@ urlpatterns = [
 
     url(r'^update_trainee_info/$', views.update_trainee_info_logic, name='update_trainee_info'),
 
+    # 피터스 탈퇴 확인 페이지로 이동
+    url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
+
 ]
 
 
