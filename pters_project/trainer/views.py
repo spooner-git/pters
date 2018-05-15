@@ -1327,8 +1327,8 @@ def update_member_info_logic(request):
 
                         while True:
                             username = user.last_name + user.first_name + str(i)
-                            try:User.objects.get(username=username)
-
+                            try:
+                                User.objects.get(username=username)
                             except:
                                 test = True
 
@@ -1359,7 +1359,9 @@ def update_member_info_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name+request.user.first_name,
+                         to_member_name=user.last_name+user.first_name,
                          log_info='회원 정보', log_how='수정',
                          reg_dt=timezone.now(), use=1)
         log_data.save()
@@ -1492,6 +1494,134 @@ def delete_member_info_logic(request):
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+# 회원수정 api
+def update_trainer_info_logic(request):
+    member_id = request.POST.get('id')
+    email = request.POST.get('email', '')
+    first_name = request.POST.get('first_name', '')
+    last_name = request.POST.get('last_name', '')
+    phone = request.POST.get('phone', '')
+    contents = request.POST.get('contents', '')
+    country = request.POST.get('country', '')
+    address = request.POST.get('address', '')
+    sex = request.POST.get('sex', '')
+    birthday_dt = request.POST.get('birthday', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    member_id = request.user.id
+    if member_id == '':
+        error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            user = User.objects.get(id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+        try:
+            member = MemberTb.objects.get(user_id=user.id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+    input_first_name = ''
+    input_last_name = ''
+    input_phone = ''
+    input_contents = ''
+    input_country = ''
+    input_address = ''
+    input_sex = ''
+    input_birthday_dt = ''
+
+    if first_name is None or first_name == '':
+        input_first_name = user.first_name
+    else:
+        input_first_name = first_name
+
+    if last_name is None or last_name == '':
+        input_last_name = user.last_name
+    else:
+        input_last_name = last_name
+
+    if contents is None or contents == '':
+        input_contents = member.contents
+    else:
+        input_contents = contents
+
+    if country is None or country == '':
+        input_country = member.country
+    else:
+        input_country = country
+
+    if address is None or address == '':
+        input_address = member.address
+    else:
+        input_address = address
+
+    if sex is None or sex == '':
+        input_sex = member.sex
+    else:
+        input_sex = sex
+
+    if birthday_dt is None or birthday_dt == '':
+        input_birthday_dt = member.birthday_dt
+    else:
+        input_birthday_dt = birthday_dt
+
+    if phone is None or phone == '':
+        input_phone = member.phone
+    else:
+        if len(phone) != 11 and len(phone) != 10:
+            error = '연락처를 확인해 주세요.'
+        elif not phone.isdigit():
+            error = '연락처를 확인해 주세요.'
+        else:
+            input_phone = phone
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                user.first_name = input_first_name
+                user.last_name = input_last_name
+                # user.email = email
+                user.save()
+                member.name = input_last_name + input_first_name
+                member.phone = input_phone
+                member.contents = input_contents
+                member.sex = input_sex
+                if input_birthday_dt is not None and input_birthday_dt != '':
+                    member.birthday_dt = input_birthday_dt
+                member.country = input_country
+                member.address = input_address
+                member.mod_dt = timezone.now()
+                member.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         log_info='본인 정보', log_how='수정',
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
         return redirect(next_page)

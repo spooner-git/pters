@@ -115,5 +115,6 @@ urlpatterns = [
     # 공지사항 조회
     url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(),name='get_off_repeat_schedule_ajax'),
 
+    url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
 
 ]
