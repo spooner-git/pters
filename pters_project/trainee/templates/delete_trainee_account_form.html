@@ -1,4 +1,4 @@
-{% extends "trainer_base.html" %}
+{% extends "trainee_base.html" %}
 
 
 {% load static_url %}
@@ -87,7 +87,7 @@
 
     function goPage(option){
       if(option=="back"){
-        location.href="{% url 'trainer:trainer_mypage' %}"
+        location.href="{% url 'trainee:mypage_trainee' %}"
       }else if(option == "deleteaccount"){
         location.href="/login/out_member/"
       }
