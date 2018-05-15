@@ -687,15 +687,15 @@ select:focus > option:checked {
 				-moz-appearance:none;
 				appearance:none;
 				/*border-color:#ffffff;*/
-				padding-left: 15px;
+				padding-left: 8px;
 				background:#ffffff;
 				border:0;
 			}
 			#memberBirth_Year_info_PC{		
-				width: 35%;
+				width: 25%;
 			}
 			#memberBirth_Month_info_PC,#memberBirth_Date_info_PC{
-				width: 25%;
+				width: 18%;
 				margin-left: 1px;
 			}
 			.member_info_PC_wrap input, .member_info_PC_wrap> span, .member_info_PC_wrap > div{
