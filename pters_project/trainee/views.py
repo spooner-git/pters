@@ -644,10 +644,15 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
             error = '강좌 정보를 불러오지 못했습니다.'
+        if error is None:
+            try:
+                member_info = MemberTb.objects.get(member_id=self.request.user.id)
+                context['member_info'] = member_info
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
 
         # if lecture_id is None or lecture_id == '':
         #    error = '수강정보를 확인해 주세요.'
-
         if error is None:
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
                                                                  self.request.user.last_name + self.request.user.first_name, class_id, start_date, end_date)
@@ -680,6 +685,13 @@ class MyPageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
             error = '강좌 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                member_info = MemberTb.objects.get(member_id=self.request.user.id)
+                context['member_info'] = member_info
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
 
         # if lecture_id is None or lecture_id == '':
         #    error = '수강정보를 확인해 주세요.'
