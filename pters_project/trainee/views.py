@@ -663,6 +663,41 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+class MyPageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'mypage_trainee_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MyPageViewAjax, self).get_context_data(**kwargs)
+        error = None
+        class_id = self.request.session.get('class_id', '')
+        # lecture_id = self.request.session.get('lecture_id', '')
+
+        today = datetime.date.today()
+        start_date = today - datetime.timedelta(days=46)
+        end_date = today + datetime.timedelta(days=47)
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+
+        # if lecture_id is None or lecture_id == '':
+        #    error = '수강정보를 확인해 주세요.'
+
+        if error is None:
+            context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
+                                                                 self.request.user.last_name + self.request.user.first_name, class_id, start_date, end_date)
+
+            # 강사 setting 값 로드
+            context = get_trainee_setting_data(context, self.request.user.id)
+            self.request.session['setting_language'] = context['lt_lan_01']
+
+        # 강사 setting 값 로드
+        if error is None:
+            context = get_trainer_setting_data(context, class_info.member_id, class_id)
+
+        return context
+
 class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'mypage_trainee_blank.html'
 
