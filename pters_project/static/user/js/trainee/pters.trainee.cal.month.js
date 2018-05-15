@@ -747,7 +747,7 @@ $(document).ready(function(){
 		targetHTML.html(tbody)
 	}
 
-
+	/*
 	//일정변경 가능 날짜에 표기 (CSS Class 붙이기)
 	function availableDateIndicator(availableStartTime,Endtime){ 
 		// 요소설명
@@ -758,7 +758,7 @@ $(document).ready(function(){
 			$('.blackballoon').parent('td').addClass('option_notavailable')
 		}else{
 			if(currentHour<Endtime && currentHour>=availableStartTime){
-				for(i=currentDate;i<currentDate+Options.availDate;i++){
+				for(i=currentDate;i<=currentDate+Options.availDate;i++){
 					if(i>lastDay[oriMonth-1] && oriMonth<12){
 					 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('available')
 					}else if(i>lastDay[oriMonth-1] && oriMonth==12){
@@ -768,7 +768,7 @@ $(document).ready(function(){
 					}
 				}
 			}else{
-				for(i=currentDate;i<currentDate+Options.availDate;i++){
+				for(i=currentDate;i<=currentDate+Options.availDate;i++){
 					if(i>lastDay[oriMonth-1] && oriMonth<12){
 					 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass('notavailable')
 					}else if(i>lastDay[oriMonth-1] && oriMonth==12){
@@ -778,6 +778,32 @@ $(document).ready(function(){
 					}
 				}
 			}	
+		}
+	}
+	*/
+
+	function availableDateIndicator(availableStartTime,Endtime){ 
+		// 요소설명
+		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 시작시간'
+		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 마감시간'
+		if(Options.reserve == 1){
+			$('td:not([schedule-id])').addClass('option_notavailable')
+			$('.blackballoon').parent('td').addClass('option_notavailable')
+		}else{
+			if(currentHour<Endtime && currentHour>=availableStartTime){
+				var availability = 'available'
+			}else{
+				var availability = 'notavailable'
+			}
+			for(i=currentDate;i<=currentDate+Options.availDate;i++){
+				if(i>lastDay[oriMonth-1] && oriMonth<12){
+				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass(availability)
+				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
+					$('td[data-date='+(oriYear+1)+'_'+(oriMonth-11)+'_'+(i-lastDay[oriMonth-1])+']').addClass(availability)
+				}else{
+				 	$('td[data-date='+oriYear+'_'+oriMonth+'_'+i+']').addClass(availability)	
+				}
+			}
 		}
 	}
 
