@@ -160,8 +160,16 @@ $(document).ready(function(){
             }else if(thisIDSplitArray[4]=="00"){
               var next30ID = '#'+thisIDSplitArray[0]+'_'+thisIDSplitArray[1]+'_'+thisIDSplitArray[2]+'_'+thisIDSplitArray[3]+'_30'
             }
+            var thisTime = thisIDSplitArray[3] +'_'+ thisIDSplitArray[4]
+            //2018_5_13_23_30
             if(Options.classDur == 60){
-                if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none') && !$(next30ID).find('div').hasClass('classTime') && !$(next30ID).find('div').hasClass('offTime') && !$(this).hasClass('_on')){
+                if(!$(this).find('div').hasClass('classTime') 
+                  && !$(this).find('div').hasClass('offTime') 
+                  && $('#page-addplan-pc').css('display','none') 
+                  && !$(next30ID).find('div').hasClass('classTime') 
+                  && !$(next30ID).find('div').hasClass('offTime') 
+                  && !$(this).hasClass('_on')
+                  && thisTime!=(Options.workEndTime-1)+'_30'){
                   //$('.td00').css('background','transparent')
                   closeMiniPopupByChange()
                   if(Options.classDur == 30){
