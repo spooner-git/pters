@@ -1280,6 +1280,7 @@ function shiftMemberList(type){
                 $('._groupaddbutton').hide()
                 $('._memberaddbutton').show()
             }else if($('#btnCallGroupList').hasClass('active')){
+                get_group_list()
                 $('#currentGroupList, #currentGroupNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._groupaddbutton').show()
@@ -1293,6 +1294,7 @@ function shiftMemberList(type){
                 $('._groupaddbutton').hide()
                 $('._memberaddbutton').show()
             }else if($('#btnCallGroupList').hasClass('active')){
+                get_group_list()
                 $('#finishedGroupList, #finishGroupNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum').css('display','none')
                 $('._groupaddbutton').show()
@@ -1313,6 +1315,7 @@ function shiftMemberList(type){
             }
         break;
         case "group":
+            get_group_list()
             if($('#btnCallCurrent').hasClass('active')){
                 $('#currentGroupList, #currentGroupNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum').css('display','none')
@@ -3364,9 +3367,9 @@ function add_group_form_func(){
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
 
-                DataFormattingDict('ID');
-                DataFormatting('current');
-                DataFormatting('finished');
+                //DataFormattingDict('ID');
+                //DataFormatting('current');
+                //DataFormatting('finished');
                 groupListSet('current',jsondata)
                 groupListSet('finished',jsondata)
                 /*
@@ -3385,17 +3388,91 @@ function add_group_form_func(){
             $('#errorMessageText').text('통신 에러: 관리자 문의')
         },
     })
+}
 
+function get_group_list(){
+    $.ajax({
+        url:'/trainer/get_group_info/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            ajax_received_json_data_member_manage(data);
+            if(messageArray.length>0){
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                scrollToDom($('#page_addmember'))
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if($('body').width()<600){
+                    $('#page_managemember').show();
+                }
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                groupListSet('current',jsondata)
+                groupListSet('finished',jsondata)
+
+                closePopup('member_add')
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
 }
 
 function groupListSet(option, jsondata){ //option : current, finished
+    console.log('json---:',jsondata)
     switch(option){
         case 'current':
         break;
         case 'finished':
         break;
     }
-    console.log('json---:',jsondata)
+
+    var htmlToJoin = [];
+    var groupNum = jsondata.group_id.length;
+    for(var i=0; i<groupNum; i++){
+        var group_name = jsondata.name[i];
+        var group_id = jsondata.group_id[i];
+        var group_type = jsondata.group_type_cd[i];
+        var group_capacity = jsondata.member_num[i];
+        var group_createdate = jsondata.reg_dt[i];
+        var group_memo = jsondata.note[i];
+
+        var htmlstart = '<div class="groupWrap">'
+        //var htmlend = '<div class="groupMembersWrap"><div></div>'
+        var htmlend = '</div>'
+
+        var main = '<div class="_groupnum">'+(i+1)+'</div>'+
+                    '<div class="_groupname">'+group_name+'</div>'+
+                    '<div class="_grouptypecd">'+group_type+'</div>'+
+                    '<div class="_groupcapacity">'+group_capacity+'</div>'+
+                    '<div class="_groupmemo">'+group_memo+'</div>'+
+                    '<div class="_groupcreatedate">'+group_createdate+'</div>'
+        htmlToJoin.push(htmlstart+main+htmlend)
+    }
+
+    $('#currentGroupList').html(htmlToJoin.join(''))
 }
 
 
