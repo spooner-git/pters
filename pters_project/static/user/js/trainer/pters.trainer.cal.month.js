@@ -246,12 +246,7 @@ $(document).ready(function(){
 			}
 		})
 
-		function closeAddPlanPopup(){
-	  	  	$('#page-addplan').fadeOut('fast','swing')
-	      	$('._NORMAL_ADD_wrap').css('display','block')
-	      	$('._REPEAT_ADD_wrap').css('display','none')
-	      	$('#timeGraph').css('display','none')
-	  	}
+		
 
 		//일정삭제 확인 팝업 예 버튼
 		var ajax_block_during_delete_monthcal = true
@@ -533,6 +528,13 @@ $(document).ready(function(){
 				send_memo()
 			}
 		})
+
+		function closeAddPlanPopup(){
+	  	  	$('#page-addplan').fadeOut('fast','swing')
+	      	$('._NORMAL_ADD_wrap').css('display','block')
+	      	$('._REPEAT_ADD_wrap').css('display','none')
+	      	$('#timeGraph').css('display','none')
+	  	}
 	}
 
 	function send_memo(){

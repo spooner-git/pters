@@ -216,6 +216,7 @@ $(document).ready(function(){
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 		$('.pt_memo_guide_popup').css('display','block')
+		$('#popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
 		var info = $(this).attr('class-time').split('_')
@@ -316,6 +317,7 @@ $(document).ready(function(){
 	//Off 일정 클릭시 팝업 Start
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 		$('.pt_memo_guide_popup').css('display','none')
+		$('#popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
 		var info = $(this).attr('off-time').split('_')
@@ -383,6 +385,110 @@ $(document).ready(function(){
 		$("#popup_btn_complete").hide()
 		$("#popup_sign_img").css("display","none")
 		schedule_on_off = 0;
+	})
+
+	//스케쥴 클릭시 팝업 Start
+	$(document).on('click','div.groupTime',function(e){ //일정을 클릭했을때 팝업 표시
+		e.stopPropagation()
+		$('#popup_btn_viewGroupParticipants').show()
+		
+		$('.pt_memo_guide_popup').css('display','block')
+		deleteTypeSelect = ''
+		addTypeSelect ='ptadd'
+		var info = $(this).attr('group-time').split('_')
+		var yy=info[0]
+		var mm=info[1]
+		var dd=info[2]
+		var time = info[3]
+		if(time == 24){
+			var time = 0
+		}
+		var minute = info[4]
+		var classdur = info[5]
+		var classdurTime = parseInt(info[5]) + "시간 "
+		if(classdur.indexOf('.')){
+			var classdurMin = "30분"
+		}else{
+			var classdurMin = ""
+		}
+		var dur = '('+classdurTime + classdurMin+')'
+		var dayobj = new Date(yy,mm-1,dd)
+		var dayraw = dayobj.getDay();
+		var dayarryKR = ['일','월','화','수','목','금','토']
+		var dayarryJP = ['日','月','火','水','木','金','土']
+		var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+		switch(Options.language){
+			case "KOR" :
+			var member = " 회원님의 ";
+			var yourplan = " 일정";
+			var day = dayarryKR[dayraw];
+			var text = 'PT 일정'
+			break;
+			case "JPN" :
+			var member = "様の ";
+			var yourplan = " 日程";
+			var day = dayarryJP[dayraw];
+			var text = 'PT 日程'
+			break;
+			case "ENG" :
+			var member = "'s schedule at ";
+			var yourplan = "";
+			var day = dayarryEN[dayraw];
+			var text = 'PT Plan'
+			break; 
+		}
+		console.log(day)
+		$('#popup_planinfo_title').text(text)
+		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
+		$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
+		$('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
+        $('#canvas').hide().css({'border-color':'#282828'})
+		$('#canvasWrap').css({'height':'0px'})
+		$('#canvasWrap span').hide();
+
+		$('#page-addplan-pc').hide()
+		$("#cal_popup_planinfo").fadeIn('fast');
+		shade_index(100)
+		closeAlarm('pc')
+
+		$('#popup_info3_memo,#popup_info3_memo_modify').show()
+		var schedule_finish_check = $(this).attr('data-schedule-check')
+		
+		
+		var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
+		var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+':'+minute+yourplan
+		var infoText3 = $(this).attr('data-memo')
+		if($(this).attr('data-memo') == undefined){
+			var infoText3 = ""
+		}
+		$('#popup_info').text(infoText);
+		$('#popup_info2').html(infoText2);
+		$('#popup_info3_memo').text(infoText3).val(infoText3)
+		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('schedule-id'))
+		$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
+		$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
+		$("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
+		$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
+		$("#id_repeat_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
+		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
+		$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
+		$("#id_repeat_member_id").val($(this).attr('data-memberid')); //member id 정보 저장
+		$("#id_repeat_lecture_id").val($(this).attr('data-lectureId')); //lecture id 정보 저장
+		$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
+		$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
+		if(schedule_finish_check=="0"){
+			$("#popup_btn_complete").show()
+			$("#popup_text1").css("display","block")
+			$("#popup_sign_img").css("display","none")
+        }
+        else{
+			$("#popup_btn_complete").hide()
+			$("#popup_text1").css("display","none")
+			$("#popup_sign_img").css("display","block")
+			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
+		}
+		schedule_on_off = 1;
+		
 	})
 
 	mini_popup_event()
@@ -703,6 +809,31 @@ $(document).ready(function(){
 				}	
 			}
 		})
+
+		$('#popup_btn_viewGroupParticipants').click(function(){
+			if(toggleGroupParticipants == 'off'){
+				toggleGroupParticipantsList('on')
+			}else if(toggleGroupParticipants == 'on'){
+				toggleGroupParticipantsList('off')
+			}
+			
+		})
+	}
+
+	var toggleGroupParticipants = 'off'
+	function toggleGroupParticipantsList(onoff){
+		switch(onoff){
+			case 'on':
+				toggleGroupParticipants = 'on'
+				$('#groupParticipants').animate({'height':'200px'},200)
+				$('#popup_btn_viewGroupParticipants img').css('transform','rotate(180deg)')
+			break;
+			case 'off':
+				toggleGroupParticipants = 'off'
+				$('#groupParticipants').animate({'height':0},200)
+				$('#popup_btn_viewGroupParticipants img').css('transform','rotate(0deg)')
+			break;
+		}
 	}
 
     function send_push(push_server_id, intance_id, title, message, badge_counter){
@@ -878,8 +1009,9 @@ $(document).ready(function(){
 	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray,"off");
 	//addcurrentTimeIndicator();
 	
-	scheduleTime('class')
+	//scheduleTime('class')
 	scheduleTime('off')
+	scheduleTime('group')
 	addPtMemberListSet();
 
 	
