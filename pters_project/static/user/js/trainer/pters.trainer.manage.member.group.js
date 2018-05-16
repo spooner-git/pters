@@ -1,13 +1,23 @@
 
+/////////////그룹타입, 그룹정원 드랍다운 값을 Form에 셋팅/////////////////////////////////////////
+$('#grouptype').change(function(){
+	$('#form_grouptype').val($(this).val())
+})
+$('#groupcapacity').change(function(){
+	$('#form_groupcapacity').val($(this).val())
+})
+/////////////그룹타입, 그룹정원 드랍다운 값을 Form에 셋팅/////////////////////////////////////////
+
 
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
 var added_New_Member_Num = 0
 $('button#addByNew').click(function(e){
+	addByNew_input_eventGroup()
 	e.preventDefault()
 	added_New_Member_Num++
-	var htmlstart = '<div class="addByNewRaw">'
+	var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="">'
 	var nameinput = '<input class="new_member_lastname" placeholder="회원 성"><input class="new_member_firstname" placeholder="회원 이름">'
-	var sexinput = '<select><option selected disabled>성별</option><option>남</option><option>여</option></select>'
+	var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
 	var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'
 	var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">'
 	var htmlend = '</div>'
@@ -38,6 +48,27 @@ $(document).on('click','img.substract_addedMember',function(){
 	}
 
 })
+
+//신규로 새로 그룹원으로 추가된 행의 input값들에 대한 key,드랍다운 이벤트모음
+function addByNew_input_eventGroup(){
+	//이름 input이 자신이 속한 부모 행의 attr에 이름 정보를 입력해둔다.
+	$(document).on('keyup', '.addByNewRaw input.new_member_lastname', function(){
+		$(this).parent('.addByNewRaw').attr({'data-lastname': $(this).val()})
+	})
+
+	$(document).on('keyup', '.addByNewRaw input.new_member_firstname', function(){
+		$(this).parent('.addByNewRaw').attr({'data-firstname': $(this).val()})
+	})
+
+	$(document).on('change', '.addByNewRaw select', function(){
+		$(this).parent('.addByNewRaw').attr('data-sex', $(this).val())
+	})
+
+	$(document).on('keyup', '.addByNewRaw input.new_member_phone', function(){
+		$(this).parent('.addByNewRaw').attr('data-phone', $(this).val())
+	})
+
+}
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
 
 
@@ -48,11 +79,9 @@ $('button#addByList, button#addBySearch').click(function(e){
 	$('#subpopup_'+$(this).attr('id')).show()
 
 	if($(this).attr('id')=="addByList"){
-
 		draw_memberlist_for_addByList()
-		
 	}else if($(this).attr('id')=="addBySearch"){
-
+		//
 	}
 })
 
@@ -98,12 +127,11 @@ function draw_memberlist_for_addByList(){
 	var html = htmlToJoin.join('')
 	$('#subpopup_addByList').html(html)
 }
-
-
 /////////////리스트에서 추가 버튼 누르면 회원리스트 팝업//////////////////////////////////
 
 
 
+/////////////PTERS에서 ID로 검색해서 그룹원 추가하기/////////////////////////////////////////
 $('button#addBySearch_search').click(function(){
 	var searchID = $('#addBySearch_input').val()
 	$.ajax({
@@ -168,3 +196,49 @@ function draw_memberlist_for_addBySearch(jsondata){
 
 	$('#searchedMemberListBox').html(html)
 }
+/////////////PTERS에서 ID로 검색해서 그룹원 추가하기/////////////////////////////////////////
+
+
+
+
+
+
+//ajax로 서버에 보낼 때, 추가된 회원들의 정보를 form에 채운다.
+function set_added_members_to_form(){
+	var len = $('#addedMemberListBox .addByNewRaw').length;
+	var name = [];
+	var firstname = [];
+	var lastname = [];
+	var dbid = [];
+	var id = [];
+	var sex = [];
+	var phone = [];
+	var newornot = [];
+	for(var i=1; i<len+1; i++){
+		firstname.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-firstname'))
+		lastname.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname'))
+		dbid.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid'))
+		id.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-id'))
+		sex.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex'))
+		phone.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone'))
+		if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid').length == 0){
+			newornot.push("new")
+		}else{
+			newornot.push('old')
+		}
+	}
+
+	var formlist = ['lastname', 'firstname', 'dbid', 'id', 'sex', 'phone', 'newornot']
+
+	for(var element in formlist){
+		$('#form_groupmember_'+formlist[element]).val(eval(formlist[element]))
+	}
+}
+
+
+//테스트
+$('#uptext2_PC').click(function(){
+	set_added_members_to_form()
+	console.log($('#member-add-form-new').serializeArray())
+})
+//테스트

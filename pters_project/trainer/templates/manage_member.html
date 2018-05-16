@@ -518,9 +518,6 @@
 </div>
 
 
-
-
-
 <div id="memberInfoPopup_PC" class="infopopup_pc wrap popups _member_info_popup" style="display: none;">
     <div id="inputError_info_PC" style="position: absolute;top: 0;left: 0;">
         <div id="errorMsg_info_PC" class="inputErrorInner" style="height: 22px;">
@@ -658,6 +655,7 @@
     </div>
 </div>
 
+
 <div id="page_addmember" class="wrap popups" style="display: none;">
     <div id="how_to_add_member">
         <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;margin-top:5px;">
@@ -688,6 +686,21 @@
         <input type="hidden" name="name" id="form_name" value="">
         <input type="hidden" name="user_id" id="id_user_id">
         <input type="hidden" name="search_confirm" id="id_search_confirm" value="0">
+
+        <!--그룹추가 관련 Form-->
+        <input type="hidden" name="groupname" id="form_groupname" value="">
+        <input type="hidden" name="grouptype" id="form_grouptype" value="">
+        <input type="hidden" name="groupcapacity" id="form_groupcapacity" value="">
+        <input type="hidden" name="groupmember_lastname" id="form_groupmember_lastname">
+        <input type="hidden" name="groupmember_firstname" id="form_groupmember_firstname">
+        <input type="hidden" name="groupmember_dbid" id="form_groupmember_dbid">
+        <input type="hidden" name="groupmember_id" id="form_groupmember_id">
+        <input type="hidden" name="groupmember_sex" id="form_groupmember_sex">
+        <input type="hidden" name="groupmember_phone" id="form_groupmember_phone">
+        <input type="hidden" name="groupmember_newornot" id="form_groupmember_newornot">
+
+
+        <!--그룹추가 관련 Form-->
 
         <div>
             <p class="icons_description _SEARCH_MEMBER_NEW">※등록하고자하는 회원님이 이미 PTERS 회원인 경우에는 아이디를 검색하여 추가하여 사용해주세요.</p>
@@ -794,7 +807,6 @@
                 </label>
                 <div id="groupNameInput">
                     <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹 이름을 입력해주세요." maxlength="10">
-                    <input type="hidden" name="grouptype" id="form_grouptype">
                     <select id="grouptype">
                         <option selected disabled>그룹 타입</option>
                         <option value="specifiedgroup">정기 그룹</option>
