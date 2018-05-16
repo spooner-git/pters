@@ -167,6 +167,12 @@ body{
 	margin-left: auto;
 	margin-right: auto;
 }
+#selectBox_type{
+	border-top: 1px solid black;
+	max-width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+}
 
 .alignSelect{
 	width: 100%;
@@ -328,14 +334,14 @@ select:focus > option:checked {
 }
 
 
-#currentMemberList,#finishedMemberList{
+#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
 	width: 91.6%;
 }
 
-
-#finishedMemberList{
+#finishedMemberList, #currentGroupList, #finishedGroupList{
 	display: none;
 }
+
 
 #float_btn_wrap{
 	display: block;
@@ -1420,7 +1426,7 @@ select:focus > option:checked {
 	}
 
 	
-	#currentMemberList, #finishedMemberList{
+	#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
 		/*width: 1080px;*/
 		height: 600px;
 		overflow-y: overlay;
@@ -1563,6 +1569,19 @@ select:focus > option:checked {
 		width: 350px;
 		height: 45px;
 	}
+	#selectBox_type{
+		border:1px solid #cccccc;
+		width: 150px;
+		height: 33px;
+		margin-top: 10px;
+	}
+		#selectBox_type div{
+			padding: 0;
+		}
+		#selectBox_type span{
+			font-size: 13px;
+			font-weight: 500;
+		}
 
 	.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
 		border-color:#282828;

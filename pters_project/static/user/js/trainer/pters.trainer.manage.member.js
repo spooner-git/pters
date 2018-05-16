@@ -1298,30 +1298,46 @@ function pc_add_member(option){
 
 //진행중 회원, 종료된 회원 리스트 스왑
 function shiftMemberList(type){
-    if(type == "current"){
-        var currentMemberList = $("#currentMemberList");
-        var currentMemberNum = $('#currentMemberNum');
-        var finishedMemberList = $("#finishedMemberList");
-        var finishedMemberNum = $('#finishMemberNum');
-        if(currentMemberList.css("display")=="none"){
-            finishedMemberList.css("display","none");
-            finishedMemberNum.css("display","none");
-            currentMemberList.css("display","block");
-            currentMemberNum.css("display","block");
-        }
-    }else if(type == "finished"){
-        var currentMemberList = $("#currentMemberList");
-        var currentMemberNum = $('#currentMemberNum');
-        var finishedMemberList = $("#finishedMemberList");
-        var finishedMemberNum = $('#finishMemberNum');
-        if(finishedMemberList.css("display")=="none"){
-            finishedMemberList.css("display","block");
-            finishedMemberNum.css("display","block");
-            currentMemberList.css("display","none");
-            currentMemberNum.css("display","none");
-        }
+    switch(type){
+        case "current":
+            if($('#btnCallMemberList').hasClass('active')){
+                $('#currentMemberList, #currentMemberNum').css('display','block');
+                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
+            }else if($('#btnCallGroupList').hasClass('active')){
+                $('#currentGroupList, #currentGroupNum').css('display','block');
+                $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum').css('display','none')
+            }
+        break;
+        case "finished":
+            if($('#btnCallMemberList').hasClass('active')){
+                $('#finishedMemberList, #finishMemberNum').css('display','block');
+                $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
+            }else if($('#btnCallGroupList').hasClass('active')){
+                $('#finishedGroupList, #finishGroupNum').css('display','block');
+                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum').css('display','none')
+            }
+        break;
+        case "member":
+            if($('#btnCallCurrent').hasClass('active')){
+                $('#currentMemberList, #currentMemberNum').css('display','block');
+                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
+            }else if($('#btnCallFinished').hasClass('active')){
+                $('#finishedMemberList, #finishMemberNum').css('display','block');
+                $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
+            }
+        break;
+        case "group":
+            if($('#btnCallCurrent').hasClass('active')){
+                $('#currentGroupList, #currentGroupNum').css('display','block');
+                $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum').css('display','none')
+            }else if($('#btnCallFinished').hasClass('active')){
+                $('#finishedGroupList, #finishGroupNum').css('display','block');
+                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum').css('display','none')
+            }
+        break;
     }
 }
+
 
 //간편 가격입력
 function priceInput(price, type, selector){

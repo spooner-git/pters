@@ -233,6 +233,18 @@
        <span class="ENtext">Finished</span>
       </div>
     </div> 
+    <div id="selectBox_type" class="btn-group btn-group-justified">
+      <div id="btnCallMemberList" onclick="shiftMemberList('member')" class="btn btn-primary active">
+        <span class="KRtext">회원 목록</span>
+        <span class="JPtext">進行中</span>
+        <span class="ENtext">Ongoing</span>
+      </div>
+      <div id="btnCallGroupList" onclick="shiftMemberList('group')" class="btn btn-primary">
+       <span class="KRtext">그룹 목록</span>
+       <span class="JPtext">終了</span>
+       <span class="ENtext">Finished</span>
+      </div>
+    </div> 
     <div id="alignBox">
       <div style="font-size:14px;position: relative;">
         <span class="memberAlign KRtext">회원 정렬 기준</span>
@@ -343,6 +355,24 @@
 
     <div id="finishedMemberList" class="centeralign">
       <table id="finishedMember" class="table table-bordered">
+    
+      </table>
+      <div class="ymdText-pc-add-member-again _info_download" style="float:right">
+            <span class="KRtext">목록 다운로드</span>
+      </div>
+    </div>
+
+    <div id="currentGroupList" class="centeralign">
+      <table id="currentGroup" class="table table-bordered">
+        
+      </table>
+      <div class="ymdText-pc-add-member _info_download" style="float:right">
+            <span class="KRtext">목록 다운로드</span>
+      </div>
+    </div>
+
+    <div id="finishedGroupList" class="centeralign">
+      <table id="finishedGroup" class="table table-bordered">
     
       </table>
       <div class="ymdText-pc-add-member-again _info_download" style="float:right">
