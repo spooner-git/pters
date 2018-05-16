@@ -4454,3 +4454,66 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         return context
 
+
+@csrf_exempt
+def delete_group_info_logic(request):
+
+    group_id = request.POST.get('group_id', '')
+    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+    error = None
+    group_info = None
+    try:
+        group_info = GroupTb.objects.get(group_id=group_id)
+    except ObjectDoesNotExist:
+        error = '그룹 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        group_info.use = 0
+        group_info.mod_dt = timezone.now()
+        group_info.save()
+
+    messages.error(request, error)
+
+    return redirect(next_page)
+
+
+@csrf_exempt
+def update_group_info_logic(request):
+
+    group_id = request.POST.get('group_id', '')
+    group_type_cd = request.POST.get('group_type_cd', '')
+    member_num = request.POST.get('member_num', '')
+    name = request.POST.get('name', '')
+    note = request.POST.get('note', '')
+    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+    group_info = None
+
+    try:
+        group_info = GroupTb.objects.get(group_id=group_id)
+    except ObjectDoesNotExist:
+        error = '그룹 정보를 불러오지 못했습니다.'
+
+    if error is None:
+
+        if group_type_cd == '' or group_type_cd is None:
+            group_type_cd = group_info.group_type_cd
+
+        if member_num == '' or member_num is None:
+            member_num = group_info.member_num
+
+        if name == '' or name is None:
+            name = group_info.name
+
+        if note == '' or note is None:
+            note = group_info.note
+
+        group_info.group_type_cd = group_type_cd
+        group_info.member_num = member_num
+        group_info.name = name
+        group_info.note = note
+        group_info.mod_dt = timezone.now()
+        group_info.save()
+
+    messages.error(request, error)
+
+    return redirect(next_page)

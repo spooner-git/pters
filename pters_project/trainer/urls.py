@@ -120,6 +120,7 @@ urlpatterns = [
     # 그룹 기능
     url(r'^add_group_info/$', views.add_group_info_logic, name='add_group_info'),
     url(r'^get_group_info/$', views.GetGroupInfoViewAjax.as_view(), name='get_group_info'),
-
+    url(r'^delete_group_info/$', views.delete_group_info_logic, name='delete_group_info'),
+    url(r'^update_group_info/$', views.update_group_info_logic, name='delete_group_info'),
 
 ]
