@@ -1,10 +1,15 @@
 
 /////////////그룹타입, 그룹정원 드랍다운 값을 Form에 셋팅/////////////////////////////////////////
+$('#groupname').keyup(function(){
+	check_dropdown_selected()
+})
 $('#grouptype').change(function(){
 	$('#form_grouptype').val($(this).val())
+	check_dropdown_selected()
 })
 $('#groupcapacity').change(function(){
 	$('#form_groupcapacity').val($(this).val())
+	check_dropdown_selected()
 })
 /////////////그룹타입, 그룹정원 드랍다운 값을 Form에 셋팅/////////////////////////////////////////
 
