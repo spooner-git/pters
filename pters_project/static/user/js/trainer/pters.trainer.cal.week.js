@@ -813,10 +813,10 @@ $(document).ready(function(){
 		$('#popup_btn_viewGroupParticipants').click(function(){
 			if(toggleGroupParticipants == 'off'){
 				toggleGroupParticipantsList('on')
+				draw_groupParticipantsList_to_popup()
 			}else if(toggleGroupParticipants == 'on'){
 				toggleGroupParticipantsList('off')
 			}
-			
 		})
 	}
 

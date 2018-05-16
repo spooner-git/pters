@@ -112,7 +112,22 @@
 	height: 0px;
 	width: 100%;
 	background: #ffffff;
+	overflow-y:auto;
 }
+	.groupParticipantsRow{
+		text-align: left;
+		margin-top: 3px;
+		margin-bottom: 3px;
+	}
+	#groupParticipants img{
+		width: 12px;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	#groupParticipants img.group_member_cancel{
+		float: right;
+		cursor: pointer;
+	}
 
 @media(max-height: 445px){
 	#cal_popup_planinfo{

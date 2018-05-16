@@ -2341,3 +2341,23 @@ function send_push(push_server_id, intance_id,title, message, badge_counter){
       }
     })
 }
+
+
+
+//그룹..
+
+function draw_groupParticipantsList_to_popup(jsondata){
+    var target = $('#groupParticipants')
+
+    var htmlToJoin = []
+    for(var i=0; i<5; i++){
+      var htmlstart = '<div class="groupParticipantsRow">'
+      var sex = '<img src="/static/user/res/member/icon-sex-M.png">'
+      var name = '<span>{회원이름}</span>'
+      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel">'
+      var htmlend = '</div>'
+      htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
+    }
+
+    target.html(htmlToJoin.join(''))
+}
