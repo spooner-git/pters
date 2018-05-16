@@ -343,34 +343,39 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
         for lecture_datum_info in lecture_data:
             lecture_datum = lecture_datum_info.lecture_tb
             # 강좌별로 연결되어있는 회원 리스트 불러오기
-            member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
-            # 강좌별로 연결된 PT 스케쥴 가져오기
-            lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
-                                                                       en_dis_type='1',
-                                                                       start_dt__gte=start_date,
-                                                                       start_dt__lt=end_date, use=1).order_by('start_dt')
-            # PT 스케쥴 정보 셋팅
-            idx = 0
-            for pt_schedule_datum in lecture_datum.pt_schedule_data:
-                # lecture schedule id 셋팅
-                idx += 1
-                pt_schedule_id.append(pt_schedule_datum.schedule_id)
-                # lecture schedule 에 해당하는 lecture id 셋팅
-                pt_schedule_lecture_id.append(lecture_datum.lecture_id)
-                pt_schedule_member_name.append(member_data.name)
-                pt_schedule_member_id.append(member_data.member_id)
-                pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
-                pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
-                pt_schedule_idx.append(idx)
-                if pt_schedule_datum.note is None:
-                    pt_schedule_note.append('')
-                else:
-                    pt_schedule_note.append(pt_schedule_datum.note)
-                # 끝난 스케쥴인지 확인
-                if pt_schedule_datum.state_cd == 'PE':
-                    pt_schedule_finish_check.append(1)
-                else:
-                    pt_schedule_finish_check.append(0)
+            try:
+                member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 가져오지 못했습니다.'
+
+            if error is None:
+                # 강좌별로 연결된 PT 스케쥴 가져오기
+                lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_datum.lecture_id,
+                                                                           en_dis_type='1',
+                                                                           start_dt__gte=start_date,
+                                                                           start_dt__lt=end_date, use=1).order_by('start_dt')
+                # PT 스케쥴 정보 셋팅
+                idx = 0
+                for pt_schedule_datum in lecture_datum.pt_schedule_data:
+                    # lecture schedule id 셋팅
+                    idx += 1
+                    pt_schedule_id.append(pt_schedule_datum.schedule_id)
+                    # lecture schedule 에 해당하는 lecture id 셋팅
+                    pt_schedule_lecture_id.append(lecture_datum.lecture_id)
+                    pt_schedule_member_name.append(member_data.name)
+                    pt_schedule_member_id.append(member_data.member_id)
+                    pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
+                    pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
+                    pt_schedule_idx.append(idx)
+                    if pt_schedule_datum.note is None:
+                        pt_schedule_note.append('')
+                    else:
+                        pt_schedule_note.append(pt_schedule_datum.note)
+                    # 끝난 스케쥴인지 확인
+                    if pt_schedule_datum.state_cd == 'PE':
+                        pt_schedule_finish_check.append(1)
+                    else:
+                        pt_schedule_finish_check.append(0)
 
     if error is None:
         class_info.schedule_check = 0
