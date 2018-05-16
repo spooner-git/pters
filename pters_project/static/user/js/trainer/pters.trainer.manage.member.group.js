@@ -247,4 +247,8 @@ $('#uptext2_PC').click(function(){
 	set_added_members_to_form()
 	console.log($('#member-add-form-new').serializeArray())
 })
+
+$('#currentGroupList').click(function(){
+	pc_add_member('groupmember')
+})
 //테스트

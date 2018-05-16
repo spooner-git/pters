@@ -1294,8 +1294,10 @@ select:focus > option:checked {
 		background: #d7f3ff;
 	}
 
-	#page_addmember,#memberInfoPopup{
-		top: 75px;
+	#page_addmember, #memberInfoPopup{
+		top:50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 
 	.ymdText-pc-add-member-wrap{
@@ -1346,6 +1348,7 @@ select:focus > option:checked {
 				height: 17px;
 				margin-bottom:5px;
 			}
+
 
 	.ymdText-pc-add-member{
 		display: inline;
