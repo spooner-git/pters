@@ -13,6 +13,11 @@
       [{% for group_info in group_data %}"{{ group_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "mod_dt":
       [{% for group_info in group_data %}"{{ group_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "state_cd":
+      [{% for group_info in group_data %}"{{ group_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "state_cd_name":
+      [{% for group_info in group_data %}"{{ group_info.state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]

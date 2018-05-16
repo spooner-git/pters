@@ -1329,7 +1329,7 @@ def update_member_info_logic(request):
                             username = user.last_name + user.first_name + str(i)
                             try:
                                 User.objects.get(username=username)
-                            except:
+                            except ObjectDoesNotExist:
                                 test = True
 
                             if test:
@@ -4410,7 +4410,7 @@ def add_group_info_logic(request):
     try:
         with transaction.atomic():
             group_info = GroupTb(class_tb_id=class_id, group_type_cd=group_type_cd, member_num=member_num,
-                                 name=name, note=note,
+                                 name=name, note=note, state_cd='IP',
                                  mod_dt=timezone.now(), reg_dt=timezone.now(), use=1)
 
             group_info.save()
@@ -4437,8 +4437,18 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(GetGroupInfoViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-
+        error = None
         group_data = GroupTb.objects.filter(class_tb_id=class_id, use=1)
+
+        for group_info in group_data:
+            try:
+                state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
+                group_info.state_cd_nm = state_cd_nm.common_cd_nm
+            except ObjectDoesNotExist:
+                error = '그룹 정보를 불러오지 못했습니다.'
+
+        if error is not None:
+            messages.error(self.request, error)
 
         context['group_data'] = group_data
 
