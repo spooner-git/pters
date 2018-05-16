@@ -8,6 +8,9 @@ $(document).ready(function(){
         memberListSet('finished','name')
     //#####################페이지 들어오면 초기 시작 함수//#####################
     */
+$('form button').click(function(e){
+    e.preventDefault()
+})
 
 var filter = "win16|win32|win64|mac|macintel";
 var platform_check;
@@ -318,15 +321,18 @@ if (agent.indexOf("firefox") != -1) {
         */
 
         if($(this).attr('data-type')=="view"){
-            var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
-            var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
             if($('body').width()<600){
                var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
+               var myRowSelect = $(this).parent('div').siblings('div.whatGroupType').find('select');
                var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input') 
             }else if($('body').width()>=600){
+                var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
+                var myRowSelect = $('select[data-leid='+$(this).attr('data-leid')+']');
+                var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
 
             }
             myRow.addClass('input_available').attr('disabled',false);
+            myRowSelect.addClass('input_available').attr('disabled',false);
             myNoteRow.addClass('input_available').attr('disabled',false);
 
 
@@ -878,6 +884,7 @@ if (agent.indexOf("firefox") != -1) {
         $('#memberCount_add_fast').removeClass('dropdown_selected');
         $('#datepicker_add,#datepicker2_add,#memberCount_add,#lecturePrice_add_2').val("");
         $('#fast_check').val('0');
+        $('#form_member_grouptype').val($('#simpleReg select.grouptypeselect').val())
         check_dropdown_selected();
     });
 
@@ -893,9 +900,11 @@ if (agent.indexOf("firefox") != -1) {
         $("#datepicker2_add").datepicker('option','minDate',$("#datepicker_add").val());
         $("#datepicker_add").datepicker('option','maxDate',$("#datepicker2_add").val());
         $('#fast_check').val('1');
+        $('#form_member_grouptype').val($('#manualReg select.grouptypeselect').val())
         check_dropdown_selected();
     });
 
+    //진행기간(빠른입력방식) 선택
     $('._due .ptersCheckbox').parent('td').click(function(){
         $('._due div.checked').removeClass('checked ptersCheckboxInner');
         var pterscheckbox = $(this).find('div');
@@ -906,6 +915,7 @@ if (agent.indexOf("firefox") != -1) {
         }
     });
 
+    //등록횟수(빠른입력방식) 선택
     $('._count .ptersCheckbox').parent('td').click(function(){
         $('._count div.checked').removeClass('checked ptersCheckboxInner');
         var pterscheckbox = $(this).find('div');
@@ -914,9 +924,15 @@ if (agent.indexOf("firefox") != -1) {
         $('#memberCount_add_fast').val(pterscheckbox.attr('data-count'));
         $('#memberCount_add_fast').addClass("dropdown_selected");
         check_dropdown_selected();
-
     });
+
+    //등록유형 선택
+    $('.grouptypeselect').change(function(){
+        $('#form_member_grouptype').val($(this).val())
+    })
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
+
+
     $("#upbutton-check, #pcBtn").click(function(e){ //회원 등록 폼 작성후 완료버튼 클릭
         e.preventDefault()
         if($('#page_addmember').css('display')=='block'){
@@ -1047,7 +1063,7 @@ if (agent.indexOf("firefox") != -1) {
     });
 
 
- //작은달력 설정
+    //작은달력 설정
     $.datepicker.setDefaults({
         dateFormat: 'yy-mm-dd',
         prevText: '이전 달',
@@ -1761,8 +1777,8 @@ function memberListSet (type,option,Reverse){
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
-        //var nametd = '<td class="_tdname" data-name="'+name+'">'+name+nameimage+npCountImg+'</td>';
-        var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+npCountImg+'</td>';
+        var grouptypetd = '<td class="_grouptype" data-name="'+name+'">'+'1:1'+'</td>';
+        var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
         var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
         var emailtd = '<td class="_email">'+email+'</td>';
         var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>';
@@ -1773,7 +1789,7 @@ function memberListSet (type,option,Reverse){
         var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
         var scrolltd = '<td class="forscroll"></td>';
 
-        var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
+        var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
         arrayResult[i] = td;
     }
 
@@ -2725,6 +2741,8 @@ function draw_member_lecture_list_table(jsondata, targetHTML, option){
             var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
             var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
+            var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
+            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
                 var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }else if(jsondata.lectureStateArray[i] == "PE"){
@@ -2741,7 +2759,7 @@ function draw_member_lecture_list_table(jsondata, targetHTML, option){
             }
 
             var note = '<div class="pc_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
-            result_history_html.push('<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>'+note)
+            result_history_html.push('<div style="border-top:1px solid #cccccc;">'+howManyReg+whatGroupType+'</div>'+'<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>'+note)
         }
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
@@ -2777,7 +2795,8 @@ function draw_member_lecture_list_table(jsondata, targetHTML, option){
             var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
             var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
-            var howManyReg = '<div style="border:0;font-weight:bold;font-size:14px;color:#fe4e65;">'+(jsondata.lectureIdArray.length-i)+'회차 등록</div>'
+            var howManyReg = '<div class="howManyReg">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
+            var whatGroupType = '<div class="whatGroupType"><select disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
                 var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }else if(jsondata.lectureStateArray[i] == "PE"){
@@ -2795,7 +2814,7 @@ function draw_member_lecture_list_table(jsondata, targetHTML, option){
 
             var note = '<div class="mobile_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
 
-            result_history_html.push('<div class="wraps"><div data-leid='+jsondata.lectureIdArray[i]+' style="text-align:right;">'+howManyReg+'수정: '+modifyActiveBtn+'</div>'+
+            result_history_html.push('<div class="wraps"><div data-leid='+jsondata.lectureIdArray[i]+' style="text-align:right;">'+howManyReg+whatGroupType+'수정: '+modifyActiveBtn+'</div>'+
                                     table_title1+
                                     '<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+'</div>'+
                                     table_title2+

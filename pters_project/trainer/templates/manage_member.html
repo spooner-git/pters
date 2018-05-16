@@ -300,6 +300,9 @@
             <th class="_tdname">
                 <span class="KRtext">회원명</span><span class="JPtext">姓名</span><span class="ENtext">Name</span>
             </th>
+            <th class="_grouptype">
+                <span class="KRtext">등록유형</span><span class="JPtext">分類</span><span class="ENtext">Type</span>
+            </th>
             <th class="_id">
                 <span class="KRtext">회원 ID</span><span class="JPtext">メンバーID</span><span class="ENtext">Member ID</span>
             </th>
@@ -686,9 +689,10 @@
         <input type="hidden" name="name" id="form_name" value="">
         <input type="hidden" name="user_id" id="id_user_id">
         <input type="hidden" name="search_confirm" id="id_search_confirm" value="0">
+        <input type="hidden" name="member_grouptype" id="form_member_grouptype" value="1">
 
         <!--그룹추가 관련 Form-->
-        <input type="hidden" name="groupname" id="form_groupname" value="">
+
         <input type="hidden" name="grouptype" id="form_grouptype" value="">
         <input type="hidden" name="groupcapacity" id="form_groupcapacity" value="">
         <input type="hidden" name="groupmember_lastname" id="form_groupmember_lastname">
@@ -721,6 +725,7 @@
                 <label for="memberNameSex" class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                 </label>
+                <p class="icons_description" style="margin-bottom: 5px;"> 회원님 초기 접속 ID는 회원등록 후 자동생성 되며, <br>초기 비밀번호는 0000입니다.</p>
                 <div id="memberName_reg" class="dropdown pters_input_custom">
                     <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10">
                     <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="이름" maxlength="10">
@@ -733,13 +738,11 @@
 
             <div class="ptaddbox form-group _ADD_MEMBER_NEW">
                 <label for="memberPhone" class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
-                    <!--<p class="icons_description"> 회원님의 초기 접속 ID로 사용됩니다. <br>초기 비밀번호는 전화번호 마지막 네자리이며, 접속하여 ID와 비밀번호 변경이 가능합니다.</p>-->
+                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                 </label>
                 <div class="dropdown pters_input_custom">
                     <input type="tel" class="form-control" id="memberPhone_add" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
                 </div>
-                <p class="icons_description"> 회원님의 초기 접속 ID로 사용됩니다. <br>초기 비밀번호는 전화번호 마지막 네자리이며, 접속하여 ID와 비밀번호 변경이 가능합니다.</p>
             </div>
 
             <div class="ptaddbox form-group _ADD_MEMBER_NEW">
@@ -865,7 +868,7 @@
 
 
             <label for="" class="ptaddboxtext" style="padding-right: 5%;padding-left: 5%;">
-                    <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> PT등록정보 <span style="color: #fe4e65;">*</span>
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> 레슨 등록 정보 <span style="color: #fe4e65;">*</span>
             </label>
             <div id="selectBox2" class="selectbox">
                 <div id="btnCallSimple" href="#" class="btnCallSimple selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
@@ -873,6 +876,17 @@
             </div>
 
             <div id="manualReg" class="manualReg"> <!-- 세부 설정 방식 -->
+                <div class="ptaddbox form-group">
+                    <label for="memberGroupType" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록유형
+                        <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
+                    </label>
+                    <select class="dropdown pters_input_custom grouptypeselect">
+                        <option value="1">1:1 레슨</option>
+                        <option value="2">그룹 레슨</option>
+                        <option value="3">1:1과 그룹레슨 모두 이용 가능</option>
+                    </select>
+                </div>
                 <div class="ptaddbox form-group">
                     <label for="memberCount" class="ptaddboxtext">
                         <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록횟수
@@ -913,6 +927,17 @@
             </div>
 
             <div id="simpleReg" class="simpleReg"> <!-- 빠른 입력 방식 -->
+                <div class="ptaddbox form-group">
+                    <label for="memberGroupType" class="ptaddboxtext">
+                        <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록유형
+                        <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
+                    </label>
+                    <select class="dropdown pters_input_custom grouptypeselect">
+                        <option value="1">1:1 레슨</option>
+                        <option value="2">그룹 레슨</option>
+                        <option value="3">1:1과 그룹레슨 모두 이용 가능</option>
+                    </select>
+                </div>
                 <div class="ptaddbox form-group _count">
                     <label for="memberCount" class="ptaddboxtext">
                         <input type="hidden" id="memberCount_add_fast" name="counts_fast" >

@@ -132,7 +132,8 @@ function draw_memberlist_for_addByList(){
 
 
 /////////////PTERS에서 ID로 검색해서 그룹원 추가하기/////////////////////////////////////////
-$('button#addBySearch_search').click(function(){
+$('button#addBySearch_search').click(function(e){
+	e.preventDefault()
 	var searchID = $('#addBySearch_input').val()
 	$.ajax({
             url:'/trainer/get_member_info/',
@@ -221,7 +222,7 @@ function set_added_members_to_form(){
 		id.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-id'))
 		sex.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex'))
 		phone.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone'))
-		if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid').length == 0){
+		if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-id').length == 0){
 			newornot.push("new")
 		}else{
 			newornot.push('old')

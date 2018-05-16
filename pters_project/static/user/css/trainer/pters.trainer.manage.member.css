@@ -324,7 +324,7 @@ select:focus > option:checked {
 .memberline:hover{
 	background:#fdfdfd;
 	color: #fe4e65 !important;
-	font-weight: bold;
+	
 }
 
 
@@ -558,6 +558,30 @@ select:focus > option:checked {
 				-webkit-opacity:1;
 				margin-bottom: 0;
 			}
+			.howManyReg{
+				font-weight:bold;
+				font-size:14px;
+				color:#fe4e65;
+				width: 25% !important;
+				text-align: left !important;
+				padding-left: 10px !important;
+				border: 0 !important;
+			}
+			.whatGroupType{
+				font-weight:bold;
+				font-size:12px;
+				color:#fe4e65;
+				width: 50% !important;
+				text-align: left !important;
+				border: 0 !important;
+			}
+				.whatGroupType select{
+					border: 0;
+					-webkit-appearance:none;
+					-moz-appearance:none;
+					appearance:none;
+					text-align-last: center;
+				}
 			.mobile_member_note{
 				color: #7d7d7d;
 				padding-left: 6px !important;
@@ -678,6 +702,30 @@ select:focus > option:checked {
 				font-weight: 500;
 				margin-bottom: 0px;
 			}
+
+			.howManyReg_PC{
+				font-weight:bold;
+				font-size:12px;
+				color:#fe4e65;
+				width: 5% !important;
+				text-align: left !important;
+				padding-left: 10px !important;
+				border: 0 !important;
+			}
+			.whatGroupType_PC{
+				font-weight:bold;
+				font-size:12px;
+				color:#fe4e65;
+				width: 25% !important;
+				text-align: left !important;
+				border: 0 !important;
+			}
+				.whatGroupType_PC select{
+					border: 0;
+					-webkit-appearance:none;
+					-moz-appearance:none;
+					appearance:none;
+				}
 			#memberBirth_select_wrap{
 				display: inline-block;
 				width: 275px;
@@ -1402,6 +1450,10 @@ select:focus > option:checked {
 
 	._countnum{
 		width: 30px;
+	}
+
+	._grouptype{
+		width: 40px;
 	}
 
 	._tdname,._tdnamee{
