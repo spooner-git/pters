@@ -33,7 +33,7 @@ from configs import settings
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb, BoardTb
 from schedule.views import get_trainer_schedule_data_func
-from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb
+from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func, get_trainee_repeat_schedule_data_func_from_schedule
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
@@ -4395,3 +4395,52 @@ class GetNoticeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['board_list'] = board_list
 
         return context
+
+
+@csrf_exempt
+def add_group_info_logic(request):
+
+    class_id = request.session.get('class_id', '')
+    group_type_cd = request.POST.get('group_type_cd', '')
+    member_num = request.POST.get('member_num', '')
+    name = request.POST.get('name', '')
+    note = request.POST.get('note', '')
+    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+    error = None
+    try:
+        with transaction.atomic():
+            group_info = GroupTb(class_tb_id=class_id, group_type_cd=group_type_cd, member_num=member_num,
+                                 name=name, note=note,
+                                 mod_dt=timezone.now(), reg_dt=timezone.now(), use=1)
+
+            group_info.save()
+    except ValueError as e:
+        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+    except IntegrityError as e:
+        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+    except TypeError as e:
+        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+    except ValidationError as e:
+        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+    except InternalError:
+        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+
+    context = {'error': error}
+
+    return render(request, next_page, context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'group_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetGroupInfoViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, use=1)
+
+        context['group_data'] = group_data
+
+        return context
+

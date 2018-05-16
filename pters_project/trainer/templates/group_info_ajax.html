@@ -1,0 +1,19 @@
+    {
+      "group_id":
+      [{% for group_info in group_data %}"{{ group_info.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_type_cd":
+      [{% for group_info in group_data %}"{{ group_info.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "member_num":
+      [{% for group_info in group_data %}"{{ group_info.member_num  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "name":
+      [{% for group_info in group_data %}"{{ group_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "note":
+      [{% for group_info in group_data %}"{{ group_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "reg_dt":
+      [{% for group_info in group_data %}"{{ group_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "mod_dt":
+      [{% for group_info in group_data %}"{{ group_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

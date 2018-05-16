@@ -113,8 +113,13 @@ urlpatterns = [
     url(r'^check_import_excel_member_info/$', views.check_import_excel_member_info_logic, name='check_import_excel_member_info'),
 
     # 공지사항 조회
-    url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(),name='get_off_repeat_schedule_ajax'),
+    url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_off_repeat_schedule_ajax'),
 
     url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
+
+    # 그룹 기능
+    url(r'^add_group_info/$', views.add_group_info_logic, name='add_group_info'),
+    url(r'^get_group_info/$', views.GetGroupInfoViewAjax.as_view(), name='get_group_info'),
+
 
 ]

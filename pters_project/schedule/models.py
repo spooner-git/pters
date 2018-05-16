@@ -68,6 +68,7 @@ class LectureTb(models.Model):
 
 class GroupTb(models.Model):
     group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     group_type_cd = models.CharField(db_column='GROUP_TYPE_CD', max_length=45, blank=True, null=True)  # Field name made lowercase.
     member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
