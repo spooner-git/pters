@@ -4425,13 +4425,13 @@ def add_group_info_logic(request):
     except InternalError:
         error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
 
-    context = {'error': error}
+    messages.error(request, error)
 
-    return render(request, next_page, context)
+    return redirect(next_page)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'group_info_ajax.html'
 
     def get_context_data(self, **kwargs):
