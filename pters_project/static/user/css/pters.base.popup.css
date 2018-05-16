@@ -93,6 +93,27 @@
 	text-align: center;
 }
 
+#popup_btn_viewGroupParticipants{
+	display: none;
+	text-align: left;
+	height: 25px;
+	margin-top: 8px;
+	cursor: pointer;
+}
+	#popup_btn_viewGroupParticipants:hover{
+		background: #f4f4f4;
+	}
+	#popup_btn_viewGroupParticipants img{
+		width: 12px;
+		float: left;
+		margin: 9px 5px 0px 28px;
+	}
+#groupParticipants{
+	height: 0px;
+	width: 100%;
+	background: #ffffff;
+}
+
 @media(max-height: 445px){
 	#cal_popup_planinfo{
 		position: absolute;

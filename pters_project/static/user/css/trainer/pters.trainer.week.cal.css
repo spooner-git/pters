@@ -471,6 +471,15 @@ img,a,div,span,p{
 	*/
 }
 
+.groupTime{
+	position: absolute;
+	top: 0px;
+	width: 98.5%;
+	background: green;
+	z-index: 100;
+	cursor: pointer;
+}
+
 
 .classTimeIndicator{
 	position: absolute;

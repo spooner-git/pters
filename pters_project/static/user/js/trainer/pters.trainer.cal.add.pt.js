@@ -1520,10 +1520,17 @@ function scheduleTime(option){ // 그룹 수업정보를 DB로 부터 받아 해
       var planColor = 'offTime'
     break;
     case 'group':
+    /*
       var plan = option
       var planArray = groupTimeArray
       var planScheduleIdArray = groupScheduleIdArray
       var planNoteArray = groupScheduleNoteArray
+      var planColor = 'groupTime'
+    */
+      var plan = option
+      var planArray = classTimeArray
+      var planScheduleIdArray = scheduleIdArray
+      var planNoteArray = scheduleNoteArray
       var planColor = 'groupTime'
     break;
   }
@@ -1575,9 +1582,21 @@ function scheduleTime(option){ // 그룹 수업정보를 DB로 부터 받아 해
     var tdPlanStart = $("#"+planStart+" div");
     var tdPlan = $("#"+planStart);
     tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none')
+
+    if(scheduleFinishArray[i] == 1){
+      var planColor_ = planColor+' classTime_checked'
+    }else{
+      var planColor_ = planColor
+    }
+
+    tdPlanStart.attr(option + '-time' , planArray[i])
+                .attr(option+'-schedule-id' , planScheduleIdArray[i])
+                .attr({'data-memo' : planNoteArray[i], 'data-schedule-check' : scheduleFinishArray[i], 'data-lectureId' : classArray_lecture_id[i], 'data-memberName' : memberName})
+                .addClass(planColor_)
+                .css({'height':Number(planDura*planheight-1)+'px'})
+                .html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
     
-    tdPlanStart.attr('off-time',planArray[i]).attr('off-schedule-id',planScheduleIdArray[i]).attr('data-memo',planNoteArray[i]).addClass(planColor).css({'height':Number(planDura*planheight-1)+'px'}).html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
-    
+
     var hhh = Number(planHour)
     var mmm = planMinute
 
