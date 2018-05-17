@@ -299,7 +299,9 @@ $(document).on('click','img.btn_add_member_to_group',function(){
 
 
 //서버로부터 그룹 목록 가져오기
-function get_group_list(){
+function get_group_list(returnvalue){
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
         url:'/trainer/get_group_info/',
 
@@ -332,9 +334,15 @@ function get_group_list(){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
-                groupListSet('current',jsondata)
-                groupListSet('finished',jsondata)
+                if(returnvalue == "dropdown"){
+                    grouptype_dropdown_set(jsondata)
+                    return jsondata
 
+                }else{
+                    groupListSet('current',jsondata)
+                    groupListSet('finished',jsondata)
+                }
+                
                 console.log('success');
             }
         },
@@ -346,6 +354,7 @@ function get_group_list(){
         },
     })
 }
+
 
 //그룹 지우기
 function delete_group_from_list(group_id){

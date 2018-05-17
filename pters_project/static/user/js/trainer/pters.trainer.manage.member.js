@@ -1198,6 +1198,8 @@ function pc_add_member(option){
             $('#how_to_add_member').css('display','none')
         }
 
+        get_group_list('dropdown')
+
 
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         initialize_add_member_sheet();
@@ -1212,6 +1214,9 @@ function pc_add_member(option){
 
         $('#memberSearchButton').attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
+
+        get_group_list('dropdown')
+
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
@@ -1231,6 +1236,9 @@ function pc_add_member(option){
             $('#memberSearch_add').val(userID);
         }
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+
+        get_group_list('dropdown')
+
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         initialize_add_member_sheet();
@@ -1250,6 +1258,8 @@ function pc_add_member(option){
 
         $('#memberSearchButton').attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
+
+        get_group_list('dropdown')
         
     }else if(option == 'group'){
         initialize_add_member_sheet();
@@ -1447,6 +1457,17 @@ function birth_dropdown_set(){
         $('#form_birth_modify').attr('value',birthdata);
     });
     */
+}
+
+//등록유형 드랍다운
+function grouptype_dropdown_set(grouplistJSON){
+    var len = grouplistJSON.group_id.length;
+
+    var optionsToJoin = ['<option value="">1:1 레슨</option>']
+    for(var i=0; i<len; i++){
+        optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'">'+grouplistJSON.name[i]+'</option>')
+    }
+    $('.grouptypeselect').html(optionsToJoin.join(''))
 }
 
 
