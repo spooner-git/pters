@@ -482,6 +482,7 @@ def get_member_data(context, class_id, member_id, user_id):
                 member_data.start_date = None
                 member_data.end_date = None
                 member_data.mod_dt = None
+                member_data.group_info = ''
 
                 lecture_count = 0
 
@@ -493,6 +494,23 @@ def get_member_data(context, class_id, member_id, user_id):
                     # if lecture_info.state_cd == 'NP':
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data.np_lecture_counts += 1
+
+                    group_check = 0
+                    try:
+                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
+                    except ObjectDoesNotExist:
+                        group_check = 1
+
+                    if group_check == 0:
+                        if member_data.group_info == '':
+                            member_data.group_info = '그룹'
+                        else:
+                            member_data.group_info += '/그룹'
+                    else:
+                        if member_data.group_info == '':
+                            member_data.group_info = '1:1'
+                        else:
+                            member_data.group_info += '/1:1'
 
                     lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                     lecture_tb=lecture_info.lecture_id,
@@ -565,7 +583,7 @@ def get_member_data(context, class_id, member_id, user_id):
                 member_data_finish.start_date = None
                 member_data_finish.end_date = None
                 member_data_finish.mod_dt = None
-
+                member_data_finish.group_info = ''
                 lecture_finish_count = 0
 
                 for lecture_info_data in lecture_finish_list:
@@ -576,6 +594,23 @@ def get_member_data(context, class_id, member_id, user_id):
                     # if lecture_info.state_cd == 'NP':
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data_finish.np_lecture_counts += 1
+
+                    group_check = 0
+                    try:
+                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
+                    except ObjectDoesNotExist:
+                        group_check = 1
+
+                    if group_check == 0:
+                        if member_data_finish.group_info == '':
+                            member_data_finish.group_info = '그룹'
+                        else:
+                            member_data_finish.group_info += '/그룹'
+                    else:
+                        if member_data_finish.group_info == '':
+                            member_data_finish.group_info = '1:1'
+                        else:
+                            member_data_finish.group_info += '/1:1'
 
                     lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                            lecture_tb=lecture_info.lecture_id,
@@ -1187,6 +1222,19 @@ def add_member_info_logic(request):
             error = '가입되지 않은 회원입니다.'
 
     if error is None:
+        if group_id != '' and group_id is not None:
+            try:
+                group_info = GroupTb.objects.get(group_id=group_id)
+            except ObjectDoesNotExist:
+                error = '그룹 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1).count()
+                if group_info.group_type_cd == 'NORMAL':
+                    if group_counter >= group_info.member_num:
+                        error = '그룹 허용 인원을 초과했습니다.'
+
+    if error is None:
         try:
             with transaction.atomic():
 
@@ -1203,6 +1251,7 @@ def add_member_info_logic(request):
                                                     reg_dt=timezone.now(), mod_dt=timezone.now(),
                                                     use=1)
                 class_lecture_info.save()
+
                 if group_id != '' and group_id is not None:
                     group_info = GroupLectureTb(group_tb_id=group_id, lecture_tb_id=lecture_info.lecture_id, use=1)
                     group_info.save()
@@ -2845,6 +2894,33 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             lecture_info.end_date = str(lecture_info.end_date)
             lecture_info.mod_dt = str(lecture_info.mod_dt)
             lecture_info.reg_dt = str(lecture_info.reg_dt)
+
+            lecture_info.group_name = '1:1'
+            lecture_info.group_type_cd = ''
+            lecture_info.group_member_num = ''
+            lecture_info.group_state_cd = ''
+            lecture_info.group_state_cd_nm = ''
+            lecture_info.group_note = ''
+            group_check = 0
+            group_info = None
+
+            try:
+                group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
+            except ObjectDoesNotExist:
+                group_check = 1
+
+            if group_check == 0:
+                lecture_info.group_name = group_info.group_tb.name
+                lecture_info.group_type_cd = group_info.group_tb.group_type_cd
+                lecture_info.group_member_num = group_info.group_tb.member_num
+                lecture_info.group_note = group_info.group_tb.note
+                lecture_info.group_state_cd = group_info.group_tb.state_cd
+                try:
+                    state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
+                    lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
+                except ObjectDoesNotExist:
+                    error = '그룹 정보를 불러오지 못했습니다.'
+
             try:
                 lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
             except ObjectDoesNotExist:
@@ -4535,6 +4611,7 @@ def add_group_member_logic(request):
     received_json_data = json.loads(request.body.decode("utf-8"))
     next_page = request.POST.get('next_page', '/trainer/get_group_info/')
 
+    print(received_json_data)
     error = None
 
     if error is not None:

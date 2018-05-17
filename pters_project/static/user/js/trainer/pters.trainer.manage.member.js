@@ -2949,7 +2949,7 @@ function set_member_lecture_list(jsondata){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('ㅁㄴㅇㄻㄴㄻㄴㄷㄹ',jsondata)
+            console.log('read_lecture_by_class_member_ajax',jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
