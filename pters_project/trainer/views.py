@@ -482,6 +482,7 @@ def get_member_data(context, class_id, member_id, user_id):
                 member_data.start_date = None
                 member_data.end_date = None
                 member_data.mod_dt = None
+                member_data.group_info = ''
 
                 lecture_count = 0
 
@@ -493,6 +494,23 @@ def get_member_data(context, class_id, member_id, user_id):
                     # if lecture_info.state_cd == 'NP':
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data.np_lecture_counts += 1
+
+                    group_check = 0
+                    try:
+                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id)
+                    except ObjectDoesNotExist:
+                        group_check = 1
+
+                    if group_check == 0:
+                        if member_data.group_info == '':
+                            member_data.group_info = '그룹'
+                        else:
+                            member_data.group_info += '/그룹'
+                    else:
+                        if member_data.group_info == '':
+                            member_data.group_info = '1:1'
+                        else:
+                            member_data.group_info += '/1:1'
 
                     lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                     lecture_tb=lecture_info.lecture_id,
@@ -565,7 +583,7 @@ def get_member_data(context, class_id, member_id, user_id):
                 member_data_finish.start_date = None
                 member_data_finish.end_date = None
                 member_data_finish.mod_dt = None
-
+                member_data_finish.group_info = ''
                 lecture_finish_count = 0
 
                 for lecture_info_data in lecture_finish_list:
@@ -576,6 +594,23 @@ def get_member_data(context, class_id, member_id, user_id):
                     # if lecture_info.state_cd == 'NP':
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data_finish.np_lecture_counts += 1
+
+                    group_check = 0
+                    try:
+                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id)
+                    except ObjectDoesNotExist:
+                        group_check = 1
+
+                    if group_check == 0:
+                        if member_data_finish.group_info == '':
+                            member_data_finish.group_info = '그룹'
+                        else:
+                            member_data_finish.group_info += '/그룹'
+                    else:
+                        if member_data_finish.group_info == '':
+                            member_data_finish.group_info = '1:1'
+                        else:
+                            member_data_finish.group_info += '/1:1'
 
                     lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                            lecture_tb=lecture_info.lecture_id,
