@@ -1484,6 +1484,7 @@ function DataFormatting(type, jsondata){
             var nameInfoArray = jsondata.nameArray;
             var dbIdInfoArray = jsondata.dIdArray;
             var idInfoArray = jsondata.idArray;
+            var groupTypeArray = jsondata.groupInfoArray;
             var emailInfoArray = jsondata.emailArray;
             var startDateArray = jsondata.startArray;
             var endDateArray = jsondata.endArray;
@@ -1506,6 +1507,7 @@ function DataFormatting(type, jsondata){
             var nameInfoArray = jsondata.finishnameArray;
             var idInfoArray = jsondata.finishIdArray;
             var dbIdInfoArray = jsondata.finishDidArray;
+            var groupTypeArray = jsondata.finishGroupInfoArray;
             var emailInfoArray = jsondata.finishemailArray;
             var startDateArray = jsondata.finishstartArray;
             var endDateArray = jsondata.finishendArray;
@@ -1532,9 +1534,9 @@ function DataFormatting(type, jsondata){
         var regcountOri = regCountInfoArray[i];
         var regcountFix = count_format_to_nnnn(regCountInfoArray[i]);
 
-        countListResult[i]=countFix+'/'+regcountFix+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i];
-        nameListResult[i]=nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i];
-        dateListResult[i]=date+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i];
+        countListResult[i]=countFix+'/'+regcountFix+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i]+'/'+groupTypeArray[i];
+        nameListResult[i]=nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i]+'/'+groupTypeArray[i];
+        dateListResult[i]=date+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i]+'/'+groupTypeArray[i];
     }
 
     return {"countSorted":countListResult, "nameSorted":nameListResult, "dateSorted":dateListResult}
@@ -1577,7 +1579,8 @@ function DataFormattingDict(Option, jsondata){
                                 'yetCount':jsondata.yetCountArray[i],
                                 'activation':jsondata.activationArray[i],
                                 'firstName':jsondata.firstNameArray[i],
-                                'lastName':jsondata.lastNameArray[i]
+                                'lastName':jsondata.lastNameArray[i],
+                                'groupType':jsondata.groupInfoArray[i]
                               };
             }
             var DBendlength = finishnameArray.length;
@@ -1596,7 +1599,8 @@ function DataFormattingDict(Option, jsondata){
                                         'sex':jsondata.finishsexArray[j],
                                         'activation':jsondata.activationArray[j],
                                         'firstName':jsondata.finishFirstNameArray[j],
-                                		'lastName':jsondata.finishLastNameArray[j]
+                                		'lastName':jsondata.finishLastNameArray[j],
+                                        'groupType':jsondata.finishGroupInfoArray[j]
                                     };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
@@ -1625,7 +1629,8 @@ function DataFormattingDict(Option, jsondata){
                               'yetCount':jsondata.yetCountArray[i],
                               'activation':jsondata.activationArray[i],
                               'firstName':jsondata.firstNameArray[i],
-                              'lastName':jsondata.lastNameArray[i]
+                              'lastName':jsondata.lastNameArray[i],
+                              'groupType':jsondata.groupInfoArray[i]
                             };
             }
             var DBendlength = jsondata.finishIdArray.length;
@@ -1645,7 +1650,8 @@ function DataFormattingDict(Option, jsondata){
                                     'sex':jsondata.finishsexArray[j],
                                     'activation':jsondata.activationArray[j],
                                     'firstName':jsondata.finishFirstNameArray[j],
-                                	'lastName':jsondata.finishLastNameArray[j]
+                                	'lastName':jsondata.finishLastNameArray[j],
+                                    'groupType':jsondata.finishGroupInfoArray[j]
                                      };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
@@ -1696,6 +1702,7 @@ function get_member_list(returnvalue){
                     return jsondata
 
                 }else{
+                    console.log(jsondata)
                     DataFormattingDict('ID',jsondata);
                     memberListSet('current','name','no',jsondata);
                     memberListSet('finished','name','no',jsondata);
@@ -1781,6 +1788,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var rjCounts = array[10];
             var yetRegCounts = array[11];
             var yetCounts = array[12];
+            var groupType = array[14];
         }else if(option == "name"){
             var array = nameLists[i].split('/');
             var email = array[8];
@@ -1800,6 +1808,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var rjCounts = array[10];
             var yetRegCounts = array[11];
             var yetCounts = array[12];
+            var groupType = array[14];
         }else if(option == "date"){
             var array = dateLists[i].split('/');
             var arrayforemail = dateLists[i].split('/');
@@ -1820,6 +1829,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var rjCounts = array[10];
             var yetRegCounts = array[11];
             var yetCounts = array[12];
+            var groupType = array[14];
         }
         
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
@@ -1871,7 +1881,7 @@ function memberListSet (type,option,Reverse, jsondata){
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
-        var grouptypetd = '<td class="_grouptype" data-name="'+name+'">'+'1:1'+'</td>';
+        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+'">'+groupType+'</td>';
         var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
         var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
         var emailtd = '<td class="_email">'+email+'</td>';
