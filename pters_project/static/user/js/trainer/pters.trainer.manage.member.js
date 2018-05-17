@@ -917,7 +917,8 @@ if (agent.indexOf("firefox") != -1) {
 
     });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
-    $("#upbutton-check, #pcBtn").click(function(){ //회원 등록 폼 작성후 완료버튼 클릭
+    $("#upbutton-check, #pcBtn").click(function(e){ //회원 등록 폼 작성후 완료버튼 클릭
+        e.preventDefault()
         if($('#page_addmember').css('display')=='block'){
             var id_search_confirm = $('#id_search_confirm').val();
             if(select_all_check==true){
