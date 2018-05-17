@@ -270,6 +270,9 @@ $(document).on('click','._groupmanage img._info_modify',function(){
 	var group_capacity = $(this).parent('div').siblings('._groupcapacity').find('input').val()
 	var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
 	var group_type = $(this).parent('div').siblings('._grouptypecd').find('input').val()
+    if(group_capacity == '∞'){ //비정기 그룹일때 무한대로 정원 설정
+        var group_capacity = 99
+    }
 
 	switch(status){
 		case 'view':
@@ -476,9 +479,14 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_createdate = jsondata.reg_dt[i];
         var group_memo = jsondata.note[i];
         var group_memberlist = []
-        if(group_memberlist.length == 0){
+        var group_membernum = jsondata.group_member_num[i] + ' /'
+        if(jsondata.group_member_num[i] == 0){
             var group_memberlist = '<p>이 그룹에 등록된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
-            var group_membernum = '0 /'
+        }else{
+            var group_memberlist = '<p>{회원 리스트 출력!}</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
+        }
+        if(group_type == 'EMPTY'){
+            var group_capacity = '∞'
         }
 
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';

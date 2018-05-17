@@ -865,8 +865,8 @@
                     <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹 이름을 입력해주세요." maxlength="10">
                     <select id="grouptype">
                         <option selected disabled>그룹 타입</option>
-                        <option value="NORMAL">정기 그룹</option>
-                        <option value="EMPTY">비정기 그룹</option>
+                        <option value="NORMAL">정해진 멤버만</option>
+                        <option value="EMPTY">모든 회원</option>
                     </select>
                     <select id="groupcapacity">
                         <option selected disabled>정원</option>
@@ -931,9 +931,9 @@
                 </div>
 
                 <div id="manualReg" class="manualReg"> <!-- 세부 설정 방식 -->
-                    <div class="ptaddbox form-group">
+                    <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                         <label for="memberGroupType" class="ptaddboxtext">
-                            <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록유형
+                            <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 그룹 유형
                             <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                         </label>
                         <select class="dropdown pters_input_custom grouptypeselect">
@@ -980,9 +980,9 @@
                 </div>
 
                 <div id="simpleReg" class="simpleReg"> <!-- 빠른 입력 방식 -->
-                    <div class="ptaddbox form-group">
+                    <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                         <label for="memberGroupType" class="ptaddboxtext">
-                            <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록유형
+                            <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 그룹 유형
                             <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                         </label>
                         <select class="dropdown pters_input_custom grouptypeselect">
