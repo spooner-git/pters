@@ -342,12 +342,12 @@ function get_group_list(returnvalue){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            if(messageArray.length>0){
+            if(jsondata.messageArray.length>0){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
-                $('#errorMessageText').text(messageArray)
+                $('#errorMessageText').text(jsondata.messageArray)
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')

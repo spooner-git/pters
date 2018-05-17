@@ -1495,7 +1495,7 @@ function DataFormatting(type, jsondata){
             var rjCountInfoArray = jsondata.rjLectureCountsArray;
             var yetRegCountInfoArray = jsondata.yetRegCountArray;
             var yetCountInfoArray = jsondata.yetCountArray;
-            var len = startArray.length; 
+            var len = jsondata.startArray.length; 
         break;
 
         case 'finished':
@@ -1517,7 +1517,7 @@ function DataFormatting(type, jsondata){
             var rjCountInfoArray = jsondata.finishRjLectureCountsArray;
             var yetRegCountInfoArray = jsondata.finishYetRegCountArray;
             var yetCountInfoArray = jsondata.finishYetCountArray;
-            var len = finishstartArray.length; 
+            var len = jsondata.finishstartArray.length; 
         break;
     }
 
@@ -1604,7 +1604,7 @@ function DataFormattingDict(Option, jsondata){
         break;
 
         case 'ID':
-            var DBlength = idArray.length;
+            var DBlength = jsondata.idArray.length;
             for(var i=0; i<DBlength;i++){
             DB[jsondata.idArray[i]] = {'id':jsondata.idArray[i],
                               'name':jsondata.nameArray[i],
@@ -1628,7 +1628,7 @@ function DataFormattingDict(Option, jsondata){
                               'lastName':jsondata.lastNameArray[i]
                             };
             }
-            var DBendlength = finishIdArray.length;
+            var DBendlength = jsondata.finishIdArray.length;
             for(var j=0; j<DBendlength;j++){
             DBe[jsondata.finishIdArray[j]] = {'id':jsondata.finishIdArray[i],
                                     'name':jsondata.finishnameArray[j], 
@@ -1676,12 +1676,12 @@ function get_member_list(returnvalue){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            if(messageArray.length>0){
+            if(jsondata.messageArray.length>0){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
-                $('#errorMessageText').text(messageArray)
+                $('#errorMessageText').text(jsondata.messageArray)
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
