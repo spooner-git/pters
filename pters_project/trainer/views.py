@@ -34,7 +34,7 @@ from configs import settings
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb, BoardTb
 from schedule.views import get_trainer_schedule_data_func
-from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb
+from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func, get_trainee_repeat_schedule_data_func_from_schedule
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
@@ -1126,6 +1126,7 @@ def add_member_info_logic(request):
     end_date_fast = request.POST.get('end_date_fast')
     search_confirm = request.POST.get('search_confirm', '0')
     class_id = request.session.get('class_id', '')
+    group_id = request.POST.get('group_id', '')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -1202,6 +1203,9 @@ def add_member_info_logic(request):
                                                     reg_dt=timezone.now(), mod_dt=timezone.now(),
                                                     use=1)
                 class_lecture_info.save()
+                if group_id != '' and group_id is not None:
+                    group_info = GroupLectureTb(group_tb_id=group_id, lecture_tb_id=lecture_info.lecture_id, use=1)
+                    group_info.save()
 
         except ValueError as e:
             error = '이미 가입된 회원입니다.'
@@ -4447,6 +4451,8 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 group_info.state_cd_nm = state_cd_nm.common_cd_nm
             except ObjectDoesNotExist:
                 error = '그룹 정보를 불러오지 못했습니다.'
+
+            group_info.group_member_num = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=1).count()
 
         if error is not None:
             messages.error(self.request, error)
