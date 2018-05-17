@@ -36,6 +36,19 @@
       "modDateTimeArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+      "groupNameArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupTypeCdArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupMemberNumArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupStateCdArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupStateCdNmArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupNoteArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "classInfoArray":
       ["{{ class_data.class_type_name.common_cd_nm}}"],
       "classIdArray":

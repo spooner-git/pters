@@ -497,7 +497,7 @@ def get_member_data(context, class_id, member_id, user_id):
 
                     group_check = 0
                     try:
-                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id)
+                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
                     except ObjectDoesNotExist:
                         group_check = 1
 
@@ -597,7 +597,7 @@ def get_member_data(context, class_id, member_id, user_id):
 
                     group_check = 0
                     try:
-                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id)
+                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
                     except ObjectDoesNotExist:
                         group_check = 1
 
@@ -2894,6 +2894,33 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
             lecture_info.end_date = str(lecture_info.end_date)
             lecture_info.mod_dt = str(lecture_info.mod_dt)
             lecture_info.reg_dt = str(lecture_info.reg_dt)
+
+            lecture_info.group_name = '1:1'
+            lecture_info.group_type_cd = ''
+            lecture_info.group_member_num = ''
+            lecture_info.group_state_cd = ''
+            lecture_info.group_state_cd_nm = ''
+            lecture_info.group_note = ''
+            group_check = 0
+            group_info = None
+
+            try:
+                group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
+            except ObjectDoesNotExist:
+                group_check = 1
+
+            if group_check == 0:
+                lecture_info.group_name = group_info.group_tb.name
+                lecture_info.group_type_cd = group_info.group_tb.group_type_cd
+                lecture_info.group_member_num = group_info.group_tb.member_num
+                lecture_info.group_note = group_info.group_tb.note
+                lecture_info.group_state_cd = group_info.group_tb.state_cd
+                try:
+                    state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
+                    lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
+                except ObjectDoesNotExist:
+                    error = '그룹 정보를 불러오지 못했습니다.'
+
             try:
                 lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
             except ObjectDoesNotExist:
