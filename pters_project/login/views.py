@@ -183,7 +183,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
     template_name = 'registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
-        username = request.POST.get('username', '')
+        username = request.POST.get('before_user_id', '')
         user_id = request.POST.get('id', '')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
@@ -585,7 +585,6 @@ class CheckMemberIdView(View):
 
         if self.error != '':
             self.error = self.error.replace("이름", "ID")
-
         return render(request, self.template_name, {'error': self.error})
 
 
@@ -601,25 +600,29 @@ class CheckMemberEmailView(View):
     def post(self, request, *args, **kwargs):
         user_email = request.POST.get('email', '')
         form = RegistrationForm(request.POST, request.FILES)
-
         if user_email is None or user_email == '':
             self.error = 'email를 입력해주세요.'
         else:
-            if form.is_valid():
-                if User.objects.filter(email=user_email).exists():
-                    self.error = '이미 가입된 회원 입니다.'
-            else:
-                for field in form:
-                    if field.errors:
-                        for err in field.errors:
-                            if self.error is None or self.error == '':
-                                if field.name == 'email':
-                                    self.error = err
+
+            if User.objects.filter(email=user_email).exists():
+                self.error = '이미 가입된 회원 입니다.'
+
+            if self.error is None or self.error == '':
+                if form.is_valid():
+                    if User.objects.filter(email=user_email).exists():
+                        self.error = '이미 가입된 회원 입니다.'
+                else:
+                    for field in form:
+                        if field.errors:
+                            for err in field.errors:
+                                if self.error is None or self.error == '':
+                                    if field.name == 'email':
+                                        self.error = err
+                                    else:
+                                        self.error = ''
                                 else:
-                                    self.error = ''
-                            else:
-                                if field.name == 'email':
-                                    self.error += err
+                                    if field.name == 'email':
+                                        self.error += err
 
         return render(request, self.template_name, {'error': self.error})
 

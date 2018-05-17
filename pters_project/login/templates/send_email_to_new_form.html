@@ -106,7 +106,7 @@
           font-size: 15px;
           font-weight: bold;
           z-index: 1500;
-      }   
+      }
           #errorMessageBar span{
               line-height: 35px;
           }
@@ -565,9 +565,10 @@
 		<p><span class="font-pink">이메일 인증</span></p>
     <p>PTERS를 처음 사용하시는 분께서는<br>이메일 인증 후 서비스를 이용하실 수 있습니다.</p>
 		<div class="explaintype" id="submit_input">
-			<form method="post" action="." style="text-align: center!important;padding-left: 20px;">
+			<form method="post" id="add-member-id-form" action="." style="text-align: center!important;padding-left: 20px;">
 			  	{% csrf_token %}
-                <input type="hidden" name="username" value="{{ request.session.username }}">
+                <input type="hidden" name="username" value="{{ request.session.username }}" id="id_username">
+                <input type="hidden" name="before_user_id" value="{{ request.session.username }}">
                 <input type="hidden" name="password" id="id_password">
                 <input type="hidden" name="email" id="id_email">
                 <input type="hidden" name="member_type" value="new">
@@ -748,11 +749,19 @@
         }
     })
 
+   $('#id_input').keyup(function(){
+        var userinput = $(this).val()
+        $('#id_username').attr('value',userinput)
+    })
+
     function check_id(){
+        var $form = $('#add-member-id-form');
+        var serializeArray = $form.serializeArray();
         $.ajax({
                 url:'/login/check_member_id/',
                 type:'POST',
-                data:{"id" : $('#id_input').val() },
+                //data:{"id" : $('#id_input').val() },
+                    data:serializeArray,
                 dataType : 'html',
 
                 beforeSend:function(){
@@ -760,8 +769,10 @@
 
                 //통신성공시 처리
                 success:function(data){
+                    console.log($('#id_input').val())
                     var jsondata = JSON.parse(data);
                     var id_check_message = jsondata.id_check_result
+                    console.log(data)
                     if(id_check_message[0].length>0){
                       var error_msg = id_check_message[0]
                       $('.id_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
@@ -785,10 +796,13 @@
     }
 
     function check_email(){
+        var $form = $('#add-member-id-form');
+        var serializeArray = $form.serializeArray();
         $.ajax({
                 url:'/login/check_member_email/',
                 type:'POST',
-                data:{"email" : $('#id_email').val() },
+                //data:{"email" : $('#id_email').val() },
+                  data:serializeArray,
                 dataType : 'html',
 
                 beforeSend:function(){
