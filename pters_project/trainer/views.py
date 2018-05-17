@@ -4611,6 +4611,7 @@ def add_group_member_logic(request):
     received_json_data = json.loads(request.body.decode("utf-8"))
     next_page = request.POST.get('next_page', '/trainer/get_group_info/')
 
+    print(received_json_data)
     error = None
 
     if error is not None:
