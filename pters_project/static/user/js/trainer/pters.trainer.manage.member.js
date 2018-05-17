@@ -725,6 +725,7 @@ if (agent.indexOf("firefox") != -1) {
                   id_search_memberEmail = jsondata.emailInfo;
                   id_search_memberId = jsondata.idInfo;
                   id_search_memberSex = jsondata.sexInfo;
+                  $('#id_username_info').val(jsondata.idInfo);
                   $('#memberSex .selectboxopt').removeClass('selectbox_checked');
                   fill_member_info_by_ID_search();
                   $('#memberSearchButton').attr('data-type','searched');

@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.serializers import json
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
@@ -1135,7 +1136,7 @@ def add_member_info_logic(request):
     lecture_info = None
     # username = name
     if username is None or username == '':
-        error = '회원가입중 오류가 발생했습니다. 다시 시도해주세요.'
+       error = '회원가입중 오류가 발생했습니다. 다시 시도해주세요.'
 
     if search_confirm == '0':
         if name == '':
@@ -2151,7 +2152,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 if lecture_count == 0:
                     member.sex = ''
                     member.birthday_dt = ''
-                    member.phone = ''
+                    member.phone = '***-****-'+member.phone[7:]
                     member.user.email = ''
 
             if member.birthday_dt is None or member.birthday_dt == '':
@@ -4471,8 +4472,8 @@ def delete_group_info_logic(request):
         group_info.use = 0
         group_info.mod_dt = timezone.now()
         group_info.save()
-
-    messages.error(request, error)
+    else:
+        messages.error(request, error)
 
     return redirect(next_page)
 
@@ -4514,6 +4515,21 @@ def update_group_info_logic(request):
         group_info.note = note
         group_info.mod_dt = timezone.now()
         group_info.save()
+
+    if error is not None:
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
+@csrf_exempt
+def add_group_member_logic(request):
+
+    class_id = request.session.get('class_id', '')
+    received_json_data = json.loads(request.body.decode("utf-8"))
+    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+
+    error = None
 
     if error is not None:
         messages.error(request, error)
