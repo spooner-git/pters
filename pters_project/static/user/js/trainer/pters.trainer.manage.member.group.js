@@ -285,6 +285,17 @@ $(document).on('click','._groupmanage img._info_modify',function(){
 })
 //그룹 리스트에서 그룹 수정버튼을 누른다.
 
+//그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
+
+$(document).on('click','img.btn_add_member_to_group',function(){
+    var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid')
+    var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname')
+    var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupid')
+    pc_add_member('groupmember')
+    $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
+})
+
+//그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 
 
 //서버로부터 그룹 목록 가져오기
@@ -306,7 +317,6 @@ function get_group_list(){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            ajax_received_json_data_member_manage(data);
             if(messageArray.length>0){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -458,7 +468,7 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_memo = jsondata.note[i];
         var group_memberlist = []
         if(group_memberlist.length == 0){
-            var group_memberlist = '이 그룹에 등록된 회원이 없습니다.'
+            var group_memberlist = '<p>이 그룹에 등록된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
             var group_membernum = '0 /'
         }
 
@@ -468,7 +478,7 @@ function groupListSet(option, jsondata){ //option : current, finished
 
         var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">'
         var htmlend = '</div>'
-        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'">'+group_memberlist+'</div>'
+        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'">'+group_memberlist+'</div>'
 
         var main = '<div class="_groupnum">'+(i+1)+'</div>'+
                     '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
@@ -486,4 +496,6 @@ function groupListSet(option, jsondata){ //option : current, finished
 function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=false 수정가능, disable=true 수정불가
 	$('div[data-groupid="'+group_id+'"] input._editable').attr('disabled',disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable))
 }
+
+
 

@@ -1262,7 +1262,6 @@ function pc_add_member(option){
     }else if(option == 'groupmember'){
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
-        $('#uptext2, #uptext2_PC').text('그룹원 추가');
 
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();

@@ -240,6 +240,11 @@
 	min-height: 40px;
 	border-bottom:1px solid #cccccc;
 }
+	.btn_add_member_to_group{
+		width: 25px;
+		margin-bottom: 10px;
+		cursor: pointer;
+	}
 
 
 /*그룹 탭에서 그룹들 나열*/
