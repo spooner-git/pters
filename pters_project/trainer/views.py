@@ -4487,6 +4487,7 @@ def update_group_info_logic(request):
     note = request.POST.get('note', '')
     next_page = request.POST.get('next_page', '/trainer/get_group_info/')
     group_info = None
+    error = None
 
     try:
         group_info = GroupTb.objects.get(group_id=group_id)
@@ -4514,6 +4515,7 @@ def update_group_info_logic(request):
         group_info.mod_dt = timezone.now()
         group_info.save()
 
-    messages.error(request, error)
+    if error is not None:
+        messages.error(request, error)
 
     return redirect(next_page)
