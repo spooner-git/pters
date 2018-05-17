@@ -1283,14 +1283,14 @@ function shiftMemberList(type){
     switch(type){
         case "current":
             if($('#btnCallMemberList').hasClass('active')){
-                get_member_list()
+                //get_member_list()
                 $('#currentMemberList, #currentMemberNum').css('display','block');
                 $('._MEMBER_THEAD').css('display','table-cell');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum, ._GROUP_THEAD').css('display','none')
                 $('._groupaddbutton').hide()
                 $('._memberaddbutton').show()
             }else if($('#btnCallGroupList').hasClass('active')){
-                get_group_list()
+                //get_group_list()
                 $('#currentGroupList, #currentGroupNum').css('display','block');
                 $('._GROUP_THEAD').css('display','table-cell');
                 $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum, ._MEMBER_THEAD').css('display','none')
@@ -1300,14 +1300,14 @@ function shiftMemberList(type){
         break;
         case "finished":
             if($('#btnCallMemberList').hasClass('active')){
-                get_member_list()
+                //get_member_list()
                 $('#finishedMemberList, #finishMemberNum').css('display','block');
                 $('._MEMBER_THEAD').css('display','table-cell');
                 $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum, ._GROUP_THEAD').css('display','none')
                 $('._groupaddbutton').hide()
                 $('._memberaddbutton').show()
             }else if($('#btnCallGroupList').hasClass('active')){
-                get_group_list()
+                //get_group_list()
                 $('#finishedGroupList, #finishGroupNum').css('display','block');
                 $('._GROUP_THEAD').css('display','table-cell');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum, ._MEMBER_THEAD').css('display','none')
