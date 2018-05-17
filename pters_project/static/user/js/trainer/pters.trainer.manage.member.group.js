@@ -124,14 +124,55 @@ $(document).on('click','img.add_listedMember',function(){
 })
 
 function draw_memberlist_for_addByList(){
-	var len = dIdArray.length;
-	var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
-	for(var i=1; i<=len; i++){
-		var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sexArray[i-1]+'.png">'
-		htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+lastNameArray[i-1]+'" data-firstname="'+firstNameArray[i-1]+'" data-dbid="'+dIdArray[i-1]+'" data-id="'+idArray[i-1]+'" data-sex="'+sexArray[i-1]+'" data-phone="'+phoneArray[i-1]+'"><div data-dbid="'+dIdArray[i-1]+'">'+sexInfo+nameArray[i-1]+' (ID: '+idArray[i-1]+')'+'</div>'+'<div>'+phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
-	}
-	var html = htmlToJoin.join('')
-	$('#subpopup_addByList').html(html)
+    $.ajax({
+        url:'/trainer/member_manage_ajax/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                scrollToDom($('#page_addmember'))
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if($('body').width()<600){
+                    $('#page_managemember').show();
+                }
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                var len = jsondata.dIdArray.length;
+                var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
+                for(var i=1; i<=len; i++){
+                    var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">'
+                    htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                }
+                var html = htmlToJoin.join('')
+                $('#subpopup_addByList').html(html)
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
 }
 /////////////리스트에서 추가 버튼 누르면 회원리스트 팝업//////////////////////////////////
 
