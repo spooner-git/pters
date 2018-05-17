@@ -948,6 +948,7 @@ if (agent.indexOf("firefox") != -1) {
                                 $('#errorMessageBar').show();
                                 $('#errorMessageText').text(messageArray);
                             }else{
+                                
                                 add_member_form_func();
                                 $('#errorMessageBar').hide();
                                 $('#errorMessageText').text('');
