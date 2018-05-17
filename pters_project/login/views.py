@@ -513,9 +513,28 @@ class AddMemberNoEmailView(View):
             username = name
             password = '0000'
         if error is None:
+
             count = MemberTb.objects.filter(name=username).count()
             if count != 0:
-                username += str(count+1)
+                # username += str(count + 1)
+                test = False
+                i = count + 1
+
+                while True:
+                    username = last_name + first_name + str(i)
+                    try:
+                        User.objects.get(username=username)
+                    except ObjectDoesNotExist:
+                        test = True
+
+                    if test:
+                        break
+                    else:
+                        i += 1
+
+            # count = MemberTb.objects.filter(name=username).count()
+            # if count != 0:
+            #    username += str(count+1)
         # elif User.objects.filter(email=email).exists():
         #    error = '이미 가입된 회원 입니다.'
 
@@ -549,7 +568,7 @@ class AddMemberNoEmailView(View):
             logger.error(name+'[강사 회원가입]'+error)
             messages.error(request, error)
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, {'username' : username})
 
 
 @method_decorator(csrf_exempt, name='dispatch')

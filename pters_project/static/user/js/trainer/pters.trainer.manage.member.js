@@ -3308,6 +3308,7 @@ function add_member_form_noemail_func(){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(messageArray);
             }else{
+                $('#id_username_info').val(jsondata.username)
                 add_member_form_func();
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');

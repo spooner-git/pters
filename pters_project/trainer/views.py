@@ -1111,6 +1111,7 @@ class LanguageSettingView(AccessTestMixin, TemplateView):
 def add_member_info_logic(request):
     fast_check = request.POST.get('fast_check', '0')
     user_id = request.POST.get('user_id')
+    username = request.POST.get('username', '')
     name = request.POST.get('name')
     phone = request.POST.get('phone')
     contents = request.POST.get('contents')
@@ -1132,14 +1133,16 @@ def add_member_info_logic(request):
     input_counts = 0
     input_price = 0
     lecture_info = None
-    username = name
+    # username = name
+    if username is None or username == '':
+        error = '회원가입중 오류가 발생했습니다. 다시 시도해주세요.'
 
     if search_confirm == '0':
         if name == '':
             error = '이름을 입력해 주세요.'
 
     if error is None:
-        username = name.replace(' ', '')
+        # username = name.replace(' ', '')
         if fast_check == '0':
             if counts_fast == '':
                 error = '남은 횟수를 입력해 주세요.'
@@ -1175,9 +1178,6 @@ def add_member_info_logic(request):
                     input_end_date = end_date
 
     if error is None:
-        count = MemberTb.objects.filter(name=username).count()
-        if count > 1:
-            username += str(count)
         try:
             user = User.objects.get(username=username)
 

@@ -123,4 +123,7 @@ urlpatterns = [
     url(r'^delete_group_info/$', views.delete_group_info_logic, name='delete_group_info'),
     url(r'^update_group_info/$', views.update_group_info_logic, name='delete_group_info'),
 
+    #  그룹 회원가입
+    # url(r'^add_group_member/$', views.add_group_member_logic, name='add_group_member'),
+
 ]
