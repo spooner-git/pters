@@ -70,22 +70,22 @@ if (agent.indexOf("firefox") != -1) {
 
     $('.alignSelect').change(function(){
         if($(this).val()=="회원명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
-            memberListSet('current','name');
-            memberListSet('finished','name');
+            memberListSet('current','name','no',jsondata);
+            memberListSet('finished','name','no',jsondata);
             alignType = 'name'
         }else if($(this).val()=="남은 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
-            memberListSet('current','count','yes');
+            memberListSet('current','count','yes',jsondata);
             alignType = 'countH'
         }else if($(this).val()=="남은 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
-            memberListSet('current','count');
+            memberListSet('current','count','no',jsondata);
             alignType = 'countL'
         }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
-            memberListSet('current','date');
-            memberListSet('finished','date');
+            memberListSet('current','date','no',jsondata);
+            memberListSet('finished','date','no',jsondata);
             alignType = 'startP'
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
-            memberListSet('current','date','yes');
-            memberListSet('finished','date','yes');
+            memberListSet('current','date','yes',jsondata);
+            memberListSet('finished','date','yes',jsondata);
             alignType = 'startR'
         }
     })
@@ -1098,10 +1098,8 @@ function send_modified_member_base_data(){
                 $('#upbutton-modify img').attr('src','/static/user/res/ptadd/icon-pencil.png');
 
                 DataFormattingDict('ID');
-                DataFormatting('current');
-                DataFormatting('finished');
-                memberListSet('current','date','yes');
-                memberListSet('finished','date','yes');
+                memberListSet('current','date','yes',jsondata);
+                memberListSet('finished','date','yes',jsondata);
                 $('#startR').attr('selected','selected');
                 console.log('success');
             }
@@ -1285,6 +1283,7 @@ function shiftMemberList(type){
     switch(type){
         case "current":
             if($('#btnCallMemberList').hasClass('active')){
+                get_member_list()
                 $('#currentMemberList, #currentMemberNum').css('display','block');
                 $('._MEMBER_THEAD').css('display','table-cell');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum, ._GROUP_THEAD').css('display','none')
@@ -1301,6 +1300,7 @@ function shiftMemberList(type){
         break;
         case "finished":
             if($('#btnCallMemberList').hasClass('active')){
+                get_member_list()
                 $('#finishedMemberList, #finishMemberNum').css('display','block');
                 $('._MEMBER_THEAD').css('display','table-cell');
                 $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum, ._GROUP_THEAD').css('display','none')
@@ -1316,6 +1316,7 @@ function shiftMemberList(type){
             }
         break;
         case "member":
+            get_member_list()
             if($('#btnCallCurrent').hasClass('active')){
                 $('#currentMemberList, #currentMemberNum').css('display','block');
                 $('._MEMBER_THEAD').css('display','table-cell');
@@ -1473,57 +1474,49 @@ function grouptype_dropdown_set(grouplistJSON){
 
 
 //DB데이터를 memberListSet에서 사용가능하도록 가공
-function DataFormatting(type){
+function DataFormatting(type, jsondata){
     switch(type){
         case 'current':
-            currentCountList = [];
-            currentRegcountList = []; //20180115;
-            currentNameList = [];
-            currentDateList = [];
-            var countListResult = currentCountList;
-            var nameListResult = currentNameList;
-            var dateListResult = currentDateList;
+            var countListResult = [];
+            var nameListResult = [];
+            var dateListResult = [];
 
-            var nameInfoArray = nameArray;
-            var dbIdInfoArray = dIdArray;
-            var idInfoArray = idArray;
-            var emailInfoArray =emailArray;
-            var startDateArray = startArray;
-            var endDateArray = endArray;
-            var remainCountArray = countArray;
-            var regCountInfoArray = regCountArray;
-            var phoneInfoArray = phoneArray;
-            var contentInfoArray = contentsArray;
-            var npCountInfoArray = npLectureCountsArray;
-            var rjCountInfoArray = rjLectureCountsArray;
-            var yetRegCountInfoArray = yetRegCountArray;
-            var yetCountInfoArray = yetCountArray;
+            var nameInfoArray = jsondata.nameArray;
+            var dbIdInfoArray = jsondata.dIdArray;
+            var idInfoArray = jsondata.idArray;
+            var emailInfoArray = jsondata.emailArray;
+            var startDateArray = jsondata.startArray;
+            var endDateArray = jsondata.endArray;
+            var remainCountArray = jsondata.countArray;
+            var regCountInfoArray = jsondata.regCountArray;
+            var phoneInfoArray = jsondata.phoneArray;
+            var contentInfoArray = jsondata.contentsArray;
+            var npCountInfoArray = jsondata.npLectureCountsArray;
+            var rjCountInfoArray = jsondata.rjLectureCountsArray;
+            var yetRegCountInfoArray = jsondata.yetRegCountArray;
+            var yetCountInfoArray = jsondata.yetCountArray;
             var len = startArray.length; 
         break;
 
         case 'finished':
-            finishCountList = [];
-            finishRegcountList = []; //20180115
-            finishNameList = [];
-            finishDateList = [];
-            var countListResult = finishCountList;
-            var nameListResult = finishNameList;
-            var dateListResult = finishDateList;
+            var countListResult = [];
+            var nameListResult = [];
+            var dateListResult = [];
 
-            var nameInfoArray = finishnameArray;
-            var idInfoArray = finishIdArray;
-            var dbIdInfoArray = finishDidArray;
-            var emailInfoArray = finishemailArray;
-            var startDateArray = finishstartArray;
-            var endDateArray = finishendArray;
-            var remainCountArray = finishcountArray;
-            var regCountInfoArray = finishRegCountArray;
-            var phoneInfoArray = finishphoneArray;
-            var contentInfoArray = finishContentsArray;
-            var npCountInfoArray = finishNpLectureCountsArray;
-            var rjCountInfoArray = finishRjLectureCountsArray;
-            var yetRegCountInfoArray = finishYetRegCountArray;
-            var yetCountInfoArray = finishYetCountArray;
+            var nameInfoArray = jsondata.finishnameArray;
+            var idInfoArray = jsondata.finishIdArray;
+            var dbIdInfoArray = jsondata.finishDidArray;
+            var emailInfoArray = jsondata.finishemailArray;
+            var startDateArray = jsondata.finishstartArray;
+            var endDateArray = jsondata.finishendArray;
+            var remainCountArray = jsondata.finishcountArray;
+            var regCountInfoArray = jsondata.finishRegCountArray;
+            var phoneInfoArray = jsondata.finishphoneArray;
+            var contentInfoArray = jsondata.finishContentsArray;
+            var npCountInfoArray = jsondata.finishNpLectureCountsArray;
+            var rjCountInfoArray = jsondata.finishRjLectureCountsArray;
+            var yetRegCountInfoArray = jsondata.finishYetRegCountArray;
+            var yetCountInfoArray = jsondata.finishYetCountArray;
             var len = finishstartArray.length; 
         break;
     }
@@ -1543,10 +1536,12 @@ function DataFormatting(type){
         nameListResult[i]=nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+date+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i];
         dateListResult[i]=date+'/'+nameInfoArray[i]+'/'+idInfoArray[i]+'/'+phoneInfoArray[i]+'/'+contentInfoArray[i]+'/'+countOri+'/'+regcountOri+'/'+enddate+'/'+emailInfoArray[i]+'/'+npCountInfoArray[i]+'/'+rjCountInfoArray[i]+'/'+yetRegCountInfoArray[i]+'/'+yetCountInfoArray[i]+'/'+dbIdInfoArray[i];
     }
+
+    return {"countSorted":countListResult, "nameSorted":nameListResult, "dateSorted":dateListResult}
 }
 
 //DB데이터를 사전형태로 만드는 함수
-function DataFormattingDict(Option){
+function DataFormattingDict(Option, jsondata){
     if(Options.language == "KOR"){
         var text = '진행중 : '
         var text2 = '종료 : '
@@ -1562,46 +1557,46 @@ function DataFormattingDict(Option){
     }
     switch(Option){
         case 'name':
-            var DBlength = nameArray.length;
+            var DBlength = jsondata.nameArray.length;
             for(var i=0; i<DBlength;i++){
-            DB[nameArray[i]] = {'id':idArray[i],
-                                'dbId':dIdArray[i],
-                                'email':emailArray[i],
-                                'count':countArray[i],
-                                'regcount':regCountArray[i],
-                                'availCount':availCountArray[i], 
-                                'phone':phoneArray[i],
-                                'contents':contentsArray[i],
-                                'start':startArray[i],
-                                'end':endArray[i], 
-                                'birth':birthdayArray[i], 
-                                'sex':sexArray[i],
-                                'npCount':npLectureCountsArray[i],
-                                'rjCount':rjLectureCountsArray[i],
-                                'yetRegCount':yetRegCountArray[i],
-                                'yetCount':yetCountArray[i],
-                                'activation':activationArray[i],
-                                'firstName':firstNameArray[i],
-                                'lastName':lastNameArray[i]
+            DB[jsondata.nameArray[i]] = {'id':jsondata.idArray[i],
+                                'dbId':jsondata.dIdArray[i],
+                                'email':jsondata.emailArray[i],
+                                'count':jsondata.countArray[i],
+                                'regcount':jsondata.regCountArray[i],
+                                'availCount':jsondata.availCountArray[i], 
+                                'phone':jsondata.phoneArray[i],
+                                'contents':jsondata.contentsArray[i],
+                                'start':jsondata.startArray[i],
+                                'end':jsondata.endArray[i], 
+                                'birth':jsondata.birthdayArray[i], 
+                                'sex':jsondata.sexArray[i],
+                                'npCount':jsondata.npLectureCountsArray[i],
+                                'rjCount':jsondata.rjLectureCountsArray[i],
+                                'yetRegCount':jsondata.yetRegCountArray[i],
+                                'yetCount':jsondata.yetCountArray[i],
+                                'activation':jsondata.activationArray[i],
+                                'firstName':jsondata.firstNameArray[i],
+                                'lastName':jsondata.lastNameArray[i]
                               };
             }
             var DBendlength = finishnameArray.length;
             for(var j=0; j<DBendlength;j++){
-            DBe[finishnameArray[j]] = {'id':finishIdArray[j],
-                                        'dbId':finishDidArray[j],
-                                        'email':finishemailArray[j],
-                                        'count':finishcountArray[j],
-                                        'regcount':finishRegCountArray[j],
-                                        'availCount':finishAvailCountArray[j],
-                                        'phone':finishphoneArray[j],
-                                        'contents':finishContentsArray[j],
-                                        'start':finishstartArray[j],
-                                        'end':finishendArray[j], 
-                                        'birth':finishbirthdayArray[j], 
-                                        'sex':finishsexArray[j],
-                                        'activation':activationArray[j],
-                                        'firstName':finishFirstNameArray[j],
-                                		'lastName':finishLastNameArray[j]
+            DBe[jsondata.finishnameArray[j]] = {'id':jsondata.finishIdArray[j],
+                                        'dbId':jsondata.finishDidArray[j],
+                                        'email':jsondata.finishemailArray[j],
+                                        'count':jsondata.finishcountArray[j],
+                                        'regcount':jsondata.finishRegCountArray[j],
+                                        'availCount':jsondata.finishAvailCountArray[j],
+                                        'phone':jsondata.finishphoneArray[j],
+                                        'contents':jsondata.finishContentsArray[j],
+                                        'start':jsondata.finishstartArray[j],
+                                        'end':jsondata.finishendArray[j], 
+                                        'birth':jsondata.finishbirthdayArray[j], 
+                                        'sex':jsondata.finishsexArray[j],
+                                        'activation':jsondata.activationArray[j],
+                                        'firstName':jsondata.finishFirstNameArray[j],
+                                		'lastName':jsondata.finishLastNameArray[j]
                                     };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
@@ -1611,46 +1606,46 @@ function DataFormattingDict(Option){
         case 'ID':
             var DBlength = idArray.length;
             for(var i=0; i<DBlength;i++){
-            DB[idArray[i]] = {'id':idArray[i],
-                              'name':nameArray[i],
-                              'dbId':dIdArray[i],
-                              'email':emailArray[i],
-                              'count':countArray[i],
-                              'regcount':regCountArray[i],
-                              'availCount':availCountArray[i], 
-                              'phone':phoneArray[i],
-                              'contents':contentsArray[i],
-                              'start':startArray[i],
-                              'end':endArray[i], 
-                              'birth':birthdayArray[i], 
-                              'sex':sexArray[i],
-                              'npCount':npLectureCountsArray[i],
-                              'rjCount':rjLectureCountsArray[i],
-                              'yetRegCount':yetRegCountArray[i],
-                              'yetCount':yetCountArray[i],
-                              'activation':activationArray[i],
-                              'firstName':firstNameArray[i],
-                              'lastName':lastNameArray[i]
+            DB[jsondata.idArray[i]] = {'id':jsondata.idArray[i],
+                              'name':jsondata.nameArray[i],
+                              'dbId':jsondata.dIdArray[i],
+                              'email':jsondata.emailArray[i],
+                              'count':jsondata.countArray[i],
+                              'regcount':jsondata.regCountArray[i],
+                              'availCount':jsondata.availCountArray[i], 
+                              'phone':jsondata.phoneArray[i],
+                              'contents':jsondata.contentsArray[i],
+                              'start':jsondata.startArray[i],
+                              'end':jsondata.endArray[i], 
+                              'birth':jsondata.birthdayArray[i], 
+                              'sex':jsondata.sexArray[i],
+                              'npCount':jsondata.npLectureCountsArray[i],
+                              'rjCount':jsondata.rjLectureCountsArray[i],
+                              'yetRegCount':jsondata.yetRegCountArray[i],
+                              'yetCount':jsondata.yetCountArray[i],
+                              'activation':jsondata.activationArray[i],
+                              'firstName':jsondata.firstNameArray[i],
+                              'lastName':jsondata.lastNameArray[i]
                             };
             }
             var DBendlength = finishIdArray.length;
             for(var j=0; j<DBendlength;j++){
-            DBe[finishIdArray[j]] = {'id':finishIdArray[i],
-                                    'name':finishnameArray[j], 
-                                    'dbId':finishDidArray[j],
-                                    'email':finishemailArray[j],
-                                    'count':finishcountArray[j],
-                                    'regcount':finishRegCountArray[j],
-                                    'availCount':finishAvailCountArray[j],
-                                    'phone':finishphoneArray[j],
-                                    'contents':finishContentsArray[j],
-                                    'start':finishstartArray[j],
-                                    'end':finishendArray[j], 
-                                    'birth':finishbirthdayArray[j], 
-                                    'sex':finishsexArray[j],
-                                    'activation':activationArray[j],
-                                    'firstName':finishFirstNameArray[j],
-                                	'lastName':finishLastNameArray[j]
+            DBe[jsondata.finishIdArray[j]] = {'id':jsondata.finishIdArray[i],
+                                    'name':jsondata.finishnameArray[j], 
+                                    'dbId':jsondata.finishDidArray[j],
+                                    'email':jsondata.finishemailArray[j],
+                                    'count':jsondata.finishcountArray[j],
+                                    'regcount':jsondata.finishRegCountArray[j],
+                                    'availCount':jsondata.finishAvailCountArray[j],
+                                    'phone':jsondata.finishphoneArray[j],
+                                    'contents':jsondata.finishContentsArray[j],
+                                    'start':jsondata.finishstartArray[j],
+                                    'end':jsondata.finishendArray[j], 
+                                    'birth':jsondata.finishbirthdayArray[j], 
+                                    'sex':jsondata.finishsexArray[j],
+                                    'activation':jsondata.activationArray[j],
+                                    'firstName':jsondata.finishFirstNameArray[j],
+                                	'lastName':jsondata.finishLastNameArray[j]
                                      };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
@@ -1659,8 +1654,67 @@ function DataFormattingDict(Option){
     }
 }
 
+
+//서버로부터 회원 목록 가져오기
+function get_member_list(returnvalue){
+    //returnvalue 1이면 jsondata를 리턴
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/member_manage_ajax/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(messageArray.length>0){
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                scrollToDom($('#page_addmember'))
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if($('body').width()<600){
+                    $('#page_managemember').show();
+                }
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                if(returnvalue == "return"){
+                    console.log(jsondata)
+                    return jsondata
+
+                }else{
+                    DataFormattingDict('ID',jsondata);
+                    memberListSet('current','name','no',jsondata);
+                    memberListSet('finished','name','no',jsondata);
+                }
+                
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
 //회원목록을 테이블로 화면에 뿌리는 함수
-function memberListSet (type,option,Reverse){
+function memberListSet (type,option,Reverse, jsondata){
     if(Options.language == "KOR"){
         var text = '소진시까지'
         var text2 = '이번달 신규회원'
@@ -1678,16 +1732,18 @@ function memberListSet (type,option,Reverse){
 
     switch(type){
         case 'current':
-            var countList = currentCountList;
-            var nameList = currentNameList;
-            var dateList = currentDateList;
+            var data = DataFormatting('current',jsondata);
+            var countList = data["countSorted"]
+            var nameList = data["nameSorted"]
+            var dateList = data["dateSorted"]
             var $table = $('#currentMember');
             var $tabletbody = $('#currentMember tbody');
         break;
         case 'finished':
-            var countList = finishCountList;
-            var nameList = finishNameList;
-            var dateList = finishDateList;
+            var data = DataFormatting('finished',jsondata);
+            var countList = data["countSorted"]
+            var nameList = data["nameSorted"]
+            var dateList = data["dateSorted"]
             var $table = $('#finishedMember');
             var $tabletbody = $('#finishedMember tbody');
         break;
@@ -1848,180 +1904,7 @@ function memberListSet (type,option,Reverse){
     $table.append(result);
 }
 
-/*
-//회원목록을 테이블로 화면에 뿌리는 함수
-function groupListSet (type,option,Reverse){
-    if(Options.language == "KOR"){
-        var text = '소진시까지'
-        var text2 = '이번달 신규회원'
-    }else if(Options.language == "JPN"){
-        var text = '残余回数終わるまで'
-        var text2 = '今月新規メンバー'
-    }else if(Options.language == "ENG"){
-        var text = ''
-        var text2 = 'New Member this month'
-    }
-    
-    var tbodyStart = '<tbody>';
-    var tbodyEnd = '</tbody>';
-    var tbodyToAppend = $(tbodyStart);
 
-    switch(type){
-        case 'current':
-            var countList = currentCountList;
-            var nameList = currentNameList;
-            var dateList = currentDateList;
-            var $table = $('#currentMember');
-            var $tabletbody = $('#currentMember tbody');
-        break;
-        case 'finished':
-            var countList = finishCountList;
-            var nameList = finishNameList;
-            var dateList = finishDateList;
-            var $table = $('#finishedMember');
-            var $tabletbody = $('#finishedMember tbody');
-        break;
-    }
-
-    if(Reverse == 'yes'){
-        var countLists =countList.sort().reverse();
-        var nameLists = nameList.sort().reverse();
-        var dateLists = dateList.sort().reverse();
-    }else{
-        var countLists =countList.sort();
-        var nameLists = nameList.sort();
-        var dateLists = dateList.sort();
-    }
-
-    var len = countLists.length;
-    var arrayResult = [];
-    for(var i=0; i<len; i++){
-        if(option == "count"){
-            var array = countLists[i].split('/');
-            var email = array[8];
-            var name = array[2];
-            var id = array[3];
-            var dbId = array[13];
-            var contents = array[5];
-            var count = array[0];
-            var regcount = array[1]
-            var starts = array[6];
-            var ends = array[7];
-            var phoneToEdit = array[4].replace(/-| |/gi,"");
-            if(name.length105){
-              var name = array[2].substr(0,9)+'..';
-            }
-            var npCounts = array[9];
-            var rjCounts = array[10];
-            var yetRegCounts = array[11];
-            var yetCounts = array[12];
-        }else if(option == "name"){
-            var array = nameLists[i].split('/');
-            var email = array[8];
-            var name = array[0];
-            var id = array[1];
-            var dbId = array[13];
-            var contents = array[3];
-            var count = array[4];
-            var regcount = array[5]
-            var starts = array[6];
-            var ends = array[7];
-            var phoneToEdit = array[2].replace(/-| |/gi,"");
-            if(name.length>10){
-              var name = array[0].substr(0,9)+'..'
-            }
-            var npCounts = array[9];
-            var rjCounts = array[10];
-            var yetRegCounts = array[11];
-            var yetCounts = array[12];
-        }else if(option == "date"){
-            var array = dateLists[i].split('/');
-            var arrayforemail = dateLists[i].split('/');
-            var email = array[8];
-            var name = array[1];
-            var id = array[2];
-            var dbId = array[13];
-            var contents = array[4];
-            var count = array[5];
-            var regcount = array[6];
-            var starts = array[0];
-            var ends = array[7];
-            var phoneToEdit = array[3].replace(/-| |/gi,"");
-            if(name.length>10){
-              var name = array[1].substr(0,9)+'..';
-            }
-            var npCounts = array[9];
-            var rjCounts = array[10];
-            var yetRegCounts = array[11];
-            var yetCounts = array[12];
-        }
-        
-        var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
-        var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2);
-        if(end == "9999.12.31"){
-            var end = text;
-        }
-
-        var newReg = ""
-        if(starts.substr(0,4) == currentYear && Number(starts.substr(4,2)) == currentMonth+1){
-            var newReg = '<img src="/static/user/res/icon-new.png" title="'+text2+'" class="newRegImg">';
-        }
-
-
-        if(phoneToEdit.substr(0,2)=="02"){
-            var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4);
-        }else{
-            var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4);
-        }
-
-         
-
-        var count = remove_front_zeros(count);
-        var regcount = remove_front_zeros(regcount);
-        
-        var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>';
-        var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
-        var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
-        var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">';
-        var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드">';
-        var pcprintimage = '<img src="/static/user/res/member/pters-print.png" class="pcmanageicon _info_print" title="프린트">';
-        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">';
-        var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
-        var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
-
-        var grouptypetd = '<td class="_grouptype" data-name="'+name+'">'+'1:1'+'</td>';
-        var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
-        var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
-        var emailtd = '<td class="_email">'+email+'</td>';
-        var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>';
-        var remaincounttd = '<td class="_remaincount">'+count+yet+'</td>';
-        var startdatetd = '<td class="_startdate">'+start+'</td>';
-        var enddatetd = '<td class="_finday">'+end+'</td>';
-        var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>';
-        var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
-        var scrolltd = '<td class="forscroll"></td>';
-
-        var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
-        arrayResult[i] = td;
-    }
-
-
-    var resultToAppend = arrayResult.join("");
-    if(type=='current' && len == 0){
-        var resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>'
-        if($('body').width()>600){
-            $('#please_add_member_pc').fadeIn()
-        }else{
-            $('#please_add_member').fadeIn()
-        }
-    }else if(type=="finished" && len ==0){
-        var resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>'
-    }
-    var result = tbodyStart + resultToAppend + tbodyEnd;
-    $tabletbody.remove();
-    $table.append(result);
-}
-*/
 
 //shade 보이기, 숨기기
 function hide_shadow_responsively(){
@@ -2526,11 +2409,7 @@ function send_member_modified_data(){
               }else{
                     $('#errorMessageBar').hide()
                     $('#errorMessageText').text('')
-                    DataFormattingDict('ID');
-                    DataFormatting('current');
-                    DataFormatting('finished');
-                    memberListSet('current','date','yes');
-                    memberListSet('finished','date','yes');
+                    get_member_list()
                     $('#startR').attr('selected','selected')
                     $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
                     if($('#memberInfoPopup_PC').css('display') == "block"){
@@ -2587,11 +2466,7 @@ function resend_member_reg_data_pc(){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-              DataFormattingDict('ID');
-              DataFormatting('current');
-              DataFormatting('finished');
-              memberListSet('current','date','yes');
-              memberListSet('finished','date','yes');
+              get_member_list()
               $('#startR').attr('selected','selected')
               if($('#memberInfoPopup_PC').css('display') == "block"){
                 open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
@@ -2639,11 +2514,7 @@ function delete_member_reg_data_pc(lectureID,userName){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                DataFormattingDict('ID');
-                DataFormatting('current');
-                DataFormatting('finished');
-                memberListSet('current','date','yes');
-                memberListSet('finished','date','yes');
+                get_member_list()
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
                     open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
@@ -2691,11 +2562,7 @@ function complete_member_reg_data_pc(lectureID, userName){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                DataFormattingDict('ID');
-                DataFormatting('current');
-                DataFormatting('finished');
-                memberListSet('current','date','yes');
-                memberListSet('finished','date','yes');
+                get_member_list()
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
                     open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
@@ -2743,11 +2610,7 @@ function resume_member_reg_data_pc(lectureID, userName){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                DataFormattingDict('ID');
-                DataFormatting('current');
-                DataFormatting('finished');
-                memberListSet('current','date','yes');
-                memberListSet('finished','date','yes');
+                get_member_list()
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
                     open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
@@ -2813,11 +2676,7 @@ function refund_member_lecture_data(lectureID, userName, refund_price){
                     else{
                         $('#errorMessageBar').hide()
                         $('#errorMessageText').text('')
-                      DataFormattingDict('ID');
-                      DataFormatting('current');
-                      DataFormatting('finished');
-                      memberListSet('current','date','yes');
-                      memberListSet('finished','date','yes');
+                      get_member_list()
                       $('#startR').attr('selected','selected')
                       if($('#memberInfoPopup_PC').css('display') == "block"){
                         open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
@@ -2880,11 +2739,7 @@ function disconnect_member_lecture_data(stateCode){
                     else{
                         $('#errorMessageBar').hide()
                         $('#errorMessageText').text('')
-                      DataFormattingDict('ID');
-                      DataFormatting('current');
-                      DataFormatting('finished');
-                      memberListSet('current','date','yes');
-                      memberListSet('finished','date','yes');
+                      get_member_list()
                       $('#startR').attr('selected','selected')
                       if($('#memberInfoPopup_PC').css('display') == "block"){
                         open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
@@ -3297,11 +3152,7 @@ function add_member_form_func(){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
-                DataFormattingDict('ID');
-                DataFormatting('current');
-                DataFormatting('finished');
-                memberListSet('current','date','yes');
-                memberListSet('finished','date','yes');
+                get_member_list()
                 $('#startR').attr('selected','selected')
                 closePopup('member_add')
                 console.log('success');
@@ -3472,11 +3323,7 @@ function add_groupmember_form_func(){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
-                DataFormattingDict('ID');
-                DataFormatting('current');
-                DataFormatting('finished');
-                memberListSet('current','date','yes');
-                memberListSet('finished','date','yes');
+                get_member_list()
                 groupListSet('current',jsondata)
                 groupListSet('finished',jsondata)
                 $('#startR').attr('selected','selected')
@@ -3530,38 +3377,36 @@ function deleteMemberAjax(){
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png')
 
                 DataFormattingDict('ID');
-                DataFormatting('current');
-                DataFormatting('finished');
                 $('#startR').attr('selected','selected')
                 switch(alignType){
                   case 'name':
-                        memberListSet ('current','name')
-                        memberListSet('finished','name');
+                        memberListSet ('current','name','no',jsondata)
+                        memberListSet('finished','name','no',jsondata);
                         $('#name').attr('selected','selected')
                   break;
                   case 'countH':
-                        memberListSet('current','count','yes');
-                        memberListSet('finished','count','yes');
+                        memberListSet('current','count','yes',jsondata);
+                        memberListSet('finished','count','yes',jsondata);
                         $('#countH').attr('selected','selected')
                   break;
                   case 'countL':
-                        memberListSet('current','count');
-                        memberListSet('finished','count');
+                        memberListSet('current','count','no',jsondata);
+                        memberListSet('finished','count','no',jsondata);
                         $('#countL').attr('selected','selected')
                   break;
                   case 'startP':
-                        memberListSet('current','date');
-                        memberListSet('finished','date');
+                        memberListSet('current','date','no',jsondata);
+                        memberListSet('finished','date','no',jsondata);
                         $('#startP').attr('selected','selected')
                   break;
                   case 'startR':
-                        memberListSet('current','date','yes');
-                        memberListSet('finished','date','yes');
+                        memberListSet('current','date','yes',jsondata);
+                        memberListSet('finished','date','yes',jsondata);
                         $('#startR').attr('selected','selected')
                   break;
                   case 'recent':
-                        memberListSet('current','date','yes');
-                        memberListSet('finished','date','yes');
+                        memberListSet('current','date','yes',jsondata);
+                        memberListSet('finished','date','yes',jsondata);
                         $('#recent').attr('selected','selected')
                   break;
                 }

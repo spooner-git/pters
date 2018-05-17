@@ -1177,11 +1177,7 @@
             var alignType = "name"
             var select_all_check = false;
 
-            DataFormattingDict('ID');
-            DataFormatting('current');
-            DataFormatting('finished');
-            memberListSet('current','name')
-            memberListSet('finished','name')
+            get_member_list()
 
             $('#shade, #shade3').click(function(){
                 if($('body').width()>600){
