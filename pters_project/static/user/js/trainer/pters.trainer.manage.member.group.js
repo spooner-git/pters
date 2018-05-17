@@ -256,6 +256,7 @@ function added_member_info_to_jsonformat(){
 			dataObject["old_member_data"].push(data)
 		}
 	}
+    console.log(dataObject)
 
     return dataObject
 }

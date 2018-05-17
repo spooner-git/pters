@@ -3438,7 +3438,7 @@ function add_groupmember_form_func(){
     $.ajax({
         url:'/trainer/add_group_member/',
         type:'POST',
-        data: added_member_info_to_jsonformat(),
+        data: JSON.stringify(added_member_info_to_jsonformat()),
         dataType : 'html',
 
         beforeSend:function(){

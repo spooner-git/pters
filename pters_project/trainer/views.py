@@ -1,6 +1,7 @@
 # Create your views here.
 import copy
 import datetime
+import json
 
 import logging
 import urllib
@@ -11,7 +12,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.core.serializers import json
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
@@ -33,6 +33,7 @@ from center.models import CenterTrainerTb
 from configs import settings
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb, BoardTb
+from login.views import add_member_no_email_func
 from schedule.views import get_trainer_schedule_data_func
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb
 from schedule.models import ClassTb
@@ -1172,7 +1173,7 @@ def add_member_info_logic(request):
     lecture_info = None
     # username = name
     if username is None or username == '':
-       error = '회원가입중 오류가 발생했습니다. 다시 시도해주세요.'
+       error = '오류가 발생했습니다. 다시 시도해주세요.'
 
     if search_confirm == '0':
         if name == '':
@@ -1235,48 +1236,12 @@ def add_member_info_logic(request):
                         error = '그룹 허용 인원을 초과했습니다.'
 
     if error is None:
-        try:
-            with transaction.atomic():
-
-                state_cd = 'IP'
-
-                lecture_info = add_lecture_info_logic_func(user.id, state_cd, input_counts, input_price, input_start_date, input_end_date, contents)
-                member_lecture_info = MemberLectureTb(member_id=user.id, lecture_tb_id=lecture_info.lecture_id,
-                                                      auth_cd='DELETE', mod_member_id=request.user.id,
-                                                      reg_dt=timezone.now(), mod_dt=timezone.now(),
-                                                      use=1)
-                member_lecture_info.save()
-                class_lecture_info = ClassLectureTb(class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                                                    auth_cd='VIEW', mod_member_id=request.user.id,
-                                                    reg_dt=timezone.now(), mod_dt=timezone.now(),
-                                                    use=1)
-                class_lecture_info.save()
-
-                if group_id != '' and group_id is not None:
-                    group_info = GroupLectureTb(group_tb_id=group_id, lecture_tb_id=lecture_info.lecture_id, use=1)
-                    group_info.save()
-
-        except ValueError as e:
-            error = '이미 가입된 회원입니다.'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
-            error = '등록 값의 형태가 문제 있습니다'
-        except InternalError:
-            error = '이미 가입된 회원입니다.'
-
+        error = add_member_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
+                                        class_id, group_id, input_counts, input_price,
+                                        input_start_date, input_end_date, contents, user.id)
     if error is None:
-
-        log_data = LogTb(log_type='LB01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='등록',
-                         reg_dt=timezone.now(), use=1)
-
-        log_data.save()
-
         return redirect(next_page)
+
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
@@ -4608,13 +4573,143 @@ def update_group_info_logic(request):
 def add_group_member_logic(request):
 
     class_id = request.session.get('class_id', '')
-    received_json_data = json.loads(request.body.decode("utf-8"))
-    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
-
-    print(received_json_data)
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
     error = None
+    user_db_id_list = []
+    user_name_list = []
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
+    if error is None:
+        group_id = json_loading_data['lecture_info']['group_id']
+        if group_id != '' and group_id is not None:
+            try:
+                group_info = GroupTb.objects.get(group_id=group_id)
+            except ObjectDoesNotExist:
+                error = '그룹 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1).count()
+                group_counter += len(json_loading_data['new_member_data']) + len(json_loading_data['old_member_data'])
+                if group_info.group_type_cd == 'NORMAL':
+                    if group_counter > group_info.member_num:
+                        error = '그룹 허용 인원을 초과했습니다.'
+    if error is None:
+        try:
+            with transaction.atomic():
+                if json_loading_data['new_member_data'] != '[]':
+                    for json_info in json_loading_data['new_member_data']:
+                        context = add_member_no_email_func(request.user.id,
+                                                           json_info['first_name'], json_info['last_name'],
+                                                           json_info['phone'], json_info['sex'],
+                                                           json_info['birthday_dt'])
+                        if context['error'] is None:
+                            try:
+                                user_info = User.objects.get(username=context['username'])
+                                user_name_list.append(user_info.last_name+user_info.first_name)
+                                user_db_id_list.append(user_info.id)
+                            except ObjectDoesNotExist:
+                                error = '회원 등록중 오류가 발생했습니다.'
+
+                        else:
+                            error = context['error']
+                            messages.error(request, context['error'])
+                            break
+
+                if error is None:
+                    if json_loading_data['old_member_data'] != '[]':
+                        for json_info in json_loading_data['old_member_data']:
+                            user_db_id_list.append(json_info['db_id'])
+
+                if error is None:
+                    for user_info in user_db_id_list:
+                        error = add_member_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
+                                                        class_id, json_loading_data['lecture_info']['group_id'],
+                                                        json_loading_data['lecture_info']['counts'],
+                                                        json_loading_data['lecture_info']['price'],
+                                                        json_loading_data['lecture_info']['start_date'],
+                                                        json_loading_data['lecture_info']['end_date'],
+                                                        json_loading_data['lecture_info']['memo'],
+                                                        user_info)
+                if error is not None:
+                    raise InternalError
+        except InternalError:
+            error = error
+
+    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
 
     if error is not None:
         messages.error(request, error)
 
     return redirect(next_page)
+
+
+def add_member_lecture_info(user_id, user_last_name, user_first_name, class_id, group_id, counts, price, start_date, end_date, contents, member_id):
+
+    error = None
+    lecture_info = None
+    if group_id != '' and group_id is not None:
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id)
+        except ObjectDoesNotExist:
+            error = '그룹 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1).count()
+            if group_info.group_type_cd == 'NORMAL':
+                if group_counter >= group_info.member_num:
+                    error = '그룹 허용 인원을 초과했습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+
+                state_cd = 'IP'
+
+                lecture_info = add_lecture_info_logic_func(member_id, state_cd, counts, price, start_date, end_date, contents)
+                member_lecture_info = MemberLectureTb(member_id=member_id, lecture_tb_id=lecture_info.lecture_id,
+                                                      auth_cd='DELETE', mod_member_id=user_id,
+                                                      reg_dt=timezone.now(), mod_dt=timezone.now(),
+                                                      use=1)
+                member_lecture_info.save()
+                class_lecture_info = ClassLectureTb(class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                                                    auth_cd='VIEW', mod_member_id=user_id,
+                                                    reg_dt=timezone.now(), mod_dt=timezone.now(),
+                                                    use=1)
+                class_lecture_info.save()
+
+                if group_id != '' and group_id is not None:
+                    group_info = GroupLectureTb(group_tb_id=group_id, lecture_tb_id=lecture_info.lecture_id, use=1)
+                    group_info.save()
+
+        except ValueError as e:
+            error = '오류가 발생했습니다. 다시 시도해주세요.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+
+    if error is None:
+        member_name = ''
+        try:
+            user_info = MemberTb.objects.get(member_id=user_id)
+            member_name = user_info.name
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        log_data = LogTb(log_type='LB01', auth_member_id=user_id, from_member_name=user_last_name+user_first_name,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         log_info='수강 정보', log_how='등록',
+                         reg_dt=timezone.now(), use=1)
+
+        log_data.save()
+    return error
+

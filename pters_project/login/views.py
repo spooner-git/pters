@@ -32,7 +32,7 @@ from configs import settings
 from login.forms import MyPasswordResetForm
 from login.models import MemberTb, PushInfoTb, QATb
 # from schedule.models import ClassTb
-from schedule.models import MemberLectureTb
+from schedule.models import MemberLectureTb, GroupTb, GroupLectureTb
 
 logger = logging.getLogger(__name__)
 
@@ -501,74 +501,15 @@ class AddMemberNoEmailView(View):
         phone = request.POST.get('username', '')
         sex = request.POST.get('sex', '')
         birthday_dt = request.POST.get('birthday', '')
+        group_id = request.POST.get('group_id', '')
         # contents = request.POST.get('contents', '')
+        print(group_id)
+        context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
+        if context['error'] is not None:
+            logger.error(name+'[강사 회원가입]'+context['error'])
+            messages.error(request, context['error'])
 
-        error = None
-        if name == '':
-            error = '이름을 입력해 주세요.'
-        else:
-            name = name.replace(' ', '')
-
-        if error is None:
-            username = name
-            password = '0000'
-        if error is None:
-
-            count = MemberTb.objects.filter(name=username).count()
-            if count != 0:
-                # username += str(count + 1)
-                test = False
-                i = count + 1
-
-                while True:
-                    username = last_name + first_name + str(i)
-                    try:
-                        User.objects.get(username=username)
-                    except ObjectDoesNotExist:
-                        test = True
-
-                    if test:
-                        break
-                    else:
-                        i += 1
-
-            # count = MemberTb.objects.filter(name=username).count()
-            # if count != 0:
-            #    username += str(count+1)
-        # elif User.objects.filter(email=email).exists():
-        #    error = '이미 가입된 회원 입니다.'
-
-        if error is None:
-            try:
-                with transaction.atomic():
-                    user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password, is_active=0)
-                    group = Group.objects.get(name='trainee')
-                    user.groups.add(group)
-                    if birthday_dt == '':
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=request.user.id,
-                                          mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
-                    else:
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=request.user.id,
-                                          birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                          user_id=user.id)
-                    member.save()
-
-            except ValueError as e:
-                error = '이미 가입된 회원입니다.'
-            except IntegrityError as e:
-                error = '등록 값에 문제가 있습니다.'
-            except TypeError as e:
-                error = '등록 값의 형태가 문제 있습니다.'
-            except ValidationError as e:
-                error = '등록 값의 형태가 문제 있습니다'
-            except InternalError:
-                error = '이미 가입된 회원입니다.'
-
-        if error is not None:
-            logger.error(name+'[강사 회원가입]'+error)
-            messages.error(request, error)
-
-        return render(request, self.template_name, {'username' : username})
+        return render(request, self.template_name, {'username': context['username']})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -894,4 +835,75 @@ def question_reg_logic(request):
         messages.info(request, qa_type_cd+'/'+title+'/'+contents)
 
         return redirect(next_page)
+
+
+def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthday_dt):
+    error = None
+    name = last_name + first_name
+    context = {'error': None, 'username': ''}
+    if name == '':
+        error = '이름을 입력해 주세요.'
+    else:
+        name = name.replace(' ', '')
+
+    if error is None:
+        username = name
+        password = '0000'
+    if error is None:
+
+        count = MemberTb.objects.filter(name=username).count()
+        if count != 0:
+            # username += str(count + 1)
+            test = False
+            i = count + 1
+
+            while True:
+                username = last_name + first_name + str(i)
+                try:
+                    User.objects.get(username=username)
+                except ObjectDoesNotExist:
+                    test = True
+
+                if test:
+                    break
+                else:
+                    i += 1
+
+                    # count = MemberTb.objects.filter(name=username).count()
+                    # if count != 0:
+                    #    username += str(count+1)
+                    # elif User.objects.filter(email=email).exists():
+                    #    error = '이미 가입된 회원 입니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,
+                                                password=password, is_active=0)
+                group = Group.objects.get(name='trainee')
+                user.groups.add(group)
+                if birthday_dt == '':
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=user_id,
+                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
+                else:
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=user_id,
+                                      birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
+                                      user_id=user.id)
+                member.save()
+                context['username'] = username
+
+        except ValueError as e:
+            error = '이미 가입된 회원입니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '이미 가입된 회원입니다.'
+
+    context['error'] = error
+
+    return context
 
