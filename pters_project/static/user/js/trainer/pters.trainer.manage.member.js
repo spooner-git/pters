@@ -114,7 +114,7 @@ if (agent.indexOf("firefox") != -1) {
     });
 
     //PC 회원 이력 엑셀 다운로드 버튼 (회원목록에서)
-    $(document).on('click','img._info_download',function(e){
+    $(document).on('click','._manage img._info_download',function(e){
         e.stopPropagation()
         var memberID = $(this).parent('td').siblings('.id').text()
         var dbID = $(this).parent('td').siblings('._id').attr('data-dbid')
@@ -249,7 +249,7 @@ if (agent.indexOf("firefox") != -1) {
     
 
     //PC 회원삭제버튼 (회원목록에서)
-    $(document).on('click','img._info_delete',function(e){
+    $(document).on('click','._manage img._info_delete',function(e){
         e.stopPropagation();
         deleteTypeSelect = "memberinfodelete";
         var selectedUserId = $(this).parent('td').siblings('._id').text();
@@ -1276,13 +1276,15 @@ function shiftMemberList(type){
         case "current":
             if($('#btnCallMemberList').hasClass('active')){
                 $('#currentMemberList, #currentMemberNum').css('display','block');
-                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
+                $('._MEMBER_THEAD').css('display','table-cell');
+                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum, ._GROUP_THEAD').css('display','none')
                 $('._groupaddbutton').hide()
                 $('._memberaddbutton').show()
             }else if($('#btnCallGroupList').hasClass('active')){
                 get_group_list()
                 $('#currentGroupList, #currentGroupNum').css('display','block');
-                $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum').css('display','none')
+                $('._GROUP_THEAD').css('display','table-cell');
+                $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum, ._MEMBER_THEAD').css('display','none')
                 $('._groupaddbutton').show()
                 $('._memberaddbutton').hide()
             }
@@ -1290,13 +1292,15 @@ function shiftMemberList(type){
         case "finished":
             if($('#btnCallMemberList').hasClass('active')){
                 $('#finishedMemberList, #finishMemberNum').css('display','block');
-                $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
+                $('._MEMBER_THEAD').css('display','table-cell');
+                $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum, ._GROUP_THEAD').css('display','none')
                 $('._groupaddbutton').hide()
                 $('._memberaddbutton').show()
             }else if($('#btnCallGroupList').hasClass('active')){
                 get_group_list()
                 $('#finishedGroupList, #finishGroupNum').css('display','block');
-                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum').css('display','none')
+                $('._GROUP_THEAD').css('display','table-cell');
+                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum, ._MEMBER_THEAD').css('display','none')
                 $('._groupaddbutton').show()
                 $('._memberaddbutton').hide()
             }
@@ -1304,12 +1308,14 @@ function shiftMemberList(type){
         case "member":
             if($('#btnCallCurrent').hasClass('active')){
                 $('#currentMemberList, #currentMemberNum').css('display','block');
-                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
+                $('._MEMBER_THEAD').css('display','table-cell');
+                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum, ._GROUP_THEAD').css('display','none')
                 $('._groupaddbutton').hide()
                 $('._memberaddbutton').show()
             }else if($('#btnCallFinished').hasClass('active')){
                 $('#finishedMemberList, #finishMemberNum').css('display','block');
-                $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
+                $('._MEMBER_THEAD').css('display','table-cell');
+                $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum, ._GROUP_THEAD').css('display','none')
                 $('._groupaddbutton').hide()
                 $('._memberaddbutton').show()
             }
@@ -1318,12 +1324,14 @@ function shiftMemberList(type){
             get_group_list()
             if($('#btnCallCurrent').hasClass('active')){
                 $('#currentGroupList, #currentGroupNum').css('display','block');
-                $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum').css('display','none')
+                $('._GROUP_THEAD').css('display','table-cell');
+                $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum, ._MEMBER_THEAD').css('display','none')
                 $('._groupaddbutton').show()
                 $('._memberaddbutton').hide()
             }else if($('#btnCallFinished').hasClass('active')){
                 $('#finishedGroupList, #finishGroupNum').css('display','block');
-                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum').css('display','none')
+                $('._GROUP_THEAD').css('display','table-cell');
+                $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum, ._MEMBER_THEAD').css('display','none')
                 $('._groupaddbutton').show()
                 $('._memberaddbutton').hide()
             }
@@ -1819,6 +1827,7 @@ function memberListSet (type,option,Reverse){
     $table.append(result);
 }
 
+/*
 //회원목록을 테이블로 화면에 뿌리는 함수
 function groupListSet (type,option,Reverse){
     if(Options.language == "KOR"){
@@ -1991,6 +2000,7 @@ function groupListSet (type,option,Reverse){
     $tabletbody.remove();
     $table.append(result);
 }
+*/
 
 //shade 보이기, 숨기기
 function hide_shadow_responsively(){
@@ -3390,90 +3400,9 @@ function add_group_form_func(){
     })
 }
 
-function get_group_list(){
-    $.ajax({
-        url:'/trainer/get_group_info/',
 
-        dataType : 'html',
 
-        beforeSend:function(){
-            beforeSend()
-        },
 
-        //보내기후 팝업창 닫기
-        complete:function(){
-            completeSend()
-        },
-
-        //통신성공시 처리
-        success:function(data){
-            var jsondata = JSON.parse(data);
-            ajax_received_json_data_member_manage(data);
-            if(messageArray.length>0){
-                $('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'))
-                $('#errorMessageBar').show();
-                $('#errorMessageText').text(messageArray)
-            }else{
-                $('#errorMessageBar').hide()
-                $('#errorMessageText').text('')
-                if($('body').width()<600){
-                    $('#page_managemember').show();
-                }
-                $('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-
-                groupListSet('current',jsondata)
-                groupListSet('finished',jsondata)
-
-                closePopup('member_add')
-                console.log('success');
-            }
-        },
-
-        //통신 실패시 처리
-        error:function(){
-            $('#errorMessageBar').show()
-            $('#errorMessageText').text('통신 에러: 관리자 문의')
-        },
-    })
-}
-
-function groupListSet(option, jsondata){ //option : current, finished
-    console.log('json---:',jsondata)
-    switch(option){
-        case 'current':
-        break;
-        case 'finished':
-        break;
-    }
-
-    var htmlToJoin = [];
-    var groupNum = jsondata.group_id.length;
-    for(var i=0; i<groupNum; i++){
-        var group_name = jsondata.name[i];
-        var group_id = jsondata.group_id[i];
-        var group_type = jsondata.group_type_cd[i];
-        var group_capacity = jsondata.member_num[i];
-        var group_createdate = jsondata.reg_dt[i];
-        var group_memo = jsondata.note[i];
-
-        var htmlstart = '<div class="groupWrap">'
-        //var htmlend = '<div class="groupMembersWrap"><div></div>'
-        var htmlend = '</div>'
-
-        var main = '<div class="_groupnum">'+(i+1)+'</div>'+
-                    '<div class="_groupname">'+group_name+'</div>'+
-                    '<div class="_grouptypecd">'+group_type+'</div>'+
-                    '<div class="_groupcapacity">'+group_capacity+'</div>'+
-                    '<div class="_groupmemo">'+group_memo+'</div>'+
-                    '<div class="_groupcreatedate">'+group_createdate+'</div>'
-        htmlToJoin.push(htmlstart+main+htmlend)
-    }
-
-    $('#currentGroupList').html(htmlToJoin.join(''))
-}
 
 
 //새로운 그룹멤버 정보 서버로 보내 등록하기

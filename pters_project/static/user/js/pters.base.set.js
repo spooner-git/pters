@@ -716,7 +716,13 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
     }
 }
 
+function show_ajax_error_message(){
 
+}
+
+function hide_ajax_error_message(){
+  
+}
 
 function scrollToDom(dom){
     var offset = dom.offset();
