@@ -1187,6 +1187,19 @@ def add_member_info_logic(request):
             error = '가입되지 않은 회원입니다.'
 
     if error is None:
+        if group_id != '' and group_id is not None:
+            try:
+                group_info = GroupTb.objects.get(group_id=group_id)
+            except ObjectDoesNotExist:
+                error = '그룹 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1).count()
+                if group_info.group_type_cd == 'NORMAL':
+                    if group_counter >= group_info.member_num:
+                        error = '그룹 허용 인원을 초과했습니다.'
+
+    if error is None:
         try:
             with transaction.atomic():
 
@@ -1203,6 +1216,7 @@ def add_member_info_logic(request):
                                                     reg_dt=timezone.now(), mod_dt=timezone.now(),
                                                     use=1)
                 class_lecture_info.save()
+
                 if group_id != '' and group_id is not None:
                     group_info = GroupLectureTb(group_tb_id=group_id, lecture_tb_id=lecture_info.lecture_id, use=1)
                     group_info.save()
