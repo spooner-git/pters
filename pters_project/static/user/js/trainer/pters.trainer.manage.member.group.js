@@ -97,7 +97,8 @@ $(document).on('click','#subpopup_addByList .listTitle_addByList span',function(
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 $(document).on('click','img.add_listedMember',function(){
-	var selected_name = $(this).parents('div.list_addByList').attr('data-name')
+	var selected_lastname = $(this).parents('div.list_addByList').attr('data-lastname')
+    var selected_firstname = $(this).parents('div.list_addByList').attr('data-firstname')
 	var selected_dbid = $(this).parents('div.list_addByList').attr('data-dbid')
 	var selected_id = $(this).parents('div.list_addByList').attr('data-id')
 	var selected_sex = $(this).parents('div.list_addByList').attr('data-sex')
@@ -113,7 +114,7 @@ $(document).on('click','img.add_listedMember',function(){
 		var selected_phone = "-"
 	}
 
-	var html = '<div class="addByNewRaw" data-name="'+selected_name+'" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_name+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>'
+	var html = '<div class="addByNewRaw" data-lastname="'+selected_lastname+'" data-firstname="'+selected_firstname+'" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>'
 
 	$('#addedMemberListBox').prepend(html)
 
@@ -127,7 +128,7 @@ function draw_memberlist_for_addByList(){
 	var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
 	for(var i=1; i<=len; i++){
 		var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sexArray[i-1]+'.png">'
-		htmlToJoin[i] = '<div class="list_addByList" data-name="'+nameArray[i-1]+'" data-dbid="'+dIdArray[i-1]+'" data-id="'+idArray[i-1]+'" data-sex="'+sexArray[i-1]+'" data-phone="'+phoneArray[i-1]+'"><div data-dbid="'+dIdArray[i-1]+'">'+sexInfo+nameArray[i-1]+' (ID: '+idArray[i-1]+')'+'</div>'+'<div>'+phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+		htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+lastNameArray[i-1]+'" data-firstname="'+firstNameArray[i-1]+'" data-dbid="'+dIdArray[i-1]+'" data-id="'+idArray[i-1]+'" data-sex="'+sexArray[i-1]+'" data-phone="'+phoneArray[i-1]+'"><div data-dbid="'+dIdArray[i-1]+'">'+sexInfo+nameArray[i-1]+' (ID: '+idArray[i-1]+')'+'</div>'+'<div>'+phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
 	}
 	var html = htmlToJoin.join('')
 	$('#subpopup_addByList').html(html)
@@ -197,7 +198,7 @@ function draw_memberlist_for_addBySearch(jsondata){
 
 	var table = ['<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
 	var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sex+'.png">'
-	var data = '<div class="list_addByList" data-name="'+lastname+firstname+'" data-dbid="'+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+	var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
 	var html = table + data
 
 	$('#searchedMemberListBox').html(html)
@@ -206,40 +207,59 @@ function draw_memberlist_for_addBySearch(jsondata){
 
 
 
-
-
-
 //ajax로 서버에 보낼 때, 추가된 회원들의 정보를 form에 채운다.
-function set_added_members_to_form(){
+function added_member_info_to_jsonformat(){
+    var fast_check = $('#fast_check').val();
+    var memo = $('#comment').val();
+    var search_confirm = $('#id_search_confirm').val()
+    var group_id = $('#form_member_groupid').val()
+    if(fast_check == 1){
+        var counts = $('#memberCount_add').val()
+        var price = $('#lecturePrice_add_value').val()
+        var start_date = $('#datepicker_add').val()
+        var end_date = $('#datepicker2_add').val()
+    }else if(fast_check == 0){
+        var counts = $('#memberCount_add_fast').val()
+        var price = $('#lecturePrice_add_value_fast').val()
+        var start_date = $('#datepicker_fast').val()
+        var end_date = $('#memberDue_add_2_fast').val()
+    }
+
+    var dataObject = {
+                        "new_member_data":[],
+                        "old_member_data":[],
+                        "lecture_info":{
+                                            "fast_check":fast_check,
+                                            "memo": memo,
+                                            "counts": counts,
+                                            "price": price,
+                                            "search_confirm": search_confirm,
+                                            "start_date": start_date,
+                                            "end_date": end_date,
+                                            "group_id":group_id  
+                                        }
+                    }
+
 	var len = $('#addedMemberListBox .addByNewRaw').length;
-	var name = [];
-	var firstname = [];
-	var lastname = [];
-	var dbid = [];
-	var id = [];
-	var sex = [];
-	var phone = [];
-	var newornot = [];
 	for(var i=1; i<len+1; i++){
-		firstname.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-firstname'))
-		lastname.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname'))
-		dbid.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid'))
-		id.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-id'))
-		sex.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex'))
-		phone.push($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone'))
-		if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-id').length == 0){
-			newornot.push("new")
+		if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid').length == 0){
+			var data = {
+                       "first_name" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-firstname'),
+                       "last_name" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname'),
+                       "phone" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone'),
+                       "sex" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex'),
+                       "birthday_dt" : ""
+                    }
+            dataObject["new_member_data"].push(data)
 		}else{
-			newornot.push('old')
+            var data = {"db_id" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid')}
+			dataObject["old_member_data"].push(data)
 		}
 	}
 
-	var formlist = ['lastname', 'firstname', 'dbid', 'id', 'sex', 'phone', 'newornot']
-
-	for(var element in formlist){
-		$('#form_groupmember_'+formlist[element]).val(eval(formlist[element]))
-	}
+    return dataObject
 }
+
 
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 $(document).on('click','div.groupWrap',function(){
@@ -288,16 +308,16 @@ $(document).on('click','._groupmanage img._info_modify',function(){
 })
 //그룹 리스트에서 그룹 수정버튼을 누른다.
 
-//그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 
+//그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 $(document).on('click','img.btn_add_member_to_group',function(){
     var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid')
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname')
-    var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupid')
+    var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity')
     pc_add_member('groupmember')
     $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
+    $('#form_member_groupid').val(group_id)
 })
-
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 
 
@@ -516,3 +536,8 @@ function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=f
 
 
 
+//test
+$('#uptext2_PC').click(function(){
+    console.log($('.addByNewRaw').length, $('.addByNewRaw:nth-child(1)').attr('data-name'), $('.addByNewRaw:nth-child(2)').attr('data-name'),$('.addByNewRaw:nth-child(3)').attr('data-name'))
+    console.log('그룹원 추가',added_member_info_to_jsonformat())
+})
