@@ -1439,11 +1439,15 @@ def delete_member_info_logic(request):
 
                         member_lecture_list = MemberLectureTb.objects.filter(member_id=user.id,
                                                                              lecture_tb_id=lecture_info.lecture_id).exclude(auth_cd='VIEW')
+
+                        # group_info = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=1)
+
                         if len(member_lecture_list) > 0:
                             schedule_data.delete()
                             schedule_data_finish.delete()
                             repeat_schedule_data.delete()
                             lecture_info.delete()
+                            # group_info.delete()
                         else:
                             # schedule_data.delete()
                             # repeat_schedule_data.delete()

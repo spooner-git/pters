@@ -48,6 +48,8 @@
           [{% for member_info in member_data %}"{{ member_info.lecture_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
           "mod_dt":
           [{% for member_info in member_data %}"{{ member_info.lecture_tb.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+          "lecture_id":
+          [{% for member_info in member_data %}"{{ member_info.lecture_tb.lecture_id}}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
 
           "messageArray" :
