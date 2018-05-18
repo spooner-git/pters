@@ -106,7 +106,7 @@
           font-size: 15px;
           font-weight: bold;
           z-index: 1500;
-      }   
+      }
           #errorMessageBar span{
               line-height: 35px;
           }
@@ -565,9 +565,10 @@
 		<p><span class="font-pink">이메일 인증</span></p>
     <p>PTERS를 처음 사용하시는 분께서는<br>이메일 인증 후 서비스를 이용하실 수 있습니다.</p>
 		<div class="explaintype" id="submit_input">
-			<form method="post" action="." style="text-align: center!important;padding-left: 20px;">
+			<form method="post" id="add-member-id-form" action="." style="text-align: center!important;padding-left: 20px;">
 			  	{% csrf_token %}
-                <input type="hidden" name="username" value="{{ request.session.username }}">
+                <input type="hidden" name="username" value="{{ request.session.username }}" id="id_username">
+                <input type="hidden" name="before_user_id" value="{{ request.session.username }}">
                 <input type="hidden" name="password" id="id_password">
                 <input type="hidden" name="email" id="id_email">
                 <input type="hidden" name="member_type" value="new">
@@ -575,7 +576,7 @@
 			  	<!--<input type="submit" value="{% trans 'Submit' %}" />-->
 
           <p style="line-height: 25px;">
-              <label>ID<span class="id_confirm" style="margin-left: 15px;"></span></label>
+              <label>새 로그인 ID<span class="id_confirm" style="margin-left: 15px;"></span></label>
               <input type="" name="id" placeholder="ID"  id="id_input"><span onclick="check_id()" class="button_duplicate_check">중복체크</span>
               
           </p>
@@ -748,47 +749,66 @@
         }
     })
 
+   $('#id_input').keyup(function(){
+        var userinput = $(this).val()
+        $('#id_username').attr('value',userinput)
+    })
+
     function check_id(){
-        $.ajax({
-                url:'/login/check_member_id/',
-                type:'POST',
-                data:{"id" : $('#id_input').val() },
-                dataType : 'html',
+      var inputLimit = /^[A-Za-z]+[a-z0-9.-_]{3,19}$/g;
+      var userIDinput = $('#id_input').val()
+      if(inputLimit.test(userIDinput)!=true){
+        alert('4자이상 20자 이내 영문과 숫자, 허용된 특수문자만 입력해주세요. \n 아이디는 반드시 영문으로 시작 해야합니다.')
+        $('.id_confirm').text('사용 불가').css({'display':'inline','color':'#fe4e65'})
+        $('#add-member-id-form').find('#id_duplicate_check').val(0)
+      }else{
+        var $form = $('#add-member-id-form');
+        var serializeArray = $form.serializeArray();
+          $.ajax({
+                  url:'/login/check_member_id/',
+                  type:'POST',
+                  //data:{"id" : $('#id_input').val() },
+                    data:serializeArray,
+                  dataType : 'html',
 
-                beforeSend:function(){
-                },
-
-                //통신성공시 처리
-                success:function(data){
-                    var jsondata = JSON.parse(data);
-                    var id_check_message = jsondata.id_check_result
-                    if(id_check_message[0].length>0){
-                      var error_msg = id_check_message[0]
-                      $('.id_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
-                      //$form.find('#id_duplicate_check').val(0)
-                    }else{
-                      $('.id_confirm').text('사용 가능').css({'display':'inline','color':'green'})
-                      //$form.find('#id_duplicate_check').val(1)
-                    }
+                  beforeSend:function(){
                   },
 
-                //보내기후 팝업창 닫기
-                complete:function(){
+                  //통신성공시 처리
+                  success:function(data){
+                      var jsondata = JSON.parse(data);
+                      var id_check_message = jsondata.id_check_result
+                      if(id_check_message[0].length>0){
+                        var error_msg = id_check_message[0]
+                        $('.id_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
+                        //$form.find('#id_duplicate_check').val(0)
+                      }else{
+                        $('.id_confirm').text('사용 가능').css({'display':'inline','color':'green'})
+                        //$form.find('#id_duplicate_check').val(1)
+                      }
+                    },
 
+                  //보내기후 팝업창 닫기
+                  complete:function(){
+
+                    },
+
+                  //통신 실패시 처리
+                  error:function(){
+                    alert("에러: 서버 통신 실패")
                   },
-
-                //통신 실패시 처리
-                error:function(){
-                  alert("에러: 서버 통신 실패")
-                },
-            })
+          })
+      }       
     }
 
     function check_email(){
+        var $form = $('#add-member-id-form');
+        var serializeArray = $form.serializeArray();
         $.ajax({
                 url:'/login/check_member_email/',
                 type:'POST',
-                data:{"email" : $('#id_email').val() },
+                //data:{"email" : $('#id_email').val() },
+                  data:serializeArray,
                 dataType : 'html',
 
                 beforeSend:function(){

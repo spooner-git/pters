@@ -246,7 +246,7 @@ $(document).ready(function(){
 			var member = " 회원님의 ";
 			var yourplan = " 일정";
 			var day = dayarryKR[dayraw];
-			var text = 'PT 일정'
+			var text = '레슨 일정'
 			break;
 			case "JPN" :
 			var member = "様の ";

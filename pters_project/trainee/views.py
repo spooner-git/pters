@@ -1249,7 +1249,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     if error is None:
         if member_id is None or member_id == '':
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                         lecture_tb__use='1', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
@@ -1257,7 +1257,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
         else:
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                          lecture_tb__member_id=member_id,
-                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                         lecture_tb__use='1', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
@@ -1333,7 +1333,7 @@ def get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, membe
     if error is None:
         if member_id is None or member_id == '':
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                         lecture_tb__use='1', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
@@ -1341,7 +1341,7 @@ def get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, membe
         else:
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                          lecture_tb__member_id=member_id,
-                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                         lecture_tb__use='1', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
@@ -1574,7 +1574,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                     lecture_tb__member_id=user_id, auth_cd='VIEW', use=1).order_by('lecture_tb')
+                                                     lecture_tb__member_id=user_id, use=1).order_by('lecture_tb')
 
         # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=user_id, member_view_state_cd='VIEW')
 
@@ -1889,12 +1889,11 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
         error = '강좌 정보를 불러오지 못했습니다.'
-
     # 수강 정보 불러 오기
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                      lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                     lecture_tb__use='1', use=1)
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
@@ -1908,7 +1907,7 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
 
                 if error is None:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type='1', use=1).order_by('start_dt')
+                                                                 en_dis_type='1').order_by('start_dt')
 
                     if pt_schedule_data is not None and len(pt_schedule_data) > 0:
                         idx = 0
