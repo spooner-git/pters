@@ -502,7 +502,8 @@ if (agent.indexOf("firefox") != -1) {
     $('.lectureStateChangeSelectPopup ._delete').click(function(){
         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
         var userName = $('.lectureStateChangeSelectPopup').attr('data-username');
-        delete_member_reg_data_pc(lectureID, userName);
+        var userId = $('.lectureStateChangeSelectPopup').attr('data-userid');
+        delete_member_reg_data_pc(lectureID, userName, userId);
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
 
@@ -2321,11 +2322,11 @@ function resend_member_reg_data_pc(){
 }
 
 //회원의 수강정보를 삭제한다.
-function delete_member_reg_data_pc(lectureID,userName){
+function delete_member_reg_data_pc(lectureID,userName, userId){
     $.ajax({
         url:'/trainer/delete_member_lecture_info/', 
         type:'POST',
-        data:{"lecture_id":lectureID,"member_name":userName, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID,"member_name":userName, "member_id":userId, "next_page":'/trainer/member_manage_ajax/'},
         dataType : 'html',
 
         beforeSend:function(){
