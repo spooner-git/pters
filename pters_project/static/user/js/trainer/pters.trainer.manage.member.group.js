@@ -732,7 +732,7 @@ function groupMemberListSet(group_id, jsondata){
         //var group_type = group_capacity+"인 비공개"
         var EMPTY_EXPLAIN = ""
     }
-    if(groupcapacity <= len){
+    if(groupcapacity <= len && grouptype =='NORMAL'){
         var addButton = ''
     }else{
         var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
