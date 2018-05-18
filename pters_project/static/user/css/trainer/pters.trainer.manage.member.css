@@ -1247,7 +1247,7 @@ select:focus > option:checked {
 	}
 
 	#page_addmember{
-
+		top: unset;
 	}
 
 	#float_btn_wrap{
