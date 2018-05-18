@@ -3386,7 +3386,7 @@ function deleteMemberAjax(){
                 $('html').css("cursor","auto")
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png')
 
-                DataFormattingDict('ID');
+                DataFormattingDict('ID',jsondata);
                 $('#startR').attr('selected','selected')
                 switch(alignType){
                   case 'name':
