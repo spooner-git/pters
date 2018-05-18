@@ -1409,8 +1409,9 @@ select:focus > option:checked {
 
 @media(min-width: 1000px){
 
-	#tableThead{
-		width: 1080px;	
+	.tableThead{
+		width: 1080px;
+		display: table;
 	}
 
 	._MEMBER_THEAD{
