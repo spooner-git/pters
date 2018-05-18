@@ -437,12 +437,23 @@ def get_member_data(context, class_id, member_id, user_id):
 
             member_data = copy.copy(member_info)
             member_data_finish = copy.copy(member_info)
+
             try:
-                user = User.objects.get(id=member_data.member_id)
-                member_data.is_active = user.is_active
-                member_data_finish.is_active = user.is_active
+                user = User.objects.get(id=member_info.member_id)
+                if user.is_active:
+                    member_data.is_active = True
+                    member_data_finish.is_active = True
+                else:
+                    if str(member_info.reg_info) == str(user_id):
+                        member_data.is_active = False
+                        member_data_finish.is_active = False
+                    else:
+                        member_data.is_active = True
+                        member_data_finish.is_active = True
+
             except ObjectDoesNotExist:
                 error = None
+
             lecture_finish_check = 0
             # 강좌에 해당하는 수강/회원 정보 가져오기
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
@@ -1452,7 +1463,7 @@ def delete_member_info_logic(request):
                             # schedule_data.delete()
                             # repeat_schedule_data.delete()
                             if len(schedule_data) > 0:
-                                schedule_data.update(mod_dt=timezone.now(), use=0)
+                                schedule_data.delete()
                             if len(schedule_data_finish) > 0:
                                 schedule_data_finish.update(mod_dt=timezone.now(), use=0)
                             # lecture_info.use = 0
@@ -1701,6 +1712,7 @@ def delete_member_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_name = request.POST.get('member_name', '')
+    member_id = request.POST.get('member_id', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
@@ -1716,6 +1728,17 @@ def delete_member_lecture_info_logic(request):
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
+        try:
+            user = User.objects.get(username=member_id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+        try:
+            member = MemberTb.objects.get(user_id=user.id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
         lecture_info = class_lecture_info.lecture_tb
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
                                                   state_cd='NP')
@@ -1727,25 +1750,42 @@ def delete_member_lecture_info_logic(request):
 
         member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(
             auth_cd='VIEW')
-        if len(member_lecture_list) > 0:
+        if user.is_active:
+            if len(member_lecture_list) > 0:
+                class_lecture_info.delete()
+                member_lecture_list.delete()
+                schedule_data.delete()
+                schedule_data_finish.delete()
+                repeat_schedule_data.delete()
+                lecture_info.delete()
+
+            else:
+                schedule_data.update(mod_dt=timezone.now(), use=0)
+                schedule_data_finish.update(mod_dt=timezone.now(), use=0)
+                class_lecture_info.auth_cd = 'DELETE'
+                # lecture_info.use = 0
+                # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+                class_lecture_info.mod_dt = timezone.now()
+                # if lecture_info.state_cd == 'IP':
+                #    lecture_info.state_cd = 'PE'
+                class_lecture_info.save()
+                if lecture_info.state_cd == 'IP':
+                    lecture_info.state_cd = 'PE'
+                    lecture_info.mod_dt = timezone.now()
+                    lecture_info.save()
+        else:
+            class_lecture_info.delete()
+            member_lecture_list.delete()
             schedule_data.delete()
             schedule_data_finish.delete()
             repeat_schedule_data.delete()
             lecture_info.delete()
-        else:
-            schedule_data.update(mod_dt=timezone.now(), use=0)
-            schedule_data_finish.update(mod_dt=timezone.now(), use=0)
-            class_lecture_info.auth_cd = 'DELETE'
-            # lecture_info.use = 0
-            # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
-            class_lecture_info.mod_dt = timezone.now()
-            # if lecture_info.state_cd == 'IP':
-            #    lecture_info.state_cd = 'PE'
-            class_lecture_info.save()
-            if lecture_info.state_cd == 'IP':
-                lecture_info.state_cd = 'PE'
-                lecture_info.mod_dt = timezone.now()
-                lecture_info.save()
+            # 회원의 수강정보가 더이상 없는경우
+            if str(member.reg_info) == str(request.user.id):
+                member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
+                if len(member_lecture_list_confirm) == 0:
+                    member.delete()
+                    user.delete()
 
     if error is None:
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
