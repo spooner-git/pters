@@ -631,6 +631,7 @@ function groupMemberListSet(group_id, jsondata){
     for(var i=0; i<len; i++){
         var groupmember_dbid = jsondata.db_id[i];
         var groupmember_id = jsondata.member_id[i];
+        var groupmember_lecid = jsondata.lecture_id[i]
         var groupmember_lastname = jsondata.last_name[i];
         var groupmember_firstname = jsondata.first_name[i];
         var groupmember_regcount = jsondata.reg_count[i];
@@ -639,7 +640,7 @@ function groupMemberListSet(group_id, jsondata){
         var groupmember_enddate = jsondata.end_date[i];
         var groupmember_phone = jsondata.phone[i];
 
-        var htmlStart = '<div class="memberline" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'++'">'
+        var htmlStart = '<div class="memberline" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'">'
         var htmlEnd = '</div>'
         var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
 
@@ -651,7 +652,7 @@ function groupMemberListSet(group_id, jsondata){
                         '<div class="_startdate" data-name="'+groupmember_startdate+'">'+groupmember_startdate+'</div>' +
                         '<div class="_finday" data-name="'+groupmember_enddate+'">'+groupmember_enddate+'</div>' +
                         '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
-                        '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'++'"></div>' +
+                        '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'"></div>' +
                         htmlEnd
 
         htmlToJoin.push(memberRow)
@@ -671,7 +672,7 @@ $(document).on('click','img.substract_groupMember',function(e){
     var group_id = $(this).attr('data-groupid');
     var dbid = $(this).attr('data-dbid');
     var lecture_id = $(this).attr('data-lecid');
-
+    //console.log('그룹id:'+group_id+' / DBid:'+dbid+' / LECID:'+lecture_id)
 })
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 
