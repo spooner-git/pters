@@ -347,7 +347,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             try:
                 member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
             except ObjectDoesNotExist:
-                error = '회원 정보를 가져오지 못했습니다.'
+                error = '회원 정보를 불러오지 못했습니다.'
 
             if error is None:
                 # 강좌별로 연결된 PT 스케쥴 가져오기
