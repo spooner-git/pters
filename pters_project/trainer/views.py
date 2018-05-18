@@ -4475,7 +4475,15 @@ def add_group_info_logic(request):
     except InternalError:
         error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
 
-    messages.error(request, error)
+    if error is None:
+        log_data = LogTb(log_type='LG01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name+' 그룹 정보', log_how='등록',
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
+
+    else:
+        messages.error(request, error)
 
     return redirect(next_page)
 
@@ -4513,6 +4521,7 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 @csrf_exempt
 def delete_group_info_logic(request):
 
+    class_id = request.session.get('class_id', '')
     group_id = request.POST.get('group_id', '')
     next_page = request.POST.get('next_page', '/trainer/get_group_info/')
     error = None
@@ -4526,6 +4535,12 @@ def delete_group_info_logic(request):
         group_info.use = 0
         group_info.mod_dt = timezone.now()
         group_info.save()
+
+        log_data = LogTb(log_type='LG01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name+' 그룹 정보', log_how='삭제',
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
     else:
 
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
@@ -4538,6 +4553,7 @@ def delete_group_info_logic(request):
 @csrf_exempt
 def update_group_info_logic(request):
 
+    class_id = request.session.get('class_id', '')
     group_id = request.POST.get('group_id', '')
     group_type_cd = request.POST.get('group_type_cd', '')
     member_num = request.POST.get('member_num', '')
@@ -4573,7 +4589,14 @@ def update_group_info_logic(request):
         group_info.mod_dt = timezone.now()
         group_info.save()
 
-    if error is not None:
+    if error is None:
+        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name+' 그룹 정보', log_how='수정',
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
+
+    else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
             request.user.id) + ']' + error)
         messages.error(request, error)
@@ -4590,6 +4613,7 @@ def add_group_member_logic(request):
     error = None
     user_db_id_list = []
     user_name_list = []
+    group_info = None
 
     try:
         json_loading_data = json.loads(json_data)
@@ -4656,7 +4680,14 @@ def add_group_member_logic(request):
 
     next_page = request.POST.get('next_page', '/trainer/get_group_info/')
 
-    if error is not None:
+    if error is None:
+        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name+' 그룹에 회원을', log_how='추가',
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
+
+    else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
             request.user.id) + ']' + error)
         messages.error(request, error)
@@ -4866,11 +4897,14 @@ def delete_group_member_info_logic(request):
     member_id = request.POST.get('member_id', '')
     next_page = request.POST.get('next_page', '/trainer/get_group_info/')
     error = None
-    group_lecture_info = None
-
 
     try:
         user_info = User.objects.get(id=member_id)
+    except ObjectDoesNotExist:
+        error = '회원 정보를 불러오지 못했습니다.'
+
+    try:
+        member = MemberTb.objecats.get(member_id=user_info.id)
     except ObjectDoesNotExist:
         error = '회원 정보를 불러오지 못했습니다.'
 
@@ -4902,7 +4936,7 @@ def delete_group_member_info_logic(request):
                 repeat_schedule_data.delete()
                 lecture_info.delete()
             else:
-                schedule_data.update(mod_dt=timezone.now(), use=0)
+                schedule_data.delete()
                 schedule_data_finish.update(mod_dt=timezone.now(), use=0)
                 class_lecture_info.auth_cd = 'DELETE'
                 # lecture_info.use = 0
@@ -4922,8 +4956,20 @@ def delete_group_member_info_logic(request):
             schedule_data_finish.delete()
             repeat_schedule_data.delete()
             lecture_info.delete()
+            if str(member.reg_info) == str(request.user.id):
+                member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user_info.id)
+                if len(member_lecture_list_confirm) == 0:
+                    member.delete()
+                    user_info.delete()
 
-    if error is not None:
+    if error is None:
+        log_data = LogTb(log_type='LG02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         to_member_name=member.name, class_tb_id=class_id,
+                         log_info='그룹 정보', log_how='삭제',
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
+
+    else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
             request.user.id) + ']' + error)
         messages.error(request, error)
