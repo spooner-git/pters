@@ -248,6 +248,7 @@ function draw_memberlist_for_addBySearch(jsondata){
 
 
 
+
 //ajax로 서버에 보낼 때, 추가된 회원들의 정보를 form에 채운다.
 function added_member_info_to_jsonformat(){
     var fast_check = $('#fast_check').val();
@@ -303,6 +304,7 @@ function added_member_info_to_jsonformat(){
 }
 
 
+//////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 $(document).on('click','div.groupWrap',function(){
 	var group_id = $(this).attr('data-groupid');
@@ -320,7 +322,6 @@ $(document).on('click','div.groupWrap',function(){
 $(document).on('click','._groupmanage img._info_delete',function(){
 	var group_id = $(this).attr('data-groupid')
 	delete_group_from_list(group_id)
-
 })
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 
@@ -420,7 +421,6 @@ function get_group_list(returnvalue){
         },
     })
 }
-
 
 //그룹 지우기
 function delete_group_from_list(group_id){
@@ -568,7 +568,6 @@ function groupListSet(option, jsondata){ //option : current, finished
     $('#currentGroupList').html(htmlToJoin.join(''))
 }
 
-
 function get_groupmember_list(group_id){
     $.ajax({
         url:'/trainer/get_group_member/',
@@ -617,6 +616,7 @@ function get_groupmember_list(group_id){
 }
 
 function groupMemberListSet(group_id, jsondata){
+    console.log(jsondata)
     var htmlToJoin = ['<div class="groupmemberline_thead">'+
                     '<div class="_tdname">회원명</div>'+
                     '<div class="_id">회원 ID</div>'+
@@ -639,7 +639,7 @@ function groupMemberListSet(group_id, jsondata){
         var groupmember_enddate = jsondata.end_date[i];
         var groupmember_phone = jsondata.phone[i];
 
-        var htmlStart = '<div class="memberline">'
+        var htmlStart = '<div class="memberline" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'++'">'
         var htmlEnd = '</div>'
         var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
 
@@ -651,7 +651,7 @@ function groupMemberListSet(group_id, jsondata){
                         '<div class="_startdate" data-name="'+groupmember_startdate+'">'+groupmember_startdate+'</div>' +
                         '<div class="_finday" data-name="'+groupmember_enddate+'">'+groupmember_enddate+'</div>' +
                         '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
-                        '<div class="_manage"></div>' +
+                        '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'++'"></div>' +
                         htmlEnd
 
         htmlToJoin.push(memberRow)
@@ -665,6 +665,15 @@ function groupMemberListSet(group_id, jsondata){
     $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(html)
 }
 
+//그룹 목록에서 그룹원 관리의 x 버튼으로 그룹에서 빼기
+$(document).on('click','img.substract_groupMember',function(e){
+    e.stopPropagation();
+    var group_id = $(this).attr('data-groupid');
+    var dbid = $(this).attr('data-dbid');
+    var lecture_id = $(this).attr('data-lecid');
+
+})
+//////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 
 
 
