@@ -1475,6 +1475,7 @@ function grouptype_dropdown_set(grouplistJSON){
 
 //DB데이터를 memberListSet에서 사용가능하도록 가공
 function DataFormatting(type, jsondata){
+    console.log('Dataformatting:',jsondata)
     switch(type){
         case 'current':
             var countListResult = [];
@@ -1789,6 +1790,11 @@ function memberListSet (type,option,Reverse, jsondata){
             var yetRegCounts = array[11];
             var yetCounts = array[12];
             var groupType = array[14];
+            if(array[15]){
+                var groupType2 = '/'+array[15];
+            }else{
+                var groupType2 = ''
+            }
         }else if(option == "name"){
             var array = nameLists[i].split('/');
             var email = array[8];
@@ -1809,6 +1815,11 @@ function memberListSet (type,option,Reverse, jsondata){
             var yetRegCounts = array[11];
             var yetCounts = array[12];
             var groupType = array[14];
+            if(array[15]){
+                var groupType2 = '/'+array[15];
+            }else{
+                var groupType2 = ''
+            }
         }else if(option == "date"){
             var array = dateLists[i].split('/');
             var arrayforemail = dateLists[i].split('/');
@@ -1830,6 +1841,11 @@ function memberListSet (type,option,Reverse, jsondata){
             var yetRegCounts = array[11];
             var yetCounts = array[12];
             var groupType = array[14];
+            if(array[15]){
+                var groupType2 = '/'+array[15];
+            }else{
+                var groupType2 = ''
+            }
         }
         
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
@@ -1881,7 +1897,7 @@ function memberListSet (type,option,Reverse, jsondata){
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
-        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+'">'+groupType+'</td>';
+        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+'">'+groupType+groupType2+'</td>';
         var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
         var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
         var emailtd = '<td class="_email">'+email+'</td>';
@@ -2864,7 +2880,18 @@ function draw_member_lecture_list_table(jsondata, targetHTML, option){
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
             var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
             var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
-            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
+            
+
+            
+            if(jsondata.groupNameArray[i] != '1:1'){
+                var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
+            }else if(jsondata.groupNameArray[i] == '1:1'){
+                var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
+            }
+            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
+            
+
+
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
                 var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }else if(jsondata.lectureStateArray[i] == "PE"){
