@@ -200,7 +200,7 @@
 	}
 	._groupnum{
 		display: table-cell;
-		width: 3%;
+		width: 4%;
 	}
 	._groupname{
 		width: 16%;
@@ -209,10 +209,10 @@
 		width: 10%;
 	}
 	._groupparticipants{
-		width: 8%;
+		width: 7%;
 	}
 	._groupcapacity{
-		width: 8%;
+		width: 7%;
 	}
 	._groupmemo{
 		width: 22%;
