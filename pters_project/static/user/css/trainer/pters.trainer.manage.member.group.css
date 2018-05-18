@@ -206,13 +206,16 @@
 		width: 16%;
 	}
 	._grouptypecd{
-		width: 12%;
-	}
-	._groupcapacity{
 		width: 10%;
 	}
+	._groupparticipants{
+		width: 7%;
+	}
+	._groupcapacity{
+		width: 7%;
+	}
 	._groupmemo{
-		width: 30%;
+		width: 22%;
 	}
 	._groupcreatedate{
 		display: table-cell;

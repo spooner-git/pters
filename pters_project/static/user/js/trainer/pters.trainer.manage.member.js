@@ -889,7 +889,9 @@ if (agent.indexOf("firefox") != -1) {
         $('#memberCount_add_fast').removeClass('dropdown_selected');
         $('#datepicker_add,#datepicker2_add,#memberCount_add,#lecturePrice_add_2').val("");
         $('#fast_check').val('0');
-        $('#form_member_groupid').val($('#simpleReg select.grouptypeselect').val())
+        if($('._ADD_GROUPMEMBER_NEW').css('display') == 'none'){
+            $('#form_member_groupid').val($('#simpleReg select.grouptypeselect').val())
+        }
         check_dropdown_selected();
     });
 
@@ -905,7 +907,9 @@ if (agent.indexOf("firefox") != -1) {
         $("#datepicker2_add").datepicker('option','minDate',$("#datepicker_add").val());
         $("#datepicker_add").datepicker('option','maxDate',$("#datepicker2_add").val());
         $('#fast_check').val('1');
-        $('#form_member_groupid').val($('#manualReg select.grouptypeselect').val())
+        if($('._ADD_GROUPMEMBER_NEW').css('display') == 'none'){
+            $('#form_member_groupid').val($('#manualReg select.grouptypeselect').val())
+        }
         check_dropdown_selected();
     });
 
@@ -1288,13 +1292,11 @@ function shiftMemberList(type){
     switch(type){
         case "current":
             if($('#btnCallMemberList').hasClass('active')){
-                //get_member_list()
                 $('#currentMemberList, #currentMemberNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').show()
             }else if($('#btnCallGroupList').hasClass('active')){
-                //get_group_list()
                 $('#currentGroupList, #currentGroupNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').show()
@@ -1303,13 +1305,11 @@ function shiftMemberList(type){
         break;
         case "finished":
             if($('#btnCallMemberList').hasClass('active')){
-                //get_member_list()
                 $('#finishedMemberList, #finishMemberNum').css('display','block');
                 $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').show()
             }else if($('#btnCallGroupList').hasClass('active')){
-                //get_group_list()
                 $('#finishedGroupList, #finishGroupNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').show()
@@ -2511,11 +2511,11 @@ function resend_member_reg_data_pc(){
 }
 
 //회원의 수강정보를 삭제한다.
-function delete_member_reg_data_pc(lectureID,userName, userId){
+function delete_member_reg_data_pc(lectureID, userName, userId){
     $.ajax({
         url:'/trainer/delete_member_lecture_info/', 
         type:'POST',
-        data:{"lecture_id":lectureID,"member_name":userName, "member_id":userId, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID, "member_name":userName, "member_id":userId, "next_page":'/trainer/member_manage_ajax/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -3676,6 +3676,7 @@ function closePopup(option){
 
 function initialize_add_member_sheet(){
     $('#id_search_confirm').val('0');
+    $('#form_member_groupid').val('')
     $('#memberLastName_add').prop('disabled',false);
     $('#memberFirstName_add').prop('disabled',false);
     $('#memberPhone_add').prop('disabled',false);
