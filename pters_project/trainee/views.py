@@ -1889,7 +1889,6 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
         error = '강좌 정보를 불러오지 못했습니다.'
-
     # 수강 정보 불러 오기
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
@@ -1908,7 +1907,7 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
 
                 if error is None:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type='1', use=1).order_by('start_dt')
+                                                                 en_dis_type='1').order_by('start_dt')
 
                     if pt_schedule_data is not None and len(pt_schedule_data) > 0:
                         idx = 0
