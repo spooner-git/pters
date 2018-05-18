@@ -321,7 +321,26 @@ $(document).on('click','div.groupWrap',function(){
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 $(document).on('click','._groupmanage img._info_delete',function(){
 	var group_id = $(this).attr('data-groupid')
+    var groupmember_lecids = []
+    var groupmember_fullnames = []
+    var groupmember_ids = []
+    var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
+    console.log('memberlen',memberLen)
+    for(var i=2; i<=memberLen+1; i++){
+        groupmember_lecids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+i+')').attr('data-lecid'))
+        groupmember_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+i+')').attr('data-id'))
+        groupmember_fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+i+')').attr('data-fullname'))
+        
+        
+    }
+    
+    //그룹을 지운다.
 	delete_group_from_list(group_id)
+
+    //그룹원들에게서 그룹에 대한 수강이력을 지운다.
+    for(var j=0; j<memberLen; j++){
+        delete_groupmember_from_grouplist(groupmember_lecids[j], groupmember_fullnames[j], groupmember_ids[j])
+    }  
 })
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 
@@ -421,6 +440,7 @@ function get_group_list(returnvalue){
         },
     })
 }
+//서버로부터 그룹 목록 가져오기
 
 //그룹 지우기
 function delete_group_from_list(group_id){
@@ -471,6 +491,49 @@ function delete_group_from_list(group_id){
         },
     })
 }
+//그룹 지우기
+
+//그룹원 지우기
+function delete_groupmember_from_grouplist(lecture_id, fullname, id){
+    $.ajax({
+        url:'/trainer/delete_member_lecture_info/', 
+        type:'POST',
+        data:{"lecture_id":lecture_id, "member_name":fullname, "member_id":id, "next_page":'/trainer/get_group_info/'},
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data)
+            //ajax_received_json_data_member_manage(data);
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }
+            else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                get_group_list()
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+//그룹원 지우기
 
 //그룹 정보 수정
 function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type){
@@ -521,6 +584,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
         },
     })
 }
+//그룹 정보 수정
 
 //그룹 목록을 화면에 뿌리기
 function groupListSet(option, jsondata){ //option : current, finished
@@ -567,7 +631,9 @@ function groupListSet(option, jsondata){ //option : current, finished
 
     $('#currentGroupList').html(htmlToJoin.join(''))
 }
+//그룹 목록을 화면에 뿌리기
 
+//그룹원 목록을 그룹에 뿌리기
 function get_groupmember_list(group_id){
     $.ajax({
         url:'/trainer/get_group_member/',
@@ -614,7 +680,9 @@ function get_groupmember_list(group_id){
         },
     })
 }
+//그룹원 목록을 그룹에 뿌리기
 
+//그룹원 목록을 그룹에 그리기 
 function groupMemberListSet(group_id, jsondata){
     console.log(jsondata)
     var htmlToJoin = ['<div class="groupmemberline_thead">'+
@@ -640,7 +708,7 @@ function groupMemberListSet(group_id, jsondata){
         var groupmember_enddate = jsondata.end_date[i];
         var groupmember_phone = jsondata.phone[i];
 
-        var htmlStart = '<div class="memberline" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'">'
+        var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">'
         var htmlEnd = '</div>'
         var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
 
@@ -652,7 +720,7 @@ function groupMemberListSet(group_id, jsondata){
                         '<div class="_startdate" data-name="'+groupmember_startdate+'">'+groupmember_startdate+'</div>' +
                         '<div class="_finday" data-name="'+groupmember_enddate+'">'+groupmember_enddate+'</div>' +
                         '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
-                        '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'"></div>' +
+                        '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'"></div>' +
                         htmlEnd
 
         htmlToJoin.push(memberRow)
@@ -665,14 +733,15 @@ function groupMemberListSet(group_id, jsondata){
 
     $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(html)
 }
+//그룹원 목록을 그룹에 그리기
 
 //그룹 목록에서 그룹원 관리의 x 버튼으로 그룹에서 빼기
 $(document).on('click','img.substract_groupMember',function(e){
     e.stopPropagation();
-    var group_id = $(this).attr('data-groupid');
-    var dbid = $(this).attr('data-dbid');
-    var lecture_id = $(this).attr('data-lecid');
-    //console.log('그룹id:'+group_id+' / DBid:'+dbid+' / LECID:'+lecture_id)
+    var groupmember_name = $(this).attr('data-fullname')
+    var groupmember_lecid = $(this).attr('data-lecid');
+    var groupmember_id = $(this).attr('data-id')
+    delete_groupmember_from_grouplist(groupmember_lecid, groupmember_name, groupmember_id)
 })
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 
