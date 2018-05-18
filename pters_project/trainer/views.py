@@ -1729,6 +1729,7 @@ def delete_member_lecture_info_logic(request):
             auth_cd='VIEW')
         if user.is_active:
             if len(member_lecture_list) > 0:
+                class_lecture_info.delete()
                 member_lecture_list.delete()
                 schedule_data.delete()
                 schedule_data_finish.delete()
