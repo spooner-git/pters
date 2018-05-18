@@ -276,7 +276,7 @@ ul a{
 	border-radius: 0px;
 	-webkit-border-radius: 0px;	
 	height: 100%;
-	font-size: 16px;
+	font-size: 14px;
 }
 
 .pters_input_custom textarea{
@@ -768,14 +768,16 @@ button._info_baseedit_img{
 
 #memberSearch_add{
 	display: table-cell;
-	width: 82%;
+	width: 78%;
+	height: 35px;
+	border:1px solid #8d8d8d;
 }
 
 #memberSearchButton{
 	display: table-cell;
 	width: 45px;
 	height: 35px;
-	background: #282828;
+	background: #fe4e65;
 	color: #ffffff;
 	border: 0;
 	font-size: 12px;
@@ -950,7 +952,7 @@ option{
 		height: 26px;
 		margin-left: 15px;
 		margin-top: 0;
-		border:1px solid #282828 !important;
+		border:1px solid #8d8d8d;
 		box-shadow: unset !important;
 	}
 
@@ -962,8 +964,12 @@ option{
 	#memberSearchButton{
 		float: right;
 		width: 20%;
-		height: 28px;
-		margin-top: 5px;
+		height: 26px;
+	}
+	#memberSearch_add{
+		display: table-cell;
+		width: 78%;
+		height: 26px;
 	}
 
 	#membersSelected{
@@ -989,8 +995,11 @@ option{
 
 	#memberLastName_add, #memberFirstName_add{
 		width: 48% !important;
-		border:1px solid #282828;
+		border:1px solid #8d8d8d;
 		height: 26px;
+	}
+	#memberFirstName_add{
+		margin-left: 2px;
 	}
 
 	#memberSex{
@@ -1003,7 +1012,7 @@ option{
 
 	.dropdown_birth{
 		height: 26px;
-		border: 1px solid #282828;
+		border: 1px solid #8d8d8d;
 		box-shadow: unset;
 	}
 
