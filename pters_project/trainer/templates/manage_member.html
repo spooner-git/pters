@@ -701,6 +701,7 @@
                 <label for="memberNameSex" class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                 </label>
+                <p class="icons_description" style="margin-bottom: 5px;"> 회원님 초기 접속 ID는 회원등록 후 자동생성 되며, <br>초기 비밀번호는 0000입니다.</p>
                 <div id="memberName_reg" class="dropdown pters_input_custom">
                     <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10">
                     <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="이름" maxlength="10">
@@ -713,13 +714,11 @@
 
             <div class="ptaddbox form-group _ADD_MEMBER_NEW">
                 <label for="memberPhone" class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
-                    <!--<p class="icons_description"> 회원님의 초기 접속 ID로 사용됩니다. <br>초기 비밀번호는 전화번호 마지막 네자리이며, 접속하여 ID와 비밀번호 변경이 가능합니다.</p>-->
+                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                 </label>
                 <div class="dropdown pters_input_custom">
                     <input type="tel" class="form-control" id="memberPhone_add" name="phone" required="required" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
                 </div>
-                <p class="icons_description"> 회원님의 초기 접속 ID로 사용됩니다. <br>초기 비밀번호는 전화번호 마지막 네자리이며, 접속하여 ID와 비밀번호 변경이 가능합니다.</p>
             </div>
 
             <div class="ptaddbox form-group _ADD_MEMBER_NEW">
