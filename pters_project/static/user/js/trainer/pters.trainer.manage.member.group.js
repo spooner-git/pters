@@ -227,7 +227,6 @@ $('#subpopup_addBySearch .listTitle_addByList span').click(function(){
 })
 
 function draw_memberlist_for_addBySearch(jsondata){
-	console.log(jsondata)
 	var lastname = jsondata.lastnameInfo;
 	var firstname = jsondata.firstnameInfo;
 	var	phone = jsondata.phoneInfo;
@@ -298,7 +297,6 @@ function added_member_info_to_jsonformat(){
 			dataObject["old_member_data"].push(data)
 		}
 	}
-    console.log(dataObject)
 
     return dataObject
 }
@@ -325,7 +323,6 @@ $(document).on('click','._groupmanage img._info_delete',function(){
     var groupmember_fullnames = []
     var groupmember_ids = []
     var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
-    console.log('memberlen',memberLen)
     for(var i=2; i<=memberLen+1; i++){
         groupmember_lecids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+i+')').attr('data-lecid'))
         groupmember_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+i+')').attr('data-id'))
@@ -588,6 +585,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
 
 //그룹 목록을 화면에 뿌리기
 function groupListSet(option, jsondata){ //option : current, finished
+    console.log('grouplist',jsondata)
     switch(option){
         case 'current':
         break;
@@ -605,24 +603,21 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_createdate = jsondata.reg_dt[i];
         var group_memo = jsondata.note[i];
         var group_memberlist = []
-        var group_membernum = jsondata.group_member_num[i] + ' /'
+        var group_membernum = jsondata.group_member_num[i]
         
-        if(group_type == 'EMPTY'){
-            var group_capacity = '∞'
-        }
-
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
 
         var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">'
         var htmlend = '</div>'
-        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'">'+group_memberlist+'</div>'
+        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
 
         var main = '<div class="_groupnum">'+(i+1)+'</div>'+
                     '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
                     '<div class="_grouptypecd"><input class="group_listinput input_disabled_true" value="'+group_type+'" disabled>'+'</div>'+
-                    '<div class="_groupcapacity">'+group_membernum+'<input style="width:25px;" class="group_listinput input_disabled_true _editable" value="'+group_capacity+'" disabled>'+'</div>'+
+                    '<div class="_groupparticipants">'+ group_membernum+'</div>'+
+                    '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+group_createdate+'" disabled>'+'</div>'+
                     '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>'
@@ -684,7 +679,7 @@ function get_groupmember_list(group_id){
 
 //그룹원 목록을 그룹에 그리기 
 function groupMemberListSet(group_id, jsondata){
-    console.log(jsondata)
+    console.log('groupmemberlist',jsondata)
     var htmlToJoin = ['<div class="groupmemberline_thead">'+
                     '<div class="_tdname">회원명</div>'+
                     '<div class="_id">회원 ID</div>'+
@@ -696,6 +691,9 @@ function groupMemberListSet(group_id, jsondata){
                     '<div class="_manage">관리</div>'+
                     '</div>']
     var len = jsondata.db_id.length
+    var groupcapacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity')
+    var grouptype = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype')
+
     for(var i=0; i<len; i++){
         var groupmember_dbid = jsondata.db_id[i];
         var groupmember_id = jsondata.member_id[i];
@@ -710,7 +708,6 @@ function groupMemberListSet(group_id, jsondata){
 
         var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">'
         var htmlEnd = '</div>'
-        var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
 
         var memberRow = htmlStart +
                         '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
@@ -726,12 +723,27 @@ function groupMemberListSet(group_id, jsondata){
         htmlToJoin.push(memberRow)
     }
 
-    var html = htmlToJoin.join('') + addButton
-    if(jsondata.db_id.length == 0){
-        var html = '<p>이 그룹에 등록된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
+    console.log(grouptype)
+
+    if(grouptype == 'EMPTY'){
+        //var group_type = group_capacity+"인 공개"
+        var EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 참여인원은 이 그룹명으로 개설된 레슨에 참여 가능하며, 참여인원은 제한이 없습니다. 한 수업단위 정원은 "+groupcapacity+" 명입니다.</p>"
+    }else if(grouptype == "NORMAL"){
+        //var group_type = group_capacity+"인 비공개"
+        var EMPTY_EXPLAIN = ""
+    }
+    if(groupcapacity <= len){
+        var addButton = ''
+    }else{
+        var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
     }
 
-    $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(html)
+    var html = htmlToJoin.join('') + addButton
+    if(jsondata.db_id.length == 0){
+        var html = '<p">이 그룹에 참여중인 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
+    }
+
+    $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html)
 }
 //그룹원 목록을 그룹에 그리기
 

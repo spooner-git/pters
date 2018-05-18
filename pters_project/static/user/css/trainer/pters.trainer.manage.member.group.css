@@ -200,19 +200,22 @@
 	}
 	._groupnum{
 		display: table-cell;
-		width: 4%;
+		width: 3%;
 	}
 	._groupname{
 		width: 16%;
 	}
 	._grouptypecd{
-		width: 12%;
-	}
-	._groupcapacity{
 		width: 10%;
 	}
+	._groupparticipants{
+		width: 8%;
+	}
+	._groupcapacity{
+		width: 8%;
+	}
 	._groupmemo{
-		width: 30%;
+		width: 22%;
 	}
 	._groupcreatedate{
 		display: table-cell;
