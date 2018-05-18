@@ -4678,28 +4678,29 @@ def add_group_member_logic(request):
                         error = '그룹 허용 인원을 초과했습니다.'
 
     if error is None:
-        if json_loading_data['old_member_data'] != '[]':
-            for json_info in json_loading_data['old_member_data']:
-                member_info = None
-                try:
-                    member_info = MemberTb.objects.get(member_id=json_info['db_id'])
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-
-                member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'])
-
-                for member_lecture_info in member_lecture_data:
-                    lecture_group_check = 0
+        if group_info.group_type_cd == 'NORMAL':
+            if json_loading_data['old_member_data'] != '[]':
+                for json_info in json_loading_data['old_member_data']:
+                    member_info = None
                     try:
-                        GroupLectureTb.objects.get(lecture_tb_id=member_lecture_info.lecture_tb_id)
+                        member_info = MemberTb.objects.get(member_id=json_info['db_id'])
                     except ObjectDoesNotExist:
-                        lecture_group_check = 1
+                        error = '회원 정보를 불러오지 못했습니다.'
 
-                    if lecture_group_check == 0:
-                        error = member_info.name + ' 회원님이 이미 그룹에 포함되어있습니다. 확인해주세요.'
+                    member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'])
+
+                    for member_lecture_info in member_lecture_data:
+                        lecture_group_check = 0
+                        try:
+                            GroupLectureTb.objects.get(lecture_tb_id=member_lecture_info.lecture_tb_id)
+                        except ObjectDoesNotExist:
+                            lecture_group_check = 1
+
+                        if lecture_group_check == 0:
+                            error = member_info.name + ' 회원님이 이미 그룹에 포함되어있습니다. 확인해주세요.'
+                            break
+                    if error is not None:
                         break
-                if error is not None:
-                    break
 
     if error is None:
         try:
