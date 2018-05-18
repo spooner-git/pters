@@ -1440,7 +1440,7 @@ def delete_member_info_logic(request):
                             # schedule_data.delete()
                             # repeat_schedule_data.delete()
                             if len(schedule_data) > 0:
-                                schedule_data.update(mod_dt=timezone.now(), use=0)
+                                schedule_data.delete()
                             if len(schedule_data_finish) > 0:
                                 schedule_data_finish.update(mod_dt=timezone.now(), use=0)
                             # lecture_info.use = 0

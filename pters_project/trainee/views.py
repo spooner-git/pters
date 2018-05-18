@@ -1574,7 +1574,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                     lecture_tb__member_id=user_id, auth_cd='VIEW', use=1).order_by('lecture_tb')
+                                                     lecture_tb__member_id=user_id, use=1).order_by('lecture_tb')
 
         # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=user_id, member_view_state_cd='VIEW')
 
