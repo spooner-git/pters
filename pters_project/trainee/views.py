@@ -1894,7 +1894,7 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                      lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                     lecture_tb__use='1', use=1)
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
