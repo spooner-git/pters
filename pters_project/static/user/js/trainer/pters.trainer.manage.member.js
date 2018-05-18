@@ -92,7 +92,7 @@ if (agent.indexOf("firefox") != -1) {
 
 //#####################회원정보 팝업 //#####################
 
-    $(document).on('click','tr.memberline',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+    $(document).on('click','.memberline',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
         var userID = $(this).find('._id').attr('data-name');
         shade_index(100)
         if($('body').width()<600){
@@ -298,10 +298,10 @@ if (agent.indexOf("firefox") != -1) {
         }
 
         $(this).attr('src','/static/user/res/btn-pt-complete.png');
-        if($('#currentMemberList').css('display') == "block"){
+        if($('#currentMemberList').css('display') == "block" || $('#currentGroupList').css('display') == "block"){
           var Data = DB;
-        }else if($('#finishedMemberList').css('display') == "block"){
-           var Data = DBe;
+        }else if($('#finishedMemberList').css('display') == "block" || $('#finishedGroupList').css('display') == "block"){
+           var Data = DBe;  
         }else if($('#calendar').length>0){
             var Data = DB;
         }
@@ -2100,7 +2100,7 @@ function limit_char(e){
 
 //회원정보////////////////////////////////////////////////////////
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
-function open_member_info_popup_pc(userID,jsondata){
+function open_member_info_popup_pc(userID, jsondata){
     if(Options.language == "KOR"){
         var text = ' '
         var text2 = '소진시까지'
@@ -2115,10 +2115,10 @@ function open_member_info_popup_pc(userID,jsondata){
         var text3 = ''
     }
 
-    if($('#currentMemberList').css('display') == "block"){
+    if($('#currentMemberList').css('display') == "block" || $('#currentGroupList').css('display') == "block"){
       var Data = DB;
-    }else if($('#finishedMemberList').css('display') == "block"){
-       var Data = DBe;
+    }else if($('#finishedMemberList').css('display') == "block" || $('#finishedGroupList').css('display') == "block"){
+       var Data = DBe;  
     }else if(jsondata.idArray.indexOf(userID)!=-1){
         var Data = DB;
     }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
@@ -2256,10 +2256,10 @@ function open_member_info_popup_pc(userID,jsondata){
 
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. MOBILE
 function open_member_info_popup_mobile(userID,jsondata){
-    if($('#currentMemberList').css('display') == "block"){
-      var Data = DB
-    }else if($('#finishedMemberList').css('display') == "block"){
-       var Data = DBe
+    if($('#currentMemberList').css('display') == "block" || $('#currentGroupList').css('display') == "block"){
+      var Data = DB;
+    }else if($('#finishedMemberList').css('display') == "block" || $('#finishedGroupList').css('display') == "block"){
+       var Data = DBe;  
     }else if(jsondata.idArray.indexOf(userID)!=-1){
         var Data = DB
     }else if(jsondata.finishIdArray.indexOf(userID)!=-1){
@@ -2785,10 +2785,10 @@ function set_member_lecture_list(jsondata){
         var $regHistory = $('#memberRegHistory_info')
         var option = "mobile"
     }
-    if($('#currentMemberList').css('display') == "block"){
-      var Data = DB
-    }else if($('#finishedMemberList').css('display') == "block"){
-       var Data = DBe
+    if($('#currentMemberList').css('display') == "block" || $('#currentGroupList').css('display') == "block"){
+      var Data = DB;
+    }else if($('#finishedMemberList').css('display') == "block" || $('#finishedGroupList').css('display') == "block"){
+       var Data = DBe;  
     }else if(idArray.indexOf(userID)!=-1){
         var Data = DB
     }else if(finishIdArray.indexOf(userID)!=-1){
@@ -2956,10 +2956,10 @@ function set_member_history_list(jsondata){
         var userID = $('#memberId').val()
         var $regHistory = $('#memberLectureHistory_info')
     }
-    if($('#currentMemberList').css('display') == "block"){
-      var Data = DB
-    }else if($('#finishedMemberList').css('display') == "block"){
-       var Data = DBe
+    if($('#currentMemberList').css('display') == "block" || $('#currentGroupList').css('display') == "block"){
+      var Data = DB;
+    }else if($('#finishedMemberList').css('display') == "block" || $('#finishedGroupList').css('display') == "block"){
+       var Data = DBe;  
     }else if(idArray.indexOf(userID)!=-1){
         var Data = DB
     }else if(finishIdArray.indexOf(userID)!=-1){
@@ -3697,10 +3697,10 @@ function get_indiv_repeat_info(){
         var $regHistory = $('#memberRegHistory_info')
         var option = "mobile"
     }
-    if($('#currentMemberList').css('display') == "block"){
-      var Data = DB
-    }else if($('#finishedMemberList').css('display') == "block"){
-       var Data = DBe
+    if($('#currentMemberList').css('display') == "block" || $('#currentGroupList').css('display') == "block"){
+      var Data = DB;
+    }else if($('#finishedMemberList').css('display') == "block" || $('#finishedGroupList').css('display') == "block"){
+       var Data = DBe;  
     }else if(idArray.indexOf(userID)!=-1){
         var Data = DB
     }else if(finishIdArray.indexOf(userID)!=-1){
