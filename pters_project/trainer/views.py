@@ -435,12 +435,23 @@ def get_member_data(context, class_id, member_id, user_id):
 
             member_data = copy.copy(member_info)
             member_data_finish = copy.copy(member_info)
+
             try:
-                user = User.objects.get(id=member_data.member_id)
-                member_data.is_active = user.is_active
-                member_data_finish.is_active = user.is_active
+                user = User.objects.get(id=member_info.member_id)
+                if user.is_active:
+                    member_data.is_active = True
+                    member_data_finish.is_active = True
+                else:
+                    if str(member_info.reg_info) == str(user_id):
+                        member_data.is_active = False
+                        member_data_finish.is_active = False
+                    else:
+                        member_data.is_active = True
+                        member_data_finish.is_active = True
+
             except ObjectDoesNotExist:
                 error = None
+
             lecture_finish_check = 0
             # 강좌에 해당하는 수강/회원 정보 가져오기
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
