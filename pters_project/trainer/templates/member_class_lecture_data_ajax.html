@@ -28,9 +28,6 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "availCountArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "noteArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
       "regDateTimeArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "modDateTimeArray":

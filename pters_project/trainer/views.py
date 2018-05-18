@@ -553,7 +553,7 @@ def get_member_data(context, class_id, member_id, user_id):
                     if lecture_count == 0:
                         member_data.sex = ''
                         member_data.birthday_dt = ''
-                        member_data.phone = ''
+                        member_data.phone = '***-****-'+member_data.phone[7:]
                         member_data.user.email = ''
 
                 member_data.start_date = str(member_data.start_date)
@@ -656,7 +656,7 @@ def get_member_data(context, class_id, member_id, user_id):
                     if lecture_finish_count == 0:
                         member_data_finish.sex = ''
                         member_data_finish.birthday_dt = ''
-                        member_data_finish.phone = ''
+                        member_data_finish.phone = '***-****-'+member_data_finish.phone[7:]
                         member_data_finish.user.email = ''
 
                 member_data_finish.start_date = str(member_data_finish.start_date)
@@ -3770,7 +3770,7 @@ def export_excel_member_list_logic(request):
                     if lecture_count == 0:
                         member_data.sex = ''
                         member_data.birthday_dt = ''
-                        member_data.phone = ''
+                        member_data.phone = '*******'+member_data.phone[7:]
                         member_data.user.email = ''
 
                 member_data.start_date = str(member_data.start_date)
@@ -3856,7 +3856,7 @@ def export_excel_member_list_logic(request):
                     if lecture_finish_count == 0:
                         member_data_finish.sex = ''
                         member_data_finish.birthday_dt = ''
-                        member_data_finish.phone = ''
+                        member_data_finish.phone = '*******'+member_data_finish.phone[7:]
                         member_data_finish.user.email = ''
 
                 member_data_finish.start_date = str(member_data_finish.start_date)
@@ -4496,6 +4496,9 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             group_info.group_member_num = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=1).count()
 
         if error is not None:
+
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
         context['group_data'] = group_data
@@ -4520,6 +4523,9 @@ def delete_group_info_logic(request):
         group_info.mod_dt = timezone.now()
         group_info.save()
     else:
+
+        logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+            self.request.user.id) + ']' + error)
         messages.error(request, error)
 
     return redirect(next_page)
@@ -4564,6 +4570,8 @@ def update_group_info_logic(request):
         group_info.save()
 
     if error is not None:
+        logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+            self.request.user.id) + ']' + error)
         messages.error(request, error)
 
     return redirect(next_page)
@@ -4645,6 +4653,8 @@ def add_group_member_logic(request):
     next_page = request.POST.get('next_page', '/trainer/get_group_info/')
 
     if error is not None:
+        logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+            self.request.user.id) + ']' + error)
         messages.error(request, error)
 
     return redirect(next_page)
@@ -4713,3 +4723,131 @@ def add_member_lecture_info(user_id, user_last_name, user_first_name, class_id, 
         log_data.save()
     return error
 
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'group_member_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        group_id = request.GET.get('group_id', '')
+        error = None
+        member_data = []
+        lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1)
+
+        for lecture_info in lecture_list:
+            try:
+                member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                member_info.member.lecture_tb = lecture_info.lecture_tb
+                member_info.member.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                member_info.member.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                member_info.member.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+                member_info.member.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                if '\r\n' in member_info.member.lecture_tb.note:
+                    member_info.member.lecture_tb.note = member_info.member.lecture_tb.note.replace('\r\n', ' ')
+
+                member_info.member.lecture_tb.auth_cd = member_info.auth_cd
+
+                try:
+                    auth_cd_nm = CommonCdTb.objects.get(common_cd=member_info.auth_cd)
+                except ObjectDoesNotExist:
+                    error = '회원 정보를 불러오지 못했습니다.'
+                if error is None:
+                    member_info.member.lecture_tb.auth_cd_nm = auth_cd_nm.common_cd_nm
+
+                try:
+                    state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.state_cd)
+                except ObjectDoesNotExist:
+                    error = '회원 정보를 불러오지 못했습니다.'
+                if error is None:
+                    member_info.member.lecture_tb.state_cd_nm = state_cd_nm.common_cd_nm
+
+                if member_info.member.birthday_dt is None or member_info.member.birthday_dt == '':
+                    member_info.member.birthday_dt = ''
+                else:
+                    member_info.member.birthday_dt = str(member_info.member.birthday_dt)
+
+                if member_info.member.reg_info is None or str(member_info.member.reg_info) != str(request.user.id):
+                    if member_info.auth_cd != 'VIEW':
+                        member_info.member.sex = ''
+                        member_info.member.birthday_dt = ''
+                        member_info.member.phone = '***-****-' + member_info.member.phone[7:]
+
+                member_data.append(member_info.member)
+
+        if error is not None:
+
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        context['member_data'] = member_data
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        group_id = request.POST.get('group_id', '')
+        error = None
+        member_data = []
+        lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1)
+
+        for lecture_info in lecture_list:
+            try:
+                member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                member_info.member.lecture_tb = lecture_info.lecture_tb
+                member_info.member.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                member_info.member.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                member_info.member.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+                member_info.member.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                if '\r\n' in member_info.member.lecture_tb.note:
+                    member_info.member.lecture_tb.note = member_info.member.lecture_tb.note.replace('\r\n', ' ')
+
+                member_info.member.lecture_tb.auth_cd = member_info.auth_cd
+
+                try:
+                    auth_cd_nm = CommonCdTb.objects.get(common_cd=member_info.auth_cd)
+                except ObjectDoesNotExist:
+                    error = '회원 정보를 불러오지 못했습니다.'
+                if error is None:
+                    member_info.member.lecture_tb.auth_cd_nm = auth_cd_nm.common_cd_nm
+
+                try:
+                    state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.state_cd)
+                except ObjectDoesNotExist:
+                    error = '회원 정보를 불러오지 못했습니다.'
+                if error is None:
+                    member_info.member.lecture_tb.state_cd_nm = state_cd_nm.common_cd_nm
+
+                if member_info.member.birthday_dt is None or member_info.member.birthday_dt == '':
+                    member_info.member.birthday_dt = ''
+                else:
+                    member_info.member.birthday_dt = str(member_info.member.birthday_dt)
+
+                if member_info.member.reg_info is None or str(member_info.member.reg_info) != str(request.user.id):
+                    if member_info.auth_cd != 'VIEW':
+                        member_info.member.sex = ''
+                        member_info.member.birthday_dt = ''
+                        member_info.member.phone = '*******' + member_info.member.phone[7:]
+
+                member_data.append(member_info.member)
+
+        if error is not None:
+
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        context['member_data'] = member_data
+
+        return render(request, self.template_name, context)
