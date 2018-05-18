@@ -199,7 +199,7 @@
 		line-height: 36px;
 	}
 	._groupnum{
-		display: none !important;
+		display: table-cell;
 		width: 4%;
 	}
 	._groupname{
@@ -215,7 +215,7 @@
 		width: 30%;
 	}
 	._groupcreatedate{
-		display: none !important;
+		display: table-cell;
 		width: 17%;
 		font-size: 13px;
 	}
@@ -252,9 +252,7 @@
 	}
 
 @media(min-width: 600px){
-	._groupnum, ._groupcreatedate{
-		display: table-cell;
-	}
+
 	.groupWrap{
 		font-weight: bold;
 		font-size: 13px;
@@ -294,7 +292,7 @@ div.memberline{
 	}
 
 div._id, div._startdate, div._finday{
-	display: none !important;
+	display: table-cell;
 }
 div._tdname{
 	width: 20%;
@@ -313,9 +311,7 @@ div._manage{
 }
 
 @media(min-width: 600px){
-	div._id, div._startdate, div._finday{
-		display: table-cell;
-	}
+
 	div.groupmemberline_thead div{
 		width: 12.5%;
 	}
