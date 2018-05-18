@@ -727,7 +727,7 @@ function groupMemberListSet(group_id, jsondata){
 
     if(grouptype == 'EMPTY'){
         //var group_type = group_capacity+"인 공개"
-        var EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 참여인원은 이 그룹명으로 개설된 레슨에 참여 가능하며, 참여인원은 제한이 없습니다. 한 수업단위 정원은 "+groupcapacity+" 명입니다.</p>"
+        var EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 참여인원은 이 그룹명으로 개설된 레슨에 예약 가능하며, 그룹 참여인원수는 제한이 없습니다. 한 레슨단위 정원은 "+groupcapacity+" 명입니다.</p>"
     }else if(grouptype == "NORMAL"){
         //var group_type = group_capacity+"인 비공개"
         var EMPTY_EXPLAIN = ""
