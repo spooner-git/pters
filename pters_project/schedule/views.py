@@ -343,7 +343,10 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
         for lecture_datum_info in lecture_data:
             lecture_datum = lecture_datum_info.lecture_tb
             # 강좌별로 연결되어있는 회원 리스트 불러오기
-            member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
+            try:
+                member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
             # 강좌별로 연결된 PT 스케쥴 가져오기
             lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        lecture_tb=lecture_datum.lecture_id,
