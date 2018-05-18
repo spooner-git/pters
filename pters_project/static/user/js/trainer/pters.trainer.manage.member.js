@@ -1190,7 +1190,8 @@ function pc_add_member(option){
     shade_index(300)
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
         $('#uptext2, #uptext2_PC').text(text);
 
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
@@ -1211,7 +1212,8 @@ function pc_add_member(option){
 
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
         $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
@@ -1227,7 +1229,8 @@ function pc_add_member(option){
 
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
         $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
@@ -1271,7 +1274,8 @@ function pc_add_member(option){
         
     }else if(option == 'group'){
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
         $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
@@ -1279,7 +1283,8 @@ function pc_add_member(option){
 
     }else if(option == 'groupmember'){
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();

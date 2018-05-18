@@ -1295,9 +1295,11 @@ select:focus > option:checked {
 	}
 
 	#page_addmember, #memberInfoPopup{
+		/*
 		top:50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
+		*/
 	}
 
 	.ymdText-pc-add-member-wrap{
@@ -1439,7 +1441,8 @@ select:focus > option:checked {
 	
 	#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
 		/*width: 1080px;*/
-		height: 600px;
+		/*height: 600px;*/
+		height: auto;
 		overflow-y: overlay;
 	}
 
