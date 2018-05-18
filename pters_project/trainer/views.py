@@ -1758,10 +1758,11 @@ def delete_member_lecture_info_logic(request):
             repeat_schedule_data.delete()
             lecture_info.delete()
             # 회원의 수강정보가 더이상 없는경우
-            member_class_lecture_counter = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id).count()
-            if member_class_lecture_counter == 0:
-                member.delete()
-                user.delete()
+            if str(member.reg_info) == str(request.user.id):
+                member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
+                if len(member_lecture_list_confirm) == 0:
+                    member.delete()
+                    user.delete()
 
     if error is None:
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
