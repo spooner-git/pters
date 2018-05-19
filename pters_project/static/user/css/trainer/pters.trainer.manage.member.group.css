@@ -254,7 +254,23 @@
 		cursor: pointer;
 	}
 
-@media(min-width: 600px){
+@media(max-width: 600px){
+	._groupnum, ._groupmemo, ._groupcreatedate{
+		display: none !important;
+	}
+
+	div._id, div._startdate, div._finday, div._contact{
+		display: none !important;
+	}
+
+	div._groupmanage img._info_download, div._groupmanage img._info_delete{
+		display: none;
+	}
+
+	._grouptype{
+		display: none !important;
+	}
+
 
 	.groupWrap{
 		font-weight: bold;

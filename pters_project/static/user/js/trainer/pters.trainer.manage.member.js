@@ -1145,6 +1145,7 @@ function float_btn_managemember(option){
         }
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet()
+        get_group_list('dropdown')
         $('#page_addmember').fadeIn('fast');
         $('#shade').hide();
         $('#shade3').fadeIn('fast');

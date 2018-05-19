@@ -251,6 +251,9 @@ select:focus > option:checked {
 	border-right-color: transparent;
 }
 
+._GROUP_THEAD{
+	display: none;
+}
 
 ._countnum,._id,._email,._finday,._manage{
 	display: none;
@@ -1424,10 +1427,6 @@ select:focus > option:checked {
 
 	._MEMBER_THEAD{
 
-	}
-
-	._GROUP_THEAD{
-		display: none;
 	}
 
 	.centeralign{
