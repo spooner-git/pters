@@ -259,7 +259,7 @@ ul a{
 .pters_input_namefield{
 	width: 48%;
 	display: inline-block;
-	height: 40px;
+	height: 40px !important;
 }
 
 
@@ -774,6 +774,7 @@ button._info_baseedit_img{
 	width: 78%;
 	height: 35px;
 	border:1px solid #8d8d8d;
+	border-radius: 0;
 }
 
 #memberSearchButton{

@@ -308,10 +308,12 @@ $(document).on('click','div.groupWrap',function(){
 	var group_id = $(this).attr('data-groupid');
 	var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"]')
 	if(memberlist.css('display')=='none'){
-		memberlist.show()
+        $(this).addClass('groupWrap_selected')
+		memberlist.addClass('groupMembersWrap_selected').show()
         get_groupmember_list(group_id)
 	}else{
-		memberlist.hide()
+        $(this).removeClass('groupWrap_selected')
+		memberlist.removeClass('groupMembersWrap_selected').hide()
 	}
 })
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.

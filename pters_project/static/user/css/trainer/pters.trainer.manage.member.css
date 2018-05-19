@@ -438,7 +438,6 @@ select:focus > option:checked {
 	z-index: 150;
 	max-width: 700px !important;
 	top: 50px;
-	left: 5%;
 }
 
 	#mobile_basic_info{
@@ -1427,6 +1426,10 @@ select:focus > option:checked {
 
 	._MEMBER_THEAD{
 
+	}
+
+	._GROUP_THEAD{
+		display: none;
 	}
 
 	.centeralign{

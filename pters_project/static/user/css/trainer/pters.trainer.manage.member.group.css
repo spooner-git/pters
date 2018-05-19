@@ -190,10 +190,24 @@
 	cursor: pointer !important;
 	font-size: 12px;
 }
-.groupWrap:hover{
-	background: #cccccc;
-	color: #fe4e65;
+
+.groupWrap_selected{
+	border-top: 1px solid #fe4e65;
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	background: #e8e8e8;
+	font-weight: bold;
 }
+
+.groupWrap:hover{
+	background: #e4e4e4;
+	font-weight: bold;
+	
+}
+.groupWrap:active{
+	background: #cccccc;
+}
+
 	.groupWrap > div{
 		display: table-cell;
 		line-height: 36px;
@@ -228,6 +242,9 @@
 	.group_listinput{
 		width: 95%;
 		height: 26px;
+		line-height: 26px;
+		-webkit-text-fill-color:#282828;
+		-webkit-opacity:1;
 	}
 	.input_disabled_true{
 		border:0;
@@ -247,12 +264,18 @@
 	border-bottom:1px solid #cccccc;
 	font-size: 12.5px;
 }
+.groupMembersWrap_selected{
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	border-bottom: 1px solid #fe4e65;
+}
 	.btn_add_member_to_group{
 		width: 25px;
 		margin-bottom: 10px;
 		margin-top: 10px;
 		cursor: pointer;
 	}
+
 
 @media(max-width: 600px){
 	._groupnum, ._groupmemo, ._groupcreatedate{
