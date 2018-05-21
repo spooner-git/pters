@@ -36,4 +36,5 @@ urlpatterns = [
 
     url(r'^update_memo_schedule/$', views.update_memo_schedule_logic, name='update_memo_schedule'),
 
+    url(r'^add_group_schedule/$', views.add_group_schedule_logic, name='add_group_schedule'),
 ]

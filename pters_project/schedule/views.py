@@ -1657,3 +1657,148 @@ def update_memo_schedule_logic(request):
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
         return redirect(next_page)
+
+
+# 일정 추가
+@csrf_exempt
+def add_group_schedule_logic(request):
+    group_id = request.POST.get('group_id')
+    schedule_date = request.POST.get('training_date')
+    schedule_time = request.POST.get('training_time')
+    schedule_time_duration = request.POST.get('time_duration')
+    note = request.POST.get('add_memo', '')
+    date = request.POST.get('date', '')
+    day = request.POST.get('day', '')
+    class_id = request.session.get('class_id', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    schedule_start_datetime = None
+    schedule_end_datetime = None
+    group_info = None
+
+    request.session['date'] = date
+    request.session['day'] = day
+
+    if group_id == '':
+        error = '그룹을 선택해 주세요.'
+
+    if schedule_date == '':
+        error = '날짜를 선택해 주세요.'
+    elif schedule_time == '':
+        error = '시작 시간을 선택해 주세요.'
+    elif schedule_time_duration == '':
+        error = '진행 시간을 선택해 주세요.'
+
+    if note is None:
+        note = ''
+
+    if error is None:
+        # 그룹 정보 가져오기
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id)
+        except ObjectDoesNotExist:
+            error = '그룹 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        # 강사 정보 가져오기
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        # 최초 날짜 값 셋팅
+        time_duration_temp = class_info.class_hour * int(schedule_time_duration)
+
+        try:
+            schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time,
+                                                                 '%Y-%m-%d %H:%M:%S.%f')
+            schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+
+    if error is None:
+        seven_days_ago = schedule_start_datetime - datetime.timedelta(days=7)
+        seven_days_after = schedule_end_datetime + datetime.timedelta(days=7)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                if error is None:
+                    try:
+                        with transaction.atomic():
+                            add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id,
+                                                           group_tb_id=group_id,
+                                                           start_dt=schedule_start_datetime,
+                                                           end_dt=schedule_end_datetime,
+                                                           state_cd='NP', permission_state_cd='AP', note=note,
+                                                           member_note='', en_dis_type='1',
+                                                           reg_member_id=request.user.id,
+                                                           reg_dt=timezone.now(), mod_dt=timezone.now())
+                            add_schedule_info.save()
+
+                    except TypeError as e:
+                        error = '등록 값의 형태에 문제가 있습니다.'
+                    except ValueError as e:
+                        error = '등록 값에 문제가 있습니다.'
+                    except IntegrityError as e:
+                        error = '날짜가 중복됐습니다.'
+                    except ValidationError as e:
+                        error = '예약 가능한 횟수를 확인해주세요.'
+                    except InternalError as e:
+                        error = '예약 가능한 횟수를 확인해주세요.'
+
+                if error is None:
+                    schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
+                                                              start_dt__gte=seven_days_ago,
+                                                              end_dt__lte=seven_days_after, use=1).exclude(
+                        schedule_id=add_schedule_info.schedule_id)
+                    for schedule_datum in schedule_data:
+                        error = date_check_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
+                                                schedule_datum.start_dt, schedule_datum.end_dt)
+                        if error is not None:
+                            break
+
+                    if error is not None:
+                        add_schedule_info.delete()
+
+                if error is not None:
+                    if '-' in error:
+                        error += ' 일정이 중복되었습니다. '
+
+        except TypeError as e:
+            error = error
+        except ValueError as e:
+            error = error
+        except IntegrityError as e:
+            error = error
+        except InternalError as e:
+            error = error
+
+    if error is None:
+
+        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name+' 그룹일정', log_how='추가',
+                         log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
+
+    if error is None:
+        request.session['push_title'] = ''
+        request.session['push_info'] = ''
+        request.session['lecture_id'] = ''
+
+        return redirect(next_page)
+    else:
+        logger.error(
+            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+        return redirect(next_page)
+
