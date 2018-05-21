@@ -176,7 +176,7 @@ $(document).ready(function(){
 		//날짜를 클릭해서 나오는 일정들을 클릭했을때
 		$(document).on('click','.plan_raw',function(){
 			shade_index(150)
-			$('#popup_planinfo_title').text('PT 일정')
+			$('#popup_planinfo_title').text('레슨 일정')
 			if($('body').width()>600){
 				$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
 			}else{

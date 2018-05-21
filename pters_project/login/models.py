@@ -113,3 +113,36 @@ class QATb(models.Model):
     class Meta:
         managed = False
         db_table = 'QA_TB'
+
+
+class BoardTb(models.Model):
+    board_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    board_type_cd = models.CharField(db_column='BOARD_TYPE_CD', max_length=45, blank=True, null=True, default='NOTICE')  # Field name made lowercase.
+    title = models.CharField(db_column='TITLE', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
+    contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, null=True, default='')  # Field name made lowercase.
+    to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=45, blank=True, null=True, default='ALL')  # Field name made lowercase.
+    hits = models.IntegerField(db_column='HITS', blank=True, null=True, default='0')  # Field name made lowercase.
+    get = models.IntegerField(db_column='GET', blank=True, null=True, default='0')  # Field name made lowercase.
+    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
+    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'BOARD_TB'
+
+
+class CommentTb(models.Model):
+    comment_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    board_type_cd = models.CharField(db_column='BOARD_TYPE_CD', max_length=45, blank=True, null=True, default='')  # Field name made lowercase.
+    board = models.ForeignKey(BoardTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    contents = models.CharField(db_column='CONTENTS', max_length=1000, blank=True, null=True, default='')  # Field name made lowercase.
+    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
+    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'COMMENT_TB'

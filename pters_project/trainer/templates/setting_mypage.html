@@ -64,7 +64,7 @@
   </div>
 
   <div id="planBoardWrap" class="boardWrap">
-      <div class="planBoard _Next_Info"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 PT 일정</p><p></p></div>
+      <div class="planBoard _Next_Info"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 레슨 일정</p><p></p></div>
       <div class="planBoard _Repeat_Info">
         <p><img src="/static/user/res/member/icon-repeat.png" alt="">OFF 반복 일정</p>
         <div></div>
@@ -597,7 +597,7 @@
             send_modified_member_info()
             function send_modified_member_info(){
                 $.ajax({
-                  url:'/trainer/update_member_info/',
+                  url:'/trainer/update_trainer_info/',
                   type:'POST',
                   data : $('#modify-member-id-form').serialize(),
                   dataType : 'html',
@@ -624,7 +624,6 @@
             }
 
             function fill_recieved_member_info(jsondata){
-              console.log(jsondata.off_repeat_schedule_type_data)
                 $('._nameInfo').text(jsondata.name)
                 $('._phoneInfo').text(jsondata.phone)
                 $('._birthInfo').text(jsondata.birthday_dt)

@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^pt_add_logic/$', views.pt_add_logic, name='pt_add_logic'),
     url(r'^pt_add_array_logic/$', views.pt_add_array_logic, name='pt_add_array_logic'),
     url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
+    url(r'^mypage_trainee_ajax/$', views.MyPageViewAjax.as_view(), name='mypage_trainee_ajax'),
     url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
 
     url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
@@ -46,11 +47,14 @@ urlpatterns = [
     # 회원정보로 수강 정보 list 조회
     url(r'^read_trainee_lecture_by_class_ajax/$', views.ReadLectureByClassAjax.as_view(), name='read_trainee_lecture_by_class_ajax'),
 
-    url(r'^read_trainee_lecture_view_by_class_ajax/$', views.ReadLectureViewByClassAjax.as_view(),
-        name='read_trainee_lecture_view_by_class_ajax'),
+    url(r'^read_trainee_lecture_view_by_class_ajax/$', views.ReadLectureViewByClassAjax.as_view(), name='read_trainee_lecture_view_by_class_ajax'),
 
-    url(r'^trainee_push_ajax/$', views.TraineePushAjax.as_view(),
-        name='trainee_push_ajax'),
+    url(r'^trainee_push_ajax/$', views.TraineePushAjax.as_view(), name='trainee_push_ajax'),
+
+    url(r'^update_trainee_info/$', views.update_trainee_info_logic, name='update_trainee_info'),
+
+    # 피터스 탈퇴 확인 페이지로 이동
+    url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
 
 ]
 

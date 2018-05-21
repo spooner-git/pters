@@ -70,6 +70,24 @@ $(document).ready(function(){
 		}else{
 			$('body').css('background-image', 'url("/static/user/res/main/bg-image.jpg")')
 		}
+	}else if(class_name.match(/필라테스/)|| class_name.match(/pilates/) || class_name.match(/기구필라테스/) ){
+		if(bodywidth>600){
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-pilates-pc.jpg")')
+		}else{
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-pilates-mobile.jpg")')
+		}
+	}else if(class_name.match(/당구/)|| class_name.match(/billiard/) || class_name.match(/ビリヤード/) ){
+		if(bodywidth>600){
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-billiards-pc.jpg")')
+		}else{
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-billiards-mobile.jpg")')
+		}
+	}else if(class_name.match(/골프/)|| class_name.match(/golf/) || class_name.match(/ゴルフ/) ){
+		if(bodywidth>600){
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-golf-pc.jpg")')
+		}else{
+			$('body').css('background-image', 'url("/static/user/res/main/bg-image-golf-mobile.jpg")')
+		}
 	}else{
 		if(bodywidth>600){
 			$('body').css('background-image', 'url("/static/user/res/main/bg-image-brick-pc.jpg")')

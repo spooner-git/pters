@@ -104,6 +104,17 @@ urlpatterns = [
 
     url(r'^get_off_repeat_schedule_ajax/$', views.GetOffRepeatScheduleDataViewAjax.as_view(), name='get_off_repeat_schedule_ajax'),
 
+    # 엑셀 export/import 기능
     url(r'^export_excel_member_list/$', views.export_excel_member_list_logic, name='export_excel_member_list'),
     url(r'^export_excel_member_info/$', views.export_excel_member_info_logic, name='export_excel_member_info'),
+    url(r'^import_excel_member_list/$', views.import_excel_member_list_logic, name='import_excel_member_list'),
+    url(r'^import_excel_member_info/$', views.import_excel_member_info_logic, name='import_excel_member_info'),
+    url(r'^check_import_excel_member_list/$', views.check_import_excel_member_list_logic, name='check_import_excel_member_list'),
+    url(r'^check_import_excel_member_info/$', views.check_import_excel_member_info_logic, name='check_import_excel_member_info'),
+
+    # 공지사항 조회
+    url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(),name='get_off_repeat_schedule_ajax'),
+
+    url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
+
 ]

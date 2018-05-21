@@ -4,6 +4,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth import SESSION_KEY
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import InternalError
@@ -643,6 +644,54 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
             error = '강좌 정보를 불러오지 못했습니다.'
+        if error is None:
+            try:
+                member_info = MemberTb.objects.get(member_id=self.request.user.id)
+                context['member_info'] = member_info
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+        # if lecture_id is None or lecture_id == '':
+        #    error = '수강정보를 확인해 주세요.'
+        if error is None:
+            context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
+                                                                 self.request.user.last_name + self.request.user.first_name, class_id, start_date, end_date)
+
+            # 강사 setting 값 로드
+            context = get_trainee_setting_data(context, self.request.user.id)
+            self.request.session['setting_language'] = context['lt_lan_01']
+
+        # 강사 setting 값 로드
+        if error is None:
+            context = get_trainer_setting_data(context, class_info.member_id, class_id)
+
+        return context
+
+
+class MyPageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'mypage_trainee_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MyPageViewAjax, self).get_context_data(**kwargs)
+        error = None
+        class_id = self.request.session.get('class_id', '')
+        # lecture_id = self.request.session.get('lecture_id', '')
+
+        today = datetime.date.today()
+        start_date = today - datetime.timedelta(days=46)
+        end_date = today + datetime.timedelta(days=47)
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강좌 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                member_info = MemberTb.objects.get(member_id=self.request.user.id)
+                context['member_info'] = member_info
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
 
         # if lecture_id is None or lecture_id == '':
         #    error = '수강정보를 확인해 주세요.'
@@ -660,7 +709,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
         return context
-
 
 class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'mypage_trainee_blank.html'
@@ -1201,7 +1249,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     if error is None:
         if member_id is None or member_id == '':
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                         lecture_tb__use='1', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
@@ -1209,7 +1257,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
         else:
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                          lecture_tb__member_id=member_id,
-                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                         lecture_tb__use='1', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
@@ -1285,7 +1333,7 @@ def get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, membe
     if error is None:
         if member_id is None or member_id == '':
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                         lecture_tb__use='1', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
@@ -1293,7 +1341,7 @@ def get_trainee_repeat_schedule_data_func_from_schedule(context, class_id, membe
         else:
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                          lecture_tb__member_id=member_id,
-                                                         lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                         lecture_tb__use='1', use=1)
             # lecture_list = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_id=member_id, use=1)
             # lecture_list.filter(state_cd='IP')
             # lecture_list.filter(state_cd='NP')
@@ -1526,7 +1574,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                     lecture_tb__member_id=user_id, auth_cd='VIEW', use=1).order_by('lecture_tb')
+                                                     lecture_tb__member_id=user_id, use=1).order_by('lecture_tb')
 
         # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=user_id, member_view_state_cd='VIEW')
 
@@ -1841,12 +1889,11 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
         error = '강좌 정보를 불러오지 못했습니다.'
-
     # 수강 정보 불러 오기
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                      lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', auth_cd='VIEW', use=1)
+                                                     lecture_tb__use='1', use=1)
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
@@ -1860,7 +1907,7 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
 
                 if error is None:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type='1', use=1).order_by('start_dt')
+                                                                 en_dis_type='1').order_by('start_dt')
 
                     if pt_schedule_data is not None and len(pt_schedule_data) > 0:
                         idx = 0
@@ -1946,3 +1993,139 @@ def get_trainee_schedule_input_lecture(class_id, member_id):
                 lecture_id = lecture_info.lecture_tb.lecture_id
 
     return lecture_id
+
+
+def update_trainee_info_logic(request):
+    member_id = request.POST.get('id')
+    email = request.POST.get('email', '')
+    first_name = request.POST.get('first_name', '')
+    last_name = request.POST.get('last_name', '')
+    phone = request.POST.get('phone', '')
+    contents = request.POST.get('contents', '')
+    country = request.POST.get('country', '')
+    address = request.POST.get('address', '')
+    sex = request.POST.get('sex', '')
+    birthday_dt = request.POST.get('birthday', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    member_id = request.user.id
+    if member_id == '':
+        error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            user = User.objects.get(id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+        try:
+            member = MemberTb.objects.get(user_id=user.id)
+        except ObjectDoesNotExist:
+            error = '회원 ID를 확인해 주세요.'
+
+    input_first_name = ''
+    input_last_name = ''
+    input_phone = ''
+    input_contents = ''
+    input_country = ''
+    input_address = ''
+    input_sex = ''
+    input_birthday_dt = ''
+
+    if first_name is None or first_name == '':
+        input_first_name = user.first_name
+    else:
+        input_first_name = first_name
+
+    if last_name is None or last_name == '':
+        input_last_name = user.last_name
+    else:
+        input_last_name = last_name
+
+    if contents is None or contents == '':
+        input_contents = member.contents
+    else:
+        input_contents = contents
+
+    if country is None or country == '':
+        input_country = member.country
+    else:
+        input_country = country
+
+    if address is None or address == '':
+        input_address = member.address
+    else:
+        input_address = address
+
+    if sex is None or sex == '':
+        input_sex = member.sex
+    else:
+        input_sex = sex
+
+    if birthday_dt is None or birthday_dt == '':
+        input_birthday_dt = member.birthday_dt
+    else:
+        input_birthday_dt = birthday_dt
+
+    if phone is None or phone == '':
+        input_phone = member.phone
+    else:
+        if len(phone) != 11 and len(phone) != 10:
+            error = '연락처를 확인해 주세요.'
+        elif not phone.isdigit():
+            error = '연락처를 확인해 주세요.'
+        else:
+            input_phone = phone
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                user.first_name = input_first_name
+                user.last_name = input_last_name
+                # user.email = email
+                user.save()
+                member.name = input_last_name + input_first_name
+                member.phone = input_phone
+                member.contents = input_contents
+                member.sex = input_sex
+                if input_birthday_dt is not None and input_birthday_dt != '':
+                    member.birthday_dt = input_birthday_dt
+                member.country = input_country
+                member.address = input_address
+                member.mod_dt = timezone.now()
+                member.save()
+
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError as e:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError as e:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         log_info='회원 정보', log_how='수정',
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+class DeleteTraineeAccountView(AccessTestMixin, TemplateView):
+    template_name = 'delete_trainee_account_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteTraineeAccountView, self).get_context_data(**kwargs)
+
+        return context

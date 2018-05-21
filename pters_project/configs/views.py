@@ -32,6 +32,7 @@ class CheckView(LoginRequiredMixin, RedirectView):
     def get(self, request, **kwargs):
         user_for_group = User.objects.get(id=request.user.id)
         group = user_for_group.groups.get(user=request.user.id)
+        self.request.session['base_html'] = group.name+'_base.html'
         if group.name == 'trainee':
             self.url = '/trainee/'
         elif group.name == 'trainer':
@@ -77,6 +78,7 @@ class AccessTestMixin(UserPassesTestMixin):
         if error is None:
             try:
                 group = user_for_group.groups.get(user=self.request.user.id)
+                self.request.session['base_html'] = group.name+'_base.html'
             except ObjectDoesNotExist:
                 error = '그룹 정보를 가져오지 못했습니다'
 

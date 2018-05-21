@@ -7,6 +7,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import password_reset, password_reset_done
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth import authenticate, logout, login
+from django.core.mail import EmailMessage
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
@@ -182,7 +183,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
     template_name = 'registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
-        username = request.POST.get('username', '')
+        username = request.POST.get('before_user_id', '')
         user_id = request.POST.get('id', '')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
@@ -503,30 +504,25 @@ class AddMemberNoEmailView(View):
         # contents = request.POST.get('contents', '')
 
         error = None
-
-        if User.objects.filter(username=phone).exists():
-            error = '이미 가입된 회원 입니다.'
-        # elif User.objects.filter(email=email).exists():
-        #    error = '이미 가입된 회원 입니다.'
-        elif name == '':
+        if name == '':
             error = '이름을 입력해 주세요.'
-        elif phone == '':
-            error = '연락처를 입력해 주세요.'
-        elif len(phone) != 11 and len(phone) != 10:
-            error = '연락처를 확인해 주세요.'
-        elif not phone.isdigit():
-            error = '연락처를 확인해 주세요.'
+        else:
+            name = name.replace(' ', '')
 
         if error is None:
-            if len(phone) == 11:
-                password = phone[7:]
-            elif len(phone) == 10:
-                password = phone[6:]
+            username = name
+            password = '0000'
+        if error is None:
+            count = MemberTb.objects.filter(name=username).count()
+            if count != 0:
+                username += str(count+1)
+        # elif User.objects.filter(email=email).exists():
+        #    error = '이미 가입된 회원 입니다.'
 
         if error is None:
             try:
                 with transaction.atomic():
-                    user = User.objects.create_user(username=phone, first_name=first_name, last_name=last_name, password=password, is_active=0)
+                    user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password, is_active=0)
                     group = Group.objects.get(name='trainee')
                     user.groups.add(group)
                     if birthday_dt == '':
@@ -553,7 +549,7 @@ class AddMemberNoEmailView(View):
             logger.error(name+'[강사 회원가입]'+error)
             messages.error(request, error)
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, {'username': username})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -589,7 +585,6 @@ class CheckMemberIdView(View):
 
         if self.error != '':
             self.error = self.error.replace("이름", "ID")
-
         return render(request, self.template_name, {'error': self.error})
 
 
@@ -605,25 +600,29 @@ class CheckMemberEmailView(View):
     def post(self, request, *args, **kwargs):
         user_email = request.POST.get('email', '')
         form = RegistrationForm(request.POST, request.FILES)
-
         if user_email is None or user_email == '':
             self.error = 'email를 입력해주세요.'
         else:
-            if form.is_valid():
-                if User.objects.filter(email=user_email).exists():
-                    self.error = '이미 가입된 회원 입니다.'
-            else:
-                for field in form:
-                    if field.errors:
-                        for err in field.errors:
-                            if self.error is None or self.error == '':
-                                if field.name == 'email':
-                                    self.error = err
+
+            if User.objects.filter(email=user_email).exists():
+                self.error = '이미 가입된 회원 입니다.'
+
+            if self.error is None or self.error == '':
+                if form.is_valid():
+                    if User.objects.filter(email=user_email).exists():
+                        self.error = '이미 가입된 회원 입니다.'
+                else:
+                    for field in form:
+                        if field.errors:
+                            for err in field.errors:
+                                if self.error is None or self.error == '':
+                                    if field.name == 'email':
+                                        self.error = err
+                                    else:
+                                        self.error = ''
                                 else:
-                                    self.error = ''
-                            else:
-                                if field.name == 'email':
-                                    self.error += err
+                                    if field.name == 'email':
+                                        self.error += err
 
         return render(request, self.template_name, {'error': self.error})
 
@@ -867,6 +866,11 @@ def question_reg_logic(request):
         qa_info.save()
 
     if error is None:
+        email = EmailMessage('[PTERS 질문]'+request.user.last_name+request.user.first_name+'회원-'+title,
+                             '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + str(timezone.now()),
+                             to=['support@pters.co.kr'])
+        email.send()
+
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)

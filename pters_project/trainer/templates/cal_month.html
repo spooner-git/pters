@@ -2,7 +2,6 @@
 {% load static_url %}
 
 {% block local_css %}
-
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.month.cal.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.off.repeat.add.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.css" %}>
@@ -93,7 +92,7 @@
 
     <div class="ymdText-pc-add">
       <div class="ymdText-pc-add-off" onclick="float_btn_addplan(2)">+ OFF 일정추가</div>
-      <div class="ymdText-pc-add-pt" onclick="float_btn_addplan(1)">+ PT 일정추가</div>
+      <div class="ymdText-pc-add-pt" onclick="float_btn_addplan(1)">+ 레슨 일정추가</div>
     </div>
 </div>
 
@@ -204,7 +203,7 @@
     </form>
     
     <div class="ptaddbox" id="addpopup_pc_label_pt">
-      <span class="KRtext">PT 일정 추가</span>
+      <span class="KRtext">레슨 일정 추가</span>
       <span class="JPtext">PT 日程追加</span>
       <span class="ENtext">Add PT Schedule</span>
     </div>
@@ -306,7 +305,7 @@
         </div>
         <input type="text" name="add_memo" class="dropdown" maxlength="15">
         <p style="font-size:12px;color:#fe4e65;margin:0;margin-top:7px;text-align: right;" class="pt_memo_guide">
-          <img src="/static/user/res/stopmark.png" style="height: 12px;margin-bottom: 1px;"> PT 일정의 메모는 해당 회원님께도 공유됩니다.
+          <img src="/static/user/res/stopmark.png" style="height: 12px;margin-bottom: 1px;"> 레슨 일정의 메모는 해당 회원님께도 공유됩니다.
         </p>
       </div>
 
@@ -461,37 +460,21 @@
             <p style="line-height: 35px;vertical-align: middle;margin:0;"></p>
         </div>
     </div>
-
-    <!--
-    <div class="ptaddbox" id="addpopup_pc_label_view">
-       <span id="uptext-pc-modify KRtext">회원 정보 조회</span>
-       <span id="uptext-pc-modify JPtext">メンバー情報</span>
-       <span id="uptext-pc-modify ENtext">Member Info.</span>
-       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_info')" style="display: none;">
-    </div>
-    -->
-
-    <!--
-    <div>
-       <button id="infoMemberDelete"><img src={% static_url "user/res/member/icon-delete-black.png" %}></button>
-       <button id="infoMemberModify" data-type="view"><img src={% static_url "user/res/member/icon-edit.png" %}></button>
-    </div>
-    -->
-
-    <form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
-        {% csrf_token %}
-        <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
-        <input type="hidden" name="sex" id="form_sex_modify">
-        <input type="hidden" name="birthday" id="form_birth_modify">
-
         <div id="mobile_basic_info">
+            <div class="member_info_tool">
+                <button class="_info_delete _info_delete_img">
+                    <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:17px;">
+                </button>
+            </div>
             <div class="mobileinfo_wrap form-group">
                 <label for="memberName_info" class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명
                     <span id="npSituationPresent"></span>
                 </label>
                 <div class="mobileinfo">
-                    <input type="text" class="mobileinfo_input" id="memberName_info" name="name" readonly>
+                    <input type="text" class="mobileinfo_input" id="memberName_info" name="name" disabled>
+                    <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled>
+                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" disabled>
                     <div id="memberSex_info">
                         <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
                         <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
@@ -504,7 +487,7 @@
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 ID
                 </label>
                 <div class="mobileinfo">
-                    <input type="text" class="mobileinfo_input" id="memberId" name="id" readonly>
+                    <input type="text" class="mobileinfo_input" id="memberId" name="id" disabled>
                 </div>
             </div>
 
@@ -513,32 +496,6 @@
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 생년월일
                 </label>
                 <div id="memberBirth_info">
-                    <!--
-                    <input type="text" class="dropdown form-control" id="memberBirthYear_info" name="birthyear" maxlength="4" readonly>
-                    <div id="memberBirthMonthSelected_info" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom input_disabled_color" type="button" data-toggle="dropdown" name="birthmonth" disabled></button>
-                        <ul id="memberBirthMonth_info" class="dropdown-menu dropdownlist">
-                            <li><a value="1">1월</a></li>
-                            <li><a value="2">2월</a></li>
-                            <li><a value="3">3월</a></li>
-                            <li><a value="4">4월</a></li>
-                            <li><a value="5">5월</a></li>
-                            <li><a value="6">6월</a></li>
-                            <li><a value="7">7월</a></li>
-                            <li><a value="8">8월</a></li>
-                            <li><a value="9">9월</a></li>
-                            <li><a value="10">10월</a></li>
-                            <li><a value="11">11월</a></li>
-                            <li><a value="12">12월</a></li>
-                        </ul>
-                    </div>
-                    <div id="memberBirthDateSelected_info" class="dropdown">
-                        <button class="btn btn-default dropdown-toggle pters_dropdown_custom input_disabled_color" type="button" data-toggle="dropdown" name="birthdate" disabled></button>
-                        <ul id="memberBirthDate_info" class="dropdown-menu dropdownlist">
-                            
-                        </ul>
-                    </div>
-                    -->
                     <select class="mobileinfo_birth dropdown_birth_info" id="birth_year_info" disabled>
                     </select>
                     <select class="mobileinfo_birth dropdown_birth_info" id="birth_month_info" disabled>
@@ -553,50 +510,16 @@
                     <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처
                 </label>
                 <div class="mobileinfo">
-                    <input type="tel" class="mobileinfo_input" id="memberPhone_info" name="phone" required="required" readonly>
-                </div>
-            </div>
-
-            <div class="mobileinfo_wrap form-group">
-                <label for="memberEmail_info" class="ptaddboxtext">
-                    <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> E-mail
-                </label>
-                <div class="mobileinfo">
-                    <input type="email" class="mobileinfo_input" id="memberEmail_info" name="email" readonly>
+                    <input type="tel" class="mobileinfo_input" id="memberPhone_info" name="phone" maxlength="11" required="required" disabled>
                 </div>
             </div>
         </div>
 
-
-        <!--
-        <div id="dateSelector_info" class="ptaddbox">
-            <label class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 시작일자</label>
-            <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker_info" name="start_date" disabled></p>
-        </div>
-        <div id="dateSelector2_info"  class="ptaddbox">
-            <label class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 종료일자</label>
-            <p class="datepicktext dropdown"><input type="text" class="input_disabled_color" id="datepicker2_info" name="end_date" disabled></p>
-        </div>
-        -->
-        
-        <!--           
-        <div class="mobileinfo_wrap form-group" hidden>
-            <label for="comment_info" class="ptaddboxtext">
-                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> 특이사항
-            </label>
-            <div class="mobileinfo">
-                <textarea class="mobileinfo_input" rows="1" id="comment_info" name="contents" readonly></textarea>
-            </div>  
-        </div>
-        -->
 
         <div id="member_info_type_select" style="margin-left: 5px;">
             <div class="button_shift_info  button_active" id="select_info_shift_lecture_mobile">수강 정보</div>
             <div class="button_shift_info" id="select_info_shift_schedule_mobile">반복 일정</div>
             <div class="button_shift_info" id="select_info_shift_history_mobile">일정 이력</div>
-            <button class="submitBtn _info_delete _info_delete_img">
-                <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:20px;">
-            </button>
         </div>
 
         <div id="mobile_lecture_info">
@@ -671,8 +594,8 @@
                 </div>
             </div>
         </div>
-    </form>
 </div>
+
 
 <div id="memberInfoPopup_PC" class="infopopup_pc wrap popups _member_info_popup">
     <div id="inputError_info_PC" style="position: absolute;top: 0;left: 0;">
@@ -682,27 +605,54 @@
     </div>
 
     <label id="memberInfoPopup_PC_label">
-        <img src="/static/user/res/member/icon-female-pink.png">
+        <div id="memberSex_info_PC">
+            <div id="memberMale_info_PC" class="selectboxopt selectboxopt_left selectbox_disable" value="M"><img src="/static/user/res/member/icon-male-blue.png" style="margin-top: 2px;"></div>
+            <div id="memberFemale_info_PC" class="selectboxopt selectboxopt_right selectbox_disable" value="W"><img src="/static/user/res/member/icon-female-pink.png"></div>
+        </div>
+        <input type="" name="" id="memberName_info_PC">
+        <input type="" name="" id="memberName_info_lastName_PC" maxlength="4">
+        <input type="" name="" id="memberName_info_firstName_PC" maxlength="4">
+        <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('member_info_PC')">
     </label>
 
     <div id="info_shift_base" class="info_shift_wrap">
+        <div class="member_info_tool">
+            <button class="_info_baseedit _info_baseedit_img" data-view="view">
+                <img src="/static/user/res/icon-pencil.png" style="margin-bottom: 4px;height:15px;">
+            </button>
+            <button class="_info_download _info_download_img">
+                <img src="/static/user/res/member/pters-download.png" style="margin-bottom: 4px;height:15px;">
+            </button>
+            <button class="_info_delete _info_delete_img">
+                <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:17px;">
+            </button>
+        </div>
         <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-user.png">아이디</label><span id="memberId_info_PC"></span>
+            <label><img src="/static/user/res/member/icon-user.png">아이디</label>
+            <!--<span id="memberId_info_PC"></span>-->
+            <input id="memberId_info_PC">
         </div>
         <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
             <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
-            <span id="memberBirth_Year_info_PC"></span>
-            <span id="memberBirth_Month_info_PC"></span>
-            <span id="memberBirth_Date_info_PC"></span>
+            <!--<span id="memberBirth_Year_info_PC"></span>-->
+            <!--<span id="memberBirth_Month_info_PC"></span>-->
+            <!--<span id="memberBirth_Date_info_PC"></span>-->
+            <div id="memberBirth_select_wrap">
+               <select id="memberBirth_Year_info_PC" disabled></select>
+                <select id="memberBirth_Month_info_PC" disabled></select>
+                <select id="memberBirth_Date_info_PC" disabled></select> 
+            </div>
         </div>
         <div id="memberPhone_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label><span id="memberPhone_info_PC"><span>
+            <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label>
+            <!--<span id="memberPhone_info_PC"></span>-->
+            <input id="memberPhone_info_PC" maxlength="11">
         </div>
 
+        <!--
         <div id="memberEmail_info_PC_wrap" class="member_info_PC_wrap">
             <label><img src="/static/user/res/member/icon-mail-grey.png">E-mail</label><span id="memberEmail_info_PC"></span>
         </div>
-        <!--
         <div id="memberStart_info_PC_wrap" class="member_info_PC_wrap">
             <label><img src="/static/user/res/member/icon-cal-grey.png">시작일자</label><span id="memberStart_info_PC"></span>
         </div>
@@ -717,9 +667,17 @@
     </div> 
 
     <div id="member_info_type_select">
-        <div class="button_shift_info" id="select_info_shift_lecture">수강 정보</div>
+        <div class="button_shift_info  button_active" id="select_info_shift_lecture">수강 정보</div>
         <div class="button_shift_info" id="select_info_shift_schedule">반복 일정</div>
         <div class="button_shift_info" id="select_info_shift_history">일정 이력</div>
+        <!--
+        <button class="submitBtn _info_download _info_download_img">
+                <img src="/static/user/res/member/pters-download.png" style="margin-bottom: 4px;height:17px;">
+            </button>
+        <button class="submitBtn _info_delete _info_delete_img">
+            <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:20px;">
+        </button>
+        -->
     </div>
 
     <div id="info_shift_lecture" class="info_shift_wrap">
@@ -742,7 +700,7 @@
         </div>
         <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
             <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
-                <!--<span class="button_add_member_lecture" onclick="pc_add_member(2)">+</span>-->
+                <span class="button_add_member_lecture" onclick="pc_add_member(2)">+</span>
             </label>
             <div id="memberRegHistory_info_PC">
                   
