@@ -1771,7 +1771,7 @@ def func_delete_member_lecture_info_logic(user_id, class_id, lecture_id, member_
             error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        print(member.name+'test1:'+str(lecture_id))
+        # print(member.name+'test1:'+str(lecture_id))
         # lecture_info = class_lecture_info.lecture_tb
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
