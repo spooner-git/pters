@@ -288,6 +288,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     pt_schedule_finish_check = []
     pt_schedule_note = []
     pt_schedule_idx = []
+    pt_schedule_group = []
     off_repeat_schedule_id = []
     off_repeat_schedule_type = []
     off_repeat_schedule_week_info = []
@@ -391,6 +392,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
                     pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
                     pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
                     pt_schedule_idx.append(idx)
+                    # pt_schedule_group.append(pt_schedule_datum.group_tb)
                     if pt_schedule_datum.note is None:
                         pt_schedule_note.append('')
                     else:
@@ -419,6 +421,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
     context['pt_schedule_note'] = pt_schedule_note
     context['pt_schedule_idx'] = pt_schedule_idx
+    # context['pt_schedule_group'] = pt_schedule_group
 
     context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
     context['off_repeat_schedule_type_data'] = off_repeat_schedule_type

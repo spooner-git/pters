@@ -38,6 +38,11 @@
       "scheduleIdxArray":
       [{% for pt_schedule_idx_info in pt_schedule_idx %}"{{ pt_schedule_idx_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+      "scheduleGroupIdArray":
+      [{% for pt_schedule_group_info in pt_schedule_group %}"{{ pt_schedule_group_info.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "scheduleGroupNameArray":
+      [{% for pt_schedule_group_info in pt_schedule_group %}"{{ pt_schedule_group_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
       "RepeatDuplicationDateArray" :
