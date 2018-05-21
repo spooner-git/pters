@@ -233,12 +233,13 @@ function draw_memberlist_for_addBySearch(jsondata){
 	var	birth = jsondata.birthdayInfo + ''; //형식 1999년 02월 08일
 	var	email = jsondata.emailInfo;
 	var	id = jsondata.idInfo;
+    var dbid = jsondata.dbidInfo;
 	var	sex = jsondata.sexInfo;
 
 
 	var table = ['<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
 	var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sex+'.png">'
-	var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+	var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
 	var html = table + data
 
 	$('#searchedMemberListBox').html(html)
