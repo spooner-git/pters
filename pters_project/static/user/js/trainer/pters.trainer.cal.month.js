@@ -813,7 +813,6 @@ $(document).ready(function(){
 			//(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
 			calTable_Set(3,currentYear,currentPageMonth+1); //새로 추가되는 슬라이드에 달력 채우기	
 			//dateDisabled();
-			classDatesTrainer();
 			monthText();
 			krHoliday();
 			//availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
@@ -828,7 +827,6 @@ $(document).ready(function(){
 			//(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
 			calTable_Set(1,currentYear,currentPageMonth-1);	
 			//dateDisabled();
-			classDatesTrainer();
 			monthText();
 			krHoliday();
 			//availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
