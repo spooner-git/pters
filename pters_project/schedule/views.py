@@ -288,7 +288,14 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     pt_schedule_finish_check = []
     pt_schedule_note = []
     pt_schedule_idx = []
-    pt_schedule_group = []
+    group_schedule_id = []
+    group_schedule_start_datetime = []
+    group_schedule_end_datetime = []
+    group_schedule_finish_check = []
+    group_schedule_note = []
+    group_schedule_group_id = []
+    group_schedule_name = []
+    group_schedule_member_num = []
     off_repeat_schedule_id = []
     off_repeat_schedule_type = []
     off_repeat_schedule_week_info = []
@@ -392,7 +399,11 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
                     pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
                     pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
                     pt_schedule_idx.append(idx)
-                    # pt_schedule_group.append(pt_schedule_datum.group_tb)
+                    # if pt_schedule_datum.group_tb is not None and pt_schedule_datum.group_tb != '':
+                    #    pt_schedule_group_id.append(pt_schedule_datum.group_tb.group_id)
+                    #    pt_schedule_group_name.append(pt_schedule_datum.group_tb.group_name)
+                    #    pt_schedule_group_member_num.append(pt_schedule_datum.group_tb.member_num)
+
                     if pt_schedule_datum.note is None:
                         pt_schedule_note.append('')
                     else:
@@ -402,6 +413,36 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
                         pt_schedule_finish_check.append(1)
                     else:
                         pt_schedule_finish_check.append(0)
+
+    if error is None:
+        # 강좌별로 연결된 그룹 스케쥴 가져오기
+        pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                     group_tb__isnull=False,
+                                                     en_dis_type='1',
+                                                     start_dt__gte=start_date,
+                                                     start_dt__lt=end_date, use=1).order_by('start_dt')
+
+        idx = 0
+        for pt_schedule_datum in pt_schedule_data:
+            # lecture schedule id 셋팅
+            idx += 1
+            group_schedule_id.append(pt_schedule_datum.schedule_id)
+            group_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
+            group_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
+            if pt_schedule_datum.group_tb is not None and pt_schedule_datum.group_tb != '':
+                group_schedule_group_id.append(pt_schedule_datum.group_tb.group_id)
+                group_schedule_name.append(pt_schedule_datum.group_tb.name)
+                group_schedule_member_num.append(pt_schedule_datum.group_tb.member_num)
+
+            if pt_schedule_datum.note is None:
+                group_schedule_note.append('')
+            else:
+                group_schedule_note.append(pt_schedule_datum.note)
+            # 끝난 스케쥴인지 확인
+            if pt_schedule_datum.state_cd == 'PE':
+                group_schedule_finish_check.append(1)
+            else:
+                group_schedule_finish_check.append(0)
 
     if error is None:
         class_info.schedule_check = 0
@@ -421,7 +462,14 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['pt_schedule_finish_check'] = pt_schedule_finish_check
     context['pt_schedule_note'] = pt_schedule_note
     context['pt_schedule_idx'] = pt_schedule_idx
-    # context['pt_schedule_group'] = pt_schedule_group
+    context['group_schedule_id'] = group_schedule_id
+    context['group_schedule_start_datetime'] = group_schedule_start_datetime
+    context['group_schedule_end_datetime'] = group_schedule_end_datetime
+    context['group_schedule_group_id'] = group_schedule_group_id
+    context['group_schedule_name'] = group_schedule_name
+    context['group_schedule_member_num'] = group_schedule_member_num
+    context['group_schedule_note'] = group_schedule_note
+    context['group_schedule_finish_check'] = group_schedule_finish_check
 
     context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
     context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
