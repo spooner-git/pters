@@ -364,7 +364,7 @@ ul a{
 	box-shadow: 0 1px 0 0 #a2a2a2;
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
 	text-align: center;
-	border-top: 9px solid transparent;
+	padding-top: 2px;
 }
 
 #remainCount_mini{

@@ -42,6 +42,9 @@ $(document).ready(function(){
                       /*ajaxTimeGraphSet($('#datepicker').val(), function(){
                         startTimeSet('class');
                         })*/
+                      $('#durations_mini, #durations_mini').html('')
+                      $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
+
                       timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
                       timeGraphSet("off","grey","AddClass", initialJSON)
                       startTimeSet('class');
@@ -57,6 +60,8 @@ $(document).ready(function(){
                       /*ajaxTimeGraphSet($('#datepicker').val(), function(){
                         startTimeSet('class');
                         })*/
+                      $('#durations_mini, #durations_mini').html('')
+                      $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
                       timeGraphSet("off","grey","AddClass", initialJSON)
                       startTimeSet('class');
@@ -211,6 +216,8 @@ $(document).ready(function(){
                       /*ajaxTimeGraphSet(yy0+'-'+mm0+'-'+dd0, function(){
                         startTimeSet('mini');
                         durTimeSet(hh,min,"mini");})*/
+                      $('#durations_mini, #durations_mini').html('')
+                      $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
                       timeGraphSet("off","grey","mini", initialJSON)
                       durTimeSet(hh,min,"mini");
@@ -246,6 +253,8 @@ $(document).ready(function(){
                       /*ajaxTimeGraphSet(yy0+'-'+mm0+'-'+dd0, function(){
                         startTimeSet('mini');
                         durTimeSet(hh,min,"mini");})*/
+                      $('#durations_mini, #durations_mini').html('')
+                      $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
                       timeGraphSet("off","grey","mini", initialJSON)
                       durTimeSet(hh,min,"mini");
@@ -307,6 +316,8 @@ $(document).ready(function(){
                       /*ajaxTimeGraphSet(yy0+'-'+mm0+'-'+dd0, function(){
                         startTimeSet('mini');
                         durTimeSet(hh,min,"mini");})*/
+                      $('#durations_mini, #durations_mini').html('')
+                      $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
                       timeGraphSet("off","grey","mini", initialJSON)
                       durTimeSet(hh,min,"mini");
@@ -342,6 +353,8 @@ $(document).ready(function(){
                       /*ajaxTimeGraphSet(yy0+'-'+mm0+'-'+dd0, function(){
                         startTimeSet('mini');
                         durTimeSet(hh,min,"mini");})*/
+                      $('#durations_mini, #durations_mini').html('')
+                      $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
                       timeGraphSet("off","grey","mini", initialJSON)
                       durTimeSet(hh,min,"mini");
@@ -707,9 +720,15 @@ $(document).ready(function(){
                               completeSend(); //ajax 로딩 이미지 숨기기
                               shade_index(200)
                             }else{
-                              scheduleTime('class', jsondata)
-                              scheduleTime('off', jsondata)
+                              scheduleTime('class', jsondata);
+                              scheduleTime('off', jsondata);
                               //scheduleTime('group', jsondata)
+
+                              initialJSON = jsondata
+                              classDatesTrainer(jsondata);
+                              addPtMemberListSet(jsondata);
+                              plancheck(clicked_td_date_info, jsondata)
+                              
                               $('#calendar').show().css('height','100%')
                               if($('body').width()>=600){
                                   $('#calendar').css('position','relative')
@@ -1756,7 +1775,6 @@ function startTimeSet(option){   // offAddOkArray의 값을 가져와서 시작�
 function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래프 채우기
   //1. option인자 : "class", "off"
   //2. CSS테마인자 : "grey", "pink"
-
   switch(option){
     case "class" :
       var planStartDate = jsondata.classTimeArray_start_date
@@ -2243,74 +2261,7 @@ function scrollToIndicator(dom){
 }
 
 
-function DBdataProcessMonthTrainer(){
-    var len = classDateArray.length;
-    var summaryArray ={}
-    var summaryArrayResult = []
 
-    var datasum = []
-    for(var i=0; i<len; i++){ //객체화로 중복 제거
-      summaryArray[classDateArray[i]] = classDateArray[i]
-      datasum[i] = classDateArray[i]+"/"+classTimeArray_member_name[i]
-    }
-    for(var i in summaryArray){ //중복 제거된 배열
-      summaryArrayResult.push(i)
-    }
-
-    var len2 = summaryArrayResult.length;
-
-    for(var i=0; i<len2; i++){
-      var scan = summaryArrayResult[i]
-      countResult[i]=0
-      for(var j=0; j<len; j++){
-        var datesplit = datasum[j].split('/')
-        if(scan == datesplit[0]){
-          countResult[i] = countResult[i]+1
-        }
-      }
-    }
-
-    for(var i=0; i<summaryArrayResult.length; i++){
-      var splited = summaryArrayResult[i].split("_")
-      var yy = splited[0];
-      var mm = splited[1];
-      var dd = splited[2];
-      dateResult[i] = yy+'_'+mm+'_'+dd
-    }
-}
-
-function classDatesTrainer(){
-  $('._classTime').html('')
-  for(var i=0; i<dateResult.length; i++){
-    var arr = dateResult[i].split('_')
-    var yy = arr[0]
-    var mm = arr[1]
-    var dd = arr[2]
-    var omm = String(oriMonth)
-    var odd = String(oriDate)
-    if(mm.length==1){
-      var mm = '0'+arr[1]
-    }
-    if(dd.length==1){
-      var dd='0'+arr[2]
-    }
-    if(omm.length==1){
-      var omm = '0'+oriMonth
-    }
-    if(odd.length==1){
-      var odd='0'+oriDate
-    }
-    if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
-      $("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
-      $("td[data-date="+dateResult[i]+"] div._classTime").addClass('balloon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
-      $("td[data-date="+dateResult[i]+"] div._classDate").addClass('greydateMytime')
-    }else{
-      $("td[data-date="+dateResult[i]+"]").attr('schedule-id',scheduleIdArray[i])
-      $("td[data-date="+dateResult[i]+"] div._classTime").addClass('blackballoon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
-      $("td[data-date="+dateResult[i]+"] div._classDate").addClass('dateMytime')
-    }
-  };
-}
 
 function send_push(push_server_id, intance_id,title, message, badge_counter){
 
