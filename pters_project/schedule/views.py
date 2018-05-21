@@ -1660,6 +1660,7 @@ def update_memo_schedule_logic(request):
 
 
 # 일정 추가
+@csrf_exempt
 def add_group_schedule_logic(request):
     group_id = request.POST.get('group_id')
     schedule_date = request.POST.get('training_date')
