@@ -20,14 +20,6 @@
         "email_activation" :
         [{% for member_info in member_data %}"{{ member_info.user.is_active }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
-          "member_view_state":
-          [{% for member_info in member_data %}"{{ member_info.lecture_tb.auth_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-          "member_view_state_name":
-          [{% for member_info in member_data %}"{{ member_info.lecture_tb.auth_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-          "lecture_state":
-          [{% for member_info in member_data %}"{{ member_info.lecture_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-          "lecture_state_name":
-          [{% for member_info in member_data %}"{{ member_info.lecture_tb.state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
           "price":
           [{% for member_info in member_data %}"{{ member_info.lecture_tb.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
           "option":
@@ -48,9 +40,6 @@
           [{% for member_info in member_data %}"{{ member_info.lecture_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
           "mod_dt":
           [{% for member_info in member_data %}"{{ member_info.lecture_tb.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-          "lecture_id":
-          [{% for member_info in member_data %}"{{ member_info.lecture_tb.lecture_id}}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
 
           "messageArray" :
           [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
