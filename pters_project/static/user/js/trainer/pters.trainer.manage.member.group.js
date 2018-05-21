@@ -314,49 +314,40 @@ $(document).on('click','div.groupWrap',function(){
 	}else{
         $(this).removeClass('groupWrap_selected')
 		memberlist.removeClass('groupMembersWrap_selected').hide()
+        $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4)
 	}
 })
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 var group_delete_JSON = {"group_id":"", "lecture_ids":[], "fullnames":[], "ids":[]}
-$(document).on('click','._groupmanage img._info_delete',function(){
-	var group_id = $(this).attr('data-groupid')
-
-    var groupmember_lecids = []
-    var groupmember_fullnames = []
-    var groupmember_ids = []
-    var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
-
-    for(var i=2; i<=memberLen+1; i++){
-        groupmember_lecids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+i+')').attr('data-lecid'))
-        groupmember_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+i+')').attr('data-id'))
-        groupmember_fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+i+')').attr('data-fullname')) 
+$(document).on('click','._groupmanage img._info_delete',function(e){
+    e.stopPropagation()
+    if($(this).css('opacity') == 1){
+        deleteTypeSelect = 'groupdelete';
+        $('#cal_popup_plandelete').fadeIn('fast')
+        $('#popup_delete_question').text('정말 이 그룹을 삭제하시겠습니까?')
+        //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
+        var group_id = $(this).attr('data-groupid')
+        var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
+        for(var k=2; k<=memberLen+1; k++){
+            group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
+            group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-id'))
+            group_delete_JSON.ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'))
+        }
+        group_delete_JSON.group_id = group_id
+        console.log(group_delete_JSON)
+    }else{
+        alert('그룹원 리스트를 펼쳐 확인 후 삭제 해주세요.')
     }
     
-    //그룹을 지운다.
-	delete_group_from_list(group_id)
-
-    //그룹원들에게서 그룹에 대한 수강이력을 지운다.
-    for(var j=0; j<memberLen; j++){
-        delete_groupmember_from_grouplist(groupmember_lecids[j], groupmember_fullnames[j], groupmember_ids[j])
-    }
-
-
-    //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
-    for(var k=2; k<=memberLen+1; k++){
-        group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
-        group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-id'))
-        group_delete_JSON.ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'))
-    }
-    group_delete_JSON.group_id = group_id
-    console.log(group_delete_JSON)
 })
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 
 
 //그룹 리스트에서 그룹 수정버튼을 누른다.
-$(document).on('click','._groupmanage img._info_modify',function(){
+$(document).on('click','._groupmanage img._info_modify',function(e){
+    e.stopPropagation()
 	var group_id = $(this).attr('data-groupid')
 	var status = $(this).attr('data-edit')
 
@@ -678,6 +669,7 @@ function get_groupmember_list(group_id){
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 groupMemberListSet(group_id, jsondata)
+                $('div._groupmanage img._info_delete[data-groupid="'+group_id+'"]').css('opacity', 1)
                 console.log('success');
             }
         },

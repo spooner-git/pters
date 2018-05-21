@@ -284,8 +284,7 @@ if (agent.indexOf("firefox") != -1) {
       //$('.confirmPopup').fadeIn('fast');
       deleteTypeSelect = "memberinfodelete";
       $('#cal_popup_plandelete').fadeIn('fast');
-      $('#popup_delete_question').text('정말 회원님 정보를 삭제하시겠습니까?')
-      $('#shade3').fadeIn('fast');
+      $('#popup_delete_question').text('정말 회원님을 삭제하시겠습니까?')
     })
 
 
@@ -358,7 +357,7 @@ if (agent.indexOf("firefox") != -1) {
 
 
     $('#popup_delete_btn_no, #cal_popup_plandelete .popup_close_x_button').click(function(){
-      closePopup('member_delete');
+      close_info_popup('cal_popup_plandelete')
     });
 
     $('#select_info_shift_lecture').click(function(){
@@ -629,7 +628,6 @@ if (agent.indexOf("firefox") != -1) {
                             get_indiv_repeat_info();
                             set_member_lecture_list(jsondata);
                             set_member_history_list(jsondata);
-                            closePopup('member_delete');
                             close_info_popup('cal_popup_plandelete')
                             deleteTypeSelect = "memberinfodelete";
                         }
@@ -653,7 +651,26 @@ if (agent.indexOf("firefox") != -1) {
                 deleteMemberAjax();
                 closePopup('member_info');
                 closePopup('member_info_PC')
-            }    
+            }else if(deleteTypeSelect == "groupdelete"){
+                //var group_delete_JSON = {"group_id":"", "lecture_ids":[], "fullnames":[], "ids":[]}
+                var group_id = group_delete_JSON.group_id
+                var groupmember_lecids = group_delete_JSON.lecture_ids
+                var groupmember_fullnames = group_delete_JSON.fullnames
+                var groupmember_ids = group_delete_JSON.ids
+
+                //그룹을 지운다.
+                delete_group_from_list(group_id)
+                //그룹원들에게서 그룹에 대한 수강이력을 지운다.
+                for(var j=0; j<groupmember_ids.length; j++){
+                    delete_groupmember_from_grouplist(groupmember_lecids[j], groupmember_fullnames[j], groupmember_ids[j])
+                }
+
+                group_delete_JSON.group_id = ""
+                group_delete_JSON.lecture_ids = []
+                group_delete_JSON.fullnames = []
+                group_delete_JSON.ids = []
+                close_info_popup('cal_popup_plandelete')
+            }  
         //}
                 
     });
@@ -3416,7 +3433,7 @@ function deleteMemberAjax(){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                closePopup('member_delete')
+                close_info_popup('cal_popup_plandelete')
 
                 if($('body').width()<600){
                     $('#page_managemember').show();
@@ -3659,9 +3676,6 @@ function closePopup(option){
         else{
             shade_index(-100)
         }
-    }else if(option == 'member_delete'){
-        //$('.confirmPopup').fadeOut('fast');
-        $('#cal_popup_plandelete').fadeOut('fast');
     }else if(option == 'group_add'){
         if($('body').width()<600){
             $('#page_managemember').show();

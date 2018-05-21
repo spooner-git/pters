@@ -257,6 +257,10 @@
 		cursor: text;
 	}
 
+	div._groupmanage img._info_delete{
+		opacity: 0.4;
+	}
+
 .groupMembersWrap{
 	display: none;
 	text-align: center;
