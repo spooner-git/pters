@@ -55,7 +55,7 @@ $(document).ready(function(){
 
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
     $(document).on('click','.memberNameForInfoView',function(){
-    	var clickedName = $(this).attr('data-name')
+    	var clickedDbid = $(this).attr('data-dbid')
     	var scheduleComplete = $(this).attr('data-schedule-check')
     	$.ajax({
               url: '/trainer/member_manage_ajax/',
@@ -67,30 +67,28 @@ $(document).ready(function(){
 
               success:function(data){
               	$('.popups').hide()
-              	ajax_received_json_data_member_manage(data)
               	var jsondata = JSON.parse(data)
+              	
               	DB=[]
               	DBe=[]
-              	DataFormattingDict('name', jsondata);
-		        if(jsondata.nameArray.indexOf(clickedName)!=-1){
+		        if(jsondata.dIdArray.indexOf(clickedDbid)!=-1){
 		    		var Data = DB
-		    	}else if(jsondata.finishnameArray.indexOf(clickedName)!=-1){
+		    	}else if(jsondata.finishDidArray.indexOf(clickedDbid)!=-1){
 		    		var Data = DBe
 		    	}
-		        var userID = Data[clickedName].id
-		        DataFormattingDict('ID', jsondata);
+		        DataFormattingDict('DBID', jsondata);
 		        if($('body').width()<600){
-		            open_member_info_popup_mobile(userID,jsondata)
+		            open_member_info_popup_mobile(clickedDbid,jsondata)
 		            $('#calendar').css('display','none')
-		            get_indiv_repeat_info(jsondata)
-		            set_member_lecture_list(jsondata)
-		            set_member_history_list(jsondata)
+		            get_indiv_repeat_info(clickedDbid)
+		            get_member_lecture_list(clickedDbid)
+		            get_member_history_list(clickedDbid)
 		            shade_index(100)
 		        }else if($('body').width()>=600){
-		            open_member_info_popup_pc(userID,jsondata)
-		            get_indiv_repeat_info(jsondata)
-		            set_member_lecture_list(jsondata)
-		            set_member_history_list(jsondata)
+		            open_member_info_popup_pc(clickedDbid,jsondata)
+		            get_indiv_repeat_info(clickedDbid)
+		            get_member_lecture_list(clickedDbid)
+		            get_member_history_list(clickedDbid)
 		            $('#info_shift_base, #info_shift_lecture').show()
 		            $('#info_shift_schedule, #info_shift_history').hide()
 		            $('#select_info_shift_lecture').addClass('button_active')
@@ -219,6 +217,7 @@ $(document).ready(function(){
 		$('#popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
+		var dbid = $(this).attr('data-dbid')
 		var info = $(this).attr('class-time').split('_')
 		var yy=info[0]
 		var mm=info[1]
@@ -280,7 +279,7 @@ $(document).ready(function(){
 		
 		
 		var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
-		var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+':'+minute+yourplan
+		var infoText2 = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+':'+minute+yourplan
 		var infoText3 = $(this).attr('data-memo')
 		if($(this).attr('data-memo') == undefined){
 			var infoText3 = ""
@@ -695,8 +694,8 @@ $(document).ready(function(){
 			                  		var userID = $('#memberId_info_PC').text()
 			                  		open_member_info_popup_pc(userID,jsondata)
 			                  		get_indiv_repeat_info(jsondata)
-			                  		set_member_lecture_list(jsondata)
-	                        		set_member_history_list(jsondata)
+			                  		get_member_lecture_list(jsondata)
+	                        		get_member_history_list(jsondata)
 			                  		close_info_popup('cal_popup_plandelete')
 				                  	//close_info_popup('page-addplan')
 				                  	AjaxCompleteSend();
@@ -1798,7 +1797,6 @@ function ajaxClassTime(reference){
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
 				set_schedule_time(jsondata)
-
 			}
 
 		  },

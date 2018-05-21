@@ -1159,7 +1159,7 @@ function ajaxRepeatConfirmSend(){
                         }
                     }
                   
-                  ajaxClassTime()
+                  set_schedule_time(jsondata)
                 }
               },
 
@@ -1459,9 +1459,9 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planStartDate = jsondata.classTimeArray_start_date
       var planEndDate = jsondata.classTimeArray_end_date
       var planMemberName = jsondata.classTimeArray_member_name
+      var planMemberDbid = jsondata.classTimeArray_member_id
       var planScheduleIdArray = jsondata.scheduleIdArray
       var planNoteArray = jsondata.scheduleNoteArray
-      console.log(planMemberName)
       var planColor = 'classTime'
     break;
     case 'off':
@@ -1471,6 +1471,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planScheduleIdArray = jsondata.offScheduleIdArray
       var planNoteArray = jsondata.offScheduleNoteArray
       var planColor = 'offTime'
+      var planMemberDbid = ''
     break;
     case 'group':
     /*
@@ -1487,6 +1488,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planScheduleIdArray = jsondata.scheduleIdArray
       var planNoteArray = jsondata.scheduleNoteArray
       var planColor = 'groupTime'
+      var planMemberDbid = ''
     break;
   }
 
@@ -1578,7 +1580,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
 
     tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
                 .attr(option+'-schedule-id' , planScheduleIdArray[i])
-                .attr({'data-memo' : planNoteArray[i], 'data-schedule-check' : jsondata.scheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-memberName' : memberName})
+                .attr({'data-memo' : planNoteArray[i], 'data-schedule-check' : jsondata.scheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-memberName' : memberName, 'data-dbid' : planMemberDbid[i]})
                 .addClass(planColor_)
                 .css({'height':Number(planDura*planheight-1)+'px'})
                 .html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
