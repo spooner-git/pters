@@ -422,7 +422,7 @@ $(document).ready(function(){
 			var member = " 회원님의 ";
 			var yourplan = " 일정";
 			var day = dayarryKR[dayraw];
-			var text = 'PT 일정'
+			var text = '그룹 레슨 일정'
 			break;
 			case "JPN" :
 			var member = "様の ";
@@ -645,7 +645,8 @@ $(document).ready(function(){
 									}
 					          		close_info_popup('cal_popup_plandelete')
 				                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
-				                  	ajax_received_json_data(jsondata)
+				                  	//ajax_received_json_data(jsondata)
+				                  	ajaxClassTime()
 				                  	AjaxCompleteSend();
 					          }
 		                  },
@@ -918,59 +919,6 @@ $(document).ready(function(){
 	})
 	//PC버전 새로고침 버튼
 
-    function ajax_received_json_data(json){
-          var jsondata = json
-          classTimeArray = [];
-          offTimeArray = [];
-          
-          classTimeArray_member_name = jsondata.classTimeArray_member_name
-          classArray_lecture_id = jsondata.classArray_lecture_id
-          scheduleIdArray = jsondata.scheduleIdArray
-          offScheduleIdArray = jsondata.offScheduleIdArray
-          scheduleFinishArray = jsondata.scheduleFinishArray;
-          scheduleNoteArray = jsondata.scheduleNoteArray;
-          memberIdArray = jsondata.memberIdArray;
-          memberLectureIdArray = jsondata.memberLectureIdArray;
-          memberNameArray = jsondata.memberNameArray;
-          memberAvailCountArray = jsondata.memberAvailCountArray;
-          messageArray = jsondata.messageArray;
-          RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
-          repeatArray = jsondata.repeatArray;
-          offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
-          offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
-          offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
-          offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
-          offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
-          offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
-          offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
-          ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
-          ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
-          ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
-          ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
-          ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
-          ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
-          ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
-          DBdataProcess(jsondata.classTimeArray_start_date,jsondata.classTimeArray_end_date,classTimeArray,"class");
-          DBdataProcess(jsondata.offTimeArray_start_date,jsondata.offTimeArray_end_date,offTimeArray,"off");
-          $('.classTime,.offTime').parent().html('<div></div>')
-          $('._on').removeClass('_on')
-          scheduleTime('class')
-		  scheduleTime('off')
-          addPtMemberListSet();
-
-          /*팝업의 timegraph 업데이트*/
-          classDateData = []
-          classTimeData = []
-          offDateData= []
-          offTimeData = []
-          offAddOkArray = [] //OFF 등록 시작 시간 리스트
-          durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-          DBdataProcess(jsondata.classTimeArray_start_date,jsondata.classTimeArray_end_date,classDateData,"graph",classTimeData)
-          DBdataProcess(jsondata.offTimeArray_start_date,jsondata.offTimeArray_end_date,offDateData,"graph",offTimeData)
-          /*팝업의 timegraph 업데이트*/
-          
-          $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
-    }
 
 
 	var date = new Date();
@@ -1005,15 +953,8 @@ $(document).ready(function(){
 	calTable_Set(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
 	//calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
 
-	DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classTimeArray,"class");
-	DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offTimeArray,"off");
-	//addcurrentTimeIndicator();
-	
-	//scheduleTime('class')
-	scheduleTime('off')
-	scheduleTime('group')
-	addPtMemberListSet();
 
+	
 	
 	weekNum_Set_fixed()
 	dateText();
@@ -1023,19 +964,10 @@ $(document).ready(function(){
 	addcurrentTimeIndicator_blackbox()
 	todayFinderArrow();	
 
-	/*
-	if(Options.classDur == 30){
-		draw_time_graph(30,'')
-		draw_time_graph(30,'mini')
-	}else if(Options.classDur == 60){
-		draw_time_graph(60,'')
-		draw_time_graph(60,'mini')
-	}
-	*/
-
 	draw_time_graph(30,'')
 	draw_time_graph(30,'mini')
 	
+	ajaxClassTime()
 	
 
 // ****************************구동시 실행********************************************************************************
@@ -1836,20 +1768,22 @@ $.datepicker.setDefaults({
 
 
 
+function ajaxClassTime(reference){
+		if(reference){
 
-function ajaxClassTime(){
-
-		var $weekNum4 = $('#weekNum_4').attr('data-date')
-		var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
-
+		}else{
+			var $weekNum4 = $('#weekNum_4').attr('data-date')
+			var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
+		}
+		
 		$.ajax({
 		  url: '/trainer/cal_day_ajax/',
 		  type : 'POST',
-		  data : {"date":today_form, "day":18},
+		  data : {"date":today_form, "day":14},
 		  dataType : 'html',
 
 		  beforeSend:function(){
-			//AjaxBeforeSend();
+			AjaxBeforeSend();
 		  },
 
 		  success:function(data){
@@ -1858,60 +1792,19 @@ function ajaxClassTime(){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				classTimeArray = [];
-				offTimeArray = [];
-
-				classTimeArray_member_name = jsondata.classTimeArray_member_name
-				classArray_lecture_id = jsondata.classArray_lecture_id
-				scheduleIdArray = jsondata.scheduleIdArray
-				offScheduleIdArray = jsondata.offScheduleIdArray
-				scheduleFinishArray = jsondata.scheduleFinishArray;
-				scheduleNoteArray = jsondata.scheduleNoteArray;
-				offScheduleNoteArray = jsondata.offScheduleNoteArray;
-				memberIdArray = jsondata.memberIdArray;
-				memberLectureIdArray = jsondata.memberLectureIdArray;
-				memberNameArray = jsondata.memberNameArray;
-				memberAvailCountArray = jsondata.memberAvailCountArray;
-				messageArray = jsondata.messageArray;
-				RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
-				repeatArray = jsondata.repeatArray;
-				offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
-				offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
-				offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
-				offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
-				offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
-				offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
-				offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
-				ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
-				ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
-				ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
-				ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
-				ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
-				ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
-				ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
-				DBdataProcess(jsondata.classTimeArray_start_date,jsondata.classTimeArray_end_date,classTimeArray,"class");
-				DBdataProcess(jsondata.offTimeArray_start_date,jsondata.offTimeArray_end_date,offTimeArray,"off");
-				$('.classTime,.offTime').parent().html('<div></div>')
+				$('.classTime, .offTime').parent().html('<div></div>')
 				$('._on').removeClass('_on')
-				scheduleTime('class')
-				scheduleTime('off')
-				addPtMemberListSet();
+				initialJSON = jsondata;
+				scheduleTime('class', jsondata)
+				scheduleTime('off', jsondata)
+				addPtMemberListSet(jsondata);
 
-				/*팝업의 timegraph 업데이트*/
-				classDateData = []
-				classTimeData = []
-				offDateData=[]
-				offTimeData = []
-				offAddOkArray = [] //OFF 등록 시작 시간 리스트
-				durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-				DBdataProcess(jsondata.classTimeArray_start_date,jsondata.classTimeArray_end_date,classDateData,"graph",classTimeData)
-				DBdataProcess(jsondata.offTimeArray_start_date,jsondata.offTimeArray_end_date,offDateData,"graph",offTimeData)
 			}
 
 		  },
 
 		  complete:function(){
-			//AjaxCompleteSend();
+			AjaxCompleteSend();
 		  },
 
 		  error:function(){
