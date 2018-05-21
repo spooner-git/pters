@@ -1437,7 +1437,7 @@ def delete_member_info_logic(request):
                 if user.is_active == 1:
                     for class_lecture_info in class_lecture_data:
                         lecture_info = class_lecture_info.lecture_tb
-
+                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   lecture_tb_id=lecture_info.lecture_id,
                                                                   state_cd='NP')
@@ -1466,6 +1466,8 @@ def delete_member_info_logic(request):
                                 schedule_data.delete()
                             if len(schedule_data_finish) > 0:
                                 schedule_data_finish.update(mod_dt=timezone.now(), use=0)
+                            if len(group_data) > 0:
+                                group_data.update(mod_dt=timezone.now(), use=0)
                             # lecture_info.use = 0
                             # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                             if lecture_info.state_cd == 'IP':
@@ -1497,11 +1499,12 @@ def delete_member_info_logic(request):
                             member_lecture_list.delete()
 
                     class_lecture_data.delete()
-                    if str(member.reg_info) == str(request.user.id):
-                        member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
-                        if len(member_lecture_list_confirm) == 0:
-                            member.delete()
-                            user.delete()
+                    if member.reg_info is not None:
+                        if str(member.reg_info) == str(request.user.id):
+                            member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
+                            if len(member_lecture_list_confirm) == 0:
+                                member.delete()
+                                user.delete()
 
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
@@ -1721,6 +1724,35 @@ def delete_member_lecture_info_logic(request):
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
+        error = func_delete_member_lecture_info_logic(request.user.id, class_id, lecture_id, member_id)
+
+    if error is None:
+        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
+        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
+
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
+                         log_info='수강 정보', log_how='삭제',
+                         reg_dt=timezone.now(), use=1)
+
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+def func_delete_member_lecture_info_logic(user_id, class_id, lecture_id, member_id):
+    error = None
+    class_lecture_info = None
+    lecture_info = None
+    user = None
+    member = None
+
+    if error is None:
         try:
             class_lecture_info = ClassLectureTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id)
             # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
@@ -1739,7 +1771,20 @@ def delete_member_lecture_info_logic(request):
             error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        lecture_info = class_lecture_info.lecture_tb
+        print(member.name+'test1:'+str(lecture_id))
+        # lecture_info = class_lecture_info.lecture_tb
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        group_data = None
+        schedule_data = None
+        schedule_data_finish = None
+        repeat_schedule_data = None
+        member_lecture_list = None
+        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
                                                   state_cd='NP')
         schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
@@ -1748,7 +1793,7 @@ def delete_member_lecture_info_logic(request):
         # schedule_data.delete()
         # repeat_schedule_data.delete()
 
-        member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(
+        member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id).exclude(
             auth_cd='VIEW')
         if user.is_active:
             if len(member_lecture_list) > 0:
@@ -1760,6 +1805,8 @@ def delete_member_lecture_info_logic(request):
                 lecture_info.delete()
 
             else:
+                if len(group_data) > 0:
+                    group_data.update(mod_dt=timezone.now(), use=0)
                 schedule_data.update(mod_dt=timezone.now(), use=0)
                 schedule_data_finish.update(mod_dt=timezone.now(), use=0)
                 class_lecture_info.auth_cd = 'DELETE'
@@ -1781,29 +1828,14 @@ def delete_member_lecture_info_logic(request):
             repeat_schedule_data.delete()
             lecture_info.delete()
             # 회원의 수강정보가 더이상 없는경우
-            if str(member.reg_info) == str(request.user.id):
-                member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
-                if len(member_lecture_list_confirm) == 0:
-                    member.delete()
-                    user.delete()
 
-    if error is None:
-        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
-        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
-
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강 정보', log_how='삭제',
-                         reg_dt=timezone.now(), use=1)
-
-        log_data.save()
-
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-
-        return redirect(next_page)
+            if member.reg_info is not None:
+                if str(member.reg_info) == str(user_id):
+                    member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
+                    if len(member_lecture_list_confirm) == 0:
+                        member.delete()
+                        user.delete()
+    return error
 
 
 @csrf_exempt
@@ -2210,7 +2242,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 lecture_count += len(member_lecture_list)
 
         if error is None:
-            if member.reg_info is None or member.reg_info != request.user.id:
+            if member.reg_info is None or str(member.reg_info) != str(request.user.id):
                 if lecture_count == 0:
                     member.sex = ''
                     member.birthday_dt = ''
@@ -4537,15 +4569,28 @@ class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id', '')
         error = None
         group_data = GroupTb.objects.filter(class_tb_id=class_id, use=1)
-
         for group_info in group_data:
+            member_data = []
             try:
                 state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
                 group_info.state_cd_nm = state_cd_nm.common_cd_nm
             except ObjectDoesNotExist:
                 error = '그룹 정보를 불러오지 못했습니다.'
+            lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=1)
+            for lecture_info in lecture_list:
+                try:
+                    member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+                except ObjectDoesNotExist:
+                    error = '회원 정보를 불러오지 못했습니다.'
+                check_add_flag = 0
+                for member_test in member_data:
+                    if member_test.user.id == member_info.member.user.id:
+                        check_add_flag = 1
 
-            group_info.group_member_num = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=1).count()
+                if check_add_flag == 0:
+                    member_data.append(member_info.member)
+
+            group_info.group_member_num = len(member_data)
 
         if error is not None:
 
@@ -4695,10 +4740,10 @@ def add_group_member_logic(request):
                             GroupLectureTb.objects.get(lecture_tb_id=member_lecture_info.lecture_tb_id)
                         except ObjectDoesNotExist:
                             lecture_group_check = 1
-
-                        if lecture_group_check == 0:
-                            error = member_info.name + ' 회원님이 이미 그룹에 포함되어있습니다. 확인해주세요.'
-                            break
+                        if group_info.group_type_cd == 'NORMAL':
+                            if lecture_group_check == 0:
+                                error = member_info.name + ' 회원님이 이미 그룹에 포함되어있습니다. 확인해주세요.'
+                                break
                     if error is not None:
                         break
 
@@ -4835,6 +4880,7 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         group_id = request.GET.get('group_id', '')
         error = None
         member_data = []
+
         lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1)
 
         for lecture_info in lecture_list:
@@ -4845,29 +4891,6 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
             if error is None:
                 member_info.member.lecture_tb = lecture_info.lecture_tb
-                member_info.member.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                member_info.member.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                member_info.member.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
-                member_info.member.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
-                if '\r\n' in member_info.member.lecture_tb.note:
-                    member_info.member.lecture_tb.note = member_info.member.lecture_tb.note.replace('\r\n', ' ')
-
-                member_info.member.lecture_tb.auth_cd = member_info.auth_cd
-
-                try:
-                    auth_cd_nm = CommonCdTb.objects.get(common_cd=member_info.auth_cd)
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-                if error is None:
-                    member_info.member.lecture_tb.auth_cd_nm = auth_cd_nm.common_cd_nm
-
-                try:
-                    state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.state_cd)
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-                if error is None:
-                    member_info.member.lecture_tb.state_cd_nm = state_cd_nm.common_cd_nm
-
                 if member_info.member.birthday_dt is None or member_info.member.birthday_dt == '':
                     member_info.member.birthday_dt = ''
                 else:
@@ -4879,8 +4902,44 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                         member_info.member.birthday_dt = ''
                         member_info.member.phone = '***-****-' + member_info.member.phone[7:]
 
-                member_data.append(member_info.member)
+                check_add_flag = 0
+                for member_test in member_data:
+                    if member_test.user.id == member_info.member.user.id:
+                        if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None or member_test.lecture_tb.start_date == '':
+                            member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                        else:
+                            if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() > lecture_info.lecture_tb.start_date:
+                                member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                        if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() is None or member_test.lecture_tb.end_date == '':
+                            member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                        else:
+                            if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() < lecture_info.lecture_tb.end_date:
+                                member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
 
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
+                            member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+                        else:
+                            if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
+                                member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                                                      '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
+                            member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                        else:
+                            if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                                                          '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
+                                member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                        member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
+                        member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
+                        member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
+                        check_add_flag = 1
+
+                if check_add_flag == 0:
+                    member_info.member.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                    member_info.member.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    member_info.member.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt).split('.')[0]
+                    member_info.member.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt).split('.')[0]
+                    member_data.append(member_info.member)
         if error is not None:
 
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -4907,29 +4966,6 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
             if error is None:
                 member_info.member.lecture_tb = lecture_info.lecture_tb
-                member_info.member.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                member_info.member.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                member_info.member.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
-                member_info.member.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
-                if '\r\n' in member_info.member.lecture_tb.note:
-                    member_info.member.lecture_tb.note = member_info.member.lecture_tb.note.replace('\r\n', ' ')
-
-                member_info.member.lecture_tb.auth_cd = member_info.auth_cd
-
-                try:
-                    auth_cd_nm = CommonCdTb.objects.get(common_cd=member_info.auth_cd)
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-                if error is None:
-                    member_info.member.lecture_tb.auth_cd_nm = auth_cd_nm.common_cd_nm
-
-                try:
-                    state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.state_cd)
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-                if error is None:
-                    member_info.member.lecture_tb.state_cd_nm = state_cd_nm.common_cd_nm
-
                 if member_info.member.birthday_dt is None or member_info.member.birthday_dt == '':
                     member_info.member.birthday_dt = ''
                 else:
@@ -4939,9 +4975,46 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                     if member_info.auth_cd != 'VIEW':
                         member_info.member.sex = ''
                         member_info.member.birthday_dt = ''
-                        member_info.member.phone = '*******' + member_info.member.phone[7:]
+                        member_info.member.phone = '***-****-' + member_info.member.phone[7:]
 
-                member_data.append(member_info.member)
+                check_add_flag = 0
+                for member_test in member_data:
+                    if member_test.user.id == member_info.member.user.id:
+                        if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None or member_test.lecture_tb.start_date == '':
+                            member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                        else:
+                            if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() > lecture_info.lecture_tb.start_date:
+                                member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                        if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() is None or member_test.lecture_tb.end_date == '':
+                            member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                        else:
+                            if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() < lecture_info.lecture_tb.end_date:
+                                member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
+                            member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+                        else:
+                            if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
+                                member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                                                      '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
+                            member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                        else:
+                            if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                                                          '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
+                                member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                        member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
+                        member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
+                        member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
+                        check_add_flag = 1
+
+                if check_add_flag == 0:
+                    member_info.member.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                    member_info.member.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    member_info.member.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt).split('.')[0]
+                    member_info.member.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt).split('.')[0]
+                    member_data.append(member_info.member)
 
         if error is not None:
 
@@ -4952,4 +5025,82 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         context['member_data'] = member_data
 
         return render(request, self.template_name, context)
+
+
+# 그룹 회원 삭제
+@csrf_exempt
+def delete_group_member_info_logic(request):
+
+    class_id = request.session.get('class_id', '')
+    json_data = request.body.decode('utf-8')
+    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+    json_loading_data = None
+    error = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
+    group_id = json_loading_data['group_id']
+    # if member_id == '':
+    #    error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        idx = 0
+        for member_id_info in json_loading_data['ids']:
+            if error is None:
+
+                try:
+                    user = User.objects.get(username=member_id_info)
+                except ObjectDoesNotExist:
+                    error = '회원 ID를 확인해 주세요.'
+
+                try:
+                    member = MemberTb.objects.get(user_id=user.id)
+                except ObjectDoesNotExist:
+                    error = '회원 ID를 확인해 주세요.'
+
+            if error is None:
+                group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__member_id=user.id, use=1)
+
+            if error is None:
+                try:
+                    with transaction.atomic():
+                        for group_lecture_info in group_lecture_data:
+                            # print(group_lecture_info.lecture_tb.lecture_id)
+                            error = func_delete_member_lecture_info_logic(request.user.id, class_id, group_lecture_info.lecture_tb.lecture_id, member_id_info)
+                            if error is not None:
+                                break
+
+                        if error is not None:
+                            raise InternalError
+
+                except ValueError as e:
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.1'
+                except IntegrityError as e:
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.2'
+                except TypeError as e:
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.3'
+                except ValidationError as e:
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.4'
+                except InternalError:
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.5'
+
+            log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                             to_member_name=json_loading_data['fullnames'][idx], class_tb_id=class_id,
+                             log_info='그룹 수강 정보', log_how='삭제',
+                             reg_dt=timezone.now(), use=1)
+            log_data.save()
+
+    if error is None:
+
+        return redirect(next_page)
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+        return redirect(next_page)
 

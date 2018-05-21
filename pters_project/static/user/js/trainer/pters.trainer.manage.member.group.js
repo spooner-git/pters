@@ -320,9 +320,11 @@ $(document).on('click','div.groupWrap',function(){
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
-var group_delete_JSON = {"group_id":"", "lecture_ids":[], "fullnames":[], "ids":[]}
+//var group_delete_JSON = {"group_id":"", "lecture_ids":[], "fullnames":[], "ids":[]}
+var group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]}
 $(document).on('click','._groupmanage img._info_delete',function(e){
     e.stopPropagation()
+    group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]}
     if($(this).css('opacity') == 1){
         deleteTypeSelect = 'groupdelete';
         $('#cal_popup_plandelete').fadeIn('fast')
@@ -331,9 +333,9 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
         var group_id = $(this).attr('data-groupid')
         var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
         for(var k=2; k<=memberLen+1; k++){
-            group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
-            group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-id'))
-            group_delete_JSON.ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'))
+            //group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
+            group_delete_JSON.ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-id'))
+            group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'))
         }
         group_delete_JSON.group_id = group_id
         console.log(group_delete_JSON)
@@ -496,11 +498,15 @@ function delete_group_from_list(group_id){
 //그룹 지우기
 
 //그룹원 지우기
-function delete_groupmember_from_grouplist(lecture_id, fullname, id){
+function delete_groupmember_from_grouplist(){
+
+        console.log('delete_groupmember_from_grouplist')
+        console.log(group_delete_JSON)
     $.ajax({
-        url:'/trainer/delete_member_lecture_info/', 
+        url:'/trainer/delete_group_member_info/',
         type:'POST',
-        data:{"lecture_id":lecture_id, "member_name":fullname, "member_id":id, "next_page":'/trainer/get_group_info/'},
+        data:JSON.stringify(group_delete_JSON),
+        //data:{"member_name":fullname, "member_id":id, "group_id":group_id, "next_page":'/trainer/get_group_info/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -703,7 +709,7 @@ function groupMemberListSet(group_id, jsondata){
     for(var i=0; i<len; i++){
         var groupmember_dbid = jsondata.db_id[i];
         var groupmember_id = jsondata.member_id[i];
-        var groupmember_lecid = jsondata.lecture_id[i]
+        //var groupmember_lecid = jsondata.lecture_id[i]
         var groupmember_lastname = jsondata.last_name[i];
         var groupmember_firstname = jsondata.first_name[i];
         var groupmember_regcount = jsondata.reg_count[i];
@@ -712,7 +718,7 @@ function groupMemberListSet(group_id, jsondata){
         var groupmember_enddate = jsondata.end_date[i];
         var groupmember_phone = jsondata.phone[i];
 
-        var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">'
+        var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">'
         var htmlEnd = '</div>'
 
         var memberRow = htmlStart +
@@ -723,7 +729,7 @@ function groupMemberListSet(group_id, jsondata){
                         '<div class="_startdate" data-name="'+groupmember_startdate+'">'+groupmember_startdate+'</div>' +
                         '<div class="_finday" data-name="'+groupmember_enddate+'">'+groupmember_enddate+'</div>' +
                         '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
-                        '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'"></div>' +
+                        '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>' +
                         htmlEnd
 
         htmlToJoin.push(memberRow)
@@ -757,9 +763,11 @@ function groupMemberListSet(group_id, jsondata){
 $(document).on('click','img.substract_groupMember',function(e){
     e.stopPropagation();
     var groupmember_name = $(this).attr('data-fullname')
-    var groupmember_lecid = $(this).attr('data-lecid');
+    //var groupmember_lecid = $(this).attr('data-lecid');
     var groupmember_id = $(this).attr('data-id')
-    delete_groupmember_from_grouplist(groupmember_lecid, groupmember_name, groupmember_id)
+    var groupmember_groupid = $(this).attr('data-groupid')
+    //delete_groupmember_from_grouplist(groupmember_lecid, groupmember_name, groupmember_id)
+    delete_groupmember_from_grouplist()
 })
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 

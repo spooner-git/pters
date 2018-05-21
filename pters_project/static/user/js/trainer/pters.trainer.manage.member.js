@@ -653,20 +653,19 @@ if (agent.indexOf("firefox") != -1) {
                 closePopup('member_info_PC')
             }else if(deleteTypeSelect == "groupdelete"){
                 //var group_delete_JSON = {"group_id":"", "lecture_ids":[], "fullnames":[], "ids":[]}
+                //var group_delete_JSON = {"group_id":"", "lecture_ids":[], "fullnames":[], "ids":[]}
                 var group_id = group_delete_JSON.group_id
-                var groupmember_lecids = group_delete_JSON.lecture_ids
+                //var groupmember_lecids = group_delete_JSON.lecture_ids
                 var groupmember_fullnames = group_delete_JSON.fullnames
                 var groupmember_ids = group_delete_JSON.ids
 
                 //그룹을 지운다.
-                delete_group_from_list(group_id)
+                delete_group_from_list(group_delete_JSON.group_id)
                 //그룹원들에게서 그룹에 대한 수강이력을 지운다.
-                for(var j=0; j<groupmember_ids.length; j++){
-                    delete_groupmember_from_grouplist(groupmember_lecids[j], groupmember_fullnames[j], groupmember_ids[j])
-                }
+                delete_groupmember_from_grouplist()
 
                 group_delete_JSON.group_id = ""
-                group_delete_JSON.lecture_ids = []
+                //group_delete_JSON.lecture_ids = []
                 group_delete_JSON.fullnames = []
                 group_delete_JSON.ids = []
                 close_info_popup('cal_popup_plandelete')
