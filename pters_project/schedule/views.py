@@ -1665,7 +1665,6 @@ def add_group_schedule_logic(request):
     schedule_date = request.POST.get('training_date')
     schedule_time = request.POST.get('training_time')
     schedule_time_duration = request.POST.get('time_duration')
-    en_dis_type = request.POST.get('en_dis_type')
     note = request.POST.get('add_memo', '')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
@@ -1680,9 +1679,8 @@ def add_group_schedule_logic(request):
     request.session['date'] = date
     request.session['day'] = day
 
-    if en_dis_type == '1':
-        if group_id == '':
-            error = '그룹을 선택해 주세요.'
+    if group_id == '':
+        error = '그룹을 선택해 주세요.'
 
     if schedule_date == '':
         error = '날짜를 선택해 주세요.'
@@ -1738,7 +1736,7 @@ def add_group_schedule_logic(request):
                                                            start_dt=schedule_start_datetime,
                                                            end_dt=schedule_end_datetime,
                                                            state_cd='NP', permission_state_cd='AP', note=note,
-                                                           member_note='', en_dis_type=en_dis_type,
+                                                           member_note='', en_dis_type='1',
                                                            reg_member_id=request.user.id,
                                                            reg_dt=timezone.now(), mod_dt=timezone.now())
                             add_schedule_info.save()
