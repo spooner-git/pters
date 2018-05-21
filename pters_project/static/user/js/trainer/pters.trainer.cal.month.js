@@ -67,14 +67,14 @@ $(document).ready(function(){
               	var jsondata = JSON.parse(data)
               	DB=[]
               	DBe=[]
-              	DataFormattingDict('name');
+              	DataFormattingDict('name', jsondata);
 		        if(jsondata.nameArray.indexOf(clickedName)!=-1){
 		    		var Data = DB
 		    	}else if(jsondata.finishnameArray.indexOf(clickedName)!=-1){
 		    		var Data = DBe
 		    	}
 		        var userID = Data[clickedName].id
-		        DataFormattingDict('ID');
+		        DataFormattingDict('ID', jsondata);
 		        if($('body').width()<600){
 		            open_member_info_popup_mobile(userID,jsondata)
 		            $('#calendar').css('display','none')
@@ -277,6 +277,7 @@ $(document).ready(function(){
                                         	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 										}
 									}
+								console.log('111')
 					           	close_info_popup('cal_popup_plandelete')
 			                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
 			                  	ajax_received_json_data(jsondata)
@@ -294,6 +295,7 @@ $(document).ready(function(){
 		                //통신 실패시 처리
 		                error:function(){
 		                  alert("에러: 서버 통신 실패")
+		                  console.log('222')
 		                  close_info_popup('cal_popup_plandelete')
 		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
 		                  AjaxCompleteSend();
@@ -357,7 +359,7 @@ $(document).ready(function(){
 				}*/else if(deleteTypeSelect == "ptoffdelete"){
 					var $ptdelform = $('#daily-pt-delete-form');
 					var $offdelform = $('#daily-off-delete-form');
-					$('body').css('overflow-y','overlay');
+					//$('body').css('overflow-y','overlay');
 					if(schedule_on_off==1){
 						//PT 일정 삭제시
 						$.ajax({
@@ -382,9 +384,10 @@ $(document).ready(function(){
                                         	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 										}
 									}
+									console.log('333')
 					          		close_info_popup('cal_popup_plandelete')
 			                      	AjaxCompleteSend();
-			                      	ajaxClassTime()
+			                      	set_schedule_Time(jsondata)
 			                      	//fake_show()
 			                      	console.log('success')
 					          	}
@@ -419,9 +422,10 @@ $(document).ready(function(){
 				              		$('#errorMessageBar').show()
 				               		$('#errorMessageText').text(jsondata.messageArray)
 					          	}else{
+					          		console.log('444')
 					          		close_info_popup('cal_popup_plandelete')
 				                    AjaxCompleteSend();
-				                    ajaxClassTime()
+				                    set_schedule_Time(jsondata)
 				                    //fake_show()
 				                    console.log('success')
 					          	}
@@ -485,9 +489,10 @@ $(document).ready(function(){
 										}
 									}
 					          		signImageSend(send_data);
+					          		console.log('555')
 					          		close_info_popup('cal_popup_planinfo')
 				                    AjaxCompleteSend();
-				                    ajaxClassTime()
+				                    set_schedule_Time(jsondata)
 				                    //send_memo()
 					          	}
 		                      },
@@ -503,7 +508,7 @@ $(document).ready(function(){
 		                    	$('#canvas').hide().css({'border-color':'#282828'})
 		                    	$('#canvasWrap span').hide();
 								$('#canvasWrap').css({'height':'0px'})
-								$('body').css('overflow-y','overlay');
+								//$('body').css('overflow-y','overlay');
 								shade_index(100)
 		                      },
 
@@ -552,7 +557,7 @@ $(document).ready(function(){
 
             //통신성공시 처리
             success:function(data){
-            	console.log(data)
+            	
             },
 
             //보내기후 팝업창 닫기
@@ -1158,6 +1163,7 @@ function ajaxClassTime(){
 
 		  beforeSend:function(){
 			AjaxBeforeSend();
+			$('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick','')
 		  },
 
 		  success:function(data){
@@ -1167,23 +1173,30 @@ function ajaxClassTime(){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				initialJSON = jsondata;
-				classDatesTrainer(jsondata);
-				addPtMemberListSet(jsondata);
-				plancheck(clicked_td_date_info, jsondata)
+				set_schedule_Time(jsondata)
 			}
 
 		  },
 
 		  complete:function(){
 			AjaxCompleteSend();
+			$('.ymdText-pc-add div').removeClass('disabled_button')
+			$('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)')
+			$('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)')
 		  },
 
 		  error:function(){
 			console.log('server error')
 		  }
 		})
- }
+}
+
+function set_schedule_Time(jsondata){
+	initialJSON = jsondata;
+	classDatesTrainer(jsondata);
+	addPtMemberListSet(jsondata);
+	plancheck(clicked_td_date_info, jsondata)
+}
 
 
 function AjaxBeforeSend(){
