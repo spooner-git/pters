@@ -517,12 +517,18 @@ def get_member_data(context, class_id, member_id, user_id):
                         if member_data.group_info == '':
                             member_data.group_info = '그룹'
                         else:
-                            member_data.group_info += '/그룹'
+                            if '그룹' in member_data.group_info:
+                                member_data.group_info = member_data.group_info
+                            else:
+                                member_data.group_info += '/그룹'
                     else:
                         if member_data.group_info == '':
                             member_data.group_info = '1:1'
                         else:
-                            member_data.group_info += '/1:1'
+                            if '1:1' in member_data.group_info:
+                                member_data.group_info = member_data.group_info
+                            else:
+                                member_data.group_info = '1:1/' + member_data.group_info
 
                     lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                     lecture_tb=lecture_info.lecture_id,
@@ -4707,8 +4713,8 @@ def add_group_member_logic(request):
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
+    group_id = json_loading_data['lecture_info']['group_id']
     if error is None:
-        group_id = json_loading_data['lecture_info']['group_id']
         if group_id != '' and group_id is not None:
             try:
                 group_info = GroupTb.objects.get(group_id=group_id)
@@ -4737,7 +4743,7 @@ def add_group_member_logic(request):
                     for member_lecture_info in member_lecture_data:
                         lecture_group_check = 0
                         try:
-                            GroupLectureTb.objects.get(lecture_tb_id=member_lecture_info.lecture_tb_id)
+                            GroupLectureTb.objects.get(group_tb_id=group_id, lecture_tb_id=member_lecture_info.lecture_tb_id)
                         except ObjectDoesNotExist:
                             lecture_group_check = 1
                         if group_info.group_type_cd == 'NORMAL':
