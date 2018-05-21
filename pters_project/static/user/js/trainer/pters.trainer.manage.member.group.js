@@ -767,6 +767,12 @@ $(document).on('click','img.substract_groupMember',function(e){
     var groupmember_id = $(this).attr('data-id')
     var groupmember_groupid = $(this).attr('data-groupid')
     //delete_groupmember_from_grouplist(groupmember_lecid, groupmember_name, groupmember_id)
+
+    group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]}
+    group_delete_JSON.ids.push(groupmember_id)
+    group_delete_JSON.fullnames.push(groupmember_name)
+    group_delete_JSON.group_id = groupmember_groupid
+    console.log(group_delete_JSON)
     delete_groupmember_from_grouplist()
 })
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////

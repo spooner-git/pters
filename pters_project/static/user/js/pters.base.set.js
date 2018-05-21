@@ -81,9 +81,12 @@ function close_info_popup(option){
   }
   else if(option =="cal_popup_plandelete"){
       $("#"+option).css({'display':'none'})
-      if($('#pshade').css('z-index')==200 || $('#mshade').css('z-index') == 200){
+      console.log('1')
+      if($('#pshade').css('z-index')== 200 || $('#mshade').css('z-index') == 200){
+        console.log('200')
         shade_index(100)
       }else{
+        console.log('-100')
         shade_index(-100)
       }
       

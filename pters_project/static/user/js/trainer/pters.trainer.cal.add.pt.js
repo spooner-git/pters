@@ -737,6 +737,7 @@ $(document).ready(function(){
                               if($('body').width()>=600){
                                   $('#calendar').css('position','relative')
                               }
+
                               closeAddPopup()
                               closeAddPopup_mini()
                               completeSend()
@@ -929,34 +930,19 @@ function float_btn_addplan(option){
         clear_pt_off_add_popup()
         open_pt_off_add_popup('ptadd')
         shade_index(100)
-        scrollToDom($('#calendar'))
+        //scrollToDom($('#calendar'))
         
     }else if(option ==2){
         clear_pt_off_add_popup()
         open_pt_off_add_popup('offadd')
         shade_index(100)
-        scrollToDom($('#calendar'))
+        //scrollToDom($('#calendar'))
     }
 }
 
 function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
     addTypeSelect = option
 
-
-    if($('body').width()<=600){
-      $('#page-base').fadeOut();
-      $('#page-base-addstyle').fadeIn();
-      $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-      $('#float_btn_wrap').fadeOut();
-      $('#calendar').hide();
-      $('#calendar').css('height','0')
-      $('#addpopup_pc_label_pt, #addpopup_pc_label_off').css('display','none')
-    }else{
-      $('#calendar').css('position','fixed')
-      $('#page-addplan-pc').css('display','none')
-    }
-
-    $('#page-addplan').fadeIn('fast');
     $('#datepicker').datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate)
     $('#datepicker').parent('p').addClass('dropdown_selected')
     $('#datepicker_repeat_start').datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate)
@@ -983,6 +969,22 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
           $('#addpopup_pc_label_pt').hide()
         }
         $(".pt_memo_guide").css('display','none')
+    }
+    
+    if($('body').width()<=600){
+      $('#page-base').fadeOut();
+      $('#page-base-addstyle').fadeIn();
+      $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+      $('#float_btn_wrap').fadeOut();
+      $('#calendar').hide();
+      $('#calendar').css('height','0')
+      $('#addpopup_pc_label_pt, #addpopup_pc_label_off').css('display','none')
+      $('#page-addplan').fadeIn('fast');
+    }else{
+      console.log($(window).height())
+      $('#page-addplan').fadeIn('fast').css({'top':(($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()),
+                                                'left':(($(window).width()-$('#page-addplan').outerWidth())/2+$(window).scrollLeft())})
+      $('#page-addplan-pc').css('display','none')
     }
 
     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder') //선택된 시간 반짝이

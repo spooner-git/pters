@@ -12,6 +12,10 @@ ul a{
 	
 }
 
+.disabled_button{
+	opacity: 0.4;
+}
+
 .link-icon{
 	width: 17px;
 	margin-bottom: 4px;
@@ -1036,7 +1040,6 @@ option{
 	
 	#page-addplan{
 		position: absolute;
-		top: 150px;
 		width: 400px;
 		margin-bottom: 50px;
 	}

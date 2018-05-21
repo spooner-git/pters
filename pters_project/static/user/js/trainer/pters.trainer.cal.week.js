@@ -71,14 +71,14 @@ $(document).ready(function(){
               	var jsondata = JSON.parse(data)
               	DB=[]
               	DBe=[]
-              	DataFormattingDict('name');
+              	DataFormattingDict('name', jsondata);
 		        if(jsondata.nameArray.indexOf(clickedName)!=-1){
 		    		var Data = DB
 		    	}else if(jsondata.finishnameArray.indexOf(clickedName)!=-1){
 		    		var Data = DBe
 		    	}
 		        var userID = Data[clickedName].id
-		        DataFormattingDict('ID');
+		        DataFormattingDict('ID', jsondata);
 		        if($('body').width()<600){
 		            open_member_info_popup_mobile(userID,jsondata)
 		            $('#calendar').css('display','none')
@@ -950,7 +950,7 @@ $(document).ready(function(){
 // ############################구동시 실행################################################################################
 // ****************************구동시 실행********************************************************************************
 	ajaxClassTime(currentYear+'-'+(currentMonth+1)+'-'+currentDate)
-	
+
 	//calTable_Set(1,currentYear,currentPageMonth,currentDate,-14); // 이번주-2
 	calTable_Set(1,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
 	calTable_Set(2,currentYear,currentPageMonth,currentDate,0); // 이번주
@@ -1788,6 +1788,7 @@ function ajaxClassTime(reference){
 
 		  beforeSend:function(){
 			AjaxBeforeSend();
+			$('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick','')
 		  },
 
 		  success:function(data){
@@ -1804,6 +1805,9 @@ function ajaxClassTime(reference){
 
 		  complete:function(){
 			AjaxCompleteSend();
+			$('.ymdText-pc-add div').removeClass('disabled_button')
+			$('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)')
+			$('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)')
 		  },
 
 		  error:function(){

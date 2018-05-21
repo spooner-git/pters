@@ -357,7 +357,9 @@ if (agent.indexOf("firefox") != -1) {
 
 
     $('#popup_delete_btn_no, #cal_popup_plandelete .popup_close_x_button').click(function(){
-      close_info_popup('cal_popup_plandelete')
+        if(!$('._calmonth') && !$('._calweek')){
+            close_info_popup('cal_popup_plandelete')
+        }
     });
 
     $('#select_info_shift_lecture').click(function(){
