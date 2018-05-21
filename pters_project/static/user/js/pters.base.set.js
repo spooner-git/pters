@@ -641,6 +641,7 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
 }
 */
 
+/*
 function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
     //DB데이터 가공
     var classTimeLength = startarray.length
@@ -715,6 +716,7 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
       }
     }
 }
+*/
 
 function show_ajax_error_message(){
 
