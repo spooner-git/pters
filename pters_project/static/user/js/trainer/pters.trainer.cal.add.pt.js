@@ -686,6 +686,7 @@ $(document).ready(function(){
                     success:function(data){
                         //ajaxClassTime();
                         var jsondata = JSON.parse(data);
+                        initialJSON = jsondata
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
                         if(jsondata.messageArray.length>0){
@@ -720,14 +721,17 @@ $(document).ready(function(){
                               completeSend(); //ajax 로딩 이미지 숨기기
                               shade_index(200)
                             }else{
-                              scheduleTime('class', jsondata);
-                              scheduleTime('off', jsondata);
-                              //scheduleTime('group', jsondata)
-
-                              initialJSON = jsondata
-                              classDatesTrainer(jsondata);
-                              addPtMemberListSet(jsondata);
-                              plancheck(clicked_td_date_info, jsondata)
+                              if($('._calweek')){
+                                scheduleTime('class', jsondata);
+                                scheduleTime('off', jsondata);
+                                //scheduleTime('group', jsondata)
+                              }
+                              else if($('._calmonth')){
+                                classDatesTrainer(jsondata);
+                                addPtMemberListSet(jsondata);
+                                plancheck(clicked_td_date_info, jsondata)
+                              }
+                              
                               
                               $('#calendar').show().css('height','100%')
                               if($('body').width()>=600){
@@ -1446,6 +1450,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 
 
 function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+  $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
   switch(option){
     case 'class':
       var plan = option
@@ -1563,7 +1568,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
     var tdPlan = $("#"+planStart);
     tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none')
 
-    if(jsondata.scheduleFinishArray[i] == 1){
+    if(jsondata.scheduleFinishArray[i] == 1 && option != 'off'){
       var planColor_ = planColor+' classTime_checked'
     }else{
       var planColor_ = planColor

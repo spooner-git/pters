@@ -288,10 +288,10 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').html(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('schedule-id'))
-		$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
-		$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
-		$("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
+		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('class-schedule-id'))
+		$("#id_schedule_id").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
+		$("#id_schedule_id_modify").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
+		$("#id_schedule_id_finish").val($(this).attr('class-schedule-id')); // shcedule 정보 저장
 		$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_repeat_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
@@ -309,7 +309,7 @@ $(document).ready(function(){
 			$("#popup_btn_complete").hide()
 			$("#popup_text1").css("display","none")
 			$("#popup_sign_img").css("display","block")
-			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
+			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('class-schedule-id')+'.png');
 		}
 		schedule_on_off = 1;
 	})
@@ -464,10 +464,10 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').html(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('schedule-id'))
-		$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
-		$("#id_schedule_id_modify").val($(this).attr('schedule-id')); //shcedule 정보 저장
-		$("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
+		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('off-schedule-id'))
+		$("#id_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+		$("#id_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+		$("#id_schedule_id_finish").val($(this).attr('off-schedule-id')); // shcedule 정보 저장
 		$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_repeat_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
@@ -485,7 +485,7 @@ $(document).ready(function(){
 			$("#popup_btn_complete").hide()
 			$("#popup_text1").css("display","none")
 			$("#popup_sign_img").css("display","block")
-			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
+			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('off-schedule-id')+'.png');
 		}
 		schedule_on_off = 1;
 		
@@ -537,7 +537,7 @@ $(document).ready(function(){
 					                	signImageSend(send_data);
 					                    close_info_popup('cal_popup_planinfo')
 					                    AjaxCompleteSend();
-					                    ajaxClassTime();
+					                    set_schedule_time(jsondata);
 					                }
 			                      },
 
@@ -646,7 +646,7 @@ $(document).ready(function(){
 					          		close_info_popup('cal_popup_plandelete')
 				                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
 				                  	//ajax_received_json_data(jsondata)
-				                  	ajaxClassTime()
+				                  	set_schedule_time(jsondata)
 				                  	AjaxCompleteSend();
 					          }
 		                  },
@@ -739,6 +739,7 @@ $(document).ready(function(){
 		                    //통신성공시 처리
 		                    success:function(data){
 		                    	var jsondata = JSON.parse(data)
+		                    	console.log(jsondata,'--------지운거')
 		                    	if(jsondata.messageArray.length>0){
 				                  	$('#errorMessageBar').show()
 				                  	$('#errorMessageText').text(jsondata.messageArray)
@@ -750,8 +751,7 @@ $(document).ready(function(){
 										}
 									}
 					          		close_info_popup('cal_popup_plandelete')
-			                      	AjaxCompleteSend();
-			                      	ajaxClassTime()
+			                      	set_schedule_time(jsondata)
 			                      	fake_show()
 			                      	console.log('success')
 					          	}
@@ -761,6 +761,7 @@ $(document).ready(function(){
 		                    complete:function(){
 		                    	ajax_block_during_delete_weekcal = true;
 		                    	shade_index(-100)
+		                    	AjaxCompleteSend();
 		                      },
 
 		                    //통신 실패시 처리
@@ -782,13 +783,14 @@ $(document).ready(function(){
 		                    //통신성공시 처리
 		                    success:function(data){
 		                    	var jsondata = JSON.parse(data)
+		                    	console.log(jsondata,'--------지운거')
 		                    	if(jsondata.messageArray.length>0){
 				                  	$('#errorMessageBar').show()
 				                  	$('#errorMessageText').text(jsondata.messageArray)
 					          	}else{
 					          		close_info_popup('cal_popup_plandelete')
 			                      	AjaxCompleteSend();
-			                      	ajaxClassTime()
+			                      	set_schedule_time(jsondata)
 			                      	fake_show()
 			                      	console.log('success')
 					          	}
@@ -947,6 +949,8 @@ $(document).ready(function(){
 
 // ############################구동시 실행################################################################################
 // ****************************구동시 실행********************************************************************************
+	ajaxClassTime(currentYear+'-'+(currentMonth+1)+'-'+currentDate)
+	
 	//calTable_Set(1,currentYear,currentPageMonth,currentDate,-14); // 이번주-2
 	calTable_Set(1,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
 	calTable_Set(2,currentYear,currentPageMonth,currentDate,0); // 이번주
@@ -967,7 +971,7 @@ $(document).ready(function(){
 	draw_time_graph(30,'')
 	draw_time_graph(30,'mini')
 	
-	ajaxClassTime()
+	
 	
 
 // ****************************구동시 실행********************************************************************************
@@ -1792,12 +1796,7 @@ function ajaxClassTime(reference){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				$('.classTime, .offTime').parent().html('<div></div>')
-				$('._on').removeClass('_on')
-				initialJSON = jsondata;
-				scheduleTime('class', jsondata)
-				scheduleTime('off', jsondata)
-				addPtMemberListSet(jsondata);
+				set_schedule_time(jsondata)
 
 			}
 
@@ -1811,6 +1810,15 @@ function ajaxClassTime(reference){
 			console.log('server error')
 		  }
 		})
+}
+
+function set_schedule_time(jsondata){
+	$('.classTime, .offTime').parent().html('<div></div>')
+	$('._on').removeClass('_on')
+	initialJSON = jsondata;
+	scheduleTime('class', jsondata)
+	scheduleTime('off', jsondata)
+	addPtMemberListSet(jsondata);
 }
 
 
