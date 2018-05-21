@@ -1472,14 +1472,33 @@ def delete_member_info_logic(request):
                                 schedule_data.delete()
                             if len(schedule_data_finish) > 0:
                                 schedule_data_finish.update(mod_dt=timezone.now(), use=0)
-                            if len(group_data) > 0:
-                                group_data.update(mod_dt=timezone.now(), use=0)
                             # lecture_info.use = 0
                             # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                             if lecture_info.state_cd == 'IP':
                                 lecture_info.state_cd = 'PE'
                                 lecture_info.mod_dt = timezone.now()
                                 lecture_info.save()
+                            if len(group_data) > 0:
+                                for group_info in group_data:
+                                    group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id, use=1).count()
+                                    group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                                        use=1).exclude(lecture_tb__state_cd='IP').count()
+
+                                    try:
+                                        group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                                    except ObjectDoesNotExist:
+                                        error = '그룹 정보를 불러오지 못했습니다.'
+                                    if error is None:
+                                        if group_data_total_size == group_data_end_size:
+                                            group_info_data.state_cd = 'PE'
+                                            group_info_data.save()
+                                        else:
+                                            group_info_data.state_cd = 'IP'
+                                            group_info_data.save()
+                                    else:
+                                        error = None
+
+                                group_data.update(mod_dt=timezone.now(), use=0)
                             # lecture_info.mod_dt = timezone.now()
                             # lecture_info.save()
 
@@ -1487,6 +1506,7 @@ def delete_member_info_logic(request):
                 else:
                     for class_lecture_info in class_lecture_data:
                         lecture_info = class_lecture_info.lecture_tb
+                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   lecture_tb_id=lecture_info.lecture_id)
                         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
@@ -1498,6 +1518,28 @@ def delete_member_info_logic(request):
                         # lecture_info.use = 0
                         # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                         lecture_info.delete()
+
+                        if len(group_data) > 0:
+                            for group_info in group_data:
+                                group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                                      use=1).count()
+                                group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
+
+                                try:
+                                    group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                                except ObjectDoesNotExist:
+                                    error = '그룹 정보를 불러오지 못했습니다.'
+                                if error is None:
+                                    if group_data_total_size == group_data_end_size:
+                                        group_info_data.state_cd = 'PE'
+                                        group_info_data.save()
+                                    else:
+                                        group_info_data.state_cd = 'IP'
+                                        group_info_data.save()
+                                else:
+                                    error = None
+
                         # lecture_info.mod_dt = timezone.now()
                         # lecture_info.save()
                         member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
@@ -1810,6 +1852,26 @@ def func_delete_member_lecture_info_logic(user_id, class_id, lecture_id, member_
                 repeat_schedule_data.delete()
                 lecture_info.delete()
 
+                if len(group_data) > 0:
+                    for group_info in group_data:
+                        group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                              use=1).count()
+                        group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                            use=1).exclude(lecture_tb__state_cd='IP').count()
+
+                        try:
+                            group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                        except ObjectDoesNotExist:
+                            error = '그룹 정보를 불러오지 못했습니다.'
+                        if error is None:
+                            if group_data_total_size == group_data_end_size:
+                                group_info_data.state_cd = 'PE'
+                                group_info_data.save()
+                            else:
+                                group_info_data.state_cd = 'IP'
+                                group_info_data.save()
+                        else:
+                            error = None
             else:
                 if len(group_data) > 0:
                     group_data.update(mod_dt=timezone.now(), use=0)
@@ -1826,6 +1888,27 @@ def func_delete_member_lecture_info_logic(user_id, class_id, lecture_id, member_
                     lecture_info.state_cd = 'PE'
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.save()
+
+                if len(group_data) > 0:
+                    for group_info in group_data:
+                        group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                              use=1).count()
+                        group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                            use=1).exclude(lecture_tb__state_cd='IP').count()
+
+                        try:
+                            group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                        except ObjectDoesNotExist:
+                            error = '그룹 정보를 불러오지 못했습니다.'
+                        if error is None:
+                            if group_data_total_size == group_data_end_size:
+                                group_info_data.state_cd = 'PE'
+                                group_info_data.save()
+                            else:
+                                group_info_data.state_cd = 'IP'
+                                group_info_data.save()
+                        else:
+                            error = None
         else:
             class_lecture_info.delete()
             member_lecture_list.delete()
@@ -1835,6 +1918,20 @@ def func_delete_member_lecture_info_logic(user_id, class_id, lecture_id, member_
             lecture_info.delete()
             # 회원의 수강정보가 더이상 없는경우
 
+            if len(group_data) > 0:
+                for group_info in group_data:
+                    group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id, use=1).count()
+                    group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                        use=1).exclude(lecture_tb__state_cd='IP').count()
+
+                    if group_data_total_size == group_data_end_size:
+                        try:
+                            group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                            group_info_data.state_cd = 'PE'
+                            group_info_data.save()
+                        except ObjectDoesNotExist:
+                            error = None
+
             if member.reg_info is not None:
                 if str(member.reg_info) == str(user_id):
                     member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id)
@@ -1842,55 +1939,6 @@ def func_delete_member_lecture_info_logic(user_id, class_id, lecture_id, member_
                         member.delete()
                         user.delete()
     return error
-
-
-@csrf_exempt
-def refund_member_lecture_info_logic(request):
-
-    lecture_id = request.POST.get('lecture_id', '')
-    member_name = request.POST.get('member_name', '')
-    next_page = request.POST.get('next_page', '')
-    class_id = request.session.get('class_id', '')
-    error = None
-
-    if lecture_id is None or lecture_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                  state_cd='NP')
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-        # schedule_data.delete()
-        # repeat_schedule_data.delete()
-        # lecture_info.use = 0
-        # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
-        lecture_info.mod_dt = timezone.now()
-        lecture_info.state_cd = 'RF'
-        lecture_info.save()
-
-    if error is None:
-        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
-        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
-
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='환불 처리',
-                         reg_dt=timezone.now(), use=1)
-
-        log_data.save()
-
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-
-        return redirect(next_page)
 
 
 @csrf_exempt
@@ -1979,6 +2027,7 @@ def refund_member_lecture_info_logic(request):
             error = '환불 금액이 등록 금액보다 많습니다.'
 
     if error is None:
+        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         schedule_data.delete()
@@ -1988,6 +2037,27 @@ def refund_member_lecture_info_logic(request):
         lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'RF'
         lecture_info.save()
+
+        if len(group_data) > 0:
+            for group_info in group_data:
+                group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                      use=1).count()
+                group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
+
+                try:
+                    group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                except ObjectDoesNotExist:
+                    error = '그룹 정보를 불러오지 못했습니다.'
+                if error is None:
+                    if group_data_total_size == group_data_end_size:
+                        group_info_data.state_cd = 'PE'
+                        group_info_data.save()
+                    else:
+                        group_info_data.state_cd = 'IP'
+                        group_info_data.save()
+                else:
+                    error = None
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -2024,6 +2094,7 @@ def progress_member_lecture_info_logic(request):
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
+        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
@@ -2031,6 +2102,28 @@ def progress_member_lecture_info_logic(request):
         lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'IP'
         lecture_info.save()
+        if len(group_data) > 0:
+            for group_info in group_data:
+                print(str(group_info.group_tb_id))
+                group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                      use=1).count()
+                group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
+                print('progress_member_lecture_info_logic'+str(group_data_total_size))
+                print('progress_member_lecture_info_logic'+str(group_data_end_size))
+                try:
+                    group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                except ObjectDoesNotExist:
+                    error = '그룹 정보를 불러오지 못했습니다.'
+                if error is None:
+                    if group_data_total_size == group_data_end_size:
+                        group_info_data.state_cd = 'PE'
+                        group_info_data.save()
+                    else:
+                        group_info_data.state_cd = 'IP'
+                        group_info_data.save()
+                else:
+                    error = None
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -2067,6 +2160,7 @@ def finish_member_lecture_info_logic(request):
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
+        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         schedule_data.delete()
@@ -2076,6 +2170,28 @@ def finish_member_lecture_info_logic(request):
         lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'PE'
         lecture_info.save()
+
+        if len(group_data) > 0:
+            for group_info in group_data:
+                group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                      use=1).count()
+                group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
+                print('finish_member_lecture_info_logic'+str(group_data_total_size))
+                print('finish_member_lecture_info_logic'+str(group_data_end_size))
+                try:
+                    group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                except ObjectDoesNotExist:
+                    error = '그룹 정보를 불러오지 못했습니다.'
+                if error is None:
+                    if group_data_total_size == group_data_end_size:
+                        group_info_data.state_cd = 'PE'
+                        group_info_data.save()
+                    else:
+                        group_info_data.state_cd = 'IP'
+                        group_info_data.save()
+                else:
+                    error = None
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -4623,6 +4739,7 @@ def delete_group_info_logic(request):
         error = '그룹 정보를 불러오지 못했습니다.'
 
     if error is None:
+        group_info.state_cd = 'PE'
         group_info.use = 0
         group_info.mod_dt = timezone.now()
         group_info.save()

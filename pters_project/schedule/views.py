@@ -25,7 +25,7 @@ from django.views.generic.base import ContextMixin
 from configs import settings
 from configs.views import date_check_func
 from login.models import LogTb, MemberTb, CommonCdTb
-from schedule.models import LectureTb, ClassLectureTb, MemberLectureTb
+from schedule.models import LectureTb, ClassLectureTb, MemberLectureTb, GroupLectureTb, GroupTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
 
@@ -229,6 +229,28 @@ def delete_schedule_logic_func(schedule_info, member_id):
 
                     if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
                         lecture_info.state_cd = 'IP'
+
+                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id)
+                        if len(group_data) > 0:
+                            for group_info in group_data:
+                                group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                                      use=1).count()
+                                group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
+
+                                try:
+                                    group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                                except ObjectDoesNotExist:
+                                    error = '그룹 정보를 불러오지 못했습니다.'
+                                if error is None:
+                                    if group_data_total_size == group_data_end_size:
+                                        group_info_data.state_cd = 'PE'
+                                        group_info_data.save()
+                                    else:
+                                        group_info_data.state_cd = 'IP'
+                                        group_info_data.save()
+                                else:
+                                    error = None
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.schedule_check = 1
                     lecture_info.save()
@@ -724,6 +746,28 @@ def finish_schedule_logic(request):
                     if lecture_repeat_schedule_data is not None:
                         lecture_repeat_schedule_data.state_cd = 'PE'
                         lecture_repeat_schedule_data.save()
+
+                    group_data = GroupLectureTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id)
+                    if len(group_data) > 0:
+                        for group_info in group_data:
+                            group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                                  use=1).count()
+                            group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                                                                                use=1).exclude(lecture_tb__state_cd='IP').count()
+
+                            try:
+                                group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                            except ObjectDoesNotExist:
+                                error = '그룹 정보를 불러오지 못했습니다.'
+                            if error is None:
+                                if group_data_total_size == group_data_end_size:
+                                    group_info_data.state_cd = 'PE'
+                                    group_info_data.save()
+                                else:
+                                    group_info_data.state_cd = 'IP'
+                                    group_info_data.save()
+                            else:
+                                error = None
 
                 lecture_info.mod_dt = timezone.now()
                 lecture_info.schedule_check = 1
