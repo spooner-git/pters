@@ -711,7 +711,7 @@ function groupMemberListSet(group_id, jsondata){
     for(var i=0; i<len; i++){
         var groupmember_dbid = jsondata.db_id[i];
         var groupmember_id = jsondata.member_id[i];
-        //var groupmember_lecid = jsondata.lecture_id[i]
+        var groupmember_lecid = jsondata.lecture_id[i]
         var groupmember_lastname = jsondata.last_name[i];
         var groupmember_firstname = jsondata.first_name[i];
         var groupmember_regcount = jsondata.reg_count[i];
@@ -720,7 +720,7 @@ function groupMemberListSet(group_id, jsondata){
         var groupmember_enddate = jsondata.end_date[i];
         var groupmember_phone = jsondata.phone[i];
 
-        var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">'
+        var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">'
         var htmlEnd = '</div>'
 
         var memberRow = htmlStart +
