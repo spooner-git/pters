@@ -295,7 +295,7 @@ $(document).ready(function(){
 		$("#id_repeat_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
-		$("#id_repeat_member_id").val($(this).attr('data-memberid')); //member id 정보 저장
+		$("#id_repeat_member_id").val($(this).attr('data-dbid')); //member id 정보 저장
 		$("#id_repeat_lecture_id").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
@@ -471,7 +471,7 @@ $(document).ready(function(){
 		$("#id_repeat_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
-		$("#id_repeat_member_id").val($(this).attr('data-memberid')); //member id 정보 저장
+		$("#id_repeat_member_id").val($(this).attr('data-dbid')); //member id 정보 저장
 		$("#id_repeat_lecture_id").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
@@ -643,7 +643,7 @@ $(document).ready(function(){
 										}
 									}
 					          		close_info_popup('cal_popup_plandelete')
-				                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
+				                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
 				                  	//ajax_received_json_data(jsondata)
 				                  	set_schedule_time(jsondata)
 				                  	AjaxCompleteSend();
@@ -663,7 +663,7 @@ $(document).ready(function(){
 		                error:function(){
 		                  alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
 		                  close_info_popup('cal_popup_plandelete')
-		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
+		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
 		                  AjaxCompleteSend();
 		                },
 		            })
@@ -1822,6 +1822,7 @@ function set_schedule_time(jsondata){
 	scheduleTime('class', jsondata)
 	scheduleTime('off', jsondata)
 	addPtMemberListSet(jsondata);
+	console.log('set_schedule_time:',jsondata)
 }
 
 
