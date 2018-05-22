@@ -278,7 +278,7 @@ $(document).ready(function(){
 									}
 								console.log('111')
 					           	close_info_popup('cal_popup_plandelete')
-			                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
+			                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
 			                  	ajax_received_json_data(jsondata)
 			                  	AjaxCompleteSend();
 					          }
@@ -296,7 +296,7 @@ $(document).ready(function(){
 		                  alert("에러: 서버 통신 실패")
 		                  console.log('222')
 		                  close_info_popup('cal_popup_plandelete')
-		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-memberid'))
+		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
 		                  AjaxCompleteSend();
 		                },
 		            })
