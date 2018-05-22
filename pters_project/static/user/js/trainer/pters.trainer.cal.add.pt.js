@@ -472,20 +472,43 @@ $(document).ready(function(){
 
       $(document).on('click',"#members_pc li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
-          $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-      		$("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
-          $('#remainCount_mini_text').css('display','inline-block')
-      		$("#id_lecture_id").val($(this).attr('data-lectureid'));
-      		$("#id_member_id").val($(this).attr('data-dbid'));
-          $("#id_member_name").val($(this).text());
+          if($(this).attr('data-grouptype') == "personal"){
+            addTypeSelect = "ptadd"
+            $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+            $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
+            $('#remainCount_mini_text').css('display','inline-block')
+            $("#id_lecture_id").val($(this).attr('data-lectureid'));
+            $("#id_member_id").val($(this).attr('data-dbid'));
+            $("#id_member_name").val($(this).text());
+          }else if($(this).attr('data-grouptype') == "group"){
+            addTypeSelect = "groupptadd"
+            /*
+            $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+            $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
+            $('#remainCount_mini_text').css('display','inline-block')
+            $("#id_lecture_id").val($(this).attr('data-lectureid'));
+            $("#id_member_id").val($(this).attr('data-dbid'));
+            $("#id_member_name").val($(this).text());
+            */
+          }
+          
           check_dropdown_selected();
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
       $(document).on('click',"#members_mobile li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
-          get_repeat_info($(this).attr('data-lectureid'),$(this).attr('data-dbid'))
-          $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
-          $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+          if($(this).attr("data-grouptype") == "personal"){
+            get_repeat_info($(this).attr('data-lectureid'),$(this).attr('data-dbid'))
+            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
+            $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+          }else if($(this).attr("data-grouptype" == "group")){
+            /*
+            get_repeat_info($(this).attr('data-lectureid'),$(this).attr('data-dbid'))
+            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
+            $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+            */
+          }
+          
           check_dropdown_selected();
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
