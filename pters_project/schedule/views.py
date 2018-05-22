@@ -295,7 +295,8 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     group_schedule_note = []
     group_schedule_group_id = []
     group_schedule_name = []
-    group_schedule_member_num = []
+    group_schedule_max_member_num = []
+    group_schedule_current_member_num = []
     off_repeat_schedule_id = []
     off_repeat_schedule_type = []
     off_repeat_schedule_week_info = []
@@ -430,9 +431,16 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
             group_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
             group_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
             if pt_schedule_datum.group_tb is not None and pt_schedule_datum.group_tb != '':
+                schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                        group_tb_id=pt_schedule_datum.group_tb.group_id,
+                                                                        lecture_tb__isnull=False,
+                                                                        start_dt=pt_schedule_datum.start_dt,
+                                                                        end_dt=pt_schedule_datum.end_dt,
+                                                                        use=1).count()
                 group_schedule_group_id.append(pt_schedule_datum.group_tb.group_id)
                 group_schedule_name.append(pt_schedule_datum.group_tb.name)
-                group_schedule_member_num.append(pt_schedule_datum.group_tb.member_num)
+                group_schedule_max_member_num.append(pt_schedule_datum.group_tb.member_num)
+                group_schedule_current_member_num.append(schedule_current_member_num)
 
             if pt_schedule_datum.note is None:
                 group_schedule_note.append('')
@@ -467,7 +475,8 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['group_schedule_end_datetime'] = group_schedule_end_datetime
     context['group_schedule_group_id'] = group_schedule_group_id
     context['group_schedule_name'] = group_schedule_name
-    context['group_schedule_member_num'] = group_schedule_member_num
+    context['group_schedule_max_member_num'] = group_schedule_max_member_num
+    context['group_schedule_current_member_num'] = group_schedule_current_member_num
     context['group_schedule_note'] = group_schedule_note
     context['group_schedule_finish_check'] = group_schedule_finish_check
 
