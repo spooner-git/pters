@@ -1164,7 +1164,6 @@ function ajaxClassTime(){
 function set_schedule_Time(jsondata){
 	initialJSON = jsondata;
 	classDatesTrainer(jsondata);
-	addPtMemberListSet(jsondata);
 	plancheck(clicked_td_date_info, jsondata)
 }
 

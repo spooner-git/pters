@@ -125,6 +125,7 @@ ul a{
 }
 
 #memberName_mini button{
+	position: relative;
 	width: 185px;
 	border: 1px solid #cccccc;
 	overflow-x: hidden;
@@ -980,7 +981,7 @@ option{
 		height: 26px;
 	}
 
-	#membersSelected{
+	#membersSelected, #membersSelected_mini{
 		margin-left: 15px;
 	}
 
