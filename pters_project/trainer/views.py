@@ -2342,7 +2342,7 @@ def update_member_lecture_info_logic(request):
             lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
-
+    print(error)
     if error is None:
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
         #               + member_name + ' 회원님의</span> 수강정보를 <span class="status">수정</span>했습니다.'
@@ -4764,7 +4764,7 @@ def add_group_info_logic(request):
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
-    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     try:
         with transaction.atomic():
@@ -4798,14 +4798,57 @@ def add_group_info_logic(request):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class GetGroupInfoViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'group_info_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(GetGroupInfoViewAjax, self).get_context_data(**kwargs)
+        context = super(GetGroupIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, use=1)
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=1)
+        for group_info in group_data:
+            member_data = []
+            try:
+                state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
+                group_info.state_cd_nm = state_cd_nm.common_cd_nm
+            except ObjectDoesNotExist:
+                error = '그룹 정보를 불러오지 못했습니다.'
+            lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=1)
+            for lecture_info in lecture_list:
+                try:
+                    member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+                except ObjectDoesNotExist:
+                    error = '회원 정보를 불러오지 못했습니다.'
+                check_add_flag = 0
+                for member_test in member_data:
+                    if member_test.user.id == member_info.member.user.id:
+                        check_add_flag = 1
+
+                if check_add_flag == 0:
+                    member_data.append(member_info.member)
+
+            group_info.group_member_num = len(member_data)
+
+        if error is not None:
+
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['group_data'] = group_data
+
+        return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'group_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetGroupEndListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=1)
         for group_info in group_data:
             member_data = []
             try:
@@ -4845,7 +4888,7 @@ def delete_group_info_logic(request):
 
     class_id = request.session.get('class_id', '')
     group_id = request.POST.get('group_id', '')
-    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     group_info = None
     try:
@@ -4882,7 +4925,7 @@ def update_group_info_logic(request):
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
-    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     group_info = None
     error = None
 
@@ -5027,7 +5070,7 @@ def add_group_member_logic(request):
         except InternalError:
             error = error
 
-    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
 
     if error is None:
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -5295,7 +5338,7 @@ def delete_group_member_info_logic(request):
 
     class_id = request.session.get('class_id', '')
     json_data = request.body.decode('utf-8')
-    next_page = request.POST.get('next_page', '/trainer/get_group_info/')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     json_loading_data = None
     error = None
 
@@ -5366,3 +5409,356 @@ def delete_group_member_info_logic(request):
 
         return redirect(next_page)
 
+
+class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'member_list_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        lecture_id = self.request.session.get('lecture_id', '')
+        error = None
+        class_info = None
+
+        member_list = []
+        # 강사 정보 가져오기
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            all_member = MemberTb.objects.filter().order_by('name')
+
+            for member_info in all_member:
+
+                member_data = copy.copy(member_info)
+                member_data_finish = copy.copy(member_info)
+
+                try:
+                    user = User.objects.get(id=member_info.member_id)
+                    if user.is_active:
+                        member_data.is_active = True
+                        member_data_finish.is_active = True
+                    else:
+                        if str(member_info.reg_info) == str(self.request.user.id):
+                            member_data.is_active = False
+                            member_data_finish.is_active = False
+                        else:
+                            member_data.is_active = True
+                            member_data_finish.is_active = True
+
+                except ObjectDoesNotExist:
+                    error = None
+
+                lecture_finish_check = 0
+                # 강좌에 해당하는 수강/회원 정보 가져오기
+                lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                             lecture_tb__member_id=member_data.member_id,
+                                                             lecture_tb__state_cd='IP', auth_cd='VIEW',
+                                                             lecture_tb__use=1, use=1)
+
+                if len(lecture_list) > 0:
+                    lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                 lecture_tb__member_id=member_data.member_id,
+                                                                 auth_cd='VIEW', lecture_tb__use=1, use=1)
+
+                    member_data.rj_lecture_counts = 0
+                    member_data.np_lecture_counts = 0
+
+                    member_data.lecture_reg_count_yet = 0
+                    member_data.lecture_rem_count_yet = 0
+                    member_data.lecture_avail_count_yet = 0
+
+                    member_data.lecture_counts = len(lecture_list)
+                    member_data.lecture_reg_count = 0
+                    member_data.lecture_rem_count = 0
+                    member_data.lecture_avail_count = 0
+
+                    member_data.lecture_reg_count_total = 0
+                    member_data.lecture_rem_count_total = 0
+                    member_data.lecture_avail_count_total = 0
+
+                    member_data.start_date = None
+                    member_data.end_date = None
+                    member_data.mod_dt = None
+                    member_data.group_info = ''
+
+                    lecture_count = 0
+
+                    for lecture_info_data in lecture_list:
+                        # if lecture_info.state_cd == 'RJ':
+                        lecture_info = lecture_info_data.lecture_tb
+                        if lecture_info_data.auth_cd == 'DELETE':
+                            member_data.rj_lecture_counts += 1
+                        # if lecture_info.state_cd == 'NP':
+                        if lecture_info_data.auth_cd == 'WAIT':
+                            member_data.np_lecture_counts += 1
+
+                        group_check = 0
+                        try:
+                            GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
+                        except ObjectDoesNotExist:
+                            group_check = 1
+
+                        if group_check == 0:
+                            if member_data.group_info == '':
+                                member_data.group_info = '그룹'
+                            else:
+                                if '그룹' in member_data.group_info:
+                                    member_data.group_info = member_data.group_info
+                                else:
+                                    member_data.group_info += '/그룹'
+                        else:
+                            if member_data.group_info == '':
+                                member_data.group_info = '1:1'
+                            else:
+                                if '1:1' in member_data.group_info:
+                                    member_data.group_info = member_data.group_info
+                                else:
+                                    member_data.group_info = '1:1/' + member_data.group_info
+
+                        lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                                                                        lecture_tb=lecture_info.lecture_id,
+                                                                        auth_cd='VIEW', lecture_tb__use=1,
+                                                                        use=1).count()
+
+                        if lecture_info.use != 0:
+                            # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                            if lecture_info.state_cd == 'IP':
+                                member_data.lecture_reg_count += lecture_info.lecture_reg_count
+                                member_data.lecture_rem_count += lecture_info.lecture_rem_count
+                                member_data.lecture_avail_count += lecture_info.lecture_avail_count
+                                member_data.end_date = lecture_info.end_date
+                                if member_data.start_date is None or member_data.start_date == '':
+                                    member_data.start_date = lecture_info.start_date
+                                else:
+                                    if member_data.start_date > lecture_info.start_date:
+                                        member_data.start_date = lecture_info.start_date
+                                if member_data.end_date is None or member_data.end_date == '':
+                                    member_data.end_date = lecture_info.end_date
+                                else:
+                                    if member_data.end_date < lecture_info.end_date:
+                                        member_data.end_date = lecture_info.end_date
+
+                            # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
+                            #    member_data.lecture_reg_count_yet += lecture_info.lecture_reg_count
+                            #    member_data.lecture_rem_count_yet += lecture_info.lecture_rem_count
+                            #    member_data.lecture_avail_count_yet += lecture_info.lecture_avail_count
+
+                            if member_data.mod_dt is None or member_data.mod_dt == '':
+                                member_data.mod_dt = lecture_info.mod_dt
+                            else:
+                                if member_data.mod_dt > lecture_info.mod_dt:
+                                    member_data.mod_dt = lecture_info.mod_dt
+                            member_data.lecture_reg_count_total += lecture_info.lecture_reg_count
+                            member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
+                            member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
+                            member_data.lecture_id = lecture_info.lecture_id
+                    if member_data.reg_info is None or str(member_data.reg_info) != str(self.request.user.id):
+                        if lecture_count == 0:
+                            member_data.sex = ''
+                            member_data.birthday_dt = ''
+                            member_data.phone = '***-****-' + member_data.phone[7:]
+                            member_data.user.email = ''
+
+                    member_data.start_date = str(member_data.start_date)
+                    member_data.end_date = str(member_data.end_date)
+                    member_data.mod_dt = str(member_data.mod_dt)
+                    if member_data.birthday_dt is None or member_data.birthday_dt == '':
+                        member_data.birthday_dt = ''
+                    else:
+                        member_data.birthday_dt = str(member_data.birthday_dt)
+                    member_list.append(member_data)
+
+            context['member_data'] = member_list
+
+        push_data = []
+
+        if lecture_id is not None and lecture_id != '':
+            member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
+
+            for class_lecture_info in member_lecture_data:
+                lecture_info = MemberLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, auth_cd='VIEW', use=1)
+                for lecture_info in lecture_info:
+                    token_data = PushInfoTb.objects.filter(member_id=lecture_info.member.member_id)
+                    for token_info in token_data:
+                        token_info.badge_counter += 1
+                        token_info.save()
+                        push_data.append(token_info)
+
+        context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+        context['push_data'] = push_data
+        return context
+
+
+class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'member_list_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        lecture_id = self.request.session.get('lecture_id', '')
+        error = None
+        class_info = None
+
+        member_list = []
+        # 강사 정보 가져오기
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            all_member = MemberTb.objects.filter().order_by('name')
+
+            for member_info in all_member:
+
+                member_data = copy.copy(member_info)
+
+                try:
+                    user = User.objects.get(id=member_info.member_id)
+                    if user.is_active:
+                        member_data.is_active = True
+                    else:
+                        if str(member_info.reg_info) == str(self.request.user.id):
+                            member_data.is_active = False
+                        else:
+                            member_data.is_active = True
+
+                except ObjectDoesNotExist:
+                    error = None
+
+                lecture_finish_check = 0
+                # 강좌에 해당하는 수강/회원 정보 가져오기
+                lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                             lecture_tb__member_id=member_data.member_id,
+                                                             lecture_tb__state_cd='IP', auth_cd='VIEW',
+                                                             lecture_tb__use=1, use=1)
+
+                lecture_finish_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                                    lecture_tb__member_id=member_data.member_id,
+                                                                    auth_cd='VIEW', lecture_tb__use=1,
+                                                                    use=1).exclude(lecture_tb__state_cd='IP')
+
+                if len(lecture_list) == 0:
+                    if len(lecture_finish_list) > 0:
+                        lecture_finish_check = 1
+
+                if lecture_finish_check > 0:
+                    member_data.rj_lecture_counts = 0
+                    member_data.np_lecture_counts = 0
+
+                    member_data.lecture_reg_count_yet = 0
+                    member_data.lecture_rem_count_yet = 0
+                    member_data.lecture_avail_count_yet = 0
+
+                    member_data.lecture_counts = len(lecture_finish_list)
+                    member_data.lecture_reg_count = 0
+                    member_data.lecture_rem_count = 0
+                    member_data.lecture_avail_count = 0
+
+                    member_data.lecture_reg_count_total = 0
+                    member_data.lecture_rem_count_total = 0
+                    member_data.lecture_avail_count_total = 0
+                    member_data.start_date = None
+                    member_data.end_date = None
+                    member_data.mod_dt = None
+                    member_data.group_info = ''
+                    lecture_finish_count = 0
+
+                    for lecture_info_data in lecture_finish_list:
+                        # if lecture_info.state_cd == 'RJ':
+                        lecture_info = lecture_info_data.lecture_tb
+                        if lecture_info_data.auth_cd == 'DELETE':
+                            member_data.rj_lecture_counts += 1
+                        # if lecture_info.state_cd == 'NP':
+                        if lecture_info_data.auth_cd == 'WAIT':
+                            member_data.np_lecture_counts += 1
+
+                        group_check = 0
+                        try:
+                            GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
+                        except ObjectDoesNotExist:
+                            group_check = 1
+
+                        if group_check == 0:
+                            if member_data.group_info == '':
+                                member_data.group_info = '그룹'
+                            else:
+                                member_data.group_info += '/그룹'
+                        else:
+                            if member_data.group_info == '':
+                                member_data.group_info = '1:1'
+                            else:
+                                member_data.group_info += '/1:1'
+
+                        lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                                                                               lecture_tb=lecture_info.lecture_id,
+                                                                               auth_cd='VIEW', lecture_tb__use=1,
+                                                                               use=1).count()
+
+                        if lecture_info.use != 0:
+                            # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
+                            # if lecture_info.state_cd == 'IP':
+                            member_data.lecture_reg_count += lecture_info.lecture_reg_count
+                            member_data.lecture_rem_count += lecture_info.lecture_rem_count
+                            member_data.lecture_avail_count += lecture_info.lecture_avail_count
+                            member_data.end_date = lecture_info.end_date
+                            if member_data.start_date is None or member_data.start_date == '':
+                                member_data.start_date = lecture_info.start_date
+                            else:
+                                if member_data.start_date > lecture_info.start_date:
+                                    member_data.start_date = lecture_info.start_date
+
+                            if member_data.end_date is None or member_data.end_date == '':
+                                member_data.end_date = lecture_info.end_date
+                            else:
+                                if member_data.end_date < lecture_info.end_date:
+                                    member_data.end_date = lecture_info.end_date
+
+                            if member_data.mod_dt is None or member_data.mod_dt == '':
+                                member_data.mod_dt = lecture_info.mod_dt
+                            else:
+                                if member_data.mod_dt > lecture_info.mod_dt:
+                                    member_data.mod_dt = lecture_info.mod_dt
+
+                            member_data.lecture_reg_count_total += lecture_info.lecture_reg_count
+                            member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
+                            member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
+                            member_data.lecture_id = lecture_info.lecture_id
+
+                    if member_data.reg_info is None or str(member_data.reg_info) != str(self.request.user.id):
+                        if lecture_finish_count == 0:
+                            member_data.sex = ''
+                            member_data.birthday_dt = ''
+                            member_data.phone = '***-****-' + member_data.phone[7:]
+                            member_data.user.email = ''
+
+                    member_data.start_date = str(member_data.start_date)
+                    member_data.end_date = str(member_data.end_date)
+                    member_data.mod_dt = str(member_data.mod_dt)
+                    if member_data.birthday_dt is None or member_data.birthday_dt == '':
+                        member_data.birthday_dt = ''
+                    else:
+                        member_data.birthday_dt = str(member_data.birthday_dt)
+                    member_list.append(member_data)
+
+            context['member_data'] = member_list
+        push_data = []
+
+        if lecture_id is not None and lecture_id != '':
+            member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
+
+            for class_lecture_info in member_lecture_data:
+                lecture_info = MemberLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, auth_cd='VIEW', use=1)
+                for lecture_info in lecture_info:
+                    token_data = PushInfoTb.objects.filter(member_id=lecture_info.member.member_id)
+                    for token_info in token_data:
+                        token_info.badge_counter += 1
+                        token_info.save()
+                        push_data.append(token_info)
+
+        context['push_server_id'] = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+        context['push_data'] = push_data
+        return context

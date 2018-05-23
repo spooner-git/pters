@@ -119,7 +119,8 @@ urlpatterns = [
 
     # 그룹 기능
     url(r'^add_group_info/$', views.add_group_info_logic, name='add_group_info'),
-    url(r'^get_group_info/$', views.GetGroupInfoViewAjax.as_view(), name='get_group_info'),
+    url(r'^get_group_ing_list/$', views.GetGroupIngListViewAjax.as_view(), name='get_group_ing_list'),
+    url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
     url(r'^delete_group_info/$', views.delete_group_info_logic, name='delete_group_info'),
     url(r'^update_group_info/$', views.update_group_info_logic, name='update_group_info'),
     url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
@@ -127,5 +128,10 @@ urlpatterns = [
 
     #  그룹 회원가입
     url(r'^add_group_member/$', views.add_group_member_logic, name='add_group_member'),
+
+    # 진행중 회원 목록 조회
+    url(r'^get_member_ing_list/$', views.GetMemberIngListViewAjax.as_view(), name='get_member_ing_list'),
+    # 진행 완료 회원 목록 조회
+    url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
 
 ]

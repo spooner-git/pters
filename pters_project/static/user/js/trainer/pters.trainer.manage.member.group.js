@@ -395,7 +395,7 @@ function get_group_list(use, callback){
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
-        url:'/trainer/get_group_info/',
+        url:'/trainer/get_group_ing_list/',
 
         dataType : 'html',
 
