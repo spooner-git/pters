@@ -1415,7 +1415,7 @@ def delete_member_info_logic(request):
     member_id = request.POST.get('id')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
-    member_name = None
+    member_name = ''
     error = None
 
     if member_id == '':
@@ -1716,7 +1716,8 @@ def update_trainer_info_logic(request):
 def resend_member_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
-    member_name = request.POST.get('member_name', '')
+    member_id = request.POST.get('member_id', '')
+    # member_name = request.POST.get('member_name', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page', '')
 
@@ -1724,6 +1725,12 @@ def resend_member_lecture_info_logic(request):
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -1745,7 +1752,7 @@ def resend_member_lecture_info_logic(request):
         #               + member_name + ' 회원님의</span> 수강정보를 <span class="status">재요청</span>했습니다.'
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
+                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보 연동', log_how='재요청',
                          reg_dt=timezone.now(), use=1)
         log_data.save()
@@ -1762,7 +1769,7 @@ def resend_member_lecture_info_logic(request):
 def delete_member_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
-    member_name = request.POST.get('member_name', '')
+    # member_name = request.POST.get('member_name', '')
     member_id = request.POST.get('member_id', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
@@ -1772,6 +1779,12 @@ def delete_member_lecture_info_logic(request):
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원정보를 불러오지 못했습니다.'
+
+    if error is None:
         error = func_delete_member_lecture_info_logic(request.user.id, class_id, lecture_id, member_id)
 
     if error is None:
@@ -1779,7 +1792,7 @@ def delete_member_lecture_info_logic(request):
         #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
+                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보', log_how='삭제',
                          reg_dt=timezone.now(), use=1)
 
@@ -1945,11 +1958,13 @@ def func_delete_member_lecture_info_logic(user_id, class_id, lecture_id, member_
 def update_member_lecture_view_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
-    member_name = request.POST.get('member_name', '')
+    member_id = request.POST.get('member_id', '')
+    # member_name = request.POST.get('member_name', '')
     auth_cd = request.POST.get('member_view_state_cd', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
+    member_info = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1957,6 +1972,12 @@ def update_member_lecture_view_info_logic(request):
     if error is None:
         if auth_cd != 'VIEW' and auth_cd != 'WAIT' and auth_cd != 'DELETE':
             error = '수강정보 연결 상태를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -1978,7 +1999,7 @@ def update_member_lecture_view_info_logic(request):
         #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_id,
+                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보 연동', log_how='수정',
                          reg_dt=timezone.now(), use=1)
 
@@ -1996,12 +2017,14 @@ def update_member_lecture_view_info_logic(request):
 def refund_member_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
-    member_name = request.POST.get('member_name', '')
+    member_id = request.POST.get('member_id', '')
+    # member_name = request.POST.get('member_name', '')
     refund_price = request.POST.get('refund_price', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     input_refund_price = 0
     error = None
+    member_info = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -2015,6 +2038,12 @@ def refund_member_lecture_info_logic(request):
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -2061,7 +2090,7 @@ def refund_member_lecture_info_logic(request):
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='환불 처리',
                          reg_dt=timezone.now(), use=1)
 
@@ -2079,10 +2108,12 @@ def refund_member_lecture_info_logic(request):
 def progress_member_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
-    member_name = request.POST.get('member_name', '')
+    member_id = request.POST.get('member_id', '')
+    # member_name = request.POST.get('member_name', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
+    member_info = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -2092,6 +2123,12 @@ def progress_member_lecture_info_logic(request):
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
         group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
@@ -2104,13 +2141,11 @@ def progress_member_lecture_info_logic(request):
         lecture_info.save()
         if len(group_data) > 0:
             for group_info in group_data:
-                print(str(group_info.group_tb_id))
                 group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                       use=1).count()
                 group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                     use=1).exclude(lecture_tb__state_cd='IP').count()
-                print('progress_member_lecture_info_logic'+str(group_data_total_size))
-                print('progress_member_lecture_info_logic'+str(group_data_end_size))
+
                 try:
                     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
                 except ObjectDoesNotExist:
@@ -2127,7 +2162,7 @@ def progress_member_lecture_info_logic(request):
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='진행중 처리',
                          reg_dt=timezone.now(), use=1)
 
@@ -2145,13 +2180,20 @@ def progress_member_lecture_info_logic(request):
 def finish_member_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
-    member_name = request.POST.get('member_name', '')
+    member_id = request.POST.get('member_id', '')
+    # member_name = request.POST.get('member_name', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -2195,7 +2237,7 @@ def finish_member_lecture_info_logic(request):
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='완료 처리',
                          reg_dt=timezone.now(), use=1)
 
@@ -2219,7 +2261,8 @@ def update_member_lecture_info_logic(request):
     refund_price = request.POST.get('refund_price', '')
     lecture_reg_count = request.POST.get('lecture_reg_count', '')
     note = request.POST.get('note', '')
-    member_name = request.POST.get('member_name', '')
+    member_id = request.POST.get('member_id', '')
+    # member_name = request.POST.get('member_name', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page', '')
 
@@ -2229,6 +2272,7 @@ def update_member_lecture_info_logic(request):
     input_lecture_reg_count = 0
     finish_pt_count = 0
     reserve_pt_count = 0
+    member_info = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -2238,6 +2282,12 @@ def update_member_lecture_info_logic(request):
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
 
@@ -2298,7 +2348,7 @@ def update_member_lecture_info_logic(request):
         #               + member_name + ' 회원님의</span> 수강정보를 <span class="status">수정</span>했습니다.'
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='수정',
                          reg_dt=timezone.now(), use=1)
         log_data.save()

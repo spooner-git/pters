@@ -51,8 +51,7 @@ urlpatterns = [
     url(r'^cal_day_ajax/$', views.CalDayViewAjax.as_view(), name='cal_day_ajax'),
     url(r'^cal_week/$', views.CalWeekView.as_view(), name='cal_week'),
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
-    url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_rep'
-                                                                     'eat_off'),
+    url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_repeat_off'),
 
     # 회원 데이터 관련
     url(r'^read_member_lecture_data/$', views.ReadMemberLectureData.as_view(), name='read_member_lecture_data'),
