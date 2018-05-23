@@ -666,7 +666,7 @@ $(document).ready(function(){
            		var sendData = send_Data(serializeArray)
 				var url_ = '/schedule/delete_group_schedule/'
 			}
-			console.log($form.serializeArray())
+			console.log(sendData)
 			$.ajax({
 	                url: url_,
 	                type:'POST',
