@@ -5192,6 +5192,11 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                 check_add_flag = 0
                 for member_test in member_data:
                     if member_test.user.id == member_info.member.user.id:
+
+                        if member_test.lecture_tb.lecture_available_id == '':
+                            if lecture_info.lecture_tb.lecture_avail_count > 0:
+                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
                         if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None or member_test.lecture_tb.start_date == '':
                             member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
                             if lecture_info.lecture_tb.lecture_avail_count > 0:
@@ -5236,6 +5241,7 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                     member_info.member.lecture_tb.lecture_reg_count = lecture_info.lecture_tb.lecture_reg_count
                     member_info.member.lecture_tb.lecture_rem_count = lecture_info.lecture_tb.lecture_rem_count
                     member_info.member.lecture_tb.lecture_avail_count = lecture_info.lecture_tb.lecture_avail_count
+                    member_info.member.lecture_tb.lecture_available_id = ''
                     if lecture_info.lecture_tb.lecture_avail_count > 0:
                         member_info.member.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
                     member_data.append(member_info.member)
@@ -5280,6 +5286,11 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                 check_add_flag = 0
                 for member_test in member_data:
                     if member_test.user.id == member_info.member.user.id:
+
+                        if member_test.lecture_tb.lecture_available_id == '':
+                            if lecture_info.lecture_tb.lecture_avail_count > 0:
+                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
                         if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None or member_test.lecture_tb.start_date == '':
                             member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
                             if lecture_info.lecture_tb.lecture_avail_count > 0:
@@ -5322,6 +5333,7 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                     member_info.member.lecture_tb.lecture_reg_count = lecture_info.lecture_tb.lecture_reg_count
                     member_info.member.lecture_tb.lecture_rem_count = lecture_info.lecture_tb.lecture_rem_count
                     member_info.member.lecture_tb.lecture_avail_count = lecture_info.lecture_tb.lecture_avail_count
+                    member_info.member.lecture_tb.lecture_available_id = ''
                     if lecture_info.lecture_tb.lecture_avail_count > 0:
                         member_info.member.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
 
@@ -5485,6 +5497,7 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
                     member_data.end_date = None
                     member_data.mod_dt = None
                     member_data.group_info = ''
+                    member_data.lecture_available_id = ''
 
                     lecture_count = 0
 
@@ -5532,11 +5545,20 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
                                 member_data.lecture_rem_count += lecture_info.lecture_rem_count
                                 member_data.lecture_avail_count += lecture_info.lecture_avail_count
                                 member_data.end_date = lecture_info.end_date
+                                if member_data.lecture_available_id == '':
+                                    if lecture_info.lecture_avail_count > 0:
+                                        member_data.lecture_available_id = lecture_info.lecture_id
+
                                 if member_data.start_date is None or member_data.start_date == '':
+                                    # print('test1::'+member_data.name +':'+str(member_data.start_date)+':'+str(lecture_info.lecture_avail_count))
                                     member_data.start_date = lecture_info.start_date
                                 else:
+                                    # print('test2::'+member_data.name +':'+str(member_data.start_date)+':'+str(lecture_info.lecture_avail_count))
                                     if member_data.start_date > lecture_info.start_date:
                                         member_data.start_date = lecture_info.start_date
+                                        if lecture_info.lecture_avail_count > 0:
+                                            member_data.lecture_available_id = lecture_info.lecture_id
+
                                 if member_data.end_date is None or member_data.end_date == '':
                                     member_data.end_date = lecture_info.end_date
                                 else:
@@ -5666,6 +5688,7 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
                     member_data.end_date = None
                     member_data.mod_dt = None
                     member_data.group_info = ''
+                    member_data.lecture_available_id = ''
                     lecture_finish_count = 0
 
                     for lecture_info_data in lecture_finish_list:
@@ -5712,11 +5735,17 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
                             member_data.lecture_rem_count += lecture_info.lecture_rem_count
                             member_data.lecture_avail_count += lecture_info.lecture_avail_count
                             member_data.end_date = lecture_info.end_date
+
+                            if member_data.lecture_available_id == '':
+                                if lecture_info.lecture_avail_count > 0:
+                                    member_data.lecture_available_id = lecture_info.lecture_id
                             if member_data.start_date is None or member_data.start_date == '':
                                 member_data.start_date = lecture_info.start_date
                             else:
                                 if member_data.start_date > lecture_info.start_date:
                                     member_data.start_date = lecture_info.start_date
+                                    if lecture_info.lecture_avail_count > 0:
+                                        member_data.lecture_available_id = lecture_info.lecture_id
 
                             if member_data.end_date is None or member_data.end_date == '':
                                 member_data.end_date = lecture_info.end_date

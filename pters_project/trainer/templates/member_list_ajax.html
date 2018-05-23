@@ -53,6 +53,9 @@
     "groupInfoArray" :
     [{% for member_info in member_data %}"{{ member_info.group_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+    "lectureIdArray" :
+    [{% for member_info in member_data %}"{{ member_info.lecture_available_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "messageArray" :
       [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
     }
