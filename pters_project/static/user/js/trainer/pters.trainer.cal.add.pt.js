@@ -480,6 +480,8 @@ $(document).ready(function(){
           //$('.tdgraph').removeClass('graphindicator')
           if($(this).attr('data-grouptype') == "personal"){
             addTypeSelect = "ptadd"
+            $('#remainCount').show()
+            $('#groupInfo').hide()
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
             $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
             $('#remainCount_mini_text').css('display','inline-block')
@@ -488,6 +490,10 @@ $(document).ready(function(){
             $("#id_member_name").val($(this).text());
           }else if($(this).attr('data-grouptype') == "group"){
             addTypeSelect = "groupptadd"
+            $('#remainCount').hide()
+            $('#groupInfo').show()
+            $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+            $('#grouptypenumInfo').text('('+$(this).attr('data-grouptypecd')+' '+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum')+')')
             /*
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
             $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
@@ -504,18 +510,26 @@ $(document).ready(function(){
       $(document).on('click',"#members_mobile li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
           if($(this).attr("data-grouptype") == "personal"){
+            addTypeSelect = "ptadd"
+            $('#remainCount').show()
+            $('#groupInfo').hide()
+            get_repeat_info($(this).attr('data-dbid'))
             $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
             $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
             $("#id_member_id").val($(this).attr('data-dbid'));
             $("#id_lecture_id").val($(this).attr('data-lectureid'));
             $("#id_member_name").val($(this).text());
-          }else if($(this).attr("data-grouptype" == "group")){
-            /*
-            get_repeat_info($(this).attr('data-lectureid'),$(this).attr('data-dbid'))
+          }else if($(this).attr("data-grouptype") == "group"){
+            addTypeSelect = "groupptadd"
+            $('#remainCount').hide()
+            $('#groupInfo').show()
+            get_repeat_info($(this).attr('data-dbid'))
             $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-            */
+            $('#grouptypenumInfo').text($(this).attr('data-grouptypecd')+' '+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum'))
+
+            
           }
           
           check_dropdown_selected();
@@ -838,7 +852,7 @@ $(document).ready(function(){
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend();
             check_dropdown_selected()
-            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
         }
       })
       
@@ -988,7 +1002,8 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
     $('#page-addplan #timeGraph').css('display','block')
 
     if(option == "ptadd"){
-        $('#memberName,#remainCount').css('display','block');
+        //$('#memberName, #remainCount').css('display','block');
+        $('#memberName').css('display','block');
         $('#uptext2').text('PT 일정 등록')
         $('#id_training_date').val($('#datepicker').val())
         $('#id_repeat_start_date').val($('#datepicker_repeat_start').val())
@@ -998,7 +1013,7 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
         }
         $(".pt_memo_guide").css('display','block')
     }else if(option == "offadd"){
-        $('#memberName,#remainCount').css('display','none');
+        $('#memberName, #remainCount, #groupInfo').css('display','none');
         $('#uptext2').text('OFF 일정 등록')
         $('#id_training_date_off').val($('#datepicker').val())
         $('#id_repeat_start_date_off').val($('#datepicker_repeat_start').val())
@@ -1193,8 +1208,8 @@ function set_group_dropdown_list(jsondata){
     var member_array_pc = [];
     if(memberSize>0){
       for(var i=0; i<memberSize; i++){
-        member_array_mobile[i] = '<li><a  data-grouptype="group" data-membernum="'+jsondata.member_num+'" data-groupid="'+jsondata.group_id+'">[그룹] '+jsondata.name[i]+'</a></li>';
-        member_array_pc[i] = '<li><a  data-grouptype="group" data-membernum="'+jsondata.member_num+'" data-groupid="'+jsondata.group_id+'">[그룹] '+jsondata.name[i]+'</a></li>';
+        member_array_mobile[i] = '<li><a  data-grouptype="group" data-grouptypecd="'+jsondata.group_type_cd[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
+        member_array_pc[i] = '<li><a  data-grouptype="group" data-grouptypecd="'+jsondata.group_type_cd[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
       }
     }else if(memberSize == 0){
         member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
@@ -1304,10 +1319,10 @@ function clear_start_dur_dropdown(){
 }
 
 
-function get_repeat_info(lecture_id, member_id){
+function get_repeat_info(member_id){
     if(addTypeSelect == "repeatptadd"){
       var url_ = '/trainer/read_member_lecture_data_from_schedule/'
-      var data_ = {"lecture_id": lecture_id, "member_id": member_id}
+      var data_ = {"member_id": member_id}
       var fill_option = 'class'
       var type_ = 'POST'
     }else if(addTypeSelect == "repeatoffadd"){
