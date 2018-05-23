@@ -257,7 +257,7 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').html(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('class-schedule-id'))
+		$('#cal_popup_planinfo').attr({'schedule_id': $(this).attr('class-schedule-id'),'data-grouptype':'class'})
 		$("#id_schedule_id").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_modify").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_finish").val($(this).attr('class-schedule-id')); // shcedule 정보 저장
@@ -348,7 +348,7 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').text(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('off-schedule-id'))
+		$('#cal_popup_planinfo').attr({'schedule_id':$(this).attr('off-schedule-id'), 'data-grouptype':'off'})
 		$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#popup_btn_complete").hide()
@@ -433,7 +433,7 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').html(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('group-schedule-id'))
+		$('#cal_popup_planinfo').attr({'schedule_id': $(this).attr('group-schedule-id'), 'data-grouptype':'group'})
 		$("#id_schedule_id").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_modify").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_finish").val($(this).attr('group-schedule-id')); // shcedule 정보 저장
@@ -533,7 +533,11 @@ $(document).ready(function(){
 
 		//일정 삭제 기능 추가 - hk.kim 171007
 		$("#popup_btn_delete").click(function(){  //일정 삭제 버튼 클릭
-			deleteTypeSelect = "ptoffdelete"
+			if($(this).parent('#cal_popup_planinfo').attr('data-grouptype') == "group"){
+				deleteTypeSelect = "groupptdelete"
+			}else{
+				deleteTypeSelect = "ptoffdelete"
+			}
 			$('#cal_popup_planinfo').hide();
 			$('#cal_popup_plandelete').fadeIn('fast');
 		})
@@ -584,6 +588,7 @@ $(document).ready(function(){
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		var ajax_block_during_delete_weekcal = true
 		$('#popup_delete_btn_yes').click(function(){
+			console.log(deleteTypeSelect)
 			if(ajax_block_during_delete_weekcal == true){
 				ajax_block_during_delete_weekcal = false;
 				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
@@ -645,7 +650,10 @@ $(document).ready(function(){
 						//OFF 일정 삭제
 						send_plan_delete('off')
 					}
-				}	
+				}else if(deleteTypeSelect == "groupptdelete"){
+					send_plan_delete('group')
+					console.log('----sdfasdfs')
+				}
 			}
 		})
 
@@ -655,7 +663,7 @@ $(document).ready(function(){
 				var serializeArray = $form.serializeArray();
            		var sendData = send_Data(serializeArray)
 				var url_ = '/schedule/delete_schedule/'
-			}else if(option = "off"){
+			}else if(option == "off"){
 				var $form = $('#daily-off-delete-form');
 				var serializeArray = $form.serializeArray();
            		var sendData = send_Data(serializeArray)
@@ -684,7 +692,6 @@ $(document).ready(function(){
 		                  	$('#errorMessageBar').show()
 		                  	$('#errorMessageText').text(jsondata.messageArray)
 			          	}else{
-
 							if(jsondata.push_info != ''){
 								for (var i=0; i<jsondata.pushArray.length; i++){
 	                            	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
@@ -1720,7 +1727,7 @@ function ajaxClassTime(reference){
 }
 
 function set_schedule_time(jsondata){
-	$('.classTime, .offTime').parent().html('<div></div>')
+	$('.classTime, .offTime, .groupTime').parent().html('<div></div>')
 	$('._on').removeClass('_on')
 	initialJSON = jsondata;
 	scheduleTime('class', jsondata)
