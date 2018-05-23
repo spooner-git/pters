@@ -431,8 +431,8 @@ if (agent.indexOf("firefox") != -1) {
 
     $('span.resend').parent('div').click(function(){
         var lectureID = $('.resendPopup').attr('data-leid');
-        var userName = DB_All[$('.resendPopup').attr('data-dbid')].name
-        resend_member_reg_data_pc(lectureID, userName)
+        var dbID = $('.resendPopup').attr('data-dbid')
+        resend_member_reg_data_pc(lectureID, dbID)
         $('.resendPopup').css('display','none');
         $('#shade3').css('display','none');
     });
@@ -456,25 +456,24 @@ if (agent.indexOf("firefox") != -1) {
     //진행 완료 처리 버튼
     $('.lectureStateChangeSelectPopup ._complete').click(function(){
         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var userName = $('.lectureStateChangeSelectPopup').attr('data-username')
-        complete_member_reg_data_pc(lectureID, userName)
+        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid')
+        complete_member_reg_data_pc(lectureID, dbID)
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
 
     //재개 처리 버튼
     $('.lectureStateChangeSelectPopup ._resume').click(function(){
         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var userName = $('.lectureStateChangeSelectPopup').attr('data-username')
-        resume_member_reg_data_pc(lectureID, userName)
+        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+        resume_member_reg_data_pc(lectureID, dbID)
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
 
     //삭제 처리 버튼
     $('.lectureStateChangeSelectPopup ._delete').click(function(){
         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var userName = $('.lectureStateChangeSelectPopup').attr('data-username');
-        var userId = $('.lectureStateChangeSelectPopup').attr('data-userid');
-        delete_member_reg_data_pc(lectureID, userName, userId);
+        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+        delete_member_reg_data_pc(lectureID, dbID);
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
 
@@ -493,11 +492,10 @@ if (agent.indexOf("firefox") != -1) {
 
     $('span.refund').parent('div').click(function(){
         var lectureID = $('.lectureRefundPopup').attr('data-leid');
-        var refund_price = $('div.lectureRefundPopup input[name="refund_price"]').val().replace(/,/gi,'')
-        var userName = $('.lectureRefundPopup').attr('data-username');
-        refund_member_lecture_data(lectureID, userName, refund_price);
+        var dbID = $('.lectureRefundPopup').attr('data-dbid');
+        var refund_price = $('div.lectureRefundPopup input[name="refund_price"]').val().replace(/,/gi,'');
+        refund_member_lecture_data(lectureID, dbID, refund_price);
         $('.lectureRefundPopup').css('display','none');
-        //$('#shade3').css('display','none')
     });
 
     $('.lectureRefundPopup input').keyup(function(){
@@ -515,10 +513,9 @@ if (agent.indexOf("firefox") != -1) {
     $('span.connectchange').parent('div').click(function(){
         var stateCode =  $(this).attr('data-stat');
         var lectureID = $('.lectureConnectStateChangePopup').attr('data-leid')
-        var memberName = DB_All[$('.lectureConnectStateChangePopup').attr('data-dbid')].name
-        disconnect_member_lecture_data(stateCode, lectureID, memberName)
+        var dbID =$('.lectureConnectStateChangePopup').attr('data-dbid')
+        disconnect_member_lecture_data(stateCode, lectureID, dbID)
         $('.lectureConnectStateChangePopup').css('display','none');
-        //$('#shade3').css('display','none')
     });
     $('span.cancel_connectchange').parent('div').click(function(){
         $('.lectureConnectStateChangePopup').css('display','none');
@@ -2495,10 +2492,10 @@ function send_member_modified_data(dbID){
                     get_member_list()
                     if($('body').width() < 600){
                         open_member_info_popup_mobile(dbID, jsondata)
-                        get_member_lecture_list(jsondata)
+                        get_member_lecture_list(dbID)
                     }else{
                         open_member_info_popup_pc(dbID, jsondata)
-                        get_member_lecture_list(jsondata)
+                        get_member_lecture_list(dbID)
                     }
                     
                     
@@ -2548,7 +2545,7 @@ function resend_member_reg_data_pc(lectureID, dbID){
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     open_member_info_popup_mobile(dbID, jsondata)
                 }
-                get_member_lecture_list(jsondata)
+                get_member_lecture_list(dbID)
                 console.log('success');
             }
         },
@@ -2595,7 +2592,7 @@ function delete_member_reg_data_pc(lectureID, dbID){
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     open_member_info_popup_mobile(dbID, jsondata)
                 }
-                get_member_lecture_list(jsondata)
+                get_member_lecture_list(dbID)
                 console.log('success');
             }
         },
@@ -2642,7 +2639,7 @@ function complete_member_reg_data_pc(lectureID, dbID){
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     open_member_info_popup_mobile(dbID, jsondata)
                 }
-                get_member_lecture_list(jsondata)
+                get_member_lecture_list(dbID)
                 console.log('success');
             }
         },
@@ -2689,7 +2686,7 @@ function resume_member_reg_data_pc(lectureID, dbID){
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     open_member_info_popup_mobile(dbID, jsondata)
                 }
-                get_member_lecture_list(jsondata)
+                get_member_lecture_list(dbID)
                 console.log('success');
             }
         },
@@ -2754,7 +2751,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
                       }else if($('#memberInfoPopup').css('display') == "block"){
                         open_member_info_popup_mobile(dbID,jsondata)
                       }
-                      get_member_lecture_list(jsondata)
+                      get_member_lecture_list(dbID)
 
                       $('#shade3').css('display','none')
                       $('div.lectureRefundPopup.popups input[type="number"]').val('')
@@ -2810,7 +2807,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
                         open_member_info_popup_mobile(dbID,jsondata)
                       }
                       
-                      get_member_lecture_list(jsondata)
+                      get_member_lecture_list(dbID)
 
                       $('#shade3').css('display','none')
                       $('div.lectureRefundPopup.popups input[type="number"]').val('')
@@ -2847,7 +2844,7 @@ function get_member_lecture_list(dbID){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_member_lecture_list',jsondata)
+            console.log('get_member_lecture_list',dbID)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -3214,7 +3211,7 @@ function add_member_form_func(){
                     $('#page_managemember').show();
                 }
                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
-                    get_member_lecture_list(jsondata)
+                    get_member_lecture_list(dbID)
                 }
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -3314,7 +3311,7 @@ function add_group_form_func(){
                     $('#page_managemember').show();
                 }
                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
-                    get_member_lecture_list(jsondata)
+                    get_member_lecture_list(dbID)
                 }
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -3376,7 +3373,7 @@ function add_groupmember_form_func(){
                     $('#page_managemember').show();
                 }
                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
-                    get_member_lecture_list(jsondata)
+                    get_member_lecture_list(dbID)
                 }
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
