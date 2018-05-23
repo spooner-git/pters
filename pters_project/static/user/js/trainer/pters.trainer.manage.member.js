@@ -1119,7 +1119,7 @@ function float_btn_managemember(option){
         }
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet()
-        get_group_list('dropdown')
+        get_group_list('callback', function(json){grouptype_dropdown_set(json)})
         $('#page_addmember').fadeIn('fast');
         $('#shade').hide();
         $('#shade3').fadeIn('fast');
@@ -1183,7 +1183,7 @@ function pc_add_member(option){
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
                                                 'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
-        get_group_list('dropdown')
+        get_group_list('callback', function(json){grouptype_dropdown_set(json)})
 
 
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
@@ -1202,7 +1202,7 @@ function pc_add_member(option){
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
                                                 'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
-        get_group_list('dropdown')
+        get_group_list('callback', function(json){grouptype_dropdown_set(json)})
 
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
@@ -1227,7 +1227,7 @@ function pc_add_member(option){
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
                                                 'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
-        get_group_list('dropdown')
+        get_group_list('callback', function(json){grouptype_dropdown_set(json)})
 
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
@@ -1249,7 +1249,7 @@ function pc_add_member(option){
         $('#memberSearchButton').attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        get_group_list('dropdown')
+        get_group_list('callback', function(json){grouptype_dropdown_set(json)})
         
     }else if(option == 'group'){
         initialize_add_member_sheet();

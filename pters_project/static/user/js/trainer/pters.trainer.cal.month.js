@@ -1248,10 +1248,8 @@ function classInfoProcessed(jsondata){
 
 
 function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
-	console.log('plancheck',jsondata)
 	var len = jsondata.scheduleIdArray.length;
 	var dateplans = []
-
 
 	for(var i=0; i<len; i++){
 		//var splited = classNameArray[i].split('_');
@@ -1278,7 +1276,6 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 		var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
 		if(ymd == dateinfo){
 			dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_/'+memoArray)
-			console.log(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_/'+memoArray)
 		}
 	}
 	dateplans.sort();
