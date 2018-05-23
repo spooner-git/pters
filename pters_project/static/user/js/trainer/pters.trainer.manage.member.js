@@ -99,11 +99,13 @@ if (agent.indexOf("firefox") != -1) {
         var dbID = $(this).find('._id').attr('data-dbid');
         shade_index(100)
         if($('body').width()<600){
+            get_indiv_member_info(dbID)
             open_member_info_popup_mobile(dbID, global_json);
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
         }else if($('body').width()>=600){
+            get_indiv_member_info(dbID)
             open_member_info_popup_pc(dbID, global_json);
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
@@ -2230,6 +2232,44 @@ function limit_char(e){
 
 
 //회원정보////////////////////////////////////////////////////////
+//서버로부터 회원의 기본정보를 받아온다.
+function get_indiv_member_info(dbID, callback){
+    $.ajax({
+              url: '/trainer/get_member_info_by_db_id/',
+              type:'POST',
+              data: {"member_id": dbID},
+              dataType : 'html',
+
+              beforeSend:function(){
+                  //beforeSend(); //ajax 로딩이미지 출력
+              },
+
+              success:function(data){
+                var jsondata = JSON.parse(data);
+                console.log('get_indiv_member_info: ',jsondata)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
+                    callback()
+                }
+                
+                
+              },
+
+              complete:function(){
+                //completeSend(); //ajax 로딩이미지 숨기기
+              },
+
+              error:function(){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
+              }
+        })
+}
+
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
 function open_member_info_popup_pc(dbID, jsondata){
     if(Options.language == "KOR"){
@@ -3649,16 +3689,10 @@ function initialize_add_member_sheet(){
 }
 
 
+
+
 //서버로부터 회원의 반복일정 정보를 받아온다.
 function get_indiv_repeat_info(dbID){
-    if($('#memberInfoPopup_PC').css('display')=="block"){
-        var $regHistory = $('#memberRegHistory_info_PC')
-        var option = "pc"
-    }else if($('#memberInfoPopup').css('display')=="block"){
-        var $regHistory = $('#memberRegHistory_info')
-        var option = "mobile"
-    }
-
     $.ajax({
               url: '/trainer/read_member_lecture_data/',
               type:'POST',
