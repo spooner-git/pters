@@ -44,8 +44,10 @@
       [{% for group_schedule_group_id_info in group_schedule_group_id %}"{{ group_schedule_group_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_group_name":
       [{% for group_schedule_name_info in group_schedule_name %}"{{ group_schedule_name_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "group_schedule_member_num":
-      [{% for group_schedule_member_num_info in group_schedule_member_num %}"{{ group_schedule_member_num_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_schedule_max_member_num":
+      [{% for group_schedule_max_member_num_info in group_schedule_max_member_num %}"{{ group_schedule_max_member_num_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_schedule_current_member_num":
+      [{% for group_schedule_current_member_num_info in group_schedule_current_member_num %}"{{ group_schedule_current_member_num_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_start_datetime":
       [{% for group_schedule_start_datetime_info in group_schedule_start_datetime %}"{{ group_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_end_datetime":
