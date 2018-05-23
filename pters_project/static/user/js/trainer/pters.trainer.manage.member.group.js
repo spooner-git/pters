@@ -640,7 +640,7 @@ function groupListSet(option, jsondata){ //option : current, finished
 //그룹 목록을 화면에 뿌리기
 
 //그룹원 목록을 그룹에 뿌리기
-function get_groupmember_list(group_id){
+function get_groupmember_list(group_id, use, callback){
     $.ajax({
         url:'/trainer/get_group_member/',
         data: {"group_id":group_id},
@@ -673,10 +673,16 @@ function get_groupmember_list(group_id){
                 }
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-
-                groupMemberListSet(group_id, jsondata)
-                $('div._groupmanage img._info_delete[data-groupid="'+group_id+'"]').css('opacity', 1)
+                if(use == 'callback'){
+                    callback(jsondata)
+                }else{
+                    groupMemberListSet(group_id, jsondata)
+                    $('div._groupmanage img._info_delete[data-groupid="'+group_id+'"]').css('opacity', 1)
+                }
+                
                 console.log('success');
+
+                
             }
         },
 

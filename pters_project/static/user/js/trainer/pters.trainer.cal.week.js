@@ -183,6 +183,7 @@ $(document).ready(function(){
 
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
+		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','block')
 		$('#popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
@@ -285,6 +286,7 @@ $(document).ready(function(){
 	
 	//Off 일정 클릭시 팝업 Start
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
+		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','none')
 		$('#popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
@@ -359,8 +361,8 @@ $(document).ready(function(){
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.groupTime',function(e){ //일정을 클릭했을때 팝업 표시
 		e.stopPropagation()
-		$('#popup_btn_viewGroupParticipants').show()
-		
+		toggleGroupParticipantsList('off')
+		$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 'data-groupid': $(this).attr('data-groupid')})
 		$('.pt_memo_guide_popup').css('display','block')
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
@@ -406,7 +408,6 @@ $(document).ready(function(){
 			var text = 'PT Plan'
 			break; 
 		}
-		console.log(day)
 		$('#popup_planinfo_title').text(text)
 		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 		$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
@@ -431,7 +432,8 @@ $(document).ready(function(){
 			var infoText3 = ""
 		}
 		$('#popup_info').text(infoText);
-		$('#popup_info2').html(infoText2);
+		//$('#popup_info2').html(infoText2);
+		$('#popup_info2').text('[그룹]'+info[6]+' '+time+':'+minute+yourplan)
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
 		$('#cal_popup_planinfo').attr({'schedule_id': $(this).attr('group-schedule-id'), 'data-grouptype':'group'})
 		$("#id_schedule_id").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
@@ -674,7 +676,6 @@ $(document).ready(function(){
            		var sendData = send_Data(serializeArray)
 				var url_ = '/schedule/delete_group_schedule/'
 			}
-			console.log(sendData)
 			$.ajax({
 	                url: url_,
 	                type:'POST',
@@ -687,7 +688,6 @@ $(document).ready(function(){
 	                //통신성공시 처리
 	                success:function(data){
 	                	var jsondata = JSON.parse(data)
-	                	console.log(jsondata,'--------지운거')
 	                	if(jsondata.messageArray.length>0){
 		                  	$('#errorMessageBar').show()
 		                  	$('#errorMessageText').text(jsondata.messageArray)
@@ -722,7 +722,9 @@ $(document).ready(function(){
 		$('#popup_btn_viewGroupParticipants').click(function(){
 			if(toggleGroupParticipants == 'off'){
 				toggleGroupParticipantsList('on')
-				draw_groupParticipantsList_to_popup()
+				var group_id = $(this).attr('data-groupid')
+				var max = $(this).attr('data-membernum')
+				get_groupmember_list(group_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, max)})
 			}else if(toggleGroupParticipants == 'on'){
 				toggleGroupParticipantsList('off')
 			}
@@ -730,9 +732,6 @@ $(document).ready(function(){
 	}
 
 	
-
-
-
 
 	var toggleGroupParticipants = 'off'
 	function toggleGroupParticipantsList(onoff){
