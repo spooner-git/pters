@@ -2267,14 +2267,10 @@ def add_group_repeat_schedule_confirm(request):
     group_info = None
     start_date = None
     end_date = None
-    en_dis_type = None
-    lecture_info = None
     member_info = None
-    member_name = ''
     information = None
     request.session['date'] = date
     request.session['day'] = day
-    lecture_id = ''
 
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
@@ -2339,7 +2335,7 @@ def add_group_repeat_schedule_confirm(request):
                              from_member_name=request.user.last_name + request.user.first_name,
                              to_member_name=member_info.name,
                              class_tb_id=class_id,
-                             log_info=group_info.name + ' 그룹일정', log_how='추가',
+                             log_info=group_info.name + ' 그룹 반복 일정', log_how='추가',
                              log_detail=str(start_date) + '/' + str(end_date),
                              reg_dt=timezone.now(), use=1)
             log_data.save()
@@ -2592,10 +2588,6 @@ def delete_group_repeat_schedule_logic(request):
     schedule_data = None
     start_date = None
     end_date = None
-    en_dis_type = None
-    lecture_info = None
-    member_info = None
-    member_name = ''
     repeat_schedule_info = None
     request.session['date'] = date
     request.session['day'] = day
@@ -2610,23 +2602,14 @@ def delete_group_repeat_schedule_logic(request):
             error = '반복 일정이 존재하지 않습니다'
 
     if error is None:
-        start_date = repeat_schedule_info.start_date
-        end_date = repeat_schedule_info.end_date
-        en_dis_type = repeat_schedule_info.en_dis_type
+        try:
+            group_info = GroupTb.objects.get(group_id=repeat_schedule_info.group_tb_id)
+        except ObjectDoesNotExist:
+            error = '그룹 정보를 불러오지 못했습니다.'
 
     if error is None:
-        if en_dis_type == '1':
-            try:
-                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_info.lecture_tb_id, use=1)
-            except ObjectDoesNotExist:
-                error = '회원 수강정보를 불러오지 못했습니다.'
-            if error is None:
-                try:
-                    member_info = MemberTb.objects.get(member_id=lecture_info.member_id)
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-            if error is None:
-                member_name = member_info.name
+        start_date = repeat_schedule_info.start_date
+        end_date = repeat_schedule_info.end_date
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id, start_dt__gte=timezone.now())
@@ -2643,7 +2626,9 @@ def delete_group_repeat_schedule_logic(request):
                 if error is not None:
                     raise ValidationError()
 
-                delete_repeat_schedule = DeleteRepeatScheduleTb(class_tb_id=repeat_schedule_info.class_tb_id, lecture_tb_id=repeat_schedule_info.lecture_tb_id,
+                delete_repeat_schedule = DeleteRepeatScheduleTb(class_tb_id=repeat_schedule_info.class_tb_id,
+                                                                lecture_tb_id=repeat_schedule_info.lecture_tb_id,
+                                                                group_tb_id=repeat_schedule_info.group_tb_id,
                                                                 repeat_schedule_id=repeat_schedule_info.repeat_schedule_id,
                                                                 repeat_type_cd=repeat_schedule_info.repeat_type_cd,
                                                                 week_info=repeat_schedule_info.week_info,
@@ -2672,23 +2657,22 @@ def delete_group_repeat_schedule_logic(request):
 
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
-        # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
         for member_lecture_data_info in member_lecture_data:
             member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
-        save_log_data(start_date, end_date, class_id, delete_repeat_schedule.lecture_tb_id, request.user.last_name+request.user.first_name,
-                      member_name, en_dis_type, 'LR02', request)
 
-        if en_dis_type == '1':
-            request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
-            request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-                                           + '~' + str(end_date) + ' 반복일정을 취소했습니다'
-            request.session['lecture_id'] = delete_repeat_schedule.lecture_tb_id
-        else:
-            request.session['push_title'] = ''
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
+        log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name + ' 그룹 반복 일정', log_how='삭제',
+                         log_detail=str(start_date) + '/' + str(end_date),
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
+
+        request.session['push_title'] = ''
+        request.session['push_info'] = ''
+        request.session['lecture_id'] = ''
 
         return redirect(next_page)
     else:
