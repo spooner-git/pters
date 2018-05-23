@@ -1,13 +1,4 @@
 $(document).ready(function(){
-    /*
-    //#####################페이지 들어오면 초기 시작 함수//#####################
-        DataFormattingDict('ID');
-        DataFormatting('current');
-        DataFormatting('finished');
-        memberListSet('current','name')
-        memberListSet('finished','name')
-    //#####################페이지 들어오면 초기 시작 함수//#####################
-    */
 
 
 $('form button').click(function(e){
@@ -100,13 +91,11 @@ if (agent.indexOf("firefox") != -1) {
         shade_index(100)
         if($('body').width()<600){
             get_indiv_member_info(dbID)
-            open_member_info_popup_mobile(dbID, global_json);
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
         }else if($('body').width()>=600){
             get_indiv_member_info(dbID)
-            open_member_info_popup_pc(dbID, global_json);
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
@@ -266,31 +255,9 @@ if (agent.indexOf("firefox") != -1) {
         }
 
         $(this).attr('src','/static/user/res/btn-pt-complete.png');
-        /*
-        if($('#currentMemberList').css('display') == "block" || $('#currentGroupList').css('display') == "block"){
-          var Data = DB;
-        }else if($('#finishedMemberList').css('display') == "block" || $('#finishedGroupList').css('display') == "block"){
-           var Data = DBe;  
-        }else if($('#calendar').length>0){
-            var Data = DB;
-        }
-        */
-        var Data = DB_All;
-        var userID = $('#memberId_info_PC').val();
-        if($('body').width()<600){
-            var userID = $('#memberId').val();
-        }
-        var userName = Data[userID].name;
+        var dbID = $(this).attr('data-dbid');
+        var userName = $(this).attr('data-username')
         var lectureID = $(this).attr('data-leid');
-        /*
-        $('#form_member_name').val(userName);
-        $('#form_lecture_id').val(lectureID);
-        $('#form_start_date').val(Data[userID].start)
-        $('#form_end_date').val(Data[userID].end)
-        $('form_price').val($('#regPrice').val())
-        $('#form_lecture_reg_count').val(Data[userID].regcount)
-        */
-
         if($(this).attr('data-type')=="view"){
             if($('body').width()<600){
                var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
@@ -318,7 +285,7 @@ if (agent.indexOf("firefox") != -1) {
             $('#form_note').val(myNoteRow.val())
         }else if($(this).attr('data-type')=="modify"){
             $('#form_price').val($('#form_price').val().replace(/,/gi,''))
-            send_member_modified_data();
+            send_member_modified_data(dbID);
         }else if($(this).attr('data-type')=="resend"){
 
         }
@@ -2233,7 +2200,7 @@ function limit_char(e){
 
 //회원정보////////////////////////////////////////////////////////
 //서버로부터 회원의 기본정보를 받아온다.
-function get_indiv_member_info(dbID, callback){
+function get_indiv_member_info(dbID){
     $.ajax({
               url: '/trainer/get_member_info_by_db_id/',
               type:'POST',
@@ -2253,7 +2220,12 @@ function get_indiv_member_info(dbID, callback){
                 }else{
                     $('#errorMessageBar').hide()
                     $('#errorMessageText').text('')
-                    callback()
+                    if($('body').width() < 600){
+                        open_member_info_popup_mobile(dbID, jsondata);
+                    }else{
+                        open_member_info_popup_pc(dbID, jsondata);
+                    }
+                    
                 }
                 
                 
@@ -2285,28 +2257,33 @@ function open_member_info_popup_pc(dbID, jsondata){
         var text2 = ''
         var text3 = ''
     }
-    var Data = DB_All;
+    var userName  = jsondata.lastnameInfo + jsondata.firstnameInfo;
+    var userID    = jsondata.idInfo;
+    var userBirth = jsondata.birthdayInfo;
+    var userPhone = jsondata.phoneInfo;
+    var userSex   = jsondata.sexInfo;
+    var userActivation = jsondata.emailActiveInfo; 
 
-    $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':Data[dbID].name,'data-userid':dbID,'data-dbid':Data[dbID].dbId});
-    if(Data[dbID].activation == 'True'){
+    $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
+    if(userActivation == 'True'){
     	$('button._info_baseedit').hide()
     }else{
     	$('button._info_baseedit').show()
     }
     
-    $('#memberName_info_PC').val(Data[dbID].name)
-    $('#memberName_info_lastName_PC, #form_lastname_modify').val(Data[dbID].lastName)
-    $('#memberName_info_firstName_PC, #form_firstname_modify').val(Data[dbID].firstName)
+    $('#memberName_info_PC').val(userName)
+    $('#memberName_info_lastName_PC, #form_lastname_modify').val(jsondata.lastnameInfo)
+    $('#memberName_info_firstName_PC, #form_firstname_modify').val(jsondata.firstnameInfo)
 
 
     //var member_info_PC = '\'member_info_PC\'';
     $('#memberSex_info_PC .selectboxopt').removeClass('selectbox_checked')
     $('#memberMale_info_PC, #memberFemale_info_PC').hide()
-    if(Data[dbID].sex == "M"){
+    if(userSex == "M"){
       $('#memberMale_info_PC').show()
       $('#memberFemale_info_PC').hide()
       $('#form_sex_modify').val('M');
-    }else if(Data[dbID].sex == "W"){
+    }else if(userSex == "W"){
       $('#memberFemale_info_PC').show()
       $('#memberMale_info_PC').hide()
       $('#form_sex_modify').val('W');
@@ -2326,24 +2303,16 @@ function open_member_info_popup_pc(dbID, jsondata){
         }
     });
 
-
-    if(Data[dbID].email.length==0){
-      var email = ''
-    }else{
-      var email = Data[dbID].email
-    }
-    var birth_year = Number(Data[dbID].birth.split('-')[0]) + '년'
-    var birth_month = Number(Data[dbID].birth.split('-')[1]) + '월'
-    var birth_date = Number(Data[dbID].birth.split('-')[2]) + '일'
-    if(Data[dbID].birth.length == 0){
+    if(userBirth[0].length < 1){
       var birth_year = "-"
       var birth_month = "-"
       var birth_date = "-" 
+    }else{
+        var birth_year = Number(userBirth[0].split('-')[0]) + '년'
+        var birth_month = Number(userBirth[0].split('-')[1]) + '월'
+        var birth_date = Number(userBirth[0].split('-')[2]) + '일'
     }
-    //$('#memberBirth_Year_info_PC').text(Data[dbID].birth)
-    //$('#memberBirth_Year_info_PC').text(birth_year)
-    //$('#memberBirth_Month_info_PC').text(birth_month)
-    //$('#memberBirth_Date_info_PC').text(birth_date)
+
     var yearoption = ['<option selected disabled hidden>'+'연도'+'</option>'];
     for(var i=2018; i>=1908; i--){
         yearoption.push('<option data-year="'+i+'년'+'">'+i+'년'+'</option>');
@@ -2374,37 +2343,22 @@ function open_member_info_popup_pc(dbID, jsondata){
 
     }
     
-
-
-    if(Data[dbID].birth != 'None' && Data[dbID].birth != '' ){
-      $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(Data[dbID].birth))
+    if(userBirth[0] != 'None' && userBirth[0] != '' ){
+      $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0]))
     }else{
       $('#form_birth_modify').val('')
     }
 
-    $('#form_name_modify').val(Data[dbID].name)
-    $('#form_dbid_modify').val(Data[dbID].dbId)
-    $('#form_phone_modify').val(Data[dbID].phone)
+    $('#form_name_modify').val(userName)
+    $('#form_dbid_modify').val(dbID)
+    $('#form_phone_modify').val(userPhone)
     
-    $('#deleteMemberId').val(dbID);
-    $('#memberName_info').val(Data[dbID].name)
-    $('#memberId').text(dbID).val(dbID).attr('data-dbid',Data[dbID].dbId);
-    $('#memberId_info_PC').val(dbID).attr('data-dbid',Data[dbID].dbId);
-    $('#memberPhone_info, #memberPhone_info_PC').val(Data[dbID].phone).val(Data[dbID].phone);
-    $('#memberRegCount_info_PC').val(Data[dbID].regcount).text(Data[dbID].regcount)
-    $('#memberRemainCount_info_PC').val(Data[dbID].count).text(Data[dbID].count)
-    $('#memberAvailCount_info_PC').val(Data[dbID].availCount).text(Data[dbID].availCount)
-    $('#memberFinishCount_info_PC').val(Data[dbID].regcount-Data[dbID].count).text(Data[dbID].regcount-Data[dbID].count)
-    $('#memberEmail_info, #memberEmail_info_PC').text(email).val(email)
-    $('#memberStart_info_PC').text(Data[dbID].start)
-    var end = Data[dbID].end
-    if(end == "9999년 12월 31일" ||end == "9999年12月31日"||end == "9999.12.31"){
-      var end = text2
-    }else{
-      var end = Data[dbID].end
-    }
-    $('#memberEnd_info_PC').text(end)
-    $('#comment_info, #memberComment_info_PC').val(Data[dbID].contents)
+    $('#deleteMemberId').val(userID);
+    $('#memberName_info').val(userName)
+    $('#memberId').text(userID).val(userID).attr('data-dbid', dbID);
+    $('#memberId_info_PC').val(userID).attr('data-dbid', dbID);
+    $('#memberPhone_info, #memberPhone_info_PC').val(userPhone);
+
     $('#memberInfoPopup_PC input, #memberInfoPopup_PC select, #memberName_info_lastName_PC, #memberName_info_firstName_PC').removeClass('input_available').attr('disabled',true);
     $('#memberName_info_PC').show()
     $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide()
@@ -2418,9 +2372,14 @@ function open_member_info_popup_pc(dbID, jsondata){
 
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. MOBILE
 function open_member_info_popup_mobile(dbID, jsondata){
-    var Data = DB_All;
+    var userName  = jsondata.lastnameInfo + jsondata.firstnameInfo;
+    var userID    = jsondata.idInfo;
+    var userBirth = jsondata.birthdayInfo;
+    var userPhone = jsondata.phoneInfo;
+    var userSex   = jsondata.sexInfo;
+    var userActivation = jsondata.emailActiveInfo; 
 
-    if(Data[dbID].activation == 'True'){
+    if(userActivation == 'True'){
     	$('#upbutton-modify').hide()
     }else{
     	$('#upbutton-modify').show()
@@ -2430,62 +2389,36 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#float_btn_wrap').fadeOut();
     $('#page-base').fadeOut('fast');
     $('#page-base-modifystyle').fadeIn('fast');
-    //$('#upbutton-modify').hide()
-    $('#memberName_info').val(Data[dbID].name)
-    $('#memberName_info_lastName, #form_lastname_modify').val(Data[dbID].lastName)
-    $('#memberName_info_firstName, #form_firstname_modify').val(Data[dbID].firstName)
-    $('#memberId').val(dbID).attr('data-dbid',Data[dbID].dbId)
-    $('#deleteMemberId').val(dbID).attr('data-dbid',Data[dbID].dbId)
-    $('#memberPhone_info').val(Data[dbID].phone);
-    $('#comment_info').val(Data[dbID].contents);
-    $('#memberRegCount_info').val(Data[dbID].regcount);
-    $('#memberCount_info').val(Data[dbID].count);
-    $('#memberAvailCount_info').val(Data[dbID].availCount).text(Data[dbID].availCount)
-    $('#memberFinishCount_info').val(Data[dbID].regcount-Data[dbID].count).text(Data[dbID].regcount-Data[dbID].count)
-    $('#memberEmail_info').val(Data[dbID].email);
-    $('#datepicker_info').val(Data[dbID].start);
-    $('#datepicker2_info').val(Data[dbID].end);
+    $('#memberName_info').val(userName)
+    $('#memberName_info_lastName, #form_lastname_modify').val(jsondata.lastnameInfo)
+    $('#memberName_info_firstName, #form_firstname_modify').val(jsondata.firstnameInfo)
+    $('#memberId').val(userID).attr('data-dbid', dbID)
+    $('#deleteMemberId').val(userID).attr('data-dbid',dbID)
+    $('#memberPhone_info').val(userPhone);
 
-    var dropdown_year_selected = $('#birth_year_info option[data-year="'+Data[dbID].birth.split('-')[0]+'년'+'"]')
-    var dropdown_month_selected = $('#birth_month_info option[data-month="'+Number(Data[dbID].birth.split('-')[1])+'월'+'"]')
-    var dropdown_date_selected = $('#birth_date_info option[data-date="'+Number(Data[dbID].birth.split('-')[2])+'일'+'"]')
+    var dropdown_year_selected = $('#birth_year_info option[data-year="'+userBirth[0].split('-')[0]+'년'+'"]')
+    var dropdown_month_selected = $('#birth_month_info option[data-month="'+Number(userBirth[0].split('-')[1])+'월'+'"]')
+    var dropdown_date_selected = $('#birth_date_info option[data-date="'+Number(userBirth[0].split('-')[2])+'일'+'"]')
     dropdown_year_selected.prop('selected',true)
     dropdown_month_selected.prop('selected',true)
     dropdown_date_selected.prop('selected',true)
 
 
     //회원정보 수정 Form도 현재 보는 회원 정보값으로 채워두기
-    $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(Data[dbID].birth))
-    $('#form_name_modify').val(Data[dbID].name)
-    $('#form_sex_modify').val(Data[dbID].sex)
-    $('#form_dbid_modify').val(Data[dbID].dbId)
-    $('#form_phone_modify').val(Data[dbID].phone)
+    $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0]))
+    $('#form_name_modify').val(userName)
+    $('#form_sex_modify').val(userSex)
+    $('#form_dbid_modify').val(dbID)
+    $('#form_phone_modify').val(userPhone)
 
-
-
-    var npCountImg = ""
-    /*
-    if(Data[dbID].npCount > 0){
-      var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/member/icon-np-wait.png" style="width:18px;margin:0 0 5px 3px" title="연결 대기중"> (연결 대기중)</span>'
-    }*/
-    /*
-    if(Data[dbID].npCount == 0 && Data[dbID].rjCount == 0){
-      var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-link.png" style="width:11px;margin:0 0 5px 3px" title="연결됨"> (연결됨)</span>'
-    }
-    else if(Data[dbID].rjCount > 0){
-      var npCountImg = '<span style="font-size:12px;"><img src="/static/user/res/icon-alert.png" style="width:11px;margin:0 0 5px 3px" title="연결 취소"> (연결 취소)</span>'
-    }
-    */
-
-    $('#npSituationPresent').html(npCountImg)
 
     $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked');
-    if(Data[dbID].sex == "M"){
+    if(userSex == "M"){
       $('#memberMale_info').addClass('selectbox_checked')
-    }else if(Data[dbID].sex == "W"){
+    }else if(userSex == "W"){
       $('#memberFemale_info').addClass('selectbox_checked')
     }
-    $('#memberInfoPopup').fadeIn('fast').attr({'data-username':Data[dbID].name,'data-userid':dbID});
+    $('#memberInfoPopup').fadeIn('fast').attr({'data-username': userName, 'data-userid' : userID});
     $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
     $('#memberName_info').show()
     $('#memberName_info_lastName, #memberName_info_firstName').hide()
@@ -2528,25 +2461,9 @@ function modify_member_lec_info_pc(){
 }
 
 
-function memberRegChange(option){
-    if('send_modified_data'){
-        send_member_modified_data()
-    }else if('resend_connect_request'){
-        resend_member_reg_data_pc()
-    }else if('delete_lecture'){
-        delete_member_reg_data_pc()
-    }else if('complete_lecture'){
-        complete_member_reg_data_pc()
-    }else if('resume_lecture'){
-        resume_member_reg_data_pc()
-    }else if('refund_lecture'){
-        refund_member_lecture_data()
-    }
-}
-
 
 //회원의 수정된 수강정보를 서버로 전송한다.
-function send_member_modified_data(){
+function send_member_modified_data(dbID){
     var $form = $('#update_member_lecture_info');
        $.ajax({
           url:'/trainer/update_member_lecture_info/',
@@ -2566,22 +2483,25 @@ function send_member_modified_data(){
           //통신성공시 처리
           success:function(data){
               var jsondata = JSON.parse(data)
+              console.log(jsondata)
               if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray)
               }else{
                     $('#errorMessageBar').hide()
                     $('#errorMessageText').text('')
-                    get_member_list()
                     $('#startR').attr('selected','selected')
                     $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
-                    if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
+                    get_member_list()
+                    if($('body').width() < 600){
+                        open_member_info_popup_mobile(dbID, jsondata)
                         get_member_lecture_list(jsondata)
-                    }else if($('#memberInfoPopup').css('display') == "block"){
-                        open_member_info_popup_mobile($('#memberId').val(),jsondata)
+                    }else{
+                        open_member_info_popup_pc(dbID, jsondata)
                         get_member_lecture_list(jsondata)
                     }
+                    
+                    
                     console.log('success');
               }
           },
@@ -2595,58 +2515,11 @@ function send_member_modified_data(){
 }
 
 //회원에게 재연결 요청을 전송한다.
-function resend_member_reg_data_pc(lectureID, userName){
+function resend_member_reg_data_pc(lectureID, dbID){
     $.ajax({
         url:'/trainer/resend_member_lecture_info/', 
         type:'POST',
-        data:{"lecture_id":lectureID,"member_name":userName, "next_page":'/trainer/member_manage_ajax/'},
-        dataType : 'html',
-
-        beforeSend:function(){
-            beforeSend()
-        },
-
-        //보내기후 팝업창 닫기
-        complete:function(){
-            completeSend()
-        },
-
-        //통신성공시 처리
-        success:function(data){
-            var jsondata = JSON.parse(data)
-            if(jsondata.messageArray.length>0){
-                $('#errorMessageBar').show();
-                $('#errorMessageText').text(jsondata.messageArray)
-            }
-            else{
-                $('#errorMessageBar').hide()
-                $('#errorMessageText').text('')
-              get_member_list()
-              $('#startR').attr('selected','selected')
-              if($('#memberInfoPopup_PC').css('display') == "block"){
-                open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
-              }else if($('#memberInfoPopup').css('display') == "block"){
-                open_member_info_popup_mobile($('#memberId').val(),jsondata)
-              }
-              get_member_lecture_list(jsondata)
-              console.log('success');
-            }
-        },
-
-        //통신 실패시 처리
-        error:function(){
-            $('#errorMessageBar').show()
-            $('#errorMessageText').text('통신 에러: 관리자 문의')
-        },
-    })
-}
-
-//회원의 수강정보를 삭제한다.
-function delete_member_reg_data_pc(lectureID, userName, userId){
-    $.ajax({
-        url:'/trainer/delete_member_lecture_info/', 
-        type:'POST',
-        data:{"lecture_id":lectureID, "member_name":userName, "member_id":userId, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID,"member_id":dbID, "next_page":'/trainer/member_manage_ajax/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2671,9 +2544,56 @@ function delete_member_reg_data_pc(lectureID, userName, userId){
                 get_member_list()
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
+                    open_member_info_popup_pc(dbID, jsondata)
                 }else if($('#memberInfoPopup').css('display') == "block"){
-                    open_member_info_popup_mobile($('#memberId').val(),jsondata)
+                    open_member_info_popup_mobile(dbID, jsondata)
+                }
+                get_member_lecture_list(jsondata)
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
+//회원의 수강정보를 삭제한다.
+function delete_member_reg_data_pc(lectureID, dbID){
+    $.ajax({
+        url:'/trainer/delete_member_lecture_info/', 
+        type:'POST',
+        data:{"lecture_id":lectureID, "member_id":dbID, "next_page":'/trainer/member_manage_ajax/'},
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data)
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }
+            else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                get_member_list()
+                $('#startR').attr('selected','selected')
+                if($('#memberInfoPopup_PC').css('display') == "block"){
+                    open_member_info_popup_pc(dbID, jsondata)
+                }else if($('#memberInfoPopup').css('display') == "block"){
+                    open_member_info_popup_mobile(dbID, jsondata)
                 }
                 get_member_lecture_list(jsondata)
                 console.log('success');
@@ -2689,11 +2609,11 @@ function delete_member_reg_data_pc(lectureID, userName, userId){
 }
 
 //회원의 수강정보를 완료 처리한다.
-function complete_member_reg_data_pc(lectureID, userName){
+function complete_member_reg_data_pc(lectureID, dbID){
     $.ajax({
         url:'/trainer/finish_member_lecture_info/', 
         type:'POST',
-        data:{"lecture_id":lectureID,"member_name":userName, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID,"member_id": dbID, "next_page":'/trainer/member_manage_ajax/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2718,9 +2638,9 @@ function complete_member_reg_data_pc(lectureID, userName){
                 get_member_list()
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
+                    open_member_info_popup_pc(dbID, jsondata)
                 }else if($('#memberInfoPopup').css('display') == "block"){
-                    open_member_info_popup_mobile($('#memberId').val(),jsondata)
+                    open_member_info_popup_mobile(dbID, jsondata)
                 }
                 get_member_lecture_list(jsondata)
                 console.log('success');
@@ -2736,11 +2656,11 @@ function complete_member_reg_data_pc(lectureID, userName){
 }
 
 //회원의 수강정보를 진행중으로 처리한다.
-function resume_member_reg_data_pc(lectureID, userName){
+function resume_member_reg_data_pc(lectureID, dbID){
     $.ajax({
         url:'/trainer/progress_member_lecture_info/', 
         type:'POST',
-        data:{"lecture_id":lectureID, "member_name":userName, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID, "member_id" : dbID, "next_page":'/trainer/member_manage_ajax/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2765,9 +2685,9 @@ function resume_member_reg_data_pc(lectureID, userName){
                 get_member_list()
                 $('#startR').attr('selected','selected')
                 if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
+                    open_member_info_popup_pc(dbID, jsondata)
                 }else if($('#memberInfoPopup').css('display') == "block"){
-                    open_member_info_popup_mobile($('#memberId').val(),jsondata)
+                    open_member_info_popup_mobile(dbID, jsondata)
                 }
                 get_member_lecture_list(jsondata)
                 console.log('success');
@@ -2783,7 +2703,7 @@ function resume_member_reg_data_pc(lectureID, userName){
 }
 
 //회원 환불 정보를 전송한다.
-function refund_member_lecture_data(lectureID, userName, refund_price){
+function refund_member_lecture_data(lectureID, dbID, refund_price){
     if(Options.language == "KOR"){
         var text = ' 회원님 환불 처리 되었습니다.'
         var text2 = '환불 금액을 입력해주세요.'
@@ -2805,7 +2725,7 @@ function refund_member_lecture_data(lectureID, userName, refund_price){
         $.ajax({
                 url:'/trainer/refund_member_lecture_info/', 
                 type:'POST',
-                data:{"lecture_id":lectureID, "member_name":userName, "refund_price": refund_price ,"next_page":'/trainer/member_manage_ajax/'},
+                data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price ,"next_page":'/trainer/member_manage_ajax/'},
                 dataType : 'html',
 
                 beforeSend:function(){
@@ -2830,9 +2750,9 @@ function refund_member_lecture_data(lectureID, userName, refund_price){
                       get_member_list()
                       $('#startR').attr('selected','selected')
                       if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
+                        open_member_info_popup_pc(dbID,jsondata)
                       }else if($('#memberInfoPopup').css('display') == "block"){
-                        open_member_info_popup_mobile($('#memberId').val(),jsondata)
+                        open_member_info_popup_mobile(dbID,jsondata)
                       }
                       get_member_lecture_list(jsondata)
 
@@ -2856,11 +2776,11 @@ function refund_member_lecture_data(lectureID, userName, refund_price){
 }
 
 //회원의 진행상태 연결해제를 한다.
-function disconnect_member_lecture_data(stateCode, lectureID, memberName){
+function disconnect_member_lecture_data(stateCode, lectureID, dbID){
         $.ajax({
                 url:'/trainer/update_member_lecture_view_info/', 
                 type:'POST',
-                data:{"lecture_id":lectureID, "member_name":memberName, "member_view_state_cd": stateCode ,"next_page":'/trainer/member_manage_ajax/'},
+                data:{"lecture_id":lectureID, "member_id": dbID, "member_view_state_cd": stateCode ,"next_page":'/trainer/member_manage_ajax/'},
                 dataType : 'html',
 
                 beforeSend:function(){
@@ -2885,9 +2805,9 @@ function disconnect_member_lecture_data(stateCode, lectureID, memberName){
                       get_member_list()
                       $('#startR').attr('selected','selected')
                       if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc($('#memberId_info_PC').val(),jsondata)
+                        open_member_info_popup_pc(dbID,jsondata)
                       }else if($('#memberInfoPopup').css('display') == "block"){
-                        open_member_info_popup_mobile($('#memberId').val(),jsondata)
+                        open_member_info_popup_mobile(dbID,jsondata)
                       }
                       
                       get_member_lecture_list(jsondata)
@@ -2909,14 +2829,6 @@ function disconnect_member_lecture_data(stateCode, lectureID, memberName){
 
 //회원의 등록 이력을 서버로부터 받아온다.
 function get_member_lecture_list(dbID){
-    if($('#memberInfoPopup_PC').css('display')=="block"){
-        var $regHistory = $('#memberRegHistory_info_PC')
-        var option = "pc"
-    }else if($('#memberInfoPopup').css('display')=="block"){
-        var $regHistory = $('#memberRegHistory_info')
-        var option = "mobile"
-    }
-
     $.ajax({
         url:'/trainer/read_lecture_by_class_member_ajax/', 
         type:'POST',
@@ -2942,7 +2854,11 @@ function get_member_lecture_list(dbID){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-               draw_member_lecture_list_table(jsondata, dbID, $regHistory, option) 
+                if($('body').width() < 600){
+                    draw_member_lecture_list_table(jsondata, dbID, 'mobile')
+                }else{
+                    draw_member_lecture_list_table(jsondata, dbID, 'pc') 
+                }
             }
             
         },
@@ -2956,9 +2872,19 @@ function get_member_lecture_list(dbID){
 }
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
-function draw_member_lecture_list_table(jsondata, dbID, targetHTML, option){
-    var $regHistory = targetHTML
-    if(option == "pc"){
+function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
+    if(PCorMobile == "pc"){
+        var $regHistory = $('#memberRegHistory_info_PC')
+    }else if(PCorMobile == "mobile"){
+        var $regHistory = $('#memberRegHistory_info')
+    }
+
+    if(PCorMobile == "pc"){
+        $('#memberRegCount_info_PC').text(sumCount(jsondata.regCountArray))  //전체 등록횟수
+        $('#memberRemainCount_info_PC').text(sumCount(jsondata.remCountArray))  //전체 남은횟수
+        $('#memberAvailCount_info_PC').text(sumCount(jsondata.availCountArray))  //전체 예약가능횟수
+        $('#memberFinishCount_info_PC').text(sumCount(jsondata.regCountArray)-sumCount(jsondata.remCountArray))  //전체 완료횟수
+
         var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
         for(var i=0; i<jsondata.lectureIdArray.length; i++){
             var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
@@ -2983,7 +2909,7 @@ function draw_member_lecture_list_table(jsondata, dbID, targetHTML, option){
             var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
             var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
-            var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
+            var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
             
 
@@ -3017,7 +2943,7 @@ function draw_member_lecture_list_table(jsondata, dbID, targetHTML, option){
         }
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
-    }else if(option == "mobile"){
+    }else if(PCorMobile == "mobile"){
         var result_history_html = []
         var result_history_html2 = []
         //시작, 종료, 등록횟수, 남은횟수, 
@@ -3048,7 +2974,7 @@ function draw_member_lecture_list_table(jsondata, dbID, targetHTML, option){
             var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
             var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
-            var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'"></div>'
+            var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
             var whatGroupType = '<div class="whatGroupType"><select disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
@@ -3078,15 +3004,17 @@ function draw_member_lecture_list_table(jsondata, dbID, targetHTML, option){
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
     }
+
+    function sumCount(numberarray){
+        var count = 0
+        for(var i=0; i<numberarray.length; i++){
+            count = count + Number(numberarray[i])
+        }
+        return count
+    }
 }
 
 function get_member_history_list(dbID){
-    if($('#memberInfoPopup_PC').css('display')=="block"){
-        var $regHistory = $('#memberLectureHistory_info_PC')
-    }else if($('#memberInfoPopup').css('display')=="block"){
-        var $regHistory = $('#memberLectureHistory_info')
-    }
-    
     $.ajax({
         url:'/trainer/read_member_schedule_data/', 
         type:'POST',
@@ -3112,7 +3040,12 @@ function get_member_history_list(dbID){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                draw_member_history_list_table(jsondata,$regHistory) 
+                if($('body').width() < 600){
+                    draw_member_history_list_table(jsondata, 'mobile') 
+                }else{
+                    draw_member_history_list_table(jsondata, 'pc') 
+                }
+                
             }
             
         },
@@ -3125,8 +3058,12 @@ function get_member_history_list(dbID){
     })
 }
 
-function draw_member_history_list_table(jsondata,targetHTML,option){
-    console.log('draw')
+function draw_member_history_list_table(jsondata, PCorMobile){
+    if(PCorMobile == "pc"){
+        var $regHistory = $('#memberLectureHistory_info_PC')
+    }else if(PCorMobile == "mobile"){
+        var $regHistory = $('#memberLectureHistory_info')
+    }
     if(Options.language == "KOR"){
         var text = '수행일자'
         var text2 = '진행시간'
@@ -3158,7 +3095,7 @@ function draw_member_history_list_table(jsondata,targetHTML,option){
         var text9 = 'h'
         var text10 = 'No.'
     }
-    var $regHistory = targetHTML
+
     var result_history_html = ['<div><div>'+text10+'</div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>']
     var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7}
     for(var i=jsondata.ptScheduleStartDtArray.length-1; i>=0; i--){
@@ -3712,7 +3649,12 @@ function get_indiv_repeat_info(dbID){
                 }else{
                     $('#errorMessageBar').hide()
                     $('#errorMessageText').text('')
-                    set_indiv_repeat_info(jsondata)
+                    if($('body').width() < 600){
+                        set_indiv_repeat_info(jsondata, 'mobile')
+                    }else{
+                        set_indiv_repeat_info(jsondata, 'pc')
+                    }
+                    
                 }
                 
                 
@@ -3730,10 +3672,10 @@ function get_indiv_repeat_info(dbID){
 }
 
 //서버로부터 받아온 반복일정을 회원정보 팝업에 그린다.
-function set_indiv_repeat_info(jsondata){
-    if($('#memberInfoPopup_PC').css('display')=="block"){
+function set_indiv_repeat_info(jsondata, PCorMobile){
+    if(PCorMobile == "pc"){
         var $regHistory =  $('#memberRepeat_info_PC')
-    }else if($('#memberInfoPopup').css('display')=="block"){
+    }else if(PCorMobile == "mobile"){
         var $regHistory = $('#memberRepeat_info')
     }
     if(Options.language == "KOR"){
