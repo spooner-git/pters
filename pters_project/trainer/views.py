@@ -2384,6 +2384,71 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
         return render(request, self.template_name, context)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class GetMemberInfoByDbIdView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'search_member_id_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetMemberInfoByDbIdView, self).get_context_data(**kwargs)
+        member_id = request.POST.get('member_id', '')
+        class_id = request.session.get('class_id', '')
+
+        member = ''
+        user = ''
+        error = None
+
+        if member_id == '':
+            error = '회원 ID를 입력해주세요.'
+        if error is None:
+            try:
+                user = User.objects.get(id=member_id)
+            except ObjectDoesNotExist:
+                error = '회원 ID를 확인해 주세요.'
+
+        if error is None:
+            try:
+                member = MemberTb.objects.get(member_id=member_id)
+            except ObjectDoesNotExist:
+                error = '회원 ID를 확인해 주세요.'
+
+        if error is None:
+            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
+                                                         lecture_tb__use=1, auth_cd='VIEW', use=1)
+        lecture_count = 0
+
+        if error is None:
+            for lecture_info_data in lecture_list:
+                member_lecture_list = MemberLectureTb.objects.filter(member_id=user.id,
+                                                                     lecture_tb=lecture_info_data.lecture_tb_id,
+                                                                     auth_cd='VIEW', lecture_tb__use=1)
+                lecture_count += len(member_lecture_list)
+
+        if error is None:
+            if member.reg_info is None or str(member.reg_info) != str(request.user.id):
+                if lecture_count == 0:
+                    member.sex = ''
+                    member.birthday_dt = ''
+                    member.phone = '***-****-' + member.phone[7:]
+                    member.user.email = ''
+
+            if member.birthday_dt is None or member.birthday_dt == '':
+                member.birthday_dt = ''
+            else:
+                member.birthday_dt = str(member.birthday_dt)
+
+        context['member_info'] = member
+        if error is not None:
+            logger.error(
+                request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return render(request, self.template_name, context)
+
+
 # log 삭제
 def alarm_delete_logic(request):
     log_size = request.POST.get('log_id_size')
