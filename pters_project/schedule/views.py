@@ -2068,8 +2068,6 @@ def add_group_repeat_schedule_logic(request):
     repeat_week_type = request.POST.get('repeat_day', '')
     repeat_schedule_time = request.POST.get('repeat_start_time')
     repeat_schedule_time_duration = request.POST.get('repeat_dur')
-    # date = request.POST.get('date', '')
-    # day = request.POST.get('day', '')
     en_dis_type = request.POST.get('en_dis_type', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
