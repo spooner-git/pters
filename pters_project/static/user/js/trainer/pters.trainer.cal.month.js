@@ -52,55 +52,26 @@ $(document).ready(function(){
 
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
     $(document).on('click','.memberNameForInfoView',function(){
-    	var clickedDbid = $(this).attr('data-dbid')
-    	var scheduleComplete = $(this).attr('data-schedule-check')
-    	$.ajax({
-              url: '/trainer/member_manage_ajax/',
-			  dataType : 'html',
-
-              beforeSend:function(){
-              	AjaxBeforeSend();
-              },
-
-              success:function(data){
-              	$('.popups').hide()
-              	var jsondata = JSON.parse(data)
-              	
-              	DB=[]
-              	DBe=[]
-		        if(jsondata.dIdArray.indexOf(clickedDbid)!=-1){
-		    		var Data = DB
-		    	}else if(jsondata.finishDidArray.indexOf(clickedDbid)!=-1){
-		    		var Data = DBe
-		    	}
-		        DataFormattingDict('DBID', jsondata);
-		        if($('body').width()<600){
-		            open_member_info_popup_mobile(clickedDbid,jsondata)
-		            $('#calendar').css('display','none')
-		            get_indiv_repeat_info(clickedDbid)
-		            get_member_lecture_list(clickedDbid)
-		            get_member_history_list(clickedDbid)
-		            shade_index(100)
-		        }else if($('body').width()>=600){
-		            open_member_info_popup_pc(clickedDbid,jsondata)
-		            get_indiv_repeat_info(clickedDbid)
-		            get_member_lecture_list(clickedDbid)
-		            get_member_history_list(clickedDbid)
-		            $('#info_shift_base, #info_shift_lecture').show()
-		            $('#info_shift_schedule, #info_shift_history').hide()
-		            $('#select_info_shift_lecture').addClass('button_active')
-		            $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active')
-		        }
-			  },
-
-              complete:function(){
-              	AjaxCompleteSend();
-              },
-
-              error:function(){
-                console.log('server error')
-              }
-        })	
+    	var dbID = $(this).attr('data-dbid')
+    	//$('.popups').hide()
+    	if($('body').width()<600){
+    		$('.popups').hide()
+    		$('#calendar').css('display','none')
+            get_indiv_member_info(dbID)
+            get_indiv_repeat_info(dbID);
+            get_member_lecture_list(dbID);
+            get_member_history_list(dbID);
+            shade_index(100)
+        }else if($('body').width()>=600){
+            get_indiv_member_info(dbID)
+            get_indiv_repeat_info(dbID);
+            get_member_lecture_list(dbID);
+            get_member_history_list(dbID);
+            $('#info_shift_base, #info_shift_lecture').show();
+            $('#info_shift_schedule, #info_shift_history').hide();
+            $('#select_info_shift_lecture').addClass('button_active')
+            $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active')
+        }
     });
 
 
@@ -185,7 +156,7 @@ $(document).ready(function(){
 			var selectedDate = $('.popup_ymdText').text()
 			var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
 			var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0]
-			var selectedPerson = '<span class="memberNameForInfoView" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
+			var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+$(this).attr('data-dbid')+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
 			var selectedMemo = $(this).attr('data-memo')
 			if($(this).attr('data-memo') == undefined){
 				var selectedMemo = ""
@@ -1277,10 +1248,14 @@ function classInfoProcessed(jsondata){
 
 
 function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
+	console.log('plancheck',jsondata)
 	var len = jsondata.scheduleIdArray.length;
 	var dateplans = []
+
+
 	for(var i=0; i<len; i++){
 		//var splited = classNameArray[i].split('_');
+		var dbID = jsondata.classTimeArray_member_id[i]
 		var scheduleID = jsondata.scheduleIdArray[i]
 		var classLectureID = jsondata.classArray_lecture_id[i]
 		var scheduleFinish = jsondata.scheduleFinishArray[i]
@@ -1302,7 +1277,8 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 		var name = jsondata.classTimeArray_member_name[i]
 		var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
 		if(ymd == dateinfo){
-			dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_/'+memoArray)
+			dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_/'+memoArray)
+			console.log(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_/'+memoArray)
 		}
 	}
 	dateplans.sort();
@@ -1332,10 +1308,10 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 				var morningday = "오후"
 			}
 			if(splited[10]==1){
-				htmltojoin.push('<div class="plan_raw" title="완료 된 일정" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+				htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
 
 			}else if(splited[10] == 0){
-				htmltojoin.push('<div class="plan_raw" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
+				htmltojoin.push('<div class="plan_raw" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
 			}
 		}
 	}else{
