@@ -433,10 +433,10 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').html(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('off-schedule-id'))
-		$("#id_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
-		$("#id_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
-		$("#id_schedule_id_finish").val($(this).attr('off-schedule-id')); // shcedule 정보 저장
+		$('#cal_popup_planinfo').attr('schedule_id',$(this).attr('group-schedule-id'))
+		$("#id_schedule_id").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
+		$("#id_schedule_id_modify").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
+		$("#id_schedule_id_finish").val($(this).attr('group-schedule-id')); // shcedule 정보 저장
 		$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_repeat_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
@@ -637,150 +637,80 @@ $(document).ready(function(){
 		                  AjaxCompleteSend();
 		                },
 		            })
-				}/*else if(deleteTypeSelect=='repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){ //회원정보창의 반복일정 삭제
-					var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
-					$.ajax({
-		                url:'/schedule/delete_repeat_schedule/',
-		                type:'POST',
-		                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/member_manage_ajax/'},
-		                dataType:'html',
-
-		                beforeSend:function(){
-		                 	AjaxBeforeSend();
-		                },
-
-		                //통신성공시 처리
-		                success:function(data){
-			                  var jsondata = JSON.parse(data);
-			                  if(jsondata.messageArray.length>0){
-				                  	$('#errorMessageBar').show()
-				                  	$('#errorMessageText').text(jsondata.messageArray)
-					          }else{
-									if(jsondata.push_info != ''){
-										for (var i=0; i<jsondata.pushArray.length; i++){
-											send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-										}
-									}
-			                  		var userID = $('#memberId_info_PC').text()
-			                  		open_member_info_popup_pc(userID,jsondata)
-			                  		get_indiv_repeat_info(jsondata)
-			                  		get_member_lecture_list(jsondata)
-	                        		get_member_history_list(jsondata)
-			                  		close_info_popup('cal_popup_plandelete')
-				                  	//close_info_popup('page-addplan')
-				                  	AjaxCompleteSend();
-					          }
-		                  },
-
-		                //보내기후 팝업창 닫기
-		                complete:function(){
-		                	if($('body').width()>=600){
-		                		$('#calendar').css('position','relative')	
-		                	}
-		                	//deleteTypeSelect = ''
-		  					addTypeSelect = 'ptadd'
-		  					shade_index(-100)
-		                  },
-
-		                //통신 실패시 처리
-		                error:function(){
-		                  alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
-		                  close_info_popup('cal_popup_plandelete')
-		                  //close_info_popup('page-addplan')
-		                  AjaxCompleteSend();
-		                },
-		            })
-				}*/else if(deleteTypeSelect == "ptoffdelete"){
-					var $ptdelform = $('#daily-pt-delete-form');
-					var $offdelform = $('#daily-off-delete-form');
-					//$('body').css('overflow-y','overlay');
+				}else if(deleteTypeSelect == "ptoffdelete"){
 					if(schedule_on_off==1){
 						//PT 일정 삭제시
-						$.ajax({
-		                    url:'/schedule/delete_schedule/',
-		                    type:'POST',
-		                    data:$ptdelform.serialize(),
-
-		                    beforeSend:function(){
-		                     	AjaxBeforeSend();
-		                    },
-
-		                    //통신성공시 처리
-		                    success:function(data){
-		                    	var jsondata = JSON.parse(data)
-		                    	console.log(jsondata,'--------지운거')
-		                    	if(jsondata.messageArray.length>0){
-				                  	$('#errorMessageBar').show()
-				                  	$('#errorMessageText').text(jsondata.messageArray)
-					          	}else{
-
-									if(jsondata.push_info != ''){
-										for (var i=0; i<jsondata.pushArray.length; i++){
-                                        	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-										}
-									}
-					          		close_info_popup('cal_popup_plandelete')
-			                      	set_schedule_time(jsondata)
-			                      	fake_show()
-			                      	console.log('success')
-					          	}
-		                      },
-
-		                    //보내기후 팝업창 닫기
-		                    complete:function(){
-		                    	ajax_block_during_delete_weekcal = true;
-		                    	shade_index(-100)
-		                    	AjaxCompleteSend();
-		                      },
-
-		                    //통신 실패시 처리
-		                    error:function(){
-		                    	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
-		                      console.log("error")
-		                    },
-		                })
+						send_plan_delete('pt')
 					}else{
-						$.ajax({
-		                    url:'/schedule/delete_schedule/',
-		                    type:'POST',
-		                    data:$offdelform.serialize(),
-
-		                    beforeSend:function(){
-		                    	AjaxBeforeSend();
-		                    },
-
-		                    //통신성공시 처리
-		                    success:function(data){
-		                    	var jsondata = JSON.parse(data)
-		                    	console.log(jsondata,'--------지운거')
-		                    	if(jsondata.messageArray.length>0){
-				                  	$('#errorMessageBar').show()
-				                  	$('#errorMessageText').text(jsondata.messageArray)
-					          	}else{
-					          		close_info_popup('cal_popup_plandelete')
-			                      	AjaxCompleteSend();
-			                      	set_schedule_time(jsondata)
-			                      	fake_show()
-			                      	console.log('success')
-					          	}
-		                      },
-
-		                     //보내기후 팝업창 닫기
-		                    complete:function(){
-		                    	ajax_block_during_delete_weekcal = true;
-		                      	shade_index(-100)
-		                      },
-
-		                    //통신 실패시 처리
-		                    error:function(){
-		                    	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
-		                      console.log("error")
-		                    },
-		                })
+						//OFF 일정 삭제
+						send_plan_delete('off')
 					}
 				}	
 			}
 		})
+
+		function send_plan_delete(option){
+			if(option == "pt"){
+				var $form = $('#daily-pt-delete-form');
+				var serializeArray = $form.serializeArray();
+           		var sendData = send_Data(serializeArray)
+				var url_ = '/schedule/delete_schedule/'
+			}else if(option = "off"){
+				var $form = $('#daily-off-delete-form');
+				var serializeArray = $form.serializeArray();
+           		var sendData = send_Data(serializeArray)
+				var url_ = '/schedule/delete_schedule/'
+			}else if(option == "group"){
+				var $form = $('#daily-pt-delete-form');
+				var serializeArray = $form.serializeArray();
+           		var sendData = send_Data(serializeArray)
+				var url_ = '/schedule/delete_group_schedule/'
+			}
+			console.log($form.serializeArray())
+			$.ajax({
+	                url: url_,
+	                type:'POST',
+	                data: sendData,
+
+	                beforeSend:function(){
+	                 	AjaxBeforeSend();
+	                },
+
+	                //통신성공시 처리
+	                success:function(data){
+	                	var jsondata = JSON.parse(data)
+	                	console.log(jsondata,'--------지운거')
+	                	if(jsondata.messageArray.length>0){
+		                  	$('#errorMessageBar').show()
+		                  	$('#errorMessageText').text(jsondata.messageArray)
+			          	}else{
+
+							if(jsondata.push_info != ''){
+								for (var i=0; i<jsondata.pushArray.length; i++){
+	                            	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+								}
+							}
+			          		close_info_popup('cal_popup_plandelete')
+	                      	set_schedule_time(jsondata)
+	                      	fake_show()
+	                      	console.log('success')
+			          	}
+	                  },
+
+	                //보내기후 팝업창 닫기
+	                complete:function(){
+	                	ajax_block_during_delete_weekcal = true;
+	                	shade_index(-100)
+	                	AjaxCompleteSend();
+	                  },
+
+	                //통신 실패시 처리
+	                error:function(){
+	                	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
+	                  console.log("error")
+	                },
+	            })
+		}
 
 		$('#popup_btn_viewGroupParticipants').click(function(){
 			if(toggleGroupParticipants == 'off'){
@@ -791,6 +721,11 @@ $(document).ready(function(){
 			}
 		})
 	}
+
+	
+
+
+
 
 	var toggleGroupParticipants = 'off'
 	function toggleGroupParticipantsList(onoff){
@@ -1761,7 +1696,6 @@ function ajaxClassTime(reference){
 		  },
 
 		  success:function(data){
-		  	console.log(data)
 			var jsondata = JSON.parse(data);
 			if(jsondata.messageArray.length>0){
 				$('#errorMessageBar').show()
