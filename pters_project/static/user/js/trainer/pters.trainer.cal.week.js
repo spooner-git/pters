@@ -1761,7 +1761,6 @@ function ajaxClassTime(reference){
 		  },
 
 		  success:function(data){
-		  	console.log(data)
 			var jsondata = JSON.parse(data);
 			if(jsondata.messageArray.length>0){
 				$('#errorMessageBar').show()
