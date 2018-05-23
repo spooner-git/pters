@@ -38,10 +38,15 @@ urlpatterns = [
 
     # 그룹 일정 추가 - hkkim - 2018.05.21
     url(r'^add_group_schedule/$', views.add_group_schedule_logic, name='add_group_schedule'),
+    # 그룹 일정 삭제 - hkkim - 2018.05.23
     url(r'^delete_group_schedule/$', views.delete_group_schedule_logic, name='delete_group_schedule'),
     # 그룹 일정에 회원 추가 - hkkim - 2018.05.22
     url(r'^add_member_group_schedule/$', views.add_member_group_schedule_logic, name='add_member_group_schedule'),
 
+    # 그룹 반복 일정 추가 - hkkim - 2018.05.23
     url(r'^add_group_repeat_schedule/$', views.add_group_repeat_schedule_logic, name='add_group_repeat_schedule'),
+    # 그룹 반복 일정 삭제 - hkkim - 2018.05.23
+    url(r'^delete_group_repeat_schedule/$', views.delete_group_repeat_schedule_logic, name='delete_group_repeat_schedule'),
+
 
 ]
