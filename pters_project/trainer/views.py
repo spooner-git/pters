@@ -623,14 +623,20 @@ def get_member_data(context, class_id, member_id, user_id):
                         if member_data_finish.group_info == '':
                             member_data_finish.group_info = '그룹'
                         else:
-                            member_data_finish.group_info += '/그룹'
+                            if '그룹' in member_data_finish.group_info:
+                                member_data_finish.group_info = member_data_finish.group_info
+                            else:
+                                member_data_finish.group_info += '/그룹'
                     else:
                         if member_data_finish.group_info == '':
                             member_data_finish.group_info = '1:1'
                         else:
-                            member_data_finish.group_info += '/1:1'
+                            if '1:1' in member_data_finish.group_info:
+                                member_data_finish.group_info = member_data_finish.group_info
+                            else:
+                                member_data_finish.group_info = '1:1/' + member_data_finish.group_info
 
-                    lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                    lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data_finish.member_id,
                                                                            lecture_tb=lecture_info.lecture_id,
                                                                            auth_cd='VIEW', lecture_tb__use=1, use=1).count()
 
@@ -5433,20 +5439,16 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
             for member_info in all_member:
 
                 member_data = copy.copy(member_info)
-                member_data_finish = copy.copy(member_info)
 
                 try:
                     user = User.objects.get(id=member_info.member_id)
                     if user.is_active:
                         member_data.is_active = True
-                        member_data_finish.is_active = True
                     else:
                         if str(member_info.reg_info) == str(self.request.user.id):
                             member_data.is_active = False
-                            member_data_finish.is_active = False
                         else:
                             member_data.is_active = True
-                            member_data_finish.is_active = True
 
                 except ObjectDoesNotExist:
                     error = None
@@ -5631,19 +5633,18 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
 
                 lecture_finish_check = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                lecture_count = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                              lecture_tb__member_id=member_data.member_id,
                                                              lecture_tb__state_cd='IP', auth_cd='VIEW',
-                                                             lecture_tb__use=1, use=1)
+                                                             lecture_tb__use=1, use=1).count()
 
                 lecture_finish_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                                     lecture_tb__member_id=member_data.member_id,
                                                                     auth_cd='VIEW', lecture_tb__use=1,
                                                                     use=1).exclude(lecture_tb__state_cd='IP')
 
-                if len(lecture_list) == 0:
-                    if len(lecture_finish_list) > 0:
-                        lecture_finish_check = 1
+                if lecture_count == 0 and len(lecture_finish_list) > 0:
+                    lecture_finish_check = 1
 
                 if lecture_finish_check > 0:
                     member_data.rj_lecture_counts = 0
@@ -5686,12 +5687,18 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
                             if member_data.group_info == '':
                                 member_data.group_info = '그룹'
                             else:
-                                member_data.group_info += '/그룹'
+                                if '그룹' in member_data.group_info:
+                                    member_data.group_info = member_data.group_info
+                                else:
+                                    member_data.group_info += '/그룹'
                         else:
                             if member_data.group_info == '':
                                 member_data.group_info = '1:1'
                             else:
-                                member_data.group_info += '/1:1'
+                                if '1:1' in member_data.group_info:
+                                    member_data.group_info = member_data.group_info
+                                else:
+                                    member_data.group_info = '1:1/' + member_data.group_info
 
                         lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                                lecture_tb=lecture_info.lecture_id,
