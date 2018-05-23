@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+      //바로 실행
+      get_current_member_list()
+      get_current_group_list()
+      //
+
+
       //유저가 터치인지 마우스 사용인지 알아낸다
       var touch_or_mouse = ""
            window.addEventListener('touchstart',function(){
@@ -498,9 +504,12 @@ $(document).ready(function(){
       $(document).on('click',"#members_mobile li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
           if($(this).attr("data-grouptype") == "personal"){
-            get_repeat_info($(this).attr('data-lectureid'),$(this).attr('data-dbid'))
             $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+            $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
+            $("#id_member_id").val($(this).attr('data-dbid'));
+            $("#id_lecture_id").val($(this).attr('data-lectureid'));
+            $("#id_member_name").val($(this).text());
           }else if($(this).attr("data-grouptype" == "group")){
             /*
             get_repeat_info($(this).attr('data-lectureid'),$(this).attr('data-dbid'))
@@ -956,8 +965,6 @@ function float_btn_addplan(option){
         }
 
     }else if(option == 1){
-        get_current_member_list('callback', function(jsondata){set_member_group_dropdown_list(jsondata, 'personal')})
-        get_current_group_list('callback', function(jsondata){set_member_group_dropdown_list(jsondata, 'group')})
         clear_pt_off_add_popup()
         open_pt_off_add_popup('ptadd')
         shade_index(100)
@@ -1035,7 +1042,8 @@ function clear_pt_off_add_popup(){
     $('#submitBtn_pt').removeClass('submitBtnActivated')
 
     //회원명 비우기
-    $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원명 선택</span>").val("");
+    $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원명 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
+    
 
     //예약가능 횟수 비우기
     $("#countsSelected,.countsSelected").text("")
@@ -1080,17 +1088,17 @@ function clear_pt_off_add_popup(){
 function get_current_member_list(use, callback){
     $.ajax({
           url: '/trainer/get_member_ing_list/',
-          type:'POST',
           dataType : 'html',
 
           beforeSend:function(){
               //beforeSend(); //ajax 로딩이미지 출력
-              $('#membersSelected span').hide()
-              $('#membersSelected img.ajaxloading_dropdown').show()
+              $('#membersSelected span, #membersSelected_mini span').hide()
+              $('#membersSelected img.ajaxloading_dropdown, #membersSelected_mini img.ajaxloading_dropdown').show()
           },
 
           success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(jsondata)
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
               $('#errorMessageText').text(jsondata.messageArray)
@@ -1098,15 +1106,15 @@ function get_current_member_list(use, callback){
               if(use == "callback"){
                 callback(jsondata)
               }else{
-
+                set_member_dropdown_list(jsondata)
               }
             }
           },
 
           complete:function(){
             //completeSend(); //ajax 로딩이미지 숨기기
-            $('#membersSelected span').show()
-            $('#membersSelected img.ajaxloading_dropdown').hide()
+              $('#membersSelected span, #membersSelected_mini span').show()
+              $('#membersSelected img.ajaxloading_dropdown, #membersSelected_mini img.ajaxloading_dropdown').hide()
           },
 
           error:function(){
@@ -1120,17 +1128,17 @@ function get_current_member_list(use, callback){
 function get_current_group_list(use, callback){
     $.ajax({
           url: '/trainer/get_group_ing_list/',
-          type:'POST',
           dataType : 'html',
 
           beforeSend:function(){
               //beforeSend(); //ajax 로딩이미지 출력
-              $('#membersSelected span').hide()
-              $('#membersSelected img.ajaxloading_dropdown').show()
+              $('#membersSelected span, #membersSelected_mini span').hide()
+              $('#membersSelected img.ajaxloading_dropdown, #membersSelected_mini img.ajaxloading_dropdown').show()
           },
 
           success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(jsondata)
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
               $('#errorMessageText').text(jsondata.messageArray)
@@ -1138,15 +1146,15 @@ function get_current_group_list(use, callback){
               if(use == "callback"){
                 callback(jsondata)
               }else{
-
+                set_group_dropdown_list(jsondata)
               }
             }
           },
 
           complete:function(){
             //completeSend(); //ajax 로딩이미지 숨기기
-            $('#membersSelected span').show()
-            $('#membersSelected img.ajaxloading_dropdown').hide()
+              $('#membersSelected span, #membersSelected_mini span').show()
+              $('#membersSelected img.ajaxloading_dropdown, #membersSelected_mini img.ajaxloading_dropdown').hide()
           },
 
           error:function(){
@@ -1156,23 +1164,16 @@ function get_current_group_list(use, callback){
         })
 }
 
-function set_member_group_dropdown_list(jsondata, option){
+function set_member_dropdown_list(jsondata){
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
-    var memberSize = json_personal.memberIdArray.length;
-    var groupSize = 0;
+    var memberSize = jsondata.dIdArray.length;
     var member_array_mobile = [];
     var member_array_pc = [];
-    memberMobileList.empty();
-    memberPcList.empty();
     if(memberSize>0){
-      for(var j=0; j<groupSize; j++){
-        member_array_mobile[i] = '<li><a id="member_mobile_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="group" data-groupid="" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
-        member_array_pc[i] = '<li><a id="member_pc_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="group" data-groupid="" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
-      }
-      for(var i=groupSize; i<memberSize; i++){
-        member_array_mobile[i] = '<li><a id="member_mobile_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="personal" data-lecturecount="'+jsondata.memberAvailCountArray[i]+'" data-dbid="'+jsondata.memberIdArray[i]+'" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
-        member_array_pc[i] = '<li><a id="member_pc_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="personal" data-lecturecount="'+jsondata.memberAvailCountArray[i]+'" data-dbid="'+jsondata.memberIdArray[i]+'" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
+      for(var i=0; i<memberSize; i++){
+        member_array_mobile[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.availCountArray[i]+'" data-dbid="'+jsondata.dIdArray[i]+'">'+jsondata.nameArray[i]+'</a></li>';
+        member_array_pc[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.availCountArray[i]+'" data-dbid="'+jsondata.dIdArray[i]+'">'+jsondata.nameArray[i]+'</a></li>';
       }
     }else if(memberSize == 0){
         member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
@@ -1180,47 +1181,33 @@ function set_member_group_dropdown_list(jsondata, option){
     }
     var member_arraySum_mobile = member_array_mobile.join('');
     var member_arraySum_pc = member_array_pc.join('');
-    if(option == 'personal'){
-      memberMobileList.append(member_arraySum_mobile);
-      memberPcList.append(member_arraySum_pc);
-    }else if(option == 'group'){
-      memberMobileList.prepend(member_arraySum_mobile);
-      memberPcList.prepend(member_arraySum_pc);
+    memberMobileList.append(member_arraySum_mobile);
+    memberPcList.append(member_arraySum_pc);
+}
+
+function set_group_dropdown_list(jsondata){
+    var memberMobileList = $('#members_mobile');
+    var memberPcList = $('#members_pc');
+    var memberSize = jsondata.group_id.length;
+    var member_array_mobile = [];
+    var member_array_pc = [];
+    if(memberSize>0){
+      for(var i=0; i<memberSize; i++){
+        member_array_mobile[i] = '<li><a  data-grouptype="group" data-membernum="'+jsondata.member_num+'" data-groupid="'+jsondata.group_id+'">[그룹] '+jsondata.name[i]+'</a></li>';
+        member_array_pc[i] = '<li><a  data-grouptype="group" data-membernum="'+jsondata.member_num+'" data-groupid="'+jsondata.group_id+'">[그룹] '+jsondata.name[i]+'</a></li>';
+      }
+    }else if(memberSize == 0){
+        member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
+        member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
     }
-    
+    var member_arraySum_mobile = member_array_mobile.join('');
+    var member_arraySum_pc = member_array_pc.join('');
+    memberMobileList.prepend(member_arraySum_mobile);
+    memberPcList.prepend(member_arraySum_pc);
 }
 
 
 
-//회원 정보 ajax 연동을 위해 구현 - hk.kim 180110
-function addPtMemberListSet(jsondata){
-  var memberMobileList = $('#members_mobile');
-  var memberPcList = $('#members_pc');
-  var memberSize = jsondata.memberIdArray.length;
-  var groupSize = 0;
-  var member_array_mobile = [];
-  var member_array_pc = [];
-  memberMobileList.empty();
-  memberPcList.empty();
-  if(memberSize>0){
-    for(var j=0; j<groupSize; j++){
-      member_array_mobile[i] = '<li><a id="member_mobile_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="group" data-groupid="" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
-      member_array_pc[i] = '<li><a id="member_pc_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="group" data-groupid="" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
-    }
-    for(var i=groupSize; i<memberSize; i++){
-      member_array_mobile[i] = '<li><a id="member_mobile_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="personal" data-lecturecount="'+jsondata.memberAvailCountArray[i]+'" data-dbid="'+jsondata.memberIdArray[i]+'" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
-      member_array_pc[i] = '<li><a id="member_pc_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="personal" data-lecturecount="'+jsondata.memberAvailCountArray[i]+'" data-dbid="'+jsondata.memberIdArray[i]+'" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
-    }
-  }else if(memberSize == 0){
-      member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
-      member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
-  }
-  
-  var member_arraySum_mobile = member_array_mobile.join('');
-  var member_arraySum_pc = member_array_pc.join('');
-  memberMobileList.html(member_arraySum_mobile);
-  memberPcList.html(member_arraySum_pc);
-}
 
 
 function ajaxRepeatConfirmSend(){
@@ -1318,7 +1305,7 @@ function clear_start_dur_dropdown(){
 
 
 function get_repeat_info(lecture_id, member_id){
-    if(addTypeSelect == "repeatptadd" || addTypeSelect == "ptadd"){
+    if(addTypeSelect == "repeatptadd"){
       var url_ = '/trainer/read_member_lecture_data_from_schedule/'
       var data_ = {"lecture_id": lecture_id, "member_id": member_id}
       var fill_option = 'class'
@@ -1369,12 +1356,7 @@ function get_repeat_info(lecture_id, member_id){
             selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
             selectedMemberNameArray = jsondata.memberNameArray
             fill_repeat_info(fill_option);
-            $("#countsSelected,.countsSelected").text(selectedMemberAvailCountArray[0]);
-            if(addTypeSelect == "ptadd"){
-              $("#id_member_id").val(selectedMemberIdArray[0]);
-              $("#id_lecture_id").val(selectedMemberLectureIdArray[0]);
-              $("#id_member_name").val(selectedMemberNameArray[0]);
-            }else if(addTypeSelect == "repeatptadd"){
+            if(addTypeSelect == "repeatptadd"){
               $("#id_repeat_member_id").val(selectedMemberIdArray[0]);
               $("#id_repeat_lecture_id").val(selectedMemberLectureIdArray[0]);
               $("#id_repeat_member_name").val(selectedMemberNameArray[0]);
@@ -1728,7 +1710,7 @@ function clear_pt_off_add_popup_mini(){
   $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected').html("<span style='color:#cccccc;'>선택</span>").val("");
 
   //회원 선택 핑크 하단선 초기화
-  $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원명 선택</span>").val("");
+  $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원명 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
 
   //예약가능 횟수 내용 초기화
   $("#countsSelected,.countsSelected").text("")
