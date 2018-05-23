@@ -956,6 +956,8 @@ function float_btn_addplan(option){
         }
 
     }else if(option == 1){
+        get_current_member_list('callback', function(jsondata){set_member_group_dropdown_list(jsondata, 'personal')})
+        get_current_group_list('callback', function(jsondata){set_member_group_dropdown_list(jsondata, 'group')})
         clear_pt_off_add_popup()
         open_pt_off_add_popup('ptadd')
         shade_index(100)
@@ -1074,61 +1076,119 @@ function clear_pt_off_add_popup(){
     $('._REPEAT_ADD_wrap').css('display','none')
 }
 
-/*
-//일정 정보창 닫기
-function close_info_popup(option){
-  if(option=="cal_popup_planinfo"){
-      $("#"+option).css({'display':'none'})
-      if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
-        shade_index(100)
-      }else{
-        shade_index(-100)
-      }
-      //$('body').css('overflow-y','overlay');
-  }
-  else if(option =="cal_popup_plandelete"){
-      $("#"+option).css({'display':'none'})
-      console.log($('#pshade').css('z-index'))
-      if($('#pshade').css('z-index')==200 || $('#mshade').css('z-index') == 200){
-        shade_index(100)
-      }else{
-        shade_index(-100)
-      }
-      
-      //$('body').css('overflow-y','overlay');
-  }
-  else if(option =="page-addplan"){
-      $('#'+option).css('display','none')
-      $('#calendar').css('position','relative')
-      shade_index(-100)
-  }
-  else if(option =="cal_popup_repeatconfirm"){
-      $('#'+option).css('display','none')
-      //$('#calendar').css('position','relative')
-      if($('#pshade').css('z-index') == 200 || $('#mshade').css('z-index') == 200){
-        shade_index(100)
-      }else{
-        shade_index(-100)
-      }
-      if($('body').width()>=600){
-          $('#calendar').css('position','relative')
-      }else{
-          $('._calmonth').css({'height':'90%','position':'fixed'})
-          $('body').css('overflow-y','overlay');
-          $('#page-addplan').hide('fast','swing');
-          $('#float_btn_wrap').fadeIn();
-          $('#float_btn').removeClass('rotate_btn');
-          $('#page-base').show();
-          $('#page-base-addstyle').hide();
-      }
-  }
-  else if(option = "cal_popup_plancheck"){
-      $('#'+option).css('display','none')
-      shade_index(-100)
-  }
-}
-*/
 
+function get_current_member_list(use, callback){
+    $.ajax({
+          url: '/trainer/get_member_ing_list/',
+          type:'POST',
+          dataType : 'html',
+
+          beforeSend:function(){
+              //beforeSend(); //ajax 로딩이미지 출력
+              $('#membersSelected span').hide()
+              $('#membersSelected img.ajaxloading_dropdown').show()
+          },
+
+          success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+              $('#errorMessageBar').show()
+              $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+              if(use == "callback"){
+                callback(jsondata)
+              }else{
+
+              }
+            }
+          },
+
+          complete:function(){
+            //completeSend(); //ajax 로딩이미지 숨기기
+            $('#membersSelected span').show()
+            $('#membersSelected img.ajaxloading_dropdown').hide()
+          },
+
+          error:function(){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
+          }
+        }) 
+}
+
+
+function get_current_group_list(use, callback){
+    $.ajax({
+          url: '/trainer/get_group_ing_list/',
+          type:'POST',
+          dataType : 'html',
+
+          beforeSend:function(){
+              //beforeSend(); //ajax 로딩이미지 출력
+              $('#membersSelected span').hide()
+              $('#membersSelected img.ajaxloading_dropdown').show()
+          },
+
+          success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+              $('#errorMessageBar').show()
+              $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+              if(use == "callback"){
+                callback(jsondata)
+              }else{
+
+              }
+            }
+          },
+
+          complete:function(){
+            //completeSend(); //ajax 로딩이미지 숨기기
+            $('#membersSelected span').show()
+            $('#membersSelected img.ajaxloading_dropdown').hide()
+          },
+
+          error:function(){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
+          }
+        })
+}
+
+function set_member_group_dropdown_list(jsondata, option){
+    var memberMobileList = $('#members_mobile');
+    var memberPcList = $('#members_pc');
+    var memberSize = json_personal.memberIdArray.length;
+    var groupSize = 0;
+    var member_array_mobile = [];
+    var member_array_pc = [];
+    memberMobileList.empty();
+    memberPcList.empty();
+    if(memberSize>0){
+      for(var j=0; j<groupSize; j++){
+        member_array_mobile[i] = '<li><a id="member_mobile_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="group" data-groupid="" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
+        member_array_pc[i] = '<li><a id="member_pc_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="group" data-groupid="" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
+      }
+      for(var i=groupSize; i<memberSize; i++){
+        member_array_mobile[i] = '<li><a id="member_mobile_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="personal" data-lecturecount="'+jsondata.memberAvailCountArray[i]+'" data-dbid="'+jsondata.memberIdArray[i]+'" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
+        member_array_pc[i] = '<li><a id="member_pc_'+jsondata.memberLectureIdArray[i]+'" data-grouptype="personal" data-lecturecount="'+jsondata.memberAvailCountArray[i]+'" data-dbid="'+jsondata.memberIdArray[i]+'" data-lectureid='+jsondata.memberLectureIdArray[i]+'>'+jsondata.memberNameArray[i]+'</a></li>';
+      }
+    }else if(memberSize == 0){
+        member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
+        member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
+    }
+    var member_arraySum_mobile = member_array_mobile.join('');
+    var member_arraySum_pc = member_array_pc.join('');
+    if(option == 'personal'){
+      memberMobileList.append(member_arraySum_mobile);
+      memberPcList.append(member_arraySum_pc);
+    }else if(option == 'group'){
+      memberMobileList.prepend(member_arraySum_mobile);
+      memberPcList.prepend(member_arraySum_pc);
+    }
+    
+}
 
 
 
@@ -1164,47 +1224,47 @@ function addPtMemberListSet(jsondata){
 
 
 function ajaxRepeatConfirmSend(){
-            ajax_block_during_repeat_confirm = false
-            var $form = $('#confirm-repeat-schedule-form')
-            var serverURL = '/schedule/add_repeat_schedule_confirm/'
-            $.ajax({
-              url: serverURL,
-              type:'POST',
-              data: $form.serialize(),
-              dataType : 'html',
+      ajax_block_during_repeat_confirm = false
+      var $form = $('#confirm-repeat-schedule-form')
+      var serverURL = '/schedule/add_repeat_schedule_confirm/'
+      $.ajax({
+        url: serverURL,
+        type:'POST',
+        data: $form.serialize(),
+        dataType : 'html',
 
-              beforeSend:function(){
-                  beforeSend(); //ajax 로딩이미지 출력
-              },
+        beforeSend:function(){
+            beforeSend(); //ajax 로딩이미지 출력
+        },
 
-              success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                  $('#errorMessageBar').show()
-                  $('#errorMessageText').text(jsondata.messageArray)
-                }else{
+        success:function(data){
+          var jsondata = JSON.parse(data);
+          if(jsondata.messageArray.length>0){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text(jsondata.messageArray)
+          }else{
 
-                    if(jsondata.push_info != ''){
-                        for (var i=0; i<jsondata.pushArray.length; i++){
-                            send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-                        }
-                    }
-                  
-                  set_schedule_time(jsondata)
-                }
-              },
-
-              complete:function(){
-                completeSend(); //ajax 로딩이미지 숨기기
-                ajax_block_during_repeat_confirm = true
-              },
-
-              error:function(){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text('통신 에러: 관리자 문의')
+              if(jsondata.push_info != ''){
+                  for (var i=0; i<jsondata.pushArray.length; i++){
+                      send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                  }
               }
-            })    
-      }
+            
+            set_schedule_time(jsondata)
+          }
+        },
+
+        complete:function(){
+          completeSend(); //ajax 로딩이미지 숨기기
+          ajax_block_during_repeat_confirm = true
+        },
+
+        error:function(){
+              $('#errorMessageBar').show()
+              $('#errorMessageText').text('통신 에러: 관리자 문의')
+        }
+      })    
+}
 
 
 function ajaxTimeGraphSet(date, callback){

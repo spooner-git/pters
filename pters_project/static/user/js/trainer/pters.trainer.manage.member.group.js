@@ -391,7 +391,7 @@ $(document).on('click','img.btn_add_member_to_group',function(){
 
 
 //서버로부터 그룹 목록 가져오기
-function get_group_list(returnvalue){
+function get_group_list(use, callback){
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
@@ -426,10 +426,8 @@ function get_group_list(returnvalue){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
-                if(returnvalue == "dropdown"){
-                    grouptype_dropdown_set(jsondata)
-                    return jsondata
-
+                if(use == "callback"){
+                    callback(jsondata)
                 }else{
                     groupListSet('current',jsondata)
                     groupListSet('finished',jsondata)

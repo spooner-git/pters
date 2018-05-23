@@ -31,6 +31,12 @@ html,body{
     z-index: 202;
 }
 
+.ajaxloading_dropdown{
+    display: none;
+    position: absolute;
+    width: 20px;
+}
+
 
 .navbar-default .navbar-brand{
     color:black;

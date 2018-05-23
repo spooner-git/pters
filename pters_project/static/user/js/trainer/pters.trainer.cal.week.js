@@ -1791,7 +1791,6 @@ function set_schedule_time(jsondata){
 	initialJSON = jsondata;
 	scheduleTime('class', jsondata)
 	scheduleTime('off', jsondata)
-	addPtMemberListSet(jsondata);
 	console.log('set_schedule_time:',jsondata)
 }
 
