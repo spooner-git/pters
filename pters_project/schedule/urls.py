@@ -42,4 +42,6 @@ urlpatterns = [
     # 그룹 일정에 회원 추가 - hkkim - 2018.05.22
     url(r'^add_member_group_schedule/$', views.add_member_group_schedule_logic, name='add_member_group_schedule'),
 
+    url(r'^add_group_repeat_schedule/$', views.add_group_repeat_schedule_logic, name='add_group_repeat_schedule'),
+
 ]
