@@ -794,6 +794,7 @@ $(document).ready(function(){
                               if($('._calweek')){
                                 scheduleTime('class', jsondata);
                                 scheduleTime('off', jsondata);
+                                scheduleTime('group', jsondata);
                                 //scheduleTime('group', jsondata)
                               }
                               else if($('._calmonth')){
@@ -1570,7 +1571,9 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planMemberDbid = jsondata.classTimeArray_member_id
       var planScheduleIdArray = jsondata.scheduleIdArray
       var planNoteArray = jsondata.scheduleNoteArray
+      var planScheduleFinishArray = jsondata.scheduleFinishArray
       var planColor = 'classTime'
+      var planCode = ''
     break;
     case 'off':
       var plan = option
@@ -1580,23 +1583,22 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planNoteArray = jsondata.offScheduleNoteArray
       var planColor = 'offTime'
       var planMemberDbid = ''
+      var planCode = ''
     break;
     case 'group':
-    /*
+
       var plan = option
-      var planArray = groupTimeArray
-      var planScheduleIdArray = groupScheduleIdArray
-      var planNoteArray = groupScheduleNoteArray
+      var planStartDate = jsondata.group_schedule_start_datetime;
+      var planEndDate = jsondata.group_schedule_end_datetime;
+      var planMemberName = jsondata.group_schedule_group_name;
+      var planMemberDbid = jsondata.group_schedule_group_id
+      var planScheduleIdArray = jsondata.group_schedule_id;
+      var planNoteArray = jsondata.group_schedule_note;
+      var planScheduleFinishArray = jsondata.group_schedule_finish_check
       var planColor = 'groupTime'
-    */
-      var plan = option
-      var planStartDate = jsondata.classTimeArray_start_date
-      var planEndDate = jsondata.classTimeArray_end_date
-      var planMemberName = jsondata.classTimeArray_member_name
-      var planScheduleIdArray = jsondata.scheduleIdArray
-      var planNoteArray = jsondata.scheduleNoteArray
       var planColor = 'groupTime'
       var planMemberDbid = ''
+      var planCode = '[G]'
     break;
   }
 
@@ -1680,18 +1682,22 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
     var tdPlan = $("#"+planStart);
     tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none')
 
-    if(jsondata.scheduleFinishArray[i] == 1 && option != 'off'){
-      var planColor_ = planColor+' classTime_checked'
+    if(option != 'off'){
+      if(planScheduleFinishArray[i] == 1){
+        var planColor_ = planColor+' classTime_checked'
+      }else{
+        var planColor_ = planColor
+      }
     }else{
       var planColor_ = planColor
     }
-
+    
     tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
                 .attr(option+'-schedule-id' , planScheduleIdArray[i])
                 .attr({'data-memo' : planNoteArray[i], 'data-schedule-check' : jsondata.scheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-memberName' : memberName, 'data-dbid' : planMemberDbid[i]})
                 .addClass(planColor_)
                 .css({'height':Number(planDura*planheight-1)+'px'})
-                .html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+                .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
     
 
     var hhh = Number(planHour)
