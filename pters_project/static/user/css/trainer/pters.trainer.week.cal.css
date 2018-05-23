@@ -475,9 +475,13 @@ img,a,div,span,p{
 	position: absolute;
 	top: 0px;
 	width: 98.5%;
-	background: green;
+	background: #ffacb7;
 	z-index: 100;
 	cursor: pointer;
+	font-size: 12px;
+}
+.groupTime:active,.groupTime:hover{
+	background: #ff6c7f;
 }
 
 
@@ -717,7 +721,6 @@ img,a,div,span,p{
 		width:100%;
 		text-align: center;
 		left: 0%;
-		margin-top: px;
 		font-size: 16px;
 		letter-spacing: -0.3px;
 		color: black;
@@ -725,13 +728,11 @@ img,a,div,span,p{
 	}
 
 	
-
 	.hourType{
 		display: block;
 		margin:0;
 		margin-bottom: -3px;
 	}
-
 	
 
 	.td00,.td30{
@@ -924,7 +925,7 @@ img,a,div,span,p{
 
 @media(min-width: 850px){
 	.memberName{
-		font-size: 18px;
+		font-size: 16px;
 	}
 }
 

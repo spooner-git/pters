@@ -37,7 +37,7 @@ $(document).ready(function(){
               onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
                 if( curDate != instance.lastVal ){
                   $(this).parent('p').addClass("dropdown_selected");
-                  if(addTypeSelect == "ptadd"){
+                  if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
                       //$("#id_training_date").val($("#datepicker").val()).submit();
                       $("#id_training_date").val($("#datepicker").val());
                       if($('#timeGraph').css('display')=='none'){
@@ -179,7 +179,7 @@ $(document).ready(function(){
                   //$('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
                   $('.typeSelected').removeClass('typeSelected')
                   $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
-                  if(addTypeSelect == "ptadd"){
+                  if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
                     $('._MINI_ptadd').css('display','inline')
                     //$('._MINI_offadd').hide()
                   }else if(addTypeSelect == "offadd"){
@@ -284,7 +284,7 @@ $(document).ready(function(){
                   $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
                   $('.typeSelected').removeClass('typeSelected')
                   $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
-                  if(addTypeSelect == "ptadd"){
+                  if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
                     $('._MINI_ptadd').css('display','inline')
                     //$('._MINI_offadd').hide()
                   }else if(addTypeSelect == "offadd"){
@@ -408,7 +408,7 @@ $(document).ready(function(){
 
       $(document).on('click',"#durations_mini li a",function(){
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
-          if(addTypeSelect == "ptadd"){ //Form 셋팅
+          if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){ //Form 셋팅
             var durationTime_class =  Number($(this).attr('data-dur'))*(30/Options.classDur)
             $("#id_time_duration").val(durationTime_class);
             planAddView($(this).attr('data-dur'));
@@ -480,6 +480,8 @@ $(document).ready(function(){
           //$('.tdgraph').removeClass('graphindicator')
           if($(this).attr('data-grouptype') == "personal"){
             addTypeSelect = "ptadd"
+            $('#remainCount').show()
+            $('#groupInfo').hide()
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
             $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
             $('#remainCount_mini_text').css('display','inline-block')
@@ -488,14 +490,12 @@ $(document).ready(function(){
             $("#id_member_name").val($(this).text());
           }else if($(this).attr('data-grouptype') == "group"){
             addTypeSelect = "groupptadd"
-            /*
+            $('#remainCount').hide()
+            $('#groupInfo').show()
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-            $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
-            $('#remainCount_mini_text').css('display','inline-block')
-            $("#id_lecture_id").val($(this).attr('data-lectureid'));
-            $("#id_member_id").val($(this).attr('data-dbid'));
-            $("#id_member_name").val($(this).text());
-            */
+            $('#grouptypenumInfo').text('('+$(this).attr('data-grouptypecd')+' '+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum')+')')
+            $("#id_group_id").val($(this).attr('data-groupid'));
+            console.log($('#id_group_id').val(),$(this).attr('data-groupid'),'asdfasdf')
           }
           
           check_dropdown_selected();
@@ -504,29 +504,47 @@ $(document).ready(function(){
       $(document).on('click',"#members_mobile li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
           if($(this).attr("data-grouptype") == "personal"){
+            if($('._NORMAL_ADD_wrap').css('display') == 'block'){
+              addTypeSelect = "ptadd"
+            }else if($('._REPEAT_ADD_wrap').css('display') == 'block'){
+              addTypeSelect = "repeatptadd"
+            }
+            $('#remainCount').show()
+            $('#groupInfo').hide()
+            get_repeat_info($(this).attr('data-dbid'))
             $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
             $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
             $("#id_member_id").val($(this).attr('data-dbid'));
             $("#id_lecture_id").val($(this).attr('data-lectureid'));
             $("#id_member_name").val($(this).text());
-          }else if($(this).attr("data-grouptype" == "group")){
-            /*
-            get_repeat_info($(this).attr('data-lectureid'),$(this).attr('data-dbid'))
+          }else if($(this).attr("data-grouptype") == "group"){
+            if($('._NORMAL_ADD_wrap').css('display') == 'block'){
+              addTypeSelect = "groupptadd"
+            }else if($('._REPEAT_ADD_wrap').css('display') == 'block'){
+              addTypeSelect = "repeatgroupptadd"
+            }
+            $('#remainCount').hide()
+            $('#groupInfo').show()
+            //get_repeat_info($(this).attr('data-dbid'))
             $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-            */
+            $('#grouptypenumInfo').text($(this).attr('data-grouptypecd')+' '+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum'))
+            $("#id_group_id").val($(this).attr('data-groupid'));
           }
           
           check_dropdown_selected();
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
+      $('#addpopup_pc_label_pt').click(function(){
+        console.log(addTypeSelect)
+      })
       
 
       $(document).on('click','#starttimes li a',function(){
           $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-          if(addTypeSelect == "ptadd"){
+          if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd" ){
             $("#id_training_time").val($(this).attr('data-trainingtime'));
           }else if(addTypeSelect == "offadd"){
             $("#id_training_time_off").val($(this).attr('data-trainingtime'));
@@ -543,7 +561,7 @@ $(document).ready(function(){
           //진행시간 자동으로 1시간으로 Default 셋팅
           $("#durationsSelected .btn:first-child").val("").html("<span style='color:#cccccc;'>선택</span>");
           $('#durationsSelected button').addClass("dropdown_selected").text($('#durations li:first-child a').text()).val($('#durations li:first-child a').attr('data-dur'))
-          if(addTypeSelect == "ptadd"){
+          if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
             var durationTime_class = Number($('#durationsSelected button').val())*(30/Options.classDur)
             $("#id_time_duration").val(durationTime_class);
             addGraphIndicator($('#durationsSelected button').val())
@@ -563,7 +581,7 @@ $(document).ready(function(){
 
       $(document).on('click',"#durations li a, #repeatdurations li a",function(){
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
-          if(addTypeSelect == "ptadd"){
+          if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
             var durationTime_class = Number($(this).attr('data-dur'))*(30/Options.classDur)
             $("#id_time_duration").val(durationTime_class);
             addGraphIndicator($(this).attr('data-dur'))
@@ -633,6 +651,20 @@ $(document).ready(function(){
                   $('#submitBtn_mini').css('background','#282828');
                   select_all_check=false;
               }
+          }else if(addTypeSelect == "groupptadd"){
+              if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
+                  $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                  $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
+                  select_all_check=true;
+              }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect).hasClass("dropdown_selected")==true && durSelect_mini.hasClass("dropdown_selected")==true){
+                  $('#submitBtn_mini').css('background','#fe4e65');
+                  select_all_check=true;
+              }else{
+                  $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                  $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
+                  $('#submitBtn_mini').css('background','#282828');
+                  select_all_check=false;
+              }
           }else if(addTypeSelect == "offadd"){
               if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true && (startSelect).hasClass("dropdown_selected")==true){
                   $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
@@ -683,7 +715,7 @@ $(document).ready(function(){
             var sendData = send_Data(serializeArray)
 
          }else if(addTypeSelect=="groupptadd"){
-            var $form = $('#off-add-form')
+            var $form = $('#pt-add-form')
             var serverURL = '/schedule/add_group_schedule/'
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
@@ -762,6 +794,7 @@ $(document).ready(function(){
                               if($('._calweek')){
                                 scheduleTime('class', jsondata);
                                 scheduleTime('off', jsondata);
+                                scheduleTime('group', jsondata);
                                 //scheduleTime('group', jsondata)
                               }
                               else if($('._calmonth')){
@@ -838,7 +871,7 @@ $(document).ready(function(){
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend();
             check_dropdown_selected()
-            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
         }
       })
       
@@ -988,7 +1021,8 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
     $('#page-addplan #timeGraph').css('display','block')
 
     if(option == "ptadd"){
-        $('#memberName,#remainCount').css('display','block');
+        //$('#memberName, #remainCount').css('display','block');
+        $('#memberName').css('display','block');
         $('#uptext2').text('PT 일정 등록')
         $('#id_training_date').val($('#datepicker').val())
         $('#id_repeat_start_date').val($('#datepicker_repeat_start').val())
@@ -998,7 +1032,7 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
         }
         $(".pt_memo_guide").css('display','block')
     }else if(option == "offadd"){
-        $('#memberName,#remainCount').css('display','none');
+        $('#memberName, #remainCount, #groupInfo').css('display','none');
         $('#uptext2').text('OFF 일정 등록')
         $('#id_training_date_off').val($('#datepicker').val())
         $('#id_repeat_start_date_off').val($('#datepicker_repeat_start').val())
@@ -1193,8 +1227,8 @@ function set_group_dropdown_list(jsondata){
     var member_array_pc = [];
     if(memberSize>0){
       for(var i=0; i<memberSize; i++){
-        member_array_mobile[i] = '<li><a  data-grouptype="group" data-membernum="'+jsondata.member_num+'" data-groupid="'+jsondata.group_id+'">[그룹] '+jsondata.name[i]+'</a></li>';
-        member_array_pc[i] = '<li><a  data-grouptype="group" data-membernum="'+jsondata.member_num+'" data-groupid="'+jsondata.group_id+'">[그룹] '+jsondata.name[i]+'</a></li>';
+        member_array_mobile[i] = '<li><a  data-grouptype="group" data-grouptypecd="'+jsondata.group_type_cd[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
+        member_array_pc[i] = '<li><a  data-grouptype="group" data-grouptypecd="'+jsondata.group_type_cd[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
       }
     }else if(memberSize == 0){
         member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
@@ -1304,10 +1338,10 @@ function clear_start_dur_dropdown(){
 }
 
 
-function get_repeat_info(lecture_id, member_id){
-    if(addTypeSelect == "repeatptadd"){
+function get_repeat_info(dbID){
+    if(addTypeSelect == "repeatptadd" || addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
       var url_ = '/trainer/read_member_lecture_data_from_schedule/'
-      var data_ = {"lecture_id": lecture_id, "member_id": member_id}
+      var data_ = {"member_id": dbID}
       var fill_option = 'class'
       var type_ = 'POST'
     }else if(addTypeSelect == "repeatoffadd"){
@@ -1327,7 +1361,9 @@ function get_repeat_info(lecture_id, member_id){
         },
 
         success:function(data){
+          console.log('-------------',data)
           var jsondata = JSON.parse(data);
+
          
           if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show();
@@ -1535,7 +1571,9 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planMemberDbid = jsondata.classTimeArray_member_id
       var planScheduleIdArray = jsondata.scheduleIdArray
       var planNoteArray = jsondata.scheduleNoteArray
+      var planScheduleFinishArray = jsondata.scheduleFinishArray
       var planColor = 'classTime'
+      var planCode = ''
     break;
     case 'off':
       var plan = option
@@ -1545,23 +1583,22 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planNoteArray = jsondata.offScheduleNoteArray
       var planColor = 'offTime'
       var planMemberDbid = ''
+      var planCode = ''
     break;
     case 'group':
-    /*
+
       var plan = option
-      var planArray = groupTimeArray
-      var planScheduleIdArray = groupScheduleIdArray
-      var planNoteArray = groupScheduleNoteArray
+      var planStartDate = jsondata.group_schedule_start_datetime;
+      var planEndDate = jsondata.group_schedule_end_datetime;
+      var planMemberName = jsondata.group_schedule_group_name;
+      var planMemberDbid = jsondata.group_schedule_group_id
+      var planScheduleIdArray = jsondata.group_schedule_id;
+      var planNoteArray = jsondata.group_schedule_note;
+      var planScheduleFinishArray = jsondata.group_schedule_finish_check
       var planColor = 'groupTime'
-    */
-      var plan = option
-      var planStartDate = jsondata.classTimeArray_start_date
-      var planEndDate = jsondata.classTimeArray_end_date
-      var planMemberName = jsondata.classTimeArray_member_name
-      var planScheduleIdArray = jsondata.scheduleIdArray
-      var planNoteArray = jsondata.scheduleNoteArray
       var planColor = 'groupTime'
       var planMemberDbid = ''
+      var planCode = '[G]'
     break;
   }
 
@@ -1645,18 +1682,22 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
     var tdPlan = $("#"+planStart);
     tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none')
 
-    if(jsondata.scheduleFinishArray[i] == 1 && option != 'off'){
-      var planColor_ = planColor+' classTime_checked'
+    if(option != 'off'){
+      if(planScheduleFinishArray[i] == 1){
+        var planColor_ = planColor+' classTime_checked'
+      }else{
+        var planColor_ = planColor
+      }
     }else{
       var planColor_ = planColor
     }
-
+    
     tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
                 .attr(option+'-schedule-id' , planScheduleIdArray[i])
                 .attr({'data-memo' : planNoteArray[i], 'data-schedule-check' : jsondata.scheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-memberName' : memberName, 'data-dbid' : planMemberDbid[i]})
                 .addClass(planColor_)
                 .css({'height':Number(planDura*planheight-1)+'px'})
-                .html('<span class="memberName">'+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+                .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
     
 
     var hhh = Number(planHour)

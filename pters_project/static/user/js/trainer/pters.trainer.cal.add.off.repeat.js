@@ -5,19 +5,25 @@ $(document).ready(function(){
         $(this).addClass('mode_active')
         $(this).siblings('.mode_switch_button').removeClass('mode_active')
 
-        if(addTypeSelect == "ptadd" && pageSelector == 'repeat'){
+        if((addTypeSelect == "ptadd" || addTypeSelect == "groupptadd") && pageSelector == 'repeat'){
             repeatStartTimeSet()
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','none')
             $('._REPEAT_ADD_wrap').css('display','block')
             $('._NORMAL_ADD_timegraph').hide()
             /*애니메이션*/
-            addTypeSelect = "repeatptadd"
-            deleteTypeSelect = "repeatptdelete"
+            if(addTypeSelect == "ptadd"){
+              addTypeSelect = "repeatptadd"
+              deleteTypeSelect = "repeatptdelete"
+            }else if(addTypeSelect == "groupptadd"){
+              addTypeSelect = "repeatgroupptadd"
+              deleteTypeSelect = "repeatgroupptdelete"
+            }
             $("#id_repeat_member_id").val($('#id_member_id').val());
             $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
             $("#id_repeat_member_name").val($('#id_member_name').val());
             check_dropdown_selected()
+            //console.log("$('#membersSelected button').val().length",$('#membersSelected button').val().length, $('#membersSelected button').val())
             if($('#membersSelected button').val().length == 0){
               $('#offRepeatSummary').html('').hide()
             }
@@ -32,7 +38,7 @@ $(document).ready(function(){
             deleteTypeSelect = "repeatoffdelete"
             check_dropdown_selected()
             fill_repeat_info('off')
-          }else if(addTypeSelect == "repeatptadd" && pageSelector == ''){
+          }else if((addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd") && pageSelector == ''){
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','block')
             $('._REPEAT_ADD_wrap').css('display','none')
@@ -41,7 +47,12 @@ $(document).ready(function(){
                 $('._NORMAL_ADD_timegraph').show('slow')
             }
             /*애니메이션*/
-            addTypeSelect = "ptadd"
+            if(addTypeSelect == "repeatptadd"){
+              addTypeSelect = "ptadd"
+            }else if(addTypeSelect == "repeatgroupptadd"){
+              addTypeSelect = "groupptadd"
+            }
+            
             check_dropdown_selected()
           }else if(addTypeSelect == "repeatoffadd" && pageSelector == ''){
             /*애니메이션*/

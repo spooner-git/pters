@@ -1791,6 +1791,7 @@ function set_schedule_time(jsondata){
 	initialJSON = jsondata;
 	scheduleTime('class', jsondata)
 	scheduleTime('off', jsondata)
+	scheduleTime('group', jsondata);
 	console.log('set_schedule_time:',jsondata)
 }
 
