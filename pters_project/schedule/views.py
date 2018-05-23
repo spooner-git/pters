@@ -2073,7 +2073,6 @@ def add_group_repeat_schedule_logic(request):
     repeat_week_type = request.POST.get('repeat_day', '')
     repeat_schedule_time = request.POST.get('repeat_start_time')
     repeat_schedule_time_duration = request.POST.get('repeat_dur')
-    en_dis_type = request.POST.get('en_dis_type', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
@@ -2137,7 +2136,7 @@ def add_group_repeat_schedule_logic(request):
                                                 week_info=repeat_week_type,
                                                 start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date_info,
                                                 start_time=repeat_schedule_time, time_duration=repeat_schedule_time_duration,
-                                                state_cd='NP', en_dis_type=en_dis_type,
+                                                state_cd='NP', en_dis_type='1',
                                                 reg_member_id=request.user.id,
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 
