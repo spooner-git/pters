@@ -60,7 +60,7 @@
 <form action="{% url 'trainer:update_member_lecture_info' %}" method="POST" class="member-form" id="update_member_lecture_info">
     {% csrf_token %}
     <input type="hidden" name="lecture_id" id="form_lecture_id">
-    <input type="hidden" name="member_name" id="form_member_name">
+    <input type="hidden" name="member_id" id="form_member_dbid">
     <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
     <input type="hidden" name="start_date" id="form_start_date">
     <input type="hidden" name="end_date" id="form_end_date">

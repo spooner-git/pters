@@ -276,7 +276,7 @@ if (agent.indexOf("firefox") != -1) {
 
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide();
             $(this).text(text).attr('data-type',"modify");
-            $('#form_member_name').val(userName);
+            $('#form_member_dbid').val(dbID);
             $('#form_lecture_id').val(lectureID);
             $('#form_start_date').val($(this).parent('div').siblings('div').find('.lec_start_date').val())
             $('#form_end_date').val($(this).parent('div').siblings('div').find('.lec_end_date').val())
@@ -1081,7 +1081,6 @@ function send_modified_member_base_data(){
                 $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/ptadd/icon-pencil.png');
 
-                //DataFormattingDict('DBID',jsondata);
                 memberListSet('current','date','yes',jsondata);
                 memberListSet('finished','date','yes',jsondata);
                 $('#startR').attr('selected','selected');
@@ -1765,7 +1764,6 @@ function get_member_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
-            DataFormattingDict('DBID',jsondata)
             if(jsondata.messageArray.length>0){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -2465,7 +2463,7 @@ function send_member_modified_data(dbID){
        $.ajax({
           url:'/trainer/update_member_lecture_info/',
           type:'POST',
-          data:$form.serialize(),
+          data: $form.serialize(),
           dataType : 'html',
 
           beforeSend:function(){
@@ -2490,15 +2488,7 @@ function send_member_modified_data(dbID){
                     $('#startR').attr('selected','selected')
                     $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
                     get_member_list()
-                    if($('body').width() < 600){
-                        open_member_info_popup_mobile(dbID, jsondata)
-                        get_member_lecture_list(dbID)
-                    }else{
-                        open_member_info_popup_pc(dbID, jsondata)
-                        get_member_lecture_list(dbID)
-                    }
-                    
-                    
+                    get_member_lecture_list(dbID)
                     console.log('success');
               }
           },
@@ -2538,13 +2528,8 @@ function resend_member_reg_data_pc(lectureID, dbID){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
+                
                 get_member_list()
-                $('#startR').attr('selected','selected')
-                if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc(dbID, jsondata)
-                }else if($('#memberInfoPopup').css('display') == "block"){
-                    open_member_info_popup_mobile(dbID, jsondata)
-                }
                 get_member_lecture_list(dbID)
                 console.log('success');
             }
@@ -2586,12 +2571,6 @@ function delete_member_reg_data_pc(lectureID, dbID){
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
                 get_member_list()
-                $('#startR').attr('selected','selected')
-                if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc(dbID, jsondata)
-                }else if($('#memberInfoPopup').css('display') == "block"){
-                    open_member_info_popup_mobile(dbID, jsondata)
-                }
                 get_member_lecture_list(dbID)
                 console.log('success');
             }
@@ -2632,13 +2611,8 @@ function complete_member_reg_data_pc(lectureID, dbID){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                get_member_list()
                 $('#startR').attr('selected','selected')
-                if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc(dbID, jsondata)
-                }else if($('#memberInfoPopup').css('display') == "block"){
-                    open_member_info_popup_mobile(dbID, jsondata)
-                }
+                get_member_list()
                 get_member_lecture_list(dbID)
                 console.log('success');
             }
@@ -2679,13 +2653,8 @@ function resume_member_reg_data_pc(lectureID, dbID){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                get_member_list()
                 $('#startR').attr('selected','selected')
-                if($('#memberInfoPopup_PC').css('display') == "block"){
-                    open_member_info_popup_pc(dbID, jsondata)
-                }else if($('#memberInfoPopup').css('display') == "block"){
-                    open_member_info_popup_mobile(dbID, jsondata)
-                }
+                get_member_list()
                 get_member_lecture_list(dbID)
                 console.log('success');
             }
@@ -2744,20 +2713,15 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
                     else{
                         $('#errorMessageBar').hide()
                         $('#errorMessageText').text('')
-                      get_member_list()
-                      $('#startR').attr('selected','selected')
-                      if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc(dbID,jsondata)
-                      }else if($('#memberInfoPopup').css('display') == "block"){
-                        open_member_info_popup_mobile(dbID,jsondata)
-                      }
-                      get_member_lecture_list(dbID)
+                        $('#startR').attr('selected','selected')
+                        get_member_list()
+                        get_member_lecture_list(dbID)
 
-                      $('#shade3').css('display','none')
-                      $('div.lectureRefundPopup.popups input[type="number"]').val('')
-                      console.log('success');
+                        $('#shade3').css('display','none')
+                        $('div.lectureRefundPopup.popups input[type="number"]').val('')
+                        console.log('success');
 
-                      alert(userName + text)
+                        alert(userName + text)
                     }
                 },
 
@@ -2799,19 +2763,14 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
                     else{
                         $('#errorMessageBar').hide()
                         $('#errorMessageText').text('')
-                      get_member_list()
-                      $('#startR').attr('selected','selected')
-                      if($('#memberInfoPopup_PC').css('display') == "block"){
-                        open_member_info_popup_pc(dbID,jsondata)
-                      }else if($('#memberInfoPopup').css('display') == "block"){
-                        open_member_info_popup_mobile(dbID,jsondata)
-                      }
-                      
-                      get_member_lecture_list(dbID)
 
-                      $('#shade3').css('display','none')
-                      $('div.lectureRefundPopup.popups input[type="number"]').val('')
-                      console.log('success');
+                        $('#startR').attr('selected','selected')
+                        get_member_list()
+                        get_member_lecture_list(dbID)
+
+                        $('#shade3').css('display','none')
+                        $('div.lectureRefundPopup.popups input[type="number"]').val('')
+                        console.log('success');
 
                     }
                 },
@@ -2921,18 +2880,18 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 
 
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-                var lectureTypeName = '<div class="lecConnectType_IP" data-name="'+DB_All[dbID].name+'" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+                var lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }else if(jsondata.lectureStateArray[i] == "PE"){
-                var lectureTypeName = '<div class="lecConnectType_PE" data-name="'+DB_All[dbID].name+'" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+                var lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }else if(jsondata.lectureStateArray[i] == "RF"){
-                var lectureTypeName = '<div class="lecConnectType_RF" data-name="'+DB_All[dbID].name+'" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+                var lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }
             if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
-                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-name="'+DB_All[dbID].name+'" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
             }else if(jsondata.memberViewStateArray[i] == "DELETE"){
-                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-name="'+DB_All[dbID].name+'" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
             }else if(jsondata.memberViewStateArray[i] == "VIEW"){
-                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-name="'+DB_All[dbID].name+'" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
             }
 
             var note = '<div class="pc_member_note" data-dbid="'+dbID+'" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
@@ -3030,7 +2989,7 @@ function get_member_history_list(dbID){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_member_history_list',jsondata)
+            console.log('get_member_history_list',dbID)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -3210,14 +3169,17 @@ function add_member_form_func(){
                 if($('body').width()<600){
                     $('#page_managemember').show();
                 }
+                /*
                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
                     get_member_lecture_list(dbID)
                 }
+                */
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-
-                get_member_list()
+                
                 $('#startR').attr('selected','selected')
+                get_member_list()
+                
                 closePopup('member_add')
                 console.log('success');
             }
@@ -3310,9 +3272,11 @@ function add_group_form_func(){
                 if($('body').width()<600){
                     $('#page_managemember').show();
                 }
+                /*
                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
                     get_member_lecture_list(dbID)
                 }
+                */
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
@@ -3372,9 +3336,11 @@ function add_groupmember_form_func(){
                 if($('body').width()<600){
                     $('#page_managemember').show();
                 }
+                /*
                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
                     get_member_lecture_list(dbID)
                 }
+                */
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
@@ -3430,7 +3396,6 @@ function deleteMemberAjax(){
                 $('html').css("cursor","auto")
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png')
 
-                //DataFormattingDict('DBID',jsondata);
                 $('#startR').attr('selected','selected')
                 switch(alignType){
                   case 'name':
