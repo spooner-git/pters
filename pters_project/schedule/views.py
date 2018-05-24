@@ -421,6 +421,7 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
         # 강좌별로 연결된 그룹 스케쥴 가져오기
         pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                      group_tb__isnull=False,
+                                                     lecture_tb__isnull=True,
                                                      en_dis_type='1',
                                                      start_dt__gte=start_date,
                                                      start_dt__lt=end_date, use=1).order_by('start_dt')

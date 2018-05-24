@@ -2498,6 +2498,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         },
 
         success:function(data){
+            console.log(data)
             var jsondata = JSON.parse(data)
             if(callbackoption == "callback"){
               callback()
