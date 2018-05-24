@@ -72,7 +72,7 @@ $(document).ready(function(){
                       timeGraphSet("off","grey","AddClass", initialJSON)
                       startTimeSet('class');
                   }
-                  else if(addTypeSelect == "repeatptadd"){
+                  else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
                       $("#datepicker_repeat_end").datepicker('option','minDate',$("#datepicker_repeat_start").val())
                       $("#datepicker_repeat_start").datepicker('option','maxDate',$("#datepicker_repeat_end").val())
                       $("#id_repeat_start_date").val($("#datepicker_repeat_start").val());
@@ -509,33 +509,41 @@ $(document).ready(function(){
       $(document).on('click',"#members_mobile li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
           if($(this).attr("data-grouptype") == "personal"){
-            if($('._NORMAL_ADD_wrap').css('display') == 'block'){
-              addTypeSelect = "ptadd"
-            }else if($('._REPEAT_ADD_wrap').css('display') == 'block'){
-              addTypeSelect = "repeatptadd"
-            }
-            $('#remainCount').show()
-            $('#groupInfo').hide()
-            get_repeat_info($(this).attr('data-dbid'))
-            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
-            $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-            $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
-            $("#id_member_id").val($(this).attr('data-dbid'));
-            $("#id_lecture_id").val($(this).attr('data-lectureid'));
-            $("#id_member_name").val($(this).text());
+
+              if($('._NORMAL_ADD_wrap').css('display') == 'block'){
+                addTypeSelect = "ptadd"
+              }else if($('._REPEAT_ADD_wrap').css('display') == 'block'){
+                addTypeSelect = "repeatptadd"
+              }
+              $('#remainCount').show()
+              $('#groupInfo').hide()
+              get_repeat_info($(this).attr('data-dbid'))
+              $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
+              $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+              $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
+              $("#id_member_id").val($(this).attr('data-dbid'));
+              $("#id_lecture_id").val($(this).attr('data-lectureid'));
+              $("#id_member_name").val($(this).text());
+
           }else if($(this).attr("data-grouptype") == "group"){
-            if($('._NORMAL_ADD_wrap').css('display') == 'block'){
-              addTypeSelect = "groupptadd"
-            }else if($('._REPEAT_ADD_wrap').css('display') == 'block'){
-              addTypeSelect = "repeatgroupptadd"
-            }
-            $('#remainCount').hide()
-            $('#groupInfo').show()
-            //get_repeat_info($(this).attr('data-dbid'))
-            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
-            $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-            $('#grouptypenumInfo').text($(this).attr('data-grouptypecd')+' '+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum'))
-            $("#id_group_id").val($(this).attr('data-groupid'));
+
+              if($('._NORMAL_ADD_wrap').css('display') == 'block'){
+                addTypeSelect = "groupptadd"
+              }else if($('._REPEAT_ADD_wrap').css('display') == 'block'){
+                addTypeSelect = "repeatgroupptadd"
+              }
+              $('#remainCount').hide()
+              $('#groupInfo').show()
+              
+              //
+              //get_repeat_info($(this).attr('data-dbid'))
+                $('#id_repeat_group_id').val($(this).attr('data-groupid'))
+              //
+              //
+              $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
+              $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+              $('#grouptypenumInfo').text($(this).attr('data-grouptypecd')+' '+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum'))
+              $("#id_group_id").val($(this).attr('data-groupid'));
           }
           
           check_dropdown_selected();
@@ -553,7 +561,7 @@ $(document).ready(function(){
             $("#id_training_time").val($(this).attr('data-trainingtime'));
           }else if(addTypeSelect == "offadd"){
             $("#id_training_time_off").val($(this).attr('data-trainingtime'));
-          }else if(addTypeSelect == "repeatptadd"){
+          }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
             $("#id_repeat_start_time").val($(this).attr('data-trainingtime'));
           }else if(addTypeSelect == "repeatoffadd"){
             $("#id_repeat_start_time_off").val($(this).attr('data-trainingtime'));
@@ -574,7 +582,7 @@ $(document).ready(function(){
             var durationTime = Number($('#durationsSelected button').val())*(30/Options.classDur)
             $("#id_time_duration_off").val(durationTime);
             addGraphIndicator($('#durationsSelected button').val())
-          }else if(addTypeSelect == "repeatptadd"){
+          }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
             $("#id_repeat_dur").val($('#durationsSelected button').val());
           }else if(addTypeSelect == "repeatoffadd"){
             $("#id_repeat_dur_off").val($('#durationsSelected button').val());
@@ -594,7 +602,7 @@ $(document).ready(function(){
             var durationTime = Number($(this).attr('data-dur'))*(30/Options.classDur)
             $("#id_time_duration_off").val(durationTime);
             addGraphIndicator($(this).attr('data-dur'))
-          }else if(addTypeSelect == "repeatptadd"){
+          }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
             $("#id_repeat_dur").val($(this).attr('data-dur'));
           }else if(addTypeSelect == "repeatoffadd"){
             $("#id_repeat_dur_off").val($(this).attr('data-dur'));
@@ -669,7 +677,7 @@ $(document).ready(function(){
                   $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
                   select_all_check=false;
               }
-          }else if(addTypeSelect == "repeatptadd"){
+          }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
               if((memberSelect).hasClass("dropdown_selected")==true && (repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
                   $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                   $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
@@ -721,8 +729,14 @@ $(document).ready(function(){
             var serverURL = '/schedule/add_repeat_schedule/'
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
-         }
-         else if(addTypeSelect=="repeatoffadd"){
+
+         }else if(addTypeSelect=="repeatgroupptadd"){
+            var $form = $('#add-repeat-schedule-form')
+            var serverURL = '/schedule/add_group_repeat_schedule/'
+            var serializeArray = $form.serializeArray();
+            var sendData = send_Data(serializeArray)
+
+         }else if(addTypeSelect=="repeatoffadd"){
             var $form = $('#add-off-repeat-schedule-form')
             var serverURL = '/schedule/add_repeat_schedule/'
             var serializeArray = $form.serializeArray();
@@ -760,7 +774,7 @@ $(document).ready(function(){
                                     }
                                 }
                             }
-                            if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
+                            if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                               var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
                               $('._repeatconfirmQuestion').text('선택한 일정 총 '+total_count+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.');
@@ -770,7 +784,7 @@ $(document).ready(function(){
                               $('#id_repeat_schedule_id_confirm').val(repeatArray)
                               completeSend(); //ajax 로딩 이미지 숨기기
                               shade_index(200)
-                            }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
+                            }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                               var repeat_info = popup_repeat_confirm()
                               var day_info = repeat_info.day_info
                               var dur_info = repeat_info.dur_info
@@ -1351,9 +1365,8 @@ function get_repeat_info(dbID){
         },
 
         success:function(data){
-          console.log('-------------',data)
           var jsondata = JSON.parse(data);
-
+          console.log('get_repeat_info',jsondata)
          
           if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show();
@@ -1516,7 +1529,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
       var $id_repeat_start_date = $('#id_repeat_start_date_off')
       var $id_repeat_end_date = $('#id_repeat_end_date_off')
       var $id_repeat_day = $('#id_repeat_day_off')
-    }else if(addTypeSelect == "repeatptadd"){
+    }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
       var $id_repeat_freq = $('#id_repeat_freq')
       var $id_repeat_start_date= $('#id_repeat_start_date')
       var $id_repeat_end_date = $('#id_repeat_end_date')
@@ -2471,36 +2484,14 @@ $(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',func
 })
 
 
-//테스트용 그룹에 속한 참여자들을 표기
-/*
-function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
-    var target = $('#groupParticipants')
-    console.log('get_groupmember_list',jsondata)
-    var htmlToJoin = []
-    for(var i=0; i<jsondata.db_id.length; i++){
-      var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'">'
-      var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
-      var name = '<span>'+jsondata.last_name[i]+jsondata.first_name[i]+'</span>'
-      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel">'
-      var htmlend = '</div>'
-      htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
-    }
-    if(jsondata.db_id.length < max){
-      htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-membernum="'+max+'"></div>')
-    }
-    target.html(htmlToJoin.join(''))
-}
-*/
-//테스트용 그룹에 속한 참여자들을 표기
 
-
-function get_group_plan_participants(schedule_Start_Date_Time, callbackoption , callback){
-  console.log(schedule_Start_Date_Time)
+function get_group_plan_participants(group_schedule_id, callbackoption , callback){
+  console.log(group_schedule_id)
     $.ajax({
-        url: '/schedule/add_member_group_schedule/',
+        url: '/trainer/get_group_schedule_list/',
         type : 'POST',
         dataType: 'html',
-        data: {"start_date": schedule_Start_Date_Time},
+        data: {"group_schedule_id": group_schedule_id},
 
         beforeSend:function(){
           beforeSend()

@@ -299,7 +299,8 @@
 
     <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
         {% csrf_token %}
-        <input type="hidden" name="member_id"        id="id_repeat_member_id">
+        <input type="hidden" name="member_id"         id="id_repeat_member_id">
+        <input type="hidden" name="group_id"          id="id_repeat_group_id">
         <input type="hidden" name="lecture_id"        id="id_repeat_lecture_id">
         <input type="hidden" name="member_name"       id="id_repeat_member_name">
         <input type="hidden" name="repeat_freq"       id="id_repeat_freq">
