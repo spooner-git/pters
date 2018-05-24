@@ -5169,6 +5169,8 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         for group_schedule_info in group_schedule_data:
             member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
             group_schedule_info.member_info = member_info
+            group_schedule_info.start_dt = str(group_schedule_info.start_dt)
+            group_schedule_info.end_dt = str(group_schedule_info.end_dt)
             if group_schedule_info.state_cd == 'PE':
                 group_schedule_info.finish_check = 1
             else:
@@ -5186,6 +5188,8 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         for group_schedule_info in group_schedule_data:
             member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
             group_schedule_info.member_info = member_info
+            group_schedule_info.start_dt = str(group_schedule_info.start_dt)
+            group_schedule_info.end_dt = str(group_schedule_info.end_dt)
             if group_schedule_info.state_cd == 'PE':
                 group_schedule_info.finish_check = 1
             else:
