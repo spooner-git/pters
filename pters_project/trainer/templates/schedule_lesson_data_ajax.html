@@ -4,9 +4,9 @@
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classArray_lecture_id" :
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "classTimeArray_member_name" :
+      "name" :
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.member_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "classTimeArray_member_id" :
+      "db_id" :
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.member_info.member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_start_date" : 
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

@@ -2519,17 +2519,16 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
 //그룹에 속한 참여자들을 표기
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
     var target = $('#groupParticipants')
-    console.log(jsondata)
     var htmlToJoin = []
-    for(var i=0; i<jsondata.classTimeArray_member_id.length; i++){
-      var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.classTimeArray_member_id[i]+'">'
+    for(var i=0; i<jsondata.db_id.length; i++){
+      var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'">'
       var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
       var name = '<span>'+jsondata.last_name[i]+jsondata.first_name[i]+'</span>'
       var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel">'
       var htmlend = '</div>'
       htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
     }
-    if(jsondata.classTimeArray_member_id.length < max){
+    if(jsondata.db_id.length < max){
       htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-membernum="'+max+'"></div>')
     }
     target.html(htmlToJoin.join(''))
