@@ -2500,8 +2500,9 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         success:function(data){
             console.log(data)
             var jsondata = JSON.parse(data)
+            console.log('get_group_plan_participants',jsondata)
             if(callbackoption == "callback"){
-              callback()
+              callback(jsondata)
             }
         },
 
