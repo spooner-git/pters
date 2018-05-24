@@ -114,17 +114,14 @@ $(document).ready(function(){
             if(splitID[3]>=(Options.workEndTime-5)){
               //$('.dropdown_mini').addClass('dropup')
               if(splitID[3]== (Options.workEndTime-1)){
-                console.log('1')
                 if(Options.workEndTime - Options.workStartTime < 5){
                   var toploc = toploc
                 }else{
                   var toploc = toploc - minipopupheight + compensate_off
                 }
               }else if(splitID[3] <= (Options.workStartTime+3)){
-                console.log('splitID[3] <= (Options.workStartTime+1)')
                 var toploc = toploc
               }else{
-                console.log('3')
                 var toploc = toploc - minipopupheight + compensate_off
               }
             }else{
@@ -1065,7 +1062,6 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
       $('#addpopup_pc_label_pt, #addpopup_pc_label_off').css('display','none')
       $('#page-addplan').fadeIn('fast');
     }else{
-      console.log($(window).height())
       $('#page-addplan').fadeIn('fast').css({'top':(($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()),
                                                 'left':(($(window).width()-$('#page-addplan').outerWidth())/2+$(window).scrollLeft())})
       $('#page-addplan-pc').css('display','none')
@@ -1145,7 +1141,6 @@ function get_current_member_list(use, callback){
 
           success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_current_member_list',jsondata)
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
               $('#errorMessageText').text(jsondata.messageArray)
@@ -1185,7 +1180,6 @@ function get_current_group_list(use, callback){
 
           success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_current_group_list',jsondata)
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
               $('#errorMessageText').text(jsondata.messageArray)
@@ -1377,7 +1371,6 @@ function get_repeat_info(dbID){
 
         success:function(data){
           var jsondata = JSON.parse(data);
-          console.log('get_repeat_info',jsondata)
          
           if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show();
@@ -1576,7 +1569,6 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 
 function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
-  console.log('전체 member_ajax',jsondata)
   switch(option){
     case 'class':
       var plan = option
@@ -2058,10 +2050,8 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
             }
             if(k==0){
               $('#'+(time)+'g_'+min+option).addClass(cssClass)
-              console.log('#'+(time)+'g_'+min+option)
             }else{
               $('#'+(time)+'g_'+min+option).addClass(cssClass_border)
-              console.log('#'+(time)+'g_'+min+option)
             }
             
             min = Number(min)+30
@@ -2330,7 +2320,6 @@ function send_push(push_server_id, intance_id,title, message, badge_counter){
         }),
 
       beforeSend:function(){
-        console.log('test_ajax')
 
       },
 
@@ -2368,9 +2357,8 @@ $(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',func
 })
 
 
-
+//그룹 일정에 속한 회원목록을 받아온다.
 function get_group_plan_participants(group_schedule_id, callbackoption , callback){
-  console.log(group_schedule_id)
     $.ajax({
         url: '/trainer/get_group_schedule_list/',
         type : 'POST',
@@ -2382,9 +2370,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         },
 
         success:function(data){
-            console.log(data)
             var jsondata = JSON.parse(data)
-            console.log('get_group_plan_participants',jsondata)
             if(callbackoption == "callback"){
               callback(jsondata)
             }
@@ -2398,18 +2384,20 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
           console.log('server error')
         }
       })
-      
 }
+//그룹 일정에 속한 회원목록을 받아온다.
 
-//그룹에 속한 참여자들을 표기
+//그룹에 일정에 속한 회원목록을 그린다. get_group_plan_participants와 같이 쓴다.
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
     var target = $('#groupParticipants')
     var htmlToJoin = []
     for(var i=0; i<jsondata.db_id.length; i++){
       var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'">'
-      var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
-      var name = '<span>'+jsondata.last_name[i]+jsondata.first_name[i]+'</span>'
-      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel">'
+      //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
+      //var name = '<span>'+jsondata.last_name[i]+jsondata.first_name[i]+'</span>'
+      var sex = '<img src="/static/user/res/member/icon-sex-'+'.png">'
+      var name = '<span>'+jsondata.name[i]+'</span>'
+      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata.scheduleIdArray[i]+'">'
       var htmlend = '</div>'
       htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
     }
@@ -2418,7 +2406,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
     }
     target.html(htmlToJoin.join(''))
 }
-//그룹에 속한 참여자들을 표기
+//그룹에 일정에 속한 회원목록을 그린다. get_group_plan_participants와 같이 쓴다.
 
 
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
@@ -2437,13 +2425,12 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 }
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 
-//[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 
-//그룹 레슨일정에 참석자 추가
+//[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
+//그룹일정에 참석자 추가 img.add_listedMember(플러스버튼)을 누르면 호출된다.
 function send_add_groupmember_plan(){
     var $form = $('#add_groupmember-plan-form').serializeArray()
     var sendData = send_Data($form)
-    console.log('senddata',sendData)
      $.ajax({
       url: '/schedule/add_member_group_schedule/',
       type : 'POST',
@@ -2459,7 +2446,7 @@ function send_add_groupmember_plan(){
           scheduleTime('class', jsondata)
           scheduleTime('off', jsondata)
           scheduleTime('group', jsondata)
-          get_group_plan_participants(sendData[5]["value"],'callback',function(data){draw_groupParticipantsList_to_popup(data, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
+          get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
           alert('그룹일정 참석자 정상 등록되었습니다.')
       },
 
@@ -2472,3 +2459,16 @@ function send_add_groupmember_plan(){
       }
     })
 }
+
+
+$(document).on('click','.group_member_cancel',function(){
+    $('#id_schedule_id').val($(this).attr('schedule-id'))
+    var group_id = $(this).attr('data-groupid');
+    var group_schedule_id = $(this).attr('group-schedule-id')
+    var max = $(this).attr('data-max')
+    send_plan_delete('pt', 'callback', function(){
+        get_group_plan_participants(group_schedule_id,'callback',
+          function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)
+          })
+    })
+})
