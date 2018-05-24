@@ -749,6 +749,7 @@ $(document).ready(function(){
          }
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
+             console.log(sendData)
             if(ajax_block_during_submit == true){
                 ajax_block_during_submit = false;
                 $.ajax({
