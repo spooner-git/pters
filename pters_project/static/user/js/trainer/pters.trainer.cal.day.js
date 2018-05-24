@@ -10,7 +10,7 @@ $(document).ready(function(){
 	    $('#page-addplan').fadeIn('fast');
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
-	    $('#uptext2').text('PT 일정 등록')
+	    $('#uptext2').text('레슨 일정 추가')
 	    $('#page-base').fadeOut();
 	    $('#page-base-addstyle').fadeIn();
 	    $("#datepicker").datepicker('setDate',null)
@@ -30,7 +30,7 @@ $(document).ready(function(){
 		
 		$('#memberName,#remainCount').hide();
 	    $('#page-addplan').fadeIn('fast');
-	    $('#uptext2').text('OFF 일정 등록')
+	    $('#uptext2').text('OFF 일정 추가')
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
 	    $('#page-base').fadeOut();
