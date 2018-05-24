@@ -5158,6 +5158,45 @@ def add_member_lecture_info(user_id, user_last_name, user_first_name, class_id, 
 
 
 @method_decorator(csrf_exempt, name='dispatch')
+class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'schedule_lesson_data_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetGroupScheduleListViewAjax, self).get_context_data(**kwargs)
+        group_schedule_id = request.GET.get('group_schedule_id', '')
+
+        group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')
+        for group_schedule_info in group_schedule_data:
+            member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
+            group_schedule_info.member_info = member_info
+            if group_schedule_info.state_cd == 'PE':
+                group_schedule_info.finish_check = 1
+            else:
+                group_schedule_info.finish_check = 0
+
+        context['group_schedule_data'] = group_schedule_data
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetGroupScheduleListViewAjax, self).get_context_data(**kwargs)
+        group_schedule_id = request.GET.get('group_schedule_id', '')
+
+        group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')
+        for group_schedule_info in group_schedule_data:
+            member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
+            group_schedule_info.member_info = member_info
+            if group_schedule_info.state_cd == 'PE':
+                group_schedule_info.finish_check = 1
+            else:
+                group_schedule_info.finish_check = 0
+
+        context['group_schedule_data'] = group_schedule_data
+
+        return render(request, self.template_name, context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
 class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'group_member_ajax.html'
 

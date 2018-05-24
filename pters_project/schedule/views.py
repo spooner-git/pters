@@ -1707,7 +1707,7 @@ def add_group_schedule_logic(request):
     if error is None:
         # 그룹 정보 가져오기
         try:
-            group_info = GroupTb.objects.get(group_id=group_id)
+            group_info = GroupTb.objects.get(group_id=group_id, use=1)
         except ObjectDoesNotExist:
             error = '그룹 정보를 불러오지 못했습니다.'
 
@@ -1767,8 +1767,7 @@ def add_group_schedule_logic(request):
                 if error is None:
                     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                               start_dt__gte=seven_days_ago,
-                                                              end_dt__lte=seven_days_after, use=1).exclude(
-                        schedule_id=add_schedule_info.schedule_id)
+                                                              end_dt__lte=seven_days_after, use=1).exclude(schedule_id=add_schedule_info.schedule_id)
                     for schedule_datum in schedule_data:
                         error = date_check_func(schedule_date, schedule_start_datetime, schedule_end_datetime,
                                                 schedule_datum.start_dt, schedule_datum.end_dt)
@@ -1791,12 +1790,28 @@ def add_group_schedule_logic(request):
         except InternalError as e:
             error = error
 
+    # if error is None and group_info.group_type_cd:
+    #    member_list = []
+    #    group_lecture_data = GroupLectureTb.objects.filter(group_id=group_id, lecture_tb__lecture_avail_count__gt=0, use=1)
+
+    #    for group_lecture_info in group_lecture_data:
+    #        member_id = group_lecture_info.lecture_tb.member_id
+    #        if len(member_list) == 0:
+    #            member_list.append(member_id)
+
+    #        for member_info in member_list:
+    #            if member_id != member_info.member_id:
+    #                member_list.append(member_id)
+
+    #    for member_info in member_list:
+    #        lecture_id = get_group_lecture_id(group_id, member_info.member_id)
+
     if error is None:
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+' 그룹일정', log_how='추가',
+                         log_info=group_info.name+' 그룹 일정', log_how='추가',
                          log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
@@ -1884,7 +1899,7 @@ def delete_group_schedule_logic(request):
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+' 그룹일정', log_how='삭제',
+                         log_info=group_info.name+' 그룹 일정', log_how='삭제',
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
@@ -1903,7 +1918,7 @@ def add_member_group_schedule_logic(request):
     # group_id = request.POST.get('group_id')
     # lecture_id = request.POST.get('lecture_id')
     member_id = request.POST.get('member_id')
-    schedule_id = request.POST.get('schedule_id')
+    group_schedule_id = request.POST.get('schedule_id')
     note = request.POST.get('add_memo', '')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
@@ -1915,14 +1930,13 @@ def add_member_group_schedule_logic(request):
     group_info = None
     schedule_info = None
     member_info = None
-    lecture_info = None
     group_id = ''
     lecture_id = ''
 
     request.session['date'] = date
     request.session['day'] = day
 
-    if schedule_id == '':
+    if group_schedule_id == '':
         error = '일정을 선택해 주세요.'
 
     if note is None:
@@ -1931,7 +1945,7 @@ def add_member_group_schedule_logic(request):
     if error is None:
         # 스케쥴 정보 가져오기
         try:
-            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+            schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id)
         except ObjectDoesNotExist:
             error = '스케쥴 정보를 불러오지 못했습니다.'
 
@@ -1947,13 +1961,6 @@ def add_member_group_schedule_logic(request):
             error = '그룹 정보를 불러오지 못했습니다.'
 
     if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
-
-    if error is None:
         # 회원 정보 가져오기
         try:
             member_info = MemberTb.objects.get(member_id=member_id)
@@ -1965,77 +1972,9 @@ def add_member_group_schedule_logic(request):
             error = '회원님의 예약 가능한 일정이 없습니다.'
 
     if error is None:
-        # 수강 정보 가져오기
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        except ObjectDoesNotExist:
-            error = '회원 정보를 불러오지 못했습니다.'
-
-    if error is None:
-        if lecture_info.lecture_avail_count == 0:
-            error = '회원님의 예약 가능한 일정이 없습니다.'
-
-    if error is None:
-        schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                     start_dt=schedule_info.start_dt,
-                                                     end_dt=schedule_info.end_dt, use=1).exclude(lecture_tb__isnull=False).count()
-
-        if schedule_counter >= group_info.member_num:
-            error = '그룹 허용 인원이 초과되었습니다.'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                add_schedule_info = ScheduleTb(class_tb_id=class_info.class_id,
-                                               group_tb_id=group_id,
-                                               lecture_tb_id=lecture_id,
-                                               start_dt=schedule_info.start_dt,
-                                               end_dt=schedule_info.end_dt,
-                                               state_cd='NP', permission_state_cd='AP', note=note,
-                                               member_note='', en_dis_type='1',
-                                               reg_member_id=request.user.id,
-                                               reg_dt=timezone.now(), mod_dt=timezone.now())
-                add_schedule_info.save()
-
-                lecture_schedule_size = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id)).count()
-                if lecture_info.lecture_reg_count >= lecture_schedule_size:
-                    lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
-                                                       - lecture_schedule_size
-                    lecture_info.mod_dt = timezone.now()
-                    lecture_info.save()
-
-                else:
-                    error = '예약 가능한 횟수를 확인해주세요.'
-                    # add_schedule_info.delete()
-                    raise ValidationError()
-
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '날짜가 중복됐습니다.'
-        except InternalError as e:
-            error = error
-
-        if error is None:
-            schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         start_dt=schedule_info.start_dt,
-                                                         end_dt=schedule_info.end_dt, use=1).count()
-            if schedule_counter > group_info.member_num:
-                error = '허용 인원이 초과되었습니다.'
-        if error is None:
-            lecture_schedule_size = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id)).count()
-            if lecture_info.lecture_reg_count < lecture_schedule_size:
-                error = '회원님의 예약 가능 횟수를 초과했습니다.'
-
-        if error is not None:
-            add_schedule_info.delete()
-            lecture_schedule_size = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id)).count()
-            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count\
-                                               - lecture_schedule_size
-            lecture_info.mod_dt = timezone.now()
-            lecture_info.save()
+        error = func_add_member_group_schedule_logic(group_schedule_id, lecture_id, class_id, group_id,
+                                                     group_info.member_num, schedule_info.start_dt, schedule_info.end_dt,
+                                                     note, request.user.id)
 
     if error is None:
 
@@ -2063,6 +2002,86 @@ def add_member_group_schedule_logic(request):
             request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
         return redirect(next_page)
+
+
+def func_add_member_group_schedule_logic(group_schedule_id, lecture_id, class_id, group_id, group_member_num, start_dt, end_dt, note, user_id):
+    error = None
+    lecture_info = None
+
+    if error is None:
+        # 수강 정보 가져오기
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if lecture_info.lecture_avail_count == 0:
+            error = '회원님의 예약 가능한 일정이 없습니다.'
+
+    if error is None:
+        schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                     group_schedule_id=group_schedule_id, use=1).exclude(lecture_tb__isnull=False).count()
+
+        if schedule_counter >= group_member_num:
+            error = '그룹 허용 인원이 초과되었습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                add_schedule_info = ScheduleTb(class_tb_id=class_id,
+                                               group_tb_id=group_id,
+                                               group_schedule_id=group_schedule_id,
+                                               lecture_tb_id=lecture_id,
+                                               start_dt=start_dt,
+                                               end_dt=end_dt,
+                                               state_cd='NP', permission_state_cd='AP', note=note,
+                                               member_note='', en_dis_type='1',
+                                               reg_member_id=user_id,
+                                               reg_dt=timezone.now(), mod_dt=timezone.now())
+                add_schedule_info.save()
+
+                lecture_schedule_size = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id)).count()
+                if lecture_info.lecture_reg_count >= lecture_schedule_size:
+                    lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
+                                                       - lecture_schedule_size
+                    lecture_info.mod_dt = timezone.now()
+                    lecture_info.save()
+
+                else:
+                    error = '예약 가능한 횟수를 확인해주세요.'
+                    # add_schedule_info.delete()
+                    raise ValidationError()
+
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '날짜가 중복됐습니다.'
+        except InternalError as e:
+            error = error
+
+        if error is None:
+            schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                         start_dt=start_dt,
+                                                         end_dt=end_dt, use=1).count()
+            if schedule_counter > group_member_num:
+                error = '허용 인원이 초과되었습니다.'
+        if error is None:
+            lecture_schedule_size = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id)).count()
+            if lecture_info.lecture_reg_count < lecture_schedule_size:
+                error = '회원님의 예약 가능 횟수를 초과했습니다.'
+
+        if error is not None:
+            add_schedule_info.delete()
+            lecture_schedule_size = ScheduleTb.objects.filter(lecture_tb_id=int(lecture_id)).count()
+            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count\
+                                               - lecture_schedule_size
+            lecture_info.mod_dt = timezone.now()
+            lecture_info.save()
+
+    return error
 
 
 # 그룹 반복 일정 추가
@@ -2448,6 +2467,7 @@ def add_group_member_repeat_schedule_logic(request):
         # 반복 일정 데이터 등록
         repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_id,
                                                 group_tb_id=group_id,
+                                                group_schedule_id=group_schedule_id,
                                                 lecture_tb_id=lecture_id,
                                                 repeat_type_cd=repeat_type,
                                                 week_info=repeat_week_type,
