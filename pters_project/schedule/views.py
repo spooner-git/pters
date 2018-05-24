@@ -1801,23 +1801,26 @@ def add_group_schedule_logic(request):
                          log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
-
+    print(error)
     if error is None and group_info.group_type_cd == 'NORMAL':
         member_list = []
-        group_lecture_data = GroupLectureTb.objects.filter(group_id=group_id, lecture_tb__lecture_avail_count__gt=0, use=1)
+        group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__lecture_avail_count__gt=0, use=1)
 
         for group_lecture_info in group_lecture_data:
             if len(member_list) == 0:
                 member_list.append(group_lecture_info.lecture_tb.member)
-
+            check_info = 0
             for member_info in member_list:
                 if group_lecture_info.lecture_tb.member.member_id != member_info.member_id:
-                    member_list.append(group_lecture_info.lecture_tb.member)
+                    check_info = 1
+            if check_info == 1:
+                member_list.append(group_lecture_info.lecture_tb.member)
 
         for member_info in member_list:
             error_temp = None
             lecture_id = get_group_lecture_id(group_id, member_info.member_id)
-            error_temp = func_add_member_group_schedule_logic(add_schedule_info.group_schedule_id, lecture_id,
+            print(member_info.name+':'+str(add_schedule_info.schedule_id))
+            error_temp = func_add_member_group_schedule_logic(add_schedule_info.schedule_id, lecture_id,
                                                               class_id,
                                                               group_id,
                                                               group_info.member_num, schedule_start_datetime,
@@ -2020,7 +2023,6 @@ def add_member_group_schedule_logic(request):
 def func_add_member_group_schedule_logic(group_schedule_id, lecture_id, class_id, group_id, group_member_num, start_dt, end_dt, note, user_id):
     error = None
     lecture_info = None
-
     if error is None:
         # 수강 정보 가져오기
         try:
@@ -2034,7 +2036,7 @@ def func_add_member_group_schedule_logic(group_schedule_id, lecture_id, class_id
 
     if error is None:
         schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                     group_schedule_id=group_schedule_id, use=1).exclude(lecture_tb__isnull=False).count()
+                                                     group_schedule_id=group_schedule_id, use=1).count()
 
         if schedule_counter >= group_member_num:
             error = '그룹 허용 인원이 초과되었습니다.'
@@ -2076,9 +2078,10 @@ def func_add_member_group_schedule_logic(group_schedule_id, lecture_id, class_id
             error = error
 
         if error is None:
+
             schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                         start_dt=start_dt,
-                                                         end_dt=end_dt, use=1).count()
+                                                         group_schedule_id=group_schedule_id, use=1).count()
+
             if schedule_counter > group_member_num:
                 error = '허용 인원이 초과되었습니다.'
         if error is None:
@@ -2110,15 +2113,12 @@ def add_group_repeat_schedule_logic(request):
     next_page = request.POST.get('next_page')
 
     error = None
-    # error_message = None
     error_date_message = None
     class_info = None
     repeat_week_type_data = []
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
     repeat_schedule_info = None
-    # request.session['date'] = date
-    # request.session['day'] = day
     pt_schedule_input_counter = 0
 
     week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
