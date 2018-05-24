@@ -1962,7 +1962,7 @@ def add_member_group_schedule_logic(request):
 
     if error is None:
         if lecture_id == '':
-            error = '수강 정보를 불러오지 못했습니다.'
+            error = '회원님의 예약 가능한 일정이 없습니다.'
 
     if error is None:
         # 수강 정보 가져오기
@@ -1972,13 +1972,14 @@ def add_member_group_schedule_logic(request):
             error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
-        if lecture_info.avail_count == 0:
-            error = '회원님의 예약 가능한 횟수가 없습니다.'
+        if lecture_info.lecture_avail_count == 0:
+            error = '회원님의 예약 가능한 일정이 없습니다.'
 
     if error is None:
         schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
                                                      start_dt=schedule_info.start_dt,
-                                                     end_dt=schedule_info.end_dt, use=1).count()
+                                                     end_dt=schedule_info.end_dt, use=1).exclude(lecture_tb__isnull=False).count()
+
         if schedule_counter >= group_info.member_num:
             error = '그룹 허용 인원이 초과되었습니다.'
 
@@ -2685,8 +2686,8 @@ def get_group_lecture_id(group_id, member_id):
 
     lecture_id = ''
     start_date = None
-    group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__member_id=member_id, use=1)
 
+    group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__member_id=member_id, use=1)
     for group_lecture_info in group_lecture_data:
         lecture_info = group_lecture_info.lecture_tb
 
@@ -2694,14 +2695,13 @@ def get_group_lecture_id(group_id, member_id):
             if lecture_info.lecture_avail_count > 0:
                 lecture_id = lecture_info.lecture_id
 
-        if lecture_info.start_date is None or lecture_info.start_date == '':
+        if start_date is None or start_date == '':
             start_date = lecture_info.start_date
         else:
             if start_date > lecture_info.start_date:
                 start_date = lecture_info.start_date
                 if lecture_info.lecture_avail_count > 0:
                     lecture_id = lecture_info.lecture_id
-
     return lecture_id
 
 
