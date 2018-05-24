@@ -365,7 +365,8 @@ $(document).ready(function(){
 		$('#subpopup_addByList').hide()
 		$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 
 															'data-groupid': $(this).attr('data-groupid'),
-															'group-schedule-id':$(this).attr('group-schedule-id')
+															'group-schedule-id':$(this).attr('group-schedule-id'),
+															'data-startdate':$(this).attr('group-time')
 															})
 		$('.pt_memo_guide_popup').css('display','block')
 		deleteTypeSelect = ''
@@ -729,8 +730,9 @@ $(document).ready(function(){
 				var group_id = $(this).attr('data-groupid')
 				var max = $(this).attr('data-membernum')
 				var group_schedule_id = $(this).attr('group-schedule-id')
+				var group_plan_start_date = $(this).attr('data-startdate')
 				//테스트용 그룹에 속한 참여자들을 표기
-				get_groupmember_list(group_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)})
+				get_group_plan_participants(group_plan_start_date,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)})
 				//테스트용 그룹에 속한 참여자들을 표기
 			}else if(toggleGroupParticipants == 'on'){
 				toggleGroupParticipantsList('off')
