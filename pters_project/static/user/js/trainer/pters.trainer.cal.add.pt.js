@@ -1552,7 +1552,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 
 function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
-  console.log('member_ajax',jsondata)
+  console.log('전체 member_ajax',jsondata)
   switch(option){
     case 'class':
       var plan = option
@@ -1694,14 +1694,14 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
     if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
        tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
               .attr(option+'-schedule-id' , planScheduleIdArray[i])
-              .attr({'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i], 'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+              .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i], 'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
               .addClass(planColor_)
               .css({'height':Number(planDura*planheight-1)+'px'})
               .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');    
     }else if(option != 'class'){
        tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
               .attr(option+'-schedule-id' , planScheduleIdArray[i])
-              .attr({'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i], 'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+              .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i], 'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
               .addClass(planColor_)
               .css({'height':Number(planDura*planheight-1)+'px'})
               .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');    
@@ -2495,11 +2495,12 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
 
 
 function get_group_plan_participants(schedule_Start_Date_Time, callbackoption , callback){
+  console.log(schedule_Start_Date_Time)
     $.ajax({
         url: '/schedule/add_member_group_schedule/',
         type : 'POST',
         dataType: 'html',
-        data: {"start_date",schedule_Start_Date_Time},
+        data: {"start_date": schedule_Start_Date_Time},
 
         beforeSend:function(){
           beforeSend()
@@ -2520,6 +2521,7 @@ function get_group_plan_participants(schedule_Start_Date_Time, callbackoption , 
           console.log('server error')
         }
       })
+      
 }
 
 //그룹에 속한 참여자들을 표기
