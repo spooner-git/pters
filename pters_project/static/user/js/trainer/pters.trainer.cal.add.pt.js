@@ -2455,6 +2455,7 @@ $(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',func
 })
 
 
+//테스트용 그룹에 속한 참여자들을 표기
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
     var target = $('#groupParticipants')
     console.log('get_groupmember_list',jsondata)
@@ -2472,8 +2473,9 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
     }
     target.html(htmlToJoin.join(''))
 }
+//테스트용 그룹에 속한 참여자들을 표기
 
-
+//참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     var len = jsondata.db_id.length;
     var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
@@ -2487,6 +2489,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     var html = htmlToJoin.join('')
     targetHTML.html(html)
 }
+//참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 var add_groupmember_plan = {"member_id":"", "schedule_id":"", "add_memo":"", "date":"", "day":"", "next_page":'/trainer/cal_day_ajax/'}
