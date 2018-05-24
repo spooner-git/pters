@@ -5180,7 +5180,7 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
 
     def post(self, request, *args, **kwargs):
         context = super(GetGroupScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_schedule_id = request.GET.get('group_schedule_id', '')
+        group_schedule_id = request.POST.get('group_schedule_id', '')
 
         group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')
         for group_schedule_info in group_schedule_data:
