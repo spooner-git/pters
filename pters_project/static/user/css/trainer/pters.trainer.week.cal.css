@@ -721,7 +721,7 @@ img,a,div,span,p{
 		width:100%;
 		text-align: center;
 		left: 0%;
-		font-size: 16px;
+		font-size: 13px;
 		letter-spacing: -0.3px;
 		color: black;
 		cursor: pointer;
@@ -925,7 +925,7 @@ img,a,div,span,p{
 
 @media(min-width: 850px){
 	.memberName{
-		font-size: 16px;
+		font-weight: 500
 	}
 }
 
