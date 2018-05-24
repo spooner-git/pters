@@ -541,7 +541,7 @@ $(document).ready(function(){
               $('#groupInfo').show()
               
               
-              //get_repeat_info($(this).attr('data-groupid'))
+              get_repeat_info($(this).attr('data-groupid'))
               $('#id_repeat_group_id').val($(this).attr('data-groupid'))
 
               $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':$(this).attr('data-groupid')})
@@ -1366,9 +1366,9 @@ function get_repeat_info(dbID){
       var fill_option = 'class'
       var type_ = 'POST'
     }else if(addTypeSelect == "groupptadd" || addTypeSelect == "repeatgroupptadd"){
-      var url_ = '/trainer/read_member_lecture_data_from_schedule/'
+      var url_ = '/trainer/get_group_repeat_schedule_list/'
       var data_ = {"group_id": dbID}
-      var fill_option = 'class'
+      var fill_option = 'group'
       var type_ = 'POST'
     }else if(addTypeSelect == "repeatoffadd"){
       var url_ = '/trainer/get_off_repeat_schedule_ajax/'
@@ -1376,6 +1376,7 @@ function get_repeat_info(dbID){
       var fill_option = 'off'
       var type_;
     }
+    console.log(dbID)
     $.ajax({
         url: url_,
         type: type_,
@@ -1388,34 +1389,16 @@ function get_repeat_info(dbID){
 
         success:function(data){
           var jsondata = JSON.parse(data);
-         
+          console.log('fill_repeat_info',jsondata)
           if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show();
               $('#errorMessageText').text(jsondata.messageArray)
           }else{
-            if(addTypeSelect == "repeatptadd" || addTypeSelect == "ptadd"){
-              ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
-              ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
-              ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
-              ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
-              ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
-              ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
-              ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
-            }else if(addTypeSelect == "repeatoffadd"){
-              offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
-              offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
-              offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
-              offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
-              offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
-              offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
-              offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
-            }
-
             selectedMemberIdArray = jsondata.memberIdArray;
             selectedMemberAvailCountArray = jsondata.memberAvailCountArray;
             selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
             selectedMemberNameArray = jsondata.memberNameArray
-            fill_repeat_info(fill_option);
+            fill_repeat_info(jsondata, fill_option);
             if(addTypeSelect == "repeatptadd"){
               $("#id_repeat_member_id").val(selectedMemberIdArray[0]);
               $("#id_repeat_lecture_id").val(selectedMemberLectureIdArray[0]);
@@ -1435,27 +1418,37 @@ function get_repeat_info(dbID){
       })
 }
 
-function fill_repeat_info(option){ //반복일정 요약 채우기
+function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
     switch(option){
         case 'class':
-          var len = ptRepeatScheduleIdArray.length
-          var repeat_id_array = ptRepeatScheduleIdArray
-          var repeat_type_array = ptRepeatScheduleTypeArray
-          var repeat_day_info_raw_array = ptRepeatScheduleWeekInfoArray
-          var repeat_start_array = ptRepeatScheduleStartDateArray
-          var repeat_end_array = ptRepeatScheduleEndDateArray
-          var repeat_time_array = ptRepeatScheduleStartTimeArray
-          var repeat_dur_array = ptRepeatScheduleTimeDurationArray
+          var len = jsondata.ptRepeatScheduleIdArray.length
+          var repeat_id_array = jsondata.ptRepeatScheduleIdArray
+          var repeat_type_array = jsondata.ptRepeatScheduleTypeArray
+          var repeat_day_info_raw_array = jsondata.ptRepeatScheduleWeekInfoArray
+          var repeat_start_array = jsondata.ptRepeatScheduleStartDateArray
+          var repeat_end_array = jsondata.ptRepeatScheduleEndDateArray
+          var repeat_time_array = jsondata.ptRepeatScheduleStartTimeArray
+          var repeat_dur_array = jsondata.ptRepeatScheduleTimeDurationArray
         break;
         case 'off':
-        var len = offRepeatScheduleIdArray.length
-        var repeat_id_array = offRepeatScheduleIdArray
-        var repeat_type_array = offRepeatScheduleTypeArray
-        var repeat_day_info_raw_array = offRepeatScheduleWeekInfoArray
-        var repeat_start_array = offRepeatScheduleStartDateArray
-        var repeat_end_array = offRepeatScheduleEndDateArray
-        var repeat_time_array = offRepeatScheduleStartTimeArray
-        var repeat_dur_array = offRepeatScheduleTimeDurationArray
+          var len = jsondata.offRepeatScheduleIdArray.length
+          var repeat_id_array = jsondata.offRepeatScheduleIdArray
+          var repeat_type_array = jsondata.offRepeatScheduleTypeArray
+          var repeat_day_info_raw_array = jsondata.offRepeatScheduleWeekInfoArray
+          var repeat_start_array = jsondata.offRepeatScheduleStartDateArray
+          var repeat_end_array = jsondata.offRepeatScheduleEndDateArray
+          var repeat_time_array = jsondata.offRepeatScheduleStartTimeArray
+          var repeat_dur_array = jsondata.offRepeatScheduleTimeDurationArray
+        break;
+        case 'group':
+          var len = jsondata.repeatScheduleIdArray.length
+          var repeat_id_array = jsondata.repeatScheduleIdArray
+          var repeat_type_array = jsondata.repeatScheduleTypeArray
+          var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray
+          var repeat_start_array = jsondata.repeatScheduleStartDateArray
+          var repeat_end_array = jsondata.repeatScheduleEndDateArray
+          var repeat_time_array = jsondata.repeatScheduleStartTimeArray
+          var repeat_dur_array = jsondata.repeatScheduleTimeDurationArray
         break;
     }
     var repeat_info_dict= { 'KOR':
