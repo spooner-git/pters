@@ -362,7 +362,10 @@ $(document).ready(function(){
 	$(document).on('click','div.groupTime',function(e){ //일정을 클릭했을때 팝업 표시
 		e.stopPropagation()
 		toggleGroupParticipantsList('off')
-		$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 'data-groupid': $(this).attr('data-groupid')})
+		$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 
+															'data-groupid': $(this).attr('data-groupid'),
+															'group-schedule-id':$(this).attr('group-schedule-id')
+															})
 		$('.pt_memo_guide_popup').css('display','block')
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
@@ -724,7 +727,8 @@ $(document).ready(function(){
 				toggleGroupParticipantsList('on')
 				var group_id = $(this).attr('data-groupid')
 				var max = $(this).attr('data-membernum')
-				get_groupmember_list(group_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, max)})
+				var group_schedule_id = $(this).attr('group-schedule-id')
+				get_groupmember_list(group_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id,max)})
 			}else if(toggleGroupParticipants == 'on'){
 				toggleGroupParticipantsList('off')
 			}

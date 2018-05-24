@@ -133,6 +133,16 @@
 		cursor:pointer;
 	}
 
+	#subpopup_addByList_thisgroup{
+		display: block;
+	}
+
+	#subpopup_addByList_whole{
+		display: none;
+	}
+
+	
+
 
 @media(max-height: 445px){
 	#cal_popup_planinfo{

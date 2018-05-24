@@ -1122,7 +1122,7 @@ function get_current_member_list(use, callback){
 
           success:function(data){
             var jsondata = JSON.parse(data);
-            console.log(jsondata)
+            console.log('get_current_member_list',jsondata)
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
               $('#errorMessageText').text(jsondata.messageArray)
@@ -1162,7 +1162,7 @@ function get_current_group_list(use, callback){
 
           success:function(data){
             var jsondata = JSON.parse(data);
-            console.log(jsondata)
+            console.log('get_current_group_list',jsondata)
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
               $('#errorMessageText').text(jsondata.messageArray)
@@ -1191,13 +1191,13 @@ function get_current_group_list(use, callback){
 function set_member_dropdown_list(jsondata){
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
-    var memberSize = jsondata.dIdArray.length;
+    var memberSize = jsondata.db_id.length;
     var member_array_mobile = [];
     var member_array_pc = [];
     if(memberSize>0){
       for(var i=0; i<memberSize; i++){
-        member_array_mobile[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.availCountArray[i]+'" data-dbid="'+jsondata.dIdArray[i]+'">'+jsondata.nameArray[i]+'</a></li>';
-        member_array_pc[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.availCountArray[i]+'" data-dbid="'+jsondata.dIdArray[i]+'">'+jsondata.nameArray[i]+'</a></li>';
+        member_array_mobile[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+        member_array_pc[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
       }
     }else if(memberSize == 0){
         member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
@@ -1552,7 +1552,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 
 function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
-  console.log(jsondata)
+  console.log('member_ajax',jsondata)
   switch(option){
     case 'class':
       var plan = option
@@ -2443,9 +2443,17 @@ function send_push(push_server_id, intance_id,title, message, badge_counter){
 
 //그룹..
 
-function draw_groupParticipantsList_to_popup(jsondata, group_id , max){
-    var target = $('#groupParticipants')
+$(document).on('click','img.add_groupmember_plan',function(){
+    add_groupmember_plan["schedule_id"] = $(this).attr('group-schedule-id')
+    $('#subpopup_addByList').show()
+    get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))})//전체회원 조회
+    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))})//특정그룹회원 목록 조회
+})
 
+
+function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
+    var target = $('#groupParticipants')
+    console.log('get_groupmember_list',jsondata)
     var htmlToJoin = []
     for(var i=0; i<jsondata.db_id.length; i++){
       var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'">'
@@ -2456,22 +2464,53 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id , max){
       htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
     }
     if(jsondata.db_id.length < max){
-      htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" data-groupid="'+group_id+'"></div>')
+      htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'"></div>')
     }
     target.html(htmlToJoin.join(''))
 }
 
-//draw_add_groupParticipantsList_popup 함수 만드는데 참고
-//전체회원 조회
-//get_current_member_list('callback',function(jsondata){draw_add_groupParticipantsList_popup(jsondata)})
 
-//특정그룹회원 목록 조회
-//get_groupmember_list(group_id, 'callback', function(jsondata){draw_add_groupParticipantsList_popup(jsondata)})
-//참고
+function draw_groupParticipantsList_to_add(jsondata, targetHTML){
+    var len = jsondata.db_id.length;
+    var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
+    for(var i=1; i<=len; i++){
+        var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">'
+        htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.last_name[i-1]+'" data-firstname="'+jsondata.first_name[i-1]+'" data-dbid="'+jsondata.db_id[i-1]+'" data-id="'+jsondata.member_id[i-1]+'" data-sex="'+jsondata.sex[i-1]+'" data-phone="'+jsondata.phone[i-1]+'"><div data-dbid="'+jsondata.db_id[i-1]+'">'+sexInfo+jsondata.name[i-1]+' (ID: '+jsondata.member_id[i-1]+')'+'</div>'+'<div>'+jsondata.phone[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+    }
+    if(len == 0){
+      htmlToJoin.push("<div class='list_addByList'>해당하는 회원이 없습니다.</div>")
+    }
+    var html = htmlToJoin.join('')
+    targetHTML.html(html)
+}
 
-function draw_add_groupParticipantsList_popup(jsondata){
-  var target = $('#groupParticipants')
-  for(var i = 0; i<  ;i++){
-    
-  }
+//[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
+var add_groupmember_plan = {"member_id":"", "schedule_id":"", "add_memo":"", "next_page":'/trainer/cal_day_ajax/'}
+
+function send_add_groupmember_plan(add_groupmember_plan_json){
+    var form_json = add_groupmember_plan_json
+    console.log(form_json)
+     $.ajax({
+      url: '/schedule/add_member_group_schedule/',
+      type : 'POST',
+      dataType: 'html',
+      data: JSON.stringify(),
+
+      beforeSend:function(){
+        
+
+      },
+
+      success:function(data){
+          var jsondata = JSON.parse(data)
+      },
+
+      complete:function(){
+
+      },
+
+      error:function(){
+        console.log('server error')
+      }
+    })
 }

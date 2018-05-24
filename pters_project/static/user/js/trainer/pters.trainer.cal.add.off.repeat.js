@@ -64,7 +64,15 @@ $(document).ready(function(){
             /*애니메이션*/
             addTypeSelect = "offadd"
             check_dropdown_selected()
-          }  
+          }
+
+          else if(pageSelector == "thisgroup"){
+            $('#subpopup_addByList_thisgroup').show()
+            $('#subpopup_addByList_whole').hide()
+          }else if(pageSelector == "whole"){
+            $('#subpopup_addByList_whole').show()
+            $('#subpopup_addByList_thisgroup').hide()
+          }
       })
 
       /*

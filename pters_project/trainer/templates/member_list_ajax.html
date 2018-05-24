@@ -1,25 +1,25 @@
     {
-    "dIdArray" :
+    "db_id" :
     [{% for member_info in member_data %}"{{ member_info.user.id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "idArray" :
+    "member_id" :
     [{% for member_info in member_data %}"{{ member_info.user }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "emailArray" :
+    "email" :
     [{% for member_info in member_data %}"{{ member_info.user.email }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "nameArray" :
+    "name" :
     [{% for member_info in member_data %}"{{ member_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "firstNameArray" :
+    "first_name" :
     [{% for member_info in member_data %}"{{ member_info.user.first_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "lastNameArray" :
+    "last_name" :
     [{% for member_info in member_data %}"{{ member_info.user.last_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "phoneArray" :
+    "phone" :
     [{% for member_info in member_data %}"{{ member_info.phone }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "birthdayArray" :
+    "birthday" :
     [{% for member_info in member_data %}"{{ member_info.birthday_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "sexArray" :
+    "sex" :
     [{% for member_info in member_data %}"{{ member_info.sex }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "contentsArray" :
+    "note" :
     [{% for member_info in member_data %}"{{ member_info.contents }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "emailActiveArray" :
+    "email_activation" :
     [{% for member_info in member_data %}"{{ member_info.user.is_active }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "lectureCountsArray" :
     [{% for member_info in member_data %}"{{ member_info.lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -29,17 +29,17 @@
     [{% for member_info in member_data %}"{{ member_info.rj_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
 
-    "countArray" :
+    "rem_count" :
     [{% for member_info in member_data %}"{{ member_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "startArray" :
+    "start_date" :
     [{% for member_info in member_data %}"{{ member_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "modifyDateArray" :
+    "mod_dt" :
     [{% for member_info in member_data %}"{{ member_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "endArray" :
+    "end_date" :
     [{% for member_info in member_data %}"{{ member_info.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "regCountArray" :
+    "reg_count" :
     [{% for member_info in member_data %}"{{ member_info.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-    "availCountArray" :
+    "avail_count" :
     [{% for member_info in member_data %}"{{ member_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
     "yetCountArray" :
@@ -53,9 +53,12 @@
     "groupInfoArray" :
     [{% for member_info in member_data %}"{{ member_info.group_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
-    "lectureIdArray" :
+    "lecture_id" :
     [{% for member_info in member_data %}"{{ member_info.lecture_available_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
       [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    
     }
+
+

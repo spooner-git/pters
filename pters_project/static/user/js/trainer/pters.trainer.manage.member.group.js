@@ -84,7 +84,7 @@ $('button#addByList, button#addBySearch').click(function(e){
 	$('#subpopup_'+$(this).attr('id')).show()
 
 	if($(this).attr('id')=="addByList"){
-		draw_memberlist_for_addByList()
+		draw_memberlist_for_addByList($('#subpopup_addByList'))
 	}else if($(this).attr('id')=="addBySearch"){
 		//
 	}
@@ -102,28 +102,37 @@ $(document).on('click','img.add_listedMember',function(){
 	var selected_dbid = $(this).parents('div.list_addByList').attr('data-dbid')
 	var selected_id = $(this).parents('div.list_addByList').attr('data-id')
 	var selected_sex = $(this).parents('div.list_addByList').attr('data-sex')
-	if(selected_sex=="M"){
-		var sexInfo = "남"
-	}else if(selected_sex=="W"){
-		var sexInfo = "여"
-	}else{
-		var sexInfo = "-"
-	}
-	var selected_phone = $(this).parents('div.list_addByList').attr('data-phone')
-	if(selected_phone.length == 0){
-		var selected_phone = "-"
-	}
+	
+    //주간, 월간달력 : 그룹레슨에 회원 추가할때.
+    if($('#calendar')){
+         add_groupmember_plan["member_id"] = selected_dbid
+         send_add_groupmember_plan(add_groupmember_plan)
+    //회원관리 : 리스트로 그룹회원 추가
+    }else{
+        if(selected_sex=="M"){
+            var sexInfo = "남"
+        }else if(selected_sex=="W"){
+            var sexInfo = "여"
+        }else{
+            var sexInfo = "-"
+        }
+        var selected_phone = $(this).parents('div.list_addByList').attr('data-phone')
+        if(selected_phone.length == 0){
+            var selected_phone = "-"
+        }
 
-	var html = '<div class="addByNewRaw" data-lastname="'+selected_lastname+'" data-firstname="'+selected_firstname+'" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>'
+        var html = '<div class="addByNewRaw" data-lastname="'+selected_lastname+'" data-firstname="'+selected_firstname+'" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>'
 
-	$('#addedMemberListBox').prepend(html)
+        $('#addedMemberListBox').prepend(html)
 
-	added_New_Member_Num++
-	$('#addedMemberListBox span').text(added_New_Member_Num+' 명')
-	$(this).parents('div.list_addByList').remove()
+        added_New_Member_Num++
+        $('#addedMemberListBox span').text(added_New_Member_Num+' 명')
+        $(this).parents('div.list_addByList').remove()
+     }
+   
 })
 
-function draw_memberlist_for_addByList(){
+function draw_memberlist_for_addByList(targetHTML){
     $.ajax({
         url:'/trainer/member_manage_ajax/',
 
@@ -163,7 +172,7 @@ function draw_memberlist_for_addByList(){
                     htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
                 }
                 var html = htmlToJoin.join('')
-                $('#subpopup_addByList').html(html)
+                targetHTML.html(html)
             }
         },
 
