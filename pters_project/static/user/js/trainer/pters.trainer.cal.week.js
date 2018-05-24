@@ -231,7 +231,6 @@ $(document).ready(function(){
 			var text = 'PT Plan'
 			break; 
 		}
-		console.log(day)
 		$('#popup_planinfo_title').text(text)
 		$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 		$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
@@ -595,7 +594,6 @@ $(document).ready(function(){
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		var ajax_block_during_delete_weekcal = true
 		$('#popup_delete_btn_yes').click(function(){
-			console.log(deleteTypeSelect)
 			if(ajax_block_during_delete_weekcal == true){
 				ajax_block_during_delete_weekcal = false;
 				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
@@ -613,7 +611,6 @@ $(document).ready(function(){
 		                //통신성공시 처리
 		                success:function(data){
 			                  var jsondata = JSON.parse(data);
-			                  console.log(jsondata)
 			                  if(jsondata.messageArray.length>0){
 				                  	$('#errorMessageBar').show()
 				                  	$('#errorMessageText').text(jsondata.messageArray)
@@ -659,7 +656,6 @@ $(document).ready(function(){
 					}
 				}else if(deleteTypeSelect == "groupptdelete"){
 					send_plan_delete('group')
-					console.log('----sdfasdfs')
 				}
 			}
 		})
@@ -1702,7 +1698,6 @@ function send_plan_delete(option, callbackoption, callback){
    		var sendData = send_Data(serializeArray)
 		var url_ = '/schedule/delete_group_schedule/'
 	}
-	console.log(sendData)
 	$.ajax({
             url: url_,
             type:'POST',
@@ -1724,7 +1719,6 @@ function send_plan_delete(option, callbackoption, callback){
                         	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 						}
 					}
-					console.log('send_plan_delete',jsondata)
                   	set_schedule_time(jsondata)
                   	fake_show()
                   	console.log('success')
@@ -1812,7 +1806,6 @@ function set_schedule_time(jsondata){
 	scheduleTime('class', jsondata)
 	scheduleTime('off', jsondata)
 	scheduleTime('group', jsondata);
-	console.log('set_schedule_time:',jsondata)
 }
 
 
