@@ -52,6 +52,7 @@ $(document).ready(function(){
                       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
 
                       timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
+                      timeGraphSet("group","pink","AddClass", initialJSON);
                       timeGraphSet("off","grey","AddClass", initialJSON)
                       startTimeSet('class');
                   }
@@ -69,6 +70,7 @@ $(document).ready(function(){
                       $('#durations_mini, #durations_mini').html('')
                       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
+                      timeGraphSet("group","pink","AddClass", initialJSON);
                       timeGraphSet("off","grey","AddClass", initialJSON)
                       startTimeSet('class');
                   }
@@ -149,10 +151,12 @@ $(document).ready(function(){
             var thisTime = thisIDSplitArray[3] +'_'+ thisIDSplitArray[4]
             //2018_5_13_23_30
             if(Options.classDur == 60){
-                if(!$(this).find('div').hasClass('classTime') 
+                if(!$(this).find('div').hasClass('classTime')
+                  && !$(this).find('div').hasClass('groupTime')  
                   && !$(this).find('div').hasClass('offTime') 
                   && $('#page-addplan-pc').css('display','none') 
-                  && !$(next30ID).find('div').hasClass('classTime') 
+                  && !$(next30ID).find('div').hasClass('classTime')
+                  && !$(next30ID).find('div').hasClass('groupTime') 
                   && !$(next30ID).find('div').hasClass('offTime') 
                   && !$(this).hasClass('_on')
                   && thisTime!=(Options.workEndTime-1)+'_30'){
@@ -225,6 +229,7 @@ $(document).ready(function(){
                       $('#durations_mini, #durations_mini').html('')
                       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
+                      timeGraphSet("group","pink","mini", initialJSON);
                       timeGraphSet("off","grey","mini", initialJSON)
                       durTimeSet(hh,min,"mini");
                       $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
@@ -262,6 +267,7 @@ $(document).ready(function(){
                       $('#durations_mini, #durations_mini').html('')
                       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
+                      timeGraphSet("group","pink","mini", initialJSON);
                       timeGraphSet("off","grey","mini", initialJSON)
                       durTimeSet(hh,min,"mini");
                       $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
@@ -273,7 +279,7 @@ $(document).ready(function(){
                   }
                 }
             }else if(Options.classDur == 30){
-                if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none')){
+                if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('groupTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none')){
                   //$('.td00').css('background','transparent')
                   closeMiniPopupByChange()
                   if(Options.classDur == 30){
@@ -325,6 +331,7 @@ $(document).ready(function(){
                       $('#durations_mini, #durations_mini').html('')
                       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
+                      timeGraphSet("group","pink","mini", initialJSON);
                       timeGraphSet("off","grey","mini", initialJSON)
                       durTimeSet(hh,min,"mini");
                       $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
@@ -362,6 +369,7 @@ $(document).ready(function(){
                       $('#durations_mini, #durations_mini').html('')
                       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
                       timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
+                      timeGraphSet("group","pink","mini", initialJSON);
                       timeGraphSet("off","grey","mini", initialJSON)
                       durTimeSet(hh,min,"mini");
                       $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
@@ -1068,6 +1076,7 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
         startTimeSet('class');
         })*/
       timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
+      timeGraphSet("group","pink","AddClass", initialJSON);
       timeGraphSet("off","grey","AddClass", initialJSON)
       startTimeSet('class');
 }
@@ -1315,8 +1324,10 @@ function ajaxTimeGraphSet(date, callback){
             $('#errorMessageText').text(jsondata.messageArray)
           }else{
             timeGraphSet("class","pink","AddClass", jsondata);  //시간 테이블 채우기
+            timeGraphSet("group","pink","AddClass", initialJSON);
             timeGraphSet("off","grey","AddClass", jsondata)
             timeGraphSet("class","pink","mini", jsondata);  //시간 테이블 채우기
+            timeGraphSet("group","pink","mini", initialJSON);
             timeGraphSet("off","grey","mini", jsondata)
 
             callback()
@@ -1928,6 +1939,14 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
       var planNoteArray = jsondata.scheduleNoteArray
       //$('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
     break;
+    case "group" :
+      var planStartDate = jsondata.group_schedule_start_datetime
+      var planEndDate = jsondata.group_schedule_end_datetime
+      var planMemberName = jsondata.group_schedule_group_name
+      var planScheduleIdArray = jsondata.group_schedule_id
+      var planNoteArray = jsondata.group_schedule_note
+      //$('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
+    break;
     case "off" :
       var planStartDate = jsondata.offTimeArray_start_date
       var planEndDate = jsondata.offTimeArray_end_date
@@ -2202,116 +2221,6 @@ function send_Data(serializeArray){
     return sendData
 }
 
-/*
-function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
-  switch(option){
-    case "class" :
-    var durTimeList = $('#durations')
-    break;
-    case "off" :
-    var durTimeList = $('#durations_off')
-    break;
-    case "mini" :
-    var durTimeList = $('#durations_mini')
-    break;
-  }
-  if(Options.language == "KOR"){
-    var text1 = '오전'
-    var text2 = '오후'
-    var text3 = '시'
-    var text4 = '시간'
-  }else if(Options.language == "JPN"){
-    var text1 = '午前'
-    var text2 = '午後'
-    var text3 = '時'
-    var text4 = '時間'
-  }else if(Options.language == "ENG"){
-    var text1 = 'AM'
-    var text2 = 'PM'
-    var text3 = ':00'
-    var text4 = 'h'
-  }
-  
-  var len = offAddOkArray.length;
-  var index = offAddOkArray.indexOf(Number(selectedTime)+Number(selectedMin)/60);
-  var substr = offAddOkArray[index+1]-offAddOkArray[index];
-  var classDur = Options.classDur/60
-
-  durTimeList.html('')
-  var t = 1
-  console.log(offAddOkArray)
-  //offAddOkArray =  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12.5, 13, 14, 18.5, 20, 21, 22, 23]
-  //[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11.5, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
-  //[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5]
-  console.log(selectedTime,selectedMin)
-  for(var j=index; j<len; j++){
-      if(classDur == 1){
-          var selectedHours = Number(selectedTime)+(j-index+classDur)
-          if(selectedHours>12){
-            if(selectedHours==24){
-              var selectedHours = text1+' 12'
-            }else{
-              var selectedHours = text2+(selectedHours-12)  
-            }
-          }else if(selectedHours==12){
-              var selectedHours = text2+' '+selectedHours
-          }else{
-              var selectedHours = text1+' '+selectedHours
-          }
-          if(offAddOkArray[j+1]-offAddOkArray[j]>1 && offAddOkArray[j+1]-offAddOkArray[j] != 1.5){
-              if(selectedMin == "00"){
-                durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+(t)+text4+'  (~ '+selectedHours+':'+selectedMin+')'+'</a></li>')
-                break;
-              }else if(selectedMin == "30"){
-                break;
-              }
-          }else if(offAddOkArray[j+1]-offAddOkArray[j] == 1.5){
-              durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+'선택 가능한 시간이 없습니다.'+'</a></li>')
-              break;
-          }else if(offAddOkArray[j+2]-offAddOkArray[j] == 2){
-              durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+'22'+'</a></li>')
-              break;
-          }else{
-              durTimeList.append('<li><a data-dur="'+(t)+'" class="pointerList">'+(t)+text4+'  (~ '+selectedHours+':'+selectedMin+')'+'</a></li>')
-          }
-      }else if(classDur == 0.5){
-          if(selectedMin == '30'){
-            var selectedHours = Number(selectedTime)+(t)
-          }else if(selectedMin == '00'){
-            var selectedHours = Number(selectedTime)+(t)-0.5
-          }
-          var hour = parseInt(selectedHours)
-          if(String(selectedHours).indexOf('.')!=-1){
-            var minute = '30'
-          }else{
-            var minute = '00'
-          }
-
-          if(hour>12){
-            if(hour==24){
-              var hour = text1+' 12'
-            }else{
-              var hour = text2+(hour-12)  
-            }
-          }else if(hour==12){
-              var hour = text2+' '+hour
-          }else{
-              var hour = text1+' '+hour
-          }
-          
-          if(offAddOkArray[j+1]-offAddOkArray[j]>0.5){
-            console.log(j)
-                durTimeList.append('<li><a data-dur="'+(t-0.5)/0.5+'" class="pointerList">'+(t-0.5)+text4+'  (~ '+hour+':'+minute+')'+'</a></li>')
-                break;
-          }else{
-            console.log(j)
-              durTimeList.append('<li><a data-dur="'+(t-0.5)/0.5+'" class="pointerList">'+(t-0.5)+text4+'  (~ '+hour+':'+minute+')'+'</a></li>')
-          }
-      }
-      t = t + classDur
-  }
-   durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>')
-}*/
 
 
 function addGraphIndicator(datadur){
@@ -2365,31 +2274,6 @@ function addGraphIndicator(datadur){
       min = Number(min)+30
     }
   }
-  
-
-
-  /*
-  var length = parseInt(durTime)
-  if(length == 0){
-    var length = 1;
-  }
-  //for(var j=0; j<length; j++){  // 1_30_1.5
-      var time = Number(targetTime)
-      var min =targetMin
-      for(k=0; k<durTime/0.5; k++){
-            if(min == 60){
-            var min = '00'
-            var time = time +1
-          }
-          if(k==0){
-            $('#'+(time)+'g_'+min+option).addClass(cssClass)
-          }else{
-            $('#'+(time)+'g_'+min+option).addClass(cssClass_border)
-          }
-          
-          min = Number(min)+30
-      }  
-  */
 
 }
 
