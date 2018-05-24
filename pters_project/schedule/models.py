@@ -102,6 +102,7 @@ class RepeatScheduleTb(models.Model):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
+    group_schedule_id = models.IntegerField(db_column='GROUP_SCHEDULE_ID', null=False)
     repeat_type_cd = models.CharField(db_column='REPEAT_TYPE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     week_info = models.CharField(db_column='WEEK_INFO', max_length=100, blank=True, null=True)  # Field name made lowercase.
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
@@ -128,6 +129,7 @@ class DeleteRepeatScheduleTb(models.Model):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
+    group_schedule_id = models.IntegerField(db_column='GROUP_SCHEDULE_ID', null=False)
     repeat_type_cd = models.CharField(db_column='REPEAT_TYPE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
     week_info = models.CharField(db_column='WEEK_INFO', max_length=100, blank=True, null=True)  # Field name made lowercase.
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
@@ -155,6 +157,7 @@ class DeleteScheduleTb(models.Model):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
+    group_schedule_id = models.IntegerField(db_column='GROUP_SCHEDULE_ID', null=False)
     delete_repeat_schedule_tb = models.IntegerField(db_column='DELETE_REPEAT_SCHEDULE_TB_ID', blank=True, null=True)  # Field name made lowercase.
     start_dt = models.DateTimeField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
     end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
@@ -180,6 +183,7 @@ class ScheduleTb(models.Model):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
     group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
+    group_schedule_id = models.IntegerField(db_column='GROUP_SCHEDULE_ID', null=False)
     repeat_schedule_tb = models.ForeignKey(RepeatScheduleTb, on_delete=models.SET_NULL, default='', blank=True, null=True) # Field name made lowercase.
     start_dt = models.DateTimeField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
     end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
