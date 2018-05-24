@@ -6,6 +6,10 @@
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "name" :
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.member_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "last_name" :
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.member_info.user.last_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "first_name" :
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.member_info.user.first_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "db_id" :
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.member_info.member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_start_date" : 
