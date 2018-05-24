@@ -42,6 +42,15 @@
   <input type="hidden" name="repeat_confirm"   id="id_repeat_confirm">  <!--val 1, 0-->
   <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
 </form>
+
+<form action="{% url 'schedule:add_member_group_schedule' %}" id="add_groupmember-plan-form" method="get">
+    {% csrf_token %}
+    <input type="hidden" name="member_id" id="form_add_member_group_plan_memberid"> <!--ajax로 받은 id-->
+    <input type="hidden" name="schedule_id" id="form_add_member_group_plan_scheduleid"> <!--ajax로 받은 id-->
+    <input type="hidden" name="add_memo" id="form_add_member_group_plan_addmemo"> <!--ajax로 받은 id-->
+    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+</form>
+
     
    <!--플로팅 버튼-->
 <div id="float_btn_wrap">

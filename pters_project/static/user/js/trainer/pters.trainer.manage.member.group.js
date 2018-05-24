@@ -105,9 +105,8 @@ $(document).on('click','img.add_listedMember',function(){
 	
     //주간, 월간달력 : 그룹레슨에 회원 추가할때.
     if($('#calendar').length != 0 ){
-        console.log('??',$('#calendar'))
-         add_groupmember_plan["member_id"] = selected_dbid
-         send_add_groupmember_plan(add_groupmember_plan)
+         $('#form_add_member_group_plan_memberid').val(selected_dbid);
+         send_add_groupmember_plan();
     //회원관리 : 리스트로 그룹회원 추가
     }else{
         if(selected_sex=="M"){
