@@ -2444,7 +2444,9 @@ function send_push(push_server_id, intance_id,title, message, badge_counter){
 //그룹..
 
 $(document).on('click','img.add_groupmember_plan',function(){
-    $('#form_add_member_group_plan_scheduleid').val($(this).attr('group-schedule-id')) 
+    $('#form_add_member_group_plan_scheduleid').val($(this).attr('group-schedule-id'))
+    $('#form_add_member_group_plan_groupid').val($(this).attr('data-groupid')) 
+    $('#form_add_member_group_plan_max').val($(this).attr('data-membernum')) 
     $('#subpopup_addByList_plan').show()
     get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))})//전체회원 조회
     get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))})//특정그룹회원 목록 조회
@@ -2469,7 +2471,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
       htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
     }
     if(jsondata.db_id.length < max){
-      htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'"></div>')
+      htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-membernum="'+max+'"></div>')
     }
     target.html(htmlToJoin.join(''))
 }
@@ -2493,10 +2495,12 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 
+//그룹 레슨일정에 참석자 추가
 function send_add_groupmember_plan(){
     var $form = $('#add_groupmember-plan-form').serializeArray()
     var sendData = send_Data($form)
     console.log('senddata',sendData)
+    console.log('datas',sendData["group_id"], sendData["max"], sendData["schedule_id"])
      $.ajax({
       url: '/schedule/add_member_group_schedule/',
       type : 'POST',
@@ -2513,6 +2517,7 @@ function send_add_groupmember_plan(){
           scheduleTime('class', jsondata)
           scheduleTime('off', jsondata)
           scheduleTime('group', jsondata)
+          get_groupmember_list(sendData["group_id"],'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, sendData["group_id"], sendData["schedule_id"], sendData["max"])})
           alert('ok')
       },
 
