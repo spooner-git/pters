@@ -75,64 +75,6 @@ $(document).ready(function(){
           }
       })
 
-      /*
-      $('#repeatSchedule').click(function(){ //일정추가 팝업에서 반복일정을 누르면 반복일정 관련 메뉴 나타남
-          
-          if(addTypeSelect == "ptadd"){
-            repeatStartTimeSet()
-         
-            $('._NORMAL_ADD_wrap').css('display','none')
-            $('._REPEAT_ADD_wrap').css('display','block')
-            $('._NORMAL_ADD_timegraph').hide()
-           
-            addTypeSelect = "repeatptadd"
-            deleteTypeSelect = "repeatptdelete"
-            $("#id_repeat_member_id").val($('#id_member_id').val());
-            $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
-            $("#id_repeat_member_name").val($('#id_member_name').val());
-            //$(this).find('.icons-next-button').addClass('rotate_90')
-            check_dropdown_selected()
-            if($('#membersSelected button').val().length == 0){
-              $('#offRepeatSummary').html('').hide()
-            }
-          }else if(addTypeSelect == "offadd"){
-            repeatStartTimeSet()
-            
-            $('._NORMAL_ADD_wrap').css('display','none')
-            $('._REPEAT_ADD_wrap').css('display','block')
-            $('._NORMAL_ADD_timegraph').hide()
-            
-            addTypeSelect = "repeatoffadd"
-            deleteTypeSelect = "repeatoffdelete"
-            check_dropdown_selected()
-            //$(this).find('.icons-next-button').addClass('rotate_90')
-            fill_repeat_info('off')
-          }else if(addTypeSelect == "repeatptadd"){
-            
-            $('._NORMAL_ADD_wrap').css('display','block')
-            $('._REPEAT_ADD_wrap').css('display','none')
-
-            if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').show('slow')
-            }
-            
-            //$(this).find('.icons-next-button').removeClass('rotate_90')
-            addTypeSelect = "ptadd"
-            check_dropdown_selected()
-          }else if(addTypeSelect == "repeatoffadd"){
-            
-            $('._NORMAL_ADD_wrap').css('display','block')
-            $('._REPEAT_ADD_wrap').css('display','none')
-            if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').show('slow')
-            }
-            
-            //$(this).find('.icons-next-button').removeClass('rotate_90')
-            addTypeSelect = "offadd"
-            check_dropdown_selected()
-          }   
-      })
-      */
 
       $(document).on('click','.summaryInnerBoxText, .summaryInnerBoxText2',function(){ //반복일정 텍스트 누르면 휴지통 닫힘
         var $btn = $('.deleteBtnBin')
@@ -142,7 +84,7 @@ $(document).ready(function(){
 
 
       $("#repeats li a").click(function(){ //반복 빈도 드랍다운 박스 - 선택시 선택한 아이템이 표시
-        if(addTypeSelect == "repeatptadd"){
+        if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
           $("#repeattypeSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-repeat'));
           $("#id_repeat_freq").val($(this).attr('data-repeat'));
         }else if(addTypeSelect == "repeatoffadd"){
@@ -156,7 +98,7 @@ $(document).ready(function(){
       $(document).on('click', '#repeatstarttimes li a',function(){
           $('.tdgraph').removeClass('graphindicator')
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-trainingtime'));
-          if(addTypeSelect == "repeatptadd"){
+          if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
             $("#id_repeat_start_time").val($(this).attr('data-trainingtime'));
           }else if(addTypeSelect == "repeatoffadd"){
             $("#id_repeat_start_time_off").val($(this).attr('data-trainingtime'));
@@ -278,7 +220,7 @@ $(document).ready(function(){
               selectedDayGroup.splice(index,1) 
             }
           }
-          if(addTypeSelect == "repeatptadd"){
+          if(addTypeSelect == "repeatptadd"  || addTypeSelect == "repeatgroupptadd"){
             $('#id_repeat_day').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
           }else if(addTypeSelect == "repeatoffadd"){
             $('#id_repeat_day_off').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
