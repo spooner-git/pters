@@ -72,6 +72,7 @@ function shade_index(option){
 function close_info_popup(option){
   if(option=="cal_popup_planinfo"){
       $("#"+option).css({'display':'none'})
+      toggleGroupParticipantsList('off')
       if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
         shade_index(100)
       }else{

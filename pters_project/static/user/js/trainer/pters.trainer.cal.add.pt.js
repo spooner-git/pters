@@ -2368,7 +2368,7 @@ $(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',func
 })
 
 
-
+//그룹 일정에 속한 회원목록을 받아온다.
 function get_group_plan_participants(group_schedule_id, callbackoption , callback){
   console.log(group_schedule_id)
     $.ajax({
@@ -2398,18 +2398,20 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
           console.log('server error')
         }
       })
-      
 }
+//그룹 일정에 속한 회원목록을 받아온다.
 
-//그룹에 속한 참여자들을 표기
+//그룹에 일정에 속한 회원목록을 그린다. get_group_plan_participants와 같이 쓴다.
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
     var target = $('#groupParticipants')
     var htmlToJoin = []
     for(var i=0; i<jsondata.db_id.length; i++){
       var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'">'
-      var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
-      var name = '<span>'+jsondata.last_name[i]+jsondata.first_name[i]+'</span>'
-      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel">'
+      //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
+      //var name = '<span>'+jsondata.last_name[i]+jsondata.first_name[i]+'</span>'
+      var sex = '<img src="/static/user/res/member/icon-sex-'+'.png">'
+      var name = '<span>'+jsondata.name[i]+'</span>'
+      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata.scheduleIdArray[i]+'">'
       var htmlend = '</div>'
       htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
     }
@@ -2418,7 +2420,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
     }
     target.html(htmlToJoin.join(''))
 }
-//그룹에 속한 참여자들을 표기
+//그룹에 일정에 속한 회원목록을 그린다. get_group_plan_participants와 같이 쓴다.
 
 
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
@@ -2437,9 +2439,9 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 }
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 
-//[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 
-//그룹 레슨일정에 참석자 추가
+//[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
+//그룹일정에 참석자 추가 img.add_listedMember(플러스버튼)을 누르면 호출된다.
 function send_add_groupmember_plan(){
     var $form = $('#add_groupmember-plan-form').serializeArray()
     var sendData = send_Data($form)
@@ -2459,7 +2461,7 @@ function send_add_groupmember_plan(){
           scheduleTime('class', jsondata)
           scheduleTime('off', jsondata)
           scheduleTime('group', jsondata)
-          get_group_plan_participants(sendData[5]["value"],'callback',function(data){draw_groupParticipantsList_to_popup(data, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
+          get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
           alert('그룹일정 참석자 정상 등록되었습니다.')
       },
 
@@ -2472,3 +2474,16 @@ function send_add_groupmember_plan(){
       }
     })
 }
+
+
+$(document).on('click','.group_member_cancel',function(){
+    $('#id_schedule_id').val($(this).attr('schedule-id'))
+    var group_id = $(this).attr('data-groupid');
+    var group_schedule_id = $(this).attr('group-schedule-id')
+    var max = $(this).attr('data-max')
+    send_plan_delete('pt', 'callback', function(){
+        get_group_plan_participants(group_schedule_id,'callback',
+          function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)
+          })
+    })
+})
