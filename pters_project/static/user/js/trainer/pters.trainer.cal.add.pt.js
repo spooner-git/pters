@@ -954,7 +954,7 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
 
     if(option == "ptadd"){
         $('#memberName,#remainCount').css('display','block');
-        $('#uptext2').text('PT 일정 등록')
+        $('#uptext2').text('레슨 일정 추가')
         $('#id_training_date').val($('#datepicker').val())
         $('#id_repeat_start_date').val($('#datepicker_repeat_start').val())
         if($('body').width()>600){
@@ -964,7 +964,7 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
         $(".pt_memo_guide").css('display','block')
     }else if(option == "offadd"){
         $('#memberName,#remainCount').css('display','none');
-        $('#uptext2').text('OFF 일정 등록')
+        $('#uptext2').text('OFF 일정 추가')
         $('#id_training_date_off').val($('#datepicker').val())
         $('#id_repeat_start_date_off').val($('#datepicker_repeat_start').val())
         if($('body').width()>600){
