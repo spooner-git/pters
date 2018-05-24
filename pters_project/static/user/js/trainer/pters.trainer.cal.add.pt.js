@@ -2445,7 +2445,7 @@ function send_push(push_server_id, intance_id,title, message, badge_counter){
 
 $(document).on('click','img.add_groupmember_plan',function(){
     add_groupmember_plan["schedule_id"] = $(this).attr('group-schedule-id')
-    $('#subpopup_addByList').show()
+    $('#subpopup_addByList_plan').show()
     get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))})//전체회원 조회
     get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))})//특정그룹회원 목록 조회
 })
@@ -2485,16 +2485,15 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 }
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
-var add_groupmember_plan = {"member_id":"", "schedule_id":"", "add_memo":"", "next_page":'/trainer/cal_day_ajax/'}
-
+var add_groupmember_plan = {"member_id":"", "schedule_id":"", "add_memo":"", "date":"", "day":"", "next_page":'/trainer/cal_day_ajax/'}
 function send_add_groupmember_plan(add_groupmember_plan_json){
     var form_json = add_groupmember_plan_json
-    console.log(form_json)
+    //var sendData = send_Data(form_json)
      $.ajax({
       url: '/schedule/add_member_group_schedule/',
       type : 'POST',
       dataType: 'html',
-      data: JSON.stringify(),
+      data: JSON.stringify(form_json),
 
       beforeSend:function(){
         

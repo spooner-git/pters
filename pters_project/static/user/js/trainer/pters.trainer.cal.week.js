@@ -185,7 +185,7 @@ $(document).ready(function(){
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','block')
-		$('#popup_btn_viewGroupParticipants').hide()
+		$('#subpopup_addByList, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
 		var dbid = $(this).attr('data-dbid')
@@ -288,7 +288,7 @@ $(document).ready(function(){
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','none')
-		$('#popup_btn_viewGroupParticipants').hide()
+		$('#subpopup_addByList, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
 		var info = $(this).attr('off-time').split('_')
@@ -362,6 +362,7 @@ $(document).ready(function(){
 	$(document).on('click','div.groupTime',function(e){ //일정을 클릭했을때 팝업 표시
 		e.stopPropagation()
 		toggleGroupParticipantsList('off')
+		$('#subpopup_addByList').hide()
 		$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 
 															'data-groupid': $(this).attr('data-groupid'),
 															'group-schedule-id':$(this).attr('group-schedule-id')
