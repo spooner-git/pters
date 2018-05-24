@@ -1811,7 +1811,7 @@ def add_group_schedule_logic(request):
                          log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
-    print(error)
+
     if error is None and group_info.group_type_cd == 'NORMAL':
         member_list = []
         group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__lecture_avail_count__gt=0, use=1)
@@ -1829,13 +1829,13 @@ def add_group_schedule_logic(request):
         for member_info in member_list:
             error_temp = None
             lecture_id = get_group_lecture_id(group_id, member_info.member_id)
-            print(member_info.name+':'+str(add_schedule_info.schedule_id))
-            error_temp = func_add_member_group_schedule_logic(add_schedule_info.schedule_id, lecture_id,
-                                                              class_id,
-                                                              group_id,
-                                                              group_info.member_num, schedule_start_datetime,
-                                                              schedule_end_datetime,
-                                                              note, request.user.id)
+            if lecture_id is not None and lecture_id != '':
+                error_temp = func_add_member_group_schedule_logic(add_schedule_info.schedule_id, lecture_id,
+                                                                  class_id,
+                                                                  group_id,
+                                                                  group_info.member_num, schedule_start_datetime,
+                                                                  schedule_end_datetime,
+                                                                  note, request.user.id)
             if error_temp is not None:
                 if error is None:
                     error = error_temp
@@ -2378,22 +2378,39 @@ def add_group_repeat_schedule_confirm(request):
             log_data.save()
 
             if group_info.group_type_cd == 'NORMAL':
-                group_lecture_data = GroupLectureTb.objects.filter(group_tb=repeat_schedule_info.group_tb_id,
+                member_list = []
+                group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=repeat_schedule_info.group_tb_id,
                                                                    lecture_tb__lecture_avail_count__gt=0, use=1)
+
                 for group_lecture_info in group_lecture_data:
-                    error = func_add_group_member_repeat_schedule_logic(repeat_schedule_info, schedule_data, group_lecture_info.lecture_tb.lecture_id, request.user.id)
-                    if error is None:
-                        log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
-                                         from_member_name=request.user.last_name + request.user.first_name,
-                                         to_member_name=group_lecture_info.lecture_tb.member.name,
-                                         class_tb_id=class_id,
-                                         log_info=group_info.name + ' 그룹 반복 일정', log_how='추가',
-                                         log_detail=str(start_date) + '/' + str(end_date),
-                                         reg_dt=timezone.now(), use=1)
-                        log_data.save()
-                        # push 필요
-                    else:
-                        error = None
+                    if len(member_list) == 0:
+                        member_list.append(group_lecture_info.lecture_tb.member)
+                    check_info = 0
+                    for member_info in member_list:
+                        if group_lecture_info.lecture_tb.member.member_id != member_info.member_id:
+                            check_info = 1
+                    if check_info == 1:
+                        member_list.append(group_lecture_info.lecture_tb.member)
+
+                for member_info in member_list:
+                    error_temp = None
+                    lecture_id = get_group_lecture_id(repeat_schedule_info.group_tb_id, member_info.member_id)
+                    if lecture_id is not None and lecture_id != '':
+                        error = func_add_group_member_repeat_schedule_logic(repeat_schedule_info, schedule_data,
+                                                                            lecture_id,
+                                                                            request.user.id)
+                        if error is None:
+                            log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
+                                             from_member_name=request.user.last_name + request.user.first_name,
+                                             to_member_name=group_lecture_info.lecture_tb.member.name,
+                                             class_tb_id=class_id,
+                                             log_info=group_info.name + ' 그룹 반복 일정', log_how='추가',
+                                             log_detail=str(start_date) + '/' + str(end_date),
+                                             reg_dt=timezone.now(), use=1)
+                            log_data.save()
+                            # push 필요
+                        else:
+                            error = None
 
             request.session['push_title'] = ''
             request.session['push_info'] = ''
