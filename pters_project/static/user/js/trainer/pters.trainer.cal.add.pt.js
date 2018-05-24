@@ -1254,8 +1254,13 @@ function set_group_dropdown_list(jsondata){
 
 function ajaxRepeatConfirmSend(){
       ajax_block_during_repeat_confirm = false
+      if(addTypeSelect == "repeatgroupptadd"){
+        var serverURL = '/schedule/delete_group_repeat_schedule/'
+      }else{
+        var serverURL = '/schedule/add_repeat_schedule_confirm/'
+      }
       var $form = $('#confirm-repeat-schedule-form')
-      var serverURL = '/schedule/add_repeat_schedule_confirm/'
+      
       $.ajax({
         url: serverURL,
         type:'POST',
