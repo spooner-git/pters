@@ -540,12 +540,11 @@ $(document).ready(function(){
               $('#remainCount').hide()
               $('#groupInfo').show()
               
-              //
-              //get_repeat_info($(this).attr('data-dbid'))
-                $('#id_repeat_group_id').val($(this).attr('data-groupid'))
-              //
-              //
-              $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
+              
+              //get_repeat_info($(this).attr('data-groupid'))
+              $('#id_repeat_group_id').val($(this).attr('data-groupid'))
+
+              $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':$(this).attr('data-groupid')})
               $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
               $('#grouptypenumInfo').text($(this).attr('data-grouptypecd')+' '+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum'))
               $("#id_group_id").val($(this).attr('data-groupid'));
@@ -781,48 +780,49 @@ $(document).ready(function(){
                                 }
                             }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
-                              var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
-                                var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
-                              $('._repeatconfirmQuestion').text('선택한 일정 총 '+total_count+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.');
-                              var repeat_info = popup_repeat_confirm()
-                              $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
-                              $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
-                              $('#id_repeat_schedule_id_confirm').val(repeatArray)
-                              completeSend(); //ajax 로딩 이미지 숨기기
-                              shade_index(200)
-                            }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
-                              var repeat_info = popup_repeat_confirm()
-                              var day_info = repeat_info.day_info
-                              var dur_info = repeat_info.dur_info
-                              $('._repeatconfirmQuestion').text('총 '+jsondata.repeatScheduleCounterArray[0]+' 건의 일정이 등록됩니다.')
-                              $('#repeat_confirm_day').text(day_info)
-                              $('#repeat_confirm_dur').text(dur_info)
-                              $('#id_repeat_schedule_id_confirm').val(repeatArray)
-                              completeSend(); //ajax 로딩 이미지 숨기기
-                              shade_index(200)
-                            }else{
-                              if($('._calweek')){
-                                scheduleTime('class', jsondata);
-                                scheduleTime('off', jsondata);
-                                scheduleTime('group', jsondata);
-                                //scheduleTime('group', jsondata)
-                              }
-                              else if($('._calmonth')){
-                                classDatesTrainer(jsondata);
-                                addPtMemberListSet(jsondata);
-                                plancheck(clicked_td_date_info, jsondata)
-                              }
-                              
-                              
-                              $('#calendar').show().css('height','100%')
-                              if($('body').width()>=600){
-                                  $('#calendar').css('position','relative')
-                              }
+                                var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
+                                  var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
+                                $('._repeatconfirmQuestion').text('선택한 일정 총 '+total_count+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.');
+                                var repeat_info = popup_repeat_confirm()
+                                $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
+                                $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
+                                $('#id_repeat_schedule_id_confirm').val(repeatArray)
+                                completeSend(); //ajax 로딩 이미지 숨기기
+                                shade_index(200)
 
-                              closeAddPopup()
-                              closeAddPopup_mini()
-                              completeSend()
-                              shade_index(-100)
+                            }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
+                                var repeat_info = popup_repeat_confirm()
+                                var day_info = repeat_info.day_info
+                                var dur_info = repeat_info.dur_info
+                                $('._repeatconfirmQuestion').text('총 '+jsondata.repeatScheduleCounterArray[0]+' 건의 일정이 등록됩니다.')
+                                $('#repeat_confirm_day').text(day_info)
+                                $('#repeat_confirm_dur').text(dur_info)
+                                $('#id_repeat_schedule_id_confirm').val(repeatArray)
+                                completeSend(); //ajax 로딩 이미지 숨기기
+                                shade_index(200)
+
+                            }else{
+                                if($('._calweek')){
+                                  scheduleTime('class', jsondata);
+                                  scheduleTime('off', jsondata);
+                                  scheduleTime('group', jsondata);
+                                  //scheduleTime('group', jsondata)
+                                }
+                                else if($('._calmonth')){
+                                  classDatesTrainer(jsondata);
+                                  addPtMemberListSet(jsondata);
+                                  plancheck(clicked_td_date_info, jsondata)
+                                }
+                                
+                                $('#calendar').show().css('height','100%')
+                                if($('body').width()>=600){
+                                    $('#calendar').css('position','relative')
+                                }
+
+                                closeAddPopup()
+                                closeAddPopup_mini()
+                                completeSend()
+                                shade_index(-100)
                             }
                         }
                     },
@@ -881,7 +881,12 @@ $(document).ready(function(){
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend();
             check_dropdown_selected()
-            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
+            if(addTypeSelect == "repeatgroupptadd"){
+              var id = $('#cal_popup_repeatconfirm').attr('data-groupid')
+            }else{
+              var id = $('#cal_popup_repeatconfirm').attr('data-dbid')
+            }
+            get_repeat_info(id)
         }
       })
       
@@ -1255,12 +1260,12 @@ function set_group_dropdown_list(jsondata){
 function ajaxRepeatConfirmSend(){
       ajax_block_during_repeat_confirm = false
       if(addTypeSelect == "repeatgroupptadd"){
-        var serverURL = '/schedule/delete_group_repeat_schedule/'
+        var serverURL = '/schedule/add_group_repeat_schedule_confirm/'
       }else{
         var serverURL = '/schedule/add_repeat_schedule_confirm/'
       }
       var $form = $('#confirm-repeat-schedule-form')
-      
+      console.log(serverURL, $form.serialize())
       $.ajax({
         url: serverURL,
         type:'POST',
@@ -1273,6 +1278,7 @@ function ajaxRepeatConfirmSend(){
 
         success:function(data){
           var jsondata = JSON.parse(data);
+          console.log('ajaxRepeatConfirmSend',jsondata)
           if(jsondata.messageArray.length>0){
             $('#errorMessageBar').show()
             $('#errorMessageText').text(jsondata.messageArray)
@@ -1354,9 +1360,14 @@ function clear_start_dur_dropdown(){
 
 
 function get_repeat_info(dbID){
-    if(addTypeSelect == "repeatptadd" || addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
+    if(addTypeSelect == "repeatptadd" || addTypeSelect == "ptadd"){
       var url_ = '/trainer/read_member_lecture_data_from_schedule/'
       var data_ = {"member_id": dbID}
+      var fill_option = 'class'
+      var type_ = 'POST'
+    }else if(addTypeSelect == "groupptadd" || addTypeSelect == "repeatgroupptadd"){
+      var url_ = '/trainer/read_member_lecture_data_from_schedule/'
+      var data_ = {"group_id": dbID}
       var fill_option = 'class'
       var type_ = 'POST'
     }else if(addTypeSelect == "repeatoffadd"){
