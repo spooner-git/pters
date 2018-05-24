@@ -2450,6 +2450,10 @@ $(document).on('click','img.add_groupmember_plan',function(){
     get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))})//특정그룹회원 목록 조회
 })
 
+$(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',function(){
+    $('#subpopup_addByList_plan').hide()
+})
+
 
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
     var target = $('#groupParticipants')
