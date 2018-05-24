@@ -732,7 +732,7 @@ $(document).ready(function(){
 				var group_schedule_id = $(this).attr('group-schedule-id')
 				//var group_plan_start_date = $(this).attr('data-starttime')
 				
-				정식(get_grouopmember_list 지우고 이게 정식) get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)})
+				get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)})
 				
 				//테스트용 그룹에 속한 참여자들을 표기
 				//get_groupmember_list(group_id, 'callback', function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)})
