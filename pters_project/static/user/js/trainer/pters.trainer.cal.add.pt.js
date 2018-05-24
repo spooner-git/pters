@@ -1552,29 +1552,32 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 
 function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
-  console.log('member_ajax',jsondata)
+  console.log('전체 member_ajax',jsondata)
   switch(option){
     case 'class':
       var plan = option
-      var planStartDate = jsondata.classTimeArray_start_date
-      var planEndDate = jsondata.classTimeArray_end_date
-      var planMemberName = jsondata.classTimeArray_member_name
-      var planMemberDbid = jsondata.classTimeArray_member_id
-      var planScheduleIdArray = jsondata.scheduleIdArray
-      var planNoteArray = jsondata.scheduleNoteArray
-      var planScheduleFinishArray = jsondata.scheduleFinishArray
+      var planStartDate = jsondata.classTimeArray_start_date;
+      var planGroupStartDate = jsondata.group_schedule_start_datetime;
+      var planEndDate = jsondata.classTimeArray_end_date;
+      var planMemberName = jsondata.classTimeArray_member_name;
+      var planMemberDbid = jsondata.classTimeArray_member_id;
+      var planScheduleIdArray = jsondata.scheduleIdArray;
+      var planNoteArray = jsondata.scheduleNoteArray;
+      var planScheduleFinishArray = jsondata.scheduleFinishArray;
       var planColor = 'classTime'
       var planMemberNum = ''
       var planGroupid = ''
       var planCode = ''
     break;
     case 'off':
-      var plan = option
+      var plan = option;
       var planGroupid = ''
-      var planStartDate = jsondata.offTimeArray_start_date
-      var planEndDate = jsondata.offTimeArray_end_date
-      var planScheduleIdArray = jsondata.offScheduleIdArray
-      var planNoteArray = jsondata.offScheduleNoteArray
+      var planStartDate = jsondata.offTimeArray_start_date;
+      var planGroupStartDate = jsondata.group_schedule_start_datetime;
+      var planEndDate = jsondata.offTimeArray_end_date;
+      var planScheduleIdArray = jsondata.offScheduleIdArray;
+      var planScheduleFinishArray = ''
+      var planNoteArray = jsondata.offScheduleNoteArray;
       var planColor = 'offTime'
       var planMemberNum = ''
       var planMemberDbid = ''
@@ -1584,14 +1587,15 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
 
       var plan = option
       var planStartDate = jsondata.group_schedule_start_datetime;
+      var planGroupStartDate = jsondata.group_schedule_start_datetime;
       var planEndDate = jsondata.group_schedule_end_datetime;
       var planMemberName = jsondata.group_schedule_group_name;
       var planGroupid = jsondata.group_schedule_group_id;
       var planScheduleIdArray = jsondata.group_schedule_id;
       var planNoteArray = jsondata.group_schedule_note;
-      var planScheduleFinishArray = jsondata.group_schedule_finish_check
+      var planScheduleFinishArray = jsondata.group_schedule_finish_check;
       var planColor = 'groupTime'
-      var planMemberNum = jsondata.group_schedule_max_member_num
+      var planMemberNum = jsondata.group_schedule_max_member_num;
       var planMemberDbid = ''
       var planCode = '[G]'
     break;
@@ -1686,13 +1690,23 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planColor_ = planColor
     }
     
-    tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                .attr(option+'-schedule-id' , planScheduleIdArray[i])
-                .attr({'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i], 'data-schedule-check' : jsondata.scheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
-                .addClass(planColor_)
-                .css({'height':Number(planDura*planheight-1)+'px'})
-                .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
-    
+
+    if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+       tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
+              .attr(option+'-schedule-id' , planScheduleIdArray[i])
+              .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i], 'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+              .addClass(planColor_)
+              .css({'height':Number(planDura*planheight-1)+'px'})
+              .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');    
+    }else if(option != 'class'){
+       tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
+              .attr(option+'-schedule-id' , planScheduleIdArray[i])
+              .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i], 'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+              .addClass(planColor_)
+              .css({'height':Number(planDura*planheight-1)+'px'})
+              .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');    
+    }
+   
 
     var hhh = Number(planHour)
     var mmm = planMinute
@@ -2444,7 +2458,9 @@ function send_push(push_server_id, intance_id,title, message, badge_counter){
 //그룹..
 
 $(document).on('click','img.add_groupmember_plan',function(){
-    $('#form_add_member_group_plan_scheduleid').val($(this).attr('group-schedule-id')) 
+    $('#form_add_member_group_plan_scheduleid').val($(this).attr('group-schedule-id'))
+    $('#form_add_member_group_plan_groupid').val($(this).attr('data-groupid')) 
+    $('#form_add_member_group_plan_max').val($(this).attr('data-membernum')) 
     $('#subpopup_addByList_plan').show()
     get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))})//전체회원 조회
     get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))})//특정그룹회원 목록 조회
@@ -2456,6 +2472,7 @@ $(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',func
 
 
 //테스트용 그룹에 속한 참여자들을 표기
+/*
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
     var target = $('#groupParticipants')
     console.log('get_groupmember_list',jsondata)
@@ -2469,11 +2486,63 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
       htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
     }
     if(jsondata.db_id.length < max){
-      htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'"></div>')
+      htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-membernum="'+max+'"></div>')
     }
     target.html(htmlToJoin.join(''))
 }
+*/
 //테스트용 그룹에 속한 참여자들을 표기
+
+
+function get_group_plan_participants(schedule_Start_Date_Time, callbackoption , callback){
+  console.log(schedule_Start_Date_Time)
+    $.ajax({
+        url: '/schedule/add_member_group_schedule/',
+        type : 'POST',
+        dataType: 'html',
+        data: {"start_date": schedule_Start_Date_Time},
+
+        beforeSend:function(){
+          beforeSend()
+        },
+
+        success:function(data){
+            var jsondata = JSON.parse(data)
+            if(callbackoption == "callback"){
+              callback()
+            }
+        },
+
+        complete:function(){
+          completeSend()
+        },
+
+        error:function(){
+          console.log('server error')
+        }
+      })
+      
+}
+
+//그룹에 속한 참여자들을 표기
+function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
+    var target = $('#groupParticipants')
+    var htmlToJoin = []
+    for(var i=0; i<jsondata.db_id.length; i++){
+      var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'">'
+      var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
+      var name = '<span>'+jsondata.last_name[i]+jsondata.first_name[i]+'</span>'
+      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel">'
+      var htmlend = '</div>'
+      htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
+    }
+    if(jsondata.db_id.length < max){
+      htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-membernum="'+max+'"></div>')
+    }
+    target.html(htmlToJoin.join(''))
+}
+//그룹에 속한 참여자들을 표기
+
 
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 function draw_groupParticipantsList_to_add(jsondata, targetHTML){
@@ -2493,6 +2562,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 
+//그룹 레슨일정에 참석자 추가
 function send_add_groupmember_plan(){
     var $form = $('#add_groupmember-plan-form').serializeArray()
     var sendData = send_Data($form)
@@ -2504,8 +2574,7 @@ function send_add_groupmember_plan(){
       data: sendData,
 
       beforeSend:function(){
-        
-
+        beforeSend()
       },
 
       success:function(data){
@@ -2513,11 +2582,12 @@ function send_add_groupmember_plan(){
           scheduleTime('class', jsondata)
           scheduleTime('off', jsondata)
           scheduleTime('group', jsondata)
-          alert('ok')
+          get_group_plan_participants(sendData[5]["value"],'callback',function(data){draw_groupParticipantsList_to_popup(data, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
+          alert('그룹일정 참석자 정상 등록되었습니다.')
       },
 
       complete:function(){
-
+        completeSend()
       },
 
       error:function(){
