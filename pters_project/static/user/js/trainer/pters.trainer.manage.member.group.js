@@ -106,6 +106,7 @@ $(document).on('click','img.add_listedMember',function(){
     //주간, 월간달력 : 그룹레슨에 회원 추가할때.
     if($('#calendar').length != 0 ){
          $('#form_add_member_group_plan_memberid').val(selected_dbid);
+
          send_add_groupmember_plan();
     //회원관리 : 리스트로 그룹회원 추가
     }else{
@@ -738,7 +739,7 @@ function groupMemberListSet(group_id, jsondata){
 
         var memberRow = htmlStart +
                         '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
-                        '<div class="_id" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
+                        '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
                         '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
                         '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>' +
                         '<div class="_startdate" data-name="'+groupmember_startdate+'">'+groupmember_startdate+'</div>' +

@@ -481,7 +481,9 @@ if (agent.indexOf("firefox") != -1) {
     $('.lectureStateChangeSelectPopup ._refund').click(function(){
         $('.lectureStateChangeSelectPopup').css('display','none')
         $('.lectureRefundPopup').css('display','block').attr({'data-leid':$('.lectureStateChangeSelectPopup').attr('data-leid'),
-                                                                    'data-username':$('.lectureStateChangeSelectPopup').attr('data-username')})
+                                                              'data-username':$('.lectureStateChangeSelectPopup').attr('data-username'),
+                                                               'data-dbid':$('.lectureStateChangeSelectPopup').attr('data-dbid')
+                                                             })
     })
 
     $('.lectureStateChangeSelectPopup ._cancel').click(function(){
@@ -2671,7 +2673,7 @@ function resume_member_reg_data_pc(lectureID, dbID){
 //회원 환불 정보를 전송한다.
 function refund_member_lecture_data(lectureID, dbID, refund_price){
     if(Options.language == "KOR"){
-        var text = ' 회원님 환불 처리 되었습니다.'
+        var text = ' 환불 처리 되었습니다.'
         var text2 = '환불 금액을 입력해주세요.'
     }else if(Options.language == "JPN"){
         var text = '　様払い戻ししました。'
@@ -2680,13 +2682,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
         var text = 'has been refunded.'
         var text2 = 'Please input refund'
     }
-    /*
-    if($('#memberInfoPopup_PC').css('display') == "block"){
-        var userID = $('#memberId_info_PC').text();
-    }else if($('#memberInfoPopup').css('display') == "block"){
-        var userID = $('#memberId').val();
-    }
-    */
+
     if(refund_price.length>0){
         $.ajax({
                 url:'/trainer/refund_member_lecture_info/', 
@@ -2785,6 +2781,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
 
 //회원의 등록 이력을 서버로부터 받아온다.
 function get_member_lecture_list(dbID){
+    console.log('dbID',dbID)
     $.ajax({
         url:'/trainer/read_lecture_by_class_member_ajax/', 
         type:'POST',
