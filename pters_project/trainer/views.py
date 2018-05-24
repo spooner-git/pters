@@ -5167,7 +5167,7 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
         for group_repeat_schedule_info in group_repeat_schedule_data:
             group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
             group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
-        context['group_repeat_schedule_data'] = group_repeat_schedule_data
+        context['repeat_schedule_data'] = group_repeat_schedule_data
 
         return render(request, self.template_name, context)
 
@@ -5180,7 +5180,7 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
             group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
             group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
 
-        context['group_repeat_schedule_data'] = group_repeat_schedule_data
+        context['repeat_schedule_data'] = group_repeat_schedule_data
 
         return render(request, self.template_name, context)
 
@@ -5204,7 +5204,7 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
             else:
                 group_schedule_info.finish_check = 0
 
-        context['group_schedule_data'] = group_schedule_data
+        context['schedule_data'] = group_schedule_data
 
         return render(request, self.template_name, context)
 
@@ -5223,7 +5223,7 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
             else:
                 group_schedule_info.finish_check = 0
 
-        context['group_schedule_data'] = group_schedule_data
+        context['schedule_data'] = group_schedule_data
 
         return render(request, self.template_name, context)
 
