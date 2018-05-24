@@ -129,6 +129,9 @@ urlpatterns = [
     # 그룹 회원가입
     url(r'^add_group_member/$', views.add_group_member_logic, name='add_group_member'),
 
+    # 그룹에 속하는 반복 일정 조회
+    url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(), name='get_group_repeat_schedule_list'),
+
     # 그룹일정에 속하는 그룹회원 일정 조회
     url(r'^get_group_schedule_list/$', views.GetGroupScheduleListViewAjax.as_view(), name='get_group_schedule_list'),
 
@@ -136,5 +139,6 @@ urlpatterns = [
     url(r'^get_member_ing_list/$', views.GetMemberIngListViewAjax.as_view(), name='get_member_ing_list'),
     # 진행 완료 회원 목록 조회
     url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
+
 
 ]

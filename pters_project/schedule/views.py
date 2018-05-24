@@ -2325,20 +2325,13 @@ def add_group_repeat_schedule_confirm(request):
     if error is None:
         start_date = repeat_schedule_info.start_date
         end_date = repeat_schedule_info.end_date
-        en_dis_type = repeat_schedule_info.en_dis_type
 
     if error is None:
         if repeat_confirm == '0':
             try:
                 with transaction.atomic():
                     schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id)
-                    # schedule_data.delete()
-                    for delete_schedule_info in schedule_data:
-                        if delete_schedule_info.state_cd != 'PE':
-                            error = delete_schedule_logic_func(delete_schedule_info, request.user.id)
-                        if error is not None:
-                            break
-
+                    schedule_data.delete()
                     repeat_schedule_info.delete()
 
             except TypeError as e:
