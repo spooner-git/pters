@@ -803,6 +803,16 @@ def finish_schedule_logic(request):
                     if lecture_repeat_schedule_data.state_cd == 'NP':
                         lecture_repeat_schedule_data.state_cd = 'IP'
                         lecture_repeat_schedule_data.save()
+                    if lecture_repeat_schedule_data.group_schedule_id is not None and lecture_repeat_schedule_data.group_schedule_id != '':
+                        try:
+                            group_repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=lecture_repeat_schedule_data.group_schedule_id)
+                        except ObjectDoesNotExist:
+                            group_repeat_schedule_info = None
+
+                        if group_repeat_schedule_info is not None:
+                            if group_repeat_schedule_info.state_cd == 'NP':
+                                group_repeat_schedule_info.state_cd = 'IP'
+                                group_repeat_schedule_info.save()
 
                 if lecture_info.lecture_rem_count == 0:
                     lecture_info.state_cd = 'PE'
@@ -2826,6 +2836,7 @@ def func_add_group_member_repeat_schedule_logic(repeat_schedule_info, schedule_d
         # 반복 일정 데이터 등록
         repeat_schedule_info = RepeatScheduleTb(class_tb_id=repeat_schedule_info.class_tb_id,
                                                 group_tb_id=repeat_schedule_info.group_tb_id,
+                                                group_schedule_id=repeat_schedule_info.repeat_schedule_id,
                                                 lecture_tb_id=lecture_id,
                                                 repeat_type_cd=repeat_schedule_info.repeat_type_cd,
                                                 week_info=repeat_schedule_info.week_info,

@@ -2225,8 +2225,6 @@ def finish_member_lecture_info_logic(request):
                                                                       use=1).count()
                 group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                     use=1).exclude(lecture_tb__state_cd='IP').count()
-                print('finish_member_lecture_info_logic'+str(group_data_total_size))
-                print('finish_member_lecture_info_logic'+str(group_data_end_size))
                 try:
                     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
                 except ObjectDoesNotExist:
@@ -5165,8 +5163,10 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
         context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_id = request.GET.get('group_id', '')
 
-        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id, use=1).order_by('start_date')
-
+        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id).order_by('start_date')
+        for group_repeat_schedule_info in group_repeat_schedule_data:
+            group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
+            group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
         context['group_repeat_schedule_data'] = group_repeat_schedule_data
 
         return render(request, self.template_name, context)
@@ -5175,18 +5175,12 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
         context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_id = request.POST.get('group_id', '')
 
-        group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')
-        for group_schedule_info in group_schedule_data:
-            member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
-            group_schedule_info.member_info = member_info
-            group_schedule_info.start_dt = str(group_schedule_info.start_dt)
-            group_schedule_info.end_dt = str(group_schedule_info.end_dt)
-            if group_schedule_info.state_cd == 'PE':
-                group_schedule_info.finish_check = 1
-            else:
-                group_schedule_info.finish_check = 0
+        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id).order_by('start_date')
+        for group_repeat_schedule_info in group_repeat_schedule_data:
+            group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
+            group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
 
-        context['group_schedule_data'] = group_schedule_data
+        context['group_repeat_schedule_data'] = group_repeat_schedule_data
 
         return render(request, self.template_name, context)
 
