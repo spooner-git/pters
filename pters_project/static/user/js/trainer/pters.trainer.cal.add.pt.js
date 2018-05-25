@@ -1458,7 +1458,7 @@ $('#week').click(function(){
 
 function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
     $.ajax({
-        url: '/trianer/get_group_member_repeat_schedule_list/',
+        url: '/trainer/get_group_member_repeat_schedule_list/',
         type : 'POST',
         data : {"group_repeat_schedule_id":group_repeat_id}, 
         dataType : 'html',
