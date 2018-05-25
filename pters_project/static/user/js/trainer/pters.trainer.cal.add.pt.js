@@ -781,7 +781,7 @@ $(document).ready(function(){
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
                                 if(total_count == RepeatDuplicationDateArray[0].split('/').length){
-                                    alert('선택한 반복일정에 등록할수 있는 일정이 없습니다. \n 일정을 다시 확인 후 등록해주세요.')
+                                    alert('선택한 반복일정과 동일한 일정의 반복일정이 등록 되어있습니다.\n 일정을 다시 확인 후 등록해주세요.')
                                     completeSend(); //ajax 로딩 이미지 숨기기
                                 }else{
                                   var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
@@ -794,7 +794,6 @@ $(document).ready(function(){
                                   shade_index(200)
                                 }
                             }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
-
                                 //if(jsondata.repeatScheduleCounterArray[0] == 0){
                                    // alert('선택한 회원님의 등록 가능한 횟수가 부족합니다.\n 다시 확인 후 등록해주세요.')
                                     //completeSend(); //ajax 로딩 이미지 숨기기
@@ -1461,7 +1460,7 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
     $.ajax({
         url: '/trianer/get_group_member_repeat_schedule_list/',
         type : 'POST',
-        data : {"group_repeat_schedule_id":group_repeat_id}, //월간 46 , 주간 18, 하루 1
+        data : {"group_repeat_schedule_id":group_repeat_id}, 
         dataType : 'html',
 
         beforeSend:function(){
