@@ -1716,7 +1716,7 @@ $.datepicker.setDefaults({
   yearSuffix: '년',
 });
 
-
+/*
 var toggleGroupParticipants = 'off'
 function toggleGroupParticipantsList(onoff){
 	switch(onoff){
@@ -1732,6 +1732,7 @@ function toggleGroupParticipantsList(onoff){
 		break;
 	}
 }
+*/
 
 function send_plan_delete(option, callbackoption, callback){
 	if(option == "pt"){
