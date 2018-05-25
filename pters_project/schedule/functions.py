@@ -110,7 +110,6 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
         group_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
-
     try:
         with transaction.atomic():
             add_schedule_info = ScheduleTb(class_tb_id=class_id,
@@ -173,7 +172,6 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
             if schedule_info.end_dt >= add_end_dt:
                 error = str(pt_schedule_date)
         if error is not None:
-            error += ' 일정이 중복되었습니다. '
             break
 
     return error

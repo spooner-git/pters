@@ -46,7 +46,7 @@ urlpatterns = [
     # 그룹 반복 일정 추가 - hkkim - 2018.05.23
     url(r'^add_group_repeat_schedule/$', views.add_group_repeat_schedule_logic, name='add_group_repeat_schedule'),
     url(r'^add_group_repeat_schedule_confirm/$', views.add_group_repeat_schedule_confirm, name='add_group_repeat_schedule_confirm'),
-    url(r'^add_group_member_repeat_schedule/$', views.add_group_member_repeat_schedule_logic, name='add_group_member_repeat_schedule'),
+    # url(r'^add_group_member_repeat_schedule/$', views.add_group_member_repeat_schedule_logic, name='add_group_member_repeat_schedule'),
     # 그룹 반복 일정 삭제 - hkkim - 2018.05.23
     url(r'^delete_group_repeat_schedule/$', views.delete_group_repeat_schedule_logic, name='delete_group_repeat_schedule'),
 
