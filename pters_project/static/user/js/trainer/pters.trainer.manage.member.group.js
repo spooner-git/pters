@@ -318,14 +318,18 @@ function added_member_info_to_jsonformat(){
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 $(document).on('click','div.groupWrap',function(){
 	var group_id = $(this).attr('data-groupid');
-	var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"]')
+    var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap')
+	var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap')
 	if(memberlist.css('display')=='none'){
         $(this).addClass('groupWrap_selected')
 		memberlist.addClass('groupMembersWrap_selected').show()
+        repeat_list.show()
         get_groupmember_list(group_id)
+        get_group_repeat_info(group_id)
 	}else{
         $(this).removeClass('groupWrap_selected')
 		memberlist.removeClass('groupMembersWrap_selected').hide()
+        repeat_list.hide()
         $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4)
 	}
 })
@@ -632,6 +636,7 @@ function groupListSet(option, jsondata){ //option : current, finished
 
         var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">'
         var htmlend = '</div>'
+        var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>'
         var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
 
         var main = '<div class="_groupnum">'+(i+1)+'</div>'+
@@ -642,7 +647,7 @@ function groupListSet(option, jsondata){ //option : current, finished
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+group_createdate+'" disabled>'+'</div>'+
                     '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>'
-        htmlToJoin.push(htmlstart+main+htmlend+memberlist)
+        htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
     }
 
     $('#currentGroupList').html(htmlToJoin.join(''))
@@ -793,6 +798,195 @@ $(document).on('click','img.substract_groupMember',function(e){
 })
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 
+
+/////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////
+//서버로부터 회원의 반복일정 정보를 받아온다.
+function get_group_repeat_info(group_id){
+    console.log(group_id)
+    $.ajax({
+              url: '/trainer/get_group_repeat_schedule_list/',
+              type:'POST',
+              data: {"group_id": group_id},
+              dataType : 'html',
+
+              beforeSend:function(){
+                  //beforeSend(); //ajax 로딩이미지 출력
+              },
+
+              success:function(data){
+                var jsondata = JSON.parse(data);
+                console.log('get_group_repeat_info',jsondata)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
+                    set_group_repeat_info(jsondata, group_id)
+                }
+              },
+
+              complete:function(){
+                //completeSend(); //ajax 로딩이미지 숨기기
+              },
+
+              error:function(){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
+              }
+        })
+}
+
+//서버로부터 받아온 반복일정을 회원정보 팝업에 그린다.
+function set_group_repeat_info(jsondata, group_id){
+    var $regHistory =  $('div[data-groupid="'+group_id+'"].groupRepeatWrap')
+
+    if(Options.language == "KOR"){
+        var text = '시'
+        var text2 = '시간'
+        var text3 = '반복 : '
+    }else if(Options.language == "JPN"){
+        var text = '時'
+        var text2 = '時間'
+        var text3 = '繰り返し : '
+    }else if(Options.language == "ENG"){
+        var text = ''
+        var text2 = 'h'
+        var text3 = 'Repeat : '
+    }
+    console.log('set_group_repeat_info',jsondata)
+    
+    var repeat_info_dict= { 'KOR':
+                              {'DD':'매일', 'WW':'매주', '2W':'격주',
+                               'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+                              'JPN':
+                              {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                               'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+                              'JAP':
+                              {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                               'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+                             }
+    var len = jsondata.repeatScheduleIdArray.length
+    var repeat_schedule_id_array = jsondata.repeatScheduleIdArray
+    var repeat_type_array = jsondata.repeatScheduleTypeArray
+    var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray
+    var repeat_start_array = jsondata.repeatScheduleStartDateArray
+    var repeat_end_array = jsondata.repeatScheduleEndDateArray
+    var repeat_time_array = jsondata.repeatScheduleStartTimeArray
+    var repeat_dur_array = jsondata.repeatScheduleTimeDurationArray
+
+    var schedulesHTML = []
+    for(var i=0; i<len; i++){
+        var repeat_id = repeat_schedule_id_array[i]
+        var repeat_type = repeat_info_dict[Options.language][repeat_type_array[i]]
+        var repeat_start = repeat_start_array[i].replace(/-/gi,".");
+        var repeat_start_text = "<span class='summaryInnerBoxText_Repeatendtext'>"+text3+"</span>"
+        //var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
+        var repeat_end_text = ""
+        var repeat_end = repeat_end_array[i].replace(/-/gi,".");
+        var repeat_time = Number(repeat_time_array[i].split(':')[0]) // 06 or 18
+        var repeat_min = Number(repeat_time_array[i].split(':')[1])  // 00 or 30
+
+        if(repeat_min == "30"){
+            var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
+        }
+        var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
+        var repeat_sum = Number(repeat_time) + Number(repeat_dur)
+
+        var repeat_end_time_hour = parseInt(repeat_sum)
+        if(parseInt(repeat_sum)<10){
+            var repeat_end_time_hour = '0'+parseInt(repeat_sum)
+        }
+        if((repeat_sum%parseInt(repeat_sum))*60 == 0){
+            var repeat_end_time_min = '00'
+        }else if((repeat_sum%parseInt(repeat_sum))*60 == 30){
+            var repeat_end_time_min = '30'
+        }
+
+        var repeat_start_time = repeat_time_array[i].split(':')[0] +':'+ repeat_time_array[i].split(':')[1]
+        var repeat_end_time = repeat_end_time_hour + ':' + repeat_end_time_min
+
+
+
+        var repeat_day =  function(){
+                            var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
+                            var repeat_day_info = ""
+                            if(repeat_day_info_raw.length>1){
+                                for(var j=0; j<repeat_day_info_raw.length; j++){
+                                    var repeat_day_info = repeat_day_info + '/' + repeat_info_dict[Options.language][repeat_day_info_raw[j]].substr(0,1)
+                                }
+                            }else if(repeat_day_info_raw.length == 1){
+                                var repeat_day_info = repeat_info_dict[Options.language][repeat_day_info_raw[0]]
+                            }
+                            if(repeat_day_info.substr(0,1) == '/'){
+                                var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+                            }
+                              return repeat_day_info
+                          };
+        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +text2+')'+'</p>'
+        var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
+        var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-deletetype="grouprepeatinfo" data-groupid="'+group_id+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+        schedulesHTML[i] = '<div class="summaryInnerBox" data-repeatid="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
+    }
+    if(len == 0){
+        var title = ''
+        var repeat_bg = ''
+    }else{
+        var title = '<div class="summaryInnerBox_repeat_title" data-repeatid="766"><img src="/static/user/res/offadd/icon-repeat-cal.png" class="pcmanageicon">반복 일정</div>'
+        var repeat_bg = 'repeat_bg'
+    }
+    $regHistory.html(title + schedulesHTML.join('')).addClass(repeat_bg)
+    
+}
+
+
+//그룹의 반복일정 id를 보내서 그 반복일정에 묶여있는 회원들의 반복일정 id를 불러온다. (그룹의 반복일정을 삭제할 때 회원들의 반복일정도 같이 지워주기 위해)
+function set_group_member_repeat_info(group_repeat_id, use, callback){
+    console.log(group_repeat_id)
+    $.ajax({
+              url: '/trainer/get_group_repeat_schedule_list/',
+              type:'POST',
+              data: {"group_repeat_id": group_repeat_id},
+              dataType : 'html',
+
+              beforeSend:function(){
+                  //beforeSend(); //ajax 로딩이미지 출력
+              },
+
+              success:function(data){
+                var jsondata = JSON.parse(data);
+                console.log('set_group_member_repeat_info',jsondata)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
+                    if(use == "callback"){
+                        callback(jsondata)
+                    }
+                }
+              },
+
+              complete:function(){
+                //completeSend(); //ajax 로딩이미지 숨기기
+              },
+
+              error:function(){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
+              }
+        })
+}
+
+//어떤 그룹반복일정id에 엮인 회원들의 반복일정id들을 모두 삭제요청한다. (그룹의 반복일정을 삭제할 때 회원들의 반복일정도 같이 지워주기 위해)
+function send_delete_member_repeat_infos(jsondata){
+        //var len = jsondata.{멤버 리피트 id 배열 길이};
+        for(var i=0; i<len; i++){
+
+        }
+}
+/////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////
 
 
 

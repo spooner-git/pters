@@ -84,10 +84,8 @@ function close_info_popup(option){
       $("#"+option).css({'display':'none'})
       console.log('1')
       if($('#pshade').css('z-index')== 200 || $('#mshade').css('z-index') == 200){
-        console.log('200')
         shade_index(100)
       }else{
-        console.log('-100')
         shade_index(-100)
       }
       

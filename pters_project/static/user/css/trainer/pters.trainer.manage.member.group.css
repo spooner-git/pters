@@ -261,6 +261,45 @@
 		opacity: 0.4;
 	}
 
+.groupRepeatWrap{
+	display: none;
+	width: 100%;
+	height: auto;
+	background: #282828;
+	color: #ffffff;
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	text-align: left;
+	font-size: 12px;
+}
+	.groupRepeatWrap p{
+		display: inline-block;
+		line-height: 35px;
+		margin:0 10px 0 10px;
+	}
+
+	.groupRepeatWrap .summaryInnerBox{
+		position: relative;
+		padding-left: 45px;
+		min-height: 35px;
+		background: #f4f4f4;
+		color: #282828;
+		border-bottom: 1px solid #cccccc;
+	}
+	.summaryInnerBox_repeat_title{
+		height: unset;
+		padding-top: 3px;
+		border-bottom: 1px dotted #6f6f6f;
+	}
+	.summaryInnerBox_repeat_title .pcmanageicon{
+		height: 15px;
+		margin-bottom: 4px;
+	}
+	.repeat_bg{
+		padding: 0 0 6px 35px;
+	}
+
+
 .groupMembersWrap{
 	display: none;
 	text-align: center;
