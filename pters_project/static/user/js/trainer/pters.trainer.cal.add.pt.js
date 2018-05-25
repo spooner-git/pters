@@ -894,6 +894,16 @@ $(document).ready(function(){
               var id = $('#cal_popup_repeatconfirm').attr('data-dbid')
             }
             get_repeat_info(id)
+
+            $('#members_mobile, #members_pc').html('')
+            get_current_member_list('callback',function(jsondata){
+              set_member_dropdown_list(jsondata)
+              $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
+            })
+            get_current_group_list('callback',function(jsondata){
+              set_group_dropdown_list(jsondata)
+              $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
+            })
         }
       })
 
