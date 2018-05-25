@@ -618,7 +618,6 @@ $(document).ready(function(){
 	                  	$('#members_mobile, #members_pc').html('')
 	                  	get_current_member_list()
       					get_current_group_list()
-	                  	ajax_block_during_delete_weekcal = true;
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
@@ -638,8 +637,10 @@ $(document).ready(function(){
 						get_current_member_list()
       					get_current_group_list()
 					}
+					ajax_block_during_delete_weekcal = true
 				}else if(deleteTypeSelect == "groupptdelete"){
 					send_plan_delete('group')
+					ajax_block_during_delete_weekcal = true
 				}
 			}
 		})
