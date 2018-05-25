@@ -544,7 +544,7 @@ $(document).ready(function(){
 				deleteTypeSelect = "ptoffdelete"
 			}
 			$('#cal_popup_planinfo').hide();
-			$('#cal_popup_plandelete').fadeIn('fast');
+			$('#cal_popup_plandelete').fadeIn('fast').attr({"schedule_id":$(this).parent('#cal_popup_planinfo').attr("schedule_id")});
 		})
 
 		//미니 팝업 메모수정
@@ -640,6 +640,13 @@ $(document).ready(function(){
 					ajax_block_during_delete_weekcal = true
 				}else if(deleteTypeSelect == "groupptdelete"){
 					send_plan_delete('group')
+					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule_id')
+					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
+						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
+							$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
+							send_plan_delete('pt')
+						}
+					})
 					ajax_block_during_delete_weekcal = true
 				}
 			}

@@ -217,7 +217,7 @@ $(document).ready(function(){
 			deleteTypeSelect = "ptoffdelete"
 			shade_index(200)
 			$('#cal_popup_planinfo').hide()
-			$('#cal_popup_plandelete').fadeIn('fast')
+			$('#cal_popup_plandelete').fadeIn('fast').attr({'schedule-id': $(this).parent('#cal_popup_planinfo').attr('schedule_id')})
 		})
 
 		//일정삭제 확인 팝업 아니오 버튼 눌렀을때 팝업 닫기
@@ -274,6 +274,13 @@ $(document).ready(function(){
 					ajax_block_during_delete_monthcal = true
 				}else if(deleteTypeSelect == "groupptdelete"){
 					send_plan_delete('group')
+					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule_id')
+					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
+						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
+							$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
+							send_plan_delete('pt')
+						}
+					})
 					ajax_block_during_delete_monthcal = true
 				}
 			}

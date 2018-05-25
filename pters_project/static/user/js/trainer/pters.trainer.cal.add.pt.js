@@ -1452,7 +1452,8 @@ function get_repeat_info(dbID){
 
 
 $('#week').click(function(){
-  get_member_repeat_id_in_group_repeat('808')
+  //get_member_repeat_id_in_group_repeat('809')
+  console.log('test, test')
 })
 
 
@@ -1652,6 +1653,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 
 function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
+  console.log(jsondata)
   switch(option){
     case 'class':
       var plan = option
@@ -1788,19 +1790,22 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
     }else{
       var planColor_ = planColor
     }
-    
+
+
 
     if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
        tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
               .attr(option+'-schedule-id' , planScheduleIdArray[i])
-              .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i], 'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+              .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i], 'data-memo' : planNoteArray[i], 
+                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
               .addClass(planColor_)
               .css({'height':Number(planDura*planheight-1)+'px'})
               .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');    
     }else if(option != 'class'){
        tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
               .attr(option+'-schedule-id' , planScheduleIdArray[i])
-              .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i], 'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+              .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
+                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
               .addClass(planColor_)
               .css({'height':Number(planDura*planheight-1)+'px'})
               .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');    
@@ -2564,7 +2569,7 @@ function send_plan_delete(option, callbackoption, callback){
   if(option == "pt"){
     var $form = $('#daily-pt-delete-form');
     var serializeArray = $form.serializeArray();
-      var sendData = send_Data(serializeArray)
+    var sendData = send_Data(serializeArray)
     var url_ = '/schedule/delete_schedule/'
   }else if(option == "off"){
     var $form = $('#daily-off-delete-form');
