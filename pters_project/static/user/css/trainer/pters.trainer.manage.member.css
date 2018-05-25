@@ -939,10 +939,10 @@ select:focus > option:checked {
 				line-height: unset;
 				font-size: unset;
 			}
-			
+
 			.deleteBtn{
 				position: absolute;
-				line-height: 35px;
+
 				width: 15px !important;
 				margin-left: 15px;
 				padding-left: 3px !important;
@@ -951,11 +951,17 @@ select:focus > option:checked {
 				text-align: center;
 				background: #cccccc !important;
 				cursor: pointer;
+				height: 100%;
+			}
+			.deleteBtn img{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
 			}
 
 			.deleteBtnBin img{
 				display: none;
-				margin: 9px 10px 10px 13px;
 			}
 
 			.deleteBtnBin{
@@ -963,7 +969,7 @@ select:focus > option:checked {
 				top: 0;
 				right: 0px;
 				width: 0px;
-				height: 35px;
+				height: 100%;
 				background:#fe4e65;
 				z-index: 100;
 			}

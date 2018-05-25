@@ -556,7 +556,7 @@ if (agent.indexOf("firefox") != -1) {
         
     });
 
-    $(document).on('click','body',function(e){ //반복일정 텍스트 누르면 휴지통 닫힘
+    $(document).on('click','.summaryInnerBox',function(e){ //반복일정 텍스트 누르면 휴지통 닫힘
         e.stopPropagation()
         var $btn = $('.deleteBtnBin');
           $btn.animate({'width':'0px'},230);

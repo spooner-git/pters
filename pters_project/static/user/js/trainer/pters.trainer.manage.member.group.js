@@ -930,10 +930,12 @@ function set_group_repeat_info(jsondata, group_id){
     }
     if(len == 0){
         var title = ''
+        var repeat_bg = ''
     }else{
         var title = '<div class="summaryInnerBox_repeat_title" data-repeatid="766"><img src="/static/user/res/offadd/icon-repeat-cal.png" class="pcmanageicon">반복 일정</div>'
+        var repeat_bg = 'repeat_bg'
     }
-    $regHistory.html(title + schedulesHTML.join(''))
+    $regHistory.html(title + schedulesHTML.join('')).addClass(repeat_bg)
     
 }
 /////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////

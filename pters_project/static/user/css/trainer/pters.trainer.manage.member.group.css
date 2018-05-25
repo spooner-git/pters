@@ -262,7 +262,6 @@
 	}
 
 .groupRepeatWrap{
-	display: table;
 	display: none;
 	width: 100%;
 	height: auto;
@@ -278,13 +277,16 @@
 		line-height: 35px;
 		margin:0 10px 0 10px;
 	}
+
 	.groupRepeatWrap .summaryInnerBox{
 		position: relative;
 		padding-left: 45px;
-		height: 35px;
+		min-height: 35px;
+		background: #f4f4f4;
+		color: #282828;
+		border-bottom: 1px solid #cccccc;
 	}
 	.summaryInnerBox_repeat_title{
-		padding-left: 45px;
 		height: unset;
 		padding-top: 3px;
 		border-bottom: 1px dotted #6f6f6f;
@@ -292,6 +294,9 @@
 	.summaryInnerBox_repeat_title .pcmanageicon{
 		height: 15px;
 		margin-bottom: 4px;
+	}
+	.repeat_bg{
+		padding: 0 0 6px 35px;
 	}
 
 
