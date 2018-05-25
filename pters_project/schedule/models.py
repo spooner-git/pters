@@ -180,11 +180,11 @@ class DeleteScheduleTb(models.Model):
 
 class ScheduleTb(models.Model):
     schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
-    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
-    group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, default='', blank=True, null=True)  # Field name made lowercase.
-    group_schedule_id = models.IntegerField(db_column='GROUP_SCHEDULE_ID', null=True)
-    repeat_schedule_tb = models.ForeignKey(RepeatScheduleTb, on_delete=models.SET_NULL, default='', blank=True, null=True) # Field name made lowercase.
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, default='', blank=True)  # Field name made lowercase.
+    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, default='', blank=True)  # Field name made lowercase.
+    group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, default='', blank=True)  # Field name made lowercase.
+    group_schedule_id = models.IntegerField(db_column='GROUP_SCHEDULE_ID', default='')
+    repeat_schedule_tb = models.ForeignKey(RepeatScheduleTb, on_delete=models.SET_DEFAULT, default='', blank=True) # Field name made lowercase.
     start_dt = models.DateTimeField(db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
     end_dt = models.DateTimeField(db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
     permission_state_cd = models.CharField(db_column='PERMISSION_STATE_CD', max_length=10, blank=True, null=True)  # Field name made lowercase.
