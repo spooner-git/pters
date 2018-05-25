@@ -623,6 +623,11 @@ $(document).ready(function(){
 	                	}
 	                	ajax_block_during_delete_weekcal = true
 		            })
+		            get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
+		            	for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
+		            		send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
+		            	}
+		            })
 				}else if(deleteTypeSelect == "ptoffdelete"){
 					if(schedule_on_off==1){
 						//PT 일정 삭제시

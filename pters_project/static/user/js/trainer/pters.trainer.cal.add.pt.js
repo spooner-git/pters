@@ -1452,7 +1452,7 @@ function get_repeat_info(dbID){
 
 
 $('#week').click(function(){
-  //get_member_repeat_id_in_group_repeat('809')
+  get_member_repeat_id_in_group_repeat('809')
   console.log('test, test')
 })
 
