@@ -5186,6 +5186,36 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
 
 
 @method_decorator(csrf_exempt, name='dispatch')
+class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'schedule_repeat_data_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
+        group_repeat_schedule_id = request.GET.get('group_repeat_schedule_id', '')
+
+        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id).order_by('start_date')
+        for group_repeat_schedule_info in group_repeat_schedule_data:
+            group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
+            group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
+        context['repeat_schedule_data'] = group_repeat_schedule_data
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
+        group_repeat_schedule_id = request.POST.get('group_repeat_schedule_id', '')
+
+        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id).order_by('start_date')
+        for group_repeat_schedule_info in group_repeat_schedule_data:
+            group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
+            group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
+
+        context['repeat_schedule_data'] = group_repeat_schedule_data
+
+        return render(request, self.template_name, context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
 class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'schedule_lesson_data_ajax.html'
 
