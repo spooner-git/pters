@@ -591,7 +591,6 @@ $(document).ready(function(){
 		}
 
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
-		$('#cal_popup_plandelete').click(function(){console.log(deleteTypeSelect)})
 		var ajax_block_during_delete_weekcal = true
 		$('#popup_delete_btn_yes').click(function(){
 			if(ajax_block_during_delete_weekcal == true){
@@ -602,34 +601,43 @@ $(document).ready(function(){
 				        close_info_popup('cal_popup_plandelete')
 			            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
 			            set_schedule_time(jsondata)
+			            $('#members_mobile, #members_pc').html('')
+			            get_current_member_list()
+      					get_current_group_list()
 			            if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
 	                	ajax_block_during_delete_weekcal = true
 	                })
-
 				}else if(deleteTypeSelect == "repeatgroupptdelete"){
 		            var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
 		            send_repeat_delete_group(repeat_schedule_id, 'callback', function(){
 	            		close_info_popup('cal_popup_plandelete')
 	                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-groupid'))
 	                  	set_schedule_time(jsondata)
+	                  	$('#members_mobile, #members_pc').html('')
+	                  	get_current_member_list()
+      					get_current_group_list()
 	                  	ajax_block_during_delete_weekcal = true;
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
 	                	ajax_block_during_delete_weekcal = true
 		            })
-
 				}else if(deleteTypeSelect == "ptoffdelete"){
 					if(schedule_on_off==1){
 						//PT 일정 삭제시
 						send_plan_delete('pt')
+						$('#members_mobile, #members_pc').html('')
+						get_current_member_list()
+      					get_current_group_list()
 					}else{
 						//OFF 일정 삭제
 						send_plan_delete('off')
+						$('#members_mobile, #members_pc').html('')
+						get_current_member_list()
+      					get_current_group_list()
 					}
-
 				}else if(deleteTypeSelect == "groupptdelete"){
 					send_plan_delete('group')
 				}

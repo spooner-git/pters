@@ -235,193 +235,45 @@ $(document).ready(function(){
 			if(ajax_block_during_delete_monthcal == true){
 				ajax_block_during_delete_monthcal = false;
 				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
-					$.ajax({
-		                url:'/schedule/delete_repeat_schedule/',
-		                type:'POST',
-		                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
-		                dataType:'html',
-
-		                beforeSend:function(){
-		                 	AjaxBeforeSend();
-		                },
-
-		                //통신성공시 처리
-		                success:function(data){
-			                  var jsondata = JSON.parse(data);
-			                  if(jsondata.messageArray.length>0){
-				              		$('#errorMessageBar').show()
-				               		$('#errorMessageText').text(jsondata.messageArray)
-					          }else{
-
-									if(jsondata.push_info != ''){
-										for (var i=0; i<jsondata.pushArray.length; i++){
-                                        	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-										}
-									}
-								console.log('111')
-					           	close_info_popup('cal_popup_plandelete')
-			                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
-			                  	AjaxCompleteSend();
-					          }
-		                  },
-
-		                //보내기후 팝업창 닫기
-		                complete:function(){
-		                	ajax_block_during_delete_monthcal = true;
-		                	$('#id_repeat_schedule_id_confirm').val('')
-		                	//fill_repeat_info_off()
-		                  },
-
-		                //통신 실패시 처리
-		                error:function(){
-		                  alert("에러: 서버 통신 실패")
-		                  console.log('222')
-		                  close_info_popup('cal_popup_plandelete')
-		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
-		                  AjaxCompleteSend();
-		                },
+		            var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
+		            send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
+	                	close_info_popup('cal_popup_plandelete')
+	                	set_schedule_time(jsondata)
+	                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+	                  	ajax_block_during_delete_monthcal = true;
+		                $('#id_repeat_schedule_id_confirm').val('')
+	                })
+				}else if(deleteTypeSelect == "repeatgroupptdelete"){
+		            var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
+		            send_repeat_delete_group(repeat_schedule_id, 'callback', function(){
+	            		close_info_popup('cal_popup_plandelete')
+	                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-groupid'))
+	                  	set_schedule_time(jsondata)
+	                  	$('#members_mobile, #members_pc').html('')
+	                  	get_current_member_list()
+      					get_current_group_list()
+	                  	ajax_block_during_delete_monthcal = true;
+	                	if($('body').width()>=600){
+	                		$('#calendar').css('position','relative')	
+	                	}
+	                	ajax_block_during_delete_monthcal = true
 		            })
-				}/*else if(deleteTypeSelect=='repeatinfodelete' && $('#memberInfoPopup_PC').css('display')=="block"){ //회원정보창의 반복일정 삭제
-					var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
-					$.ajax({
-		                url:'/schedule/delete_repeat_schedule/',
-		                type:'POST',
-		                //data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/member_manage_ajax/'},
-		                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
-		                dataType:'html',
-
-		                beforeSend:function(){
-		                 	AjaxBeforeSend();
-		                },
-
-		                //통신성공시 처리
-		                success:function(data){
-			                  var jsondata = JSON.parse(data);
-			                  if(jsondata.messageArray.length>0){
-				                  	$('#errorMessageBar').show()
-				                  	$('#errorMessageText').text(jsondata.messageArray)
-					          }else{
-
-									if(jsondata.push_info != ''){
-										for (var i=0; i<jsondata.pushArray.length; i++){
-											send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-										}
-									}
-			                  		var userID = $('#memberId_info_PC').text()
-			                  		open_member_info_popup_pc(userID,jsondata)
-			                  		get_indiv_repeat_info(jsondata)
-			                  		get_member_lecture_list(jsondata)
-	                        		get_member_history_list(jsondata)
-			                  		closeDeletePopup();
-				                  	closeAddPlanPopup();
-				                  	AjaxCompleteSend();
-				                  	ajaxClassTime()			                  	
-					          }
-		                  },
-
-		                //보내기후 팝업창 닫기
-		                complete:function(){
-		                	if($('body').width()>=600){
-		                		$('#calendar').css('position','relative')	
-		                	}
-		                	//deleteTypeSelect = ''
-		  					addTypeSelect = 'ptadd'
-		                  },
-
-		                //통신 실패시 처리
-		                error:function(){
-		                  alert("에러: 서버 통신 실패")
-		                  closeDeletePopup();
-		                  closeAddPlanPopup()
-		                  AjaxCompleteSend();
-		                },
-		            })	
-				}*/else if(deleteTypeSelect == "ptoffdelete"){
-					var $ptdelform = $('#daily-pt-delete-form');
-					var $offdelform = $('#daily-off-delete-form');
-					//$('body').css('overflow-y','overlay');
+				}else if(deleteTypeSelect == "ptoffdelete"){
 					if(schedule_on_off==1){
 						//PT 일정 삭제시
-						$.ajax({
-		                    url:'/schedule/delete_schedule/',
-		                    type:'POST',
-		                    data:$ptdelform.serialize(),
-
-		                    beforeSend:function(){
-		                     	AjaxBeforeSend();
-		                    },
-
-		                    //통신성공시 처리
-		                    success:function(data){
-		                    	var jsondata = JSON.parse(data)
-		                    	if(jsondata.messageArray.length>0){
-				              		$('#errorMessageBar').show()
-				               		$('#errorMessageText').text(jsondata.messageArray)
-					          	}else{
-
-									if(jsondata.push_info != ''){
-										for (var i=0; i<jsondata.pushArray.length; i++){
-                                        	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-										}
-									}
-									console.log('333')
-					          		close_info_popup('cal_popup_plandelete')
-			                      	AjaxCompleteSend();
-			                      	set_schedule_time(jsondata)
-			                      	//fake_show()
-			                      	console.log('success')
-					          	}
-		                      },
-
-		                    //보내기후 팝업창 닫기
-		                    complete:function(){
-		                    	ajax_block_during_delete_monthcal = true;
-		                    	shade_index(100)
-		                      },
-
-		                    //통신 실패시 처리
-		                    error:function(){
-		                      console.log("error")
-		                    },
-		                 })
+						send_plan_delete('pt')
+						$('#members_mobile, #members_pc').html('')
+						get_current_member_list()
+      					get_current_group_list()
+					}else{
+						//OFF 일정 삭제
+						send_plan_delete('off')
+						$('#members_mobile, #members_pc').html('')
+						get_current_member_list()
+      					get_current_group_list()
 					}
-					else{
-						$.ajax({
-		                    url:'/schedule/delete_schedule/',
-		                    type:'POST',
-		                    data:$offdelform.serialize(),
-
-		                    beforeSend:function(){
-		                    	AjaxBeforeSend();
-		                    },
-
-		                    //통신성공시 처리
-		                    success:function(data){
-		                    	var jsondata = JSON.parse(data)
-		                    	if(jsondata.messageArray.length>0){
-				              		$('#errorMessageBar').show()
-				               		$('#errorMessageText').text(jsondata.messageArray)
-					          	}else{
-					          		console.log('444')
-					          		close_info_popup('cal_popup_plandelete')
-				                    AjaxCompleteSend();
-				                    set_schedule_time(jsondata)
-				                    //fake_show()
-				                    console.log('success')
-					          	}
-		                      },
-
-		                     //보내기후 팝업창 닫기
-		                    complete:function(){
-		                      	ajax_block_during_delete_monthcal = true;
-		                      },
-
-		                    //통신 실패시 처리
-		                    error:function(){
-		                      console.log("error")
-		                    },
-		                 })
-					}
+				}else if(deleteTypeSelect == "groupptdelete"){
+					send_plan_delete('group')
 				}
 			}
 			
