@@ -5163,7 +5163,7 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
         context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_id = request.GET.get('group_id', '')
 
-        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id).order_by('start_date')
+        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id, group_schedule_id__isnull = True).order_by('start_date')
         for group_repeat_schedule_info in group_repeat_schedule_data:
             group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
             group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
@@ -5175,7 +5175,7 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
         context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_id = request.POST.get('group_id', '')
 
-        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id).order_by('start_date')
+        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id, group_schedule_id__isnull = True).order_by('start_date')
         for group_repeat_schedule_info in group_repeat_schedule_data:
             group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
             group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
