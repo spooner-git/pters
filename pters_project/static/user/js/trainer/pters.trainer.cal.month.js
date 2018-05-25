@@ -1226,32 +1226,43 @@ function classDatesTrainer(jsondata){
 }
 
 function classInfoProcessed(jsondata){
-	var len = jsondata.scheduleIdArray.length
-	var countResult = []
-	var summaryArray = {}
-	var summaryArrayResult = []
+	var len = jsondata.scheduleIdArray.length;
+	var len2 = jsondata.group_schedule_id.length;
+	var countResult = [];
+	var summaryArray = {};
+	var summaryArray_group = {};
+	var summaryArrayResult = [];
 
-	var datasum = []
-	for(var i=0; i<len; i++){ //객체화로 중복 제거
+	var datasum = [];
+	for(var i=0; i<len; i++){ //개인일정 객체화로 중복 제거
 		summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0]
-		if(datasum.indexOf(jsondata.classTimeArray_start_date[i].split(' ')[0]+"/"+jsondata.classTimeArray_member_name[i]) == -1){
-			datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0]+"/"+jsondata.classTimeArray_member_name[i])
+		if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+			datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0])
 		}else{
 
 		}
 	}
-	for(var i in summaryArray){ //중복 제거된 배열
+	for(var i in summaryArray){ //개인일정 중복 제거된 배열
 		summaryArrayResult.push(i)
 	}
-	console.log(datasum)
+
+
+	for(var i=0; i<len2; i++){ //그룹 객체화로 중복 제거
+		summaryArray_group[jsondata.group_schedule_start_datetime[i].split(' ')[0]] = jsondata.group_schedule_start_datetime[i].split(' ')[0]
+		datasum.push(jsondata.group_schedule_start_datetime[i].split(' ')[0])
+	}
+	for(var i in summaryArray_group){ //그룹 중복 제거된 배열
+		summaryArrayResult.push(i)
+	}
+
+
 	var len2 = summaryArrayResult.length;
 
 	for(var i=0; i<len2; i++){
 		var scan = summaryArrayResult[i]
 		countResult[i]=0
 		for(var j=0; j<datasum.length; j++){
-			var datesplit = datasum[j].split('/')
-			if(scan == datesplit[0]){
+			if(scan == datasum[j]){
 				countResult[i] = countResult[i]+1
 			}
 		}
