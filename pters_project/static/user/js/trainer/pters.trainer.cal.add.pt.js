@@ -810,16 +810,16 @@ $(document).ready(function(){
                                     shade_index(200)
                                 }
                             }else{
-                                if($('._calweek')){
+
+                                if($('._calweek').length == 1){
+                                  console.log('weekweek')
                                   scheduleTime('class', jsondata);
                                   scheduleTime('off', jsondata);
                                   scheduleTime('group', jsondata);
-                                  //scheduleTime('group', jsondata)
                                 }
-                                else if($('._calmonth')){
+                                else if($('._calmonth').length == 1){
+                                  console.log('monthmonth')
                                   classDatesTrainer(jsondata);
-                                  addPtMemberListSet(jsondata);
-                                  plancheck(clicked_td_date_info, jsondata)
                                 }
                                 
                                 $('#calendar').show().css('height','100%')
@@ -895,6 +895,21 @@ $(document).ready(function(){
               var id = $('#cal_popup_repeatconfirm').attr('data-dbid')
             }
             get_repeat_info(id)
+        }
+      })
+
+
+      //일정 눌러서 cal_popup_planinfo의 그룹 참석자 버튼
+      $('#popup_btn_viewGroupParticipants').click(function(){
+        if(toggleGroupParticipants == 'off'){
+          toggleGroupParticipantsList('on')
+          var group_id = $(this).attr('data-groupid')
+          var max = $(this).attr('data-membernum')
+          var group_schedule_id = $(this).attr('group-schedule-id')
+          get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)})
+
+        }else if(toggleGroupParticipants == 'on'){
+          toggleGroupParticipantsList('off')
         }
       })
       
@@ -2389,6 +2404,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
 
         success:function(data){
             var jsondata = JSON.parse(data)
+            console.log('get_group_plan_participants',jsondata)
             if(callbackoption == "callback"){
               callback(jsondata)
             }
@@ -2484,9 +2500,76 @@ $(document).on('click','.group_member_cancel',function(){
     var group_id = $(this).attr('data-groupid');
     var group_schedule_id = $(this).attr('group-schedule-id')
     var max = $(this).attr('data-max')
+    console.log('groupmember_cancel:',group_id,group_schedule_id,max)
     send_plan_delete('pt', 'callback', function(){
         get_group_plan_participants(group_schedule_id,'callback',
           function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)
           })
     })
 })
+
+
+
+function send_plan_delete(option, callbackoption, callback){
+  if(option == "pt"){
+    var $form = $('#daily-pt-delete-form');
+    var serializeArray = $form.serializeArray();
+      var sendData = send_Data(serializeArray)
+    var url_ = '/schedule/delete_schedule/'
+  }else if(option == "off"){
+    var $form = $('#daily-off-delete-form');
+    var serializeArray = $form.serializeArray();
+      var sendData = send_Data(serializeArray)
+    var url_ = '/schedule/delete_schedule/'
+  }else if(option == "group"){
+    var $form = $('#daily-pt-delete-form');
+    var serializeArray = $form.serializeArray();
+      var sendData = send_Data(serializeArray)
+    var url_ = '/schedule/delete_group_schedule/'
+  }
+  $.ajax({
+            url: url_,
+            type:'POST',
+            data: sendData,
+
+            beforeSend:function(){
+              AjaxBeforeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data)
+                console.log('send_plan_delete',jsondata)
+                if(jsondata.messageArray.length>0){
+                      $('#errorMessageBar').show()
+                      $('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                    if(jsondata.push_info != ''){
+                      for (var i=0; i<jsondata.pushArray.length; i++){
+                                    send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                      }
+                    }
+                    set_schedule_time(jsondata)
+                    console.log('success')
+                    if(callbackoption == 'callback'){
+                      callback()
+                    }else{
+                      close_info_popup('cal_popup_plandelete')
+                      shade_index(-100)
+                    }
+                }
+              },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+              ajax_block_during_delete_weekcal = true;
+              AjaxCompleteSend();
+              },
+
+            //통신 실패시 처리
+            error:function(){
+              alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
+              console.log("error")
+            },
+        })
+}

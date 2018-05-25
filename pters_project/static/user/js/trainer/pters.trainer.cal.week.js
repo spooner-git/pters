@@ -185,7 +185,7 @@ $(document).ready(function(){
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
 		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','block')
-		$('#subpopup_addByList, #popup_btn_viewGroupParticipants').hide()
+		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
 		var dbid = $(this).attr('data-dbid')
@@ -287,7 +287,7 @@ $(document).ready(function(){
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
 		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','none')
-		$('#subpopup_addByList, #popup_btn_viewGroupParticipants').hide()
+		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
 		var info = $(this).attr('off-time').split('_')
@@ -361,11 +361,10 @@ $(document).ready(function(){
 	$(document).on('click','div.groupTime',function(e){ //일정을 클릭했을때 팝업 표시
 		e.stopPropagation()
 		toggleGroupParticipantsList('off')
-		$('#subpopup_addByList').hide()
+		$('#subpopup_addByList_plan').hide()
 		$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 
 															'data-groupid': $(this).attr('data-groupid'),
 															'group-schedule-id':$(this).attr('group-schedule-id'),
-															'data-starttime':$(this).attr('data-starttime')
 															})
 		$('.pt_memo_guide_popup').css('display','block')
 		deleteTypeSelect = ''
@@ -775,19 +774,6 @@ $(document).ready(function(){
 	                },
 	            })
 		}*/
-
-		$('#popup_btn_viewGroupParticipants').click(function(){
-			if(toggleGroupParticipants == 'off'){
-				toggleGroupParticipantsList('on')
-				var group_id = $(this).attr('data-groupid')
-				var max = $(this).attr('data-membernum')
-				var group_schedule_id = $(this).attr('group-schedule-id')
-				get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)})
-
-			}else if(toggleGroupParticipants == 'on'){
-				toggleGroupParticipantsList('off')
-			}
-		})
 	}
 
 	
@@ -1734,69 +1720,7 @@ function toggleGroupParticipantsList(onoff){
 }
 */
 
-function send_plan_delete(option, callbackoption, callback){
-	if(option == "pt"){
-		var $form = $('#daily-pt-delete-form');
-		var serializeArray = $form.serializeArray();
-   		var sendData = send_Data(serializeArray)
-		var url_ = '/schedule/delete_schedule/'
-	}else if(option == "off"){
-		var $form = $('#daily-off-delete-form');
-		var serializeArray = $form.serializeArray();
-   		var sendData = send_Data(serializeArray)
-		var url_ = '/schedule/delete_schedule/'
-	}else if(option == "group"){
-		var $form = $('#daily-pt-delete-form');
-		var serializeArray = $form.serializeArray();
-   		var sendData = send_Data(serializeArray)
-		var url_ = '/schedule/delete_group_schedule/'
-	}
-	$.ajax({
-            url: url_,
-            type:'POST',
-            data: sendData,
 
-            beforeSend:function(){
-             	AjaxBeforeSend();
-            },
-
-            //통신성공시 처리
-            success:function(data){
-            	var jsondata = JSON.parse(data)
-            	if(jsondata.messageArray.length>0){
-                  	$('#errorMessageBar').show()
-                  	$('#errorMessageText').text(jsondata.messageArray)
-	          	}else{
-					if(jsondata.push_info != ''){
-						for (var i=0; i<jsondata.pushArray.length; i++){
-                        	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-						}
-					}
-                  	set_schedule_time(jsondata)
-                  	fake_show()
-                  	console.log('success')
-                  	if(callbackoption == 'callback'){
-                  		callback()
-                  	}else{
-                  		close_info_popup('cal_popup_plandelete')
-                  		shade_index(-100)
-                  	}
-	          	}
-              },
-
-            //보내기후 팝업창 닫기
-            complete:function(){
-            	ajax_block_during_delete_weekcal = true;
-            	AjaxCompleteSend();
-              },
-
-            //통신 실패시 처리
-            error:function(){
-            	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
-              console.log("error")
-            },
-        })
-}
 
 function fake_show(){
 	//var faketarget = selector.parent('div').siblings('.fake_for_blankpage')
@@ -1859,6 +1783,7 @@ function set_schedule_time(jsondata){
 	scheduleTime('class', jsondata)
 	scheduleTime('off', jsondata)
 	scheduleTime('group', jsondata);
+	fake_show()
 }
 
 

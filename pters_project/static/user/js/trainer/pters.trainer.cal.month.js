@@ -161,7 +161,7 @@ $(document).ready(function(){
 			if($(this).attr('data-memo') == undefined){
 				var selectedMemo = ""
 			}
-			$("#cal_popup_planinfo").fadeIn('fast').attr('schedule_id',$(this).attr('schedule-id'))
+			$("#cal_popup_planinfo").fadeIn('fast').attr({'schedule_id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype')})
 			$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
 			$('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
 			$('#popup_info').text(selectedDate);
@@ -172,7 +172,7 @@ $(document).ready(function(){
 			$('#canvasWrap').css({'height':'0px'})
 			$('#canvasWrap span').hide();
 
-			$("#id_schedule_id_delete").val($(this).attr('schedule-id')); //shcedule 정보 저장
+			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
 			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 			$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
@@ -193,13 +193,13 @@ $(document).ready(function(){
 			}
 			schedule_on_off = 1;
 
-			$('#subpopup_addByList').hide()
+			toggleGroupParticipantsList('off')
+			$('#subpopup_addByList_plan').hide()
 			if($(this).attr('data-grouptype') == "group"){
-				$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 
-															'data-groupid': $(this).attr('data-groupid'),
-															'group-schedule-id':$(this).attr('group-schedule-id'),
-															'data-starttime':$(this).attr('data-starttime')
-															})
+				$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'),
+																	'data-groupid': $(this).attr('data-groupid'),
+																	'group-schedule-id':$(this).attr('schedule-id'),
+																	})
 			}else{
 				$('#popup_btn_viewGroupParticipants').hide()
 			}
@@ -261,7 +261,6 @@ $(document).ready(function(){
 								console.log('111')
 					           	close_info_popup('cal_popup_plandelete')
 			                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
-			                  	ajax_received_json_data(jsondata)
 			                  	AjaxCompleteSend();
 					          }
 		                  },
@@ -368,7 +367,7 @@ $(document).ready(function(){
 									console.log('333')
 					          		close_info_popup('cal_popup_plandelete')
 			                      	AjaxCompleteSend();
-			                      	set_schedule_Time(jsondata)
+			                      	set_schedule_time(jsondata)
 			                      	//fake_show()
 			                      	console.log('success')
 					          	}
@@ -406,7 +405,7 @@ $(document).ready(function(){
 					          		console.log('444')
 					          		close_info_popup('cal_popup_plandelete')
 				                    AjaxCompleteSend();
-				                    set_schedule_Time(jsondata)
+				                    set_schedule_time(jsondata)
 				                    //fake_show()
 				                    console.log('success')
 					          	}
@@ -473,7 +472,7 @@ $(document).ready(function(){
 					          		console.log('555')
 					          		close_info_popup('cal_popup_planinfo')
 				                    AjaxCompleteSend();
-				                    set_schedule_Time(jsondata)
+				                    set_schedule_time(jsondata)
 				                    //send_memo()
 					          	}
 		                      },
@@ -613,101 +612,6 @@ $(document).ready(function(){
 	}
 
 
-
-	
-	function ajax_received_json_data(json){
-		var jsondata = json
-		classTimeArray = [];
-		offTimeArray = [];
-
-		//월간 달력
-		classDateArray = []
-		classStartArray = []
-		classNameArray = []
-		countResult = []
-		dateResult = []
-		//월간 달력
-
-		classTimeArray_member_name = [];
-		classArray_lecture_id = [];
-		scheduleIdArray = [];
-		offScheduleIdArray = [];
-		scheduleFinishArray = [];
-		scheduleNoteArray = [];
-		memberIdArray = [];
-		memberLectureIdArray = [];
-		memberNameArray = [];
-		memberAvailCountArray = [];
-		messageArray = [];
-		RepeatDuplicationDateArray = [];
-		repeatArray = [];
-		offRepeatScheduleIdArray = [];
-		offRepeatScheduleTypeArray = [];
-		offRepeatScheduleWeekInfoArray = [];
-		offRepeatScheduleStartDateArray = [];
-		offRepeatScheduleEndDateArray = [];
-		offRepeatScheduleStartTimeArray = [];
-		offRepeatScheduleTimeDurationArray = [];
-		ptRepeatScheduleIdArray = [];
-		ptRepeatScheduleTypeArray = [];
-		ptRepeatScheduleWeekInfoArray = [];
-		ptRepeatScheduleStartDateArray = [];
-		ptRepeatScheduleEndDateArray = [];
-		ptRepeatScheduleStartTimeArray = [];
-		ptRepeatScheduleTimeDurationArray = [];
-
-		var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
-		var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
-		var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
-		var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
-		classTimeArray_member_name = jsondata.classTimeArray_member_name
-		classArray_lecture_id = jsondata.classArray_lecture_id
-		scheduleIdArray = jsondata.scheduleIdArray
-		offScheduleIdArray = jsondata.offScheduleIdArray
-		scheduleFinishArray = jsondata.scheduleFinishArray;
-		scheduleNoteArray = jsondata.scheduleNoteArray;
-		memberIdArray = jsondata.memberIdArray;
-		memberLectureIdArray = jsondata.memberLectureIdArray;
-		memberNameArray = jsondata.memberNameArray;
-		memberAvailCountArray = jsondata.memberAvailCountArray;
-		messageArray = jsondata.messageArray;
-		RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
-		repeatArray = jsondata.repeatArray;
-		offRepeatScheduleIdArray = jsondata.offRepeatScheduleIdArray;
-		offRepeatScheduleTypeArray = jsondata.offRepeatScheduleTypeArray;
-		offRepeatScheduleWeekInfoArray = jsondata.offRepeatScheduleWeekInfoArray;
-		offRepeatScheduleStartDateArray = jsondata.offRepeatScheduleStartDateArray;
-		offRepeatScheduleEndDateArray = jsondata.offRepeatScheduleEndDateArray;
-		offRepeatScheduleStartTimeArray = jsondata.offRepeatScheduleStartTimeArray;
-		offRepeatScheduleTimeDurationArray = jsondata.offRepeatScheduleTimeDurationArray;
-		ptRepeatScheduleIdArray = jsondata.ptRepeatScheduleIdArray;
-		ptRepeatScheduleTypeArray = jsondata.ptRepeatScheduleTypeArray;
-		ptRepeatScheduleWeekInfoArray = jsondata.ptRepeatScheduleWeekInfoArray;
-		ptRepeatScheduleStartDateArray = jsondata.ptRepeatScheduleStartDateArray;
-		ptRepeatScheduleEndDateArray = jsondata.ptRepeatScheduleEndDateArray;
-		ptRepeatScheduleStartTimeArray = jsondata.ptRepeatScheduleStartTimeArray;
-		ptRepeatScheduleTimeDurationArray = jsondata.ptRepeatScheduleTimeDurationArray;
-
-		/*팝업의 timegraph 업데이트*/
-		classDateData = []
-		classTimeData = []
-		offDateData= []
-		offTimeData = []
-		offAddOkArray = [] //OFF 등록 시작 시간 리스트
-		durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-		/*팝업의 timegraph 업데이트*/
-
-		$('.blankSelected_addview').removeClass('blankSelected')
-
-		DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateArray,'member',classStartArray)
-		DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classNameArray,'class')
-		DBdataProcessMonthTrainer();
-		classDatesTrainer();
-		plancheck(clicked_td_date_info)
-        var countNum = $('.plan_raw').length
-		$('#countNum').text(countNum)
-	}
-	
 
 	function signImageSend(send_data){
 		$.ajax({
@@ -922,6 +826,7 @@ $(document).ready(function(){
 		};
 	};
 
+	/*
 	function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
 		for(var i=0; i<classDateArray.length; i++){
 			var arr = classDateArray[i].split('_')
@@ -954,6 +859,7 @@ $(document).ready(function(){
 			}
 		};
 	};
+	*/
 
 
 
@@ -1154,7 +1060,7 @@ function ajaxClassTime(){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				set_schedule_Time(jsondata)
+				set_schedule_time(jsondata)
 			}
 
 		  },
@@ -1172,7 +1078,7 @@ function ajaxClassTime(){
 		})
 }
 
-function set_schedule_Time(jsondata){
+function set_schedule_time(jsondata){
 	initialJSON = jsondata;
 	classDatesTrainer(jsondata);
 	//plancheck(clicked_td_date_info, jsondata)
@@ -1195,6 +1101,7 @@ function AjaxCompleteSend(){
 
 
 function classDatesTrainer(jsondata){
+	console.log('classDatesTrainer', jsondata)
 	$('._classTime').html('')
 	var planInfo = classInfoProcessed(jsondata)
 	var dateResult = planInfo.dateResult
@@ -1364,10 +1271,10 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 				var morningday = "오후"
 			}
 			if(splited[10]==1){
-				htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+				htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
 
 			}else if(splited[10] == 0){
-				htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
+				htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
 			}
 		}
 	}else{
