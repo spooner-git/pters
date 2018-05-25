@@ -928,7 +928,12 @@ function set_group_repeat_info(jsondata, group_id){
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-groupid="'+group_id+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-repeatid="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
     }
-    $regHistory.html(schedulesHTML.join(''))
+    if(len == 0){
+        var title = ''
+    }else{
+        var title = '<div class="summaryInnerBox_repeat_title" data-repeatid="766"><img src="/static/user/res/offadd/icon-repeat-cal.png" class="pcmanageicon">반복 일정</div>'
+    }
+    $regHistory.html(title + schedulesHTML.join(''))
     
 }
 /////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////

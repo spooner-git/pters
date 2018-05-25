@@ -268,6 +268,8 @@
 	height: auto;
 	background: #282828;
 	color: #ffffff;
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
 	text-align: left;
 	font-size: 12px;
 }
@@ -280,6 +282,16 @@
 		position: relative;
 		padding-left: 45px;
 		height: 35px;
+	}
+	.summaryInnerBox_repeat_title{
+		padding-left: 45px;
+		height: unset;
+		padding-top: 3px;
+		border-bottom: 1px dotted #6f6f6f;
+	}
+	.summaryInnerBox_repeat_title .pcmanageicon{
+		height: 15px;
+		margin-bottom: 4px;
 	}
 
 
