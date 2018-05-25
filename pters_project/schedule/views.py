@@ -2244,10 +2244,12 @@ def add_group_repeat_schedule_logic(request):
 
         # 반복일정 종료 날짜 보다 크면 종료
         while check_date <= repeat_schedule_end_date_info:
+
             # 그룹 스케쥴 등록 횟수 설정
-            group_schedule_reg_counter -= 1
-            if group_schedule_reg_counter < 0:
-                break
+            if error is None and group_info.group_type_cd == 'NORMAL':
+                group_schedule_reg_counter -= 1
+                if group_schedule_reg_counter < 0:
+                    break
 
             # 반복일정 등록해야하는 첫번째 요일 검색 -> 자신보다 뒤에있는 요일중에 가장 가까운것
             week_idx = -1
