@@ -1450,6 +1450,47 @@ function get_repeat_info(dbID){
       })
 }
 
+
+$('#week').click(function(){
+  get_member_repeat_id_in_group_repeat('808')
+})
+
+
+function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
+    $.ajax({
+        url: '/trianer/get_group_member_repeat_schedule_list/',
+        type : 'POST',
+        data : {"group_repeat_schedule_id":group_repeat_id}, //월간 46 , 주간 18, 하루 1
+        dataType : 'html',
+
+        beforeSend:function(){
+          beforeSend()
+        },
+
+        success:function(data){
+          var jsondata = JSON.parse(data);
+          console.log(jsondata)
+          if(jsondata.messageArray.length>0){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text(jsondata.messageArray)
+          }else{
+            if(use == "callback"){
+              callback(jsondata)
+            }
+          }
+        },
+
+        complete:function(){
+          completeSend()
+        },
+
+        error:function(){
+          $('#errorMessageBar').show()
+          $('#errorMessageText').text('통신 에러: 관리자 문의')
+        }
+      })
+}
+
 function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
     switch(option){
         case 'class':

@@ -611,7 +611,7 @@ $(document).ready(function(){
 	                })
 				}else if(deleteTypeSelect == "repeatgroupptdelete"){
 		            var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
-		            send_repeat_delete_group(repeat_schedule_id, 'callback', function(){
+		            send_repeat_delete_group(repeat_schedule_id, 'callback', function(jsondata){
 	            		close_info_popup('cal_popup_plandelete')
 	                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-groupid'))
 	                  	set_schedule_time(jsondata)
