@@ -1308,7 +1308,8 @@ def delete_repeat_schedule_logic(request):
                 member_name = member_info.name
 
     if error is None:
-        schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id, start_dt__gte=timezone.now())
+        # 오늘 날짜 이후의 반복일정 삭제 -> 전체 삭제 확이 필요 hk.kim
+        schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id)
 
     if error is None:
         try:
@@ -2154,6 +2155,7 @@ def add_group_repeat_schedule_logic(request):
     repeat_schedule_end_date_info = None
     repeat_schedule_info = None
     pt_schedule_input_counter = 0
+    group_schedule_reg_counter = 0
 
     week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
     if repeat_type == '':
@@ -2201,11 +2203,15 @@ def add_group_repeat_schedule_logic(request):
             error = '그룹 정보를 불러오지 못했습니다.'
 
     if error is None and group_info.group_type_cd == 'NORMAL':
-        group_lecture_data_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                 lecture_tb__lecture_avail_count__gt=0, use=1).count()
+        group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                                                                 lecture_tb__lecture_avail_count__gt=0, use=1)
 
-        if group_lecture_data_count == 0:
+        if len(group_lecture_data) == 0:
             error = '그룹에 해당하는 회원들의 예약 가능 횟수가 없습니다.'
+
+        for group_lecture_info in group_lecture_data:
+            if group_schedule_reg_counter < group_lecture_info.lecture_tb.lecture_avail_count:
+                group_schedule_reg_counter = group_lecture_info.lecture_tb.lecture_avail_count
 
     if error is None:
         # 반복 일정 데이터 등록
@@ -2230,6 +2236,10 @@ def add_group_repeat_schedule_logic(request):
 
         # 반복일정 종료 날짜 보다 크면 종료
         while check_date <= repeat_schedule_end_date_info:
+            # 그룹 스케쥴 등록 횟수 설정
+            group_schedule_reg_counter -= 1
+            if group_schedule_reg_counter < 0:
+                break
 
             # 반복일정 등록해야하는 첫번째 요일 검색 -> 자신보다 뒤에있는 요일중에 가장 가까운것
             week_idx = -1
@@ -2322,6 +2332,9 @@ def add_group_repeat_schedule_logic(request):
             if int(check_date.strftime('%w')) == 0:
                 if repeat_type == '2W':
                     check_date = check_date + datetime.timedelta(days=7)
+
+    if pt_schedule_input_counter == 0:
+        repeat_schedule_info.delete()
 
     request.session['repeat_schedule_input_counter'] = pt_schedule_input_counter
     if error_date_message is not None:
@@ -2720,14 +2733,15 @@ def delete_group_repeat_schedule_logic(request):
         end_date = group_repeat_schedule_info.end_date
 
     if error is None:
-        schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id,
-                                                  start_dt__gte=timezone.now())
+        # 오늘 이후 날짜 반복일정만 제거 -> 전체 제거
+        schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id)
 
     if error is None:
         try:
             with transaction.atomic():
                 for delete_schedule_info in schedule_data:
-                    if delete_schedule_info.state_cd != 'PE':
+                    end_schedule_counter = ScheduleTb.objects.filter(group_schedule_id=delete_schedule_info.schedule_id, state_cd='PE').count()
+                    if end_schedule_counter == 0:
                         delete_schedule = DeleteScheduleTb(schedule_id=delete_schedule_info.schedule_id,
                                                            class_tb_id=delete_schedule_info.class_tb_id,
                                                            group_tb_id=delete_schedule_info.group_tb_id,
