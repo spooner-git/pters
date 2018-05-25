@@ -597,7 +597,6 @@ $(document).ready(function(){
 			if(ajax_block_during_delete_weekcal == true){
 				ajax_block_during_delete_weekcal = false;
 				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
-					var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-id')
 					$.ajax({
 		                url:'/schedule/delete_repeat_schedule/',
 		                type:'POST',
@@ -622,8 +621,8 @@ $(document).ready(function(){
 										}
 									}
 					          		close_info_popup('cal_popup_plandelete')
-				                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
-				                  	//ajax_received_json_data(jsondata)
+				                  	//get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+				                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
 				                  	set_schedule_time(jsondata)
 				                  	AjaxCompleteSend();
 					          }
@@ -642,7 +641,60 @@ $(document).ready(function(){
 		                error:function(){
 		                  alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
 		                  close_info_popup('cal_popup_plandelete')
-		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+		                  //get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
+		                  AjaxCompleteSend();
+		                },
+		            })
+				}else if(deleteTypeSelect == "repeatgroupptdelete"){
+					console.log($('#id_repeat_schedule_id_confirm').val(),'grouprepeat delete!!!!!!!!!', 'groupid: ',$('#cal_popup_repeatconfirm').attr('data-groupid'))
+					$.ajax({
+		                url:'/schedule/delete_group_repeat_schedule/',
+		                type:'POST',
+		                data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
+		                dataType:'html',
+
+		                beforeSend:function(){
+		                 	AjaxBeforeSend();
+		                },
+
+		                //통신성공시 처리
+		                success:function(data){
+			                  var jsondata = JSON.parse(data);
+			                  console.log(jsondata)
+			                  if(jsondata.messageArray.length>0){
+				                  	$('#errorMessageBar').show()
+				                  	$('#errorMessageText').text(jsondata.messageArray)
+					          }else{
+
+									if(jsondata.push_info != ''){
+										for (var i=0; i<jsondata.pushArray.length; i++){
+                                        	send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+										}
+									}
+					          		close_info_popup('cal_popup_plandelete')
+				                  	//get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+				                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-groupid'))
+				                  	set_schedule_time(jsondata)
+				                  	AjaxCompleteSend();
+					          }
+		                  },
+
+		                //보내기후 팝업창 닫기
+		                complete:function(){
+		                	ajax_block_during_delete_weekcal = true;
+		                	if($('body').width()>=600){
+		                		$('#calendar').css('position','relative')	
+		                	}
+		  					//addTypeSelect = 'ptadd'
+		                  },
+
+		                //통신 실패시 처리
+		                error:function(){
+		                  alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
+		                  close_info_popup('cal_popup_plandelete')
+		                  //get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+		                  get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
 		                  AjaxCompleteSend();
 		                },
 		            })
