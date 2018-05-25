@@ -3613,10 +3613,7 @@ function get_indiv_repeat_info(dbID){
                     }else{
                         set_indiv_repeat_info(jsondata, 'pc')
                     }
-                    
                 }
-                
-                
               },
 
               complete:function(){
