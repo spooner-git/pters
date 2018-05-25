@@ -780,11 +780,12 @@ $(document).ready(function(){
                                 }
                             }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
+                                var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
                                 if(total_count == RepeatDuplicationDateArray[0].split('/').length){
-                                  alert('선택한 반복일정과 동일한 일정의 반복일정이 등록되어있습니다.\n 일정을 다시 확인 후 등록해주세요.')
+                                    alert('선택한 반복일정과 동일한 일정의 반복일정이 등록 되어있습니다.\n 일정을 다시 확인 후 등록해주세요.')
+                                    completeSend(); //ajax 로딩 이미지 숨기기
                                 }else{
                                   var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
-                                  var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
                                   $('._repeatconfirmQuestion').text('선택한 일정 총 '+total_count+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.');
                                   var repeat_info = popup_repeat_confirm()
                                   $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
@@ -794,16 +795,20 @@ $(document).ready(function(){
                                   shade_index(200)
                                 }
                             }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
-                                var repeat_info = popup_repeat_confirm()
-                                var day_info = repeat_info.day_info
-                                var dur_info = repeat_info.dur_info
-                                $('._repeatconfirmQuestion').text('총 '+jsondata.repeatScheduleCounterArray[0]+' 건의 일정이 등록됩니다.')
-                                $('#repeat_confirm_day').text(day_info)
-                                $('#repeat_confirm_dur').text(dur_info)
-                                $('#id_repeat_schedule_id_confirm').val(repeatArray)
-                                completeSend(); //ajax 로딩 이미지 숨기기
-                                shade_index(200)
-
+                                if(jsondata.repeatScheduleCounterArray[0] == 0){
+                                    alert('선택한 회원님의 등록 가능한 횟수가 부족합니다.\n 다시 확인 후 등록해주세요.')
+                                    completeSend(); //ajax 로딩 이미지 숨기기
+                                }else{
+                                    var repeat_info = popup_repeat_confirm()
+                                    var day_info = repeat_info.day_info
+                                    var dur_info = repeat_info.dur_info
+                                    $('._repeatconfirmQuestion').text('총 '+jsondata.repeatScheduleCounterArray[0]+' 건의 일정이 등록됩니다.')
+                                    $('#repeat_confirm_day').text(day_info)
+                                    $('#repeat_confirm_dur').text(dur_info)
+                                    $('#id_repeat_schedule_id_confirm').val(repeatArray)
+                                    completeSend(); //ajax 로딩 이미지 숨기기
+                                    shade_index(200)
+                                }
                             }else{
                                 if($('._calweek')){
                                   scheduleTime('class', jsondata);
@@ -1069,7 +1074,7 @@ function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
       $('#calendar').hide();
       $('#calendar').css('height','0')
       $('#addpopup_pc_label_pt, #addpopup_pc_label_off').css('display','none')
-      $('#page-addplan').fadeIn('fast');
+      $('#page-addplan').fadeIn('fast').css('top',50);
     }else{
       $('#page-addplan').fadeIn('fast').css({'top':(($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()),
                                                 'left':(($(window).width()-$('#page-addplan').outerWidth())/2+$(window).scrollLeft())})
