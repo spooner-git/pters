@@ -1309,6 +1309,7 @@ function ajaxRepeatConfirmSend(){
         },
 
         success:function(data){
+          console.log(data)
           var jsondata = JSON.parse(data);
           console.log('ajaxRepeatConfirmSend',jsondata)
           if(jsondata.messageArray.length>0){

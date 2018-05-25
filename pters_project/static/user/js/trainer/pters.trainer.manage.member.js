@@ -3760,6 +3760,7 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
 
 //그룹의 반복일정을 지운다
 function send_repeat_delete_group(repeat_schedule_id, use, callback){
+        console.log('send_repeat_delete_group',repeat_schedule_id)
     $.ajax({
             url:'/schedule/delete_group_repeat_schedule/',
             type:'POST',

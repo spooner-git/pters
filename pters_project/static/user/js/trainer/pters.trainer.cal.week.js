@@ -647,6 +647,7 @@ $(document).ready(function(){
 					send_plan_delete('group')
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule_id')
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
+						console.log("get_group_plan_participants",jsondata)
 						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
 							$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
 							send_plan_delete('pt')
