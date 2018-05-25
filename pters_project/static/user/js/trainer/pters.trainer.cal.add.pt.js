@@ -746,10 +746,8 @@ $(document).ready(function(){
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
          }
-         console.log('addTypeSelect',addTypeSelect,serverURL)
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
-             console.log(sendData)
             if(ajax_block_during_submit == true){
                 ajax_block_during_submit = false;
                 $.ajax({
@@ -812,27 +810,27 @@ $(document).ready(function(){
                                     shade_index(200)
                                 //}
                             }else{
-
                                 if($('._calweek').length == 1){
-                                  console.log('weekweek')
                                   scheduleTime('class', jsondata);
                                   scheduleTime('off', jsondata);
                                   scheduleTime('group', jsondata);
                                 }
                                 else if($('._calmonth').length == 1){
-                                  console.log('monthmonth')
                                   classDatesTrainer(jsondata);
                                 }
-                                
-                                $('#calendar').show().css('height','100%')
-                                if($('body').width()>=600){
-                                    $('#calendar').css('position','relative')
-                                }
+                                $('#members_mobile, #members_pc').html('')
+                                get_current_member_list()
+                                get_current_group_list()
 
                                 closeAddPopup()
                                 closeAddPopup_mini()
                                 completeSend()
                                 shade_index(-100)
+                                
+                                $('#calendar').show().css('height','100%')
+                                if($('body').width()>=600){
+                                    $('#calendar').css('position','relative')
+                                }
                             }
                         }
                     },
@@ -897,6 +895,16 @@ $(document).ready(function(){
               var id = $('#cal_popup_repeatconfirm').attr('data-dbid')
             }
             get_repeat_info(id)
+
+            $('#members_mobile, #members_pc').html('')
+            get_current_member_list('callback',function(jsondata){
+              set_member_dropdown_list(jsondata)
+              $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
+            })
+            get_current_group_list('callback',function(jsondata){
+              set_group_dropdown_list(jsondata)
+              $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
+            })
         }
       })
 
@@ -2535,7 +2543,7 @@ function send_plan_delete(option, callbackoption, callback){
             data: sendData,
 
             beforeSend:function(){
-              AjaxBeforeSend();
+              beforeSend();
             },
 
             //통신성공시 처리
@@ -2565,7 +2573,7 @@ function send_plan_delete(option, callbackoption, callback){
             //보내기후 팝업창 닫기
             complete:function(){
               ajax_block_during_delete_weekcal = true;
-              AjaxCompleteSend();
+              completeSend();
               },
 
             //통신 실패시 처리
