@@ -703,7 +703,7 @@ $(document).ready(function(){
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
                               var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
                               if(total_count == RepeatDuplicationDateArray[0].split('/').length){
-                                  alert('선택한 반복일정과 동일한 일정의 반복일정이 등록 되어있습니다.\n 일정을 다시 확인 후 등록해주세요.')
+                                  alert('선택한 반복 일정의 등록 가능한 일정이 없습니다.\n 다시 확인 후 등록해주세요.')
                                   completeSend(); //ajax 로딩 이미지 숨기기
                               }else{
                                 var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
@@ -717,7 +717,7 @@ $(document).ready(function(){
                               }
                             }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
                               if(jsondata.repeatScheduleCounterArray[0] == 0){
-                                  alert('선택한 회원님의 등록 가능한 횟수가 부족합니다.\n 다시 확인 후 등록해주세요.')
+                                  alert('선택한 반복 일정의 등록 가능한 일정이 없습니다.\n 다시 확인 후 등록해주세요.')
                                   completeSend(); //ajax 로딩 이미지 숨기기
                               }else{
                                   var repeat_info = popup_repeat_confirm()

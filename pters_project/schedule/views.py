@@ -992,6 +992,10 @@ def add_repeat_schedule_logic(request):
             if int(check_date.strftime('%w')) == 0:
                 if repeat_type == '2W':
                     check_date = check_date + datetime.timedelta(days=7)
+
+    if pt_schedule_input_counter == 0:
+        repeat_schedule_info.delete()
+
     request.session['repeat_schedule_input_counter'] = pt_schedule_input_counter
     if error_date_message is not None:
         # logger.info(error_date_message)
