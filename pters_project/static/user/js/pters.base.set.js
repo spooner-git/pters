@@ -124,6 +124,22 @@ function close_info_popup(option){
   }
 }
 
+var toggleGroupParticipants = 'off'
+function toggleGroupParticipantsList(onoff){
+  switch(onoff){
+    case 'on':
+      toggleGroupParticipants = 'on'
+      $('#groupParticipants').animate({'height':'200px'},200)
+      $('#popup_btn_viewGroupParticipants img').css('transform','rotate(180deg)')
+    break;
+    case 'off':
+      toggleGroupParticipants = 'off'
+      $('#groupParticipants').animate({'height':0},200)
+      $('#popup_btn_viewGroupParticipants img').css('transform','rotate(0deg)')
+    break;
+  }
+}
+
 
 function shade1(option){
   if($('body').width()>600){

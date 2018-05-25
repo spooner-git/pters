@@ -192,6 +192,17 @@ $(document).ready(function(){
 				$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
 			}
 			schedule_on_off = 1;
+
+			$('#subpopup_addByList').hide()
+			if($(this).attr('data-grouptype') == "group"){
+				$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 
+															'data-groupid': $(this).attr('data-groupid'),
+															'group-schedule-id':$(this).attr('group-schedule-id'),
+															'data-starttime':$(this).attr('data-starttime')
+															})
+			}else{
+				$('#popup_btn_viewGroupParticipants').hide()
+			}
 		})
 
 		//plan_raw 클릭해서 나오는 개별일정 [일정완료][일정삭제] 팝업의 X버튼
@@ -1164,7 +1175,7 @@ function ajaxClassTime(){
 function set_schedule_Time(jsondata){
 	initialJSON = jsondata;
 	classDatesTrainer(jsondata);
-	plancheck(clicked_td_date_info, jsondata)
+	//plancheck(clicked_td_date_info, jsondata)
 }
 
 
@@ -1223,18 +1234,22 @@ function classInfoProcessed(jsondata){
 	var datasum = []
 	for(var i=0; i<len; i++){ //객체화로 중복 제거
 		summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0]
-		datasum[i] = jsondata.classTimeArray_start_date[i].split(' ')[0]+"/"+jsondata.classTimeArray_member_name[i]
+		if(datasum.indexOf(jsondata.classTimeArray_start_date[i].split(' ')[0]+"/"+jsondata.classTimeArray_member_name[i]) == -1){
+			datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0]+"/"+jsondata.classTimeArray_member_name[i])
+		}else{
+
+		}
 	}
 	for(var i in summaryArray){ //중복 제거된 배열
 		summaryArrayResult.push(i)
 	}
-
+	console.log(datasum)
 	var len2 = summaryArrayResult.length;
 
 	for(var i=0; i<len2; i++){
 		var scan = summaryArrayResult[i]
 		countResult[i]=0
-		for(var j=0; j<len; j++){
+		for(var j=0; j<datasum.length; j++){
 			var datesplit = datasum[j].split('/')
 			if(scan == datesplit[0]){
 				countResult[i] = countResult[i]+1
@@ -1247,12 +1262,47 @@ function classInfoProcessed(jsondata){
 
 
 function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
-	var len = jsondata.scheduleIdArray.length;
+	var len1 = jsondata.scheduleIdArray.length;
+	var len2 = jsondata.group_schedule_id.length;
 	var dateplans = []
 
-	for(var i=0; i<len; i++){
-		//var splited = classNameArray[i].split('_');
+
+	for(var i=0; i<len2; i++){  //시간순 정렬을 위해 'group' 정보를 가공하여 dateplans에 넣는다.
+		var grouptype = "group"
+		var dbID = ''
+		var group_id = jsondata.group_schedule_group_id[i]
+		var scheduleID = jsondata.group_schedule_id[i]
+		var classLectureID = ''
+		var scheduleFinish = jsondata.group_schedule_finish_check[i]
+		var memoArray = jsondata.group_schedule_note[i]
+		var yy = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0]
+		var mm = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1]
+		var dd = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2]
+		var stime1 = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0]
+		var etime1 = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0]
+		var sminute = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1]
+		var eminute = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
+		var groupmax = jsondata.group_schedule_max_member_num[i]
+		var groupcurrent = jsondata.group_schedule_current_member_num[i]
+		var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')'
+		var name = jsondata.group_schedule_group_name[i]+groupParticipants
+		if(stime1.length<2){
+			var stime1 = '0'+stime1
+		}else if(stime1 == '24'){
+			var stime1 = '00'
+		}
+		var stime = stime1+'_'+sminute
+		var etime = etime1+'_'+eminute
+		var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
+		if(ymd == dateinfo){
+			dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
+		}
+	}
+
+	for(var i=0; i<len1; i++){  //시간순 정렬을 위해 'class' 정보를 가공하여 dateplans에 넣는다.
+		var grouptype = "class"
 		var dbID = jsondata.classTimeArray_member_id[i]
+		var group_id = ''
 		var scheduleID = jsondata.scheduleIdArray[i]
 		var classLectureID = jsondata.classArray_lecture_id[i]
 		var scheduleFinish = jsondata.scheduleFinishArray[i]
@@ -1273,21 +1323,20 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 		var etime = etime1+'_'+eminute
 		var name = jsondata.classTimeArray_member_name[i]
 		var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
-		if(ymd == dateinfo){
-			dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_/'+memoArray)
+		if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+			dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
 		}
 	}
+
+	
 	dateplans.sort();
 	var htmltojoin = []
 	if(dateplans.length>0){
 		for(var i=1;i<=dateplans.length;i++){
 			var splited = dateplans[i-1].split('_')
-			var stime = splited[0]
+			var stime = Number(splited[0])
 			var sminute = splited[1]
-			if(stime.substr(0,1)=='0'){
-				var stime = stime.substr(1,1)
-			}
-			var etime = splited[2]
+			var etime = Number(splited[2])
 			var eminute = splited[3]
 			var name = splited[4]
 			var morningday = ""
@@ -1304,10 +1353,10 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 				var morningday = "오후"
 			}
 			if(splited[10]==1){
-				htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+				htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
 
 			}else if(splited[10] == 0){
-				htmltojoin.push('<div class="plan_raw" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
+				htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
 			}
 		}
 	}else{
