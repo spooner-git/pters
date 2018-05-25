@@ -746,6 +746,7 @@ $(document).ready(function(){
             var serializeArray = $form.serializeArray();
             var sendData = send_Data(serializeArray)
          }
+         console.log('addTypeSelect',addTypeSelect,serverURL)
          if(select_all_check==true){
              //ajax 회원정보 입력된 데이터 송신
              console.log(sendData)
@@ -795,10 +796,11 @@ $(document).ready(function(){
                                   shade_index(200)
                                 }
                             }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
-                                if(jsondata.repeatScheduleCounterArray[0] == 0){
-                                    alert('선택한 반복일정에 등록할수 있는 일정이 없습니다. \n 일정을 다시 확인 후 등록해주세요.')
-                                    completeSend(); //ajax 로딩 이미지 숨기기
-                                }else{
+
+                                //if(jsondata.repeatScheduleCounterArray[0] == 0){
+                                   // alert('선택한 회원님의 등록 가능한 횟수가 부족합니다.\n 다시 확인 후 등록해주세요.')
+                                    //completeSend(); //ajax 로딩 이미지 숨기기
+                                //}else{
                                     var repeat_info = popup_repeat_confirm()
                                     var day_info = repeat_info.day_info
                                     var dur_info = repeat_info.dur_info
@@ -808,7 +810,7 @@ $(document).ready(function(){
                                     $('#id_repeat_schedule_id_confirm').val(repeatArray)
                                     completeSend(); //ajax 로딩 이미지 숨기기
                                     shade_index(200)
-                                }
+                                //}
                             }else{
 
                                 if($('._calweek').length == 1){
@@ -1534,7 +1536,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
 
       var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +'시간)</span>'
       var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>'
-      var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+      var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-deletetype="'+option+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
       schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
     }
 

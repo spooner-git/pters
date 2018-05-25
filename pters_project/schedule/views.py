@@ -1946,6 +1946,7 @@ def add_group_repeat_schedule_logic(request):
 
         # 반복일정 종료 날짜 보다 크면 종료
         while check_date <= repeat_schedule_end_date_info:
+
             # 그룹 스케쥴 등록 횟수 설정
             if error is None and group_info.group_type_cd == 'NORMAL':
                 group_schedule_reg_counter -= 1
