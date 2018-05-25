@@ -266,10 +266,22 @@
 	display: none;
 	width: 100%;
 	height: auto;
-	background: #f4f4f4;
-	text-align: center;
+	background: #282828;
+	color: #ffffff;
+	text-align: left;
 	font-size: 12px;
 }
+	.groupRepeatWrap p{
+		display: inline-block;
+		line-height: 35px;
+		margin:0 10px 0 10px;
+	}
+	.groupRepeatWrap .summaryInnerBox{
+		position: relative;
+		padding-left: 45px;
+		height: 35px;
+	}
+
 
 .groupMembersWrap{
 	display: none;

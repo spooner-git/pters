@@ -939,6 +939,7 @@ select:focus > option:checked {
 				line-height: unset;
 				font-size: unset;
 			}
+			
 			.deleteBtn{
 				position: absolute;
 				line-height: 35px;
