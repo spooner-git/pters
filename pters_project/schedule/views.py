@@ -996,6 +996,9 @@ def add_repeat_schedule_logic(request):
     if error_date_message is not None:
         # logger.info(error_date_message)
         messages.info(request, error_date_message)
+    if error is not None:
+        request.session['repeat_schedule_id'] = ''
+        messages.error(request, error)
 
     return redirect(next_page)
 
