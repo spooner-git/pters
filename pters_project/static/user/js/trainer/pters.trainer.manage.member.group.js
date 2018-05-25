@@ -925,7 +925,7 @@ function set_group_repeat_info(jsondata, group_id){
                           };
         var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +text2+')'+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
-        var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-groupid="'+group_id+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+        var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-deletetype="grouprepeatinfo" data-groupid="'+group_id+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-repeatid="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
     }
     if(len == 0){
@@ -937,6 +937,54 @@ function set_group_repeat_info(jsondata, group_id){
     }
     $regHistory.html(title + schedulesHTML.join('')).addClass(repeat_bg)
     
+}
+
+
+//그룹의 반복일정 id를 보내서 그 반복일정에 묶여있는 회원들의 반복일정 id를 불러온다. (그룹의 반복일정을 삭제할 때 회원들의 반복일정도 같이 지워주기 위해)
+function set_group_member_repeat_info(group_repeat_id, use, callback){
+    console.log(group_repeat_id)
+    $.ajax({
+              url: '/trainer/get_group_repeat_schedule_list/',
+              type:'POST',
+              data: {"group_repeat_id": group_repeat_id},
+              dataType : 'html',
+
+              beforeSend:function(){
+                  //beforeSend(); //ajax 로딩이미지 출력
+              },
+
+              success:function(data){
+                var jsondata = JSON.parse(data);
+                console.log('set_group_member_repeat_info',jsondata)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
+                    if(use == "callback"){
+                        callback(jsondata)
+                    }
+                }
+              },
+
+              complete:function(){
+                //completeSend(); //ajax 로딩이미지 숨기기
+              },
+
+              error:function(){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
+              }
+        })
+}
+
+//어떤 그룹반복일정id에 엮인 회원들의 반복일정id들을 모두 삭제요청한다. (그룹의 반복일정을 삭제할 때 회원들의 반복일정도 같이 지워주기 위해)
+function send_delete_member_repeat_infos(jsondata){
+        //var len = jsondata.{멤버 리피트 id 배열 길이};
+        for(var i=0; i<len; i++){
+
+        }
 }
 /////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////
 

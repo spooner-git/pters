@@ -546,11 +546,20 @@ if (agent.indexOf("firefox") != -1) {
         var id_info = $(this).parents('div.summaryInnerBox').attr('data-id');
         $('#id_repeat_schedule_id_confirm').val(id_info);
         $('#cal_popup_plandelete').fadeIn().attr({'data-repeatid':$(this).attr('data-repeatid'), 'data-dbid':$(this).attr('data-dbid'), 'data-groupid':$(this).attr('data-groupid')});
-        if($(this).attr('data-groupid')){
+        if($(this).attr('data-deletetype') == 'grouprepeatinfo'){
             deleteTypeSelect = 'grouprepeatinfodelete';
             shade_index(100)
-        }else{
+        }else if($(this).attr('data-deletetype') == 'repeatinfo'){
             deleteTypeSelect = 'repeatinfodelete';
+            shade_index(200)
+        }else if($(this).attr('data-deletetype') == 'class'){
+            deleteTypeSelect = 'repeatptdelete';
+            shade_index(200)
+        }else if($(this).attr('data-deletetype') == 'off'){
+            deleteTypeSelect = 'repeatoffdelete';
+            shade_index(200)
+        }else if($(this).attr('data-deletetype') == 'group'){
+            deleteTypeSelect = 'repeatgroupptdelete';
             shade_index(200)
         }
         
@@ -568,58 +577,23 @@ if (agent.indexOf("firefox") != -1) {
         //if($('#calendar').length==0){
            if(deleteTypeSelect == "repeatinfodelete"){
                 var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
-                var dbId = $(this).parent('#cal_popup_plandelete').attr('data-dbid');
-                $.ajax({
-                    url:'/schedule/delete_repeat_schedule/',
-                    type:'POST',
-                    data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/cal_day_ajax/'},
-                    dataType:'html',
-
-                    beforeSend:function(){
-                        beforeSend();
-                    },
-
-                    //통신성공시 처리
-                    success:function(data){
-                        var jsondata = JSON.parse(data);
-                        if(jsondata.messageArray.length>0){
-                            $('#errorMessageBar').show();
-                            $('#errorMessageText').text(jsondata.messageArray);
-                        }else{
-							if(jsondata.push_info != ''){
-								for (var i=0; i<jsondata.pushArray.length; i++){
-									send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-								}
-							}
-                            $('#errorMessageBar').hide();
-                            $('#errorMessageText').text('');
-                            
-                            get_indiv_repeat_info(dbId);
-                            get_member_lecture_list(dbId);
-                            get_member_history_list(dbId);
-                            close_info_popup('cal_popup_plandelete')
-                            deleteTypeSelect = "memberinfodelete";
-                        }
-                      },
-
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                        completeSend();
-                        if($('#calendar').length!=0){
-                            ajaxClassTime()
-                        }
-                    },
-
-                    //통신 실패시 처리
-                    error:function(){
-                        $('#errorMessageBar').show();
-                        $('#errorMessageText').text('통신 에러: 관리자 문의');
-                    },
+                var dbID = $(this).parent('#cal_popup_plandelete').attr('data-dbid');
+                send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
+                    get_indiv_repeat_info(dbID);
+                    get_member_lecture_list(dbID);
+                    get_member_history_list(dbID);
+                    close_info_popup('cal_popup_plandelete')
+                    deleteTypeSelect = "memberinfodelete";
+                    if($('#calendar').length!=0){
+                        ajaxClassTime()
+                    }
                 })
+
             }else if(deleteTypeSelect == "memberinfodelete"){
                 deleteMemberAjax();
                 closePopup('member_info');
                 closePopup('member_info_PC')
+
             }else if(deleteTypeSelect == "groupdelete"){
                 var group_id = group_delete_JSON.group_id
                 var groupmember_fullnames = group_delete_JSON.fullnames
@@ -634,60 +608,22 @@ if (agent.indexOf("firefox") != -1) {
                 group_delete_JSON.fullnames = []
                 group_delete_JSON.ids = []
                 close_info_popup('cal_popup_plandelete')
+
             }else if(deleteTypeSelect == "grouprepeatinfodelete"){
                 var group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid')
-                $.ajax({
-                        url:'/schedule/delete_group_repeat_schedule/',
-                        type:'POST',
-                        data:{"repeat_schedule_id" : $('#id_repeat_schedule_id_confirm').val(), "next_page" : '/trainer/cal_day_ajax/'},
-                        dataType:'html',
-
-                        beforeSend:function(){
-                            AjaxBeforeSend();
-                        },
-
-                        //통신성공시 처리
-                        success:function(data){
-                              var jsondata = JSON.parse(data);
-                              console.log(jsondata)
-                              if(jsondata.messageArray.length>0){
-                                    $('#errorMessageBar').show()
-                                    $('#errorMessageText').text(jsondata.messageArray)
-                              }else{
-
-                                    if(jsondata.push_info != ''){
-                                        for (var i=0; i<jsondata.pushArray.length; i++){
-                                            send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-                                        }
-                                    }
-                                    close_info_popup('cal_popup_plandelete')
-                                    set_group_repeat_info(jsondata, group_id)
-                                    AjaxCompleteSend();
-                              }
-                          },
-
-                        //보내기후 팝업창 닫기
-                        complete:function(){
-                            ajax_block_during_delete_weekcal = true;
-                            if($('body').width()>=600){
-                                $('#calendar').css('position','relative')   
-                            }
-                            //addTypeSelect = 'ptadd'
-                          },
-
-                        //통신 실패시 처리
-                        error:function(){
-                          alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
-                          close_info_popup('cal_popup_plandelete')
-                          //get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
-                          get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
-                          AjaxCompleteSend();
-                        },
+                var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
+                send_repeat_delete_group(repeat_schedule_id, 'callback', function(){
+                    close_info_popup('cal_popup_plandelete')
+                    get_group_repeat_info(group_id)
+                    if($('body').width()>=600){
+                        $('#calendar').css('position','relative')   
+                    }
                 })
-            }
-        //}
-                
+            }               
     });
+
+
+
     
 //#####################회원정보 팝업 //#####################
 
@@ -3770,12 +3706,103 @@ function set_indiv_repeat_info(jsondata, PCorMobile){
                           };
         var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +text2+')'+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
-        var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-dbid="'+dbId+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+        var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-dbid="'+dbId+'" data-deletetype="repeatinfo" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-repeatid="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
     }
     $regHistory.html(schedulesHTML.join(''))
 }
 //회원등록////////////////////////////////////////////////////////
+
+//개인의 반복일정을 지운다
+function send_repeat_delete_personal(repeat_schedule_id, use, callback){
+    $.ajax({
+        url:'/schedule/delete_repeat_schedule/',
+        type:'POST',
+        data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/cal_day_ajax/'},
+        dataType:'html',
+
+        beforeSend:function(){
+            beforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                if(jsondata.push_info != ''){
+                    for (var i=0; i<jsondata.pushArray.length; i++){
+                        send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                    }
+                }
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(use == "callback"){
+                    callback(jsondata)
+                }
+            }
+          },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        },
+    })
+}
+
+//그룹의 반복일정을 지운다
+function send_repeat_delete_group(repeat_schedule_id, use, callback){
+    $.ajax({
+            url:'/schedule/delete_group_repeat_schedule/',
+            type:'POST',
+            data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/cal_day_ajax/'},
+            dataType:'html',
+
+            beforeSend:function(){
+                beforeSend()
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                  var jsondata = JSON.parse(data);
+                  console.log(jsondata)
+                  if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show()
+                        $('#errorMessageText').text(jsondata.messageArray)
+                  }else{
+
+                        if(jsondata.push_info != ''){
+                            for (var i=0; i<jsondata.pushArray.length; i++){
+                                send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                            }
+                        }
+
+                        if(use == 'callback'){
+                            callback(jsondata)
+                        }
+                  }
+              },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend()
+              },
+
+            //통신 실패시 처리
+            error:function(){
+              alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
+              completeSend()
+            },
+    })
+}
 
 
 //ajax 로딩이미지 표기
