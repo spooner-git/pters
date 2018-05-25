@@ -1055,10 +1055,11 @@ def add_repeat_schedule_logic(request):
                         if en_dis_type == '1':
                             lecture_id = get_member_schedule_input_lecture(class_id, member_id)
 
-                        error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
-                                                        schedule_end_datetime, request.user.id,
-                                                        lecture_id, '', en_dis_type,
-                                                        repeat_schedule_info.repeat_schedule_id, class_id)
+                        if error is None:
+                            error = add_schedule_logic_func(str(check_date).split(' ')[0], schedule_start_datetime,
+                                                            schedule_end_datetime, request.user.id,
+                                                            lecture_id, '', en_dis_type,
+                                                            repeat_schedule_info.repeat_schedule_id, class_id)
                         if error is None:
                             pt_schedule_input_counter += 1
                         '''
@@ -1485,9 +1486,16 @@ def get_member_schedule_input_lecture(class_id, member_id):
                                                  lecture_tb__state_cd='IP', lecture_tb__lecture_avail_count__gt=0,
                                                  lecture_tb__use=1).order_by('lecture_tb__start_date')
     # lecture_list = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, state_cd='IP',
-     #                                        lecture_avail_count__gt=0, use=1).order_by('start_date')
+    #                                        lecture_avail_count__gt=0, use=1).order_by('start_date')
     if len(lecture_list) > 0:
-        lecture_id = lecture_list[0].lecture_tb.lecture_id
+        for lecture_info in lecture_list:
+            try:
+                GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb.lecture_id)
+            except ObjectDoesNotExist:
+                lecture_id = lecture_info.lecture_tb.lecture_id
+
+            if lecture_id is not None:
+                break
 
     return lecture_id
 
@@ -2966,3 +2974,6 @@ def func_add_group_member_repeat_schedule_logic(repeat_schedule_info, schedule_d
 
     # error = None
     return error
+
+
+
