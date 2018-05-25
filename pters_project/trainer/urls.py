@@ -131,6 +131,8 @@ urlpatterns = [
 
     # 그룹에 속하는 반복 일정 조회
     url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(), name='get_group_repeat_schedule_list'),
+    # 그룹 반복일정과 같이 등록된 회원들의 반복일정
+    url(r'^get_group_member_repeat_schedule_list/$', views.GetGroupMemberRepeatScheduleListViewAjax.as_view(), name='get_group_member_repeat_schedule_list'),
 
     # 그룹일정에 속하는 그룹회원 일정 조회
     url(r'^get_group_schedule_list/$', views.GetGroupScheduleListViewAjax.as_view(), name='get_group_schedule_list'),
