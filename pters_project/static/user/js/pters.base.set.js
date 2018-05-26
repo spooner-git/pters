@@ -802,3 +802,23 @@ function alarm_change_easy_read(data){ // data : 2018-04-11 02:00:00/2018-04-11 
 }
 
 
+
+
+
+
+///////////////////////////////////////////////////AJAX 속도측정테스트 코드///////////////////////////////////////////////////
+function TEST_CODE_FOR_AJAX_TIMER_starts(yourMessage){
+  console.log('S************************************** Ajax Sending Start......'+yourMessage)
+  var testtimer = 0
+  var testtime = setInterval(function(){
+            testtimer = testtimer+0.5
+            console.log('Waiting for receiving JSON Data......'+testtimer+'second from Request......'+yourMessage)
+          },500)
+  return {"func":testtime, "message":yourMessage}
+}
+
+function TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER){
+  clearInterval(AJAXTESTTIMER["func"])
+  console.log('E************************************** Ajax Data Receiving COMPLETE.....JSON.parse() END......'+AJAXTESTTIMER["message"])
+}
+///////////////////////////////////////////////////AJAX 속도측정테스트 코드///////////////////////////////////////////////////

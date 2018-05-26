@@ -907,6 +907,7 @@ function ajaxClassTime(){
 		}
 		var today_form = yyyy+'-'+ mm +'-'+"01"
 
+		var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('ajaxClassTime')
 		$.ajax({
 		  url: '/trainer/cal_day_ajax/',
 		  type : 'POST',
@@ -920,6 +921,7 @@ function ajaxClassTime(){
 
 		  success:function(data){
 			var jsondata = JSON.parse(data);
+			TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
 			console.log(jsondata)
 			if(jsondata.messageArray.length>0){
 				$('#errorMessageBar').show()

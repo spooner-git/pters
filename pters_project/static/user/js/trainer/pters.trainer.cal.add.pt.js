@@ -750,6 +750,7 @@ $(document).ready(function(){
              //ajax 회원정보 입력된 데이터 송신
             if(ajax_block_during_submit == true){
                 ajax_block_during_submit = false;
+                var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(serverURL)
                 $.ajax({
                     url: serverURL,
                     type:'POST',
@@ -762,7 +763,7 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(data){
-                        //ajaxClassTime();
+                        TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
                         var jsondata = JSON.parse(data);
                         initialJSON = jsondata
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
@@ -915,6 +916,7 @@ $(document).ready(function(){
           var group_id = $(this).attr('data-groupid')
           var max = $(this).attr('data-membernum')
           var group_schedule_id = $(this).attr('group-schedule-id')
+          console.log("group_id:",group_id,"max:",max,"group_schedule_id:",group_schedule_id)
           get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)})
 
         }else if(toggleGroupParticipants == 'on'){
@@ -1167,6 +1169,7 @@ function clear_pt_off_add_popup(){
 
 
 function get_current_member_list(use, callback){
+    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_member_ing_list')
     $.ajax({
           url: '/trainer/get_member_ing_list/',
           dataType : 'html',
@@ -1178,6 +1181,7 @@ function get_current_member_list(use, callback){
           },
 
           success:function(data){
+            TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
@@ -1206,6 +1210,7 @@ function get_current_member_list(use, callback){
 
 
 function get_current_group_list(use, callback){
+  var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_ing_list')
     $.ajax({
           url: '/trainer/get_group_ing_list/',
           dataType : 'html',
@@ -1217,6 +1222,7 @@ function get_current_group_list(use, callback){
           },
 
           success:function(data){
+            TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
@@ -1297,7 +1303,7 @@ function ajaxRepeatConfirmSend(){
         var serverURL = '/schedule/add_repeat_schedule_confirm/'
       }
       var $form = $('#confirm-repeat-schedule-form')
-      console.log(serverURL, $form.serialize())
+      var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(serverURL)
       $.ajax({
         url: serverURL,
         type:'POST',
@@ -1309,7 +1315,7 @@ function ajaxRepeatConfirmSend(){
         },
 
         success:function(data){
-          console.log(data)
+          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           console.log('ajaxRepeatConfirmSend',jsondata)
           if(jsondata.messageArray.length>0){
@@ -1322,7 +1328,6 @@ function ajaxRepeatConfirmSend(){
                       send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
                   }
               }
-            
             set_schedule_time(jsondata)
           }
         },
@@ -1346,6 +1351,7 @@ function ajaxTimeGraphSet(date, callback){
       durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
       $('#durations_mini, #durations_mini').html('')
       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
+      var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/cal_day_ajax')
       $.ajax({
         url: '/trainer/cal_day_ajax/',
         type : 'POST',
@@ -1357,6 +1363,7 @@ function ajaxTimeGraphSet(date, callback){
         },
 
         success:function(data){
+          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           if(jsondata.messageArray.length>0){
             $('#errorMessageBar').show()
@@ -1409,7 +1416,7 @@ function get_repeat_info(dbID){
       var fill_option = 'off'
       var type_;
     }
-    console.log(dbID)
+    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
     $.ajax({
         url: url_,
         type: type_,
@@ -1421,6 +1428,7 @@ function get_repeat_info(dbID){
         },
 
         success:function(data){
+          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           console.log('fill_repeat_info',jsondata)
           if(jsondata.messageArray.length>0){
@@ -1459,6 +1467,7 @@ $('#week').click(function(){
 
 
 function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
+    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
     $.ajax({
         url: '/trainer/get_group_member_repeat_schedule_list/',
         type : 'POST',
@@ -1470,6 +1479,7 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
         },
 
         success:function(data){
+          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           console.log(jsondata)
           if(jsondata.messageArray.length>0){
@@ -2448,6 +2458,7 @@ $(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',func
 
 //그룹 일정에 속한 회원목록을 받아온다.
 function get_group_plan_participants(group_schedule_id, callbackoption , callback){
+    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_schedule_list')
     $.ajax({
         url: '/trainer/get_group_schedule_list/',
         type : 'POST',
@@ -2459,6 +2470,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         },
 
         success:function(data){
+            TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             var jsondata = JSON.parse(data)
             console.log('get_group_plan_participants',jsondata)
             if(callbackoption == "callback"){
@@ -2521,6 +2533,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 function send_add_groupmember_plan(){
     var $form = $('#add_groupmember-plan-form').serializeArray()
     var sendData = send_Data($form)
+    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/schedule/add_member_group_schedule')
      $.ajax({
       url: '/schedule/add_member_group_schedule/',
       type : 'POST',
@@ -2532,6 +2545,7 @@ function send_add_groupmember_plan(){
       },
 
       success:function(data){
+          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data)
           scheduleTime('class', jsondata)
           scheduleTime('off', jsondata)
@@ -2583,6 +2597,7 @@ function send_plan_delete(option, callbackoption, callback){
       var sendData = send_Data(serializeArray)
     var url_ = '/schedule/delete_group_schedule/'
   }
+  var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
   $.ajax({
             url: url_,
             type:'POST',
@@ -2594,6 +2609,7 @@ function send_plan_delete(option, callbackoption, callback){
 
             //통신성공시 처리
             success:function(data){
+                TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
                 var jsondata = JSON.parse(data)
                 console.log('send_plan_delete',jsondata)
                 if(jsondata.messageArray.length>0){
@@ -2618,7 +2634,6 @@ function send_plan_delete(option, callbackoption, callback){
 
             //보내기후 팝업창 닫기
             complete:function(){
-              ajax_block_during_delete_weekcal = true;
               completeSend();
               },
 

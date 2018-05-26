@@ -612,6 +612,7 @@ $(document).ready(function(){
 				}else if(deleteTypeSelect == "repeatgroupptdelete"){
 		            var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
 		            send_repeat_delete_group(repeat_schedule_id, 'callback', function(jsondata){
+		            	ajax_block_during_delete_weekcal = true
 	            		close_info_popup('cal_popup_plandelete')
 	                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-groupid'))
 	                  	set_schedule_time(jsondata)
@@ -621,7 +622,6 @@ $(document).ready(function(){
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
-	                	ajax_block_during_delete_weekcal = true
 		            })
 		            get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
 		            	for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
@@ -1616,6 +1616,10 @@ function fake_show(){
 
 
 
+
+
+
+
 function ajaxClassTime(reference){
 		if(reference){
 
@@ -1623,7 +1627,8 @@ function ajaxClassTime(reference){
 			var $weekNum4 = $('#weekNum_4').attr('data-date')
 			var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
 		}
-		
+
+		var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/cal_day_ajax/')
 		$.ajax({
 		  url: '/trainer/cal_day_ajax/',
 		  type : 'POST',
@@ -1637,13 +1642,14 @@ function ajaxClassTime(reference){
 
 		  success:function(data){
 			var jsondata = JSON.parse(data);
+			TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+			
 			if(jsondata.messageArray.length>0){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
 				set_schedule_time(jsondata)
 			}
-
 		  },
 
 		  complete:function(){
