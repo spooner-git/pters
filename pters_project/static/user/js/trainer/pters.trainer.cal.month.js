@@ -24,7 +24,7 @@ $(document).ready(function(){
 			  dataType : 'html',
 
               beforeSend:function(){
-              	//AjaxBeforeSend();
+              	//beforeSend();
               },
 
               success:function(data){
@@ -41,7 +41,7 @@ $(document).ready(function(){
 			  },
 
               complete:function(){
-              	//AjaxCompleteSend();
+              	//completeSend();
               },
 
               error:function(){
@@ -317,7 +317,7 @@ $(document).ready(function(){
 
 
 		                    beforeSend:function(){
-		                      AjaxBeforeSend();
+		                      beforeSend();
 		                    },
 
 		                    //통신성공시 처리
@@ -336,7 +336,7 @@ $(document).ready(function(){
 					          		signImageSend(send_data);
 					          		console.log('555')
 					          		close_info_popup('cal_popup_planinfo')
-				                    AjaxCompleteSend();
+				                    completeSend();
 				                    set_schedule_time(jsondata)
 				                    //send_memo()
 					          	}
@@ -397,7 +397,7 @@ $(document).ready(function(){
             data:{"schedule_id":schedule_id,"add_memo":memo,"next_page":'/trainer/cal_week'},
 
             beforeSend:function(){
-            	//AjaxBeforeSend();
+            	//beforeSend();
             },
 
             //통신성공시 처리
@@ -485,7 +485,7 @@ $(document).ready(function(){
             data:send_data,
 
             beforeSend:function(){
-            	//AjaxBeforeSend();
+            	//beforeSend();
             },
 
             //통신성공시 처리
@@ -915,7 +915,7 @@ function ajaxClassTime(){
 		  dataType : 'html',
 
 		  beforeSend:function(){
-			AjaxBeforeSend();
+			beforeSend();
 			$('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick','')
 		  },
 
@@ -933,7 +933,7 @@ function ajaxClassTime(){
 		  },
 
 		  complete:function(){
-			AjaxCompleteSend();
+			completeSend();
 			$('.ymdText-pc-add div').removeClass('disabled_button')
 			$('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)')
 			$('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)')
@@ -952,14 +952,14 @@ function set_schedule_time(jsondata){
 }
 
 
-function AjaxBeforeSend(){
+function beforeSend(){
 	$('html').css("cursor","wait");
 	//$('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
 	$('.ajaxloadingPC').show();
 
 }
 
-function AjaxCompleteSend(){
+function completeSend(){
 	$('html').css("cursor","auto");
 	//$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 	$('.ajaxloadingPC').hide();

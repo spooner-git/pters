@@ -367,7 +367,7 @@
     <div id="remainCount" class="ptaddbox">
       <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약 가능 횟수</span><span class="JPtext">予約可能回数</span><span class="ENtext">Available Reserv. Counts</span></div>
       <!-- 남은 횟수 DB연동 필요 -->
-            <div id="countsSelected" class="dropdown" placeholder="ー"></div>
+            <div id="countsSelected" class="dropdown" placeholder="ー">-</div>
     </div>
 
     <div id="groupInfo" class="ptaddbox">
@@ -661,7 +661,18 @@
             <span class="JPtext">予約可能回数</span>
             <span class="ENtext">Reserve. Available count</span>
       </span>
-      <div id="countsSelected" class="dropdown_mini countsSelected" placeholder="ー"></div>
+      <div id="countsSelected_mini" class="dropdown_mini countsSelected" placeholder="ー"></div>
+    </div>
+
+    <div id="groupInfo_mini" class="ptaddbox_mini">
+      <div class="ptaddboxtext_mini"></div>
+      <!-- 남은 횟수 DB연동 필요 -->
+      <span id="groupInfo_mini_text">
+            <span class="KRtext">그룹 정보 :</span>
+            <span class="JPtext">予約可能回数</span>
+            <span class="ENtext">Reserve. Available count</span>
+      </span>
+      <div id="groupInfoSelected" class="dropdown_mini groupInfoSelected" placeholder="ー"></div>
     </div>
 
     <div id="timeGraph" class="ptaddbox_mini" style="display: none;">

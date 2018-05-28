@@ -2771,7 +2771,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
 }
 
 //회원의 등록 이력을 서버로부터 받아온다.
-function get_member_lecture_list(dbID){
+function get_member_lecture_list(dbID, use, callback){
     console.log('dbID',dbID)
     $.ajax({
         url:'/trainer/read_lecture_by_class_member_ajax/', 
@@ -2798,11 +2798,16 @@ function get_member_lecture_list(dbID){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width() < 600){
-                    draw_member_lecture_list_table(jsondata, dbID, 'mobile')
+                if(use == "callback"){
+                    callback(jsondata)
                 }else{
-                    draw_member_lecture_list_table(jsondata, dbID, 'pc') 
+                    if($('body').width() < 600){
+                        draw_member_lecture_list_table(jsondata, dbID, 'mobile')
+                    }else{
+                        draw_member_lecture_list_table(jsondata, dbID, 'pc') 
+                    }
                 }
+                
             }
             
         },

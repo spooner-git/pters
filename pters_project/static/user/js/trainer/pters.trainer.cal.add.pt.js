@@ -491,20 +491,31 @@ $(document).ready(function(){
           //$('.tdgraph').removeClass('graphindicator')
           if($(this).attr('data-grouptype') == "personal"){
             addTypeSelect = "ptadd"
-            $('#remainCount').show()
-            $('#groupInfo').hide()
+            $('#remainCount_mini').show()
+            $('#groupInfo, #groupInfo_mini, #groupInfo_mini_text, #groupInfoSelected').hide()
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-grouptype','personal');
-            $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
+
+            //회원 이름을 클릭했을때, 회원의 수강일정중 1:1 레슨의 예약가능 횟수만을 표기해준다.
+            get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
+                var availCount_personal = 0
+                for(var i= 0; i<jsondata.availCountArray.length; i++){
+                  if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                    availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
+                  }
+                }
+                $("#countsSelected_mini").show().text(availCount_personal);
+            })
+            
             $('#remainCount_mini_text').css('display','inline-block')
             $("#id_lecture_id").val($(this).attr('data-lectureid'));
             $("#id_member_id").val($(this).attr('data-dbid'));
             $("#id_member_name").val($(this).text());
           }else if($(this).attr('data-grouptype') == "group"){
             addTypeSelect = "groupptadd"
-            $('#remainCount').hide()
-            $('#groupInfo').show()
+            $('#remainCount_mini, #remainCount_mini_text, #countsSelected_mini').hide()
+            $('#groupInfo, #groupInfo_mini, #groupInfo_mini_text, #groupInfoSelected').show()
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-grouptype','group');
-            $('#grouptypenumInfo').text('('+$(this).attr('data-grouptypecd')+' '+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum')+')')
+            $('#grouptypenumInfo, #groupInfoSelected').text('('+$(this).attr('data-grouptypecd')+' 정원'+$(this).attr('data-membernum')+'명)')
             $("#id_group_id").val($(this).attr('data-groupid'));
           }
           
@@ -514,7 +525,6 @@ $(document).ready(function(){
       $(document).on('click',"#members_mobile li a",function(){
           //$('.tdgraph').removeClass('graphindicator')
           if($(this).attr("data-grouptype") == "personal"){
-
               if($('._NORMAL_ADD_wrap').css('display') == 'block'){
                 addTypeSelect = "ptadd"
               }else if($('._REPEAT_ADD_wrap').css('display') == 'block'){
@@ -523,9 +533,20 @@ $(document).ready(function(){
               $('#remainCount').show()
               $('#groupInfo').hide()
               get_repeat_info($(this).attr('data-dbid'))
+
+              //회원 이름을 클릭했을때, 회원의 수강일정중 1:1 레슨의 예약가능 횟수만을 표기해준다.
+              get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
+                  var availCount_personal = 0
+                  for(var i= 0; i<jsondata.availCountArray.length; i++){
+                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                      availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
+                    }
+                  }
+                  $("#countsSelected").text(availCount_personal);
+              })
+
               $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')})
               $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-              $("#countsSelected,.countsSelected").text($(this).attr('data-lecturecount'));
               $("#id_member_id").val($(this).attr('data-dbid'));
               $("#id_lecture_id").val($(this).attr('data-lectureid'));
               $("#id_member_name").val($(this).text());
@@ -546,7 +567,7 @@ $(document).ready(function(){
 
               $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':$(this).attr('data-groupid')})
               $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-              $('#grouptypenumInfo').text($(this).attr('data-grouptypecd')+' '+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum'))
+              $('#grouptypenumInfo').text($(this).attr('data-grouptypecd')+' ('+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum')+')')
               $("#id_group_id").val($(this).attr('data-groupid'));
           }
           
@@ -1129,8 +1150,8 @@ function clear_pt_off_add_popup(){
     
 
     //예약가능 횟수 비우기
-    $("#countsSelected,.countsSelected").text("")
-    $('#remainCount_mini_text').hide()
+    $("#countsSelected, #countsSelected_mini").text("")
+    $('#remainCount_mini, #groupInfo_mini').hide()
     
     //날짜 비우기
     $("#dateSelector p").removeClass("dropdown_selected");
@@ -1250,6 +1271,7 @@ function get_current_group_list(use, callback){
 }
 
 function set_member_dropdown_list(jsondata){
+  console.log("set_member_dropdown_lis:", jsondata)
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
     var memberSize = jsondata.db_id.length;
@@ -1282,8 +1304,8 @@ function set_group_dropdown_list(jsondata){
         member_array_pc[i] = '<li><a  data-grouptype="group" data-grouptypecd="'+jsondata.group_type_cd[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
       }
     }else if(memberSize == 0){
-        member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
-        member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
+        //member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 그룹이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
+        //member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 그룹이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
     }
     var member_arraySum_mobile = member_array_mobile.join('');
     var member_arraySum_pc = member_array_pc.join('');
@@ -1878,7 +1900,7 @@ function clear_pt_off_add_popup_mini(){
 
   //예약가능 횟수 내용 초기화
   $("#countsSelected,.countsSelected").text("")
-  $('#remainCount_mini_text').hide()
+  $('#remainCount_mini, #groupInfo_mini').hide()
 
   //메모 초기화
   $('#addmemo_mini input').val('').text('')

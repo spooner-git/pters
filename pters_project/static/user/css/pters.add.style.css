@@ -378,7 +378,7 @@ ul a{
 	padding-top: 2px;
 }
 
-#remainCount_mini{
+#remainCount_mini, #groupInfo_mini{
 	position: relative;
 	padding: 0;
 	margin-top: 0px;
@@ -387,13 +387,13 @@ ul a{
 	vertical-align: middle;
 }
 
-#remainCount_mini_text{
+#remainCount_mini_text, #groupInfo_mini_text{
 	display: none;
 	margin-left: 97px;
 }
 
 
-#remainCount_mini div:nth-child(2){
+#remainCount_mini div:nth-child(2), #groupInfo_mini div:nth-child(2){
 	background-color: #eaeaea;
 	box-shadow: 0 1px 0 0 #a2a2a2;
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
