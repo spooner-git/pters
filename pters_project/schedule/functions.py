@@ -268,12 +268,11 @@ def func_get_available_group_member_list(group_id):
         if len(member_list) == 0:
             member_list.append(group_lecture_info.lecture_tb.member)
         check_info = 0
-
         for member_info in member_list:
-            if group_lecture_info.lecture_tb.member.member_id != member_info.member_id:
+            if group_lecture_info.lecture_tb.member.member_id == member_info.member_id:
                 check_info = 1
 
-        if check_info == 1:
+        if check_info == 0:
             member_list.append(group_lecture_info.lecture_tb.member)
 
     return member_list

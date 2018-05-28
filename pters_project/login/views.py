@@ -848,7 +848,11 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
         error = '이름을 입력해 주세요.'
     else:
         name = name.replace(' ', '')
+    if sex == '':
+        sex = None
 
+    if phone == '':
+        phone = None
     if error is None:
         username = name
         password = '0000'

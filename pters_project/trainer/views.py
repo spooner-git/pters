@@ -5041,6 +5041,7 @@ def add_group_member_logic(request):
                                                            json_info['first_name'], json_info['last_name'],
                                                            json_info['phone'], json_info['sex'],
                                                            json_info['birthday_dt'])
+
                         if context['error'] is None:
                             try:
                                 user_info = User.objects.get(username=context['username'])
