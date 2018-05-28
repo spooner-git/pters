@@ -5228,6 +5228,13 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')
         for group_schedule_info in group_schedule_data:
             member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
+            if member_info.reg_info is None or str(member_info.reg_info) != str(self.request.user.id):
+                lecture_count = MemberLectureTb.objects.filter(auth_cd='VIEW', use=1).count()
+                if lecture_count == 0:
+                    member_info.sex = ''
+                    member_info.birthday_dt = ''
+                    member_info.phone = '***-****-'+member_info.phone[7:]
+                    member_info.user.email = ''
             group_schedule_info.member_info = member_info
             group_schedule_info.start_dt = str(group_schedule_info.start_dt)
             group_schedule_info.end_dt = str(group_schedule_info.end_dt)
@@ -5247,6 +5254,13 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')
         for group_schedule_info in group_schedule_data:
             member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
+            if member_info.reg_info is None or str(member_info.reg_info) != str(self.request.user.id):
+                lecture_count = MemberLectureTb.objects.filter(auth_cd='VIEW', use=1).count()
+                if lecture_count == 0:
+                    member_info.sex = ''
+                    member_info.birthday_dt = ''
+                    member_info.phone = '***-****-'+member_info.phone[7:]
+                    member_info.user.email = ''
             group_schedule_info.member_info = member_info
             group_schedule_info.start_dt = str(group_schedule_info.start_dt)
             group_schedule_info.end_dt = str(group_schedule_info.end_dt)
