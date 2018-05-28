@@ -1272,7 +1272,7 @@ function get_current_group_list(use, callback){
 }
 
 function set_member_dropdown_list(jsondata){
-  console.log("set_member_dropdown_lis:", jsondata)
+  console.log("set_member_dropdown_list:", jsondata)
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
     var memberSize = jsondata.db_id.length;
@@ -1280,8 +1280,10 @@ function set_member_dropdown_list(jsondata){
     var member_array_pc = [];
     if(memberSize>0){
       for(var i=0; i<memberSize; i++){
-        member_array_mobile[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
-        member_array_pc[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+        if(jsondata.groupInfoArray[i] != "그룹"){
+          member_array_mobile[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+          member_array_pc[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+        }
       }
     }else if(memberSize == 0){
         member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
@@ -2502,7 +2504,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         },
 
         complete:function(){
-          completeSend()
+          //completeSend()
         },
 
         error:function(){
@@ -2658,7 +2660,7 @@ function send_plan_delete(option, callbackoption, callback){
 
             //보내기후 팝업창 닫기
             complete:function(){
-              completeSend();
+                completeSend();
               },
 
             //통신 실패시 처리
