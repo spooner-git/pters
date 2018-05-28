@@ -10,6 +10,8 @@
       [{% for schedule_info in schedule_data %}"{{ schedule_info.member_info.user.last_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "first_name" :
       [{% for schedule_info in schedule_data %}"{{ schedule_info.member_info.user.first_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "sexArray" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.member_info.sex }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "db_id" :
       [{% for schedule_info in schedule_data %}"{{ schedule_info.member_info.member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_start_date" : 
