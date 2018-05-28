@@ -1581,7 +1581,6 @@ def add_group_schedule_logic(request):
         for member_info in member_list:
             error_temp = None
             lecture_id = func_get_group_lecture_id(group_id, member_info.member_id)
-            print(member_info.name+':'+str(lecture_id))
             if lecture_id is not None and lecture_id != '':
                 error_temp = func_check_group_available_member_before(class_id, group_id, group_schedule_id)
 
@@ -1916,7 +1915,11 @@ def add_group_repeat_schedule_logic(request):
 
     if error is None and group_info.group_type_cd == 'NORMAL':
         group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                           lecture_tb__lecture_avail_count__gt=0, use=1)
+                                                           group_tb__use=1,
+                                                           lecture_tb__state_cd='IP',
+                                                           lecture_tb__lecture_avail_count__gt=0,
+                                                           lecture_tb__use=1,
+                                                           use=1)
 
         if len(group_lecture_data) == 0:
             error = '그룹에 해당하는 회원들의 예약 가능 횟수가 없습니다.'
@@ -2003,7 +2006,7 @@ def add_group_repeat_schedule_logic(request):
                     with transaction.atomic():
                         # PT 일정 추가라면 일정 추가해야할 lecture id 찾기
                         if error is None:
-                            schedule_result = func_add_schedule(class_id, None, None,
+                            schedule_result = func_add_schedule(class_id, None, repeat_schedule_info.repeat_schedule_id,
                                                                 group_id, None,
                                                                 schedule_start_datetime, schedule_end_datetime,
                                                                 '', '1', request.user.id)
@@ -2174,7 +2177,7 @@ def add_group_repeat_schedule_confirm(request):
                         repeat_schedule_info.save()
                         for schedule_info in schedule_data:
                             error_temp = func_check_group_available_member_before(class_id, group_info.group_id,
-                                                                           schedule_info.schedule_id)
+                                                                                  schedule_info.schedule_id)
                             if error_temp is None:
                                 try:
                                     with transaction.atomic():
@@ -2192,7 +2195,7 @@ def add_group_repeat_schedule_confirm(request):
 
                                         if error_temp is None:
                                             error_temp = func_check_group_available_member_after(class_id, group_info.group_id,
-                                                                                           schedule_info.schedule_id)
+                                                                                                 schedule_info.schedule_id)
 
                                         if error_temp is not None:
                                             raise InternalError
@@ -2208,7 +2211,7 @@ def add_group_repeat_schedule_confirm(request):
 
                     log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                                      from_member_name=request.user.last_name + request.user.first_name,
-                                     to_member_name=member_info.member.name,
+                                     to_member_name=member_info.name,
                                      class_tb_id=class_id,
                                      log_info=group_info.name + ' 그룹 반복 일정', log_how='추가',
                                      log_detail=str(start_date) + '/' + str(end_date),
