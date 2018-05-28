@@ -23,11 +23,11 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
 from configs import settings
-from configs.views import date_check_func
 from login.models import LogTb, MemberTb, CommonCdTb
 from schedule.functions import func_get_lecture_id, func_add_schedule, func_refresh_lecture_count, func_date_check, \
     func_update_member_schedule_alarm, func_save_log_data, func_check_group_schedule_enable, \
-    func_get_available_group_member_list, func_get_group_lecture_id, func_check_group_available_member
+    func_get_available_group_member_list, func_get_group_lecture_id, \
+    func_check_group_available_member_before, func_check_group_available_member_after
 from schedule.models import LectureTb, ClassLectureTb, MemberLectureTb, GroupLectureTb, GroupTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
@@ -1583,7 +1583,7 @@ def add_group_schedule_logic(request):
             lecture_id = func_get_group_lecture_id(group_id, member_info.member_id)
             print(member_info.name+':'+str(lecture_id))
             if lecture_id is not None and lecture_id != '':
-                error_temp = func_check_group_available_member(class_id, group_id, group_schedule_id)
+                error_temp = func_check_group_available_member_before(class_id, group_id, group_schedule_id)
 
                 if error_temp is None:
                     try:
@@ -1599,7 +1599,7 @@ def add_group_schedule_logic(request):
                                 error_temp = func_refresh_lecture_count(lecture_id)
 
                             if error_temp is None:
-                                error_temp = func_check_group_available_member(class_id, group_id, group_schedule_id)
+                                error_temp = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
 
                             if error_temp is not None:
                                 raise InternalError
@@ -1788,7 +1788,7 @@ def add_member_group_schedule_logic(request):
             error = '회원님의 예약 가능한 일정이 없습니다.'
 
     if error is None:
-        error = func_check_group_available_member(class_id, group_id, group_schedule_id)
+        error = func_check_group_available_member_before(class_id, group_id, group_schedule_id)
 
     if error is None:
         try:
@@ -1804,7 +1804,7 @@ def add_member_group_schedule_logic(request):
                     error = func_refresh_lecture_count(lecture_id)
 
                 if error is None:
-                    error = func_check_group_available_member(class_id, group_id, group_schedule_id)
+                    error = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
 
                 if error is not None:
                     raise InternalError()
@@ -2173,7 +2173,7 @@ def add_group_repeat_schedule_confirm(request):
 
                         repeat_schedule_info.save()
                         for schedule_info in schedule_data:
-                            error_temp = func_check_group_available_member(class_id, group_info.group_id,
+                            error_temp = func_check_group_available_member_before(class_id, group_info.group_id,
                                                                            schedule_info.schedule_id)
                             if error_temp is None:
                                 try:
@@ -2191,7 +2191,7 @@ def add_group_repeat_schedule_confirm(request):
                                             error_temp = func_refresh_lecture_count(lecture_id)
 
                                         if error_temp is None:
-                                            error_temp = func_check_group_available_member(class_id, group_info.group_id,
+                                            error_temp = func_check_group_available_member_after(class_id, group_info.group_id,
                                                                                            schedule_info.schedule_id)
 
                                         if error_temp is not None:
