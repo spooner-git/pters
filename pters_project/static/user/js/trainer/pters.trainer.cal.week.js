@@ -609,6 +609,7 @@ $(document).ready(function(){
 	                	}
 	                	ajax_block_during_delete_weekcal = true
 	                })
+
 				}else if(deleteTypeSelect == "repeatgroupptdelete"){
 		            var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
 		            send_repeat_delete_group(repeat_schedule_id, 'callback', function(jsondata){
@@ -628,6 +629,7 @@ $(document).ready(function(){
 		            		send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
 		            	}
 		            })
+
 				}else if(deleteTypeSelect == "ptoffdelete"){
 					if(schedule_on_off==1){
 						//PT 일정 삭제시
@@ -643,6 +645,7 @@ $(document).ready(function(){
       					get_current_group_list()
 					}
 					ajax_block_during_delete_weekcal = true
+
 				}else if(deleteTypeSelect == "groupptdelete"){
 					send_plan_delete('group')
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule_id')
@@ -653,6 +656,7 @@ $(document).ready(function(){
 							send_plan_delete('pt')
 						}
 					})
+
 					ajax_block_during_delete_weekcal = true
 				}
 			}
