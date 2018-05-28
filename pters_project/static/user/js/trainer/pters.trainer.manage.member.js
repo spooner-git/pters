@@ -2790,7 +2790,6 @@ function get_member_lecture_list(dbID, use, callback){
 
         //통신성공시 처리
         success:function(data){
-            console.log(data)
             var jsondata = JSON.parse(data);
             console.log('get_member_lecture_list',dbID)
             if(jsondata.messageArray.length>0){
