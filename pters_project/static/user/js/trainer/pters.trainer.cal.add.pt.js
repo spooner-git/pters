@@ -45,15 +45,14 @@ $(document).ready(function(){
                       }
                       $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
                       clear_start_dur_dropdown()
-                      /*ajaxTimeGraphSet($('#datepicker').val(), function(){
-                        startTimeSet('class');
-                        })*/
                       $('#durations_mini, #durations_mini').html('')
                       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
-
+                      ajaxTimeGraphSet($('#datepicker').val())
+                      /*
                       timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
                       timeGraphSet("group","pink","AddClass", initialJSON);
                       timeGraphSet("off","grey","AddClass", initialJSON)
+                      */
                       startTimeSet('class');
                   }
                   else if(addTypeSelect =="offadd"){
@@ -69,9 +68,12 @@ $(document).ready(function(){
                         })*/
                       $('#durations_mini, #durations_mini').html('')
                       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
+                      ajaxTimeGraphSet($('#datepicker').val())
+                      /*
                       timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
                       timeGraphSet("group","pink","AddClass", initialJSON);
                       timeGraphSet("off","grey","AddClass", initialJSON)
+                      */
                       startTimeSet('class');
                   }
                   else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
@@ -1071,12 +1073,14 @@ function float_btn_addplan(option){
     }else if(option == 1){
         clear_pt_off_add_popup()
         open_pt_off_add_popup('ptadd')
+        ajaxTimeGraphSet()
         shade_index(100)
         //scrollToDom($('#calendar'))
         
     }else if(option ==2){
         clear_pt_off_add_popup()
         open_pt_off_add_popup('offadd')
+        ajaxTimeGraphSet()
         shade_index(100)
         //scrollToDom($('#calendar'))
     }
@@ -1370,7 +1374,7 @@ function ajaxRepeatConfirmSend(){
 }
 
 
-function ajaxTimeGraphSet(date, callback){
+function ajaxTimeGraphSet(date, use, callback){
       var today_form = date
       offAddOkArray = [] //OFF 등록 시작 시간 리스트
       durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
@@ -1390,6 +1394,7 @@ function ajaxTimeGraphSet(date, callback){
         success:function(data){
           TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
+          console.log('cal_da_ajax',jso)
           if(jsondata.messageArray.length>0){
             $('#errorMessageBar').show()
             $('#errorMessageText').text(jsondata.messageArray)
@@ -1400,8 +1405,9 @@ function ajaxTimeGraphSet(date, callback){
             timeGraphSet("class","pink","mini", jsondata);  //시간 테이블 채우기
             timeGraphSet("group","pink","mini", initialJSON);
             timeGraphSet("off","grey","mini", jsondata)
-
-            callback()
+            if(use == "callback"){
+              callback()
+            }
           }
           
         },
@@ -2649,7 +2655,7 @@ function send_plan_delete(option, callbackoption, callback){
                     set_schedule_time(jsondata)
                     console.log('success')
                     if(callbackoption == 'callback'){
-                      callback()
+                      callback(jsondata)
                     }else{
                       close_info_popup('cal_popup_plandelete')
                       shade_index(-100)
