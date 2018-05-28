@@ -1554,7 +1554,6 @@ select:focus > option:checked {
 		top: 0;
 		right: 0;
 		margin-top: 0 !important;
-		margin-right: 20px;
 		border:1px solid #eeeeee;
 		width: 160px !important;
 		height: 30px !important;
