@@ -51,7 +51,7 @@ $(document).ready(function(){
     }
 
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
-    $(document).on('click','.memberNameForInfoView',function(){
+    $(document).on('click','.memberNameForInfoView, .groupParticipantsRow span',function(){
     	var dbID = $(this).attr('data-dbid')
     	//$('.popups').hide()
     	if($('body').width()<600){

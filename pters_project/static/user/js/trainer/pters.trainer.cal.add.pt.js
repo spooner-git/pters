@@ -498,6 +498,7 @@ $(document).ready(function(){
             //회원 이름을 클릭했을때, 회원의 수강일정중 1:1 레슨의 예약가능 횟수만을 표기해준다.
             get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
                 var availCount_personal = 0
+                console.log('get_member_lecture_list',jsondata)
                 for(var i= 0; i<jsondata.availCountArray.length; i++){
                   if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
                     availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
@@ -665,7 +666,7 @@ $(document).ready(function(){
                   $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                   $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
                   select_all_check=true;
-              }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect_mini).hasClass("dropdown_selected")==true && $('#countsSelected').text() != 0 && durSelect_mini.hasClass("dropdown_selected")==true){
+              }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect_mini).hasClass("dropdown_selected")==true && $('#countsSelected_mini').text() != 0 && durSelect_mini.hasClass("dropdown_selected")==true){
                   $('#submitBtn_mini').css('background','#fe4e65');
                   select_all_check=true;
               }else{
@@ -2513,6 +2514,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
 
 //그룹에 일정에 속한 회원목록을 그린다. get_group_plan_participants와 같이 쓴다.
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
+    console.log('draw_groupParticipantsList_to_popup',jsondata)
     var target = $('#groupParticipants')
     var htmlToJoin = []
     for(var i=0; i<jsondata.db_id.length; i++){
@@ -2520,7 +2522,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
       //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
       //var name = '<span>'+jsondata.last_name[i]+jsondata.first_name[i]+'</span>'
       var sex = '<img src="/static/user/res/member/icon-sex-'+'.png">'
-      var name = '<span>'+jsondata.name[i]+'</span>'
+      var name = '<span data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</span>'
       var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata.scheduleIdArray[i]+'">'
       var htmlend = '</div>'
       htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)

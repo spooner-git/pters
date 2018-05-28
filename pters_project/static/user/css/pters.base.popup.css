@@ -119,6 +119,12 @@
 		margin-top: 3px;
 		margin-bottom: 3px;
 	}
+	.groupParticipantsRow span{
+		cursor: pointer;
+	}
+	.groupParticipantsRow span:hover{
+		text-decoration: underline;
+	}
 	#groupParticipants img{
 		width: 12px;
 		margin-left: 10px;
