@@ -2536,6 +2536,7 @@ function resend_member_reg_data_pc(lectureID, dbID){
 
 //회원의 수강정보를 삭제한다.
 function delete_member_reg_data_pc(lectureID, dbID){
+    console.log('delete_member_reg_data_pc',lectureID,dbID)
     $.ajax({
         url:'/trainer/delete_member_lecture_info/', 
         type:'POST',
@@ -2553,6 +2554,7 @@ function delete_member_reg_data_pc(lectureID, dbID){
 
         //통신성공시 처리
         success:function(data){
+            console.log(data)
             var jsondata = JSON.parse(data)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
