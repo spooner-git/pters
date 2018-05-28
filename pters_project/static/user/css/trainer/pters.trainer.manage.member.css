@@ -704,7 +704,7 @@ select:focus > option:checked {
 		}
 			.member_info_PC_wrap label{
 				display: inline-block;
-				width: 120px;
+				width: 100px;
 				color: #7d7d7d;
 				font-size: 13px;
 				font-weight: 500;
@@ -769,7 +769,7 @@ select:focus > option:checked {
 			}
 			
 			#memberRegCount_info_PC, #memberRemainCount_info_PC, #memberAvailCount_info_PC, #memberFinishCount_info_PC{
-				width: 45px;
+				width: auto;
 			}
 
 			.member_info_PC_wrap >label img{

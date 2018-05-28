@@ -2817,6 +2817,7 @@ function get_member_lecture_list(dbID){
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
 function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
+    console.log('draw_member_lecture_list_table', jsondata)
     if(PCorMobile == "pc"){
         var $regHistory = $('#memberRegHistory_info_PC')
     }else if(PCorMobile == "mobile"){
@@ -2824,11 +2825,11 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
     }
 
     if(PCorMobile == "pc"){
-        $('#memberRegCount_info_PC').text(sumCount(jsondata.regCountArray))  //전체 등록횟수
-        $('#memberRemainCount_info_PC').text(sumCount(jsondata.remCountArray))  //전체 남은횟수
-        $('#memberAvailCount_info_PC').text(sumCount(jsondata.availCountArray))  //전체 예약가능횟수
-        $('#memberFinishCount_info_PC').text(sumCount(jsondata.regCountArray)-sumCount(jsondata.remCountArray))  //전체 완료횟수
-
+        
+        var regCount_group_personal = []
+        var remCount_group_personal = []
+        var availCount_group_personal = []
+        var finishCount_group_personal = []
         var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
         for(var i=0; i<jsondata.lectureIdArray.length; i++){
             var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
@@ -2860,8 +2861,21 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             
             if(jsondata.groupNameArray[i] != '1:1'){
                 var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
+                if(jsondata.lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push('G'+jsondata.regCountArray[i])
+                    remCount_group_personal.push('G'+jsondata.remCountArray[i])
+                    availCount_group_personal.push('G'+jsondata.availCountArray[i])
+                    finishCount_group_personal.push('G'+(Number(jsondata.regCountArray[i])-Number(jsondata.remCountArray[i]))) 
+                }
+                
             }else if(jsondata.groupNameArray[i] == '1:1'){
                 var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
+                if(jsondata.lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push(jsondata.regCountArray[i])
+                    remCount_group_personal.push(jsondata.remCountArray[i])
+                    availCount_group_personal.push(jsondata.availCountArray[i])
+                    finishCount_group_personal.push(jsondata.regCountArray[i]-jsondata.remCountArray[i])
+                }
             }
             var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
             
@@ -2885,6 +2899,11 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var note = '<div class="pc_member_note" data-dbid="'+dbID+'" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
             result_history_html.push('<div style="border-top:1px solid #cccccc;">'+howManyReg+whatGroupType+'</div>'+'<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>'+note)
         }
+        $('#memberRegCount_info_PC').html(sumCount(jsondata.regCountArray)+'<span style="font-size:11px;"> ('+regCount_group_personal.join(',')+')</span>')  //전체 등록횟수
+        $('#memberRemainCount_info_PC').html(sumCount(jsondata.remCountArray)+'<span style="font-size:11px;"> ('+remCount_group_personal.join(',')+')</span>')  //전체 남은횟수
+        $('#memberAvailCount_info_PC').html(sumCount(jsondata.availCountArray)+'<span style="font-size:11px;"> ('+availCount_group_personal.join(',')+')</span>')  //전체 예약가능횟수
+        $('#memberFinishCount_info_PC').html(sumCount(jsondata.regCountArray)-sumCount(jsondata.remCountArray)+'<span style="font-size:11px;"> ('+finishCount_group_personal.join(',')+')</span>')  //전체 완료횟수
+
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
     }else if(PCorMobile == "mobile"){
