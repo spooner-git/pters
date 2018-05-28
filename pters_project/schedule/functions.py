@@ -133,7 +133,7 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
     return context
 
 
-def func_check_group_available_member(class_id, group_id, group_schedule_id):
+def func_check_group_available_member_before(class_id, group_id, group_schedule_id):
     error = None
     group_info = None
 
@@ -145,7 +145,25 @@ def func_check_group_available_member(class_id, group_id, group_schedule_id):
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                  group_schedule_id=group_schedule_id, use=1).count()
-    if schedule_counter >= group_info.member_num:
+    if schedule_counter == group_info.member_num:
+        error = '그룹 허용 인원이 초과되었습니다.'
+
+    return error
+
+
+def func_check_group_available_member_after(class_id, group_id, group_schedule_id):
+    error = None
+    group_info = None
+
+    try:
+        group_info = GroupTb.objects.get(group_id=group_id)
+
+    except ObjectDoesNotExist:
+        error = '그룹 정보를 불러오지 못했습니다.'
+
+    schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                 group_schedule_id=group_schedule_id, use=1).count()
+    if schedule_counter > group_info.member_num:
         error = '그룹 허용 인원이 초과되었습니다.'
 
     return error
