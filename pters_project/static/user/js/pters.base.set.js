@@ -454,6 +454,7 @@ function date_format_to_yyyymmdd(hanguldate, resultSplit){
 }
 
 
+//20180511 을 2018-05-11, 2018/05/11 등 원하는 split
 function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
   if(String(yyyymmdd).length==8){
     var yyyy = yyyymmdd.substr(0,4)
@@ -477,12 +478,15 @@ function date_format_yyyy_m_d_to_yyyymmdd(yyyy_m_d){
     return yyyy+mm+dd
 }
 
-function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd){
+//2018-05-11 을 2018-5-11
+function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd, resultSplit){
     var yyyy = String(yyyy_mm_dd.split('-')[0])
     var mm = Number(yyyy_mm_dd.split('-')[1])
     var dd = Number(yyyy_mm_dd.split('-')[2])
-    return yyyy+'-'+mm+'-'+dd
+    return yyyy+resultSplit+mm+resultSplit+dd
 }
+
+
 
 function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d,resultSplit){
     var yyyy = String(yyyy_m_d.split('-')[0])
