@@ -1791,7 +1791,6 @@ def delete_member_lecture_info_logic(request):
             error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
-        print(member_info.name+':'+member_id)
         error = func_delete_member_lecture_info_logic(request.user.id, class_id, lecture_id, member_id)
 
     if error is None:
