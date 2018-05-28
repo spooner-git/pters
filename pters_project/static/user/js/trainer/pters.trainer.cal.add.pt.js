@@ -939,7 +939,7 @@ $(document).ready(function(){
           var max = $(this).attr('data-membernum')
           var group_schedule_id = $(this).attr('group-schedule-id')
           console.log("group_id:",group_id,"max:",max,"group_schedule_id:",group_schedule_id)
-          get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)})
+          get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);completeSend();})
 
         }else if(toggleGroupParticipants == 'on'){
           toggleGroupParticipantsList('off')
@@ -2491,17 +2491,15 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         data: {"group_schedule_id": group_schedule_id},
 
         beforeSend:function(){
-          beforeSend()
+          beforeSend();
         },
 
         success:function(data){
-            TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
-            var jsondata = JSON.parse(data)
+            TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER);
+            var jsondata = JSON.parse(data);
             console.log('get_group_plan_participants',jsondata)
             if(callbackoption == "callback"){
               callback(jsondata)
-            }else{
-              completeSend();
             }
         },
 
@@ -2524,8 +2522,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
     for(var i=0; i<jsondata.db_id.length; i++){
       var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'">'
       //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
-      //var name = '<span>'+jsondata.last_name[i]+jsondata.first_name[i]+'</span>'
-      var sex = '<img src="/static/user/res/member/icon-sex-'+'.png">'
+      var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i]+'.png">'
       var name = '<span data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</span>'
       var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata.scheduleIdArray[i]+'">'
       var htmlend = '</div>'
