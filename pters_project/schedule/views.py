@@ -1488,6 +1488,7 @@ def add_group_schedule_logic(request):
     schedule_end_datetime = None
     group_info = None
     schedule_result = None
+    group_schedule_id = None
 
     request.session['date'] = date
     request.session['day'] = day
@@ -1547,6 +1548,7 @@ def add_group_schedule_logic(request):
                     error = schedule_result['error']
 
                 if error is None:
+                    group_schedule_id = schedule_result['schedule_id']
                     error = func_date_check(class_id, schedule_result['schedule_id'],
                                             schedule_date, schedule_start_datetime, schedule_end_datetime)
 
@@ -1565,7 +1567,6 @@ def add_group_schedule_logic(request):
             error = error
 
     if error is None:
-
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
@@ -1580,15 +1581,16 @@ def add_group_schedule_logic(request):
         for member_info in member_list:
             error_temp = None
             lecture_id = func_get_group_lecture_id(group_id, member_info.member_id)
+            print(member_info.name+':'+str(lecture_id))
             if lecture_id is not None and lecture_id != '':
-                error_temp = func_check_group_available_member(class_id, group_id, schedule_result['schedule_id'])
+                error_temp = func_check_group_available_member(class_id, group_id, group_schedule_id)
 
                 if error_temp is None:
                     try:
                         with transaction.atomic():
                             if error_temp is None:
                                 schedule_result = func_add_schedule(class_id, lecture_id, None,
-                                                                    group_id, schedule_result['schedule_id'],
+                                                                    group_id, group_schedule_id,
                                                                     schedule_start_datetime, schedule_end_datetime,
                                                                     note, '1', request.user.id)
                                 error_temp = schedule_result['error']
@@ -1597,7 +1599,7 @@ def add_group_schedule_logic(request):
                                 error_temp = func_refresh_lecture_count(lecture_id)
 
                             if error_temp is None:
-                                error_temp = func_check_group_available_member(class_id, group_id, schedule_result['schedule_id'])
+                                error_temp = func_check_group_available_member(class_id, group_id, group_schedule_id)
 
                             if error_temp is not None:
                                 raise InternalError
@@ -2172,14 +2174,14 @@ def add_group_repeat_schedule_confirm(request):
                         repeat_schedule_info.save()
                         for schedule_info in schedule_data:
                             error_temp = func_check_group_available_member(class_id, group_info.group_id,
-                                                                           schedule_info.group_schedule_id)
+                                                                           schedule_info.schedule_id)
                             if error_temp is None:
                                 try:
                                     with transaction.atomic():
                                         if error_temp is None:
                                             schedule_result = func_add_schedule(class_id, lecture_id,
                                                                                 repeat_schedule_info.repeat_schedule_id,
-                                                                                group_info.group_id, schedule_info.group_schedule_id,
+                                                                                group_info.group_id, schedule_info.schedule_id,
                                                                                 schedule_info.start_dt,
                                                                                 schedule_info.end_dt,
                                                                                 '', '1', request.user.id)
@@ -2190,7 +2192,7 @@ def add_group_repeat_schedule_confirm(request):
 
                                         if error_temp is None:
                                             error_temp = func_check_group_available_member(class_id, group_info.group_id,
-                                                                                           schedule_result['schedule_id'])
+                                                                                           schedule_info.schedule_id)
 
                                         if error_temp is not None:
                                             raise InternalError
@@ -2248,7 +2250,6 @@ def delete_group_repeat_schedule_logic(request):
     group_repeat_schedule_info = None
     request.session['date'] = date
     request.session['day'] = day
-    print(str(repeat_schedule_id))
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
 
@@ -2279,8 +2280,6 @@ def delete_group_repeat_schedule_logic(request):
                     end_schedule_counter = ScheduleTb.objects.filter(group_schedule_id=delete_schedule_info.schedule_id,
                                                                      state_cd='PE', use=1).count()
                     if end_schedule_counter == 0:
-                        print('vvvvvvvv')
-                        print(str(delete_schedule_info.schedule_id))
                         delete_schedule = DeleteScheduleTb(schedule_id=delete_schedule_info.schedule_id,
                                                            class_tb_id=delete_schedule_info.class_tb_id,
                                                            group_tb_id=delete_schedule_info.group_tb_id,
@@ -2297,7 +2296,6 @@ def delete_group_repeat_schedule_logic(request):
 
                         delete_schedule.save()
                         delete_schedule_info.delete()
-                        print('testsetsetset')
                     if error is not None:
                         break
 
