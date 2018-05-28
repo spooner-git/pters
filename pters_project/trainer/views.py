@@ -1791,6 +1791,7 @@ def delete_member_lecture_info_logic(request):
             error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
+        print(member_info.name+':'+member_id)
         error = func_delete_member_lecture_info_logic(request.user.id, class_id, lecture_id, member_id)
 
     if error is None:
@@ -1828,12 +1829,12 @@ def func_delete_member_lecture_info_logic(user_id, class_id, lecture_id, member_
 
     if error is None:
         try:
-            user = User.objects.get(username=member_id)
+            user = User.objects.get(id=member_id)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
         try:
-            member = MemberTb.objects.get(user_id=user.id)
+            member = MemberTb.objects.get(member_id=member_id)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
@@ -5479,7 +5480,7 @@ def delete_group_member_info_logic(request):
             if error is None:
 
                 try:
-                    user = User.objects.get(username=member_id_info)
+                    user = User.objects.get(id=member_id_info)
                 except ObjectDoesNotExist:
                     error = '회원 ID를 확인해 주세요.'
 
@@ -5487,7 +5488,6 @@ def delete_group_member_info_logic(request):
                     member = MemberTb.objects.get(user_id=user.id)
                 except ObjectDoesNotExist:
                     error = '회원 ID를 확인해 주세요.'
-
             if error is None:
                 group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__member_id=user.id, use=1)
 
