@@ -1394,7 +1394,6 @@ function ajaxTimeGraphSet(date, use, callback){
         success:function(data){
           TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
-          console.log('cal_da_ajax',jso)
           if(jsondata.messageArray.length>0){
             $('#errorMessageBar').show()
             $('#errorMessageText').text(jsondata.messageArray)
