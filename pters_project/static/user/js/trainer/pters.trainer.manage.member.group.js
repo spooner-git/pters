@@ -785,12 +785,12 @@ $(document).on('click','img.substract_groupMember',function(e){
     e.stopPropagation();
     var groupmember_name = $(this).attr('data-fullname')
     //var groupmember_lecid = $(this).attr('data-lecid');
-    var groupmember_id = $(this).attr('data-id')
+    var groupmember_dbid = $(this).attr('data-dbid')
     var groupmember_groupid = $(this).attr('data-groupid')
     //delete_groupmember_from_grouplist(groupmember_lecid, groupmember_name, groupmember_id)
 
     group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]}
-    group_delete_JSON.ids.push(groupmember_id)
+    group_delete_JSON.ids.push(groupmember_dbid)
     group_delete_JSON.fullnames.push(groupmember_name)
     group_delete_JSON.group_id = groupmember_groupid
     console.log(group_delete_JSON)
