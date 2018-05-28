@@ -2825,7 +2825,6 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
     }
 
     if(PCorMobile == "pc"){
-        
         var regCount_group_personal = []
         var remCount_group_personal = []
         var availCount_group_personal = []
@@ -2911,6 +2910,10 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
         var result_history_html2 = []
         //시작, 종료, 등록횟수, 남은횟수, 
         //등록금액, 회당 금액, 전행상태, 연결상태, 수정
+        var regCount_group_personal = []
+        var remCount_group_personal = []
+        var availCount_group_personal = []
+        var finishCount_group_personal = []
         for(var i=0; i<jsondata.lectureIdArray.length; i++){
             var table_title1 = '<div><div class="regHistory_table_title">시작</div><div class="regHistory_table_title">종료</div><div class="regHistory_table_title">등록횟수</div><div class="regHistory_table_title">남은횟수</div></div>'
             var table_title2 = '<div><div class="regHistory_table_title">등록금액</div><div class="regHistory_table_title">회당금액</div><div class="regHistory_table_title">진행상태</div><div class="regHistory_table_title">연결상태</div></div>'
@@ -2939,7 +2942,28 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
             var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
-            var whatGroupType = '<div class="whatGroupType"><select disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
+            
+            if(jsondata.groupNameArray[i] != '1:1'){
+                var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
+                if(jsondata.lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push('G'+jsondata.regCountArray[i])
+                    remCount_group_personal.push('G'+jsondata.remCountArray[i])
+                    availCount_group_personal.push('G'+jsondata.availCountArray[i])
+                    finishCount_group_personal.push('G'+(Number(jsondata.regCountArray[i])-Number(jsondata.remCountArray[i]))) 
+                }
+                
+            }else if(jsondata.groupNameArray[i] == '1:1'){
+                var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
+                if(jsondata.lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push(jsondata.regCountArray[i])
+                    remCount_group_personal.push(jsondata.remCountArray[i])
+                    availCount_group_personal.push(jsondata.availCountArray[i])
+                    finishCount_group_personal.push(jsondata.regCountArray[i]-jsondata.remCountArray[i])
+                }
+            }
+            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
+
+            //var whatGroupType = '<div class="whatGroupType"><select disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
                 var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }else if(jsondata.lectureStateArray[i] == "PE"){
@@ -2964,6 +2988,11 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                                     '<div data-leid='+jsondata.lectureIdArray[i]+'>'+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+'</div>'+
                                     note+'</div>')
         }
+        $('#memberRegCount_info').val(sumCount(jsondata.regCountArray)+' ('+regCount_group_personal.join(',')+')')  //전체 등록횟수
+        $('#memberRemainCount_info').val(sumCount(jsondata.remCountArray)+' ('+remCount_group_personal.join(',')+')')  //전체 남은횟수
+        $('#memberAvailCount_info').val(sumCount(jsondata.availCountArray)+' ('+availCount_group_personal.join(',')+')')  //전체 예약가능횟수
+        $('#memberFinishCount_info').val(sumCount(jsondata.regCountArray)-sumCount(jsondata.remCountArray)+' ('+finishCount_group_personal.join(',')+')')  //전체 완료횟수
+
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
     }
