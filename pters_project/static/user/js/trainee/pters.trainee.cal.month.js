@@ -333,7 +333,7 @@ $(document).ready(function(){
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
 					for (var i=0; i<jsondata.pushArray.length; i++){
-						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+						//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 					}
 					ajaxClassTime();
 					close_reserve_popup()
@@ -443,7 +443,7 @@ $(document).ready(function(){
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
 					for (var i=0; i<=jsondata.pushArray.length; i++){
-						send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+						//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 					}
 					ajaxClassTime();
 					close_delete_confirm_popup()

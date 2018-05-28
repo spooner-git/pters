@@ -25,6 +25,7 @@ from el_pagination.views import AjaxListView
 
 from configs.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
+from schedule.functions import func_send_push_trainee
 from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, MemberClassTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
@@ -914,10 +915,15 @@ def pt_delete_logic(request):
 
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-        request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
-        request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
-                                       + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-                                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다'
+
+        func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
+                       request.user.last_name + request.user.first_name + '님이 ' \
+                       + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다.')
+        # request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
+        # request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
+        #                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+        #                               + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다'
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -1046,10 +1052,14 @@ def pt_add_logic(request):
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
-        request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
-        request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
-                                       +push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-                                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다'
+        func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
+                       request.user.last_name + request.user.first_name + '님이 ' \
+                       + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다')
+        # request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
+        # request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
+        #                                +push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+        #                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다'
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)

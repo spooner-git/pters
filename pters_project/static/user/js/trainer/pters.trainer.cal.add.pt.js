@@ -797,7 +797,7 @@ $(document).ready(function(){
                             if(addTypeSelect=="ptadd") {
                                 if (jsondata.push_info != '') {
                                     for (var i = 0; i < jsondata.pushArray.length; i++) {
-                                        send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                                        //send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
                                     }
                                 }
                             }
@@ -1350,7 +1350,7 @@ function ajaxRepeatConfirmSend(){
 
               if(jsondata.push_info != ''){
                   for (var i=0; i<jsondata.pushArray.length; i++){
-                      send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                      //send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
                   }
               }
             set_schedule_time(jsondata)
@@ -2643,7 +2643,7 @@ function send_plan_delete(option, callbackoption, callback){
                 }else{
                     if(jsondata.push_info != ''){
                       for (var i=0; i<jsondata.pushArray.length; i++){
-                                    send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+                                    //send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
                       }
                     }
                     set_schedule_time(jsondata)
