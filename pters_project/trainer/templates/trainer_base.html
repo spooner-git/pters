@@ -508,6 +508,7 @@
             var class_name = '{{ request.session.class_type_name }}'
             open_lecture_select_popup_pc()
 
+            /* Shade 클릭해서 팝업 닫기
             $('.pshade').click(function(){
                 if($('body').width()>600){
                     $('#calendar').css('position','relative')
@@ -517,6 +518,7 @@
                 }
                 $('#alarm').css('transform','translate(-50%,-200%)');
             })
+            Shade 클릭해서 팝업 닫기*/ 
 
             $('#errorMessageBar span:nth-child(2)').click(function(){
                 window.location.reload()

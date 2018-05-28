@@ -703,8 +703,8 @@ img,a,div,span,p{
 		top: -20px;
 	}
 
-	.classTime{
-		top: 0.5px;
+	.classTime, .groupTime{
+		/*top: 0.5px;*/
 		left: 1px;
 	}
 

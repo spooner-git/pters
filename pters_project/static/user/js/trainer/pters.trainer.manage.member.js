@@ -1135,8 +1135,42 @@ function float_btn_managemember(option){
         }else{
             $('#how_to_add_member').css('display','none')
         }
-    }else if(option == 2){
-        alert('float_inner2');
+    }else if(option == "group"){
+        initialize_add_member_sheet();
+        $('#page_addmember').fadeIn('fast');
+        $('#shade').hide();
+        $('#shade3').fadeIn('fast');
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').fadeOut();
+
+        scrollToDom($('#page_addmember'));
+        if($('body').width()<600){
+            $('#page_managemember').hide();
+            $('#page-base').fadeOut();
+            $('#page-base-addstyle').fadeIn();
+        }
+        
+        $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
+
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._ADD_GROUP_NEW').show();
+    }else if(option == "groupmember"){
+        initialize_add_member_sheet();
+        $('#page_addmember').fadeIn('fast');
+        $('#shade').hide();
+        $('#shade3').fadeIn('fast');
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').fadeOut();
+
+        scrollToDom($('#page_addmember'));
+        if($('body').width()<600){
+            $('#page_managemember').hide();
+            $('#page-base').fadeOut();
+            $('#page-base-addstyle').fadeIn();
+        }
+
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
     }
 }
 

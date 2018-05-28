@@ -27,13 +27,13 @@
       <img src={% static_url "user/res/memberadd/float_plus_member.png" %} alt="">  <!--2017.10.2-->
     </div>
     <div id="float_inner1" class="float_inner" onclick="float_btn_managemember(1)">
-        <a class="KRtext">신규<br/>회원</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+        <a class="KRtext">회원<br/>추가</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
     </div>
-    <!--
-    <div id="float_inner2" class="float_inner" onclick="float_btn_managemember(2)">
-        <a class="KRtext">연장<br/>회원</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
+    
+    <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('group')">
+        <a class="KRtext">그룹<br/>추가</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
     </div>
-    -->
+    
 </div>
 
 <div id="instructPopup" class="instructPopup">
@@ -917,7 +917,7 @@
                 <div class="groupMemberAddBox">
                     <div class="buttonGroup">
                         <button id="addByNew">신규 회원으로 추가</button>
-                        <button id="addByList">리스트에서 추가</button>
+                        <button id="addByList">내 리스트에서 추가</button>
                         <button id="addBySearch">PTERS 검색으로 추가</button>
                     </div>
                     <div id="addedMemberListBox">
