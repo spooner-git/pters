@@ -915,9 +915,20 @@ $(document).ready(function(){
                 get_repeat_info(id)
 
                 $('#members_mobile, #members_pc').html('')
+                /*
                 get_current_member_list('callback',function(jsondata){
                   set_member_dropdown_list(jsondata)
                   $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
+                })
+                */
+                get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
+                    var availCount_personal = 0
+                    for(var i= 0; i<jsondata.availCountArray.length; i++){
+                      if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                        availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
+                      }
+                    }
+                    $("#countsSelected").text(availCount_personal);
                 })
                 get_current_group_list('callback',function(jsondata){
                   set_group_dropdown_list(jsondata)
