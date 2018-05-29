@@ -577,7 +577,7 @@ $(document).ready(function(){
           check_dropdown_selected();
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
-      $('#addpopup_pc_label_pt').click(function(){
+      $('#addpopup_pc_label_off').click(function(){
         console.log(addTypeSelect)
       })
       
@@ -643,11 +643,6 @@ $(document).ready(function(){
         $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
       })
 
-      $(document).on('click','button',function(){
-         //scrollToIndicator($(this))
-      })
-
-      
 
       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
           var memberSelect = $("#membersSelected button");
@@ -1080,6 +1075,8 @@ function float_btn_addplan(option){
     }else if(option ==2){
         clear_pt_off_add_popup()
         open_pt_off_add_popup('offadd')
+        //addTypeSelect = "offadd"
+        get_repeat_info("")
         ajaxTimeGraphSet()
         shade_index(100)
         //scrollToDom($('#calendar'))
@@ -1431,7 +1428,8 @@ function clear_start_dur_dropdown(){
 
 function get_repeat_info(dbID){
     if(addTypeSelect == "repeatptadd" || addTypeSelect == "ptadd"){
-      var url_ = '/trainer/read_member_lecture_data_from_schedule/'
+      //var url_ = '/trainer/read_member_lecture_data_from_schedule/'
+      var url_ = '/trainer/read_member_lecture_data/'
       var data_ = {"member_id": dbID}
       var fill_option = 'class'
       var type_ = 'POST'
@@ -1440,7 +1438,7 @@ function get_repeat_info(dbID){
       var data_ = {"group_id": dbID}
       var fill_option = 'group'
       var type_ = 'POST'
-    }else if(addTypeSelect == "repeatoffadd"){
+    }else if(addTypeSelect == "offadd" || addTypeSelect == "repeatoffadd"){
       var url_ = '/trainer/get_off_repeat_schedule_ajax/'
       var data_;
       var fill_option = 'off'
@@ -1458,6 +1456,7 @@ function get_repeat_info(dbID){
         },
 
         success:function(data){
+          console.log(data)
           TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           console.log('fill_repeat_info',jsondata)
@@ -1534,6 +1533,7 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
 }
 
 function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
+  console.log('fill_repeat_info--add',jsondata)
     switch(option){
         case 'class':
           var len = jsondata.ptRepeatScheduleIdArray.length
@@ -1544,6 +1544,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_end_array = jsondata.ptRepeatScheduleEndDateArray
           var repeat_time_array = jsondata.ptRepeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.ptRepeatScheduleTimeDurationArray
+          var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray
         break;
         case 'off':
           var len = jsondata.offRepeatScheduleIdArray.length
@@ -1554,6 +1555,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_end_array = jsondata.offRepeatScheduleEndDateArray
           var repeat_time_array = jsondata.offRepeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.offRepeatScheduleTimeDurationArray
+          var repeat_group_name = [""]
         break;
         case 'group':
           var len = jsondata.repeatScheduleIdArray.length
@@ -1564,6 +1566,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_end_array = jsondata.repeatScheduleEndDateArray
           var repeat_time_array = jsondata.repeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.repeatScheduleTimeDurationArray
+          var repeat_group_name = [""]
         break;
     }
     var repeat_info_dict= { 'KOR':
@@ -1578,6 +1581,11 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
                            }
     var schedulesHTML = []
     for(var i=0; i<len; i++){
+      var repeat_title = "[그룹]"
+      if(repeat_group_name[i].length == 0){
+        var repeat_title = ""
+      }
+
       var repeat_id = repeat_id_array[i]
       var repeat_type = repeat_info_dict['KOR'][repeat_type_array[i]]
       var repeat_start = repeat_start_array[i].replace(/-/gi,".");
@@ -1624,7 +1632,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
                             return repeat_day_info
                         };
 
-      var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +'시간)</span>'
+      var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+'<span style="color:#fe4e65;">'+repeat_title+'</span>'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +'시간)</span>'
       var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>'
       var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-deletetype="'+option+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
       schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
@@ -1636,7 +1644,6 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
     }else{
       $('#offRepeatSummary').hide()
     }
-
 }
 
 

@@ -37,7 +37,6 @@ $(document).ready(function(){
             addTypeSelect = "repeatoffadd"
             deleteTypeSelect = "repeatoffdelete"
             check_dropdown_selected()
-            fill_repeat_info('off')
           }else if((addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd") && pageSelector == ''){
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','block')
