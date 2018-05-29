@@ -37,6 +37,7 @@ from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLect
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func, get_trainee_repeat_schedule_data_func_from_schedule
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
+from trainer.function import func_get_class_member_list
 
 logger = logging.getLogger(__name__)
 
@@ -141,8 +142,8 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             self.request.session['class_hour'] = class_info.class_hour
 
         if error is None:
-            all_member = MemberTb.objects.filter().order_by('name')
-
+            # all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
             for member_info in all_member:
                 # member_data = member_info
 
@@ -427,7 +428,8 @@ def get_member_data(context, class_id, member_id, user_id):
 
     if error is None:
         if member_id is None or member_id == '':
-            all_member = MemberTb.objects.filter().order_by('name')
+            # all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
         else:
             all_member = MemberTb.objects.filter(member_id=member_id).order_by('name')
 
@@ -828,7 +830,8 @@ class MyPageView(AccessTestMixin, TemplateView):
                 off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
 
         if error is None:
-            all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
+            # all_member = MemberTb.objects.filter().order_by('name')
 
             for member_info in all_member:
                 # member_data = member_info
@@ -983,7 +986,8 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
                 off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
         # error = 'test'
         if error is None:
-            all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
+            # all_member = MemberTb.objects.filter().order_by('name')
 
             for member_info in all_member:
                 # member_data = member_info
@@ -2967,7 +2971,8 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for class_auth_info in class_auth_data:
 
                 class_info = class_auth_info.class_tb
-                all_member = MemberTb.objects.filter().order_by('name')
+                all_member = func_get_class_member_list(class_info.class_id)
+                # all_member = MemberTb.objects.filter().order_by('name')
                 total_member_num = 0
                 for member_info in all_member:
                     # member_data = member_info
@@ -3665,7 +3670,8 @@ def export_excel_member_list_logic(request):
 
     if error is None:
         if member_id is None or member_id == '':
-            all_member = MemberTb.objects.filter().order_by('name')
+            # all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
         else:
             all_member = MemberTb.objects.filter(member_id=member_id).order_by('name')
 
