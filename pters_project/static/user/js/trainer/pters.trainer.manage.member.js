@@ -1052,6 +1052,7 @@ function send_modified_member_base_data(){
 
         //통신성공시 처리
         success:function(data){
+            var jsondata = JSON.parse(data)
             if(jsondata.messageArray.length>0){
                 $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
@@ -1076,6 +1077,10 @@ function send_modified_member_base_data(){
                 memberListSet('finished','date','yes',jsondata);
                 $('#startR').attr('selected','selected');
                 console.log('success');
+
+                if($('._calmonth').length == 1 || $('._calweek').length == 1){
+                    ajaxClassTime()
+                }
             }
         },
 
@@ -2505,7 +2510,6 @@ function send_member_modified_data(dbID){
           //통신성공시 처리
           success:function(data){
               var jsondata = JSON.parse(data)
-              console.log(jsondata)
               if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray)

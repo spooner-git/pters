@@ -870,7 +870,7 @@
 <form action="{% url 'trainer:update_member_lecture_info' %}" method="POST" class="member-form" id="update_member_lecture_info">
     {% csrf_token %}
     <input type="hidden" name="lecture_id" id="form_lecture_id">
-    <input type="hidden" name="member_name" id="form_member_name">
+    <input type="hidden" name="member_id" id="form_member_dbid">
     <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
     <input type="hidden" name="start_date" id="form_start_date">
     <input type="hidden" name="end_date" id="form_end_date">
@@ -878,6 +878,18 @@
     <input type="hidden" name="refund_price" id="form_refund_price">
     <input type="hidden" name="lecture_reg_count" id="form_lecture_reg_count">
     <input type="hidden" name="note" id="form_note">
+</form>
+
+<form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
+    {% csrf_token %}
+    <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
+    <input type="hidden" name="sex" id="form_sex_modify">
+    <input type="hidden" name="birthday" id="form_birth_modify">
+    <input type="hidden" name="name" id="form_name_modify">
+    <input type="hidden" name="first_name" id="form_firstname_modify">
+    <input type="hidden" name="last_name" id="form_lastname_modify">
+    <input type="hidden" name="phone" id="form_phone_modify">
+    <input type="hidden" name="member_id" id="form_dbid_modify">
 </form>
 
 
