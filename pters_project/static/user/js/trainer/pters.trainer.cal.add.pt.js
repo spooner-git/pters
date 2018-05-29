@@ -577,7 +577,7 @@ $(document).ready(function(){
           check_dropdown_selected();
   		}); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
-      $('#addpopup_pc_label_pt').click(function(){
+      $('#addpopup_pc_label_off').click(function(){
         console.log(addTypeSelect)
       })
       
@@ -643,11 +643,6 @@ $(document).ready(function(){
         $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
       })
 
-      $(document).on('click','button',function(){
-         //scrollToIndicator($(this))
-      })
-
-      
 
       function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
           var memberSelect = $("#membersSelected button");
@@ -1080,6 +1075,8 @@ function float_btn_addplan(option){
     }else if(option ==2){
         clear_pt_off_add_popup()
         open_pt_off_add_popup('offadd')
+        //addTypeSelect = "offadd"
+        get_repeat_info("")
         ajaxTimeGraphSet()
         shade_index(100)
         //scrollToDom($('#calendar'))
@@ -1441,7 +1438,7 @@ function get_repeat_info(dbID){
       var data_ = {"group_id": dbID}
       var fill_option = 'group'
       var type_ = 'POST'
-    }else if(addTypeSelect == "repeatoffadd"){
+    }else if(addTypeSelect == "offadd" || addTypeSelect == "repeatoffadd"){
       var url_ = '/trainer/get_off_repeat_schedule_ajax/'
       var data_;
       var fill_option = 'off'
@@ -1459,6 +1456,7 @@ function get_repeat_info(dbID){
         },
 
         success:function(data){
+          console.log(data)
           TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           console.log('fill_repeat_info',jsondata)
@@ -1557,7 +1555,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_end_array = jsondata.offRepeatScheduleEndDateArray
           var repeat_time_array = jsondata.offRepeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.offRepeatScheduleTimeDurationArray
-          var repeat_group_name = []
+          var repeat_group_name = [""]
         break;
         case 'group':
           var len = jsondata.repeatScheduleIdArray.length
@@ -1568,7 +1566,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_end_array = jsondata.repeatScheduleEndDateArray
           var repeat_time_array = jsondata.repeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.repeatScheduleTimeDurationArray
-          var repeat_group_name = []
+          var repeat_group_name = [""]
         break;
     }
     var repeat_info_dict= { 'KOR':
