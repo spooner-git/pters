@@ -3749,6 +3749,15 @@ function set_indiv_repeat_info(jsondata, PCorMobile){
 
     var schedulesHTML = []
     for(var i=0; i<jsondata.ptRepeatScheduleIdArray.length; i++){
+        var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray[i]
+        var repeat_group_type = "[그룹레슨]"
+        if(repeat_group_name.length == 0 ){
+            var repeat_group_name = ""
+            var repeat_group_type = "[개인레슨]"
+        }
+        var repeat_title = repeat_group_type+' '+repeat_group_name
+
+
         var repeat_id = repeat_id_array[i]
         var repeat_type = repeat_info_dict[Options.language][repeat_type_array[i]]
         var repeat_start = repeat_start_array[i].replace(/-/gi,".");
@@ -3795,10 +3804,11 @@ function set_indiv_repeat_info(jsondata, PCorMobile){
                             }
                               return repeat_day_info
                           };
+        var summaryInnerBoxText_title = '<p class="summaryInnerBoxText">'+repeat_title+'</p>'
         var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +text2+')'+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-dbid="'+dbId+'" data-deletetype="repeatinfo" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
-        schedulesHTML[i] = '<div class="summaryInnerBox" data-repeatid="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
+        schedulesHTML[i] = '<div class="summaryInnerBox" data-repeatid="'+repeat_id+'">'+summaryInnerBoxText_title+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
     }
     $regHistory.html(schedulesHTML.join(''))
 }

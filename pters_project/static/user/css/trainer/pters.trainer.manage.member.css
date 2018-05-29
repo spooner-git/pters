@@ -781,6 +781,7 @@ select:focus > option:checked {
 				font-size:12px;
 				width: 100%;
 				padding: 0;
+				margin-top: 5px;
 			}
 			#memberRegHistory_info_PC > div{
 				display: table;
@@ -926,6 +927,7 @@ select:focus > option:checked {
 				display: block;
 				color: #282828;
 				border-bottom:1px solid #cccccc;
+				height: 55px;
 			}
 			#memberRepeat_info_PC p:nth-child(1), #memberRepeat_info p:nth-child(1){
 				color: #fe4e65;
@@ -934,6 +936,12 @@ select:focus > option:checked {
 				font-size: unset;
 			}
 			#memberRepeat_info_PC p:nth-child(2), #memberRepeat_info p:nth-child(2){
+				color: #444444;
+				margin: 0;
+				line-height: unset;
+				font-size: unset;
+			}
+			#memberRepeat_info_PC p:nth-child(3), #memberRepeat_info p:nth-child(3){
 				color: #444444;
 				margin: 0;
 				line-height: unset;
