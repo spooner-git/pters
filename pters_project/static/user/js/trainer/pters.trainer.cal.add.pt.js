@@ -921,7 +921,7 @@ $(document).ready(function(){
                   $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
                 })
                 */
-                get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
+                get_member_lecture_list(id, 'callback', function(jsondata){
                     var availCount_personal = 0
                     for(var i= 0; i<jsondata.availCountArray.length; i++){
                       if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
