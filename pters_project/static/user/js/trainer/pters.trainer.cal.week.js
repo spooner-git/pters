@@ -602,8 +602,17 @@ $(document).ready(function(){
 			            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
 			            set_schedule_time(jsondata)
 			            $('#members_mobile, #members_pc').html('')
-			            get_current_member_list()
-      					get_current_group_list()
+			            //get_current_member_list()
+      					//get_current_group_list()
+      					get_member_lecture_list(id, 'callback', function(jsondata){
+		                    var availCount_personal = 0
+		                    for(var i= 0; i<jsondata.availCountArray.length; i++){
+		                      if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+		                        availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
+		                      }
+		                    }
+		                    $("#countsSelected").text(availCount_personal);
+		                })
 			            if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
