@@ -353,7 +353,7 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ManageMemberView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+        # class_id = self.request.session.get('class_id', '')
         # context = get_member_data(context, class_id, None, self.request.user.id)
 
         return context
@@ -363,13 +363,9 @@ class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member_ajax.html'
 
     def get_context_data(self, **kwargs):
-        print(str(timezone.now()))
         context = super(ManageMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        lecture_id = self.request.session.get('lecture_id', '')
         context = get_member_data(context, class_id, None, self.request.user.id)
-
-        print(str(timezone.now()))
         return context
 
 
