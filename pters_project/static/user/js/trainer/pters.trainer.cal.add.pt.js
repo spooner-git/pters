@@ -906,24 +906,36 @@ $(document).ready(function(){
               $('#calendar').show() //20180430
             }
             close_info_popup('cal_popup_repeatconfirm')
-            ajaxRepeatConfirmSend();
-            check_dropdown_selected()
-            if(addTypeSelect == "repeatgroupptadd"){
-              var id = $('#cal_popup_repeatconfirm').attr('data-groupid')
-            }else{
-              var id = $('#cal_popup_repeatconfirm').attr('data-dbid')
-            }
-            get_repeat_info(id)
+            ajaxRepeatConfirmSend('callback',function(){
+                if(addTypeSelect == "repeatgroupptadd"){
+                  var id = $('#cal_popup_repeatconfirm').attr('data-groupid')
+                }else{
+                  var id = $('#cal_popup_repeatconfirm').attr('data-dbid')
+                }
+                get_repeat_info(id)
 
-            $('#members_mobile, #members_pc').html('')
-            get_current_member_list('callback',function(jsondata){
-              set_member_dropdown_list(jsondata)
-              $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
-            })
-            get_current_group_list('callback',function(jsondata){
-              set_group_dropdown_list(jsondata)
-              $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
-            })
+                $('#members_mobile, #members_pc').html('')
+                /*
+                get_current_member_list('callback',function(jsondata){
+                  set_member_dropdown_list(jsondata)
+                  $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
+                })
+                */
+                get_member_lecture_list(id, 'callback', function(jsondata){
+                    var availCount_personal = 0
+                    for(var i= 0; i<jsondata.availCountArray.length; i++){
+                      if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                        availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
+                      }
+                    }
+                    $("#countsSelected").text(availCount_personal);
+                })
+                get_current_group_list('callback',function(jsondata){
+                  set_group_dropdown_list(jsondata)
+                  $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
+                })
+            });
+            check_dropdown_selected()
         }
       })
 
@@ -1321,7 +1333,7 @@ function set_group_dropdown_list(jsondata){
 
 
 
-function ajaxRepeatConfirmSend(){
+function ajaxRepeatConfirmSend(use, callback){
       ajax_block_during_repeat_confirm = false
       if(addTypeSelect == "repeatgroupptadd"){
         var serverURL = '/schedule/add_group_repeat_schedule_confirm/'
@@ -1348,13 +1360,15 @@ function ajaxRepeatConfirmSend(){
             $('#errorMessageBar').show()
             $('#errorMessageText').text(jsondata.messageArray)
           }else{
-
               if(jsondata.push_info != ''){
                   for (var i=0; i<jsondata.pushArray.length; i++){
                       //send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
                   }
               }
             set_schedule_time(jsondata)
+            if(use == "callback"){
+              callback(jsondata)
+            }
           }
         },
 
@@ -1537,6 +1551,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
     switch(option){
         case 'class':
           var len = jsondata.ptRepeatScheduleIdArray.length
+          var dbId = jsondata.memberIdArray
           var repeat_id_array = jsondata.ptRepeatScheduleIdArray
           var repeat_type_array = jsondata.ptRepeatScheduleTypeArray
           var repeat_day_info_raw_array = jsondata.ptRepeatScheduleWeekInfoArray
@@ -1548,6 +1563,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
         break;
         case 'off':
           var len = jsondata.offRepeatScheduleIdArray.length
+          var dbId = ""
           var repeat_id_array = jsondata.offRepeatScheduleIdArray
           var repeat_type_array = jsondata.offRepeatScheduleTypeArray
           var repeat_day_info_raw_array = jsondata.offRepeatScheduleWeekInfoArray
@@ -1559,6 +1575,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
         break;
         case 'group':
           var len = jsondata.repeatScheduleIdArray.length
+          var dbId = ""
           var repeat_id_array = jsondata.repeatScheduleIdArray
           var repeat_type_array = jsondata.repeatScheduleTypeArray
           var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray
@@ -1634,7 +1651,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
 
       var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+'<span style="color:#fe4e65;">'+repeat_title+'</span>'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +'시간)</span>'
       var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>'
-      var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-deletetype="'+option+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+      var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-dbid="'+dbId+'" data-deletetype="'+option+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
       schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
     }
 
