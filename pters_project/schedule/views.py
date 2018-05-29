@@ -812,7 +812,6 @@ def add_repeat_schedule_logic(request):
     # request.session['date'] = date
     # request.session['day'] = day
     pt_schedule_input_counter = 0
-
     week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
 
     if repeat_type == '':
@@ -849,12 +848,18 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
         if en_dis_type == '1':
-            # if lecture_id == '':
-            #     error = '회원을 선택해 주세요.'
-            if member_name == '':
+            if lecture_id == '':
                 error = '회원을 선택해 주세요.'
+            else:
+                lecture_id = func_get_lecture_id(class_id, member_id)
+                if lecture_id is None or lecture_id == '':
+                    error = '등록할수 있는 일정이 없습니다.'
         else:
             lecture_id = ''
+
+    if error is None:
+        if member_name == '':
+            error = '회원을 선택해 주세요.'
 
     if error is None:
         try:

@@ -37,5 +37,19 @@
       "ptRepeatScheduleStateCdArray" :
       [{% for pt_repeat_schedule_state_cd_info in pt_repeat_schedule_state_cd %}"{{ pt_repeat_schedule_state_cd_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "ptRepeatScheduleStateCdNameArray" :
-      [{% for pt_repeat_schedule_state_cd_nm_info in pt_repeat_schedule_state_cd_nm %}"{{ pt_repeat_schedule_state_cd_nm_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+      [{% for pt_repeat_schedule_state_cd_nm_info in pt_repeat_schedule_state_cd_nm %}"{{ pt_repeat_schedule_state_cd_nm_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "ptRepeatScheduleGroupIdArray" :
+      [{% for pt_repeat_schedule_group_info in pt_repeat_schedule_group_data %}"{{ pt_repeat_schedule_group_info.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptRepeatScheduleGroupTypeCdArray" :
+      [{% for pt_repeat_schedule_group_info in pt_repeat_schedule_group_data %}"{{ pt_repeat_schedule_group_info.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptRepeatScheduleGroupMemberNumArray" :
+      [{% for pt_repeat_schedule_group_info in pt_repeat_schedule_group_data %}"{{ pt_repeat_schedule_group_info.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptRepeatScheduleGroupNameArray" :
+      [{% for pt_repeat_schedule_group_info in pt_repeat_schedule_group_data %}"{{ pt_repeat_schedule_group_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptRepeatScheduleGroupStateCdArray" :
+      [{% for pt_repeat_schedule_group_info in pt_repeat_schedule_group_data %}"{{ pt_repeat_schedule_group_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "ptRepeatScheduleGroupNoteArray" :
+      [{% for pt_repeat_schedule_group_info in pt_repeat_schedule_group_data %}"{{ pt_repeat_schedule_group_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+
     }

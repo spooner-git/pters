@@ -1247,6 +1247,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     pt_repeat_schedule_time_duration = []
     pt_repeat_schedule_state_cd = []
     pt_repeat_schedule_state_cd_nm = []
+    pt_repeat_schedule_group_data = []
     lecture_list = None
 
     # 강좌 정보 가져오기
@@ -1295,6 +1296,8 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
                 pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
                 pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
                 pt_repeat_schedule_state_cd.append(pt_repeat_schedule_info.state_cd)
+                pt_repeat_schedule_group_data.append(pt_repeat_schedule_info.group_tb)
+
                 try:
                     state_cd_name = CommonCdTb.objects.get(common_cd=pt_repeat_schedule_info.state_cd)
                 except ObjectDoesNotExist:
@@ -1311,6 +1314,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
     context['pt_repeat_schedule_state_cd'] = pt_repeat_schedule_state_cd
     context['pt_repeat_schedule_state_cd_nm'] = pt_repeat_schedule_state_cd_nm
+    context['pt_repeat_schedule_group_data'] = pt_repeat_schedule_group_data
     if error is None:
         context['error'] = error
 
