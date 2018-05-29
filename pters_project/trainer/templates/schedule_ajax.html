@@ -66,40 +66,6 @@
       "repeatScheduleCounterArray" :
       ["{{ request.session.repeat_schedule_input_counter }}"],
 
-      "offRepeatScheduleIdArray" :
-      [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}"{{ off_repeat_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "offRepeatScheduleTypeArray" :
-      [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}"{{ off_repeat_schedule_type_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "offRepeatScheduleWeekInfoArray" :
-      [{% for off_repeat_schedule_week_info_info in off_repeat_schedule_week_info_data %}"{{ off_repeat_schedule_week_info_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "offRepeatScheduleStartDateArray" :
-      [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}"{{ off_repeat_schedule_start_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "offRepeatScheduleEndDateArray" :
-      [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}"{{ off_repeat_schedule_end_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "offRepeatScheduleStartTimeArray" :
-      [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}"{{ off_repeat_schedule_start_time_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "offRepeatScheduleTimeDurationArray" :
-      [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}"{{ off_repeat_schedule_time_duration_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
-      "ptRepeatScheduleIdArray" :
-      [{% for pt_repeat_schedule_id_info in pt_repeat_schedule_id_data %}"{{ pt_repeat_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ptRepeatScheduleTypeArray" :
-      [{% for pt_repeat_schedule_type_info in pt_repeat_schedule_type_data %}"{{ pt_repeat_schedule_type_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ptRepeatScheduleWeekInfoArray" :
-      [{% for pt_repeat_schedule_week_info_info in pt_repeat_schedule_week_info_data %}"{{ pt_repeat_schedule_week_info_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ptRepeatScheduleStartDateArray" :
-      [{% for pt_repeat_schedule_start_date_info in pt_repeat_schedule_start_date_data %}"{{ pt_repeat_schedule_start_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ptRepeatScheduleEndDateArray" :
-      [{% for pt_repeat_schedule_end_date_info in pt_repeat_schedule_end_date_data %}"{{ pt_repeat_schedule_end_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ptRepeatScheduleStartTimeArray" :
-      [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}"{{ pt_repeat_schedule_start_time_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ptRepeatScheduleTimeDurationArray" :
-      [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}"{{ pt_repeat_schedule_time_duration_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ptRepeatScheduleStateCdArray" :
-      [{% for pt_repeat_schedule_state_cd_info in pt_repeat_schedule_state_cd %}"{{ pt_repeat_schedule_state_cd_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "ptRepeatScheduleStateCdNameArray" :
-      [{% for pt_repeat_schedule_state_cd_nm_info in pt_repeat_schedule_state_cd_nm %}"{{ pt_repeat_schedule_state_cd_nm_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
       "push_server_id" :
       ["{{ push_server_id }}"],
       "pushArray" :

@@ -26,7 +26,7 @@ def func_get_lecture_id(class_id, member_id):
                                                  lecture_tb__member_id=member_id,
                                                  lecture_tb__state_cd='IP',
                                                  lecture_tb__lecture_avail_count__gt=0,
-                                                 lecture_tb__use=1).order_by('lecture_tb__start_date')
+                                                 lecture_tb__use=1).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
     for lecture_info in lecture_data:
         try:
@@ -49,7 +49,7 @@ def func_get_group_lecture_id(group_id, member_id):
                                                        lecture_tb__state_cd='IP',
                                                        lecture_tb__lecture_avail_count__gt=0,
                                                        lecture_tb__use=1,
-                                                       use=1).order_by('lecture_tb__start_date')
+                                                       use=1).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
     if len(group_lecture_data) > 0:
         lecture_id = group_lecture_data[0].lecture_tb.lecture_id
@@ -79,7 +79,7 @@ def func_refresh_lecture_count(lecture_id):
             lecture_info.mod_dt = timezone.now()
             lecture_info.save()
         else:
-            error = '등록중 오류가 발생했습니다.'
+            error = '오류가 발생했습니다.'
 
     if error is None:
         end_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').count()
@@ -95,7 +95,7 @@ def func_refresh_lecture_count(lecture_id):
             lecture_info.save()
 
         else:
-            error = '등록중 오류가 발생했습니다.'
+            error = '오류가 발생했습니다.'
 
     return error
 
@@ -278,6 +278,29 @@ def func_check_group_schedule_enable(group_id):
     return error
 
 
+def func_get_group_member_list(group_id):
+    member_list = []
+    group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                                                       group_tb__group_type_cd='NORMAL',
+                                                       group_tb__use=1,
+                                                       lecture_tb__state_cd='IP',
+                                                       lecture_tb__use=1,
+                                                       use=1)
+
+    for group_lecture_info in group_lecture_data:
+        if len(member_list) == 0:
+            member_list.append(group_lecture_info.lecture_tb.member)
+        check_info = 0
+        for member_info in member_list:
+            if group_lecture_info.lecture_tb.member.member_id == member_info.member_id:
+                check_info = 1
+
+        if check_info == 0:
+            member_list.append(group_lecture_info.lecture_tb.member)
+
+    return member_list
+
+
 def func_get_available_group_member_list(group_id):
     member_list = []
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
@@ -286,6 +309,29 @@ def func_get_available_group_member_list(group_id):
                                                        lecture_tb__state_cd='IP',
                                                        lecture_tb__use=1,
                                                        lecture_tb__lecture_avail_count__gt=0,
+                                                       use=1)
+
+    for group_lecture_info in group_lecture_data:
+        if len(member_list) == 0:
+            member_list.append(group_lecture_info.lecture_tb.member)
+        check_info = 0
+        for member_info in member_list:
+            if group_lecture_info.lecture_tb.member.member_id == member_info.member_id:
+                check_info = 1
+
+        if check_info == 0:
+            member_list.append(group_lecture_info.lecture_tb.member)
+
+    return member_list
+
+
+def func_get_not_available_group_member_list(group_id):
+    member_list = []
+    group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                                                       group_tb__group_type_cd='NORMAL',
+                                                       group_tb__use=1,
+                                                       lecture_tb__lecture_avail_count=0,
+                                                       lecture_tb__use=1,
                                                        use=1)
 
     for group_lecture_info in group_lecture_data:

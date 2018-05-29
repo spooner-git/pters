@@ -28,7 +28,7 @@ from schedule.functions import func_get_lecture_id, func_add_schedule, func_refr
     func_update_member_schedule_alarm, func_save_log_data, func_check_group_schedule_enable, \
     func_get_available_group_member_list, func_get_group_lecture_id, \
     func_check_group_available_member_before, func_check_group_available_member_after, \
-    func_send_push_trainer
+    func_send_push_trainer, func_get_not_available_group_member_list
 from schedule.models import LectureTb, ClassLectureTb, MemberLectureTb, GroupLectureTb, GroupTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
@@ -207,60 +207,12 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     group_schedule_name = []
     group_schedule_max_member_num = []
     group_schedule_current_member_num = []
-    off_repeat_schedule_id = []
-    off_repeat_schedule_type = []
-    off_repeat_schedule_week_info = []
-    off_repeat_schedule_start_date = []
-    off_repeat_schedule_end_date = []
-    off_repeat_schedule_start_time = []
-    off_repeat_schedule_time_duration = []
-
-    pt_repeat_schedule_id = []
-    pt_repeat_schedule_type = []
-    pt_repeat_schedule_week_info = []
-    pt_repeat_schedule_start_date = []
-    pt_repeat_schedule_end_date = []
-    pt_repeat_schedule_start_time = []
-    pt_repeat_schedule_time_duration = []
-    pt_repeat_schedule_state_cd = []
-    pt_repeat_schedule_state_cd_nm = []
 
     # 강사 정보 가져오기
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
         error = '강좌 정보를 불러오지 못했습니다.'
-
-    if error is None:
-        # 강사 클래스의 반복일정 불러오기
-        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                   en_dis_type='0')
-        for off_repeat_schedule_info in off_repeat_schedule_data:
-            off_repeat_schedule_id.append(off_repeat_schedule_info.repeat_schedule_id)
-            off_repeat_schedule_type.append(off_repeat_schedule_info.repeat_type_cd)
-            off_repeat_schedule_week_info.append(off_repeat_schedule_info.week_info)
-            off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_date))
-            off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_date))
-            off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
-            off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
-
-        pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                  en_dis_type='1').exclude(state_cd='PE')
-        for pt_repeat_schedule_info in pt_repeat_schedule_data:
-            pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
-            pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
-            pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
-            pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
-            pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
-            pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
-            pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
-            pt_repeat_schedule_state_cd.append(pt_repeat_schedule_info.state_cd)
-            try:
-                state_cd_name = CommonCdTb.objects.get(common_cd=pt_repeat_schedule_info.state_cd)
-            except ObjectDoesNotExist:
-                error = '반복일정의 상태를 불러오지 못했습니다.'
-            if error is None:
-                pt_repeat_schedule_state_cd_nm.append(state_cd_name.common_cd_nm)
 
     # OFF 일정 조회
     if error is None:
@@ -279,16 +231,11 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     # PT 일정 조회
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
-        lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, use=1)
+        lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=1)
 
         for lecture_datum_info in lecture_data:
             lecture_datum = lecture_datum_info.lecture_tb
             # 강좌별로 연결되어있는 회원 리스트 불러오기
-
-            try:
-                member_data = MemberTb.objects.get(member_id=lecture_datum.member_id)
-            except ObjectDoesNotExist:
-                error = '회원 정보를 불러오지 못했습니다.'
 
             if error is None:
                 # 강좌별로 연결된 PT 스케쥴 가져오기
@@ -305,15 +252,11 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
                     pt_schedule_id.append(pt_schedule_datum.schedule_id)
                     # lecture schedule 에 해당하는 lecture id 셋팅
                     pt_schedule_lecture_id.append(lecture_datum.lecture_id)
-                    pt_schedule_member_name.append(member_data.name)
-                    pt_schedule_member_id.append(member_data.member_id)
+                    pt_schedule_member_name.append(lecture_datum.member.name)
+                    pt_schedule_member_id.append(lecture_datum.member.member_id)
                     pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
                     pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
                     pt_schedule_idx.append(idx)
-                    # if pt_schedule_datum.group_tb is not None and pt_schedule_datum.group_tb != '':
-                    #    pt_schedule_group_id.append(pt_schedule_datum.group_tb.group_id)
-                    #    pt_schedule_group_name.append(pt_schedule_datum.group_tb.group_name)
-                    #    pt_schedule_group_member_num.append(pt_schedule_datum.group_tb.member_num)
 
                     if pt_schedule_datum.note is None:
                         pt_schedule_note.append('')
@@ -390,24 +333,6 @@ def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
     context['group_schedule_current_member_num'] = group_schedule_current_member_num
     context['group_schedule_note'] = group_schedule_note
     context['group_schedule_finish_check'] = group_schedule_finish_check
-
-    context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
-    context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
-    context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
-    context['off_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
-    context['off_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
-    context['off_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
-    context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
-
-    context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
-    context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
-    context['pt_repeat_schedule_week_info_data'] = pt_repeat_schedule_week_info
-    context['pt_repeat_schedule_start_date_data'] = pt_repeat_schedule_start_date
-    context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
-    context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
-    context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
-    context['pt_repeat_schedule_state_cd'] = pt_repeat_schedule_state_cd
-    context['pt_repeat_schedule_state_cd_nm'] = pt_repeat_schedule_state_cd_nm
 
     return context
 
@@ -1527,6 +1452,7 @@ def add_group_schedule_logic(request):
     next_page = request.POST.get('next_page')
 
     error = None
+    info_message = None
     schedule_start_datetime = None
     schedule_end_datetime = None
     group_info = None
@@ -1619,7 +1545,14 @@ def add_group_schedule_logic(request):
         log_data.save()
 
     if error is None:
+        not_reg_member_list = func_get_not_available_group_member_list(group_id)
         member_list = func_get_available_group_member_list(group_id)
+
+        for member_info in not_reg_member_list:
+            if info_message is None or info_message == '':
+                info_message = member_info.name
+            else:
+                info_message = info_message + ',' + member_info.name
 
         for member_info in member_list:
             error_temp = None
@@ -1678,16 +1611,22 @@ def add_group_schedule_logic(request):
                 error_temp = member_info.name + ' 회원님의 예약가능한 횟수가 없습니다.'
 
             if error_temp is not None:
-                if error is None:
-                    error = error_temp
+                if info_message is None or info_message == '':
+                    info_message = member_info.name
                 else:
-                    error = error+'/'+error_temp
+                    info_message = info_message + ',' + member_info.name
+                # if error is None:
+                #    error = error_temp
+                # else:
+                #    error = error+'/'+error_temp
 
     if error is None:
         request.session['push_title'] = ''
         request.session['push_info'] = ''
         request.session['lecture_id'] = ''
-
+        if info_message is not None:
+            info_message += ' 님의 일정이 등록되지 않았습니다.'
+            messages.info(request, info_message)
         return redirect(next_page)
     else:
         logger.error(
