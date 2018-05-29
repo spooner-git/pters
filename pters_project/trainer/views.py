@@ -144,8 +144,8 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             self.request.session['class_hour'] = class_info.class_hour
 
         if error is None:
-            all_member = MemberTb.objects.filter().order_by('name')
-
+            # all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
             for member_info in all_member:
                 # member_data = member_info
 
@@ -837,7 +837,8 @@ class MyPageView(AccessTestMixin, TemplateView):
                 off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
 
         if error is None:
-            all_member = MemberTb.objects.filter().order_by('name')
+            # all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
 
             for member_info in all_member:
                 # member_data = member_info
@@ -992,8 +993,8 @@ class MyPageViewAjax(AccessTestMixin, TemplateView):
                 off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
         # error = 'test'
         if error is None:
-            all_member = MemberTb.objects.filter().order_by('name')
-
+            # all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
             for member_info in all_member:
                 # member_data = member_info
 
@@ -3249,7 +3250,8 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for class_auth_info in class_auth_data:
 
                 class_info = class_auth_info.class_tb
-                all_member = MemberTb.objects.filter().order_by('name')
+                all_member = func_get_class_member_list(class_info.class_id)
+                # all_member = MemberTb.objects.filter().order_by('name')
                 total_member_num = 0
                 for member_info in all_member:
                     # member_data = member_info
@@ -3947,7 +3949,8 @@ def export_excel_member_list_logic(request):
 
     if error is None:
         if member_id is None or member_id == '':
-            all_member = MemberTb.objects.filter().order_by('name')
+            # all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
         else:
             all_member = MemberTb.objects.filter(member_id=member_id).order_by('name')
 
