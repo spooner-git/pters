@@ -1621,9 +1621,10 @@ function toggleGroupParticipantsList(onoff){
 
 function fake_show(){
 	//var faketarget = selector.parent('div').siblings('.fake_for_blankpage')
-	if($('.swiper-slide-active').find('.classTime').length == 1 && $('.swiper-slide-active').find('.offTime').length == 0){
+	console.log('fake_show', $('.swiper-slide-active').find('.classTime').length, $('.swiper-slide-active').find('.offTime').length)
+	if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
 		$('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
-	}else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 1){
+	}else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
 		$('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
 	}
 }

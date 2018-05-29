@@ -126,7 +126,7 @@ ul a{
 
 #memberName_mini button{
 	position: relative;
-	width: 185px;
+	width: 198px;
 	border: 1px solid #cccccc;
 	overflow-x: hidden;
 }
@@ -318,7 +318,7 @@ ul a{
 }
 
 #memo_mini{
-	width: 70%;
+	width: 198px;
 	height: 23px;
 	margin-left: 12px;
 }
@@ -379,6 +379,7 @@ ul a{
 }
 
 #remainCount_mini, #groupInfo_mini{
+	display: none;
 	position: relative;
 	padding: 0;
 	margin-top: 0px;
@@ -992,7 +993,7 @@ option{
 	}
 
 	#memberName_mini .dropdown_mini{
-		margin-left: 23px;
+		margin-left: 22px;
 	}
 
 	#durationsSelected{
