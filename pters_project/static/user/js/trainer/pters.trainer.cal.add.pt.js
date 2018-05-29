@@ -1568,7 +1568,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_end_array = jsondata.repeatScheduleEndDateArray
           var repeat_time_array = jsondata.repeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.repeatScheduleTimeDurationArray
-          var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray
+          var repeat_group_name = []
         break;
     }
     var repeat_info_dict= { 'KOR':
