@@ -906,24 +906,25 @@ $(document).ready(function(){
               $('#calendar').show() //20180430
             }
             close_info_popup('cal_popup_repeatconfirm')
-            ajaxRepeatConfirmSend();
-            check_dropdown_selected()
-            if(addTypeSelect == "repeatgroupptadd"){
-              var id = $('#cal_popup_repeatconfirm').attr('data-groupid')
-            }else{
-              var id = $('#cal_popup_repeatconfirm').attr('data-dbid')
-            }
-            get_repeat_info(id)
+            ajaxRepeatConfirmSend('callback',function(){
+                if(addTypeSelect == "repeatgroupptadd"){
+                  var id = $('#cal_popup_repeatconfirm').attr('data-groupid')
+                }else{
+                  var id = $('#cal_popup_repeatconfirm').attr('data-dbid')
+                }
+                get_repeat_info(id)
 
-            $('#members_mobile, #members_pc').html('')
-            get_current_member_list('callback',function(jsondata){
-              set_member_dropdown_list(jsondata)
-              $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
-            })
-            get_current_group_list('callback',function(jsondata){
-              set_group_dropdown_list(jsondata)
-              $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
-            })
+                $('#members_mobile, #members_pc').html('')
+                get_current_member_list('callback',function(jsondata){
+                  set_member_dropdown_list(jsondata)
+                  $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
+                })
+                get_current_group_list('callback',function(jsondata){
+                  set_group_dropdown_list(jsondata)
+                  $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
+                })
+            });
+            check_dropdown_selected()
         }
       })
 
@@ -1321,7 +1322,7 @@ function set_group_dropdown_list(jsondata){
 
 
 
-function ajaxRepeatConfirmSend(){
+function ajaxRepeatConfirmSend(use, callback){
       ajax_block_during_repeat_confirm = false
       if(addTypeSelect == "repeatgroupptadd"){
         var serverURL = '/schedule/add_group_repeat_schedule_confirm/'
@@ -1348,13 +1349,15 @@ function ajaxRepeatConfirmSend(){
             $('#errorMessageBar').show()
             $('#errorMessageText').text(jsondata.messageArray)
           }else{
-
               if(jsondata.push_info != ''){
                   for (var i=0; i<jsondata.pushArray.length; i++){
                       //send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
                   }
               }
             set_schedule_time(jsondata)
+            if(use == "callback"){
+              callback(jsondata)
+            }
           }
         },
 
