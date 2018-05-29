@@ -2657,7 +2657,11 @@ function send_plan_delete(option, callbackoption, callback){
                       callback(jsondata)
                     }else{
                       close_info_popup('cal_popup_plandelete')
-                      shade_index(-100)
+                      if($('._calmonth').length == 1){
+
+                      }else if($('._calweek').length == 1){
+                        shade_index(-100)
+                      }
                     }
                 }
               },
