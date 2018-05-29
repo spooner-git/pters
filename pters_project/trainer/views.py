@@ -2269,7 +2269,6 @@ def update_member_lecture_info_logic(request):
     # member_name = request.POST.get('member_name', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page', '')
-
     error = None
     input_refund_price = 0
     input_price = 0
@@ -3167,7 +3166,7 @@ def get_lecture_list_by_class_member_id(context, class_id, member_id):
 
     if error is None:
         lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
-                                                     lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date')
+                                                     lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date', 'lecture_tb__reg_dt')
         # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, use=1).order_by('-start_date')
 
         for lecture_info_data in lecture_data:
@@ -3773,7 +3772,7 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                      lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', auth_cd='VIEW', use=1).order_by('lecture_tb__start_date')
+                                                     lecture_tb__use='1', auth_cd='VIEW', use=1).order_by('lecture_tb__start_date', '-lecture_tb__reg_dt')
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
@@ -3782,10 +3781,10 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
                 pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                              en_dis_type='1', use=1).order_by('start_dt')
 
+                idx += 1
                 if pt_schedule_data is not None and len(pt_schedule_data) > 0:
-                    idx = 0
-                    for pt_schedule_info in pt_schedule_data:
-                        idx += 1
+                    for idx2, pt_schedule_info in enumerate(pt_schedule_data):
+                        idx2 += 1
                         # lecture schedule id 셋팅
                         pt_schedule_id.append(pt_schedule_info.schedule_id)
                         # lecture schedule 에 해당하는 lecture id 셋팅
@@ -3795,7 +3794,7 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
                         pt_schedule_end_datetime.append(str(pt_schedule_info.end_dt))
                         pt_schedule_reg_datetime.append(str(pt_schedule_info.mod_dt))
                         pt_schedule_mod_datetime.append(str(pt_schedule_info.reg_dt))
-                        pt_schedule_idx.append(idx)
+                        pt_schedule_idx.append(str(idx)+'-'+str(idx2))
 
                         if pt_schedule_info.note is None:
                             pt_schedule_note.append('')
@@ -4299,7 +4298,7 @@ def export_excel_member_info_logic(request):
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                      lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', auth_cd='VIEW', use=1).order_by('-lecture_tb__start_date')
+                                                     lecture_tb__use='1', auth_cd='VIEW', use=1).order_by('-lecture_tb__start_date', 'lecture_tb__reg_dt')
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
