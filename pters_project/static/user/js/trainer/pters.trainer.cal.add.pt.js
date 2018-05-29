@@ -701,25 +701,36 @@ $(document).ready(function(){
                                 }
                             }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
-                              var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
-                                var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
-                              $('._repeatconfirmQuestion').text('선택한 일정 총 '+total_count+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.');
-                              var repeat_info = popup_repeat_confirm()
-                              $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
-                              $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
-                              $('#id_repeat_schedule_id_confirm').val(repeatArray)
-                              completeSend(); //ajax 로딩 이미지 숨기기
-                              shade_index(200)
+                              var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
+                              if(total_count == RepeatDuplicationDateArray[0].split('/').length){
+                                  alert('선택한 반복 일정의 등록 가능한 일정이 없습니다.\n 다시 확인 후 등록해주세요.')
+                                  completeSend(); //ajax 로딩 이미지 숨기기
+                              }else{
+                                var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
+                                $('._repeatconfirmQuestion').text('선택한 일정 총 '+total_count+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.');
+                                var repeat_info = popup_repeat_confirm()
+                                $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
+                                $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')
+                                $('#id_repeat_schedule_id_confirm').val(repeatArray)
+                                completeSend(); //ajax 로딩 이미지 숨기기
+                                shade_index(200)
+                              }
                             }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd")){
-                              var repeat_info = popup_repeat_confirm()
-                              var day_info = repeat_info.day_info
-                              var dur_info = repeat_info.dur_info
-                              $('._repeatconfirmQuestion').text('총 '+jsondata.repeatScheduleCounterArray[0]+' 건의 일정이 등록됩니다.')
-                              $('#repeat_confirm_day').text(day_info)
-                              $('#repeat_confirm_dur').text(dur_info)
-                              $('#id_repeat_schedule_id_confirm').val(repeatArray)
-                              completeSend(); //ajax 로딩 이미지 숨기기
-                              shade_index(200)
+                              if(jsondata.repeatScheduleCounterArray[0] == 0){
+                                  alert('선택한 반복 일정의 등록 가능한 일정이 없습니다.\n 다시 확인 후 등록해주세요.')
+                                  completeSend(); //ajax 로딩 이미지 숨기기
+                              }else{
+                                  var repeat_info = popup_repeat_confirm()
+                                  var day_info = repeat_info.day_info
+                                  var dur_info = repeat_info.dur_info
+                                  $('._repeatconfirmQuestion').text('총 '+jsondata.repeatScheduleCounterArray[0]+' 건의 일정이 등록됩니다.')
+                                  $('#repeat_confirm_day').text(day_info)
+                                  $('#repeat_confirm_dur').text(dur_info)
+                                  $('#id_repeat_schedule_id_confirm').val(repeatArray)
+                                  completeSend(); //ajax 로딩 이미지 숨기기
+                                  shade_index(200)
+                              }
+                              
                             }else{
                               ajax_received_json_data(jsondata)
                               $('#calendar').show().css('height','100%')
