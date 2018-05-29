@@ -20,7 +20,7 @@ $('button#addByNew').click(function(e){
 	addByNew_input_eventGroup()
 	e.preventDefault()
 	added_New_Member_Num++
-	var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="">'
+	var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="">'
 	var nameinput = '<input class="new_member_lastname" placeholder="회원 성"><input class="new_member_firstname" placeholder="회원 이름">'
 	var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
 	var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'

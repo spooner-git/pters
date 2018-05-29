@@ -1135,6 +1135,8 @@ function float_btn_managemember(option){
         }else{
             $('#how_to_add_member').css('display','none')
         }
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
+        $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
     }else if(option == "group"){
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');

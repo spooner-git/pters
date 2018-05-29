@@ -647,7 +647,7 @@ $(document).ready(function(){
 					ajax_block_during_delete_weekcal = true
 
 				}else if(deleteTypeSelect == "groupptdelete"){
-					send_plan_delete('group')
+					
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule_id')
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
 						console.log("get_group_plan_participants",jsondata)
@@ -656,6 +656,7 @@ $(document).ready(function(){
 							send_plan_delete('pt')
 						}
 					})
+					send_plan_delete('group')
 
 					ajax_block_during_delete_weekcal = true
 				}
