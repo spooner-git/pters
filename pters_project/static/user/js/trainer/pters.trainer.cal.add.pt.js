@@ -1551,6 +1551,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
     switch(option){
         case 'class':
           var len = jsondata.ptRepeatScheduleIdArray.length
+          var dbId = jsondata.memberIdArray
           var repeat_id_array = jsondata.ptRepeatScheduleIdArray
           var repeat_type_array = jsondata.ptRepeatScheduleTypeArray
           var repeat_day_info_raw_array = jsondata.ptRepeatScheduleWeekInfoArray
@@ -1562,6 +1563,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
         break;
         case 'off':
           var len = jsondata.offRepeatScheduleIdArray.length
+          var dbId = ""
           var repeat_id_array = jsondata.offRepeatScheduleIdArray
           var repeat_type_array = jsondata.offRepeatScheduleTypeArray
           var repeat_day_info_raw_array = jsondata.offRepeatScheduleWeekInfoArray
@@ -1573,6 +1575,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
         break;
         case 'group':
           var len = jsondata.repeatScheduleIdArray.length
+          var dbId = ""
           var repeat_id_array = jsondata.repeatScheduleIdArray
           var repeat_type_array = jsondata.repeatScheduleTypeArray
           var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray
@@ -1648,7 +1651,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
 
       var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+'<span style="color:#fe4e65;">'+repeat_title+'</span>'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +'시간)</span>'
       var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>'
-      var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-deletetype="'+option+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+      var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-dbid="'+dbId+'" data-deletetype="'+option+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
       schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
     }
 
