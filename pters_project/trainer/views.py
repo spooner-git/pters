@@ -39,6 +39,7 @@ from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLect
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func, get_trainee_repeat_schedule_data_func_from_schedule
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
+from trainer.function import func_get_class_member_list
 
 logger = logging.getLogger(__name__)
 
@@ -362,11 +363,13 @@ class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member_ajax.html'
 
     def get_context_data(self, **kwargs):
+        print(str(timezone.now()))
         context = super(ManageMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         lecture_id = self.request.session.get('lecture_id', '')
         context = get_member_data(context, class_id, None, self.request.user.id)
 
+        print(str(timezone.now()))
         return context
 
 
@@ -385,7 +388,7 @@ def get_member_data(context, class_id, member_id, user_id):
 
     error = None
     class_info = None
-
+    all_member = []
     member_list = []
     member_finish_list = []
     # 강사 정보 가져오기
@@ -395,8 +398,9 @@ def get_member_data(context, class_id, member_id, user_id):
         error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
+
         if member_id is None or member_id == '':
-            all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
         else:
             all_member = MemberTb.objects.filter(member_id=member_id).order_by('name')
 
@@ -404,10 +408,11 @@ def get_member_data(context, class_id, member_id, user_id):
 
             member_data = copy.copy(member_info)
             member_data_finish = copy.copy(member_info)
-
-            try:
-                user = User.objects.get(id=member_info.member_id)
-                if user.is_active:
+            if member_info.user.is_active:
+                member_data.is_active = True
+                member_data_finish.is_active = True
+            else:
+                if member_info.reg_info is None or member_info.reg_info == '':
                     member_data.is_active = True
                     member_data_finish.is_active = True
                 else:
@@ -417,9 +422,6 @@ def get_member_data(context, class_id, member_id, user_id):
                     else:
                         member_data.is_active = True
                         member_data_finish.is_active = True
-
-            except ObjectDoesNotExist:
-                error = None
 
             lecture_finish_check = 0
             # 강좌에 해당하는 수강/회원 정보 가져오기
@@ -625,11 +627,6 @@ def get_member_data(context, class_id, member_id, user_id):
                         else:
                             if member_data_finish.end_date < lecture_info.end_date:
                                 member_data_finish.end_date = lecture_info.end_date
-
-                        # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
-                        #    member_data_finish.lecture_reg_count_yet += lecture_info.lecture_reg_count
-                        #    member_data_finish.lecture_rem_count_yet += lecture_info.lecture_rem_count
-                        #    member_data_finish.lecture_avail_count_yet += lecture_info.lecture_avail_count
 
                         if member_data_finish.mod_dt is None or member_data_finish.mod_dt == '':
                             member_data_finish.mod_dt = lecture_info.mod_dt
@@ -5518,7 +5515,6 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         lecture_id = self.request.session.get('lecture_id', '')
         error = None
         class_info = None
-
         member_list = []
         # 강사 정보 가져오기
         try:
@@ -5527,7 +5523,7 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
             error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
-            all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
 
             for member_info in all_member:
 
@@ -5715,7 +5711,7 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
             error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
-            all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_list(class_id)
 
             for member_info in all_member:
 
