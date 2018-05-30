@@ -96,7 +96,7 @@ $(document).ready(function(){
 
     
 
-
+    /*
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
 		$("#popup_sign_img img").attr("src","");
 		console.log($(this).attr('schedule-id'))
@@ -253,6 +253,7 @@ $(document).ready(function(){
 			})
 		}
 	})
+	*/
 
 
 	/*
@@ -284,6 +285,7 @@ $(document).ready(function(){
 		}
 	})
 	*/
+	
 
 	$('.button_close_popup').click(function(){
 		$(this).parents('.popups').fadeOut('fast')

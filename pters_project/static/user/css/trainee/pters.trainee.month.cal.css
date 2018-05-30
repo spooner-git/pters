@@ -633,6 +633,104 @@ img,a,div,span,p{
 	z-index: 105;
 }
 
+
+
+
+/*월간달력 팝업*/
+#cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
+	display: none;
+	position: fixed;
+	width: 300px;
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	z-index: -2;
+	text-align: center;
+	top: 50%;
+	left:50%;
+	transform: translate(-50%,-50%);
+	z-index: 125;
+}
+
+#cal_popup_plancheck .popup_inner:hover{
+	background : white;
+}
+
+#countNum{
+	position: absolute;
+	font-size: 9px;
+	background:#fe4e65;
+	color: #ffffff;
+	width: 13px;
+	line-height: 13px;
+	border-radius: 50%;
+	text-align: center;
+	font-weight: 500;
+	top: 6px;
+	left: 155px;
+}
+
+.plan_raw{
+	height: 45px;
+	vertical-align: middle;
+	border-bottom: 1px solid #a2a2a2;
+}
+
+.plan_raw span{
+	position: relative;
+	top: unset;
+	left: unset;
+	transform: unset;
+	line-height: 45px;
+	font-size: 14px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.popup_inner_month{
+	background: #ffffff;
+	position: relative;
+	height: 50px;
+	border-top: 1px solid #a2a2a2;
+}
+
+.plan_raw_blank{
+	line-height: 45px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.planchecktime,.plancheckname{
+	display: inline-grid;
+	width: 40%;
+	text-align: left;
+}
+
+.plancheckname{
+	position: relative;
+	font-weight: bold;
+}
+
+.plancheckmorningday{
+	display: inline-grid;
+	width: 20%;
+	font-weight: bold;
+}
+
+.plancheckname img{
+	width: 12px;
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+/*월간달력 팝업*/
+
+
+
+
+
+
+
 #popup_info,#popup_info2,#popup_info3,#popup_info4,#popup_info3_memo{
 	background: #ffffff;
 	position: relative;
@@ -826,6 +924,7 @@ img,a,div,span,p{
 		background: #f4f4f4;
 		margin : 0 auto;
 		width: 450px;
+		padding-top: 10px;
 	}
 
 	.groupreserve{
@@ -851,7 +950,7 @@ img,a,div,span,p{
 		position: relative;
 		margin :0 auto;
 		background: #ffffff;
-		height: 70px;
+		height: 50px;
 		padding-top: 22.5px;
 		padding-bottom: 22.5px;
 		width: 330px;

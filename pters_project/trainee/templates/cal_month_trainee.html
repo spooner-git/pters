@@ -41,6 +41,21 @@
   </div>
   <!--추가/삭제/조회 선택 팝업-->
 
+  <!--[월간전용] 일정조회(강사)팝업 -->
+        <div id="cal_popup_plancheck" class="popups">
+          <div style="position: relative;">
+            <div>
+              <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
+              <span id="countNum"></span>
+            </div>
+            <img src="/static/user/res/ptadd/btn-x.png" alt="" id="btn_close5" class="btn_close_popup" onclick="close_info_popup('cal_popup_plancheck')">
+            <p class="popup_ymdText"></p>
+          </div>
+            <p style="font-size: 11px;color:#fe4e65;"></p>
+          <div class="popup_inner_month" style="height: auto;"></div>
+        </div>
+  <!--[월간전용] 일정조회(강사)팝업 -->
+
   <!--변경 팝업메뉴-->
     <div id="cal_popup">
       <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div><div id="popup_info3_memo"></div>
@@ -88,7 +103,7 @@
         </div>
         <div id="timeGraph" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph personalreserve" style="display: block;">
           <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">예약 가능 시간 
-            <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
+            <div class="tdgraph" style="display: inline-block;margin-bottom:1px;margin-left:3px;width:17px;height:9px;border:1px solid #cccccc;background: #ffffff;"></div>
           </div>
           <table class="timegraphtext">
 
