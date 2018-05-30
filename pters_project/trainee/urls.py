@@ -56,6 +56,10 @@ urlpatterns = [
     # 피터스 탈퇴 확인 페이지로 이동
     url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
 
+    # 회원이 자신이 속한 그룹중 진행중 상태인 그룹 list 조회
+    url(r'^get_trainee_group_ing_list/$', views.GetTraineeGroupIngListViewAjax.as_view(), name='get_trainee_group_ing_list'),
+    url(r'^get_trainee_group_end_list/$', views.GetTraineeGroupEndListViewAjax.as_view(), name='get_trainee_group_end_list'),
+
 ]
 
 
