@@ -45,6 +45,12 @@
       [{{ lecture_reg_count }}],
       "lecture_finish_count" :
       [{{ lecture_finish_count }}],
+      "group_lecture_avail_count" :
+      [{{ group_lecture_avail_count }}],
+      "group_lecture_reg_count" :
+      [{{ group_lecture_reg_count }}],
+      "group_lecture_finish_count" :
+      [{{ group_lecture_finish_count }}],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
