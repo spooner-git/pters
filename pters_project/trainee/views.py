@@ -32,7 +32,7 @@ from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, Sett
 
 from django.utils import timezone
 
-from trainee.function import func_get_trainee_all_schedule_data
+from trainee.function import func_get_trainee_all_schedule_data, func_get_class_lecture_count
 
 logger = logging.getLogger(__name__)
 
@@ -632,8 +632,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #    error = '수강정보를 확인해 주세요.'
 
         if error is None:
-            context = func_get_trainee_all_schedule_data(context, self.request.user.id,
-                                                                 self.request.user.last_name+self.request.user.first_name, class_id, start_date, end_date)
+            context = func_get_trainee_all_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
 
             # 회원 setting 값 로드
             context = get_trainee_setting_data(context, self.request.user.id)
@@ -1485,7 +1484,6 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         day = request.session.get('day', '')
 
         class_id = self.request.session.get('class_id', '')
-        lecture_id = self.request.session.get('lecture_id', '')
         today = datetime.date.today()
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -1494,9 +1492,9 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
 
-        context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
-                                                             self.request.user.last_name+self.request.user.first_name, class_id, start_date,
-                                                             end_date)
+        context = func_get_trainee_all_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_class_lecture_count(context, class_id, self.request.user.id)
+
         if context['error'] is not None:
             logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
             messages.error(self.request, context['error'])
@@ -1507,7 +1505,6 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         date = request.POST.get('date', '')
         day = request.POST.get('day', '')
         class_id = self.request.session.get('class_id', '')
-        lecture_id = self.request.session.get('lecture_id', '')
         today = datetime.date.today()
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -1518,9 +1515,9 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
 
         context = super(ReadTraineeScheduleViewAjax, self).get_context_data(**kwargs)
 
-        context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
-                                                             self.request.user.last_name+self.request.user.first_name, class_id, start_date,
-                                                             end_date)
+        context = func_get_trainee_all_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_class_lecture_count(context, class_id, self.request.user.id)
+
         if context['error'] is not None:
             logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
             messages.error(self.request, context['error'])

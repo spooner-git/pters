@@ -230,8 +230,20 @@
 
             var classHourArray = ['{{ class_info.class_hour }}'];
 
+      var group_schedule_id = [{% for group_schedule_id_info in group_schedule_id %}"{{ group_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var group_schedule_group_id = [{% for group_schedule_group_id_info in group_schedule_group_id %}"{{ group_schedule_group_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var group_schedule_group_name = [{% for group_schedule_name_info in group_schedule_name %}"{{ group_schedule_name_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var group_schedule_max_member_num = [{% for group_schedule_max_member_num_info in group_schedule_max_member_num %}"{{ group_schedule_max_member_num_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var group_schedule_current_member_num = [{% for group_schedule_current_member_num_info in group_schedule_current_member_num %}"{{ group_schedule_current_member_num_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var group_schedule_start_datetime = [{% for group_schedule_start_datetime_info in group_schedule_start_datetime %}"{{ group_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var group_schedule_end_datetime = [{% for group_schedule_end_datetime_info in group_schedule_end_datetime %}"{{ group_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var group_schedule_finish_check = [{% for group_schedule_finish_check_info in group_schedule_finish_check %}"{{ group_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var group_schedule_note = [{% for group_schedule_note_info in group_schedule_note %}"{{ group_schedule_note_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
 
 
+      var lecture_avail_count = [{{ lecture_avail_count }}];
+      var lecture_reg_count = [{{ lecture_reg_count }}];
+      var lecture_finish_count = [{{ lecture_finish_count }}];
             var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
             var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
