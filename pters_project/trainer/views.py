@@ -1720,7 +1720,7 @@ def resend_member_lecture_info_logic(request):
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강 정보 연동', log_how='재요청',
+                         log_info='수강 정보 연동', log_how='요청',
                          reg_dt=timezone.now(), use=1)
         log_data.save()
 
