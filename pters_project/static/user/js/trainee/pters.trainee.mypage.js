@@ -277,11 +277,13 @@ $(document).ready(function(){
     	var $Loc = targetHTML
     	var tableHeader = '<div class="lecture_history_table_header">'+
     						'<div class="cell1">No.</div>'+
+    						'<div class="cell3">등록명</div>'+
+    						'<div class="cell3">수업당 인원</div>'+
     						'<div class="cell3">등록 날짜</div>'+
     						'<div class="cell3">종료 날짜</div>'+
-    						'<div class="cell4">등록 횟수</div>'+
-    						'<div class="cell4">남은 횟수</div>'+
-    						'<div class="cell4">상태</div>'+
+    						'<div class="cell3">등록 횟수</div>'+
+    						'<div class="cell3">남은 횟수</div>'+
+    						'<div class="cell3">상태</div>'+
     					   '</div>'
     	var html = []
     	for(var i=0; i<jsondata.countArray.length; i++){
@@ -293,12 +295,28 @@ $(document).ready(function(){
     			var sdateFormat = jsondata.startArray[i]
     			var edateFormat =jsondata.endArray[i]
     		}
-    		var sdate        = '<div class="cell3">'+sdateFormat+'</div>'
-    		var edate  		 = '<div class="cell3">'+edateFormat+'</div>'
+
+    		var typename = "1:1레슨"
+    		var maxnumber = "1"
+    		if(jsondata.groupNameArray[i] != ""){
+    			var typename = jsondata.groupNameArray[i]
+    			var maxnumber = jsondata.groupMemberNumArray[i]
+    		}
+    		var stateColor = ""
+    		if(jsondata.lectureStateNameArray[i] == "진행중"){
+    			var stateColor = "state_PE"
+    		}
+    		
+    		var type         = '<div class="cell3">'+typename+'</div>'
+    		var maxnum		 = '<div class="cell3">'+maxnumber+'</div>'
+    		//var sdate        = '<div class="cell3">'+sdateFormat+'</div>'
+    		//var edate  		 = '<div class="cell3">'+edateFormat+'</div>'
+    		var sdate        = '<div class="cell3">'+jsondata.startArray[i]+'</div>'
+    		var edate  		 = '<div class="cell3">'+jsondata.endArray[i]+'</div>'
     		var regCount     = '<div class="cell4">'+jsondata.countArray[i]+'</div>'
     		var remCount     = '<div class="cell4">'+jsondata.remCountArray[i]+'</div>'
-    		var state     = '<div class="cell4">'+jsondata.lectureStateNameArray[i]+'</div>'
-    		html.push('<div class="lecture_history_table_row">'+number+sdate+edate+regCount+remCount+state+'</div>')
+    		var state     = '<div class="cell4 '+stateColor+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+    		html.push('<div class="lecture_history_table_row">'+number+type+maxnum+sdate+edate+regCount+remCount+state+'</div>')
     	}
     	$Loc.html(tableHeader+html.join(''))
     }
