@@ -1101,8 +1101,8 @@ img,a,div,span,p{
 	}
 
 	#calendar td:hover{
-		background : #eaeaea;
-		opacity: 0.2;
+		background : #fffcfc;
+		opacity: 0.9;
 	}
 	
 	#ymdText{
