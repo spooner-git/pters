@@ -117,13 +117,20 @@ urlpatterns = [
 
     url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
 
-    # 그룹 기능
+    # 그룹 기능 #####
+    # 그룹 추가
     url(r'^add_group_info/$', views.add_group_info_logic, name='add_group_info'),
+    # 진행중 그룹 list 조회
     url(r'^get_group_ing_list/$', views.GetGroupIngListViewAjax.as_view(), name='get_group_ing_list'),
+    # 완료된 그룹 list 조회
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
+    # 그룹 삭제 - 검토 필요
     url(r'^delete_group_info/$', views.delete_group_info_logic, name='delete_group_info'),
+    # 그룹 수정 - 검토 필요
     url(r'^update_group_info/$', views.update_group_info_logic, name='update_group_info'),
+    # 그룹에 해당하는 회원 조회
     url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
+    # 그룹에 해당하는 회원 정보 삭제
     url(r'^delete_group_member_info/$', views.delete_group_member_info_logic, name='delete_group_member_info'),
 
     # 그룹 회원가입

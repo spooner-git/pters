@@ -2601,11 +2601,16 @@ function send_add_groupmember_plan(){
       success:function(data){
           TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data)
-          scheduleTime('class', jsondata)
-          scheduleTime('off', jsondata)
-          scheduleTime('group', jsondata)
-          get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
-          alert('그룹일정 참석자 정상 등록되었습니다.')
+            if(jsondata.messageArray.length>0){
+              $('#errorMessageBar').show()
+              $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+              scheduleTime('class', jsondata)
+              scheduleTime('off', jsondata)
+              scheduleTime('group', jsondata)
+              get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
+              alert('그룹일정 참석자 정상 등록되었습니다.')
+            }
       },
 
       complete:function(){

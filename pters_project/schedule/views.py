@@ -1774,8 +1774,13 @@ def add_member_group_schedule_logic(request):
 
     if error is None:
         lecture_id = func_get_group_lecture_id(group_id, member_info.member_id)
-        if lecture_id == '':
+        if lecture_id is None or lecture_id == '':
             error = '회원님의 예약 가능한 일정이 없습니다.'
+
+    if error is None:
+        group_schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id, lecture_tb__member_id=member_id)
+        if len(group_schedule_data) != 0:
+            error = '회원님이 이미 그룹 일정에 포함되어있습니다.'
 
     if error is None:
         error = func_check_group_available_member_before(class_id, group_id, group_schedule_id)
