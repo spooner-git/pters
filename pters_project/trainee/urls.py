@@ -60,6 +60,12 @@ urlpatterns = [
     url(r'^get_trainee_group_ing_list/$', views.GetTraineeGroupIngListViewAjax.as_view(), name='get_trainee_group_ing_list'),
     url(r'^get_trainee_group_end_list/$', views.GetTraineeGroupEndListViewAjax.as_view(), name='get_trainee_group_end_list'),
 
+    # 회원 스케쥴 정보 전부 가져오기
+    url(r'^get_trainee_all_schedule/$', views.GetTraineeAllScheduleView.as_view(), name='get_trainee_all_schedule'),
+    # 회원 남은 횟수 정보 가져오기
+    url(r'^get_trainee_count/$', views.GetTraineeCountView.as_view(), name='get_trainee_count'),
+
+
 ]
 
 

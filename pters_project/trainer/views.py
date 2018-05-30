@@ -5042,7 +5042,7 @@ def add_group_member_logic(request):
     if error is None:
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+' 그룹에 회원을', log_how='추가',
+                         log_info=group_info.name+' 그룹에 회원을', log_how='등록',
                          reg_dt=timezone.now(), use=1)
         log_data.save()
 
