@@ -277,12 +277,12 @@ $(document).ready(function(){
     	var $Loc = targetHTML
     	var tableHeader = '<div class="lecture_history_table_header">'+
     						'<div class="cell1">No.</div>'+
-    						'<div class="cell3">등록명</div>'+
+    						'<div class="cell2">등록명</div>'+
     						'<div class="cell3">수업당 인원</div>'+
-    						'<div class="cell3">등록 날짜</div>'+
-    						'<div class="cell3">종료 날짜</div>'+
-    						'<div class="cell3">등록 횟수</div>'+
-    						'<div class="cell3">남은 횟수</div>'+
+    						'<div class="cell3">등록일</div>'+
+    						'<div class="cell3">종료일</div>'+
+    						'<div class="cell4">등록 횟수</div>'+
+    						'<div class="cell4">남은 횟수</div>'+
     						'<div class="cell3">상태</div>'+
     					   '</div>'
     	var html = []
@@ -307,7 +307,7 @@ $(document).ready(function(){
     			var stateColor = "state_PE"
     		}
     		
-    		var type         = '<div class="cell3">'+typename+'</div>'
+    		var type         = '<div class="cell2">'+typename+'</div>'
     		var maxnum		 = '<div class="cell3">'+maxnumber+'</div>'
     		//var sdate        = '<div class="cell3">'+sdateFormat+'</div>'
     		//var edate  		 = '<div class="cell3">'+edateFormat+'</div>'
@@ -315,7 +315,7 @@ $(document).ready(function(){
     		var edate  		 = '<div class="cell3">'+jsondata.endArray[i]+'</div>'
     		var regCount     = '<div class="cell4">'+jsondata.countArray[i]+'</div>'
     		var remCount     = '<div class="cell4">'+jsondata.remCountArray[i]+'</div>'
-    		var state     = '<div class="cell4 '+stateColor+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+    		var state     = '<div class="cell3 '+stateColor+'">'+jsondata.lectureStateNameArray[i]+'</div>'
     		html.push('<div class="lecture_history_table_row">'+number+type+maxnum+sdate+edate+regCount+remCount+state+'</div>')
     	}
     	$Loc.html(tableHeader+html.join(''))
