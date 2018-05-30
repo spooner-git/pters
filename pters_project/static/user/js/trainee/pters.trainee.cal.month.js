@@ -98,6 +98,7 @@ $(document).ready(function(){
 
 
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
+		$("#popup_sign_img img").attr("src","");
 		console.log($(this).attr('schedule-id'))
 		$('#cal_popup').attr('data-date',$(this).attr('data-date'))
 		if($(this).hasClass('available')){
@@ -238,8 +239,9 @@ $(document).ready(function(){
 				$('#popup_info').text(infoText)
 				$('#popup_info2').text(infoText2)
 				$('#popup_info3_memo').text(infoText3)
+				$('#popup_sign_img').hide()
+				$('#popup_text1').show()
 				$('#popup_text1 span').addClass("limited")
-
 			}
 		}else if($(this).hasClass('option_notavailable')){
 
