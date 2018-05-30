@@ -598,7 +598,7 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	*/
-	z-index: -2;
+	z-index: 200;
 	text-align: center;
 }
 
@@ -614,7 +614,7 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	*/
-	z-index: -2;
+	z-index: 200;
 	text-align: center;
 }
 
@@ -630,7 +630,7 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	*/
-	z-index: -2;
+	z-index: 200;
 	text-align: center;
 }
 
@@ -654,7 +654,6 @@ img,a,div,span,p{
 	width: 300px;
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
-	z-index: -2;
 	text-align: center;
 	top: 50%;
 	left:50%;
@@ -898,14 +897,15 @@ img,a,div,span,p{
 		position: fixed;
 		background: transparent;
 		border-color: transparent;
-		top: 35%;
-		left: 0;
+		top: 50%;
+		left: 50%;
 		width: 100%;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;
 		*/
-		z-index: -2;
+		transform: translate(-50%, -50%);
+		z-index: 200;
 		text-align: center;
 	}
 
@@ -914,14 +914,15 @@ img,a,div,span,p{
 		position: fixed;
 		background: transparent;
 		border-color: transparent;
-		top: 35%;
-		left: 0;
+		top: 50%;
+		left: 50%;
 		width: 100%;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;
 		*/
-		z-index: -2;
+		transform: translate(-50%, -50%);
+		z-index: 200;
 		text-align: center;
 	}
 
@@ -930,25 +931,26 @@ img,a,div,span,p{
 		position: fixed;
 		background: transparent;
 		border-color: transparent;
-		top: 35%;
-		left: 0;
+		top: 50%;
+		left: 50%;
 		width: 100%;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;
 		*/
-		z-index: -2;
+		transform: translate(-50%, -50%);
+		z-index: 200;
 		text-align: center;
 	}
 
 	#addpopup{
 		position: fixed;
 		display: none;
-		left: 0;
-		top: 30%;
-		width: 100%;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
 		background: transparent;
-		z-index: 105;
+		z-index: 250;
 	}
 
 	#dateSelector, #offStartTime, #offDuration, #submitBtn, .mode_switch_button_wrap_cal{
