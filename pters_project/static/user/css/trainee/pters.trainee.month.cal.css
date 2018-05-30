@@ -8,6 +8,17 @@ body{
 	background-color: #ffffff;
 }
 
+.pshade,.mshade{
+	position: fixed;
+	display: none;
+	background: black;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	opacity: 0.7;
+	z-index: -100
+}
+
 #blank_member_popup{
 	position: absolute;
 	width: 90%;
@@ -462,7 +473,7 @@ img,a,div,span,p{
 .balloon{
 	position: absolute;
 	background: transparent;
-	color: #9e9e9e;
+	color: #6f6f6f;
 	height: 16px;
 	width: 90%;
 	bottom: 5px;
@@ -587,7 +598,7 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	*/
-	z-index: -2;
+	z-index: 200;
 	text-align: center;
 }
 
@@ -603,7 +614,7 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	*/
-	z-index: -2;
+	z-index: 200;
 	text-align: center;
 }
 
@@ -619,7 +630,7 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	*/
-	z-index: -2;
+	z-index: 200;
 	text-align: center;
 }
 
@@ -643,7 +654,6 @@ img,a,div,span,p{
 	width: 300px;
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
-	z-index: -2;
 	text-align: center;
 	top: 50%;
 	left:50%;
@@ -706,7 +716,7 @@ img,a,div,span,p{
 	left: unset;
 	transform: unset;
 	line-height: 45px;
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: bold;
 	cursor: pointer;
 }
@@ -724,21 +734,24 @@ img,a,div,span,p{
 	font-weight: bold;
 }
 
-.planchecktime,.plancheckname{
+.planchecktime, .plancheckname{
 	display: inline-grid;
-	width: 40%;
 	text-align: left;
+}
+
+.planchecktime{
+	width: 34%;
 }
 
 .plancheckname{
 	position: relative;
-	font-weight: bold;
+	width: 46%;
+	text-overflow: ellipsis;
 }
 
 .plancheckmorningday{
 	display: inline-grid;
 	width: 20%;
-	font-weight: bold;
 }
 
 .plancheckname img{
@@ -884,14 +897,15 @@ img,a,div,span,p{
 		position: fixed;
 		background: transparent;
 		border-color: transparent;
-		top: 35%;
-		left: 0;
+		top: 50%;
+		left: 50%;
 		width: 100%;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;
 		*/
-		z-index: -2;
+		transform: translate(-50%, -50%);
+		z-index: 200;
 		text-align: center;
 	}
 
@@ -900,14 +914,15 @@ img,a,div,span,p{
 		position: fixed;
 		background: transparent;
 		border-color: transparent;
-		top: 35%;
-		left: 0;
+		top: 50%;
+		left: 50%;
 		width: 100%;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;
 		*/
-		z-index: -2;
+		transform: translate(-50%, -50%);
+		z-index: 200;
 		text-align: center;
 	}
 
@@ -916,25 +931,26 @@ img,a,div,span,p{
 		position: fixed;
 		background: transparent;
 		border-color: transparent;
-		top: 35%;
-		left: 0;
+		top: 50%;
+		left: 50%;
 		width: 100%;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;
 		*/
-		z-index: -2;
+		transform: translate(-50%, -50%);
+		z-index: 200;
 		text-align: center;
 	}
 
 	#addpopup{
 		position: fixed;
 		display: none;
-		left: 0;
-		top: 30%;
-		width: 100%;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
 		background: transparent;
-		z-index: 105;
+		z-index: 250;
 	}
 
 	#dateSelector, #offStartTime, #offDuration, #submitBtn, .mode_switch_button_wrap_cal{
@@ -1254,36 +1270,46 @@ img,a,div,span,p{
 	}
 
 	.balloon{
-		position: absolute;
-		background: #e4e4e4;
-		height: 21px;
-		width: 40px;
-		top: 43px;
-		border-radius: 2px;
-		font-size: 13.5px;
+		position: relative;
+		/*background: #e4e4e4;
+		width: 40px;*/
+		height: auto;
+		width: 95%;
+		font-size: 12.5px;
 		font-weight: 400;
 		padding-top: 1px;
 		z-index: -2;
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		text-align: center;
+	}
+	.balloon div{
+		background: #e4e4e4;
+		margin: 1px;
+		border-radius: 2px;
 	}
 
 	.blackballoon{
-		position: absolute;
+		position: relative;
 		color: #ffffff;
-		background: #3b3d3d;
-		height: 21px;
-		width: 40px;
-		top: 43px;
-		border-radius: 2px;
-		font-size: 13.5px;
+		/*background: #3b3d3d;
+		width: 40px;*/
+		height: auto;
+		width: 95%;
+		font-size: 12.5px;
 		font-weight: 300;
 		padding-top: 1px;
 		z-index: -2;
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		text-align: center;
+	}
+	.blackballoon div{
+		background: #3b3d3d;
+		margin: 1px;
+		border-radius: 2px;
 	}
 
 	.holidayName{
@@ -1382,9 +1408,12 @@ img,a,div,span,p{
 
 	#calendar td{
 		vertical-align: unset;
+		height: 100%;
 		padding-top: 3px;
-		padding-right: 10px;
 		cursor: pointer;
+	}
+	#calendar td span:nth-of-type(2){
+		margin-right: 10px;
 	}
 
 	.today{
