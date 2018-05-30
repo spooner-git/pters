@@ -810,6 +810,51 @@ function alarm_change_easy_read(data){ // data : 2018-04-11 02:00:00/2018-04-11 
 
 
 
+///////////////////////////////////////////////////여기서부터 회원모드!!///////////////////////////////////////////////////
+function get_trainee_participate_group(use, callback){
+  $.ajax({
+        url: '/trainee/get_trainee_group_ing_list/',
+        //data: $('#pt-add-form').serialize(),
+    dataType : 'html',
+    //type:'POST',
+
+        beforeSend:function(){
+          beforeSend();
+        },
+
+        success:function(data){
+          var jsondata = JSON.parse(data);
+          console.log('get_trainee_group_ing_list',jsondata)
+          if(jsondata.messageArray.length>0){
+              $('#errorMessageBar').show()
+              $('#errorMessageText').text(jsondata.messageArray)
+          }else{
+            if(use == "callback"){
+              callback(jsondata)
+            }
+
+            //ajaxClassTime();
+            //close_reserve_popup()
+          }
+          
+    },
+
+        complete:function(){
+          completeSend()
+        },
+
+        error:function(){
+          console.log('server error')
+        }
+    })
+}
+
+
+///////////////////////////////////////////////////여기서부터 회원모드!!///////////////////////////////////////////////////
+
+
+
+
 ///////////////////////////////////////////////////AJAX 속도측정테스트 코드///////////////////////////////////////////////////
 function TEST_CODE_FOR_AJAX_TIMER_starts(yourMessage){
   console.log('S************************************** Ajax Sending Start......'+yourMessage)

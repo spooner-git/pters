@@ -138,14 +138,15 @@ body{
 				}
 				.cell2{
 					/*width: 40%;*/
-					width: 35%;
+					width: 18%;
 				}
 				.cell3{
-					width: 20%;
+					/*width: 20%;*/
+					width: 14%;
 				}
 				.cell4{
 					/*width: 15%;*/
-					width: 12%;
+					width: 10%;
 				}
 				.cell5{
 					width: 30%;
@@ -605,8 +606,8 @@ body{
 		display:none;
 	}
 
-	.lecture_history_table_header,.lecture_history_table_row{
-		font-size: 14px;
+	.lecture_history_table_header, .lecture_history_table_row{
+		font-size: 13px;
 	}
 
 	#menuName{
