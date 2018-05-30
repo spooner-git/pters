@@ -52,9 +52,9 @@ def func_get_trainee_all_schedule_data(context, user_id, class_id, start_date, e
 
         for member_lecture_info in member_lecture_data:
             idx += 1
-            schedule_data = ScheduleTb.objects.get(class_tb_id=class_id, en_dis_type='1',
-                                                   lecture_tb_id=member_lecture_info,
-                                                   start_dt__gte=start_date, end_dt__lt=end_date).order_by('start_dt')
+            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type='1',
+                                                      lecture_tb_id=member_lecture_info.lecture_tb_id,
+                                                      start_dt__gte=start_date, end_dt__lt=end_date).order_by('start_dt')
             idx2 = 0
 
             for schedule_info in schedule_data:
@@ -100,9 +100,9 @@ def func_get_trainee_all_schedule_data(context, user_id, class_id, start_date, e
                                                             en_dis_type='1',
                                                             start_dt__gte=start_date,
                                                             start_dt__lt=end_date).order_by('start_dt')
-
             for group_schedule_info in group_schedule_data:
                 # lecture schedule id 셋팅
+
                 group_schedule_id.append(group_schedule_info.schedule_id)
                 group_schedule_start_datetime.append(str(group_schedule_info.start_dt))
                 group_schedule_end_datetime.append(str(group_schedule_info.end_dt))
@@ -134,7 +134,7 @@ def func_get_trainee_all_schedule_data(context, user_id, class_id, start_date, e
                                                   end_dt__lt=end_date).order_by('-lecture_tb__start_date','start_dt')
 
         for schedule_info in schedule_data:
-            if schedule_info.group_tb is None or schedule_info.group_tb == '':
+            if schedule_info.group_tb_id is None or schedule_info.group_tb_id == '':
                 # on 스케쥴
                 if schedule_info.en_dis_type == '1':
                     if schedule_info.lecture_tb.member_id != user_id:
@@ -231,3 +231,40 @@ def func_get_trainee_group_ing_list(class_id, user_id):
                 group_list.append(group_lecture_info)
 
     return group_list
+
+
+def func_get_class_lecture_count(context, class_id, user_id):
+    error = None
+    if class_id is None or class_id == '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    lecture_reg_count_sum = 0
+    lecture_rem_count_sum = 0
+    lecture_avail_count_sum = 0
+
+    if error is None:
+        # 강사에 해당하는 강좌 정보 불러오기
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                     lecture_tb__member_id=user_id, use=1).order_by('lecture_tb')
+
+    if error is None:
+        # 강사 클래스의 반복일정 불러오기
+        if len(lecture_list) > 0:
+            for idx, lecture_list_info in enumerate(lecture_list):
+                lecture_info = lecture_list_info.lecture_tb
+                try:
+                    MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id,
+                                                lecture_tb=lecture_info.lecture_id, use=1)
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
+
+                if lecture_info.state_cd == 'IP':
+                    lecture_reg_count_sum += lecture_info.lecture_reg_count
+                    lecture_rem_count_sum += lecture_info.lecture_rem_count
+                    lecture_avail_count_sum += lecture_info.lecture_avail_count
+
+    context['lecture_reg_count'] = lecture_reg_count_sum
+    context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
+    context['lecture_avail_count'] = lecture_avail_count_sum
+
+    return context
