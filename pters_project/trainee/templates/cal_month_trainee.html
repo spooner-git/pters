@@ -77,21 +77,34 @@
 
     <!-- 일정추가 팝업 -->
     <div id="addpopup">
-
         <div id="dateSelector">
-        <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close4"></div><div id="popup_info4"></div>
-        <div id="dateInfo"></div>
+          <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close4"></div><div id="popup_info4"></div>
+          <div id="dateInfo"></div>
         </div>
 
-        <div id="timeGraph" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph" style="display: block;">
-          <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">예약 가능 시간 <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
+        <div class="mode_switch_button_wrap_cal" style="margin-top: 0;"> 
+          <div class="mode_switch_button mode_active" data-page="personalreserve">1:1 레슨</div>
+          <div class="mode_switch_button" data-page="groupreserve">그룹 레슨</div>
+        </div>
+        <div id="timeGraph" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph personalreserve" style="display: block;">
+          <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">예약 가능 시간 
+            <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
+          </div>
           <table class="timegraphtext">
 
           </table>
           <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
         </div>
 
-        <div id="offStartTime" class="ptaddbox_nomargin addpopupinner" style="position:relative;">
+        <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph groupreserve">
+          <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">그룹
+            <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
+          </div>
+          <div class="ptersCheckbox"><div></div></div>
+          <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
+        </div>
+
+        <div id="offStartTime" class="ptaddbox_nomargin addpopupinner personalreserve" style="position:relative;">
           <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
           <div id="starttimesSelected" class="dropdown_trainee_popup">
             <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>

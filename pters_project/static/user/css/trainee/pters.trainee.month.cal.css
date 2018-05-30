@@ -814,18 +814,22 @@ img,a,div,span,p{
 		z-index: 105;
 	}
 
-	#dateSelector,#offStartTime,#offDuration,#submitBtn{
+	#dateSelector, #offStartTime, #offDuration, #submitBtn, .mode_switch_button_wrap_cal{
 		position: relative;
 		background: #ffffff;
 		margin : 0 auto;
 		width: 450px;
 	}
 
-	#timeGraph{
+	#timeGraph.personalreserve, .groupreserve{
 		position: relative;
 		background: #f4f4f4;
 		margin : 0 auto;
 		width: 450px;
+	}
+
+	.groupreserve{
+		display: none;
 	}
 
 	#popup_info,#popup_info2,#popup_info3,#popup_info4, #popup_info3_memo{
