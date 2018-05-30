@@ -2158,14 +2158,14 @@ class GetTraineeGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
 
         lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id,
                                                       lecture_tb__state_cd='IP',
-                                                      use=1).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
+                                                      auth_cd='VIEW',
+                                                      use=1).order_by('-lecture_tb__start_date')
 
         for lecture_info in lecture_data:
             group_lecture_check = 0
             try:
                 group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
-                                                                lecture_tb_id=lecture_info.lecture_tb_id,
-                                                                use=1)
+                                                                lecture_tb_id=lecture_info.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
                 group_lecture_check = 1
 
