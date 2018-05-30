@@ -5184,28 +5184,6 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
 
     def get(self, request, *args, **kwargs):
         context = super(GetGroupScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_schedule_id = request.GET.get('group_schedule_id', '')
-
-        group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')
-        for group_schedule_info in group_schedule_data:
-            member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
-            if member_info.reg_info is None or str(member_info.reg_info) != str(self.request.user.id):
-                lecture_count = MemberLectureTb.objects.filter(auth_cd='VIEW', use=1).count()
-                if lecture_count == 0:
-                    member_info.sex = ''
-                    member_info.birthday_dt = ''
-                    member_info.phone = '***-****-'+member_info.phone[7:]
-                    member_info.user.email = ''
-            group_schedule_info.member_info = member_info
-            group_schedule_info.start_dt = str(group_schedule_info.start_dt)
-            group_schedule_info.end_dt = str(group_schedule_info.end_dt)
-            if group_schedule_info.state_cd == 'PE':
-                group_schedule_info.finish_check = 1
-            else:
-                group_schedule_info.finish_check = 0
-
-        context['schedule_data'] = group_schedule_data
-
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -5241,97 +5219,6 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
     def get(self, request, *args, **kwargs):
         context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        group_id = request.GET.get('group_id', '')
-        error = None
-        member_data = []
-
-        lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1)
-
-        for lecture_info in lecture_list:
-            try:
-                member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=1)
-            except ObjectDoesNotExist:
-                error = '회원 정보를 불러오지 못했습니다.'
-
-            if error is None:
-                member_info.member.lecture_tb = lecture_info.lecture_tb
-                if member_info.member.birthday_dt is None or member_info.member.birthday_dt == '':
-                    member_info.member.birthday_dt = ''
-                else:
-                    member_info.member.birthday_dt = str(member_info.member.birthday_dt)
-
-                if member_info.member.reg_info is None or str(member_info.member.reg_info) != str(request.user.id):
-                    if member_info.auth_cd != 'VIEW':
-                        member_info.member.sex = ''
-                        member_info.member.birthday_dt = ''
-                        member_info.member.phone = '***-****-' + member_info.member.phone[7:]
-
-                check_add_flag = 0
-                for member_test in member_data:
-                    if member_test.user.id == member_info.member.user.id:
-
-                        if member_test.lecture_tb.lecture_available_id == '':
-                            if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-
-                        if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None or member_test.lecture_tb.start_date == '':
-                            member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                            if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() > lecture_info.lecture_tb.start_date:
-                                member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                                if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                    member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-
-                        if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() is None or member_test.lecture_tb.end_date == '':
-                            member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() < lecture_info.lecture_tb.end_date:
-                                member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
-                            member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
-                                member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
-
-                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                      '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
-                            member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                          '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
-                                member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
-
-                        member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
-                        member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
-                        member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
-                        check_add_flag = 1
-
-                if check_add_flag == 0:
-                    member_info.member.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                    member_info.member.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                    member_info.member.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt).split('.')[0]
-                    member_info.member.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt).split('.')[0]
-
-                    member_info.member.lecture_tb.lecture_reg_count = lecture_info.lecture_tb.lecture_reg_count
-                    member_info.member.lecture_tb.lecture_rem_count = lecture_info.lecture_tb.lecture_rem_count
-                    member_info.member.lecture_tb.lecture_avail_count = lecture_info.lecture_tb.lecture_avail_count
-                    member_info.member.lecture_tb.lecture_available_id = ''
-                    if lecture_info.lecture_tb.lecture_avail_count > 0:
-                        member_info.member.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-                    member_data.append(member_info.member)
-
-        if error is not None:
-
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
-            messages.error(request, error)
-
-        context['member_data'] = member_data
-
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):

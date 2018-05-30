@@ -26,7 +26,7 @@ from el_pagination.views import AjaxListView
 from configs.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
 from schedule.functions import func_send_push_trainee
-from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, MemberClassTb
+from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, MemberClassTb, GroupTb, GroupLectureTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
 
@@ -2143,3 +2143,110 @@ class DeleteTraineeAccountView(AccessTestMixin, TemplateView):
         context = super(DeleteTraineeAccountView, self).get_context_data(**kwargs)
 
         return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetTraineeGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_group_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetTraineeGroupIngListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        group_list = []
+        # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=1)
+
+        lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id,
+                                                      lecture_tb__state_cd='IP',
+                                                      use=1).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
+
+        for lecture_info in lecture_data:
+            group_lecture_check = 0
+            try:
+                group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
+                                                                lecture_tb_id=lecture_info.lecture_tb_id,
+                                                                use=1)
+            except ObjectDoesNotExist:
+                group_lecture_check = 1
+
+            if group_lecture_check == 0:
+                check = 0
+
+                try:
+                    state_cd_nm = CommonCdTb.objects.get(common_cd=group_lecture_info.group_tb.state_cd)
+                    group_lecture_info.group_tb.state_cd_nm = state_cd_nm.common_cd_nm
+                except ObjectDoesNotExist:
+                    error = '그룹 정보를 불러오지 못했습니다.'
+
+                if len(group_list) == 0:
+                    group_list.append(group_lecture_info)
+
+                for group_info in group_list:
+
+                    if group_info.group_tb_id == group_lecture_info.group_tb_id:
+                        check = 1
+                if check == 0:
+                    group_list.append(group_lecture_info)
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['group_data'] = group_list
+
+        return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetTraineeGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_group_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetTraineeGroupEndListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        group_list = []
+        # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=1)
+
+        lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id,
+                                                      lecture_tb__state_cd='IP',
+                                                      use=1).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
+
+        for lecture_info in lecture_data:
+            group_lecture_check = 0
+            try:
+                group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
+                                                                lecture_tb_id=lecture_info.lecture_tb_id,
+                                                                use=1)
+            except ObjectDoesNotExist:
+                group_lecture_check = 1
+
+            if group_lecture_check == 0:
+                check = 0
+
+                try:
+                    state_cd_nm = CommonCdTb.objects.get(common_cd=group_lecture_info.group_tb.state_cd)
+                    group_lecture_info.group_tb.state_cd_nm = state_cd_nm.common_cd_nm
+                except ObjectDoesNotExist:
+                    error = '그룹 정보를 불러오지 못했습니다.'
+
+                if len(group_list) == 0:
+                    group_list.append(group_lecture_info)
+
+                for group_info in group_list:
+
+                    if group_info.group_tb_id == group_lecture_info.group_tb_id:
+                        check = 1
+                if check == 0:
+                    group_list.append(group_lecture_info)
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['group_data'] = group_list
+
+        return context
+
