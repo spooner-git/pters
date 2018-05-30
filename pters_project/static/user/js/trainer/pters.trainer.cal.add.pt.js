@@ -394,8 +394,8 @@ $(document).ready(function(){
           $(this).addClass('typeSelected')
           $(this).siblings('.toggleBtnWrap').removeClass('typeSelected')
           if($(this).attr('id').split('_')[1]=="ptadd"){
-              $('#memberName_mini').css('display','inline')
-              $('#remainCount_mini').show('fast')
+              $('#memberName_mini, #remainCount_mini').css('display','inline')
+              //$('#remainCount_mini').show('fast')
               $("#durationsSelected .btn:first-child").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>"+'선택'+"</span>").val("");
               $("#id_time_duration").val('')
               planAddView($("#id_time_duration").val())
@@ -406,8 +406,8 @@ $(document).ready(function(){
                 addTypeSelect = "ptadd"
               }
           }else if($(this).attr('id').split('_')[1]=="offadd"){
-              $('#memberName_mini').hide('fast')
-              $('#remainCount_mini').hide('fast')
+              $('#memberName_mini, #remainCount_mini').css('display','none')
+              //$('#remainCount_mini').hide('fast')
               $("#durationsSelected .btn:first-child").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>"+'선택'+"</span>").val("");
               $("#id_time_duration_off").val('')
               planAddView($("#id_time_duration_off").val())  
