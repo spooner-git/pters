@@ -91,41 +91,10 @@ $(document).ready(function(){
     });
 
     $(document).on('click','.admonth',function(){
-    	$.ajax({
-	          url: '/trainee/get_trainee_group_ing_list/',
-	          //data: $('#pt-add-form').serialize(),
-			  dataType : 'html',
-			  type:'POST',
-
-	          beforeSend:function(){
-	          	beforeSend();
-	          },
-
-	          success:function(data){
-	          	var jsondata = JSON.parse(data);
-	          	console.log('get_trainee_group_ing_list',jsondata)
-	          	if(jsondata.messageArray.length>0){
-	              	$('#errorMessageBar').show()
-	              	$('#errorMessageText').text(jsondata.messageArray)
-	            }else{
-					for (var i=0; i<jsondata.pushArray.length; i++){
-						//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-					}
-					//ajaxClassTime();
-					//close_reserve_popup()
-	            }
-	            
-			  },
-
-	          complete:function(){
-	          	completeSend()
-	          },
-
-	          error:function(){
-	            console.log('server error')
-	          }
-        })
+    	get_trainee_participate_group()
     })
+
+    
 
 
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
