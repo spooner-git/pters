@@ -589,10 +589,10 @@ img,a,div,span,p{
 #cal_popup{
 	display: none;
 	position: fixed;
-	background: transparent;
+	background: #ffffff;
 	border-color: transparent;
-	top: 35%;
-	left: 10%;
+	top: 50%;
+	left: 50%;
 	width: 80%;
 	/*
 	background-color: #ffffff;
@@ -895,11 +895,11 @@ img,a,div,span,p{
 	#cal_popup{
 		display: none;
 		position: fixed;
-		background: transparent;
+		background: #ffffff;
 		border-color: transparent;
 		top: 50%;
 		left: 50%;
-		width: 100%;
+		max-width: 330px;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;

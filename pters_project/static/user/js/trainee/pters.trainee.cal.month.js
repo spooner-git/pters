@@ -1005,7 +1005,9 @@ $(document).ready(function(){
 		}else{
 			htmltojoin.push('<div class="plan_raw_blank">등록된 일정이 없습니다.</div>')
 		}
-		htmltojoin.push('<div class="plan_raw_blank plan_raw_add" data-date="'+dateinfo+'"><img src="/static/user/res/floatbtn/btn-plus.png" style="width:20px;cursor:pointer;"></div>')
+		if(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) >= date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate)){
+			htmltojoin.push('<div class="plan_raw_blank plan_raw_add" data-date="'+dateinfo+'"><img src="/static/user/res/floatbtn/btn-plus.png" style="width:20px;cursor:pointer;"></div>')
+		}
 
 		$('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
 	}
