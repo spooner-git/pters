@@ -266,7 +266,10 @@ $(document).ready(function(){
 		var dayarry = ['일','월','화','수','목','금','토']
 		var day = dayarry[dayraw];
 		var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-		var countNum = $(this).find('._classTime').text()
+		var countNum = $(this).attr('data-countnum')
+		if(countNum == undefined){
+			$('#countNum').text(0)
+		}
 		$('#countNum').text(countNum)
 		$('.popup_ymdText').html(infoText)
 		plancheck(yy+'_'+mm+'_'+dd, initialJSON)
@@ -1586,7 +1589,15 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 		}
 
 		if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
-			$("td[data-date="+classDate+"]").attr('schedule-id',scheduleIdArray[i])
+			console.log($("td[data-date="+classDate+"]").attr('data-countnum'))
+			if($("td[data-date="+classDate+"]").attr('data-countnum') == undefined){
+				var countnum = 0
+			}else{
+				var countnum = Number($("td[data-date="+classDate+"]").attr('data-countnum'))
+			}
+			plancount =  countnum + 1;
+
+			$("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i],'data-countnum':plancount})
 			$("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
 			$("td[data-date="+classDate+"] div._classDate").addClass('greydateMytime')
 			if($("td[data-date="+classDate+"] div._classTime div").length <2){
@@ -1594,9 +1605,17 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 			}else{
 				$("td[data-date="+classDate+"] div._classTime").append('<div><span>…</span></div>')
 			}
+			
 			//$("td[data-date="+classDate+"] div.memo").addClass('greymemo').text(memo)
 		}else{
-			$("td[data-date="+classDate+"]").attr('schedule-id',scheduleIdArray[i])
+			console.log($("td[data-date="+classDate+"]").attr('data-countnum'))
+			if($("td[data-date="+classDate+"]").attr('data-countnum') == undefined){
+				var countnum = 0
+			}else{
+				var countnum = Number($("td[data-date="+classDate+"]").attr('data-countnum'))
+			}
+			plancount =  countnum + 1;
+			$("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i],'data-countnum':plancount})
 			$("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
 			$("td[data-date="+classDate+"] div._classDate").addClass('dateMytime')
 			if($("td[data-date="+classDate+"] div._classTime div").length <3){
