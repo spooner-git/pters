@@ -32,6 +32,8 @@ from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, Sett
 
 from django.utils import timezone
 
+from trainee.function import func_get_trainee_all_schedule_data
+
 logger = logging.getLogger(__name__)
 
 
@@ -630,7 +632,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #    error = '수강정보를 확인해 주세요.'
 
         if error is None:
-            context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
+            context = func_get_trainee_all_schedule_data(context, self.request.user.id,
                                                                  self.request.user.last_name+self.request.user.first_name, class_id, start_date, end_date)
 
             # 회원 setting 값 로드
@@ -1606,8 +1608,6 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
         # 강사에 해당하는 강좌 정보 불러오기
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                      lecture_tb__member_id=user_id, use=1).order_by('lecture_tb')
-
-        # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=user_id, member_view_state_cd='VIEW')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
