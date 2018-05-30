@@ -8,6 +8,17 @@ body{
 	background-color: #ffffff;
 }
 
+.pshade,.mshade{
+	position: fixed;
+	display: none;
+	background: black;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	opacity: 0.7;
+	z-index: -100
+}
+
 #blank_member_popup{
 	position: absolute;
 	width: 90%;
@@ -706,7 +717,7 @@ img,a,div,span,p{
 	left: unset;
 	transform: unset;
 	line-height: 45px;
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: bold;
 	cursor: pointer;
 }
@@ -724,21 +735,24 @@ img,a,div,span,p{
 	font-weight: bold;
 }
 
-.planchecktime,.plancheckname{
+.planchecktime, .plancheckname{
 	display: inline-grid;
-	width: 40%;
 	text-align: left;
+}
+
+.planchecktime{
+	width: 34%;
 }
 
 .plancheckname{
 	position: relative;
-	font-weight: bold;
+	width: 46%;
+	text-overflow: ellipsis;
 }
 
 .plancheckmorningday{
 	display: inline-grid;
 	width: 20%;
-	font-weight: bold;
 }
 
 .plancheckname img{
@@ -1254,35 +1268,35 @@ img,a,div,span,p{
 	}
 
 	.balloon{
-		position: absolute;
+		position: relative;
 		background: #e4e4e4;
-		height: 21px;
+		height: auto;
 		width: 40px;
-		top: 43px;
 		border-radius: 2px;
 		font-size: 13.5px;
 		font-weight: 400;
 		padding-top: 1px;
 		z-index: -2;
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		text-align: center;
 	}
 
 	.blackballoon{
-		position: absolute;
+		position: relative;
 		color: #ffffff;
 		background: #3b3d3d;
-		height: 21px;
+		height: auto;
 		width: 40px;
-		top: 43px;
 		border-radius: 2px;
 		font-size: 13.5px;
 		font-weight: 300;
 		padding-top: 1px;
 		z-index: -2;
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		text-align: center;
 	}
 
@@ -1382,9 +1396,12 @@ img,a,div,span,p{
 
 	#calendar td{
 		vertical-align: unset;
+		height: 100%;
 		padding-top: 3px;
-		padding-right: 10px;
 		cursor: pointer;
+	}
+	#calendar td span:nth-of-type(2){
+		margin-right: 10px;
 	}
 
 	.today{

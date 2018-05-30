@@ -31,7 +31,7 @@ $(document).ready(function(){
                 }else{
                 	var update_data_changed = jsondata.data_changed;
 					if(update_data_changed[0]=="1"){
-						ajaxClassTime();
+						ajaxClassTime("this");
 					}
                 }
                 
@@ -254,7 +254,6 @@ $(document).ready(function(){
 	})
 	*/
 
-	var initialJSON;
 	$(document).on('click','td',function(){
 		$('#cal_popup_plancheck').fadeIn('fast');
 		shade_index(100)
@@ -382,7 +381,7 @@ $(document).ready(function(){
 					for (var i=0; i<jsondata.pushArray.length; i++){
 						//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 					}
-					ajaxClassTime();
+					ajaxClassTime("this");
 					close_reserve_popup()
 	            }
 	            
@@ -492,7 +491,7 @@ $(document).ready(function(){
 					for (var i=0; i<=jsondata.pushArray.length; i++){
 						//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 					}
-					ajaxClassTime();
+					ajaxClassTime("this");
 					close_delete_confirm_popup()
 	            }
 	            
@@ -587,7 +586,7 @@ $(document).ready(function(){
 	availableDateIndicator(availableStartTime,availableEndTime);
 	krHoliday(); //대한민국 공휴일
 	draw_time_graph(Options.hourunit,'')
-	ajaxClassTime(); //나의 PT일정에 핑크색 동그라미 표시
+	ajaxClassTime("this"); //나의 PT일정에 핑크색 동그라미 표시
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('SlideNextEnd',function(){
@@ -624,7 +623,7 @@ $(document).ready(function(){
 			monthText();
 			krHoliday();
 			availableDateIndicator(availableStartTime,availableEndTime);
-			ajaxClassTime()
+			ajaxClassTime("this")
 			myswiper.update(); //슬라이드 업데이트
 
 		},
@@ -638,7 +637,7 @@ $(document).ready(function(){
 			monthText();
 			krHoliday();
 			availableDateIndicator(availableStartTime,availableEndTime);
-			ajaxClassTime()
+			ajaxClassTime("this")
 			myswiper.update(); //이전페이지로 넘겼을때
 		}
 	};
@@ -857,10 +856,12 @@ $(document).ready(function(){
 
 		for(var i=0; i<len1; i++){  //시간순 정렬을 위해 'class' 정보를 가공하여 dateplans에 넣는다.
 			var grouptype = "class"
-			var dbID = jsondata.classTimeArray_member_id[i]
+			//var dbID = jsondata.classTimeArray_member_id[i]
+			var dbID = ''
 			var group_id = ''
 			var scheduleID = jsondata.scheduleIdArray[i]
-			var classLectureID = jsondata.classArray_lecture_id[i]
+			//var classLectureID = jsondata.classArray_lecture_id[i]
+			var classLectureID = ''
 			var scheduleFinish = jsondata.scheduleFinishArray[i]
 			var memoArray = jsondata.scheduleNoteArray[i]
 			var yy = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[0]
@@ -877,7 +878,7 @@ $(document).ready(function(){
 			}
 			var stime = stime1+'_'+sminute
 			var etime = etime1+'_'+eminute
-			var name = jsondata.classTimeArray_member_name[i]
+			var name = "1:1 레슨"
 			var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
 			if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
 				dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
@@ -917,8 +918,8 @@ $(document).ready(function(){
 			}
 		}else{
 			htmltojoin.push('<div class="plan_raw_blank">등록된 일정이 없습니다.</div>')
-
 		}
+		htmltojoin.push('<div class="plan_raw_blank"><img src="/static/user/res/floatbtn/btn-plus.png" style="width:20px;cursor:pointer;"></div>')
 
 		$('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
 	}
@@ -1399,18 +1400,24 @@ var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시�
 var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
 var reserveOption = Options.reserve
 
-function ajaxClassTime(){
-	var yyyy = $('#yearText').text()
-	var mm = $('#monthText').text().replace(/월/gi,"")
-	if(mm.length<2){
-		var mm = '0' + mm
+function ajaxClassTime(referencedate, howmanydates){
+	if(referencedate == "this"){
+		var yyyy = $('#yearText').text()
+		var mm = $('#monthText').text().replace(/월/gi,"")
+		if(mm.length<2){
+			var mm = '0' + mm
+		}
+		var today_form = yyyy+'-'+ mm +'-'+"01"
+		var date_form = 46
+	}else{
+		var today_form = referencedate
+		var date_form = howmanydates
 	}
-	var today_form = yyyy+'-'+ mm +'-'+"01"
-
+	
 	$.ajax({
 	  url: '/trainee/read_trainee_schedule_ajax/',
 	  type : 'POST',
-	  data : {"date":today_form, "day":46},
+	  data : {"date":today_form, "day":date_form},
 	  dataType : 'html',
 
 	  beforeSend:function(){
@@ -1425,34 +1432,7 @@ function ajaxClassTime(){
 			$('#errorMessageBar').show()
 			$('#errorMessageText').text(jsondata.messageArray)
 		}else{
-			/*
-				classTimeArray_start_date = []
-				classTimeArray_end_date = []
-				scheduleIdArray = []
-				scheduleFinishArray = []
-				scheduleNoteArray = []
-				classTimeArray_member_name = []
-				offTimeArray_start_date = []
-				offTimeArray_end_date = []
-				classDateArray = []
-				classStartArray = []
-
-
-				classTimeArray_start_date = jsondata.classTimeArray_start_date
-				classTimeArray_end_date = jsondata.classTimeArray_end_date
-				classTimeArray_start_date = jsondata.classTimeArray_start_date
-				classTimeArray_end_date = jsondata.classTimeArray_end_date
-				scheduleIdArray = jsondata.scheduleIdArray
-				scheduleFinishArray = jsondata.scheduleFinishArray
-				scheduleNoteArray = jsondata.scheduleNoteArray
-				classTimeArray_member_name = jsondata.classTimeArray_member_name
-				offTimeArray_start_date = jsondata.offTimeArray_start_date
-				offTimeArray_end_date = jsondata.offTimeArray_end_date
-			*/
-
 			$('#countRemainData span').text(jsondata.lecture_avail_count)
-
-			//DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
 			$('.classTime,.offTime').parent().html('<div></div>')
 			$('.blackballoon, .balloon').html('')
 			$('.blackballoon').removeClass('blackballoon')
@@ -1475,9 +1455,9 @@ function ajaxClassTime(){
 }
 
 function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
+	$('div._classTime').html('')
 	var len = jsondata.classTimeArray_start_date.length;
 	for(var i=0; i<len; i++){
-
 		var finish = jsondata.scheduleFinishArray[i]
 		var memo = jsondata.scheduleNoteArray[i]
 
@@ -1508,26 +1488,36 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 		}
 
 		if(finish == '1'){
-			var finishImg = '<span>'+classTime+'</span><img src="/static/user/res/btn-pt-complete.png">'
+			var finishImg = '<div><span>'+classTime+'</span><img src="/static/user/res/btn-pt-complete.png"></div>'
 		}else if(finish == '0'){
-			var finishImg = '<span>'+classTime+'</span>'
+			var finishImg = '<div><span>'+classTime+'</span></div>'
 		}
 
 		if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
 			$("td[data-date="+classDate+"]").attr('schedule-id',scheduleIdArray[i])
 			$("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
 			$("td[data-date="+classDate+"] div._classDate").addClass('greydateMytime')
-			$("td[data-date="+classDate+"] div._classTime").addClass('balloon').html(finishImg)
-			$("td[data-date="+classDate+"] div.memo").addClass('greymemo').text(memo)
+			if($("td[data-date="+classDate+"] div._classTime div").length <2){
+				$("td[data-date="+classDate+"] div._classTime").addClass('balloon').append(finishImg)
+			}else{
+				$("td[data-date="+classDate+"] div._classTime").append('<div><span>…</span></div>')
+			}
+			//$("td[data-date="+classDate+"] div.memo").addClass('greymemo').text(memo)
 		}else{
 			$("td[data-date="+classDate+"]").attr('schedule-id',scheduleIdArray[i])
 			$("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
 			$("td[data-date="+classDate+"] div._classDate").addClass('dateMytime')
-			$("td[data-date="+classDate+"] div._classTime").addClass('blackballoon').html(finishImg)
-			$("td[data-date="+classDate+"] div.memo").text(memo)
+			if($("td[data-date="+classDate+"] div._classTime div").length <3){
+				$("td[data-date="+classDate+"] div._classTime").addClass('blackballoon').append(finishImg)
+			}else{
+				$("td[data-date="+classDate+"] div._classTime").append('<div><span>…</span></div>')
+			}
+			//$("td[data-date="+classDate+"] div.memo").text(memo)
 		}
+		
 	};
 };
+
 
 
 function beforeSend(){
