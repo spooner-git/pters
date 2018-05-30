@@ -419,9 +419,26 @@ def get_lecture_view_list_by_class_member_id(context, class_id, member_id):
                 except ObjectDoesNotExist:
                     lecture_info_data.lecture_tb.state_cd_name = ''
 
-                if lecture_info_data.auth_cd == 'WAIT':
-                    np_lecture_counts += 1
                 lecture_counts += 1
+
+                group_info = None
+                group_check = 0
+                try:
+                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+                except ObjectDoesNotExist:
+                    group_check = 1
+                if group_check == 0:
+                    lecture_info_data.group_name = group_info.group_tb.name
+                    lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
+                    lecture_info_data.group_member_num = group_info.group_tb.member_num
+                    lecture_info_data.group_note = group_info.group_tb.note
+                    lecture_info_data.group_state_cd = group_info.group_tb.state_cd
+                    try:
+                        state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
+                        lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
+                    except ObjectDoesNotExist:
+                        error = '그룹 정보를 불러오지 못했습니다.'
+
                 output_lecture_list.append(lecture_info_data)
 
     context['lecture_data'] = output_lecture_list
