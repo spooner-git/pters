@@ -442,9 +442,9 @@ def add_schedule_logic(request):
         push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
         if en_dis_type == '1':
             func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
-                           request.user.last_name+request.user.first_name+'님이 '
-                           + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다.')
+                                   request.user.last_name+request.user.first_name+'님이 '
+                                   + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                   + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다.')
             # request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
             # request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
             #                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
@@ -1539,7 +1539,7 @@ def add_group_schedule_logic(request):
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+' 그룹 일정', log_how='추가',
+                         log_info=group_info.name+' 그룹 일정', log_how='등록',
                          log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
@@ -1583,7 +1583,7 @@ def add_group_schedule_logic(request):
                                                  from_member_name=request.user.last_name + request.user.first_name,
                                                  to_member_name=member_info.name,
                                                  class_tb_id=class_id,
-                                                 log_info=group_info.name + '그룹 일정', log_how='추가',
+                                                 log_info=group_info.name + ' 그룹 레슨 일정', log_how='등록',
                                                  log_detail=str(schedule_start_datetime) + '/' + str(
                                                      schedule_end_datetime),
                                                  reg_dt=timezone.now(), use=1)
@@ -1705,7 +1705,7 @@ def delete_group_schedule_logic(request):
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+' 그룹 일정', log_how='삭제',
+                         log_info=group_info.name+' 그룹 레슨 일정', log_how='삭제',
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
@@ -1814,7 +1814,7 @@ def add_member_group_schedule_logic(request):
                          from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+'그룹 일정', log_how='추가',
+                         log_info=group_info.name+' 그룹 레슨 일정', log_how='등록',
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
@@ -2146,7 +2146,7 @@ def add_group_repeat_schedule_confirm(request):
             log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info=group_info.name + ' 그룹 반복 일정', log_how='추가',
+                             log_info=group_info.name + ' 그룹 반복 일정', log_how='등록',
                              log_detail=str(start_date) + '/' + str(end_date),
                              reg_dt=timezone.now(), use=1)
             log_data.save()
@@ -2211,7 +2211,7 @@ def add_group_repeat_schedule_confirm(request):
                                      from_member_name=request.user.last_name + request.user.first_name,
                                      to_member_name=member_info.name,
                                      class_tb_id=class_id,
-                                     log_info=group_info.name + ' 그룹 반복 일정', log_how='추가',
+                                     log_info=group_info.name + ' 그룹 반복 일정', log_how='등록',
                                      log_detail=str(start_date) + '/' + str(end_date),
                                      reg_dt=timezone.now(), use=1)
                     log_data.save()

@@ -241,7 +241,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='PT '+log_type_name, log_how=log_type_detail,
+                         log_info='1:1 레슨 '+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
