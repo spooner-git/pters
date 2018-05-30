@@ -233,6 +233,43 @@ def func_get_trainee_group_ing_list(class_id, user_id):
     return group_list
 
 
+def func_get_trainee_lecture_ing_list(class_id, user_id):
+    group_list = []
+    lecture_data = MemberLectureTb.objects.filter(member_id=user_id,
+                                                  lecture_tb__state_cd='IP',
+                                                  auth_cd='VIEW',
+                                                  use=1).order_by('-lecture_tb__start_date')
+
+    for lecture_info in lecture_data:
+        group_lecture_check = 0
+        try:
+            group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
+                                                            lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+        except ObjectDoesNotExist:
+            group_lecture_check = 1
+
+        if group_lecture_check == 0:
+            check = 0
+
+            try:
+                state_cd_nm = CommonCdTb.objects.get(common_cd=group_lecture_info.group_tb.state_cd)
+                group_lecture_info.group_tb.state_cd_nm = state_cd_nm.common_cd_nm
+            except ObjectDoesNotExist:
+                error = '그룹 정보를 불러오지 못했습니다.'
+
+            if len(group_list) == 0:
+                group_list.append(group_lecture_info)
+
+            for group_info in group_list:
+
+                if group_info.group_tb_id == group_lecture_info.group_tb_id:
+                    check = 1
+            if check == 0:
+                group_list.append(group_lecture_info)
+
+    return group_list
+
+
 def func_get_class_lecture_count(context, class_id, user_id):
     error = None
     if class_id is None or class_id == '':
@@ -241,6 +278,9 @@ def func_get_class_lecture_count(context, class_id, user_id):
     lecture_reg_count_sum = 0
     lecture_rem_count_sum = 0
     lecture_avail_count_sum = 0
+    group_lecture_reg_count_sum = 0
+    group_lecture_rem_count_sum = 0
+    group_lecture_avail_count_sum = 0
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
@@ -258,13 +298,31 @@ def func_get_class_lecture_count(context, class_id, user_id):
                 except ObjectDoesNotExist:
                     error = '수강정보를 불러오지 못했습니다.'
 
-                if lecture_info.state_cd == 'IP':
-                    lecture_reg_count_sum += lecture_info.lecture_reg_count
-                    lecture_rem_count_sum += lecture_info.lecture_rem_count
-                    lecture_avail_count_sum += lecture_info.lecture_avail_count
+                if error is None:
+
+                    group_lecture_check = 0
+                    try:
+                        GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
+                                                   lecture_tb_id=lecture_info.lecture_id, use=1)
+                    except ObjectDoesNotExist:
+                        group_lecture_check = 1
+
+                    if group_lecture_check == 1:
+                        if lecture_info.state_cd == 'IP':
+                            lecture_reg_count_sum += lecture_info.lecture_reg_count
+                            lecture_rem_count_sum += lecture_info.lecture_rem_count
+                            lecture_avail_count_sum += lecture_info.lecture_avail_count
+                    else:
+                        if lecture_info.state_cd == 'IP':
+                            group_lecture_reg_count_sum += lecture_info.lecture_reg_count
+                            group_lecture_rem_count_sum += lecture_info.lecture_rem_count
+                            group_lecture_avail_count_sum += lecture_info.lecture_avail_count
 
     context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
     context['lecture_avail_count'] = lecture_avail_count_sum
+    context['group_lecture_reg_count'] = group_lecture_reg_count_sum
+    context['group_lecture_finish_count'] = group_lecture_reg_count_sum - group_lecture_rem_count_sum
+    context['group_lecture_avail_count'] = group_lecture_avail_count_sum
 
     return context
