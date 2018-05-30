@@ -419,9 +419,26 @@ def get_lecture_view_list_by_class_member_id(context, class_id, member_id):
                 except ObjectDoesNotExist:
                     lecture_info_data.lecture_tb.state_cd_name = ''
 
-                if lecture_info_data.auth_cd == 'WAIT':
-                    np_lecture_counts += 1
                 lecture_counts += 1
+
+                group_info = None
+                group_check = 0
+                try:
+                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+                except ObjectDoesNotExist:
+                    group_check = 1
+                if group_check == 0:
+                    lecture_info_data.group_name = group_info.group_tb.name
+                    lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
+                    lecture_info_data.group_member_num = group_info.group_tb.member_num
+                    lecture_info_data.group_note = group_info.group_tb.note
+                    lecture_info_data.group_state_cd = group_info.group_tb.state_cd
+                    try:
+                        state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
+                        lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
+                    except ObjectDoesNotExist:
+                        error = '그룹 정보를 불러오지 못했습니다.'
+
                 output_lecture_list.append(lecture_info_data)
 
     context['lecture_data'] = output_lecture_list
@@ -2158,14 +2175,14 @@ class GetTraineeGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
 
         lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id,
                                                       lecture_tb__state_cd='IP',
-                                                      use=1).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
+                                                      auth_cd='VIEW',
+                                                      use=1).order_by('-lecture_tb__start_date')
 
         for lecture_info in lecture_data:
             group_lecture_check = 0
             try:
                 group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
-                                                                lecture_tb_id=lecture_info.lecture_tb_id,
-                                                                use=1)
+                                                                lecture_tb_id=lecture_info.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
                 group_lecture_check = 1
 
