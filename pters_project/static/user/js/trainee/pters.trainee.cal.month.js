@@ -1572,10 +1572,17 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 			var classTime = "00:00"
 		}
 
+		if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+			var groupname = " - [1:1 레슨]"
+		}else{
+			var index = jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i])
+			var groupname = " - ["+jsondata.group_schedule_group_name[index]+"]"
+		}
+
 		if(finish == '1'){
-			var finishImg = '<div><span>'+classTime+'</span><img src="/static/user/res/btn-pt-complete.png"></div>'
+			var finishImg = '<div><span>'+classTime+groupname+'</span><img src="/static/user/res/btn-pt-complete.png"></div>'
 		}else if(finish == '0'){
-			var finishImg = '<div><span>'+classTime+'</span></div>'
+			var finishImg = '<div><span>'+classTime+groupname+'</span></div>'
 		}
 
 		if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기

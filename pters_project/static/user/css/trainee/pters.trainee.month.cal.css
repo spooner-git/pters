@@ -473,7 +473,7 @@ img,a,div,span,p{
 .balloon{
 	position: absolute;
 	background: transparent;
-	color: #9e9e9e;
+	color: #6f6f6f;
 	height: 16px;
 	width: 90%;
 	bottom: 5px;
@@ -1271,11 +1271,11 @@ img,a,div,span,p{
 
 	.balloon{
 		position: relative;
-		background: #e4e4e4;
+		/*background: #e4e4e4;
+		width: 40px;*/
 		height: auto;
-		width: 40px;
-		border-radius: 2px;
-		font-size: 13.5px;
+		width: 95%;
+		font-size: 12.5px;
 		font-weight: 400;
 		padding-top: 1px;
 		z-index: -2;
@@ -1284,15 +1284,20 @@ img,a,div,span,p{
 		transform: translate(-50%, -50%);
 		text-align: center;
 	}
+	.balloon div{
+		background: #e4e4e4;
+		margin: 1px;
+		border-radius: 2px;
+	}
 
 	.blackballoon{
 		position: relative;
 		color: #ffffff;
-		background: #3b3d3d;
+		/*background: #3b3d3d;
+		width: 40px;*/
 		height: auto;
-		width: 40px;
-		border-radius: 2px;
-		font-size: 13.5px;
+		width: 95%;
+		font-size: 12.5px;
 		font-weight: 300;
 		padding-top: 1px;
 		z-index: -2;
@@ -1300,6 +1305,11 @@ img,a,div,span,p{
 		left: 50%;
 		transform: translate(-50%, -50%);
 		text-align: center;
+	}
+	.blackballoon div{
+		background: #3b3d3d;
+		margin: 1px;
+		border-radius: 2px;
 	}
 
 	.holidayName{
