@@ -655,6 +655,24 @@ img,a,div,span,p{
 	background : white;
 }
 
+.img_cal{
+	position: relative;
+	width: 25px;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#btn_close5{
+	position: absolute;
+	top: 10%;
+	left: 85%;
+	padding: 10px;
+	width: 35px;
+	float: right;
+	cursor: pointer;
+}
+
 #countNum{
 	position: absolute;
 	font-size: 9px;
@@ -667,6 +685,13 @@ img,a,div,span,p{
 	font-weight: 500;
 	top: 6px;
 	left: 155px;
+}
+
+.popup_ymdText{
+	margin-top:9px;
+	margin-bottom: 3px;
+	font-size: 14px;
+	font-weight: bold;
 }
 
 .plan_raw{
