@@ -49,8 +49,6 @@ $(document).ready(function(){
     }
 
 
-
-
 	//플로팅 버튼
 	$('#float_btn').click(function(){
 		/*if($('#shade').css('z-index')<0){
@@ -66,9 +64,68 @@ $(document).ready(function(){
 	});
 	//플로팅 버튼
 
-	$(document).on('click','.admonth',function(){
-		alert('까꿍~')
-	})
+
+	//날짜 클릭시 예약화면에서 [1:1레슨/ 그룹레슨] 선택 토글
+	$('.mode_switch_button').click(function(){
+    	var page = $(this).attr('data-page')
+    	if(page == "personalreserve"){
+    		$('.'+page).show()
+    		$('.groupreserve').hide()
+    		$('.groupreserve div.checked').removeClass('checked ptersCheckboxInner');
+
+    	}else if(page == "groupreserve"){
+    		$('.'+page).show()
+    		$('.personalreserve').hide()
+    	}
+    	$(this).addClass('mode_active')
+    	$(this).siblings('.mode_switch_button').removeClass('mode_active')
+    })
+
+    //등록횟수(빠른입력방식) 선택
+    $('.groupreserve .ptersCheckbox').click(function(){
+        $('.groupreserve div.checked').removeClass('checked ptersCheckboxInner');
+        var pterscheckbox = $(this).find('div');
+        $(this).addClass('checked');
+        pterscheckbox.addClass('ptersCheckboxInner checked');
+        check_dropdown_selected();
+    });
+
+    $(document).on('click','.admonth',function(){
+    	$.ajax({
+	          url: '/trainee/get_trainee_group_ing_list/',
+	          //data: $('#pt-add-form').serialize(),
+			  dataType : 'html',
+			  type:'POST',
+
+	          beforeSend:function(){
+	          	beforeSend();
+	          },
+
+	          success:function(data){
+	          	var jsondata = JSON.parse(data);
+	          	console.log('get_trainee_group_ing_list',jsondata)
+	          	if(jsondata.messageArray.length>0){
+	              	$('#errorMessageBar').show()
+	              	$('#errorMessageText').text(jsondata.messageArray)
+	            }else{
+					for (var i=0; i<jsondata.pushArray.length; i++){
+						//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
+					}
+					//ajaxClassTime();
+					//close_reserve_popup()
+	            }
+	            
+			  },
+
+	          complete:function(){
+	          	completeSend()
+	          },
+
+	          error:function(){
+	            console.log('server error')
+	          }
+        })
+    })
 
 
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
@@ -261,8 +318,6 @@ $(document).ready(function(){
 		$(this).parents('.popups').fadeOut('fast')
 	})
 
-	
-
       var select_all_check = false;
       //달력 선택된 날짜
       //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
@@ -285,7 +340,6 @@ $(document).ready(function(){
         }else{
         	$('.cancellimit_time').text(Options.cancellimit+"시간 전")
         }
-        
     })
 
     function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화 
@@ -787,21 +841,6 @@ $(document).ready(function(){
 	          		$('#errorMessageBar').show()
 	                $('#errorMessageText').text(jsondata.messageArray)
 	          	}else{
-	          		/*팝업의 timegraph 업데이트*/
-	          		/*
-	                var updatedClassTimeArray_start_date = jsondata.classTimeArray_start_date
-	                var updatedClassTimeArray_end_date = jsondata.classTimeArray_end_date
-	                var updatedOffTimeArray_start_date = jsondata.offTimeArray_start_date
-	                var updatedOffTimeArray_end_date = jsondata.offTimeArray_end_date
-	                classDateData = []
-	                classTimeData = []
-	                offDateData=[]
-	                offTimeData = []
-	                offAddOkArray = [] //OFF 등록 시작 시간 리스트
-	                durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-	                */
-	                //DBdataProcess(updatedClassTimeArray_start_date,updatedClassTimeArray_end_date,classDateData,"graph",classTimeData)
-	                //DBdataProcess(updatedOffTimeArray_start_date,updatedOffTimeArray_end_date,offDateData,"graph",offTimeData)
 	                timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
 			        timeGraphSet("off","grey", "AddClass", jsondata);
 	                startTimeSet('class');  //일정등록 가능한 시작시간 리스트 채우기
