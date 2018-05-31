@@ -1780,7 +1780,7 @@ function get_member_list(use, callback){
     //returnvalue 1이면 jsondata를 리턴
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
-        url:'/trainer/member_manage_ajax/',
+        url:'/trainer/get_member_list/',
 
         dataType : 'html',
 
@@ -2494,7 +2494,7 @@ function modify_member_lec_info_pc(){
 function send_member_modified_data(dbID){
     var $form = $('#update_member_lecture_info');
        $.ajax({
-          url:'/trainer/update_member_lecture_info/',
+          url:'/trainer/update_lecture_info/',
           type:'POST',
           data: $form.serialize(),
           dataType : 'html',
@@ -2536,9 +2536,9 @@ function send_member_modified_data(dbID){
 //회원에게 재연결 요청을 전송한다.
 function resend_member_reg_data_pc(lectureID, dbID){
     $.ajax({
-        url:'/trainer/resend_member_lecture_info/', 
+        url:'/trainer/resend_lecture_info/',
         type:'POST',
-        data:{"lecture_id":lectureID,"member_id":dbID, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID,"member_id":dbID, "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2579,9 +2579,9 @@ function resend_member_reg_data_pc(lectureID, dbID){
 function delete_member_reg_data_pc(lectureID, dbID){
     console.log('delete_member_reg_data_pc',lectureID,dbID)
     $.ajax({
-        url:'/trainer/delete_member_lecture_info/', 
+        url:'/trainer/delete_lecture_info/',
         type:'POST',
-        data:{"lecture_id":lectureID, "member_id":dbID, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID, "member_id":dbID, "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2621,9 +2621,9 @@ function delete_member_reg_data_pc(lectureID, dbID){
 //회원의 수강정보를 완료 처리한다.
 function complete_member_reg_data_pc(lectureID, dbID){
     $.ajax({
-        url:'/trainer/finish_member_lecture_info/', 
+        url:'/trainer/finish_lecture_info/',
         type:'POST',
-        data:{"lecture_id":lectureID,"member_id": dbID, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID,"member_id": dbID, "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2663,9 +2663,9 @@ function complete_member_reg_data_pc(lectureID, dbID){
 //회원의 수강정보를 진행중으로 처리한다.
 function resume_member_reg_data_pc(lectureID, dbID){
     $.ajax({
-        url:'/trainer/progress_member_lecture_info/', 
+        url:'/trainer/progress_lecture_info/',
         type:'POST',
-        data:{"lecture_id":lectureID, "member_id" : dbID, "next_page":'/trainer/member_manage_ajax/'},
+        data:{"lecture_id":lectureID, "member_id" : dbID, "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2717,9 +2717,9 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
 
     if(refund_price.length>0){
         $.ajax({
-                url:'/trainer/refund_member_lecture_info/', 
+                url:'/trainer/refund_lecture_info/',
                 type:'POST',
-                data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price ,"next_page":'/trainer/member_manage_ajax/'},
+                data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price ,"next_page":'/trainer/get_member_list/'},
                 dataType : 'html',
 
                 beforeSend:function(){
@@ -2767,9 +2767,9 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
 //회원의 진행상태 연결해제를 한다.
 function disconnect_member_lecture_data(stateCode, lectureID, dbID){
         $.ajax({
-                url:'/trainer/update_member_lecture_view_info/', 
+                url:'/trainer/update_lecture_info/',
                 type:'POST',
-                data:{"lecture_id":lectureID, "member_id": dbID, "member_view_state_cd": stateCode ,"next_page":'/trainer/member_manage_ajax/'},
+                data:{"lecture_id":lectureID, "member_id": dbID, "member_view_state_cd": stateCode ,"next_page":'/trainer/get_member_list/'},
                 dataType : 'html',
 
                 beforeSend:function(){
@@ -2815,7 +2815,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
 function get_member_lecture_list(dbID, use, callback){
     console.log('dbID',dbID)
     $.ajax({
-        url:'/trainer/read_lecture_by_class_member_ajax/', 
+        url:'/trainer/get_lecture_list/',
         type:'POST',
         data:{"member_id":dbID},
         dataType : 'html',
@@ -3054,7 +3054,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 
 function get_member_history_list(dbID){
     $.ajax({
-        url:'/trainer/read_member_schedule_data/', 
+        url:'/trainer/get_member_schedule/',
         type:'POST',
         data:{"member_id":dbID},
         dataType : 'html',
@@ -3222,7 +3222,7 @@ function fill_member_info_by_ID_search(){
 //새로운 회원 정보 서버로 보내 등록하기
 function add_member_form_func(){
     $.ajax({
-        url:'/trainer/add_member_info/',
+        url:'/trainer/add_lecture_info/',
         type:'POST',
         data: $('#member-add-form-new').serialize(),
         dataType : 'html',
@@ -3675,7 +3675,7 @@ function initialize_add_member_sheet(){
 //서버로부터 회원의 반복일정 정보를 받아온다.
 function get_indiv_repeat_info(dbID){
     $.ajax({
-              url: '/trainer/read_member_lecture_data/',
+              url: '/trainer/get_member_repeat_schedule/',
               type:'POST',
               data: {"member_id": dbID},
               dataType : 'html',

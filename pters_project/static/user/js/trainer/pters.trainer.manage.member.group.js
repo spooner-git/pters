@@ -137,7 +137,7 @@ $(document).on('click','img.add_listedMember',function(){
 
 function draw_memberlist_for_addByList(targetHTML){
     $.ajax({
-        url:'/trainer/member_manage_ajax/',
+        url:'/trainer/get_member_list/',
 
         dataType : 'html',
 

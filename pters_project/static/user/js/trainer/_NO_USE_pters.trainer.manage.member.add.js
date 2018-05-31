@@ -412,7 +412,7 @@ $(document).ready(function(){
 	function ajaxMemberData(){
 
             $.ajax({
-              url: '/trainer/member_manage_ajax',
+              url: '/trainer/get_member_list',
               dataType : 'html',
 
               beforeSend:function(){

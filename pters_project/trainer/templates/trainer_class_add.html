@@ -146,7 +146,7 @@
   <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
   <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->
   <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
-  <input type="hidden" name="next_page" value = '{% url 'trainer:trainer_error_info' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
 
 <div id="myClassCreate" class="classSettingBox">

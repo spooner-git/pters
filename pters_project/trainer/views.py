@@ -345,16 +345,16 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ManageMemberView, self).get_context_data(**kwargs)
         # class_id = self.request.session.get('class_id', '')
-        # context = get_member_data(context, class_id, None, self.request.user.id)
+        # context = get_member_list(context, class_id, None, self.request.user.id)
 
         return context
 
 
-class ManageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/manage_member_ajax.html'
+class GetMemberListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/member_list_all_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ManageMemberViewAjax, self).get_context_data(**kwargs)
+        context = super(GetMemberListView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         context = get_member_data(context, class_id, None, self.request.user.id)
         return context
@@ -910,11 +910,11 @@ class MyPageView(AccessTestMixin, TemplateView):
         return context
 
 
-class MyPageViewAjax(AccessTestMixin, TemplateView):
-    template_name = 'ajax/mypage_member_info_ajax.html'
+class GetTrainerInfoView(AccessTestMixin, TemplateView):
+    template_name = 'ajax/trainer_info_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(MyPageViewAjax, self).get_context_data(**kwargs)
+        context = super(GetTrainerInfoView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
         class_info = None
@@ -1120,7 +1120,7 @@ class LanguageSettingView(AccessTestMixin, TemplateView):
 
 
 # 회원가입 api
-def add_member_info_logic(request):
+def add_lecture_info_logic(request):
     fast_check = request.POST.get('fast_check', '0')
     user_id = request.POST.get('user_id')
     username = request.POST.get('username', '')
@@ -1671,7 +1671,7 @@ def update_trainer_info_logic(request):
 
 
 @csrf_exempt
-def resend_member_lecture_info_logic(request):
+def resend_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -1724,7 +1724,7 @@ def resend_member_lecture_info_logic(request):
 
 
 @csrf_exempt
-def delete_member_lecture_info_logic(request):
+def delete_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     # member_name = request.POST.get('member_name', '')
@@ -1913,7 +1913,7 @@ def func_delete_member_lecture_info_logic(user_id, class_id, lecture_id, member_
 
 
 @csrf_exempt
-def update_member_lecture_view_info_logic(request):
+def update_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -1972,7 +1972,7 @@ def update_member_lecture_view_info_logic(request):
 
 
 @csrf_exempt
-def refund_member_lecture_info_logic(request):
+def refund_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -2063,7 +2063,7 @@ def refund_member_lecture_info_logic(request):
 
 
 @csrf_exempt
-def progress_member_lecture_info_logic(request):
+def progress_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -2135,7 +2135,7 @@ def progress_member_lecture_info_logic(request):
 
 
 @csrf_exempt
-def finish_member_lecture_info_logic(request):
+def finish_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -2208,7 +2208,7 @@ def finish_member_lecture_info_logic(request):
 
 
 @csrf_exempt
-def update_member_lecture_info_logic(request):
+def update_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     start_date = request.POST.get('start_date', '')
@@ -2426,17 +2426,15 @@ def alarm_delete_logic(request):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'ajax/member_lecture_data_ajax.html'
+class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'ajax/member_repeat_schedule_ajax.html'
 
     def get(self, request, *args, **kwargs):
-        context = super(ReadMemberLectureData, self).get_context_data(**kwargs)
+        context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         context['error'] = None
 
         context = get_trainee_repeat_schedule_data_func(context, class_id, None)
-        if context['error'] is None:
-            context = get_member_data(context, class_id, None, request.user.id)
 
         if context['error'] is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
@@ -2445,13 +2443,11 @@ class ReadMemberLectureData(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = super(ReadMemberLectureData, self).get_context_data(**kwargs)
+        context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', None)
         context['error'] = None
         context = get_trainee_repeat_schedule_data_func(context, class_id, member_id)
-        if context['error'] is None:
-            context = get_member_data(context, class_id, member_id, request.user.id)
 
         if context['error'] is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
@@ -2862,15 +2858,6 @@ def update_setting_language_logic(request):
         return redirect(next_page)
 
 
-class TrainerSettingViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/setting_ajax.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(TrainerSettingViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        context = get_trainer_setting_data(context, self.request.user.id, class_id)
-        return context
-
 
 def get_trainer_setting_data(context, user_id, class_id):
 
@@ -2958,11 +2945,11 @@ def get_trainer_setting_data(context, user_id, class_id):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'ajax/member_class_lecture_data_ajax.html'
+class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'ajax/lecture_list_ajax.html'
 
     def get(self, request, *args, **kwargs):
-        context = super(ReadLectureByClassMemberAjax, self).get_context_data(**kwargs)
+        context = super(GetLectureListView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
         context['error'] = None
@@ -2976,7 +2963,7 @@ class ReadLectureByClassMemberAjax(LoginRequiredMixin, AccessTestMixin, ContextM
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = super(ReadLectureByClassMemberAjax, self).get_context_data(**kwargs)
+        context = super(GetLectureListView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
         context['error'] = None
@@ -3179,7 +3166,7 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-def class_processing_logic(request):
+def select_class_processing_logic(request):
 
     class_id = request.POST.get('class_id', '')
     next_page = request.POST.get('next_page')
@@ -3569,20 +3556,20 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name)
 
 
-class TrainerErrorInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/trainer_error_ajax.html'
+class GetErrorInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/error_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(TrainerErrorInfoView, self).get_context_data(**kwargs)
+        context = super(GetErrorInfoView, self).get_context_data(**kwargs)
         return context
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ReadMemberScheduleDataView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'ajax/member_schedule_data_ajax.html'
+class GetMemberScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'ajax/member_schedule_ajax.html'
 
     def post(self, request, *args, **kwargs):
-        context = super(ReadMemberScheduleDataView, self).get_context_data(**kwargs)
+        context = super(GetMemberScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', None)
         context['error'] = None
@@ -4283,311 +4270,6 @@ def export_excel_member_info_logic(request):
     # filename="'+test_str+'.xlsx"'
     # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
-
-    if error is None:
-
-        return response
-    else:
-
-        return response
-
-
-@csrf_exempt
-def import_excel_member_list_logic(request):
-
-    class_id = request.session.get('class_id', '')
-    finish_flag = request.GET.get('finish_flag', '0')
-
-    error = None
-    class_info = None
-    member_id = None
-    member_list = []
-    member_finish_list = []
-    filename_temp = ''
-    # 강사 정보 가져오기
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '강사 정보를 불러오지 못했습니다.'
-
-    wb = Workbook()
-    ws1 = wb.active
-    start_raw = 3
-
-    ws1['A2'] = '회원명'
-    ws1['B2'] = '회원 ID'
-    ws1['C2'] = '등록 횟수'
-    ws1['D2'] = '남은 횟수'
-    ws1['E2'] = '시작 일자'
-    ws1['F2'] = '종료 일자'
-    ws1['G2'] = '연락처'
-    ws1.column_dimensions['A'].width = 10
-    ws1.column_dimensions['B'].width = 20
-    ws1.column_dimensions['C'].width = 10
-    ws1.column_dimensions['D'].width = 10
-    ws1.column_dimensions['E'].width = 15
-    ws1.column_dimensions['F'].width = 15
-    ws1.column_dimensions['G'].width = 20
-    filename_temp = request.user.last_name+request.user.first_name+'님_'
-    if finish_flag == '0':
-        filename_temp += '진행중_회원목록'
-        ws1.title = "진행중 회원"
-        ws1['A1'] = '진행중 회원정보'
-        ws1['A1'].font = Font(bold=True, size=15)
-        for member_info in member_list:
-            ws1['A'+str(start_raw)] = member_info.name
-            ws1['B'+str(start_raw)] = member_info.user.username
-            ws1['C'+str(start_raw)] = member_info.lecture_reg_count
-            ws1['D'+str(start_raw)] = member_info.lecture_rem_count
-            ws1['E'+str(start_raw)] = member_info.start_date
-            if member_info.end_date == '9999-12-31':
-                ws1['F' + str(start_raw)] = '소진시까지'
-            else:
-                ws1['F'+str(start_raw)] = member_info.end_date
-            ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
-            start_raw += 1
-    else:
-        ws1.title = "종료된 회원"
-        filename_temp += '종료된_회원목록'
-        ws1['A1'] = '종료된 회원정보'
-        ws1['A1'].font = Font(bold=True, size=15)
-        for member_info in member_finish_list:
-            ws1['A'+str(start_raw)] = member_info.name
-            ws1['B'+str(start_raw)] = member_info.user.username
-            ws1['C'+str(start_raw)] = member_info.lecture_reg_count
-            ws1['D'+str(start_raw)] = member_info.lecture_rem_count
-            ws1['E'+str(start_raw)] = member_info.start_date
-            if member_info.end_date == '9999-12-31':
-                ws1['F' + str(start_raw)] = '소진시까지'
-            else:
-                ws1['F'+str(start_raw)] = member_info.end_date
-            ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
-            start_raw += 1
-
-    user_agent = request.META['HTTP_USER_AGENT']
-    filename_temp += '.xlsx'
-    filename = filename_temp.encode('utf-8')
-    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    if 'chrome' in str(user_agent) or 'Chrome' in str(user_agent):
-        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
-    elif 'safari' in str(user_agent) or 'Safari' in str(user_agent):
-        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
-    elif 'firefox' in str(user_agent) or 'Firefox' in str(user_agent):
-        response['Content-Disposition'] = 'attachment; filename*="'+urllib.parse.quote(filename)+'"'
-    else:
-        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
-
-    # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
-
-    if error is None:
-
-        return response
-    else:
-
-        return response
-
-
-@csrf_exempt
-def import_excel_member_info_logic(request):
-
-    class_id = request.session.get('class_id', '')
-    member_id = request.GET.get('member_id', '')
-
-    error = None
-    class_info = None
-    member_info = None
-    lecture_counts = 0
-    np_lecture_counts = 0
-
-    if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
-
-    if member_id is None or member_id == '':
-        error = '회원 정보를 불러오지 못했습니다.'
-
-    wb = Workbook()
-    ws1 = wb.active
-
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '강좌 정보를 불러오지 못했습니다.'
-
-    if error is None:
-        try:
-            member_info = MemberTb.objects.get(member_id=member_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
-
-    # 수강 정보 불러 오기
-    if error is None:
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                     lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', auth_cd='VIEW', use=1).order_by('-lecture_tb__start_date')
-    if error is None:
-        # 강사 클래스의 반복일정 불러오기
-        if len(lecture_list) > 0:
-
-            for idx, lecture_list_info in enumerate(lecture_list):
-                lecture_info = lecture_list_info.lecture_tb
-                lecture_info.start_date = str(lecture_info.start_date)
-                lecture_info.end_date = str(lecture_info.end_date)
-                lecture_info.mod_dt = str(lecture_info.mod_dt)
-                lecture_info.reg_dt = str(lecture_info.reg_dt)
-
-                start_raw = 7
-                ws1.title = lecture_info.start_date + ' 수강정보'
-                ws1['A1'] = '수강 정보'
-                ws1['A1'].font = Font(bold=True, size=15)
-                ws1['A2'] = '시작일자'
-                ws1['B2'] = '종료일자'
-                ws1['C2'] = '등록횟수'
-                ws1['D2'] = '남은횟수'
-                ws1['E2'] = '등록금액'
-                ws1['F2'] = '진행상태'
-                ws1['G2'] = '회원님과 연결상태'
-                ws1['H2'] = '특이사항'
-
-                ws1['A5'] = '수강 이력'
-                ws1['A5'].font = Font(bold=True, size=15)
-                ws1['A6'] = '회차'
-                ws1['B6'] = '시작일자'
-                ws1['C6'] = '진행시간'
-                ws1['D6'] = '구분'
-                ws1['E6'] = '메모'
-
-                ws1.column_dimensions['A'].width = 15
-                ws1.column_dimensions['B'].width = 20
-                ws1.column_dimensions['C'].width = 10
-                ws1.column_dimensions['D'].width = 10
-                ws1.column_dimensions['E'].width = 20
-                ws1.column_dimensions['F'].width = 10
-                ws1.column_dimensions['G'].width = 10
-                ws1.column_dimensions['H'].width = 20
-
-                try:
-                    lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
-                try:
-                    lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
-
-                lecture_info.auth_cd = lecture_test.auth_cd
-
-                try:
-                    lecture_info.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.auth_cd)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
-
-                if lecture_info.auth_cd == 'WAIT':
-                    np_lecture_counts += 1
-                lecture_counts += 1
-
-                # for line in lecture_info.note:
-
-                #    if line in ['\n', '\r\n']:
-                #        line
-                #        print('empty line')
-
-                if '\r\n' in lecture_info.note:
-                    lecture_info.note = lecture_info.note.replace('\r\n', ' ')
-
-                ws1['A3'] = lecture_info.start_date
-                ws1['B3'] = lecture_info.end_date
-                ws1['C3'] = lecture_info.lecture_reg_count
-                ws1['D3'] = lecture_info.lecture_rem_count
-                ws1['E3'] = lecture_info.price
-                ws1['F3'] = lecture_info.state_cd_name.common_cd_nm
-                ws1['G3'] = lecture_info.auth_cd_name.common_cd_nm
-                ws1['H3'] = lecture_info.note
-
-                pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                             en_dis_type='1', use=1).order_by('-start_dt')
-
-                if pt_schedule_data is not None and len(pt_schedule_data) > 0:
-                    schedule_idx = len(pt_schedule_data)
-                    for pt_schedule_info in pt_schedule_data:
-
-                        ws1['A' + str(start_raw)] = str(schedule_idx)
-                        start_date_temp = str(pt_schedule_info.start_dt).split(':')
-                        ws1['B' + str(start_raw)] = start_date_temp[0]+':'+start_date_temp[1]
-
-                        time_duration_temp = pt_schedule_info.end_dt-pt_schedule_info.start_dt
-                        time_duration = str(time_duration_temp).split(':')
-                        time_duration_str = ''
-                        if time_duration[0] != '00' and time_duration[0] != '0':
-                            time_duration_str += time_duration[0]+'시간'
-                        if time_duration[1] != '00' and time_duration[1] != '0':
-                            time_duration_str += time_duration[1]+'분'
-
-                        ws1['C' + str(start_raw)] = time_duration_str
-                        if pt_schedule_info.state_cd == 'PE':
-                            ws1['D' + str(start_raw)] = '완료'
-                        else:
-                            ws1['D' + str(start_raw)] = '시작전'
-
-                        if pt_schedule_info.note is None:
-                            ws1['E' + str(start_raw)] = ''
-                        else:
-                            ws1['E' + str(start_raw)] = pt_schedule_info.note
-                        start_raw += 1
-                        schedule_idx -= 1
-
-                ws1 = wb.create_sheet()
-    user_agent = request.META['HTTP_USER_AGENT']
-    filename = str(member_info.name+'_회원님_수강정보.xlsx').encode('utf-8')
-    # test_str = urllib.parse.unquote('한글')
-    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    if 'chrome' in str(user_agent) or 'Chrome' in str(user_agent):
-        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
-    elif 'safari' in str(user_agent) or 'Safari' in str(user_agent):
-        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
-    elif 'firefox' in str(user_agent) or 'Firefox' in str(user_agent):
-        response['Content-Disposition'] = 'attachment; filename*="'+urllib.parse.quote(filename)+'"'
-    else:
-        response['Content-Disposition'] = 'attachment; filename="'+urllib.parse.quote(filename)+'"'
-    # filename="'+test_str+'.xlsx"'
-    # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
-
-    if error is None:
-
-        return response
-    else:
-
-        return response
-
-
-@csrf_exempt
-def check_import_excel_member_list_logic(request):
-
-    class_id = request.session.get('class_id', '')
-    member_id = request.GET.get('member_id', '')
-
-    error = None
-    response = None
-
-    if error is None:
-
-        return response
-    else:
-
-        return response
-
-
-@csrf_exempt
-def check_import_excel_member_info_logic(request):
-
-    class_id = request.session.get('class_id', '')
-    member_id = request.GET.get('member_id', '')
-
-    error = None
-    excel_document = openpyxl.load_workbook('sample.xlsx')
-    response = None
-    # response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     if error is None:
 
