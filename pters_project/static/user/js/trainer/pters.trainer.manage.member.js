@@ -2536,9 +2536,9 @@ function send_member_modified_data(dbID){
 //회원에게 재연결 요청을 전송한다.
 function resend_member_reg_data_pc(lectureID, dbID){
     $.ajax({
-        url:'/trainer/resend_lecture_info/',
+        url:'/trainer/update_lecture_connection_info/',
         type:'POST',
-        data:{"lecture_id":lectureID,"member_id":dbID, "next_page":'/trainer/get_member_list/'},
+        data:{"lecture_id":lectureID,"member_id":dbID,"member_view_state_cd": 'WAIT' , "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2767,7 +2767,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
 //회원의 진행상태 연결해제를 한다.
 function disconnect_member_lecture_data(stateCode, lectureID, dbID){
         $.ajax({
-                url:'/trainer/update_lecture_info/',
+                url:'/trainer/update_lecture_connection_info/',
                 type:'POST',
                 data:{"lecture_id":lectureID, "member_id": dbID, "member_view_state_cd": stateCode ,"next_page":'/trainer/get_member_list/'},
                 dataType : 'html',
