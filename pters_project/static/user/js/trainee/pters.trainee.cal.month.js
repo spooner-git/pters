@@ -527,10 +527,11 @@ $(document).ready(function(){
 					for (var i=0; i<jsondata.pushArray.length; i++){
 						//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
 					}
-					ajaxClassTime("this");
+					ajaxClassTime("this", 46, "callback", function(json){
+						plancheck(clicked_td_date_info, json)
+					});
 					close_reserve_popup()
 	            }
-	            
 			  },
 
 	          complete:function(){
@@ -632,9 +633,10 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
-					ajaxClassTime("this");
+					ajaxClassTime("this", 46, "callback", function(json){
+						plancheck(clicked_td_date_info, json)
+					});
 					close_delete_confirm_popup()
-					plancheck(clicked_td_date_info)
 	            }
 	            
 			  },
@@ -999,7 +1001,7 @@ $(document).ready(function(){
 			}else{
 				var availability = 'notavailable'
 			}
-			for(i=currentDate;i<=currentDate+Options.availDate;i++){
+			for(i=currentDate;i<currentDate+Options.availDate;i++){
 				if(i>lastDay[oriMonth-1] && oriMonth<12){
 				 	$('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass(availability)
 				}else if(i>lastDay[oriMonth-1] && oriMonth==12){
@@ -1630,7 +1632,7 @@ var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시�
 var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
 var reserveOption = Options.reserve
 
-function ajaxClassTime(referencedate, howmanydates){
+function ajaxClassTime(referencedate, howmanydates, use, callback){
 	if(referencedate == "this"){
 		var yyyy = $('#yearText').text()
 		var mm = $('#monthText').text().replace(/월/gi,"")
@@ -1678,6 +1680,10 @@ function ajaxClassTime(referencedate, howmanydates){
 			$('.dateMytime').removeClass('dateMytime')
 			$('.memo, .greymemo').text('').removeClass('greymemo')
 			classDates(jsondata)
+
+			if(use == "callback"){
+				callback(jsondata)
+			}
 		}
 
 	  },
