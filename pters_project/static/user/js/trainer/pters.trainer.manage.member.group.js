@@ -1,3 +1,5 @@
+var db_id_flag = 0;
+var user_id_flag = 1;
 
 /////////////그룹타입, 그룹정원 드랍다운 값을 Form에 셋팅/////////////////////////////////////////
 $('#groupname').keyup(function(){
@@ -195,7 +197,7 @@ $('button#addBySearch_search').click(function(e){
 	$.ajax({
             url:'/trainer/get_member_info/',
             type:'POST',
-            data: {'id':searchID},
+            data: {'id':searchID, 'id_flag':user_id_flag},
             dataType : 'html',
 
             beforeSend:function(){

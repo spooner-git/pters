@@ -909,7 +909,7 @@ function ajaxClassTime(){
 
 		var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('ajaxClassTime')
 		$.ajax({
-		  url: '/trainer/cal_day_ajax/',
+		  url: '/trainer/get_trainer_schedule/',
 		  type : 'POST',
 		  data : {"date":today_form, "day":46},
 		  dataType : 'html',

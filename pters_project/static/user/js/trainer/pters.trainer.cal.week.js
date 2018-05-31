@@ -1643,9 +1643,9 @@ function ajaxClassTime(reference){
 			var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
 		}
 
-		var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/cal_day_ajax/')
+		var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
 		$.ajax({
-		  url: '/trainer/cal_day_ajax/',
+		  url: '/trainer/get_trainer_schedule/',
 		  type : 'POST',
 		  data : {"date":today_form, "day":14},
 		  dataType : 'html',

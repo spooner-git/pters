@@ -13,7 +13,7 @@ from httplib2 import Http
 from configs import settings
 from login.models import LogTb, PushInfoTb
 from schedule.models import GroupLectureTb, ClassLectureTb, LectureTb, ScheduleTb, GroupTb, MemberLectureTb, \
-    MemberClassTb
+    MemberClassTb, ClassTb
 
 
 # 1:1 Lecture Id 조회
@@ -418,3 +418,159 @@ def func_send_push_trainee(class_id, title, message):
         resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
                                   headers={'Content-Type': 'application/json;', 'Authorization': 'key=' + push_server_id})
 
+
+def func_get_trainer_schedule(context, class_id, start_date, end_date):
+
+    error = None
+    class_info = None
+    off_schedule_id = []
+    off_schedule_start_datetime = []
+    off_schedule_end_datetime = []
+    off_schedule_note = []
+
+    pt_schedule_id = []
+    pt_schedule_lecture_id = []
+    pt_schedule_start_datetime = []
+    pt_schedule_end_datetime = []
+    pt_schedule_member_name = []
+    pt_schedule_member_id = []
+    pt_schedule_finish_check = []
+    pt_schedule_note = []
+    pt_schedule_idx = []
+    group_schedule_id = []
+    group_schedule_start_datetime = []
+    group_schedule_end_datetime = []
+    group_schedule_finish_check = []
+    group_schedule_note = []
+    group_schedule_group_id = []
+    group_schedule_name = []
+    group_schedule_max_member_num = []
+    group_schedule_current_member_num = []
+
+    # 강사 정보 가져오기
+    try:
+        class_info = ClassTb.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        error = '강좌 정보를 불러오지 못했습니다.'
+
+    # OFF 일정 조회
+    if error is None:
+        off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                      en_dis_type='0', start_dt__gte=start_date,
+                                                      start_dt__lt=end_date)
+        for off_schedule_datum in off_schedule_data:
+            off_schedule_id.append(off_schedule_datum.schedule_id)
+            off_schedule_start_datetime.append(str(off_schedule_datum.start_dt))
+            off_schedule_end_datetime.append(str(off_schedule_datum.end_dt))
+            if off_schedule_datum.note is None:
+                off_schedule_note.append('')
+            else:
+                off_schedule_note.append(off_schedule_datum.note)
+
+    # PT 일정 조회
+    if error is None:
+        # 강사에 해당하는 강좌 정보 불러오기
+        lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=1)
+
+        for lecture_datum_info in lecture_data:
+            lecture_datum = lecture_datum_info.lecture_tb
+            # 강좌별로 연결되어있는 회원 리스트 불러오기
+
+            if error is None:
+                # 강좌별로 연결된 PT 스케쥴 가져오기
+                lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                                           lecture_tb=lecture_datum.lecture_id,
+                                                                           en_dis_type='1',
+                                                                           start_dt__gte=start_date,
+                                                                           start_dt__lt=end_date, use=1).order_by('start_dt')
+                # PT 스케쥴 정보 셋팅
+                idx = 0
+                for pt_schedule_datum in lecture_datum.pt_schedule_data:
+                    # lecture schedule id 셋팅
+                    idx += 1
+                    pt_schedule_id.append(pt_schedule_datum.schedule_id)
+                    # lecture schedule 에 해당하는 lecture id 셋팅
+                    pt_schedule_lecture_id.append(lecture_datum.lecture_id)
+                    pt_schedule_member_name.append(lecture_datum.member.name)
+                    pt_schedule_member_id.append(lecture_datum.member.member_id)
+                    pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
+                    pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
+                    pt_schedule_idx.append(idx)
+
+                    if pt_schedule_datum.note is None:
+                        pt_schedule_note.append('')
+                    else:
+                        pt_schedule_note.append(pt_schedule_datum.note)
+                    # 끝난 스케쥴인지 확인
+                    if pt_schedule_datum.state_cd == 'PE':
+                        pt_schedule_finish_check.append(1)
+                    else:
+                        pt_schedule_finish_check.append(0)
+
+    if error is None:
+        # 강좌별로 연결된 그룹 스케쥴 가져오기
+        pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                     group_tb__isnull=False,
+                                                     lecture_tb__isnull=True,
+                                                     en_dis_type='1',
+                                                     start_dt__gte=start_date,
+                                                     start_dt__lt=end_date, use=1).order_by('start_dt')
+
+        idx = 0
+        for pt_schedule_datum in pt_schedule_data:
+            # lecture schedule id 셋팅
+            idx += 1
+            group_schedule_id.append(pt_schedule_datum.schedule_id)
+            group_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
+            group_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
+            if pt_schedule_datum.group_tb is not None and pt_schedule_datum.group_tb != '':
+                schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                        group_tb_id=pt_schedule_datum.group_tb.group_id,
+                                                                        lecture_tb__isnull=False,
+                                                                        start_dt=pt_schedule_datum.start_dt,
+                                                                        end_dt=pt_schedule_datum.end_dt,
+                                                                        use=1).count()
+                group_schedule_group_id.append(pt_schedule_datum.group_tb.group_id)
+                group_schedule_name.append(pt_schedule_datum.group_tb.name)
+                group_schedule_max_member_num.append(pt_schedule_datum.group_tb.member_num)
+                group_schedule_current_member_num.append(schedule_current_member_num)
+
+            if pt_schedule_datum.note is None:
+                group_schedule_note.append('')
+            else:
+                group_schedule_note.append(pt_schedule_datum.note)
+            # 끝난 스케쥴인지 확인
+            if pt_schedule_datum.state_cd == 'PE':
+                group_schedule_finish_check.append(1)
+            else:
+                group_schedule_finish_check.append(0)
+
+    if error is None:
+        class_info.schedule_check = 0
+        class_info.save()
+
+    context['off_schedule_id'] = off_schedule_id
+    context['off_schedule_start_datetime'] = off_schedule_start_datetime
+    context['off_schedule_end_datetime'] = off_schedule_end_datetime
+    context['off_schedule_note'] = off_schedule_note
+    context['pt_schedule_id'] = pt_schedule_id
+    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
+    context['pt_schedule_member_name'] = pt_schedule_member_name
+    context['pt_schedule_member_id'] = pt_schedule_member_id
+
+    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
+    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
+    context['pt_schedule_finish_check'] = pt_schedule_finish_check
+    context['pt_schedule_note'] = pt_schedule_note
+    context['pt_schedule_idx'] = pt_schedule_idx
+    context['group_schedule_id'] = group_schedule_id
+    context['group_schedule_start_datetime'] = group_schedule_start_datetime
+    context['group_schedule_end_datetime'] = group_schedule_end_datetime
+    context['group_schedule_group_id'] = group_schedule_group_id
+    context['group_schedule_name'] = group_schedule_name
+    context['group_schedule_max_member_num'] = group_schedule_max_member_num
+    context['group_schedule_current_member_num'] = group_schedule_current_member_num
+    context['group_schedule_note'] = group_schedule_note
+    context['group_schedule_finish_check'] = group_schedule_finish_check
+
+    return context

@@ -18,20 +18,20 @@
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="member_name"   id="id_member_name_delete">
     <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
   </form>
   <form action="{% url 'schedule:delete_schedule' %}" id="daily-off-delete-form" method="post">
     {% csrf_token %}
     <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
     <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
   </form>
   <form action="{% url 'schedule:finish_schedule' %}" id="pt-finish-form" method="get">
     {% csrf_token %}
     <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
     <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
     <input type="hidden" name="member_name"   id="id_member_name_finish">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
   </form>
    
   <!--팝업메뉴-->
@@ -158,7 +158,7 @@
         <input type="hidden" name="time_duration" id="id_time_duration">
         <input type="hidden" name="training_time" id="id_training_time">
         <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
     </form>
 
     <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
@@ -167,7 +167,7 @@
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
         <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
     </form>
     
     <div class="ptaddbox" id="pcaddpopup">

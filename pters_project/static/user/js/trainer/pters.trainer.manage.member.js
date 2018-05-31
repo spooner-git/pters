@@ -4,7 +4,8 @@ $(document).ready(function(){
 $('form button').click(function(e){
     e.preventDefault()
 })
-
+var db_id_flag = 0;
+var user_id_flag = 1;
 var filter = "win16|win32|win64|mac|macintel";
 var platform_check;
 var browser_check;
@@ -668,7 +669,7 @@ if (agent.indexOf("firefox") != -1) {
         $.ajax({
             url:'/trainer/get_member_info/',
             type:'POST',
-            data: {'id':searchID},
+            data: {'id':searchID, 'id_flag':user_id_flag},
             dataType : 'html',
 
             beforeSend:function(){
@@ -2229,9 +2230,9 @@ function limit_char(e){
 //서버로부터 회원의 기본정보를 받아온다.
 function get_indiv_member_info(dbID){
     $.ajax({
-              url: '/trainer/get_member_info_by_db_id/',
+              url: '/trainer/get_member_info/',
               type:'POST',
-              data: {"member_id": dbID},
+              data: {"member_id": dbID, 'id_flag':db_id_flag},
               dataType : 'html',
 
               beforeSend:function(){
@@ -3823,7 +3824,7 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
     $.ajax({
         url:'/schedule/delete_repeat_schedule/',
         type:'POST',
-        data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/cal_day_ajax/'},
+        data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_trainer_schedule/'},
         dataType:'html',
 
         beforeSend:function(){
@@ -3869,7 +3870,7 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
     $.ajax({
             url:'/schedule/delete_group_repeat_schedule/',
             type:'POST',
-            data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/cal_day_ajax/'},
+            data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_trainer_schedule/'},
             dataType:'html',
 
             beforeSend:function(){
