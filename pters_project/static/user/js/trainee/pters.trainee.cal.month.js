@@ -270,8 +270,6 @@ $(document).ready(function(){
 	*/
 
 	$(document).on('click','td',function(){
-		$('#cal_popup_plancheck').fadeIn('fast');
-		shade_index(100)
 		var info = $(this).attr('data-date').split('_')
 		var yy=info[0]
 		var mm=info[1]
@@ -281,9 +279,28 @@ $(document).ready(function(){
 		var dayarry = ['일','월','화','수','목','금','토']
 		var day = dayarry[dayraw];
 		var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-		$('.popup_ymdText').html(infoText)
-		plancheck(yy+'_'+mm+'_'+dd, initialJSON)
 		clicked_td_date_info = yy+'_'+mm+'_'+dd
+		if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
+			$('#shade2').css({'display':'block'});
+			$('#ng_popup_text').html('<p>현재시간은 일정 예약변경이 불가한 시간입니다.</p><p style="color:#fe4e65;font-size=13px;">예약변경 가능 시간대<br> '+availableStartTime+'시 ~ '+availableEndTime+'시</p>')
+			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
+			//$(this).fadeOut(5000)
+			})
+		}else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
+			$('#cal_popup_plancheck').fadeIn('fast');
+			$('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
+			$('.cancellimit_time').text(Options.cancellimit+"시간 전")
+			plancheck(yy+'_'+mm+'_'+dd, initialJSON)
+			$('.plan_raw_add').hide()
+			shade_index(100)
+		}else{
+			$('#cal_popup_plancheck').fadeIn('fast');
+			$('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
+			$('.cancellimit_time').text(Options.cancellimit+"시간 전")
+			plancheck(yy+'_'+mm+'_'+dd, initialJSON)
+			$('.plan_raw_add').show()
+			shade_index(100)
+		}
 	})
 
 	$(document).on('click','.plan_raw',function(){
@@ -296,6 +313,8 @@ $(document).ready(function(){
 			}
 			
 			var selectedDate = $('.popup_ymdText').text()
+			var selectedDateyyyymmdd = date_format_yyyy_m_d_to_yyyymmdd($('.popup_ymdText').attr('data-date'))
+			var todayYYYYMMDD = date_format_yyyy_m_d_to_yyyymmdd(String(oriYear)+'_'+String(oriMonth)+'_'+String(oriDate))
 			var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
 			var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0]
 			var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+$(this).attr('data-dbid')+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
@@ -326,14 +345,22 @@ $(document).ready(function(){
 				$("#popup_btn_complete").show()
 				$("#popup_text1").css("display","block")
 				$("#popup_sign_img").css("display","none")
+				if(selectedDateyyyymmdd < todayYYYYMMDD){
+					$("#popup_text1").css("display","none")
+				}
 			}
 			else{
 				$("#popup_btn_complete").hide()
 				$("#popup_text1").css("display","none")
 				$("#popup_sign_img").css("display","block")
 				$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
+				if(selectedDateyyyymmdd < todayYYYYMMDD){
+					$("#popup_text1").css("display","none")
+				}
 			}
 			schedule_on_off = 1;
+
+			
 
 			toggleGroupParticipantsList('off')
 			$('#subpopup_addByList_plan').hide()
@@ -369,7 +396,6 @@ $(document).ready(function(){
 	})
 
 	
-
 
 	/*
 	$(document).on('click','td',function(){   //날짜에 클릭 이벤트 생성
@@ -475,6 +501,7 @@ $(document).ready(function(){
     })
 
     function send_reservation(){
+    	console.log($('#pt-add-form').serialize())
 		$.ajax({
 	          url: '/trainee/pt_add_logic/',
 	          data: $('#pt-add-form').serialize(),
@@ -487,7 +514,7 @@ $(document).ready(function(){
 
 	          success:function(data){
 	          	var jsondata = JSON.parse(data);
-	          	console.log(data)
+	          	console.log(jsondata)
 	          	if(jsondata.messageArray.length>0){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
@@ -580,7 +607,6 @@ $(document).ready(function(){
 			ajax_block_during_sending_send_delete = false
 			send_delete()
 		}
-		
 	})
 
 	function send_delete(){
@@ -591,27 +617,25 @@ $(document).ready(function(){
 			  type:'POST',
 
 	          beforeSend:function(){
-	          	//beforeSend();
+	          	beforeSend();
 	          },
 
 	          success:function(data){
-	          	console.log('test')
 	          	var jsondata = JSON.parse(data);
 	          	console.log(jsondata)
 	          	if(jsondata.messageArray.length>0){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
-					for (var i=0; i<=jsondata.pushArray.length; i++){
-						//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-					}
 					ajaxClassTime("this");
 					close_delete_confirm_popup()
+					plancheck(clicked_td_date_info)
 	            }
 	            
 			  },
 
 	          complete:function(){
+	          	completeSend()
 	          	ajax_block_during_sending_send_delete = true
 	          },
 
@@ -646,7 +670,7 @@ $(document).ready(function(){
 	function close_delete_confirm_popup(){
 		if($('#cal_popup3').css('display')=='block'){
 				$("#cal_popup3").css({'display':'none'})
-				$('#shade2').css({'display':'none'});
+				shade_index(100)
 		}
 	}
 
@@ -908,8 +932,6 @@ $(document).ready(function(){
 		for(var i=0; i<len; i++){
 			if(date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0],'_') == dateinfo){
 				if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
-
-
 					var planYear    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0])
 				    var planMonth   = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1])
 				    var planDate    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2])
@@ -951,6 +973,9 @@ $(document).ready(function(){
 																	')</div>')
 				}
 			}
+		}
+		if(htmlTojoin.length == 0){
+			htmlTojoin.push('<div style="text-align:center;margin-top:18px;margin-bottom:18px;font-weight:bold;">예약 가능한 일정이 없습니다.</div>')
 		}
 		$('#groupTimeSelect').html(htmlTojoin.join(''))
 	}
@@ -996,6 +1021,12 @@ $(document).ready(function(){
 			var dbID = ''
 			var group_id = jsondata.group_schedule_group_id[i]
 			var scheduleID = jsondata.group_schedule_id[i]
+			var index = jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i])
+			if(index != -1){
+				var scheduleID = jsondata.scheduleIdArray[index]
+			}else{
+				var scheduleID = ''
+			}
 			var classLectureID = ''
 			var scheduleFinish = jsondata.group_schedule_finish_check[i]
 			var memoArray = jsondata.group_schedule_note[i]
@@ -1588,6 +1619,7 @@ var date2 = new Date();
 var oriYear = date.getFullYear();
 var oriMonth = date.getMonth()+1;
 var oriDate = date.getDate();
+
 
 var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시작 시간 (시작)
 var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
