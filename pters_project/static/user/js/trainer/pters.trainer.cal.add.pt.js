@@ -1443,7 +1443,7 @@ function clear_start_dur_dropdown(){
 function get_repeat_info(dbID){
     if(addTypeSelect == "repeatptadd" || addTypeSelect == "ptadd"){
       //var url_ = '/trainer/read_member_lecture_data_from_schedule/'
-      var url_ = '/trainer/read_member_lecture_data/'
+      var url_ = '/trainer/get_member_repeat_schedule/'
       var data_ = {"member_id": dbID}
       var fill_option = 'class'
       var type_ = 'POST'
