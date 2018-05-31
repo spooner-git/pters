@@ -1611,7 +1611,15 @@ function ajaxClassTime(referencedate, howmanydates){
 			$('#errorMessageBar').show()
 			$('#errorMessageText').text(jsondata.messageArray)
 		}else{
-			$('#countRemainData span').text(jsondata.lecture_avail_count)
+			if(jsondata.group_lecture_reg_count[0] != 0){
+				$('#countRemainData span:first-child').text(jsondata.lecture_avail_count+' / '+ jsondata.group_lecture_avail_count+' ')
+				$('#countRemainData span:nth-of-type(2)').text('회 (1:1/그룹)')
+			}else{
+				$('#countRemainData span:first-child').text(jsondata.lecture_avail_count)
+				$('#countRemainData span:nth-of-type(2)').text('회')
+			}
+			
+
 			$('.classTime,.offTime').parent().html('<div></div>')
 			$('.blackballoon, .balloon').html('')
 			$('.blackballoon').removeClass('blackballoon')
