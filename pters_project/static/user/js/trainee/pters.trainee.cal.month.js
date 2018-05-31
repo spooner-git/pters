@@ -300,13 +300,13 @@ $(document).ready(function(){
 			plancheck(yy+'_'+mm+'_'+dd, initialJSON)
 			$('.plan_raw_add').show()
 			shade_index(100)
-		}else{
+		}/*else{
 			shade_index(100)
 			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')
 			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
 			//$(this).fadeOut(2800)
 			})
-		}
+		}*/
 	})
 
 	$(document).on('click','.plan_raw',function(){
