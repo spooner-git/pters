@@ -1763,7 +1763,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planColor = 'groupTime'
       var planMemberNum = jsondata.group_schedule_max_member_num;
       var planMemberDbid = ''
-      var planCode = '[G]'
+      var planCode = ''
     break;
   }
 
@@ -1856,6 +1856,12 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planColor_ = planColor
     }
 
+    if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
+      var textcolor = "bluetext"
+    }else{
+      var textcolor = ""
+    }
+
 
 
     if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
@@ -1866,7 +1872,15 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
               .addClass(planColor_)
               .css({'height':Number(planDura*planheight-1)+'px'})
               .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');    
-    }else if(option != 'class'){
+    }else if(option == 'group'){
+       tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
+              .attr(option+'-schedule-id' , planScheduleIdArray[i])
+              .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
+                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+              .addClass(planColor_)
+              .css({'height':Number(planDura*planheight-1)+'px'})
+              .html('<span class="memberName">'+'<span class="groupnumstatus '+textcolor+'">('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');    
+    }else if(option == 'off'){
        tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
               .attr(option+'-schedule-id' , planScheduleIdArray[i])
               .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
