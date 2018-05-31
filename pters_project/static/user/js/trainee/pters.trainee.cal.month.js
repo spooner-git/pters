@@ -1023,7 +1023,7 @@ $(document).ready(function(){
 			var stime = stime1+'_'+sminute
 			var etime = etime1+'_'+eminute
 			var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
-			if(ymd == dateinfo){
+			if(ymd == dateinfo && jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) != -1){
 				dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
 			}
 		}
