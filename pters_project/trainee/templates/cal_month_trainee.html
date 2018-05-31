@@ -19,6 +19,7 @@
     {% csrf_token %}
     <input type="hidden" name="class_id" id="id_class_id" value="{{ request.session.class_id }}">
     <input type="hidden" name="lecture_id" id="id_lecture_id" value="{{ request.session.lecture_id }}">
+    <input type="hidden" name="group_schedule_id" id="id_group_schedule_id">
     <input type="hidden" name="training_date" id="id_training_date">
     <input type="hidden" name="time_duration" id="id_time_duration">
     <input type="hidden" name="training_time" id="id_training_time">
@@ -115,7 +116,7 @@
           <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">그룹
             <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
           </div>
-          <div class="ptersCheckbox"><div></div></div>
+          <div id="groupTimeSelect"></div>
           <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
         </div>
 

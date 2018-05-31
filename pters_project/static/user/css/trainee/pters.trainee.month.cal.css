@@ -890,6 +890,11 @@ img,a,div,span,p{
 }
 
 
+.ptersCheckbox{
+	display: inline-block;
+	margin-right: 4px !important;
+}
+
 
 @media(min-width:415px){
 	#cal_popup{
@@ -970,6 +975,7 @@ img,a,div,span,p{
 
 	.groupreserve{
 		display: none;
+		min-height: 128px;
 	}
 
 	#popup_info,#popup_info2,#popup_info3,#popup_info4, #popup_info3_memo{

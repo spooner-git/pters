@@ -78,16 +78,31 @@ $(document).ready(function(){
     	}
     	$(this).addClass('mode_active')
     	$(this).siblings('.mode_switch_button').removeClass('mode_active')
+    	clear_pt_add_logic_form()
+    	check_dropdown_selected()
     })
 
+    function clear_pt_add_logic_form(){
+    	$('#timeGraph td').removeClass('graphindicator_leftborder')
+		$("#starttimesSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
+    	$('#id_group_schedule_id').val('')
+    	$('#id_time_duration').val('')
+    	$('#id_training_time').val('')
+    }
+
     //등록횟수(빠른입력방식) 선택
-    $('.groupreserve .ptersCheckbox').click(function(){
-        $('.groupreserve div.checked').removeClass('checked ptersCheckboxInner');
+    $(document).on('click','#groupTimeSelect .ptersCheckbox',function(){
+    	$('#id_group_schedule_id').val($(this).attr('group-schedule-id'))
+    	$('#id_training_time').val($(this).attr('data-time'))
+    	$('#id_time_duration').val($(this).attr('data-dur'))
+
+
+    	$('#groupTimeSelect div.checked').removeClass('checked ptersCheckboxInner');
         var pterscheckbox = $(this).find('div');
         $(this).addClass('checked');
         pterscheckbox.addClass('ptersCheckboxInner checked');
         check_dropdown_selected();
-    });
+    })
 
     $(document).on('click','.admonth',function(){
     	get_trainee_participate_group()
@@ -423,12 +438,30 @@ $(document).ready(function(){
     function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화 
    		var durSelect = $("#durationsSelected button");
        	var startSelect = $("#starttimesSelected button")
+
+       	var form_date = $('#id_training_date')
+       	var form_time = $('#id_training_time')
+       	var form_dura = $('#id_time_duration')
+       	var form_group = $('#id_group_schedule_id')
+
+       	console.log(form_date.val(), form_time.val(), form_dura.val())
+       	if(form_date.val() && form_time.val() && form_dura.val()){
+       	    $("#submitBtn").addClass('submitBtnActivated');
+           	select_all_check=true;
+       	}else{
+       		$("#submitBtn").removeClass('submitBtnActivated');
+       	    select_all_check=false;
+    	}
+
+
+       	/*
     	if((startSelect).hasClass("dropdown_selected")==true){
        	    $("#submitBtn").addClass('submitBtnActivated');
            	select_all_check=true;
        	}else{
        	    select_all_check=false;
     	}
+    	*/
     }
 
     var ajax_block_during_sending_send_reservation = true
@@ -873,6 +906,61 @@ $(document).ready(function(){
 	}
 
 
+
+	function draw_time_group_graph(jsondata, dateinfo){
+		var len = jsondata.group_schedule_group_id.length;
+		var htmlTojoin = []
+		for(var i=0; i<len; i++){
+			if(date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0],'_') == dateinfo){
+				if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
+
+
+					var planYear    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0])
+				    var planMonth   = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1])
+				    var planDate    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2])
+				    var planHour    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0])
+				    var planMinute  = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1]
+				    var planEDate   = Number(jsondata.group_schedule_end_datetime[i].split(' ')[0].split('-')[2]) 
+				    var planEndHour = Number(jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0])
+				    var planEndMin  = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
+					if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00 
+				        if(planEndHour-planHour == 0){
+				          var planDura = "0.5"
+				        }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
+				          var planDura = String((planEndHour-planHour-1))+'.5'
+				        }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == 30){
+				          var planDura = String((planEndHour-planHour))+'.5'
+				        }
+				    }else{
+				      var planDura = planEndHour - planHour;
+				    }
+				    
+				    //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+				    if(planEDate == planDate+1 && planEndHour==planHour){
+				      var planDura = 24
+				    }else if(planEDate == planDate+1 && planEndHour == 0){
+				      var planDura = 24-planHour
+				    }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
+				      var planDura = 24-planHour
+				    }
+
+
+					htmlTojoin.push('<div><div class="ptersCheckbox" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
+																	'" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
+																	'" data-dur="'+planDura+
+																	'" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div></div></div>'+
+																	jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' - ['+
+																	jsondata.group_schedule_group_name[i]+'] ('+
+																	jsondata.group_schedule_current_member_num[i]+'/'+
+																	jsondata.group_schedule_max_member_num[i]+
+																	')</div>')
+				}
+			}
+		}
+		$('#groupTimeSelect').html(htmlTojoin.join(''))
+	}
+
+
 	function availableDateIndicator(availableStartTime,Endtime){ 
 		// 요소설명
 		// availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 시작시간'
@@ -1032,6 +1120,7 @@ $(document).ready(function(){
 	                timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
 			        timeGraphSet("off","grey", "AddClass", jsondata);
 	                startTimeSet('class');  //일정등록 가능한 시작시간 리스트 채우기
+	                draw_time_group_graph(jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form,'_'))
 	          	}
                 
               },
@@ -1602,7 +1691,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 			$("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i],'data-countnum':plancount})
 			$("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
 			$("td[data-date="+classDate+"] div._classDate").addClass('greydateMytime')
-			if($("td[data-date="+classDate+"] div._classTime div").length <2){
+			if($("td[data-date="+classDate+"] div._classTime div").length <3){
 				$("td[data-date="+classDate+"] div._classTime").addClass('balloon').append(finishImg)
 			}else{
 				$("td[data-date="+classDate+"] div._classTime").append('<div><span>…</span></div>')
