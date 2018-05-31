@@ -1431,7 +1431,7 @@ $(document).ready(function(){
 	      var offText = text2
 	    }
 
-	    if(offHour.length<2){
+	    if(Number(offHour) < 10){
 	      timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':'+offmin+':00.000000" class="pointerList">'+offText+offHours+':'+offmin+'</a></li>' //text3 = :00
 	    }else{
 	      timeArray[i] ='<li><a data-trainingtime="'+offHour+':'+offmin+':00.000000" class="pointerList">'+offText+offHours+':'+offmin+'</a></li>'
