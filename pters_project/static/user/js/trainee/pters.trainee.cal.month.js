@@ -1292,7 +1292,7 @@ $(document).ready(function(){
 	  
 	  /*업무시간 설정*/
 
-	  //timeGraphLimitSet(Options.limit)
+	  timeGraphLimitSet(Options.limit)
 	}
 
     function timeGraphLimitSet(limit){  //회원달력 전용 timeGraphLimitSet 함수 
@@ -1319,18 +1319,23 @@ $(document).ready(function(){
         }
         var hh = date.getHours();
         var today = yy+mm+dd
-        if(selecteddate>today && selecteddate < Number(today)+parseInt(limit/24)){
+        console.log(selecteddate,today,Number(today)+parseInt(limit/24))
+        if(selecteddate > today && selecteddate < Number(today)+parseInt(limit/24)){
           for(var i=0;i<=23;i++){
-            var time = $('#'+i+'g')
-              time.addClass('greytimegraph')
+              //var time = $('#'+i+'g')
+              //time.addClass('greytimegraph')
+              $('#'+i+'g_00').addClass('greytimegraph')
+              $('#'+i+'g_30').addClass('greytimegraph_greyleft')
           }
         }else if(selecteddate==today){
         	for(var i=0;i<=23;i++){
-            var time = $('#'+i+'g')
-            if(i<=hh+limit){
-              time.addClass('greytimegraph')
+	            //var time = $('#'+i+'g')
+	            if(i<=hh+limit){
+	              //time.addClass('greytimegraph')
+	              $('#'+i+'g_00').addClass('greytimegraph')
+	              $('#'+i+'g_30').addClass('greytimegraph_greyleft')
+	            }
             }
-          }
         }
 
     }
