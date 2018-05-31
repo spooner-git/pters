@@ -1043,7 +1043,6 @@ def pt_add_logic(request):
     if error is None:
         if start_date >= avail_end_date:
             error = '입력할 수 없는 날짜입니다.'
-
     if error is None:
         if start_date < disable_time:
             error = '입력할 수 없는 일정입니다.'
@@ -1059,8 +1058,9 @@ def pt_add_logic(request):
             except ObjectDoesNotExist:
                 group_schedule_info = None
             if group_schedule_info is not None:
-                group_schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id, lecture_tb__member_id=request.user.id)
-
+                group_schedule_data = ScheduleTb.objects.filter(group_tb_id=group_schedule_info.group_tb_id,
+                                                                group_schedule_id=group_schedule_id,
+                                                                lecture_tb__member_id=request.user.id)
                 if len(group_schedule_data) == 0:
                     lecture_id = func_get_group_lecture_id(group_schedule_info.group_tb_id, request.user.id)
                 else:
@@ -1182,6 +1182,8 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
                 group_id = group_schedule_info.group_tb_id
             except ObjectDoesNotExist:
                 error = '그룹 일정 정보를 불러오지 못했습니다.'
+        else:
+            group_schedule_id = None
 
     if error is None:
         time_duration_temp = class_info.class_hour*int(pt_schedule_time_duration)
@@ -1232,13 +1234,13 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
 
                 if error is None:
                     if group_schedule_info is not None and group_schedule_info != '':
+                        error = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
+                    else:
                         error = func_date_check(class_id, schedule_result['schedule_id'],
                                                 pt_schedule_date, start_date, end_date)
 
                         if error is not None:
                             error += ' 일정이 중복되었습니다.'
-                    else:
-                        error = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
 
                 if error is not None:
                     raise InternalError()

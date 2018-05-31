@@ -14,8 +14,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.views.decorators.cache import cache_control
-from django.views.generic import TemplateView
 
 from trainer import views
 
@@ -52,10 +50,10 @@ urlpatterns = [
     # 진행 완료 회원 목록 조회
     url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
     # 회원 데이터 관련
-    # 회원 수강 list 조회
-    # 회원 스케쥴 데이터 read
     url(r'^read_lecture_by_class_member_ajax/$', views.ReadLectureByClassMemberAjax.as_view(), name='read_lecture_by_class_member_ajax'),
+    # 회원 수강 list 조회
     url(r'^read_member_lecture_data/$', views.ReadMemberLectureData.as_view(), name='read_member_lecture_data'),
+    # 회원 스케쥴 데이터 read
     url(r'^read_member_schedule_data/$', views.ReadMemberScheduleDataView.as_view(), name='read_member_schedule_data'),
 
     # 엑셀 export/import 기능
