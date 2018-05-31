@@ -1391,9 +1391,9 @@ function ajaxTimeGraphSet(date, use, callback){
       durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
       $('#durations_mini, #durations_mini').html('')
       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
-      var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/cal_day_ajax')
+      var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule')
       $.ajax({
-        url: '/trainer/cal_day_ajax/',
+        url: '/trainer/get_trainer_schedule/',
         type : 'POST',
         data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
         dataType : 'html',

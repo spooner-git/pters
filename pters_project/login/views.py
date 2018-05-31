@@ -180,7 +180,7 @@ def logout_trainer(request):
 
 # 회원가입 api
 class ResendEmailAuthenticationView(RegistrationView, View):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
         username = request.POST.get('before_user_id', '')
@@ -268,7 +268,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
 
 # 회원가입 api
 class ResetPasswordView(View):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
         email = request.POST.get('email', '')
@@ -406,7 +406,7 @@ def add_member_info_logic_test(request):
 
 
 class AddMemberView(RegistrationView, View):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
 
@@ -491,7 +491,7 @@ class AddMemberView(RegistrationView, View):
 
 
 class AddMemberNoEmailView(View):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
 
@@ -503,7 +503,6 @@ class AddMemberNoEmailView(View):
         birthday_dt = request.POST.get('birthday', '')
         group_id = request.POST.get('group_id', '')
         # contents = request.POST.get('contents', '')
-        print(group_id)
         context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
         if context['error'] is not None:
             logger.error(name+'[강사 회원가입]'+context['error'])
@@ -514,7 +513,7 @@ class AddMemberNoEmailView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CheckMemberIdView(View):
-    template_name = 'id_check_ajax.html'
+    template_name = 'ajax/id_check_ajax.html'
     error = ''
 
     def get(self, request, *args, **kwargs):
@@ -552,7 +551,7 @@ class CheckMemberIdView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CheckMemberEmailView(View):
-    template_name = 'id_check_ajax.html'
+    template_name = 'ajax/id_check_ajax.html'
     error = ''
 
     def get(self, request, *args, **kwargs):
@@ -591,7 +590,7 @@ class CheckMemberEmailView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CheckMemberValidationView(View):
-    template_name = 'id_check_ajax.html'
+    template_name = 'ajax/id_check_ajax.html'
     error = ''
 
     def get(self, request, *args, **kwargs):
@@ -618,7 +617,7 @@ class CheckMemberValidationView(View):
 
 
 class RegisterErrorView(TemplateView):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(RegisterErrorView, self).get_context_data(**kwargs)
@@ -717,7 +716,7 @@ def out_member_logic(request):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AddPushTokenView(View):
-    template_name = 'token_check_ajax.html'
+    template_name = 'ajax/token_check_ajax.html'
     error = ''
 
     def get(self, request, *args, **kwargs):
@@ -752,7 +751,7 @@ class AddPushTokenView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DeletePushTokenView(View):
-    template_name = 'token_check_ajax.html'
+    template_name = 'ajax/token_check_ajax.html'
     error = ''
 
     def get(self, request, *args, **kwargs):
@@ -772,7 +771,7 @@ class DeletePushTokenView(View):
 
 
 class ClearBadgeCounterView(TemplateView):
-    template_name = 'token_check_ajax.html'
+    template_name = 'ajax/token_check_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(ClearBadgeCounterView, self).get_context_data(**kwargs)
@@ -802,12 +801,12 @@ def clear_badge_counter_logic(request):
         token_data.save()
 
     if error is None:
-        return render(request, 'token_check_ajax.html', {'token_check': token_data.token})
+        return render(request, 'ajax/token_check_ajax.html', {'token_check': token_data.token})
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         # messages.error(request, error)
 
-        return render(request, 'token_check_ajax.html', {'token_check': error})
+        return render(request, 'ajax/token_check_ajax.html', {'token_check': error})
 
 
 @csrf_exempt

@@ -20,3 +20,5 @@ def func_get_class_member_list(class_id):
             all_member.append(class_lecture_info.lecture_tb.member)
 
     return all_member
+
+

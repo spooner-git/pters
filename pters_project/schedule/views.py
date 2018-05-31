@@ -1205,7 +1205,7 @@ def delete_repeat_schedule_logic(request):
 
 
 class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
-    template_name = 'data_change_check_ajax.html'
+    template_name = 'ajax/data_change_check_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(CheckScheduleUpdateViewAjax, self).get_context_data(**kwargs)
@@ -1253,7 +1253,7 @@ def upload_sign_image_logic(request):
     # user_id = request.POST.get('user_id', '')
     schedule_id = request.POST.get('schedule_id', '')
     image_test = request.POST.get('upload_file', '')
-    next_page = '/trainer/cal_day_ajax/'
+    next_page = '/trainer/get_trainer_schedule/'
 
     s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
                         aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
@@ -1284,7 +1284,7 @@ def upload_sign_image_logic(request):
 # 수정 필요 - hkkim - 2018.03.28
 @method_decorator(csrf_exempt, name='dispatch')
 class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
-    template_name = 'finish_schedule_ajax.html'
+    template_name = 'ajax/finish_schedule_ajax.html'
 
     def get(self, request, *args, **kwargs):
         context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
@@ -1336,7 +1336,7 @@ class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
 # hkkim - 2018.04.23
 @method_decorator(csrf_exempt, name='dispatch')
 class GetDeleteScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
-    template_name = 'delete_schedule_ajax.html'
+    template_name = 'ajax/delete_schedule_ajax.html'
 
     def get(self, request, *args, **kwargs):
         context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)

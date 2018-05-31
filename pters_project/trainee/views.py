@@ -195,7 +195,7 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
 
 class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'trainee_lecture_ajax.html'
+    template_name = 'ajax/trainee_lecture_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(ReadTraineeLectureViewAjax, self).get_context_data(**kwargs)
@@ -211,7 +211,7 @@ class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVi
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'class_lecture_data_ajax.html'
+    template_name = 'ajax/class_lecture_data_ajax.html'
 
     def get(self, request, *args, **kwargs):
         context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
@@ -241,7 +241,7 @@ class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReadLectureViewByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'class_lecture_data_ajax.html'
+    template_name = 'ajax/class_lecture_data_ajax.html'
 
     def get(self, request, *args, **kwargs):
         context = super(ReadLectureViewByClassAjax, self).get_context_data(**kwargs)
@@ -690,7 +690,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
 
 class MyPageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'mypage_trainee_ajax.html'
+    template_name = 'ajax/mypage_trainee_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(MyPageViewAjax, self).get_context_data(**kwargs)
@@ -1500,7 +1500,7 @@ def get_trainee_setting_data(context, user_id):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'trainee_schedule_ajax.html'
+    template_name = 'ajax/trainee_schedule_ajax.html'
 
     def get(self, request, *args, **kwargs):
         context = super(ReadTraineeScheduleViewAjax, self).get_context_data(**kwargs)
@@ -1551,7 +1551,7 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReadTraineeAllScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'trainee_all_schedule_ajax.html'
+    template_name = 'ajax/trainee_all_schedule_ajax.html'
 
     def post(self, request, *args, **kwargs):
         context = super(ReadTraineeAllScheduleViewAjax, self).get_context_data(**kwargs)
@@ -1779,7 +1779,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
 
 
 class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'alarm_data_ajax.html'
+    template_name = 'ajax/alarm_data_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(AlarmViewAjax, self).get_context_data(**kwargs)
@@ -2002,7 +2002,7 @@ def get_trainee_schedule_data_func(context, class_id, member_id):
 
 
 class TraineePushAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'trainee_push_ajax.html'
+    template_name = 'ajax/trainee_push_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(TraineePushAjax, self).get_context_data(**kwargs)
@@ -2185,7 +2185,7 @@ class DeleteTraineeAccountView(AccessTestMixin, TemplateView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class GetTraineeGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'trainee_group_info_ajax.html'
+    template_name = 'ajax/trainee_group_info_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(GetTraineeGroupIngListViewAjax, self).get_context_data(**kwargs)
@@ -2238,7 +2238,7 @@ class GetTraineeGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
 
 @method_decorator(csrf_exempt, name='dispatch')
 class GetTraineeGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'trainee_group_info_ajax.html'
+    template_name = 'ajax/trainee_group_info_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(GetTraineeGroupEndListViewAjax, self).get_context_data(**kwargs)
@@ -2291,7 +2291,7 @@ class GetTraineeGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
 
 @method_decorator(csrf_exempt, name='dispatch')
 class GetTraineeAllScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'trainee_schedule_ajax.html'
+    template_name = 'ajax/trainee_schedule_ajax.html'
 
     def post(self, request, *args, **kwargs):
         context = super(GetTraineeAllScheduleView, self).get_context_data(**kwargs)
@@ -2317,7 +2317,7 @@ class GetTraineeAllScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixi
 
 @method_decorator(csrf_exempt, name='dispatch')
 class GetTraineeCountView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'trainee_schedule_ajax.html'
+    template_name = 'ajax/trainee_schedule_ajax.html'
 
     def post(self, request, *args, **kwargs):
         context = super(GetTraineeCountView, self).get_context_data(**kwargs)
