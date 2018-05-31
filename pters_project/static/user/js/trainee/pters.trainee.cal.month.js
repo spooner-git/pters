@@ -1023,7 +1023,7 @@ $(document).ready(function(){
 			var stime = stime1+'_'+sminute
 			var etime = etime1+'_'+eminute
 			var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
-			if(ymd == dateinfo){
+			if(ymd == dateinfo && jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) != -1){
 				dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
 			}
 		}
@@ -1431,7 +1431,7 @@ $(document).ready(function(){
 	      var offText = text2
 	    }
 
-	    if(offHour.length<2){
+	    if(Number(offHour) < 10){
 	      timeArray[i] ='<li><a data-trainingtime="'+'0'+offHour+':'+offmin+':00.000000" class="pointerList">'+offText+offHours+':'+offmin+'</a></li>' //text3 = :00
 	    }else{
 	      timeArray[i] ='<li><a data-trainingtime="'+offHour+':'+offmin+':00.000000" class="pointerList">'+offText+offHours+':'+offmin+'</a></li>'
