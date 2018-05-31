@@ -1453,7 +1453,7 @@ function get_repeat_info(dbID){
       var fill_option = 'group'
       var type_ = 'POST'
     }else if(addTypeSelect == "offadd" || addTypeSelect == "repeatoffadd"){
-      var url_ = '/trainer/get_off_repeat_schedule_ajax/'
+      var url_ = '/trainer/get_off_repeat_schedule/'
       var data_;
       var fill_option = 'off'
       var type_;
