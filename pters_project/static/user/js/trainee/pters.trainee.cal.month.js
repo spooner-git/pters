@@ -281,11 +281,6 @@ $(document).ready(function(){
 		var dayarry = ['일','월','화','수','목','금','토']
 		var day = dayarry[dayraw];
 		var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-		var countNum = $(this).attr('data-countnum')
-		if(countNum == undefined){
-			$('#countNum').text(0)
-		}
-		$('#countNum').text(countNum)
 		$('.popup_ymdText').html(infoText)
 		plancheck(yy+'_'+mm+'_'+dd, initialJSON)
 		clicked_td_date_info = yy+'_'+mm+'_'+dd
@@ -1098,6 +1093,8 @@ $(document).ready(function(){
 		}
 
 		$('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
+		var countNumber = $('.popup_inner_month .plan_raw').length
+		$('#countNum').text(countNumber)
 	}
 
     function ajaxTimeGraphSet(clicked){
@@ -1318,19 +1315,26 @@ $(document).ready(function(){
           var dd = '0'+dd
         }
         var hh = date.getHours();
-        var today = yy+mm+dd
-        console.log(selecteddate,today,Number(today)+parseInt(limit/24))
-        if(selecteddate > today && selecteddate < Number(today)+parseInt(limit/24)){
-          for(var i=0;i<=23;i++){
-              //var time = $('#'+i+'g')
-              //time.addClass('greytimegraph')
-              $('#'+i+'g_00').addClass('greytimegraph')
-              $('#'+i+'g_30').addClass('greytimegraph_greyleft')
-          }
-        }else if(selecteddate==today){
-        	for(var i=0;i<=23;i++){
+        var today = yy+mm+dd;
+        
+
+        var todayandlimitSum = Number(today)+parseInt(limit/24);
+        if(Number(dd)+parseInt(limit/24) > lastDay[Number(mm)-1]){
+        	var todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(yy+'-'+(Number(mm)+1)+'-'+parseInt(limit/24),'')
+        }
+
+        console.log(selecteddate,today,todayandlimitSum);
+        if(selecteddate > today && selecteddate < todayandlimitSum){
+            for(var i=0;i<=23;i++){
+                //var time = $('#'+i+'g')
+                //time.addClass('greytimegraph')
+                $('#'+i+'g_00').addClass('greytimegraph')
+                $('#'+i+'g_30').addClass('greytimegraph_greyleft')
+            }
+        }else if(selecteddate == today){
+        	for(var i=0; i<=23; i++){
 	            //var time = $('#'+i+'g')
-	            if(i<=hh+limit){
+	            if(i <= hh + limit){
 	              //time.addClass('greytimegraph')
 	              $('#'+i+'g_00').addClass('greytimegraph')
 	              $('#'+i+'g_30').addClass('greytimegraph_greyleft')
@@ -1573,7 +1577,12 @@ var currentYear = date.getFullYear(); //현재 년도
 var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 var currentDate = date.getDate(); //오늘 날짜
 var currentHour = date.getHours(); //현재시간
-var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
+var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+    if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+        lastDay[1] = 29;
+    }else{
+        lastDay[1] = 28;
+    };
 var currentPageMonth = currentMonth+1; //현재 달
 var date2 = new Date();
 var oriYear = date.getFullYear();
@@ -1693,15 +1702,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 		}
 
 		if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
-			console.log($("td[data-date="+classDate+"]").attr('data-countnum'))
-			if($("td[data-date="+classDate+"]").attr('data-countnum') == undefined){
-				var countnum = 0
-			}else{
-				var countnum = Number($("td[data-date="+classDate+"]").attr('data-countnum'))
-			}
-			plancount =  countnum + 1;
-
-			$("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i],'data-countnum':plancount})
+			$("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i]})
 			$("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
 			$("td[data-date="+classDate+"] div._classDate").addClass('greydateMytime')
 			if($("td[data-date="+classDate+"] div._classTime div").length <3){
@@ -1712,14 +1713,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 			
 			//$("td[data-date="+classDate+"] div.memo").addClass('greymemo').text(memo)
 		}else{
-			console.log($("td[data-date="+classDate+"]").attr('data-countnum'))
-			if($("td[data-date="+classDate+"]").attr('data-countnum') == undefined){
-				var countnum = 0
-			}else{
-				var countnum = Number($("td[data-date="+classDate+"]").attr('data-countnum'))
-			}
-			plancount =  countnum + 1;
-			$("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i],'data-countnum':plancount})
+			$("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i]})
 			$("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
 			$("td[data-date="+classDate+"] div._classDate").addClass('dateMytime')
 			if($("td[data-date="+classDate+"] div._classTime div").length <3){
