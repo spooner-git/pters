@@ -293,13 +293,19 @@ $(document).ready(function(){
 			plancheck(yy+'_'+mm+'_'+dd, initialJSON)
 			$('.plan_raw_add').hide()
 			shade_index(100)
-		}else{
+		}else if($(this).hasClass('available')){
 			$('#cal_popup_plancheck').fadeIn('fast');
 			$('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
 			$('.cancellimit_time').text(Options.cancellimit+"시간 전")
 			plancheck(yy+'_'+mm+'_'+dd, initialJSON)
 			$('.plan_raw_add').show()
 			shade_index(100)
+		}else{
+			shade_index(100)
+			$('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')
+			$('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
+			//$(this).fadeOut(2800)
+			})
 		}
 	})
 
@@ -501,7 +507,6 @@ $(document).ready(function(){
     })
 
     function send_reservation(){
-    	console.log($('#pt-add-form').serialize())
 		$.ajax({
 	          url: '/trainee/pt_add_logic/',
 	          data: $('#pt-add-form').serialize(),
@@ -702,7 +707,7 @@ $(document).ready(function(){
 	}
 
 	$('#ng_popup').click(function(){
-		$('#shade2').css({'display':'none'});
+		shade_index(-100)
 		$(this).fadeOut(100)
 	})
 
