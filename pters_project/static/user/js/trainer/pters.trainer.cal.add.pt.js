@@ -1718,7 +1718,6 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 
 function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
-  console.log(jsondata)
   switch(option){
     case 'class':
       var plan = option
@@ -1731,6 +1730,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planNoteArray = jsondata.scheduleNoteArray;
       var planScheduleFinishArray = jsondata.scheduleFinishArray;
       var planColor = 'classTime'
+      var planfinished = ' classTime_checked'
       var planMemberNum = ''
       var planGroupid = ''
       var planCode = ''
@@ -1761,6 +1761,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planNoteArray = jsondata.group_schedule_note;
       var planScheduleFinishArray = jsondata.group_schedule_finish_check;
       var planColor = 'groupTime'
+      var planfinished = ' groupTime_checked'
       var planMemberNum = jsondata.group_schedule_max_member_num;
       var planMemberDbid = ''
       var planCode = ''
@@ -1848,7 +1849,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
 
     if(option != 'off'){
       if(planScheduleFinishArray[i] == 1){
-        var planColor_ = planColor+' classTime_checked'
+        var planColor_ = planColor+planfinished
       }else{
         var planColor_ = planColor
       }
@@ -2563,7 +2564,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
     var target = $('#groupParticipants')
     var htmlToJoin = []
     for(var i=0; i<jsondata.db_id.length; i++){
-      var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'">'
+      var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'" schedule-id="'+jsondata.scheduleIdArray[i]+'" data-leid="'+jsondata.classArray_lecture_id[i]+'">'
       //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
       var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i]+'.png">'
       var name = '<span data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</span>'

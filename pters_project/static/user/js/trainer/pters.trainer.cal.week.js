@@ -461,7 +461,7 @@ $(document).ready(function(){
 			$("#popup_sign_img").css("display","block")
 			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('off-schedule-id')+'.png');
 		}
-		schedule_on_off = 1;
+		schedule_on_off = 2;
 		
 	})
 
@@ -471,70 +471,98 @@ $(document).ready(function(){
 		//일정 완료 기능 추가 - hk.kim 180106
 		var ajax_block_during_complete_weekcal = true
 		$("#popup_btn_complete").click(function(){  //일정 완료 버튼 클릭
-			
 				if($(this).val()!="filled"){
 					$('#canvas').show()
 					$('#canvasWrap').animate({'height':'200px'},200)
 					$('#canvasWrap span').show();
-					//$('#cal_popup_planinfo').animate({'top':'15%'},200)
+					if(schedule_on_off == 2){
+						toggleGroupParticipantsList('on')
+						var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
+						var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
+						var group_schedule_id = $('#popup_btn_viewGroupParticipants').attr('group-schedule-id')
+						get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);completeSend();})
+					}
 				}else if($(this).val()=="filled"){
-					var $pt_finish_form = $('#pt-finish-form');
-					var drawCanvas = document.getElementById('canvas');
-					var send_data = $pt_finish_form.serializeArray();
-					send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
 					if(ajax_block_during_complete_weekcal == true){
 						ajax_block_during_complete_weekcal = false
 						if(schedule_on_off==1){
 							//PT 일정 완료 처리시
-							$.ajax({
-			                    url:'/schedule/finish_schedule/',
-			                    type:'POST',
-			                    data:send_data,
+							send_plan_complete('callback',function(json, senddata){
+								send_memo()
+			                	signImageSend(senddata);
+			                    close_info_popup('cal_popup_planinfo')
+			                    completeSend();
+			                    set_schedule_time(json);
 
-			                    beforeSend:function(){
-			                    	beforeSend();
-			                    },
-			                    //통신성공시 처리
-			                    success:function(data){
-			                    	var jsondata = JSON.parse(data)
-			                    	if(jsondata.messageArray.length>0){
-					                  	$('#errorMessageBar').show()
-					                  	$('#errorMessageText').text(jsondata.messageArray)
-					                }else{
-
-										if(jsondata.push_info != ''){
-											for (var i=0; i<jsondata.pushArray.length; i++){
-                                        		//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-											}
-										}
-					                	send_memo()
-					                	signImageSend(send_data);
-					                    close_info_popup('cal_popup_planinfo')
-					                    completeSend();
-					                    set_schedule_time(jsondata);
-					                }
-			                      },
-
-			                    //보내기후 팝업창 닫기
-			                    complete:function(){
-			                    	ajax_block_during_complete_weekcal = true
-			             			$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
-			                    	$('#canvas').hide().css({'border-color':'#282828'})
-			                    	$('#canvasWrap span').hide();
-									$('#canvasWrap').css({'height':'0px'})
-									//$('body').css('overflow-y','overlay');
-									shade_index(-100)
-			                      },
-
-			                    //통신 실패시 처리
-			                    error:function(){
-			                    },
-			                 })
+			                    ajax_block_during_complete_weekcal = true
+			         			$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
+			                	$('#canvas').hide().css({'border-color':'#282828'})
+			                	$('#canvasWrap span').hide();
+								$('#canvasWrap').css({'height':'0px'})
+								//shade_index(-100)
+							})
+						}else if(schedule_on_off == 2){
+							var len = $('#groupParticipants .groupParticipantsRow').length;
+							close_info_popup('cal_popup_planinfo')
+							var z = 0
+							for(var i=0; i<len; i++){
+								$('#id_schedule_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
+								$('#id_lecture_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
+								send_plan_complete('callback', function(json, senddata){
+									z++
+									console.log('for문',z, len)
+									if(z==len){
+										send_memo()
+										signImageSend(senddata);
+										completeSend();
+										set_schedule_time(json);
+										ajax_block_during_complete_weekcal = true
+									}
+								})
+							}
 						}
 					}
 				}
-			
 		})
+
+		function send_plan_complete(use, callback){
+			var $pt_finish_form = $('#pt-finish-form');
+			var drawCanvas = document.getElementById('canvas');
+			var send_data = $pt_finish_form.serializeArray();
+			send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
+			$.ajax({
+                url:'/schedule/finish_schedule/',
+                type:'POST',
+                data:send_data,
+
+                beforeSend:function(){
+                	beforeSend();
+                },
+                //통신성공시 처리
+                success:function(data){
+                	var jsondata = JSON.parse(data)
+                	if(jsondata.messageArray.length>0){
+	                  	$('#errorMessageBar').show()
+	                  	$('#errorMessageText').text(jsondata.messageArray)
+	                }else{
+	                    if(use == "callback"){
+	                    	callback(jsondata, send_data)
+	                    }
+	                }
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                	
+                  },
+
+                //통신 실패시 처리
+                error:function(){
+                },
+            })
+		}
+
+
 
 		//일정 삭제 기능 추가 - hk.kim 171007
 		$("#popup_btn_delete").click(function(){  //일정 삭제 버튼 클릭
@@ -1662,8 +1690,6 @@ function fake_show(){
 
 
 
-
-
 function ajaxClassTime(reference){
 		if(reference){
 
@@ -1687,7 +1713,7 @@ function ajaxClassTime(reference){
 		  success:function(data){
 			var jsondata = JSON.parse(data);
 			TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
-			
+			console.log('ajaxclasstime', jsondata)
 			if(jsondata.messageArray.length>0){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
