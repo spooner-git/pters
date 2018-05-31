@@ -25,9 +25,9 @@ urlpatterns = [
     url(r'^cal_day/$', views.CalDayView.as_view(), name='cal_day'),
     url(r'^cal_week/$', views.CalWeekView.as_view(), name='cal_week'),
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
+    # 강사 스케쥴 조회 - 1:1/Group/Off
     url(r'^get_trainer_schedule/$', views.GetTrainerScheduleView.as_view(), name='get_trainer_schedule'),
-    url(r'^add_repeat_off/$', views.OffRepeatAddView.as_view(), name='add_repeat_off'),
-    url(r'^get_off_repeat_schedule_ajax/$', views.GetOffRepeatScheduleDataViewAjax.as_view(), name='get_off_repeat_schedule_ajax'),
+    url(r'^get_off_repeat_schedule/$', views.GetOffRepeatScheduleView.as_view(), name='get_off_repeat_schedule'),
 
     # 회원 기능 #####################################################################################################
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),

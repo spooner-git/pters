@@ -230,55 +230,19 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CalDayView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        # today = datetime.date.today()
-        # start_date = today
-        # end_date = today + datetime.timedelta(days=1)
-        # context = get_trainer_schedule_data_func(context, class_id, start_date, end_date)
+        class_info = None
+        error = None
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
 
+        if error is None:
+            self.request.session['class_hour'] = class_info.class_hour
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
 
         return context
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'ajax/schedule_ajax.html'
-
-    def get(self, request, *args, **kwargs):
-        context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        date = request.session.get('date', '')
-        day = request.session.get('day', '')
-        today = datetime.date.today()
-
-        if date != '':
-            today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        if day == '':
-            day = 46
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(47))
-
-        context = func_get_trainer_schedule(context, class_id, start_date, end_date)
-
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        date = request.POST.get('date', '')
-        day = request.POST.get('day', '')
-        today = datetime.date.today()
-        if date != '':
-            today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        if day == '':
-            day = 18
-
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(day)+1)
-
-        context = func_get_trainer_schedule(context, class_id, start_date, end_date)
-        return render(request, self.template_name, context)
 
 
 class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -324,6 +288,46 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['holiday'] = holiday
 
         return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'ajax/schedule_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        date = request.session.get('date', '')
+        day = request.session.get('day', '')
+        today = datetime.date.today()
+
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(47))
+
+        context = func_get_trainer_schedule(context, class_id, start_date, end_date)
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        date = request.POST.get('date', '')
+        day = request.POST.get('day', '')
+        today = datetime.date.today()
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 18
+
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day)+1)
+
+        context = func_get_trainer_schedule(context, class_id, start_date, end_date)
+        return render(request, self.template_name, context)
 
 
 class OffRepeatAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -3760,11 +3764,11 @@ class AlarmPushView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class GetOffRepeatScheduleDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/off_schedule_data_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(GetOffRepeatScheduleDataViewAjax, self).get_context_data(**kwargs)
+        context = super(GetOffRepeatScheduleView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
         off_repeat_schedule_id = []

@@ -1027,6 +1027,8 @@ def pt_add_logic(request):
         reserve_avail_date = lt_res_05
 
         if reserve_prohibition_time != '':
+            if reserve_prohibition_time >= 24:
+                reserve_prohibition_time = 0
             disable_time = disable_time + datetime.timedelta(hours=int(reserve_prohibition_time))
 
         if reserve_stop == '1':
