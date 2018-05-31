@@ -1,13 +1,10 @@
 # Create your views here.
-import copy
 import datetime
 import json
 
 import logging
 import urllib
-from collections import OrderedDict
 
-import openpyxl
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -1182,204 +1179,8 @@ def export_excel_member_list_logic(request):
         error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
-        if member_id is None or member_id == '':
-            # all_member = MemberTb.objects.filter().order_by('name')
-            all_member = func_get_class_member_list(class_id)
-        else:
-            all_member = MemberTb.objects.filter(member_id=member_id).order_by('name')
-
-        for member_info in all_member:
-            member_data = copy.copy(member_info)
-            member_data_finish = copy.copy(member_info)
-            lecture_finish_check = 0
-            # 강좌에 해당하는 수강/회원 정보 가져오기
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         lecture_tb__member_id=member_data.member_id,
-                                                         lecture_tb__state_cd='IP', auth_cd='VIEW',
-                                                         lecture_tb__use=1, use=1)
-
-            lecture_finish_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                lecture_tb__member_id=member_data.member_id,
-                                                                auth_cd='VIEW', lecture_tb__use=1,
-                                                                use=1).exclude(lecture_tb__state_cd='IP')
-
-            if len(lecture_list) == 0:
-                if len(lecture_finish_list) > 0:
-                    lecture_finish_check = 1
-
-            if len(lecture_list) > 0:
-                lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                             lecture_tb__member_id=member_data.member_id,
-                                                             auth_cd='VIEW', lecture_tb__use=1, use=1)
-
-                member_data.rj_lecture_counts = 0
-                member_data.np_lecture_counts = 0
-
-                member_data.lecture_reg_count_yet = 0
-                member_data.lecture_rem_count_yet = 0
-                member_data.lecture_avail_count_yet = 0
-
-                member_data.lecture_counts = len(lecture_list)
-                member_data.lecture_reg_count = 0
-                member_data.lecture_rem_count = 0
-                member_data.lecture_avail_count = 0
-
-                member_data.lecture_reg_count_total = 0
-                member_data.lecture_rem_count_total = 0
-                member_data.lecture_avail_count_total = 0
-
-                member_data.start_date = None
-                member_data.end_date = None
-                member_data.mod_dt = None
-
-                lecture_count = 0
-
-                for lecture_info_data in lecture_list:
-                    # if lecture_info.state_cd == 'RJ':
-                    lecture_info = lecture_info_data.lecture_tb
-                    if lecture_info_data.auth_cd == 'DELETE':
-                        member_data.rj_lecture_counts += 1
-                    # if lecture_info.state_cd == 'NP':
-                    if lecture_info_data.auth_cd == 'WAIT':
-                        member_data.np_lecture_counts += 1
-
-                    lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
-                                                                    lecture_tb=lecture_info.lecture_id,
-                                                                    auth_cd='VIEW', lecture_tb__use=1, use=1).count()
-
-                    if lecture_info.use != 0:
-                        # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
-                        if lecture_info.state_cd == 'IP':
-                            member_data.lecture_reg_count += lecture_info.lecture_reg_count
-                            member_data.lecture_rem_count += lecture_info.lecture_rem_count
-                            member_data.lecture_avail_count += lecture_info.lecture_avail_count
-                            member_data.end_date = lecture_info.end_date
-                            if member_data.start_date is None or member_data.start_date == '':
-                                member_data.start_date = lecture_info.start_date
-                            else:
-                                if member_data.start_date > lecture_info.start_date:
-                                    member_data.start_date = lecture_info.start_date
-                            if member_data.end_date is None or member_data.end_date == '':
-                                member_data.end_date = lecture_info.end_date
-                            else:
-                                if member_data.end_date < lecture_info.end_date:
-                                    member_data.end_date = lecture_info.end_date
-
-                        # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
-                        #    member_data.lecture_reg_count_yet += lecture_info.lecture_reg_count
-                        #    member_data.lecture_rem_count_yet += lecture_info.lecture_rem_count
-                        #    member_data.lecture_avail_count_yet += lecture_info.lecture_avail_count
-
-                        if member_data.mod_dt is None or member_data.mod_dt == '':
-                            member_data.mod_dt = lecture_info.mod_dt
-                        else:
-                            if member_data.mod_dt > lecture_info.mod_dt:
-                                member_data.mod_dt = lecture_info.mod_dt
-                        member_data.lecture_reg_count_total += lecture_info.lecture_reg_count
-                        member_data.lecture_rem_count_total += lecture_info.lecture_rem_count
-                        member_data.lecture_avail_count_total += lecture_info.lecture_avail_count
-                        member_data.lecture_id = lecture_info.lecture_id
-                if member_data.reg_info is None or str(member_data.reg_info) != str(request.user.id):
-                    if lecture_count == 0:
-                        member_data.sex = ''
-                        member_data.birthday_dt = ''
-                        member_data.phone = '*******'+member_data.phone[7:]
-                        member_data.user.email = ''
-
-                member_data.start_date = str(member_data.start_date)
-                member_data.end_date = str(member_data.end_date)
-                member_data.mod_dt = str(member_data.mod_dt)
-                if member_data.birthday_dt is None or member_data.birthday_dt == '':
-                    member_data.birthday_dt = ''
-                else:
-                    member_data.birthday_dt = str(member_data.birthday_dt)
-                member_list.append(member_data)
-
-            if lecture_finish_check > 0:
-                member_data_finish.rj_lecture_counts = 0
-                member_data_finish.np_lecture_counts = 0
-
-                member_data_finish.lecture_reg_count_yet = 0
-                member_data_finish.lecture_rem_count_yet = 0
-                member_data_finish.lecture_avail_count_yet = 0
-
-                member_data_finish.lecture_counts = len(lecture_finish_list)
-                member_data_finish.lecture_reg_count = 0
-                member_data_finish.lecture_rem_count = 0
-                member_data_finish.lecture_avail_count = 0
-
-                member_data_finish.lecture_reg_count_total = 0
-                member_data_finish.lecture_rem_count_total = 0
-                member_data_finish.lecture_avail_count_total = 0
-                member_data_finish.start_date = None
-                member_data_finish.end_date = None
-                member_data_finish.mod_dt = None
-
-                lecture_finish_count = 0
-
-                for lecture_info_data in lecture_finish_list:
-                    # if lecture_info.state_cd == 'RJ':
-                    lecture_info = lecture_info_data.lecture_tb
-                    if lecture_info_data.auth_cd == 'DELETE':
-                        member_data_finish.rj_lecture_counts += 1
-                    # if lecture_info.state_cd == 'NP':
-                    if lecture_info_data.auth_cd == 'WAIT':
-                        member_data_finish.np_lecture_counts += 1
-
-                    lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
-                                                                           lecture_tb=lecture_info.lecture_id,
-                                                                           auth_cd='VIEW', lecture_tb__use=1, use=1).count()
-
-                    if lecture_info.use != 0:
-                        # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
-                        # if lecture_info.state_cd == 'IP':
-                        member_data_finish.lecture_reg_count += lecture_info.lecture_reg_count
-                        member_data_finish.lecture_rem_count += lecture_info.lecture_rem_count
-                        member_data_finish.lecture_avail_count += lecture_info.lecture_avail_count
-                        member_data_finish.end_date = lecture_info.end_date
-                        if member_data_finish.start_date is None or member_data_finish.start_date == '':
-                            member_data_finish.start_date = lecture_info.start_date
-                        else:
-                            if member_data_finish.start_date > lecture_info.start_date:
-                                member_data_finish.start_date = lecture_info.start_date
-
-                        if member_data_finish.end_date is None or member_data_finish.end_date == '':
-                            member_data_finish.end_date = lecture_info.end_date
-                        else:
-                            if member_data_finish.end_date < lecture_info.end_date:
-                                member_data_finish.end_date = lecture_info.end_date
-
-                        # if lecture_info.state_cd == 'NP' or lecture_info.state_cd == 'RJ':
-                        #    member_data_finish.lecture_reg_count_yet += lecture_info.lecture_reg_count
-                        #    member_data_finish.lecture_rem_count_yet += lecture_info.lecture_rem_count
-                        #    member_data_finish.lecture_avail_count_yet += lecture_info.lecture_avail_count
-
-                        if member_data_finish.mod_dt is None or member_data_finish.mod_dt == '':
-                            member_data_finish.mod_dt = lecture_info.mod_dt
-                        else:
-                            if member_data_finish.mod_dt > lecture_info.mod_dt:
-                                member_data_finish.mod_dt = lecture_info.mod_dt
-
-                        member_data_finish.lecture_reg_count_total += lecture_info.lecture_reg_count
-                        member_data_finish.lecture_rem_count_total += lecture_info.lecture_rem_count
-                        member_data_finish.lecture_avail_count_total += lecture_info.lecture_avail_count
-                        member_data_finish.lecture_id = lecture_info.lecture_id
-
-                if member_data_finish.reg_info is None or str(member_data_finish.reg_info) != str(request.user.id):
-                    if lecture_finish_count == 0:
-                        member_data_finish.sex = ''
-                        member_data_finish.birthday_dt = ''
-                        member_data_finish.phone = '*******'+member_data_finish.phone[7:]
-                        member_data_finish.user.email = ''
-
-                member_data_finish.start_date = str(member_data_finish.start_date)
-                member_data_finish.end_date = str(member_data_finish.end_date)
-                member_data_finish.mod_dt = str(member_data_finish.mod_dt)
-                if member_data_finish.birthday_dt is None or member_data_finish.birthday_dt == '':
-                    member_data_finish.birthday_dt = ''
-                else:
-                    member_data_finish.birthday_dt = str(member_data_finish.birthday_dt)
-                member_finish_list.append(member_data_finish)
+        member_list = func_get_member_ing_list(class_id, request.user.id)
+        member_finish_list = func_get_member_end_list(class_id, request.user.id)
 
     wb = Workbook()
     ws1 = wb.active
@@ -1780,7 +1581,6 @@ def update_lecture_info_logic(request):
     lecture_reg_count = request.POST.get('lecture_reg_count', '')
     note = request.POST.get('note', '')
     member_id = request.POST.get('member_id', '')
-    # member_name = request.POST.get('member_name', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page', '')
     error = None
@@ -1881,7 +1681,6 @@ def update_lecture_info_logic(request):
 def delete_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
-    # member_name = request.POST.get('member_name', '')
     member_id = request.POST.get('member_id', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
@@ -1900,9 +1699,6 @@ def delete_lecture_info_logic(request):
         error = func_delete_lecture_info(request.user.id, class_id, lecture_id, member_id)
 
     if error is None:
-        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
-        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
-
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보', log_how='삭제',
@@ -1923,7 +1719,6 @@ def finish_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
-    # member_name = request.POST.get('member_name', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
@@ -1996,7 +1791,6 @@ def refund_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
-    # member_name = request.POST.get('member_name', '')
     refund_price = request.POST.get('refund_price', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
@@ -2087,7 +1881,6 @@ def progress_lecture_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
-    # member_name = request.POST.get('member_name', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
@@ -2159,7 +1952,6 @@ def update_lecture_connection_info_logic(request):
 
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
-    # member_name = request.POST.get('member_name', '')
     auth_cd = request.POST.get('member_view_state_cd', '')
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
@@ -2182,7 +1974,6 @@ def update_lecture_connection_info_logic(request):
     if error is None:
         try:
             member_lecture_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_id)
-            # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
 
@@ -2192,9 +1983,6 @@ def update_lecture_connection_info_logic(request):
         member_lecture_info.save()
 
     if error is None:
-        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
-        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status"> 삭제 </span>했습니다.'
-
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='수강 정보 연동', log_how='수정',
@@ -2498,7 +2286,6 @@ def delete_group_member_info_logic(request):
                 try:
                     with transaction.atomic():
                         for group_lecture_info in group_lecture_data:
-                            # print(group_lecture_info.lecture_tb.lecture_id)
                             error = func_delete_lecture_info(request.user.id, class_id, group_lecture_info.lecture_tb.lecture_id, member_id_info)
                             if error is not None:
                                 break
@@ -2507,15 +2294,15 @@ def delete_group_member_info_logic(request):
                             raise InternalError
 
                 except ValueError as e:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.1'
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
                 except IntegrityError as e:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.2'
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
                 except TypeError as e:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.3'
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
                 except ValidationError as e:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.4'
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
                 except InternalError:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.5'
+                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                              to_member_name=json_loading_data['fullnames'][idx], class_tb_id=class_id,
@@ -2823,27 +2610,18 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(GetClassListViewAjax, self).get_context_data(**kwargs)
         # class_id = self.request.session.get('class_id', '')
         error = None
-        class_auth_data = None
+        member_class_data = None
 
         if error is None:
-            class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd__contains='VIEW', use=1).order_by('-reg_dt')
-            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            # class_data = ClassTb.objects.filter(member_id=self.request.user.id, member_view_state_cd='VIEW', use=1).order_by('-reg_dt')
-            # log_data.order_by('-reg_dt')
+            member_class_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd__contains='VIEW', use=1).order_by('-reg_dt')
 
         if error is None:
-            for class_auth_info in class_auth_data:
+            for class_auth_info in member_class_data:
 
                 class_info = class_auth_info.class_tb
                 all_member = func_get_class_member_list(class_info.class_id)
-                # all_member = MemberTb.objects.filter().order_by('name')
                 total_member_num = 0
                 for member_info in all_member:
-                    # member_data = member_info
-
-                    member_lecture_reg_count = 0
-                    member_lecture_rem_count = 0
-                    member_lecture_avail_count = 0
                     # 강좌에 해당하는 수강/회원 정보 가져오기
                     class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                                        lecture_tb__member_id=member_info.member_id,
@@ -2862,7 +2640,7 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
                 class_info.total_member_num = total_member_num
 
-        context['class_data'] = class_auth_data
+        context['class_data'] = member_class_data
 
         if error is not None:
             messages.error(self.request, error)
