@@ -1317,6 +1317,7 @@ function shiftMemberList(type){
     switch(type){
         case "current":
             if($('#btnCallMemberList').hasClass('active')){
+                get_member_ing_list()
                 $('#currentMemberList, #currentMemberNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
@@ -1330,6 +1331,7 @@ function shiftMemberList(type){
         break;
         case "finished":
             if($('#btnCallMemberList').hasClass('active')){
+                get_member_end_list()
                 $('#finishedMemberList, #finishMemberNum').css('display','block');
                 $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
@@ -1342,13 +1344,14 @@ function shiftMemberList(type){
             }
         break;
         case "member":
-            get_member_list()
             if($('#btnCallCurrent').hasClass('active')){
+                get_member_ing_list()
                 $('#currentMemberList, #currentMemberNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').show()
             }else if($('#btnCallFinished').hasClass('active')){
+                get_member_end_list()
                 $('#finishedMemberList, #finishMemberNum').css('display','block');
                 $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
@@ -1496,54 +1499,30 @@ function grouptype_dropdown_set(grouplistJSON){
 
 
 //DB데이터를 memberListSet에서 사용가능하도록 가공
-function DataFormatting(type, jsondata){
-    switch(type){
-        case 'current':
-            var countListResult = [];
-            var nameListResult = [];
-            var dateListResult = [];
+function DataFormatting(jsondata){
 
-            var nameInfoArray = jsondata.nameArray;
-            var dbIdInfoArray = jsondata.dIdArray;
-            var idInfoArray = jsondata.idArray;
-            var groupTypeArray = jsondata.groupInfoArray;
-            var emailInfoArray = jsondata.emailArray;
-            var startDateArray = jsondata.startArray;
-            var endDateArray = jsondata.endArray;
-            var remainCountArray = jsondata.countArray;
-            var regCountInfoArray = jsondata.regCountArray;
-            var phoneInfoArray = jsondata.phoneArray;
-            var contentInfoArray = jsondata.contentsArray;
-            var npCountInfoArray = jsondata.npLectureCountsArray;
-            var rjCountInfoArray = jsondata.rjLectureCountsArray;
-            var yetRegCountInfoArray = jsondata.yetRegCountArray;
-            var yetCountInfoArray = jsondata.yetCountArray;
-            var len = jsondata.startArray.length; 
-        break;
+    var countListResult = [];
+    var nameListResult = [];
+    var dateListResult = [];
 
-        case 'finished':
-            var countListResult = [];
-            var nameListResult = [];
-            var dateListResult = [];
+    var nameInfoArray = jsondata.name;
+    var dbIdInfoArray = jsondata.db_id;
+    var idInfoArray = jsondata.member_id;
+    var groupTypeArray = jsondata.groupInfoArray;
+    var emailInfoArray = jsondata.email;
+    var startDateArray = jsondata.start_date;
+    var endDateArray = jsondata.end_date;
+    var remainCountArray = jsondata.rem_count;
+    var regCountInfoArray = jsondata.reg_count;
+    var phoneInfoArray = jsondata.phone;
+    var contentInfoArray = jsondata.note;
+    var npCountInfoArray = jsondata.npLectureCountsArray;
+    var rjCountInfoArray = jsondata.rjLectureCountsArray;
+    var yetRegCountInfoArray = jsondata.yetRegCountArray;
+    var yetCountInfoArray = jsondata.yetCountArray;
+    var len = jsondata.db_id.length; 
 
-            var nameInfoArray = jsondata.finishnameArray;
-            var idInfoArray = jsondata.finishIdArray;
-            var dbIdInfoArray = jsondata.finishDidArray;
-            var groupTypeArray = jsondata.finishGroupInfoArray;
-            var emailInfoArray = jsondata.finishemailArray;
-            var startDateArray = jsondata.finishstartArray;
-            var endDateArray = jsondata.finishendArray;
-            var remainCountArray = jsondata.finishcountArray;
-            var regCountInfoArray = jsondata.finishRegCountArray;
-            var phoneInfoArray = jsondata.finishphoneArray;
-            var contentInfoArray = jsondata.finishContentsArray;
-            var npCountInfoArray = jsondata.finishNpLectureCountsArray;
-            var rjCountInfoArray = jsondata.finishRjLectureCountsArray;
-            var yetRegCountInfoArray = jsondata.finishYetRegCountArray;
-            var yetCountInfoArray = jsondata.finishYetCountArray;
-            var len = jsondata.finishstartArray.length; 
-        break;
-    }
+
 
     for(i=0; i<len; i++){
         var date    = date_format_to_yyyymmdd(startDateArray[i],'');
@@ -1837,6 +1816,118 @@ function get_member_list(use, callback){
     })
 }
 
+
+function get_member_ing_list(use, callback){
+    //returnvalue 1이면 jsondata를 리턴
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/get_member_ing_list/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            global_json = jsondata;
+            if(jsondata.messageArray.length>0){
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                scrollToDom($('#page_addmember'))
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if($('body').width()<600){
+                    $('#page_managemember').show();
+                }
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                if(use == "callback"){
+                    callback(jsondata)
+
+                }else{
+                    console.log('get_member_list',jsondata)
+                    memberListSet('current','name','no',jsondata);
+                }
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
+function get_member_end_list(use, callback){
+    //returnvalue 1이면 jsondata를 리턴
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/get_member_end_list/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            global_json = jsondata;
+            if(jsondata.messageArray.length>0){
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                scrollToDom($('#page_addmember'))
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if($('body').width()<600){
+                    $('#page_managemember').show();
+                }
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                if(use == "callback"){
+                    callback(jsondata)
+
+                }else{
+                    console.log('get_member_list',jsondata)
+                    memberListSet('finished','name','no',jsondata);
+                }
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
+
 //회원목록을 테이블로 화면에 뿌리는 함수
 function memberListSet (type,option,Reverse, jsondata){
     if(Options.language == "KOR"){
@@ -1856,7 +1947,7 @@ function memberListSet (type,option,Reverse, jsondata){
 
     switch(type){
         case 'current':
-            var data = DataFormatting('current',jsondata);
+            var data = DataFormatting(jsondata);
             var countList = data["countSorted"]
             var nameList = data["nameSorted"]
             var dateList = data["dateSorted"]
@@ -1864,7 +1955,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var $tabletbody = $('#currentMember tbody');
         break;
         case 'finished':
-            var data = DataFormatting('finished',jsondata);
+            var data = DataFormatting(jsondata);
             var countList = data["countSorted"]
             var nameList = data["nameSorted"]
             var dateList = data["dateSorted"]

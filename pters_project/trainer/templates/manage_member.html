@@ -1131,23 +1131,17 @@
             $('#uptext').text("회원 관리")
             $('footer').hide()
             
-            var DB = {};
-            var DBe = {};
-            var DB_All = {};
+            //var DB = {};
+            //var DBe = {};
+            //var DB_All = {};
 
             var deleteTypeSelect;
             var alignType = "name"
             var select_all_check = false;
 
-            get_member_list()
+            get_member_ing_list()
 
-            $('#shade, #shade3').click(function(){
-                if($('body').width()>600){
-                    $('.popups').css('display','none')
-                    $('#shade, #shade3').css('display','none')
-                    closePopup('member_add')
-                }
-            })
+
 
             $('html,body').click(function(){
                 $('#please_add_member_pc').fadeOut('fast')
