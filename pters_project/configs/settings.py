@@ -244,17 +244,17 @@ LOGGING = {
         '': {
             'handlers': ['default'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
         'django': {
             'handlers': ['default'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
         'django.request': {
             'handlers': ['default'],
             'propagate': False,
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
         'login': {
             'handlers': ['login_file'],
