@@ -53,7 +53,7 @@
 
 <form action="{% url 'trainer:delete_member_info' %}" method="POST" class="member-form" id="member-delete-form">
     {% csrf_token %}
-    <input type="hidden" name="next_page" value="{% url 'trainer:get_member_list' %}">
+    <input type="hidden" name="next_page" value="{% url 'trainer:get_member_end_list' %}">
     <input type="hidden" name="id" id="deleteMemberId">
 </form>
 

@@ -35,7 +35,7 @@ from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLect
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
-from trainer.function import func_get_class_member_list, func_get_trainee_schedule_list, \
+from trainer.function import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list
 
@@ -151,7 +151,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
-            all_member = func_get_class_member_list(class_id)
+            all_member = func_get_class_member_id_list(class_id)
             for member_info in all_member:
                 # member_data = member_info
 
@@ -160,7 +160,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
                 class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                                   lecture_tb__member_id=member_info.member_id,
+                                                                   lecture_tb__member_id=member_info,
                                                                    lecture_tb__state_cd='IP',
                                                                    lecture_tb__use=1,
                                                                    auth_cd='VIEW', use=1).order_by('-lecture_tb__start_date')
@@ -415,18 +415,18 @@ class MyPageView(AccessTestMixin, TemplateView):
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
-            all_member = func_get_class_member_list(class_id)
+            all_member = func_get_class_member_id_list(class_id)
 
             for member_info in all_member:
                 # member_data = member_info
 
                 # 강좌에 해당하는 수강/회원 정보 가져오기
                 total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                                         lecture_tb__member_id=member_info.member_id,
+                                                                         lecture_tb__member_id=member_info,
                                                                          lecture_tb__use=1, auth_cd='VIEW',
                                                                          use=1).order_by('-lecture_tb__start_date')
                 class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                                   lecture_tb__member_id=member_info.member_id,
+                                                                   lecture_tb__member_id=member_info,
                                                                    lecture_tb__state_cd='IP',
                                                                    lecture_tb__use=1,
                                                                    auth_cd='VIEW',
@@ -648,12 +648,12 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(47))
-
         context = func_get_trainer_schedule(context, class_id, start_date, end_date)
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        # start_time = timezone.now()
         context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         date = request.POST.get('date', '')
@@ -669,6 +669,8 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
         context = func_get_trainer_schedule(context, class_id, start_date, end_date)
 
+        # end_time = timezone.now()
+        # print(str(end_time-start_time))
         return render(request, self.template_name, context)
 
 
@@ -804,13 +806,19 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                 if lecture_count == 0:
                     member.sex = ''
                     member.birthday_dt = ''
-                    member.phone = '***-****-'+member.phone[7:]
+                    if member.phone is None:
+                        member.phone = ''
+                    else:
+                        member.phone = '***-****-'+member.phone[7:]
                     member.user.email = ''
 
             if member.birthday_dt is None or member.birthday_dt == '':
                 member.birthday_dt = ''
             else:
                 member.birthday_dt = str(member.birthday_dt)
+
+            if member.phone is None:
+                member.phone = ''
 
         context['member_info'] = member
         if error is not None:
@@ -839,7 +847,6 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
     def get_context_data(self, **kwargs):
         context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-
         context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
 
         return context
@@ -1216,7 +1223,11 @@ def export_excel_member_list_logic(request):
                 ws1['F' + str(start_raw)] = '소진시까지'
             else:
                 ws1['F'+str(start_raw)] = member_info.end_date
-            ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
+
+            if member_info.phone is None:
+                ws1['G'+str(start_raw)] = '---'
+            else:
+                ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
             start_raw += 1
     else:
         ws1.title = "종료된 회원"
@@ -1233,7 +1244,10 @@ def export_excel_member_list_logic(request):
                 ws1['F' + str(start_raw)] = '소진시까지'
             else:
                 ws1['F'+str(start_raw)] = member_info.end_date
-            ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
+            if member_info.phone is None:
+                ws1['G'+str(start_raw)] = '---'
+            else:
+                ws1['G'+str(start_raw)] = member_info.phone[0:3]+'-'+member_info.phone[3:7]+'-'+member_info.phone[7:]
             start_raw += 1
 
     user_agent = request.META['HTTP_USER_AGENT']
@@ -2439,7 +2453,13 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                     if member_info.auth_cd != 'VIEW':
                         member_info.member.sex = ''
                         member_info.member.birthday_dt = ''
-                        member_info.member.phone = '***-****-' + member_info.member.phone[7:]
+                        if member_info.member.phone is None:
+                            member_info.member.phone = ''
+                        else:
+                            member_info.member.phone = '***-****-' + member_info.member.phone[7:]
+
+                if member_info.member.phone is None:
+                    member_info.member.phone = ''
 
                 check_add_flag = 0
                 for member_test in member_data:
@@ -2528,8 +2548,14 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
                 if lecture_count == 0:
                     member_info.sex = ''
                     member_info.birthday_dt = ''
-                    member_info.phone = '***-****-'+member_info.phone[7:]
+                    if member_info.phone is None:
+                        member_info.phone = ''
+                    else:
+                        member_info.phone = '***-****-'+member_info.phone[7:]
                     member_info.user.email = ''
+
+            if member_info.phone is None:
+                member_info.phone = ''
             group_schedule_info.member_info = member_info
             group_schedule_info.start_dt = str(group_schedule_info.start_dt)
             group_schedule_info.end_dt = str(group_schedule_info.end_dt)
@@ -2619,12 +2645,12 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for class_auth_info in member_class_data:
 
                 class_info = class_auth_info.class_tb
-                all_member = func_get_class_member_list(class_info.class_id)
+                all_member = func_get_class_member_id_list(class_info.class_id)
                 total_member_num = 0
                 for member_info in all_member:
                     # 강좌에 해당하는 수강/회원 정보 가져오기
                     class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                       lecture_tb__member_id=member_info.member_id,
+                                                                       lecture_tb__member_id=member_info,
                                                                        lecture_tb__state_cd='IP',
                                                                        lecture_tb__use=1,
                                                                        auth_cd='VIEW', use=1).order_by('-lecture_tb__start_date')
@@ -3004,18 +3030,18 @@ class GetTrainerInfoView(AccessTestMixin, TemplateView):
         # error = 'test'
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
-            all_member = func_get_class_member_list(class_id)
+            all_member = func_get_class_member_id_list(class_id)
             for member_info in all_member:
                 # member_data = member_info
 
                 # 강좌에 해당하는 수강/회원 정보 가져오기
                 total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                                         lecture_tb__member_id=member_info.member_id,
+                                                                         lecture_tb__member_id=member_info,
                                                                          lecture_tb__use=1,
                                                                          auth_cd='VIEW',
                                                                          use=1).order_by('-lecture_tb__start_date')
                 class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                                   lecture_tb__member_id=member_info.member_id,
+                                                                   lecture_tb__member_id=member_info,
                                                                    lecture_tb__state_cd='IP',
                                                                    lecture_tb__use=1,
                                                                    auth_cd='VIEW',

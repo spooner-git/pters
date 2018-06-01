@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from django.utils import timezone
 
 from login.models import MemberTb, HolidayTb, CommonCdTb
@@ -418,7 +419,6 @@ def func_get_class_list(context, member_id):
         for class_lecture_info in class_lecture_data:
 
             pt_type_name = None
-
             if error is None:
                 try:
                     pt_type_name = CommonCdTb.objects.get(common_cd=class_lecture_info.class_tb.subject_cd)
@@ -434,7 +434,7 @@ def func_get_class_list(context, member_id):
             for lecture_list_info in lecture_list_data:
                 try:
                     member_lecture_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id,
-                                                                      lecture_tb=lecture_list_info.lecture_tb_id)
+                                                                      lecture_tb_id=lecture_list_info.lecture_tb_id)
                 except ObjectDoesNotExist:
                     error = '수강 정보를 불러오지 못했습니다.'
 

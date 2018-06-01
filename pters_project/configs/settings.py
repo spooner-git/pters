@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'configs.urls'
 
 AUTHENTICATION_BACKENDS = (
@@ -243,17 +244,17 @@ LOGGING = {
         '': {
             'handlers': ['default'],
             'propagate': True,
-            'level': 'ERROR',
+            'level': 'DEBUG',
         },
         'django': {
             'handlers': ['default'],
             'propagate': True,
-            'level': 'ERROR',
+            'level': 'DEBUG',
         },
         'django.request': {
             'handlers': ['default'],
             'propagate': False,
-            'level': 'ERROR',
+            'level': 'DEBUG',
         },
         'login': {
             'handlers': ['login_file'],

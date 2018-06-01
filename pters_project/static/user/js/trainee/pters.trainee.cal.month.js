@@ -1751,7 +1751,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 
 		if(finish == '1'){
 			var mobile = '<div class="monthplans_count"><img src="/static/user/res/icon-cal-mini.png">'+count+'</div>'
-			var finishImg = '<div class="monthplans"><span>'+classTime+groupname+'</span><img src="/static/user/res/btn-pt-complete.png"></div>'
+			var finishImg = '<div class="monthplans"><img src="/static/user/res/btn-pt-complete.png"><span>'+classTime+groupname+'</span></div>'
 		}else if(finish == '0'){
 			var mobile = '<div class="monthplans_count"><img src="/static/user/res/icon-cal-mini.png">'+count+'</div>'
 			var finishImg = '<div class="monthplans"><span>'+classTime+groupname+'</span></div>'

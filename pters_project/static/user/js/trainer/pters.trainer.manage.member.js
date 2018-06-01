@@ -1797,7 +1797,7 @@ function get_member_list(use, callback){
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if(use == "callback"){
-                    callback()
+                    callback(jsondata)
 
                 }else{
                     console.log('get_member_list',jsondata)
@@ -1944,7 +1944,6 @@ function memberListSet (type,option,Reverse, jsondata){
     var tbodyStart = '<tbody>';
     var tbodyEnd = '</tbody>';
     var tbodyToAppend = $(tbodyStart);
-
     switch(type){
         case 'current':
             var data = DataFormatting(jsondata);
@@ -3544,6 +3543,7 @@ function add_groupmember_form_func(){
 //회원을 삭제 요청을 서버로 보낸다.
 function deleteMemberAjax(){
     var $form = $('#member-delete-form');
+    console.log('$form.serialize()',$form.serialize())
     $.ajax({
         url: '/trainer/delete_member_info/',
         type:'POST',
@@ -3577,34 +3577,66 @@ function deleteMemberAjax(){
                 $('#startR').attr('selected','selected')
                 switch(alignType){
                   case 'name':
-                        memberListSet ('current','name','no',jsondata)
-                        memberListSet('finished','name','no',jsondata);
-                        $('#name').attr('selected','selected')
+                        get_member_ing_list('callback',function(json){
+                            memberListSet ('current','name','no',json)
+                            $('#name').attr('selected','selected')
+                        })
+                        get_member_end_list('callback',function(json){
+                            memberListSet('finished','name','no',json)
+                            $('#name').attr('selected','selected')
+                        })
+                        
                   break;
                   case 'countH':
-                        memberListSet('current','count','yes',jsondata);
-                        memberListSet('finished','count','yes',jsondata);
-                        $('#countH').attr('selected','selected')
+                        get_member_ing_list('callback',function(json){
+                            memberListSet('current','count','yes',json);
+                            $('#countH').attr('selected','selected')
+                        })
+                        get_member_end_list('callback',function(json){
+                            memberListSet('finished','count','yes',json);
+                            $('#countH').attr('selected','selected')
+                        })
+                        
                   break;
                   case 'countL':
-                        memberListSet('current','count','no',jsondata);
-                        memberListSet('finished','count','no',jsondata);
-                        $('#countL').attr('selected','selected')
+                        get_member_ing_list('callback',function(json){
+                                memberListSet('current','count','no',json);
+                                $('#countL').attr('selected','selected')
+                        })
+                        get_member_end_list('callback',function(json){
+                                memberListSet('finished','count','no',json);
+                                $('#countL').attr('selected','selected')
+                        })
                   break;
                   case 'startP':
-                        memberListSet('current','date','no',jsondata);
-                        memberListSet('finished','date','no',jsondata);
-                        $('#startP').attr('selected','selected')
+                        get_member_ing_list('callback',function(json){
+                                memberListSet('current','date','no',json);
+                                $('#startP').attr('selected','selected')
+                        })
+                        get_member_end_list('callback',function(json){
+                                memberListSet('finished','date','no',json);
+                                $('#startP').attr('selected','selected')
+                        })
                   break;
                   case 'startR':
-                        memberListSet('current','date','yes',jsondata);
-                        memberListSet('finished','date','yes',jsondata);
-                        $('#startR').attr('selected','selected')
+                        get_member_ing_list('callback',function(json){
+                                memberListSet('current','date','yes',json);
+                                $('#startR').attr('selected','selected')
+                        })
+                        get_member_end_list('callback',function(json){
+                                memberListSet('finished','date','yes',json);
+                                $('#startR').attr('selected','selected')
+                        })
                   break;
                   case 'recent':
-                        memberListSet('current','date','yes',jsondata);
-                        memberListSet('finished','date','yes',jsondata);
-                        $('#recent').attr('selected','selected')
+                        get_member_ing_list('callback',function(json){
+                                memberListSet('current','date','yes',json);
+                                $('#recent').attr('selected','selected')
+                        })
+                        get_member_end_list('callback',function(json){
+                                memberListSet('finished','date','yes',json);
+                                $('#recent').attr('selected','selected')
+                        })
                   break;
                 }
                 console.log('success');
@@ -3612,7 +3644,7 @@ function deleteMemberAjax(){
         },
 
         complete:function(){
-            completeSend();
+            //completeSend();
         },
 
         error:function(){
