@@ -592,10 +592,13 @@ if (agent.indexOf("firefox") != -1) {
     
     $('#popup_delete_btn_yes').click(function(){
         //if($('#calendar').length==0){
+            console.log(deleteTypeSelect)
            if(deleteTypeSelect == "repeatinfodelete"){
                 var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
                 var dbID = $(this).parent('#cal_popup_plandelete').attr('data-dbid');
+                console.log('popup_delete_btn_yes!!!!!!!!!!!!!!!!!!!!!!!',dbID)
                 send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
+                    console.log('popup_delete_btn_yes!!!!!!!!!!!!!!!!!!!!!!!--------',dbID)
                     get_indiv_repeat_info(dbID);
                     get_member_lecture_list(dbID);
                     get_member_history_list(dbID);
@@ -643,6 +646,44 @@ if (agent.indexOf("firefox") != -1) {
                 })
             }               
     });
+
+
+    function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
+        var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
+        $.ajax({
+            url: '/trainer/get_group_member_repeat_schedule_list/',
+            type : 'POST',
+            data : {"group_repeat_schedule_id":group_repeat_id}, 
+            dataType : 'html',
+
+            beforeSend:function(){
+              beforeSend()
+            },
+
+            success:function(data){
+              TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+              var jsondata = JSON.parse(data);
+              console.log(jsondata)
+              if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text(jsondata.messageArray)
+              }else{
+                if(use == "callback"){
+                  callback(jsondata)
+                }
+              }
+            },
+
+            complete:function(){
+              completeSend()
+            },
+
+            error:function(){
+              $('#errorMessageBar').show()
+              $('#errorMessageText').text('통신 에러: 관리자 문의')
+            }
+          })
+    }
 
 
 
@@ -2943,7 +2984,7 @@ function get_member_lecture_list(dbID, use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_member_lecture_list',dbID)
+            console.log('get_member_lecture_list',jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -3838,9 +3879,9 @@ function get_indiv_repeat_info(dbID){
                     $('#errorMessageBar').hide()
                     $('#errorMessageText').text('')
                     if($('body').width() < 600){
-                        set_indiv_repeat_info(jsondata, 'mobile')
+                        set_indiv_repeat_info(dbID, jsondata, 'mobile')
                     }else{
-                        set_indiv_repeat_info(jsondata, 'pc')
+                        set_indiv_repeat_info(dbID, jsondata, 'pc')
                     }
                 }
               },
@@ -3857,7 +3898,7 @@ function get_indiv_repeat_info(dbID){
 }
 
 //서버로부터 받아온 반복일정을 회원정보 팝업에 그린다.
-function set_indiv_repeat_info(jsondata, PCorMobile){
+function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
     if(PCorMobile == "pc"){
         var $regHistory =  $('#memberRepeat_info_PC')
     }else if(PCorMobile == "mobile"){
@@ -3887,7 +3928,8 @@ function set_indiv_repeat_info(jsondata, PCorMobile){
                                'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
                              }
     var len = jsondata.ptRepeatScheduleIdArray.length
-    var dbId = jsondata.memberIdArray
+    var dbId = dbID
+    console.log(jsondata)
     var repeat_id_array = jsondata.ptRepeatScheduleIdArray
     var repeat_type_array = jsondata.ptRepeatScheduleTypeArray
     var repeat_day_info_raw_array = jsondata.ptRepeatScheduleWeekInfoArray
