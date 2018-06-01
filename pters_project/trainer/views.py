@@ -846,7 +846,7 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
 
 
 class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'member_list_ajax.html'
+    template_name = 'ajax/member_list_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)

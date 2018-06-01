@@ -162,7 +162,7 @@ $(document).ready(function(){
     get_trainee_reg_history()
     function get_trainee_lecture_history(){
     	$.ajax({
-	          url: '/trainee/read_trainee_all_schedule_ajax/',
+	          url: '/trainee/get_trainee_schedule_history/',
 			  dataType : 'html',
 			  type:'POST',
 

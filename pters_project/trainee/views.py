@@ -194,11 +194,11 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class GetTraineeClassListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/trainee_lecture_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ReadTraineeLectureViewAjax, self).get_context_data(**kwargs)
+        context = super(GetTraineeClassListView, self).get_context_data(**kwargs)
 
         context['error'] = None
         context = get_lecture_list_by_member_id(context, self.request.user.id)
@@ -207,6 +207,36 @@ class ReadTraineeLectureViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVi
             messages.error(self.request, context['error'])
 
         return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetTraineeLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'ajax/class_lecture_data_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
+        class_id = request.GET.get('class_id', '')
+        context['error'] = None
+        context = GetTraineeLectureListView(context, class_id, request.user.id)
+
+        if context['error'] is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
+            messages.error(self.request, context['error'])
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
+        class_id = request.POST.get('class_id', '')
+
+        context['error'] = None
+        context = GetTraineeLectureListView(context, class_id, request.user.id)
+
+        if context['error'] is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
+            messages.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+self.request, context['error'])
+
+        return render(request, self.template_name, context)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -387,7 +417,6 @@ def get_lecture_view_list_by_class_member_id(context, class_id, member_id):
     error = None
     context['error'] = None
     lecture_counts = 0
-    np_lecture_counts = 0
     output_lecture_list = []
 
     if class_id is None or class_id == '':
@@ -1075,43 +1104,6 @@ def add_trainee_schedule_logic(request):
         return redirect(next_page)
 
 
-# pt 일정 추가
-def pt_add_array_logic(request):
-    class_id = request.POST.get('class_id', '')
-    # lecture_id = request.POST.get('lecture_id')
-    add_pt_size = request.POST.get('add_pt_size')
-    training_date = request.POST.getlist('training_date[]')
-    time_duration = request.POST.getlist('time_duration[]')
-    training_time = request.POST.getlist('training_time[]')
-    next_page = request.POST.get('next_page')
-
-    error = None
-
-    if class_id is None or class_id == '':
-        error = '강좌 정보를 불러오지 못했습니다.'
-
-    if int(add_pt_size) == 0:
-        error = 'pt 일정을 선택하세요.'
-
-    for i in range(0, int(add_pt_size)):
-
-        lecture_id = get_trainee_schedule_input_lecture(class_id, request.user.id)
-
-        if lecture_id is None:
-            error = '등록할수 있는 일정이 없습니다.'
-        if error is None:
-            error = pt_add_logic_func(training_date[i], time_duration[i], training_time[i],
-                                      request.user.id, lecture_id, class_id, request, None)
-
-    if error is None:
-
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-        return redirect(next_page)
-
-
 def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_time, user_id,
                       lecture_id, class_id, request, group_schedule_id):
 
@@ -1463,11 +1455,11 @@ def get_trainee_setting_data(context, user_id):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/trainee_schedule_ajax.html'
 
     def get(self, request, *args, **kwargs):
-        context = super(ReadTraineeScheduleViewAjax, self).get_context_data(**kwargs)
+        context = super(GetTraineeScheduleView, self).get_context_data(**kwargs)
         date = request.session.get('date', '')
         day = request.session.get('day', '')
 
@@ -1490,6 +1482,7 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        context = super(GetTraineeScheduleView, self).get_context_data(**kwargs)
         date = request.POST.get('date', '')
         day = request.POST.get('day', '')
         class_id = self.request.session.get('class_id', '')
@@ -1500,8 +1493,6 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
             day = 18
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day)+1)
-
-        context = super(ReadTraineeScheduleViewAjax, self).get_context_data(**kwargs)
 
         context = func_get_trainee_all_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
@@ -1514,11 +1505,11 @@ class ReadTraineeScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMi
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ReadTraineeAllScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetTraineeScheduleHistoryView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/trainee_all_schedule_ajax.html'
 
     def post(self, request, *args, **kwargs):
-        context = super(ReadTraineeAllScheduleViewAjax, self).get_context_data(**kwargs)
+        context = super(GetTraineeScheduleHistoryView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.user.id
         context['error'] = None
@@ -1535,6 +1526,88 @@ class ReadTraineeAllScheduleViewAjax(LoginRequiredMixin, AccessTestMixin, Contex
 
         return render(request, self.template_name, context)
 
+
+def get_trainee_schedule_data_func(context, class_id, member_id):
+
+    error = None
+    class_info = None
+
+    pt_schedule_data = None
+
+    lecture_list = None
+    pt_schedule_id = []
+    pt_schedule_lecture_id = []
+    pt_schedule_start_datetime = []
+    pt_schedule_end_datetime = []
+    pt_schedule_state_cd = []
+    pt_schedule_note = []
+    pt_schedule_reg_datetime = []
+    pt_schedule_mod_datetime = []
+    pt_schedule_idx = []
+
+    # 강좌 정보 가져오기
+    try:
+        class_info = ClassTb.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        error = '강좌 정보를 불러오지 못했습니다.'
+    # 수강 정보 불러 오기
+    if error is None:
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                     lecture_tb__member_id=member_id,
+                                                     lecture_tb__use='1', use=1)
+    if error is None:
+        # 강사 클래스의 반복일정 불러오기
+        if len(lecture_list) > 0:
+            for idx, lecture_list_info in enumerate(lecture_list):
+                lecture_info = lecture_list_info.lecture_tb
+                try:
+                    lecture_info_data = MemberLectureTb.objects.get(auth_cd='VIEW', member_id=member_id,
+                                                                    lecture_tb=lecture_info.lecture_id)
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
+
+                if error is None:
+                    pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                 en_dis_type='1').order_by('start_dt')
+
+                    if pt_schedule_data is not None and len(pt_schedule_data) > 0:
+                        idx = 0
+                        for pt_schedule_info in pt_schedule_data:
+                            idx += 1
+                            # lecture schedule id 셋팅
+                            pt_schedule_id.append(pt_schedule_info.schedule_id)
+                            # lecture schedule 에 해당하는 lecture id 셋팅
+                            pt_schedule_lecture_id.append(pt_schedule_info.lecture_tb_id)
+
+                            pt_schedule_start_datetime.append(str(pt_schedule_info.start_dt))
+                            pt_schedule_end_datetime.append(str(pt_schedule_info.end_dt))
+                            pt_schedule_reg_datetime.append(str(pt_schedule_info.mod_dt))
+                            pt_schedule_mod_datetime.append(str(pt_schedule_info.reg_dt))
+                            pt_schedule_idx.append(idx)
+
+                            if pt_schedule_info.note is None:
+                                pt_schedule_note.append('')
+                            else:
+                                pt_schedule_note.append(pt_schedule_info.note)
+                            # 끝난 스케쥴인지 확인
+                            pt_schedule_state_cd.append(str(pt_schedule_info.state_cd))
+                else:
+                    error = None
+
+    context['pt_schedule_id'] = pt_schedule_id
+    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
+    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
+    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
+    context['pt_schedule_reg_datetime'] = pt_schedule_reg_datetime
+    context['pt_schedule_mod_datetime'] = pt_schedule_mod_datetime
+    context['pt_schedule_state_cd'] = pt_schedule_state_cd
+    context['pt_schedule_note'] = pt_schedule_note
+    context['pt_schedule_idx'] = pt_schedule_idx
+
+    if error is None:
+        context['error'] = error
+
+    return context
 
 def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, class_id, start_date, end_date):
     error = None
@@ -2127,32 +2200,6 @@ class GetTraineeGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
         context['group_data'] = group_list
 
         return context
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class GetTraineeAllScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
-    template_name = 'ajax/trainee_schedule_ajax.html'
-
-    def post(self, request, *args, **kwargs):
-        context = super(GetTraineeAllScheduleView, self).get_context_data(**kwargs)
-        date = request.POST.get('date', '')
-        day = request.POST.get('day', '')
-        class_id = self.request.session.get('class_id', '')
-        today = datetime.date.today()
-        if date != '':
-            today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        if day == '':
-            day = 18
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(day)+1)
-
-        context = func_get_trainee_all_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
-
-        if context['error'] is not None:
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
-            messages.error(self.request, context['error'])
-
-        return render(request, self.template_name, context)
 
 
 @method_decorator(csrf_exempt, name='dispatch')

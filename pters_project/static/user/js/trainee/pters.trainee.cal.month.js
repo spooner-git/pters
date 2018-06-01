@@ -1145,7 +1145,7 @@ $(document).ready(function(){
     function ajaxTimeGraphSet(clicked){
             var today_form = date_format_to_yyyymmdd(clicked.attr('data-date'),'-')
             $.ajax({
-              url: '/trainee/read_trainee_schedule_ajax/',
+              url: '/trainee/get_trainee_schedule/',
               type : 'POST',
               data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
               dataType : 'html',
@@ -1654,7 +1654,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
 	}
 	
 	$.ajax({
-	  url: '/trainee/read_trainee_schedule_ajax/',
+	  url: '/trainee/get_trainee_schedule/',
 	  type : 'POST',
 	  data : {"date":today_form, "day":date_form},
 	  dataType : 'html',
