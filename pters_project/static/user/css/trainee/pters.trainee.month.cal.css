@@ -534,33 +534,28 @@ img,a,div,span,p{
 	border-radius: 50%;
 }
 
-
-#cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
+.monthplans{
 	display: none;
-	position: fixed;
-	top: 35%;
-	background-color: #ffffff;
-	border: 1px solid #a2a2a2;
-	z-index: -2;
-	text-align: center;
-	left:50%;
-	transform: translateX(-50%);
-	z-index: 150;
 }
+.monthplans_count{
+	display: block;
+	margin-top: 4px;
+}
+	._classTime img{
+		width: 10px;
+		margin-bottom: 2px;
+		margin-right: 1.5px;
+	}
+
+
+
+
 
 #cal_popup_plancheck .popup_inner:hover{
 	background : white;
 }
 
-._classTime img{
-	position: absolute;
-	display: inline;
-	left: 0;
-	top: 0;
-	width: 9px;
-	height: 10px;
-	opacity: 0.7;
-}
+
 
 
 /*팝업 css*/
@@ -593,6 +588,7 @@ img,a,div,span,p{
 	border-color: transparent;
 	top: 50%;
 	left: 50%;
+	transform: translate(-50%, -50%);
 	width: 80%;
 	/*
 	background-color: #ffffff;
@@ -637,11 +633,16 @@ img,a,div,span,p{
 #addpopup{
 	position: absolute;
 	display: none;
-	left: 5%;
-	top: 30%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 	width: 90%;
 	background: #ffffff;
-	z-index: 105;
+	z-index: 150;
+}
+.groupreserve{
+	display: none;
+	min-height: 128px;
 }
 
 
@@ -1316,6 +1317,13 @@ img,a,div,span,p{
 		background: #3b3d3d;
 		margin: 1px;
 		border-radius: 2px;
+	}
+
+	.monthplans{
+		display: block;
+	}
+	.monthplans_count{
+		display: none;
 	}
 
 	.holidayName{
