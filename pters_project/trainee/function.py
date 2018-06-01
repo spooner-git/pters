@@ -5,7 +5,7 @@ from login.models import MemberTb, HolidayTb, CommonCdTb
 from schedule.models import ClassTb, MemberLectureTb, ClassLectureTb, ScheduleTb, RepeatScheduleTb, GroupLectureTb
 
 
-def func_get_trainee_all_schedule_data(context, user_id, class_id, start_date, end_date):
+def func_get_trainee_schedule_data(context, user_id, class_id, start_date, end_date):
     error = None
 
     context['lecture_info'] = None
@@ -340,18 +340,27 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
 
+    if auth_cd is None or auth_cd == '':
+        auth_cd = 'VIEW'
+    auth_cd_list = auth_cd.split('/')
+
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                      lecture_tb__member_id=member_id,
                                                      use=1).order_by('-lecture_tb__start_date')
 
         for lecture_info in lecture_list:
-            try:
-                lecture_info_data = MemberLectureTb.objects.get(auth_cd='VIEW',
-                                                                member_id=member_id,
-                                                                lecture_tb=lecture_info.lecture_tb_id)
-            except ObjectDoesNotExist:
-                lecture_info_data = None
+
+            for auth_cd_info in auth_cd_list:
+                try:
+                    lecture_info_data = MemberLectureTb.objects.get(auth_cd=auth_cd_info,
+                                                                    member_id=member_id,
+                                                                    lecture_tb=lecture_info.lecture_tb_id)
+                except ObjectDoesNotExist:
+                    lecture_info_data = None
+
+                if lecture_info_data is not None:
+                    break
 
             if lecture_info_data is not None:
                 lecture_info_data.lecture_tb.start_date = str(lecture_info_data.lecture_tb.start_date)
@@ -390,6 +399,67 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 output_lecture_list.append(lecture_info_data)
 
     context['lecture_data'] = output_lecture_list
+
+    if error is not None:
+        context['error'] = error
+
+    return context
+
+
+def func_get_class_list(context, member_id):
+
+    error = None
+    class_lecture_data = ClassLectureTb.objects.filter(lecture_tb__member_id=member_id,
+                                                       use=1).order_by('class_tb_id').distinct()
+
+    # class_lecture_data = class_lecture_data.values('class_tb')
+    class_list = []
+    if len(class_lecture_data) > 0:
+        for class_lecture_info in class_lecture_data:
+
+            pt_type_name = None
+
+            if error is None:
+                try:
+                    pt_type_name = CommonCdTb.objects.get(common_cd=class_lecture_info.class_tb.subject_cd)
+                except ObjectDoesNotExist:
+                    error = '강좌 정보를 불러오지 못했습니다.'
+
+            lecture_list_data = ClassLectureTb.objects.filter(class_tb_id=class_lecture_info.class_tb_id,
+                                                              lecture_tb__member_id=member_id)
+
+            class_lecture_info.np_lecture_counts = 0
+            class_lecture_info.lecture_counts = 0
+
+            for lecture_list_info in lecture_list_data:
+                try:
+                    member_lecture_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id,
+                                                                      lecture_tb=lecture_list_info.lecture_tb_id)
+                except ObjectDoesNotExist:
+                    error = '수강 정보를 불러오지 못했습니다.'
+
+                if error is None:
+                    class_lecture_info.lecture_counts += 1
+                    if member_lecture_data.auth_cd == 'WAIT':
+                        class_lecture_info.np_lecture_counts += 1
+                else:
+                    error = None
+
+            if error is None and class_lecture_info.lecture_counts > 0:
+                class_lecture_info.class_type_name = pt_type_name.common_cd_nm
+
+                if class_lecture_info.class_tb.subject_detail_nm is not None and class_lecture_info.class_tb.subject_detail_nm != '':
+                    class_lecture_info.class_type_name = class_lecture_info.class_tb.subject_detail_nm
+
+                check = 0
+                for check_class_list_item in class_list:
+                    if check_class_list_item.class_tb_id == class_lecture_info.class_tb_id:
+                        check = 1
+
+                if check == 0:
+                    class_list.append(class_lecture_info)
+
+    context['class_data'] = class_list
 
     if error is not None:
         context['error'] = error

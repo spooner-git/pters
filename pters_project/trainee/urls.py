@@ -18,14 +18,12 @@ from trainee import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    # schedule 폴더로 이동
+
+    # 일정 기능 #####################################################################################################
     # 회원 일정 추가 - 1:1/Group
     url(r'^add_trainee_schedule/$', views.add_trainee_schedule_logic, name='add_trainee_schedule'),
     # 회원 일정 삭제 - 1:1/Group
     url(r'^delete_trainee_schedule/$', views.delete_trainee_schedule_logic, name='delete_trainee_schedule'),
-
-
-    # 일정 기능 #####################################################################################################
     # 회원 스케쥴 조회 - 1:1/Group/Off
     url(r'^get_trainee_schedule/$', views.GetTraineeScheduleView.as_view(), name='get_trainee_schedule'),
     # 회원 스케쥴 이력 조회 - 1:1/Group
@@ -34,22 +32,15 @@ urlpatterns = [
     # 수강 정보 기능 #####################################################################################################
     # 강좌 정보 list 조회
     url(r'^get_trainee_class_list/$', views.GetTraineeClassListView.as_view(), name='get_trainee_class_list'),
-
-    # 수강 정보 list 조회 - VIEW / WAIT
+    # 수강 정보 list 조회 - auth_cd(연결상태) 종류별
     url(r'^get_trainee_lecture_list/$', views.GetTraineeLectureListView.as_view(), name='get_trainee_lecture_list'),
-
-    url(r'^read_trainee_lecture_by_class_ajax/$', views.ReadLectureByClassAjax.as_view(), name='read_trainee_lecture_by_class_ajax'),
-    # 수강 정보 list 조회 - VIEW
-    url(r'^read_trainee_lecture_view_by_class_ajax/$', views.ReadLectureViewByClassAjax.as_view(), name='read_trainee_lecture_view_by_class_ajax'),
-
-    # 강좌 선택 기능
-    url(r'^lecture_processing/$', views.lecture_processing, name='lecture_processing'),
-    # 회원 남은 횟수 정보 가져오기
+    # 수강 횟수 정보 가져오기
     url(r'^get_trainee_count/$', views.GetTraineeCountView.as_view(), name='get_trainee_count'),
-
+    # 수강정보 선택/연동 기능
+    url(r'^lecture_processing/$', views.lecture_processing, name='lecture_processing'),
 
     # Mypage 기능 #####################################################################################################
-    url(r'^trainee_push_ajax/$', views.TraineePushAjax.as_view(), name='trainee_push_ajax'),
+    url(r'^get_trainee_error_info/$', views.GetTraineeErrorInfoView.as_view(), name='get_trainee_error_info'),
     # 회원 정보 조회
     url(r'^get_trainee_info/$', views.MyPageViewAjax.as_view(), name='get_trainee_info'),
     # 회원 정보 수정
