@@ -34,8 +34,9 @@ from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, Sett
 
 from django.utils import timezone
 
-from trainee.function import func_get_trainee_schedule_data, func_get_class_lecture_count, func_get_lecture_list, \
-    func_get_class_list
+from trainee.function import func_get_class_lecture_count, func_get_lecture_list, \
+    func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
+    func_get_holiday_schedule, func_get_trainee_on_repeat_schedule
 
 logger = logging.getLogger(__name__)
 
@@ -223,7 +224,11 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         end_date = today + datetime.timedelta(days=47)
 
         if error is None:
-            context = func_get_trainee_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
+            # context = func_get_trainee_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
+            context = func_get_holiday_schedule(context)
+            context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, start_date, end_date)
+            context = func_get_trainee_off_schedule(context, self.request.user.id, class_id, start_date, end_date)
+            context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
 
             # 회원 setting 값 로드
             context = get_trainee_setting_data(context, self.request.user.id)
@@ -263,6 +268,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         #    error = '수강정보를 확인해 주세요.'
         if error is None:
+            context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, None, None)
+            context = func_get_trainee_on_repeat_schedule(context, self.request.user.id, class_id)
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
                                                                  self.request.user.last_name + self.request.user.first_name, class_id, start_date, end_date)
 
@@ -668,7 +675,10 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
 
-        context = func_get_trainee_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_holiday_schedule(context)
+        context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_trainee_off_schedule(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
         if context['error'] is not None:
@@ -689,8 +699,11 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
             day = 18
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day)+1)
-
-        context = func_get_trainee_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
+        context['error'] = None
+        context = func_get_holiday_schedule(context)
+        context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_trainee_off_schedule(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
         if context['error'] is not None:
@@ -714,7 +727,7 @@ class GetTraineeScheduleHistoryView(LoginRequiredMixin, AccessTestMixin, Context
             context['error'] = '회원 정보를 불러오지 못했습니다.'
 
         if context['error'] is None:
-            context = get_trainee_schedule_data_func(context, class_id, member_id)
+            context = func_get_trainee_on_schedule(context, class_id, member_id, None, None)
 
         if context['error'] is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
@@ -919,6 +932,8 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
+            context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, None, None)
+            context = func_get_trainee_on_repeat_schedule(context, self.request.user.id, class_id)
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
                                                                  self.request.user.last_name + self.request.user.first_name, class_id, start_date, end_date)
 
@@ -1485,118 +1500,15 @@ def get_trainee_setting_data(context, user_id):
     return context
 
 
-def get_trainee_schedule_data_func(context, class_id, member_id):
-
-    error = None
-    class_info = None
-
-    lecture_list = None
-    pt_schedule_id = []
-    pt_schedule_lecture_id = []
-    pt_schedule_start_datetime = []
-    pt_schedule_end_datetime = []
-    pt_schedule_state_cd = []
-    pt_schedule_note = []
-    pt_schedule_reg_datetime = []
-    pt_schedule_mod_datetime = []
-    pt_schedule_idx = []
-
-    # 강좌 정보 가져오기
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '강좌 정보를 불러오지 못했습니다.'
-    # 수강 정보 불러 오기
-    if error is None:
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                     lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', use=1)
-    if error is None:
-        # 강사 클래스의 반복일정 불러오기
-        if len(lecture_list) > 0:
-            for idx, lecture_list_info in enumerate(lecture_list):
-                lecture_info = lecture_list_info.lecture_tb
-                try:
-                    MemberLectureTb.objects.get(auth_cd='VIEW', member_id=member_id,
-                                                lecture_tb=lecture_info.lecture_id)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
-
-                if error is None:
-                    pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type='1').order_by('start_dt')
-
-                    if pt_schedule_data is not None and len(pt_schedule_data) > 0:
-                        idx = 0
-                        for pt_schedule_info in pt_schedule_data:
-                            idx += 1
-                            # lecture schedule id 셋팅
-                            pt_schedule_id.append(pt_schedule_info.schedule_id)
-                            # lecture schedule 에 해당하는 lecture id 셋팅
-                            pt_schedule_lecture_id.append(pt_schedule_info.lecture_tb_id)
-
-                            pt_schedule_start_datetime.append(str(pt_schedule_info.start_dt))
-                            pt_schedule_end_datetime.append(str(pt_schedule_info.end_dt))
-                            pt_schedule_reg_datetime.append(str(pt_schedule_info.mod_dt))
-                            pt_schedule_mod_datetime.append(str(pt_schedule_info.reg_dt))
-                            pt_schedule_idx.append(idx)
-
-                            if pt_schedule_info.note is None:
-                                pt_schedule_note.append('')
-                            else:
-                                pt_schedule_note.append(pt_schedule_info.note)
-                            # 끝난 스케쥴인지 확인
-                            pt_schedule_state_cd.append(str(pt_schedule_info.state_cd))
-                else:
-                    error = None
-
-    context['pt_schedule_id'] = pt_schedule_id
-    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
-    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
-    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
-    context['pt_schedule_reg_datetime'] = pt_schedule_reg_datetime
-    context['pt_schedule_mod_datetime'] = pt_schedule_mod_datetime
-    context['pt_schedule_state_cd'] = pt_schedule_state_cd
-    context['pt_schedule_note'] = pt_schedule_note
-    context['pt_schedule_idx'] = pt_schedule_idx
-
-    if error is None:
-        context['error'] = error
-
-    return context
-
-
 def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, class_id, start_date, end_date):
     error = None
 
     context['lecture_info'] = None
     context['error'] = None
-    off_schedule_start_datetime = []
-    off_schedule_end_datetime = []
-    pt_schedule_id = []
-    pt_schedule_lecture_id = []
-    pt_schedule_start_datetime = []
-    pt_schedule_end_datetime = []
-    pt_schedule_member_name = []
-    pt_schedule_finish_check = []
-    pt_schedule_note = []
-    pt_schedule_idx = []
 
-    pt_repeat_schedule_id = []
-    pt_repeat_schedule_type = []
-    pt_repeat_schedule_week_info = []
-    pt_repeat_schedule_start_date = []
-    pt_repeat_schedule_end_date = []
-    pt_repeat_schedule_start_time = []
-    pt_repeat_schedule_time_duration = []
-
-    lecture_data = None
     class_info = None
-    pt_schedule_data = None
-    pt_repeat_schedule_data = None
     next_schedule_start_dt = ''
     next_schedule_end_dt = ''
-    now = timezone.now()
     lecture_reg_count_sum = 0
     lecture_rem_count_sum = 0
     lecture_avail_count_sum = 0
@@ -1637,59 +1549,12 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
 
                 if error is None:
                     lecture_counts += 1
-                    pt_schedule_data = ScheduleTb.objects.filter(lecture_tb=lecture_info.lecture_id,
-                                                                 en_dis_type='1',
-                                                                 start_dt__gte=start_date,
-                                                                 start_dt__lt=end_date).order_by('start_dt')
-
-                    # PT 스케쥴 정보 셋팅
-                    if pt_schedule_data is not None:
-                        idx = 0
-                        for pt_schedule_datum in pt_schedule_data:
-                            idx += 1
-                            # lecture schedule id 셋팅
-                            pt_schedule_id.append(pt_schedule_datum.schedule_id)
-                            # lecture schedule 에 해당하는 lecture id 셋팅
-                            pt_schedule_lecture_id.append(pt_schedule_datum.lecture_tb_id)
-                            pt_schedule_member_name.append(user_name)
-
-                            if pt_schedule_datum.start_dt > now:
-                                if next_schedule_start_dt is '':
-                                    next_schedule_start_dt = pt_schedule_datum.start_dt
-                                    next_schedule_end_dt = pt_schedule_datum.end_dt
-                                elif next_schedule_start_dt > pt_schedule_datum.start_dt:
-                                    next_schedule_start_dt = pt_schedule_datum.start_dt
-                                    next_schedule_end_dt = pt_schedule_datum.end_dt
-
-                            pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
-                            pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
-                            pt_schedule_idx.append(idx)
-
-                            if pt_schedule_datum.note is None:
-                                pt_schedule_note.append('')
-                            else:
-                                pt_schedule_note.append(pt_schedule_datum.note)
-                            # 끝난 스케쥴인지 확인
-                            if pt_schedule_datum.state_cd == 'PE':
-                                pt_schedule_finish_check.append(1)
-                            else:
-                                pt_schedule_finish_check.append(0)
-
                     if lecture_counts == 1:
-                    # if idx == 0:
-                        pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                                  en_dis_type='1')
-                        # if lecture_info.use != 0:
-                        # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
                         if lecture_info.state_cd == 'IP':
                             pt_start_date = lecture_info.start_date
                             pt_end_date = lecture_info.end_date
 
                     else:
-                        pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                                   en_dis_type='1')
-                        # if lecture_info.use != 0:
-                        # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
                         if lecture_info.state_cd == 'IP':
                             if pt_start_date == '':
                                 pt_start_date = lecture_info.start_date
@@ -1702,8 +1567,6 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                                 if pt_end_date < lecture_info.end_date:
                                     pt_end_date = lecture_info.end_date
 
-                    # if lecture_info.use != 0:
-                    # if lecture_info.state_cd == 'IP' or lecture_info.state_cd == 'PE':
                     if lecture_info.state_cd == 'IP':
                         lecture_reg_count_sum += lecture_info.lecture_reg_count
                         lecture_rem_count_sum += lecture_info.lecture_rem_count
@@ -1713,50 +1576,10 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                 else:
                     error = None
 
-            if pt_repeat_schedule_data is not None:
-                for pt_repeat_schedule_info in pt_repeat_schedule_data:
-                    pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
-                    pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
-                    pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
-                    pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
-                    pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
-                    pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
-                    pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
-
-    # OFF 일정
-    if error is None:
-        if pt_start_date != '':
-            off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_info.class_id,
-                                                          start_dt__gte=start_date,
-                                                          start_dt__lt=end_date)
-            for off_schedule_datum in off_schedule_data:
-                off_schedule_start_datetime.append(str(off_schedule_datum.start_dt))
-                off_schedule_end_datetime.append(str(off_schedule_datum.end_dt))
-
     holiday = HolidayTb.objects.filter(use=1)
 
     if error is not None:
         context['error'] = error
-
-    context['off_schedule_start_datetime'] = off_schedule_start_datetime
-    context['off_schedule_end_datetime'] = off_schedule_end_datetime
-
-    context['pt_schedule_id'] = pt_schedule_id
-    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
-    context['pt_schedule_member_name'] = pt_schedule_member_name
-    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
-    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
-    context['pt_schedule_finish_check'] = pt_schedule_finish_check
-    context['pt_schedule_note'] = pt_schedule_note
-    context['pt_schedule_idx'] = pt_schedule_idx
-
-    context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
-    context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
-    context['pt_repeat_schedule_week_info_data'] = pt_repeat_schedule_week_info
-    context['pt_repeat_schedule_start_date_data'] = pt_repeat_schedule_start_date
-    context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
-    context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
-    context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
 
     context['next_schedule_start_dt'] = str(next_schedule_start_dt)
     context['next_schedule_end_dt'] = str(next_schedule_end_dt)
