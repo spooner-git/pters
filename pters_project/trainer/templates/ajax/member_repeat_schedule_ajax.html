@@ -1,4 +1,5 @@
     {
+
       "messageArray" :
       [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 

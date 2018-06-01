@@ -128,6 +128,7 @@ urlpatterns = [
 
 
 
+
     # 페이지 #####################################################################################################
     # 강사 메인 페이지
     url(r'^trainer_main/$', views.TrainerMainView.as_view(), name='trainer_main'),
