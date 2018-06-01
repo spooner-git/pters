@@ -91,7 +91,7 @@ $(document).ready(function(){
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
 	    if(Options.language == "KOR"){
-	    	var text1 = '회원명 선택'
+	    	var text1 = '회원/그룹 선택'
 	    	var text2 = '선택'
 	    }else if(Options.language == "JPN"){
 	    	var text1 = '「会員選択」'
@@ -148,7 +148,7 @@ $(document).ready(function(){
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
 	    if(Options.language == "KOR"){
-	    	var text1 = '회원명 선택'
+	    	var text1 = '회원/그룹 선택'
 	    	var text2 = '선택'
 	    }else if(Options.language == "JPN"){
 	    	var text1 = '「会員選択」'
