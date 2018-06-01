@@ -2553,9 +2553,9 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
       var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'" schedule-id="'+jsondata.scheduleIdArray[i]+'" data-leid="'+jsondata.classArray_lecture_id[i]+'">'
       //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
       var finishcheck = jsondata.scheduleFinishArray[i]
-      if(finishcheck == 0){
+      if(finishcheck == 1){
         var finish = '(완료)'
-      }else if(finishcheck == 1){
+      }else if(finishcheck == 0){
         var finish = ''
       }
       var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i]+'.png">'

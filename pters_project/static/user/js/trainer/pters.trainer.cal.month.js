@@ -333,7 +333,7 @@ $(document).ready(function(){
 						
 					}else if(schedule_on_off == 2){
 						var len = $('#groupParticipants .groupParticipantsRow').length;
-						close_info_popup('cal_popup_planinfo')
+						
 						var z = 0
 						$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule_id'))
 						send_group_plan_complete()
@@ -348,6 +348,7 @@ $(document).ready(function(){
 									signImageSend(senddata);
 									completeSend();
 									set_schedule_time(json);
+									close_info_popup('cal_popup_planinfo')
 									ajax_block_during_complete_monthcal = true
 								}
 							})
