@@ -53,7 +53,7 @@
 
 <form action="{% url 'trainer:delete_member_info' %}" method="POST" class="member-form" id="member-delete-form">
     {% csrf_token %}
-    <input type="hidden" name="next_page" value="{% url 'trainer:get_member_list' %}">
+    <input type="hidden" name="next_page" value="{% url 'trainer:get_error_info' %}">
     <input type="hidden" name="id" id="deleteMemberId">
 </form>
 
@@ -61,7 +61,7 @@
     {% csrf_token %}
     <input type="hidden" name="lecture_id" id="form_lecture_id">
     <input type="hidden" name="member_id" id="form_member_dbid">
-    <input type="hidden" name="next_page" value="{% url 'trainer:get_member_list' %}">
+    <input type="hidden" name="next_page" value="{% url 'trainer:get_error_info' %}">
     <input type="hidden" name="start_date" id="form_start_date">
     <input type="hidden" name="end_date" id="form_end_date">
     <input type="hidden" name="price" id="form_price">
@@ -72,7 +72,7 @@
 
 <form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
     {% csrf_token %}
-    <input type="hidden" name="next_page" value="{% url 'trainer:get_member_list' %}">
+    <input type="hidden" name="next_page" value="{% url 'trainer:get_error_info' %}">
     <input type="hidden" name="sex" id="form_sex_modify">
     <input type="hidden" name="birthday" id="form_birth_modify">
     <input type="hidden" name="name" id="form_name_modify">

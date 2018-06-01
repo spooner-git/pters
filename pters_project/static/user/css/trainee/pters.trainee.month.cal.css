@@ -1321,6 +1321,10 @@ img,a,div,span,p{
 
 	.monthplans{
 		display: block;
+		height: 19px;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
 	}
 	.monthplans_count{
 		display: none;
@@ -1406,11 +1410,11 @@ img,a,div,span,p{
 	}
 
 	._classTime img{
-		position: absolute;
+		position: relative;
 		display: inline;
-		width: 15px;
-		margin-left: 5px;
-		margin-top: 3px;
+		width: 12px;
+		margin-left: 1px;
+		margin-right: 1px;
 		left: unset;
 		top: unset;
 		height: unset;
