@@ -240,8 +240,8 @@ $(document).ready(function(){
 
     function get_trainee_reg_history(){
     	$.ajax({
-	          url: '/trainee/read_trainee_lecture_view_by_class_ajax/',
-	          data:{"class_id":class_id[0]},
+	          url: '/trainee/get_trainee_lecture_list/',
+	          data:{"class_id":class_id[0], "auth_cd":'VIEW'},
 			  dataType : 'html',
 			  type:'POST',
 

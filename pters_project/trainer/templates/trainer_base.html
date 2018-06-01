@@ -737,8 +737,8 @@
 
             function ajax_read_lecture_detail_info_from_db(classid){
                 $.ajax({
-                      url: '/trainee/read_trainee_lecture_by_class_ajax/',
-                      data:{"class_id": classid},
+                      url: '/trainee/get_trainee_lecture_list/',
+                      data:{"class_id": classid, "auth_cd":'VIEW/WAIT'},
                       dataType : 'html',
 
                       beforeSend:function(){
