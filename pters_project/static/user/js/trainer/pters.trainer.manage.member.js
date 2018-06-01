@@ -63,24 +63,40 @@ if (agent.indexOf("firefox") != -1) {
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
     $('.alignSelect').change(function(){
-        var jsondata = global_json
+        //var jsondata = global_json
         if($(this).val()=="회원명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
-            memberListSet('current','name','no',jsondata);
-            memberListSet('finished','name','no',jsondata);
+            get_member_ing_list("callback",function(jsondata){
+                memberListSet('current','name','no',jsondata);
+            })
+            get_member_end_list("callback",function(jsondata){
+                memberListSet('finished','name','no',jsondata);
+            })
             alignType = 'name'
         }else if($(this).val()=="남은 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
-            memberListSet('current','count','yes',jsondata);
+            get_member_ing_list("callback",function(jsondata){
+                memberListSet('current','count','yes',jsondata);
+            })
             alignType = 'countH'
         }else if($(this).val()=="남은 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
-            memberListSet('current','count','no',jsondata);
+            get_member_ing_list("callback",function(jsondata){
+                memberListSet('current','count','no',jsondata);
+            })
             alignType = 'countL'
         }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
-            memberListSet('current','date','no',jsondata);
-            memberListSet('finished','date','no',jsondata);
+            get_member_ing_list("callback",function(jsondata){
+                memberListSet('current','date','no',jsondata);
+            })
+            get_member_end_list("callback",function(jsondata){
+                memberListSet('finished','date','no',jsondata);
+            })
             alignType = 'startP'
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
-            memberListSet('current','date','yes',jsondata);
-            memberListSet('finished','date','yes',jsondata);
+            get_member_ing_list("callback",function(jsondata){
+                memberListSet('current','date','yes',jsondata);
+            })
+            get_member_end_list("callback",function(jsondata){
+                memberListSet('finished','date','yes',jsondata);
+            })
             alignType = 'startR'
         }
     })
@@ -1069,18 +1085,18 @@ function send_modified_member_base_data(){
             else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                
-                
-
                 if($('body').width()<600){
                 	closePopup('member_info');
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/ptadd/icon-pencil.png');
-
-                memberListSet('current','date','yes',jsondata);
-                memberListSet('finished','date','yes',jsondata);
+                get_member_ing_list("callback",function(jsondata){
+                    memberListSet('current','date','yes',jsondata);
+                })
+                get_member_end_list("callback",function(jsondata){
+                    memberListSet('finished','date','yes',jsondata);
+                })
                 $('#startR').attr('selected','selected');
                 console.log('success');
 
@@ -1801,8 +1817,8 @@ function get_member_list(use, callback){
 
                 }else{
                     console.log('get_member_list',jsondata)
-                    memberListSet('current','name','no',jsondata);
-                    memberListSet('finished','name','no',jsondata);
+                    //memberListSet('current','name','no',jsondata);
+                    //memberListSet('finished','name','no',jsondata);
                 }
                 console.log('success');
             }
