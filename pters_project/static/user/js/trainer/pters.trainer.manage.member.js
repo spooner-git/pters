@@ -1499,54 +1499,30 @@ function grouptype_dropdown_set(grouplistJSON){
 
 
 //DB데이터를 memberListSet에서 사용가능하도록 가공
-function DataFormatting(type, jsondata){
-    switch(type){
-        case 'current':
-            var countListResult = [];
-            var nameListResult = [];
-            var dateListResult = [];
+function DataFormatting(jsondata){
 
-            var nameInfoArray = jsondata.name;
-            var dbIdInfoArray = jsondata.db_id;
-            var idInfoArray = jsondata.member_id;
-            var groupTypeArray = jsondata.groupInfoArray;
-            var emailInfoArray = jsondata.email;
-            var startDateArray = jsondata.start_date;
-            var endDateArray = jsondata.end_date;
-            var remainCountArray = jsondata.rem_count;
-            var regCountInfoArray = jsondata.reg_count;
-            var phoneInfoArray = jsondata.phone;
-            var contentInfoArray = jsondata.note;
-            var npCountInfoArray = jsondata.npLectureCountsArray;
-            var rjCountInfoArray = jsondata.rjLectureCountsArray;
-            var yetRegCountInfoArray = jsondata.yetRegCountArray;
-            var yetCountInfoArray = jsondata.yetCountArray;
-            var len = jsondata.db_id.length; 
-        break;
+    var countListResult = [];
+    var nameListResult = [];
+    var dateListResult = [];
 
-        case 'finished':
-            var countListResult = [];
-            var nameListResult = [];
-            var dateListResult = [];
+    var nameInfoArray = jsondata.name;
+    var dbIdInfoArray = jsondata.db_id;
+    var idInfoArray = jsondata.member_id;
+    var groupTypeArray = jsondata.groupInfoArray;
+    var emailInfoArray = jsondata.email;
+    var startDateArray = jsondata.start_date;
+    var endDateArray = jsondata.end_date;
+    var remainCountArray = jsondata.rem_count;
+    var regCountInfoArray = jsondata.reg_count;
+    var phoneInfoArray = jsondata.phone;
+    var contentInfoArray = jsondata.note;
+    var npCountInfoArray = jsondata.npLectureCountsArray;
+    var rjCountInfoArray = jsondata.rjLectureCountsArray;
+    var yetRegCountInfoArray = jsondata.yetRegCountArray;
+    var yetCountInfoArray = jsondata.yetCountArray;
+    var len = jsondata.db_id.length; 
 
-            var nameInfoArray = jsondata.finishnameArray;
-            var idInfoArray = jsondata.finishIdArray;
-            var dbIdInfoArray = jsondata.finishDidArray;
-            var groupTypeArray = jsondata.finishGroupInfoArray;
-            var emailInfoArray = jsondata.finishemailArray;
-            var startDateArray = jsondata.finishstartArray;
-            var endDateArray = jsondata.finishendArray;
-            var remainCountArray = jsondata.finishcountArray;
-            var regCountInfoArray = jsondata.finishRegCountArray;
-            var phoneInfoArray = jsondata.finishphoneArray;
-            var contentInfoArray = jsondata.finishContentsArray;
-            var npCountInfoArray = jsondata.finishNpLectureCountsArray;
-            var rjCountInfoArray = jsondata.finishRjLectureCountsArray;
-            var yetRegCountInfoArray = jsondata.finishYetRegCountArray;
-            var yetCountInfoArray = jsondata.finishYetCountArray;
-            var len = jsondata.finishstartArray.length; 
-        break;
-    }
+
 
     for(i=0; i<len; i++){
         var date    = date_format_to_yyyymmdd(startDateArray[i],'');
@@ -1971,7 +1947,7 @@ function memberListSet (type,option,Reverse, jsondata){
 
     switch(type){
         case 'current':
-            var data = DataFormatting('current',jsondata);
+            var data = DataFormatting(jsondata);
             var countList = data["countSorted"]
             var nameList = data["nameSorted"]
             var dateList = data["dateSorted"]
@@ -1979,7 +1955,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var $tabletbody = $('#currentMember tbody');
         break;
         case 'finished':
-            var data = DataFormatting('finished',jsondata);
+            var data = DataFormatting(jsondata);
             var countList = data["countSorted"]
             var nameList = data["nameSorted"]
             var dateList = data["dateSorted"]
