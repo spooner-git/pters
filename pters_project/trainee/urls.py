@@ -18,6 +18,7 @@ from trainee import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^get_trainee_error_info/$', views.GetTraineeErrorInfoView.as_view(), name='get_trainee_error_info'),
 
     # 일정 기능 #####################################################################################################
     # 회원 일정 추가 - 1:1/Group
@@ -40,9 +41,8 @@ urlpatterns = [
     url(r'^lecture_processing/$', views.lecture_processing, name='lecture_processing'),
 
     # Mypage 기능 #####################################################################################################
-    url(r'^get_trainee_error_info/$', views.GetTraineeErrorInfoView.as_view(), name='get_trainee_error_info'),
     # 회원 정보 조회
-    url(r'^get_trainee_info/$', views.MyPageViewAjax.as_view(), name='get_trainee_info'),
+    url(r'^get_trainee_info/$', views.GetTraineeInfoView.as_view(), name='get_trainee_info'),
     # 회원 정보 수정
     url(r'^update_trainee_info/$', views.update_trainee_info_logic, name='update_trainee_info'),
 
