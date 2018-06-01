@@ -455,14 +455,13 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
                                                                    start_dt__lt=end_date, use=1).order_by('start_dt')
         # PT 스케쥴 정보 셋팅
         idx = 0
-        for pt_schedule_datum in lecture_datum.pt_schedule_data:
+        for pt_schedule_info in lecture_datum.pt_schedule_data:
             # lecture schedule id 셋팅
             idx += 1
-            pt_schedule_info = pt_schedule_datum
             pt_schedule_info.member_name = lecture_datum.member.name
             pt_schedule_info.member_id = lecture_datum.member.member_id
-            pt_schedule_info.start_dt = str(pt_schedule_datum.start_dt)
-            pt_schedule_info.end_dt = str(pt_schedule_datum.end_dt)
+            pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
+            pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
             pt_schedule_info.idx = idx
             if pt_schedule_info.note is None:
                 pt_schedule_info.note = ''
@@ -480,17 +479,16 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date):
 
     # 강좌별로 연결된 그룹 스케쥴 가져오기
     group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                 group_tb__isnull=False,
-                                                 lecture_tb__isnull=True,
-                                                 en_dis_type='1',
-                                                 start_dt__gte=start_date,
-                                                 start_dt__lt=end_date, use=1).order_by('start_dt')
+                                                    group_tb__isnull=False,
+                                                    lecture_tb__isnull=True,
+                                                    en_dis_type='1',
+                                                    start_dt__gte=start_date,
+                                                    start_dt__lt=end_date, use=1).order_by('start_dt')
 
     idx = 0
-    for group_schedule_datum in group_schedule_data:
+    for group_schedule_info in group_schedule_data:
         # lecture schedule id 셋팅
         idx += 1
-        group_schedule_info = group_schedule_datum
         if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
             schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                     group_tb_id=group_schedule_info.group_tb.group_id,
@@ -521,8 +519,7 @@ def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
     off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                   en_dis_type='0', start_dt__gte=start_date,
                                                   start_dt__lt=end_date)
-    for off_schedule_datum in off_schedule_data:
-        off_schedule_info = off_schedule_datum
+    for off_schedule_info in off_schedule_data:
         off_schedule_info.start_dt = (str(off_schedule_info.start_dt))
         off_schedule_info.end_dt = (str(off_schedule_info.end_dt))
         if off_schedule_info.note is None:
