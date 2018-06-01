@@ -502,7 +502,8 @@ $(document).ready(function(){
 							var len = $('#groupParticipants .groupParticipantsRow').length;
 							close_info_popup('cal_popup_planinfo')
 							var z = 0
-							send_group_plan_complete($('#cal_popup_planinfo').attr('schedule_id'))
+							$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule_id'))
+							send_group_plan_complete()
 							for(var i=0; i<len; i++){
 								$('#id_schedule_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
 								$('#id_lecture_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
@@ -560,15 +561,14 @@ $(document).ready(function(){
             })
 		}
 
-		function send_group_plan_complete(schedule_id, use, callback){
+		function send_group_plan_complete(use, callback){
+			var $group_finish_form = $('#group-finish-form');
 			var drawCanvas = document.getElementById('canvas');
-			var send_data = [
-							 {"name":"schedule_id", "value":schedule_id}, 
-							 {"name":"upload_file", "value":drawCanvas.toDataURL('image/png')}
-							]
+			var send_data = $group_finish_form.serializeArray();
+			send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
 			console.log(send_data)
 			$.ajax({
-                url:'/trainer/finish_group_schedule/',
+                url:'/schedule/finish_group_schedule/',
                 type:'POST',
                 data: send_data,
 
