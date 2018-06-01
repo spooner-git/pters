@@ -568,7 +568,7 @@ $(document).ready(function(){
 							]
 			console.log(send_data)
 			$.ajax({
-                url:'/trainer/finish_group_schedule_logic/',
+                url:'/trainer/finish_group_schedule/',
                 type:'POST',
                 data: send_data,
 
