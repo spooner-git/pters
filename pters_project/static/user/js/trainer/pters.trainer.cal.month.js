@@ -333,8 +333,10 @@ $(document).ready(function(){
 						
 					}else if(schedule_on_off == 2){
 						var len = $('#groupParticipants .groupParticipantsRow').length;
-						close_info_popup('cal_popup_planinfo')
+						
 						var z = 0
+						$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule_id'))
+						send_group_plan_complete()
 						for(var i=0; i<len; i++){
 							$('#id_schedule_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
 							$('#id_lecture_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
@@ -346,6 +348,7 @@ $(document).ready(function(){
 									signImageSend(senddata);
 									completeSend();
 									set_schedule_time(json);
+									close_info_popup('cal_popup_planinfo')
 									ajax_block_during_complete_monthcal = true
 								}
 							})
@@ -365,6 +368,44 @@ $(document).ready(function(){
                 url:'/schedule/finish_schedule/',
                 type:'POST',
                 data:send_data,
+
+                beforeSend:function(){
+                	beforeSend();
+                },
+                //통신성공시 처리
+                success:function(data){
+                	var jsondata = JSON.parse(data)
+                	if(jsondata.messageArray.length>0){
+	                  	$('#errorMessageBar').show()
+	                  	$('#errorMessageText').text(jsondata.messageArray)
+	                }else{
+	                    if(use == "callback"){
+	                    	callback(jsondata, send_data)
+	                    }
+	                }
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                	
+                  },
+
+                //통신 실패시 처리
+                error:function(){
+                },
+            })
+		}
+
+		function send_group_plan_complete(use, callback){
+			var $group_finish_form = $('#group-finish-form');
+			var drawCanvas = document.getElementById('canvas');
+			var send_data = $group_finish_form.serializeArray();
+			send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
+			console.log(send_data)
+			$.ajax({
+                url:'/schedule/finish_group_schedule/',
+                type:'POST',
+                data: send_data,
 
                 beforeSend:function(){
                 	beforeSend();

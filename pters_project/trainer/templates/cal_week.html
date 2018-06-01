@@ -36,6 +36,12 @@
   <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
 </form>
 
+<form action="{% url 'schedule:finish_group_schedule' %}" id="group-finish-form" method="post" enctype='multipart/form-data'>
+    {% csrf_token %}
+  <input type="hidden" name="schedule_id" id="id_group_schedule_id_finish">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
+</form>
+
 <form action="{% url 'schedule:add_repeat_schedule_confirm' %}" id="confirm-repeat-schedule-form" method="get">
     {% csrf_token %}
   <input type="hidden" name="repeat_schedule_id" id="id_repeat_schedule_id_confirm"> <!--ajax로 받은 id-->
@@ -633,7 +639,7 @@
     </div>
 
     <div id="memberName_mini" class="ptaddbox_mini _MINI_ptadd">
-      <div class="ptaddboxtext_mini"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원/그룹명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
+      <div class="ptaddboxtext_mini"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원/그룹</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
       <div id="membersSelected_mini" class="dropdown_mini">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom_mini" type="button" data-toggle="dropdown">
           <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloading_dropdown">

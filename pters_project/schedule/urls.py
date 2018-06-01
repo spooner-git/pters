@@ -50,5 +50,6 @@ urlpatterns = [
     # 그룹 반복 일정 삭제 - hkkim - 2018.05.23
     url(r'^delete_group_repeat_schedule/$', views.delete_group_repeat_schedule_logic, name='delete_group_repeat_schedule'),
 
+    url(r'^finish_group_schedule/$', views.finish_group_schedule_logic, name='finish_group_schedule'),
 
 ]
