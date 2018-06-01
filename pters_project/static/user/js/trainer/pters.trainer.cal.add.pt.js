@@ -791,13 +791,6 @@ $(document).ready(function(){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray)
                         }else{
-                            if(addTypeSelect=="ptadd") {
-                                if (jsondata.push_info != '') {
-                                    for (var i = 0; i < jsondata.pushArray.length; i++) {
-                                        //send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-                                    }
-                                }
-                            }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
                                 if(total_count == RepeatDuplicationDateArray[0].split('/').length){
@@ -2683,11 +2676,6 @@ function send_plan_delete(option, callbackoption, callback){
                       $('#errorMessageBar').show()
                       $('#errorMessageText').text(jsondata.messageArray)
                 }else{
-                    if(jsondata.push_info != ''){
-                      for (var i=0; i<jsondata.pushArray.length; i++){
-                                    //send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-                      }
-                    }
                     set_schedule_time(jsondata)
                     console.log('success')
                     if(callbackoption == 'callback'){
