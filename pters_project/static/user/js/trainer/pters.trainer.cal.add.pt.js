@@ -879,8 +879,6 @@ $(document).ready(function(){
          }
       })
 
-
-
       //OFF반복일정 확인 팝업 "아니오" 눌렀을때 (선택지: 반복 설정 다시 하겠다)
       var ajax_block_during_repeat_confirm = true;
       $('#popup_btn_repeatconfirm_no').click(function(){
@@ -894,8 +892,8 @@ $(document).ready(function(){
             ajaxRepeatConfirmSend();
             check_dropdown_selected()
         }
-        
       })
+      
 
       $('#popup_btn_repeatconfirm_yes').click(function(){
         if(ajax_block_during_repeat_confirm == true){
