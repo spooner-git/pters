@@ -544,7 +544,6 @@ def finish_schedule_logic(request):
     schedule_info = None
     lecture_info = None
 
-    print('finish:'+schedule_id)
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
 
@@ -676,7 +675,6 @@ def finish_group_schedule_logic(request):
     error = None
     schedule_info = None
     group_info = None
-    print('group_finish:'+schedule_id)
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
 
