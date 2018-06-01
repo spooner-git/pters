@@ -193,15 +193,17 @@ $(document).ready(function(){
 			}
 			schedule_on_off = 1;
 
-			toggleGroupParticipantsList('off')
+			
 			$('#subpopup_addByList_plan').hide()
 			if($(this).attr('data-grouptype') == "group"){
 				$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'),
 																	'data-groupid': $(this).attr('data-groupid'),
 																	'group-schedule-id':$(this).attr('schedule-id'),
 																	})
+				toggleGroupParticipantsList('on')
 			}else{
 				$('#popup_btn_viewGroupParticipants').hide()
+				toggleGroupParticipantsList('off')
 			}
 		})
 
@@ -308,10 +310,6 @@ $(document).ready(function(){
 				$('#canvasWrap span').show();
 				if(schedule_on_off == 2){
 					toggleGroupParticipantsList('on')
-					var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
-					var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
-					var group_schedule_id = $('#popup_btn_viewGroupParticipants').attr('group-schedule-id')
-					get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);completeSend();})
 				}
 			}else if($(this).val()=="filled"){
 				if(ajax_block_during_complete_monthcal == true){

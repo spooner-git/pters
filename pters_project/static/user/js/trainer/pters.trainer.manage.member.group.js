@@ -808,7 +808,6 @@ $(document).on('click','img.substract_groupMember',function(e){
 /////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////
 //서버로부터 회원의 반복일정 정보를 받아온다.
 function get_group_repeat_info(group_id){
-    console.log(group_id)
     $.ajax({
               url: '/trainer/get_group_repeat_schedule_list/',
               type:'POST',

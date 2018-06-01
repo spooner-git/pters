@@ -129,10 +129,14 @@ function toggleGroupParticipantsList(onoff){
       toggleGroupParticipants = 'on'
       $('#groupParticipants').animate({'height':'200px'},200)
       $('#popup_btn_viewGroupParticipants img').css('transform','rotate(180deg)')
+      var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
+      var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
+      var group_schedule_id = $('#popup_btn_viewGroupParticipants').attr('group-schedule-id')
+      get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);completeSend();})
     break;
     case 'off':
       toggleGroupParticipants = 'off'
-      $('#groupParticipants').animate({'height':0},200)
+      $('#groupParticipants').animate({'height':0},200).html('')
       $('#popup_btn_viewGroupParticipants img').css('transform','rotate(0deg)')
     break;
   }

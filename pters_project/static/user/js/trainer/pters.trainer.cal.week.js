@@ -91,7 +91,7 @@ $(document).ready(function(){
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
 	    if(Options.language == "KOR"){
-	    	var text1 = '회원명 선택'
+	    	var text1 = '회원/그룹 선택'
 	    	var text2 = '선택'
 	    }else if(Options.language == "JPN"){
 	    	var text1 = '「会員選択」'
@@ -148,7 +148,7 @@ $(document).ready(function(){
 
 	    $("#membersSelected button").removeClass("dropdown_selected");
 	    if(Options.language == "KOR"){
-	    	var text1 = '회원명 선택'
+	    	var text1 = '회원/그룹 선택'
 	    	var text2 = '선택'
 	    }else if(Options.language == "JPN"){
 	    	var text1 = '「会員選択」'
@@ -183,7 +183,6 @@ $(document).ready(function(){
 
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
-		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','block')
 		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
@@ -281,11 +280,12 @@ $(document).ready(function(){
 			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('class-schedule-id')+'.png');
 		}
 		schedule_on_off = 1;
+
+		toggleGroupParticipantsList('off')
 	})
 	
 	//Off 일정 클릭시 팝업 Start
 	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
-		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','none')
 		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
@@ -355,12 +355,13 @@ $(document).ready(function(){
 		$("#popup_btn_complete").hide()
 		$("#popup_sign_img").css("display","none")
 		schedule_on_off = 0;
+
+		toggleGroupParticipantsList('off')
 	})
 
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.groupTime',function(e){ //일정을 클릭했을때 팝업 표시
 		e.stopPropagation()
-		toggleGroupParticipantsList('off')
 		$('#subpopup_addByList_plan').hide()
 		$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 
 															'data-groupid': $(this).attr('data-groupid'),
@@ -462,7 +463,7 @@ $(document).ready(function(){
 			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('off-schedule-id')+'.png');
 		}
 		schedule_on_off = 2;
-		
+		toggleGroupParticipantsList('on')
 	})
 
 	mini_popup_event()
@@ -477,10 +478,6 @@ $(document).ready(function(){
 					$('#canvasWrap span').show();
 					if(schedule_on_off == 2){
 						toggleGroupParticipantsList('on')
-						var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
-						var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
-						var group_schedule_id = $('#popup_btn_viewGroupParticipants').attr('group-schedule-id')
-						get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);completeSend();})
 					}
 				}else if($(this).val()=="filled"){
 					if(ajax_block_during_complete_weekcal == true){
