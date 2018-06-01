@@ -973,7 +973,7 @@ $(document).ready(function(){
         canvas.addEventListener("touchcancel",listener)
       
       $("canvas").attr("width", 324).attr("height", 200);
-      $(document).on('click','div.classTime, div.plan_raw',function(){
+      $(document).on('click','div.classTime, div.plan_raw, div.groupTime',function(){
         ctx.clearRect(0,0,324,300);
         $('#cal_popup').css({'top':'35%'});
       })

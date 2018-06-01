@@ -246,7 +246,6 @@ $(document).ready(function(){
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
 		var schedule_finish_check = $(this).attr('data-schedule-check')
 		
-		
 		var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')'
 		var infoText2 = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+':'+minute+yourplan
 		var infoText3 = $(this).attr('data-memo')
