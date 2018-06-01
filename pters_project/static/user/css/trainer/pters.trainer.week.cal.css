@@ -484,6 +484,14 @@ img,a,div,span,p{
 	background: #ff6c7f;
 }
 
+.groupTime_checked{
+	background: #af757c !important;
+}
+
+.groupTime_checked:hover{
+	background: #946369 !important;
+}
+
 
 .classTimeIndicator{
 	position: absolute;
