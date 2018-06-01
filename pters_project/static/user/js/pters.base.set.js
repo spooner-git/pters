@@ -136,7 +136,7 @@ function toggleGroupParticipantsList(onoff){
     break;
     case 'off':
       toggleGroupParticipants = 'off'
-      $('#groupParticipants').animate({'height':0},200)
+      $('#groupParticipants').animate({'height':0},200).html('')
       $('#popup_btn_viewGroupParticipants img').css('transform','rotate(0deg)')
     break;
   }
