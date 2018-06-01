@@ -60,7 +60,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                                                                 use=1).order_by('-lecture_tb__start_date')
 
         if class_data is None or len(class_data) == 0:
-            self.url = '/trainee/blank/'
+            self.url = '/trainee/cal_month_blank/'
         elif len(class_data) == 1:
             for lecture_info_data in class_data:
                 lecture_info = lecture_info_data.lecture_tb
@@ -77,7 +77,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     if lecture_auth_info.auth_cd == 'WAIT':
                         self.url = '/trainee/lecture_select/'
                     elif lecture_auth_info.auth_cd == 'DELETE':
-                        self.url = '/trainee/blank/'
+                        self.url = '/trainee/cal_month_blank/'
                     else:
                         class_type_name = ''
                         class_name = None
@@ -103,7 +103,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                             else:
                                 self.request.session['class_center_name'] = lecture_info_data.class_tb.center_tb.center_name
                 else:
-                    self.url = '/trainee/blank/'
+                    self.url = '/trainee/cal_month_blank/'
 
         else:
             class_id_comp = ''
@@ -174,11 +174,11 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
 
 
-class BlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class CalMonthBlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_month_trainee_blank.html'
 
     def get_context_data(self, **kwargs):
-        context = super(BlankView, self).get_context_data(**kwargs)
+        context = super(CalMonthBlankView, self).get_context_data(**kwargs)
         context = get_trainee_setting_data(context, self.request.user.id)
         holiday = HolidayTb.objects.filter(use=1)
         self.request.session['setting_language'] = context['lt_lan_01']
@@ -571,45 +571,6 @@ def lecture_processing(request):
     return redirect(next_page)
 
 
-class WeekAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'cal_week_trainee.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(WeekAddView, self).get_context_data(**kwargs)
-        error = None
-        class_id = self.request.session.get('class_id', '')
-        lecture_id = self.request.session.get('lecture_id', '')
-
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
-
-        today = datetime.date.today()
-        start_date = today - datetime.timedelta(days=46)
-        end_date = today + datetime.timedelta(days=47)
-        if lecture_id is None or lecture_id == '':
-            error = '수강정보를 확인해 주세요.'
-        if error is None:
-            context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
-                                                                 self.request.user.last_name+self.request.user.first_name, class_id, start_date, end_date)
-
-        # 강사 setting 값 로드
-        if error is None:
-            context = get_trainer_setting_data(context, class_info.member_id, class_id)
-
-        return context
-
-
-class DayAddView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'trainee_add_pt.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DayAddView, self).get_context_data(**kwargs)
-
-        return context
-
-
 # trainee용 Month View
 class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_month_trainee.html'
@@ -672,7 +633,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
 
-        # if lecture_id is None or lecture_id == '':
         #    error = '수강정보를 확인해 주세요.'
         if error is None:
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
@@ -742,7 +702,7 @@ class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
 
 # pt 일정 삭제
-def pt_delete_logic(request):
+def delete_trainee_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
@@ -953,7 +913,7 @@ def pt_delete_logic(request):
 
 
 # pt 일정 추가
-def pt_add_logic(request):
+def add_trainee_schedule_logic(request):
     class_id = request.POST.get('class_id', '')
     # lecture_id = request.POST.get('lecture_id', '')
     group_schedule_id = request.POST.get('group_schedule_id', None)

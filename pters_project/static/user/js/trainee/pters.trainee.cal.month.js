@@ -617,7 +617,7 @@ $(document).ready(function(){
 
 	function send_delete(){
 		$.ajax({
-	          url: '/trainee/pt_delete_logic/',
+	          url: '/trainee/delete_trainee_schedule/',
 	          data: $('#pt-delete-form').serialize(),
 			  dataType : 'html',
 			  type:'POST',

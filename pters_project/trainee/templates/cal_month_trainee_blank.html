@@ -10,12 +10,12 @@
 {% block content %}
 <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
-<form action="{% url 'trainee:pt_delete_logic' %}" id="pt-delete-form" method="post">
+<form action="{% url 'trainee:delete_trainee_schedule' %}" id="pt-delete-form" method="post">
     {% csrf_token %}
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="next_page" value = "{% url 'trainee:trainee_push_ajax' %}">
 </form>
-<form action="{% url 'trainee:pt_add_logic' %}" id="pt-add-form" method="post">
+<form action="{% url 'trainee:add_trainee_schedule' %}" id="pt-add-form" method="post">
     {% csrf_token %}
     <input type="hidden" name="class_id" id="id_class_id" value="{{ request.session.class_id }}">
     <input type="hidden" name="lecture_id" id="id_lecture_id" value="{{ request.session.lecture_id }}">
