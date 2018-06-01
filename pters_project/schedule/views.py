@@ -2185,7 +2185,7 @@ def add_group_repeat_schedule_confirm(request):
                     error_temp = None
                     lecture_id = func_get_group_lecture_id(group_info.group_id, member_info.member_id)
                     if lecture_id is not None and lecture_id != '':
-                        repeat_schedule_info = RepeatScheduleTb(class_tb_id=repeat_schedule_info.class_tb_id,
+                        member_repeat_schedule_info = RepeatScheduleTb(class_tb_id=repeat_schedule_info.class_tb_id,
                                                                 group_tb_id=repeat_schedule_info.group_tb_id,
                                                                 group_schedule_id=repeat_schedule_info.repeat_schedule_id,
                                                                 lecture_tb_id=lecture_id,
@@ -2197,7 +2197,7 @@ def add_group_repeat_schedule_confirm(request):
                                                                 reg_member_id=request.user.id,
                                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 
-                        repeat_schedule_info.save()
+                        member_repeat_schedule_info.save()
                         for schedule_info in schedule_data:
                             error_temp = func_check_group_available_member_before(class_id, group_info.group_id,
                                                                                   schedule_info.schedule_id)
@@ -2206,7 +2206,7 @@ def add_group_repeat_schedule_confirm(request):
                                     with transaction.atomic():
                                         if error_temp is None:
                                             schedule_result = func_add_schedule(class_id, lecture_id,
-                                                                                repeat_schedule_info.repeat_schedule_id,
+                                                                                member_repeat_schedule_info.repeat_schedule_id,
                                                                                 group_info.group_id, schedule_info.schedule_id,
                                                                                 schedule_info.start_dt,
                                                                                 schedule_info.end_dt,
