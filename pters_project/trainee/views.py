@@ -210,6 +210,36 @@ class GetTraineeClassListView(LoginRequiredMixin, AccessTestMixin, TemplateView)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
+class GetTraineeLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'ajax/class_lecture_data_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
+        class_id = request.GET.get('class_id', '')
+        context['error'] = None
+        context = GetTraineeLectureListView(context, class_id, request.user.id)
+
+        if context['error'] is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
+            messages.error(self.request, context['error'])
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(ReadLectureByClassAjax, self).get_context_data(**kwargs)
+        class_id = request.POST.get('class_id', '')
+
+        context['error'] = None
+        context = GetTraineeLectureListView(context, class_id, request.user.id)
+
+        if context['error'] is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
+            messages.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+self.request, context['error'])
+
+        return render(request, self.template_name, context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
 class ReadLectureByClassAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/class_lecture_data_ajax.html'
 

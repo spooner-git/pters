@@ -32,10 +32,12 @@ urlpatterns = [
     url(r'^get_trainee_schedule_history/$', views.GetTraineeScheduleHistoryView.as_view(), name='get_trainee_schedule_history'),
 
     # 수강 정보 기능 #####################################################################################################
-    # 회원정보로 강좌 정보 list 조회
+    # 강좌 정보 list 조회
     url(r'^get_trainee_class_list/$', views.GetTraineeClassListView.as_view(), name='get_trainee_class_list'),
 
     # 수강 정보 list 조회 - VIEW / WAIT
+    url(r'^get_trainee_lecture_list/$', views.GetTraineeLectureListView.as_view(), name='get_trainee_lecture_list'),
+
     url(r'^read_trainee_lecture_by_class_ajax/$', views.ReadLectureByClassAjax.as_view(), name='read_trainee_lecture_by_class_ajax'),
     # 수강 정보 list 조회 - VIEW
     url(r'^read_trainee_lecture_view_by_class_ajax/$', views.ReadLectureViewByClassAjax.as_view(), name='read_trainee_lecture_view_by_class_ajax'),
