@@ -640,6 +640,7 @@ if (agent.indexOf("firefox") != -1) {
                     }
                 })
                 get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
+                    console.log("repeat id로 그 안에 회원 repeat id 받아오기",jsondata)
                     for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
                         send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
                     }
@@ -663,7 +664,7 @@ if (agent.indexOf("firefox") != -1) {
             success:function(data){
               TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
               var jsondata = JSON.parse(data);
-              console.log(jsondata)
+              console.log("get_member_repeat_id_in_group_repeat",jsondata)
               if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)
