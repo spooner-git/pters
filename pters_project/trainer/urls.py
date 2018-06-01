@@ -30,6 +30,12 @@ urlpatterns = [
     url(r'^get_member_schedule/$', views.GetMemberScheduleView.as_view(), name='get_member_schedule'),
     # 회원 반복 일정 조회 - 1:1/Group
     url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(), name='get_member_repeat_schedule'),
+    # 그룹일정에 속하는 그룹회원 일정 조회
+    url(r'^get_group_schedule_list/$', views.GetGroupScheduleListViewAjax.as_view(), name='get_group_schedule_list'),
+    # 그룹 반복 일정 조회
+    url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(), name='get_group_repeat_schedule_list'),
+    # 그룹 반복일정과 같이 등록된 회원들의 반복일정
+    url(r'^get_group_member_repeat_schedule_list/$', views.GetGroupMemberRepeatScheduleListViewAjax.as_view(), name='get_group_member_repeat_schedule_list'),
 
     # 회원 기능 #####################################################################################################
     # 회원 정보 조회
@@ -84,12 +90,7 @@ urlpatterns = [
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
     # 그룹 회원 조회
     url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
-    # 그룹일정에 속하는 그룹회원 일정 조회
-    url(r'^get_group_schedule_list/$', views.GetGroupScheduleListViewAjax.as_view(), name='get_group_schedule_list'),
-    # 그룹 반복 일정 조회
-    url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(), name='get_group_repeat_schedule_list'),
-    # 그룹 반복일정과 같이 등록된 회원들의 반복일정
-    url(r'^get_group_member_repeat_schedule_list/$', views.GetGroupMemberRepeatScheduleListViewAjax.as_view(), name='get_group_member_repeat_schedule_list'),
+
 
     # 강좌 기능 ##########################################################################################################
     # 강좌 정보 조회
@@ -124,7 +125,6 @@ urlpatterns = [
     # 공지 기능 ##########################################################################################################
     # 공지사항 조회
     url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_off_repeat_schedule_ajax'),
-
 
 
 
