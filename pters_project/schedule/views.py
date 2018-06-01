@@ -675,7 +675,6 @@ def finish_group_schedule_logic(request):
     error = None
     schedule_info = None
     group_info = None
-
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
 
@@ -1819,7 +1818,7 @@ def add_member_group_schedule_logic(request):
             error = '회원님의 예약 가능한 일정이 없습니다.'
 
     if error is None:
-        group_schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id, lecture_tb__member_id=member_id)
+        group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, lecture_tb__member_id=member_id)
         if len(group_schedule_data) != 0:
             error = '회원님이 이미 그룹 일정에 포함되어있습니다.'
 
