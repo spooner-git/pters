@@ -554,6 +554,12 @@ $(document).ready(function(){
               $("#id_lecture_id").val($(this).attr('data-lectureid'));
               $("#id_member_name").val($(this).text());
 
+              if(addTypeSelect == "repeatptadd"){
+                $("#id_repeat_member_id").val($(this).attr('data-dbid'));
+                $("#id_repeat_lecture_id").val($(this).attr('data-lectureid'));
+                $("#id_repeat_member_name").val($(this).text());
+              }
+
           }else if($(this).attr("data-grouptype") == "group"){
 
               if($('._NORMAL_ADD_wrap').css('display') == 'block'){
@@ -770,6 +776,7 @@ $(document).ready(function(){
             if(ajax_block_during_submit == true){
                 ajax_block_during_submit = false;
                 var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(serverURL)
+                console.log(sendData)
                 $.ajax({
                     url: serverURL,
                     type:'POST',
@@ -973,7 +980,7 @@ $(document).ready(function(){
         canvas.addEventListener("touchcancel",listener)
       
       $("canvas").attr("width", 324).attr("height", 200);
-      $(document).on('click','div.classTime, div.plan_raw',function(){
+      $(document).on('click','div.classTime, div.plan_raw, div.groupTime',function(){
         ctx.clearRect(0,0,324,300);
         $('#cal_popup').css({'top':'35%'});
       })
@@ -1285,8 +1292,8 @@ function set_member_dropdown_list(jsondata){
     if(memberSize>0){
       for(var i=0; i<memberSize; i++){
         if(jsondata.groupInfoArray[i] != "그룹"){
-          member_array_mobile[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
-          member_array_pc[i] = '<li><a data-grouptype="personal" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+          member_array_mobile[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+          member_array_pc[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
         }
       }
     }else if(memberSize == 0){
@@ -1469,11 +1476,6 @@ function get_repeat_info(dbID){
             selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
             selectedMemberNameArray = jsondata.memberNameArray
             fill_repeat_info(jsondata, fill_option);
-            if(addTypeSelect == "repeatptadd"){
-              $("#id_repeat_member_id").val(selectedMemberIdArray[0]);
-              $("#id_repeat_lecture_id").val(selectedMemberLectureIdArray[0]);
-              $("#id_repeat_member_name").val(selectedMemberNameArray[0]);
-            }
           }
         },
 
