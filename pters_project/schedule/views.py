@@ -727,7 +727,6 @@ def finish_group_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
-    # print(error)
 
     if error is None:
 
@@ -778,7 +777,6 @@ def add_repeat_schedule_logic(request):
     # request.session['day'] = day
     pt_schedule_input_counter = 0
     week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
-
     if repeat_type == '':
         error = '반복 빈도를 선택해주세요.'
 
@@ -813,7 +811,7 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
         if en_dis_type == '1':
-            if lecture_id == '':
+            if member_id == '':
                 error = '회원을 선택해 주세요.'
             else:
                 lecture_id = func_get_lecture_id(class_id, member_id)
@@ -821,10 +819,6 @@ def add_repeat_schedule_logic(request):
                     error = '등록할수 있는 일정이 없습니다.'
         else:
             lecture_id = ''
-
-    if error is None:
-        if member_name == '':
-            error = '회원을 선택해 주세요.'
 
     if error is None:
         try:
@@ -965,9 +959,9 @@ def add_repeat_schedule_logic(request):
             if int(check_date.strftime('%w')) == 0:
                 if repeat_type == '2W':
                     check_date = check_date + datetime.timedelta(days=7)
-
-    if pt_schedule_input_counter == 0:
-        repeat_schedule_info.delete()
+    if error is None:
+        if pt_schedule_input_counter == 0:
+            repeat_schedule_info.delete()
     request.session['repeat_schedule_input_counter'] = pt_schedule_input_counter
     if error_date_message is not None:
         # logger.info(error_date_message)
@@ -1140,7 +1134,6 @@ def delete_repeat_schedule_logic(request):
     repeat_schedule_info = None
     request.session['date'] = date
     request.session['day'] = day
-
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
 
@@ -1210,8 +1203,6 @@ def delete_repeat_schedule_logic(request):
         except ValidationError as e:
             error = '예약 가능한 횟수를 확인해주세요.'
 
-    # print(error)
-
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
         for member_lecture_data_info in member_lecture_data:
@@ -1219,23 +1210,12 @@ def delete_repeat_schedule_logic(request):
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
         func_save_log_data(start_date, end_date, class_id, delete_repeat_schedule.lecture_tb_id, request.user.last_name+request.user.first_name,
-                      member_name, en_dis_type, 'LR02', request)
+                           member_name, en_dis_type, 'LR02', request)
 
         if en_dis_type == '1':
             func_send_push_trainer(delete_repeat_schedule.lecture_tb_id, class_type_name + ' 수업 - 일정 알림',
                                    request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
                                    + '~' + str(end_date) + ' 반복일정을 취소했습니다')
-            request.session['push_title'] = ''
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
-            # request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
-            # request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-            #                               + '~' + str(end_date) + ' 반복일정을 취소했습니다'
-            # request.session['lecture_id'] = delete_repeat_schedule.lecture_tb_id
-        else:
-            request.session['push_title'] = ''
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
 
         return redirect(next_page)
     else:

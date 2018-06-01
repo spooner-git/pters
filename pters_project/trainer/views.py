@@ -696,7 +696,6 @@ class GetMemberScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
 
         if member_id is None or member_id == '':
             context['error'] = '회원 정보를 불러오지 못했습니다.'
-
         if context['error'] is None:
             context = func_get_trainee_schedule_list(context, class_id, member_id)
 
@@ -728,6 +727,7 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
         context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', None)
+
         context['error'] = None
         context = get_trainee_repeat_schedule_data_func(context, class_id, member_id)
 
@@ -1465,6 +1465,7 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View
         context = super(GetLectureListView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
+
         context['error'] = None
 
         context = func_get_lecture_list(context, class_id, member_id)
