@@ -502,6 +502,7 @@ $(document).ready(function(){
 							var len = $('#groupParticipants .groupParticipantsRow').length;
 							close_info_popup('cal_popup_planinfo')
 							var z = 0
+							send_group_plan_complete($('#cal_popup_planinfo').attr('schedule_id'))
 							for(var i=0; i<len; i++){
 								$('#id_schedule_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
 								$('#id_lecture_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
@@ -531,6 +532,45 @@ $(document).ready(function(){
                 url:'/schedule/finish_schedule/',
                 type:'POST',
                 data:send_data,
+
+                beforeSend:function(){
+                	beforeSend();
+                },
+                //통신성공시 처리
+                success:function(data){
+                	var jsondata = JSON.parse(data)
+                	if(jsondata.messageArray.length>0){
+	                  	$('#errorMessageBar').show()
+	                  	$('#errorMessageText').text(jsondata.messageArray)
+	                }else{
+	                    if(use == "callback"){
+	                    	callback(jsondata, send_data)
+	                    }
+	                }
+                  },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                	
+                  },
+
+                //통신 실패시 처리
+                error:function(){
+                },
+            })
+		}
+
+		function send_group_plan_complete(schedule_id, use, callback){
+			var drawCanvas = document.getElementById('canvas');
+			var send_data = [
+							 {"name":"schedule_id", "value":schedule_id}, 
+							 {"name":"upload_file", "value":drawCanvas.toDataURL('image/png')}
+							]
+			console.log(send_data)
+			$.ajax({
+                url:'/trainer/finish_group_schedule_logic/',
+                type:'POST',
+                data: send_data,
 
                 beforeSend:function(){
                 	beforeSend();
