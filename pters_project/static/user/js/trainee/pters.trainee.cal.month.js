@@ -1707,12 +1707,13 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
 
 function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
 	$('div._classTime').html('')
+	var count_date_info = classInfoProcessed(jsondata)
 	var len = jsondata.classTimeArray_start_date.length;
+	console.log('count_date_info',count_date_info)
+	var already_added = []
 	for(var i=0; i<len; i++){
 		var finish = jsondata.scheduleFinishArray[i]
 		var memo = jsondata.scheduleNoteArray[i]
-
-
 		var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.classTimeArray_start_date[i].split(' ')[0], '_')
 		var arr = classDate.split('_')
 		var yy = arr[0]
@@ -1745,18 +1746,30 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 			var groupname = " - ["+jsondata.group_schedule_group_name[index]+"]"
 		}
 
+		var index = count_date_info.dateResult.indexOf(jsondata.classTimeArray_start_date[i].split(' ')[0])
+		var count = count_date_info.countResult[index]
+
 		if(finish == '1'){
-			var finishImg = '<div><span>'+classTime+groupname+'</span><img src="/static/user/res/btn-pt-complete.png"></div>'
+			var mobile = '<div class="monthplans_count"><img src="/static/user/res/icon-cal-mini.png">'+count+'</div>'
+			var finishImg = '<div class="monthplans"><span>'+classTime+groupname+'</span><img src="/static/user/res/btn-pt-complete.png"></div>'
 		}else if(finish == '0'){
-			var finishImg = '<div><span>'+classTime+groupname+'</span></div>'
+			var mobile = '<div class="monthplans_count"><img src="/static/user/res/icon-cal-mini.png">'+count+'</div>'
+			var finishImg = '<div class="monthplans"><span>'+classTime+groupname+'</span></div>'
 		}
+
+		if(already_added.indexOf(classDate) != -1){ //날짜 및에 일정 카운트가 여러개 출력되는 것을 방지
+			var month_daily_planview = finishImg
+		}else{
+			var month_daily_planview = finishImg + mobile
+		}
+		already_added.push(classDate)
 
 		if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
 			$("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i]})
 			$("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
 			$("td[data-date="+classDate+"] div._classDate").addClass('greydateMytime')
 			if($("td[data-date="+classDate+"] div._classTime div").length <3){
-				$("td[data-date="+classDate+"] div._classTime").addClass('balloon').append(finishImg)
+				$("td[data-date="+classDate+"] div._classTime").addClass('balloon').append(month_daily_planview)
 			}else{
 				$("td[data-date="+classDate+"] div._classTime").append('<div><span>…</span></div>')
 			}
@@ -1767,7 +1780,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 			$("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
 			$("td[data-date="+classDate+"] div._classDate").addClass('dateMytime')
 			if($("td[data-date="+classDate+"] div._classTime div").length <3){
-				$("td[data-date="+classDate+"] div._classTime").addClass('blackballoon').append(finishImg)
+				$("td[data-date="+classDate+"] div._classTime").addClass('blackballoon').append(month_daily_planview)
 			}else{
 				$("td[data-date="+classDate+"] div._classTime").append('<div><span>…</span></div>')
 			}
@@ -1776,6 +1789,52 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 		
 	};
 };
+
+function classInfoProcessed(jsondata){
+	var len = jsondata.scheduleIdArray.length;
+	var len2 = jsondata.group_schedule_id.length;
+	var countResult = [];
+	var summaryArray = {};
+	var summaryArray_group = {};
+	var summaryArrayResult = [];
+
+	var datasum = [];
+	for(var i=0; i<len; i++){ //개인일정 객체화로 중복 제거
+		summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0]
+		if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+			datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0])
+		}else{
+
+		}
+	}
+	for(var i in summaryArray){ //개인일정 중복 제거된 배열
+		summaryArrayResult.push(i)
+	}
+
+
+	for(var i=0; i<len2; i++){ //그룹 객체화로 중복 제거
+		summaryArray_group[jsondata.group_schedule_start_datetime[i].split(' ')[0]] = jsondata.group_schedule_start_datetime[i].split(' ')[0]
+		datasum.push(jsondata.group_schedule_start_datetime[i].split(' ')[0])
+	}
+	for(var i in summaryArray_group){ //그룹 중복 제거된 배열
+		summaryArrayResult.push(i)
+	}
+
+
+	var len2 = summaryArrayResult.length;
+
+	for(var i=0; i<len2; i++){
+		var scan = summaryArrayResult[i]
+		countResult[i]=0
+		for(var j=0; j<datasum.length; j++){
+			if(scan == datasum[j]){
+				countResult[i] = countResult[i]+1
+			}
+		}
+	}
+
+	return {"countResult":countResult, "dateResult":summaryArrayResult}
+}
 
 
 
