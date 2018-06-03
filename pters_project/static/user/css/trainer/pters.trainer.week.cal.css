@@ -409,6 +409,7 @@ img,a,div,span,p{
 
 .timeindex_time{
 	color: #888888;
+	font-size: 12px;
 }
 
 ._morningday{
@@ -517,11 +518,18 @@ img,a,div,span,p{
 	letter-spacing: -0.3px;
 	color: black;
 	cursor: pointer;
-	line-height: 30px;
+	line-height: 25px;
 }
 
 .memberTime{
 	display: none;
+}
+
+.groupnametag{
+	overflow:hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin: 0;
 }
 
 .groupnumstatus{
@@ -589,6 +597,11 @@ img,a,div,span,p{
 	display: block;
 }
 
+@media(min-width: 400px){
+	.timeindex_time{
+		font-size: 13.5px;
+	}
+}
 
 
 @media(min-width: 600px){
@@ -735,7 +748,7 @@ img,a,div,span,p{
 	.memberName{
 		position: absolute;
 		width: 78%;
-		text-align: right;
+		text-align: center;
 		right:  0;
 		font-size: 12.5px;
 		font-weight: 500;
@@ -859,6 +872,10 @@ img,a,div,span,p{
 }
 
 @media(min-width: 730px){
+
+	.memberName{
+		text-align: right;
+	}
 
 	.memberTime{
 		display: block;
