@@ -515,7 +515,7 @@ $(document).ready(function(){
 
     function send_reservation(){
 		$.ajax({
-	          url: '/trainee/pt_add_logic/',
+	          url: '/trainee/add_trainee_schedule/',
 	          data: $('#pt-add-form').serialize(),
 			  dataType : 'html',
 			  type:'POST',
@@ -531,9 +531,6 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
-					for (var i=0; i<jsondata.pushArray.length; i++){
-						//send_push(jsondata.push_server_id, jsondata.pushArray[i], jsondata.push_title[0], jsondata.push_info[0], jsondata.badgeCounterArray[i]);
-					}
 					ajaxClassTime("this", 46, "callback", function(json){
 						plancheck(clicked_td_date_info, json)
 					});
