@@ -47,278 +47,8 @@ class IndexView(TemplateView):
         return context
 
 
-def delete_schedule_logic_func(schedule_info, member_id):
-
-    error = None
-    lecture_info = None
-    en_dis_type = schedule_info.en_dis_type
-
-    if en_dis_type == '1':
-        if error is None:
-            try:
-                lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
-            except ObjectDoesNotExist:
-                error = '회원 수강정보를 불러오지 못했습니다.'
-
-    # print()
-    if error is None:
-        try:
-            with transaction.atomic():
-                delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
-                                                   class_tb_id=schedule_info.class_tb_id,
-                                                   group_tb_id=schedule_info.group_tb_id,
-                                                   lecture_tb_id=schedule_info.lecture_tb_id,
-                                                   delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
-                                                   start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
-                                                   permission_state_cd=schedule_info.permission_state_cd,
-                                                   state_cd=schedule_info.state_cd, note=schedule_info.note,
-                                                   en_dis_type=schedule_info.en_dis_type, member_note=schedule_info.member_note,
-                                                   reg_member_id=schedule_info.reg_member_id,
-                                                   del_member_id=str(member_id),
-                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
-
-                delete_schedule.save()
-                schedule_info.delete()
-
-                if en_dis_type == '1':
-
-                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-                    if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
-                        lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
-                                                                  - len(lecture_schedule_data)
-                    else:
-                        error = '예약 가능한 횟수를 확인해주세요.'
-                        raise ValidationError()
-
-                    # 진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
-                    if schedule_info.state_cd == 'PE':
-                        lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                          state_cd='PE')
-                        if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
-                            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count \
-                                                               - len(lecture_schedule_data)
-
-                        else:
-                            error = '예약 가능한 횟수를 확인해주세요.'
-                            raise ValidationError()
-
-                    lecture_repeat_schedule_data = None
-
-                    if delete_schedule.delete_repeat_schedule_tb is not None and delete_schedule.delete_repeat_schedule_tb != '':
-                        try:
-                            lecture_repeat_schedule_data = RepeatScheduleTb.objects.get(
-                                repeat_schedule_id=delete_schedule.delete_repeat_schedule_tb)
-                        except ObjectDoesNotExist:
-                            lecture_repeat_schedule_data = None
-
-                    if lecture_repeat_schedule_data is not None:
-                        repeat_schedule_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=delete_schedule.delete_repeat_schedule_tb).count()
-                        repeat_schedule_finish_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=delete_schedule.delete_repeat_schedule_tb,
-                                                                                 state_cd='PE').count()
-                        if repeat_schedule_count == 0:
-                            delete_repeat_schedule = DeleteRepeatScheduleTb(
-                                class_tb_id=lecture_repeat_schedule_data.class_tb_id,
-                                group_tb_id=lecture_repeat_schedule_data.group_tb_id,
-                                lecture_tb_id=lecture_repeat_schedule_data.lecture_tb_id,
-                                repeat_schedule_id=lecture_repeat_schedule_data.repeat_schedule_id,
-                                repeat_type_cd=lecture_repeat_schedule_data.repeat_type_cd,
-                                week_info=lecture_repeat_schedule_data.week_info,
-                                start_date=lecture_repeat_schedule_data.start_date,
-                                end_date=lecture_repeat_schedule_data.end_date,
-                                start_time=lecture_repeat_schedule_data.start_time,
-                                time_duration=lecture_repeat_schedule_data.time_duration,
-                                state_cd=lecture_repeat_schedule_data.state_cd, en_dis_type=lecture_repeat_schedule_data.en_dis_type,
-                                reg_member_id=lecture_repeat_schedule_data.reg_member_id,
-                                reg_dt=lecture_repeat_schedule_data.reg_dt, mod_dt=timezone.now(), use=0)
-                            delete_repeat_schedule.save()
-                            lecture_repeat_schedule_data.delete()
-                        else:
-                            if repeat_schedule_finish_count == 0:
-                                lecture_repeat_schedule_data.state_cd = 'NP'
-                                lecture_repeat_schedule_data.save()
-
-                    if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
-                        lecture_info.state_cd = 'IP'
-
-                    lecture_info.mod_dt = timezone.now()
-                    lecture_info.schedule_check = 1
-                    lecture_info.save()
-
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '이미 삭제된 일정입니다.'
-        except InternalError as e:
-            error = '이미 삭제된 일정입니다.'
-        except ValidationError as e:
-            error = '예약 가능한 횟수를 확인해주세요.'
-
-    # print(error)
-    return error
-
-
-def get_trainer_schedule_data_func(context, class_id, start_date, end_date):
-
-    error = None
-    class_info = None
-    off_schedule_id = []
-    off_schedule_start_datetime = []
-    off_schedule_end_datetime = []
-    off_schedule_note = []
-
-    pt_schedule_id = []
-    pt_schedule_lecture_id = []
-    pt_schedule_start_datetime = []
-    pt_schedule_end_datetime = []
-    pt_schedule_member_name = []
-    pt_schedule_member_id = []
-    pt_schedule_finish_check = []
-    pt_schedule_note = []
-    pt_schedule_idx = []
-    group_schedule_id = []
-    group_schedule_start_datetime = []
-    group_schedule_end_datetime = []
-    group_schedule_finish_check = []
-    group_schedule_note = []
-    group_schedule_group_id = []
-    group_schedule_name = []
-    group_schedule_max_member_num = []
-    group_schedule_current_member_num = []
-
-    # 강사 정보 가져오기
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '강좌 정보를 불러오지 못했습니다.'
-
-    # OFF 일정 조회
-    if error is None:
-        off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                      en_dis_type='0', start_dt__gte=start_date,
-                                                      start_dt__lt=end_date)
-        for off_schedule_datum in off_schedule_data:
-            off_schedule_id.append(off_schedule_datum.schedule_id)
-            off_schedule_start_datetime.append(str(off_schedule_datum.start_dt))
-            off_schedule_end_datetime.append(str(off_schedule_datum.end_dt))
-            if off_schedule_datum.note is None:
-                off_schedule_note.append('')
-            else:
-                off_schedule_note.append(off_schedule_datum.note)
-
-    # PT 일정 조회
-    if error is None:
-        # 강사에 해당하는 강좌 정보 불러오기
-        lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=1)
-
-        for lecture_datum_info in lecture_data:
-            lecture_datum = lecture_datum_info.lecture_tb
-            # 강좌별로 연결되어있는 회원 리스트 불러오기
-
-            if error is None:
-                # 강좌별로 연결된 PT 스케쥴 가져오기
-                lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                                           lecture_tb=lecture_datum.lecture_id,
-                                                                           en_dis_type='1',
-                                                                           start_dt__gte=start_date,
-                                                                           start_dt__lt=end_date, use=1).order_by('start_dt')
-                # PT 스케쥴 정보 셋팅
-                idx = 0
-                for pt_schedule_datum in lecture_datum.pt_schedule_data:
-                    # lecture schedule id 셋팅
-                    idx += 1
-                    pt_schedule_id.append(pt_schedule_datum.schedule_id)
-                    # lecture schedule 에 해당하는 lecture id 셋팅
-                    pt_schedule_lecture_id.append(lecture_datum.lecture_id)
-                    pt_schedule_member_name.append(lecture_datum.member.name)
-                    pt_schedule_member_id.append(lecture_datum.member.member_id)
-                    pt_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
-                    pt_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
-                    pt_schedule_idx.append(idx)
-
-                    if pt_schedule_datum.note is None:
-                        pt_schedule_note.append('')
-                    else:
-                        pt_schedule_note.append(pt_schedule_datum.note)
-                    # 끝난 스케쥴인지 확인
-                    if pt_schedule_datum.state_cd == 'PE':
-                        pt_schedule_finish_check.append(1)
-                    else:
-                        pt_schedule_finish_check.append(0)
-
-    if error is None:
-        # 강좌별로 연결된 그룹 스케쥴 가져오기
-        pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                     group_tb__isnull=False,
-                                                     lecture_tb__isnull=True,
-                                                     en_dis_type='1',
-                                                     start_dt__gte=start_date,
-                                                     start_dt__lt=end_date, use=1).order_by('start_dt')
-
-        idx = 0
-        for pt_schedule_datum in pt_schedule_data:
-            # lecture schedule id 셋팅
-            idx += 1
-            group_schedule_id.append(pt_schedule_datum.schedule_id)
-            group_schedule_start_datetime.append(str(pt_schedule_datum.start_dt))
-            group_schedule_end_datetime.append(str(pt_schedule_datum.end_dt))
-            if pt_schedule_datum.group_tb is not None and pt_schedule_datum.group_tb != '':
-                schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                        group_tb_id=pt_schedule_datum.group_tb.group_id,
-                                                                        lecture_tb__isnull=False,
-                                                                        start_dt=pt_schedule_datum.start_dt,
-                                                                        end_dt=pt_schedule_datum.end_dt,
-                                                                        use=1).count()
-                group_schedule_group_id.append(pt_schedule_datum.group_tb.group_id)
-                group_schedule_name.append(pt_schedule_datum.group_tb.name)
-                group_schedule_max_member_num.append(pt_schedule_datum.group_tb.member_num)
-                group_schedule_current_member_num.append(schedule_current_member_num)
-
-            if pt_schedule_datum.note is None:
-                group_schedule_note.append('')
-            else:
-                group_schedule_note.append(pt_schedule_datum.note)
-            # 끝난 스케쥴인지 확인
-            if pt_schedule_datum.state_cd == 'PE':
-                group_schedule_finish_check.append(1)
-            else:
-                group_schedule_finish_check.append(0)
-
-    if error is None:
-        class_info.schedule_check = 0
-        class_info.save()
-
-    context['off_schedule_id'] = off_schedule_id
-    context['off_schedule_start_datetime'] = off_schedule_start_datetime
-    context['off_schedule_end_datetime'] = off_schedule_end_datetime
-    context['off_schedule_note'] = off_schedule_note
-    context['pt_schedule_id'] = pt_schedule_id
-    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
-    context['pt_schedule_member_name'] = pt_schedule_member_name
-    context['pt_schedule_member_id'] = pt_schedule_member_id
-
-    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
-    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
-    context['pt_schedule_finish_check'] = pt_schedule_finish_check
-    context['pt_schedule_note'] = pt_schedule_note
-    context['pt_schedule_idx'] = pt_schedule_idx
-    context['group_schedule_id'] = group_schedule_id
-    context['group_schedule_start_datetime'] = group_schedule_start_datetime
-    context['group_schedule_end_datetime'] = group_schedule_end_datetime
-    context['group_schedule_group_id'] = group_schedule_group_id
-    context['group_schedule_name'] = group_schedule_name
-    context['group_schedule_max_member_num'] = group_schedule_max_member_num
-    context['group_schedule_current_member_num'] = group_schedule_current_member_num
-    context['group_schedule_note'] = group_schedule_note
-    context['group_schedule_finish_check'] = group_schedule_finish_check
-
-    return context
-
-
 # 일정 추가
 def add_schedule_logic(request):
-    # lecture_id = request.POST.get('lecture_id')
     member_id = request.POST.get('member_id')
     member_name = request.POST.get('member_name')
     schedule_date = request.POST.get('training_date')
@@ -367,11 +97,11 @@ def add_schedule_logic(request):
         try:
             schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time, '%Y-%m-%d %H:%M:%S.%f')
             schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
@@ -424,18 +154,6 @@ def add_schedule_logic(request):
                                    request.user.last_name+request.user.first_name+'님이 '
                                    + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다.')
-            # request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
-            # request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
-            #                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-            #                               + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' 일정을 등록했습니다'
-            # request.session['lecture_id'] = lecture_id
-            request.session['push_title'] = ''
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
-        else:
-            request.session['push_title'] = ''
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
 
         return redirect(next_page)
     else:
@@ -460,7 +178,6 @@ def delete_schedule_logic(request):
     request.session['date'] = date
     request.session['day'] = day
     lecture_id = ''
-    class_info = None
 
     if en_dis_type == '1':
         schedule_id = pt_schedule_id
@@ -488,35 +205,22 @@ def delete_schedule_logic(request):
     if error is None:
 
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
-        # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
         for member_lecture_data_info in member_lecture_data:
             member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
         func_save_log_data(start_date, end_date, class_id, lecture_id, request.user.last_name+request.user.first_name,
-                      member_name, en_dis_type, 'LS02', request)
+                           member_name, en_dis_type, 'LS02', request)
 
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
         if en_dis_type == '1':
             func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
-                                   request.user.last_name + request.user.first_name + '님이 ' \
-                                   + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+                                   request.user.last_name + request.user.first_name + '님이 '\
+                                   + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
                                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[
                                        1] + ' 일정을 취소했습니다')
-            # request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
-            # request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
-            #                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-            #                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다'
-            # request.session['lecture_id'] = lecture_id
-            request.session['push_title'] = ''
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
-        else:
-            request.session['push_title'] = ''
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
 
         return redirect(next_page)
     else:
@@ -529,17 +233,10 @@ def delete_schedule_logic(request):
 def finish_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     member_name = request.POST.get('member_name')
-    # imgUpload = request.POST.get('upload')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
 
-    # image upload test - hk.kim 180313
-    # format, imgstr = imgUpload.split(';base64,')
-    # ext = format.split('/')[-1]
-    # data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
-
-    # print(str(imgUpload))
     error = None
     schedule_info = None
     lecture_info = None
@@ -566,12 +263,6 @@ def finish_schedule_logic(request):
         except ObjectDoesNotExist:
             error = '회원 수강정보를 불러오지 못했습니다.'
 
-    # if error is None:
-    #    if lecture_info.state_cd == 'NP':
-    #        error = '회원이 수락하지 않은 스케쥴입니다.'
-    #    if lecture_info.state_cd == 'RJ':
-    #        error = '회원이 수락하지 않은 스케쥴입니다.'
-
     if error is None:
         try:
             with transaction.atomic():
@@ -580,15 +271,7 @@ def finish_schedule_logic(request):
                 schedule_info.save()
                 # 남은 횟수 차감
                 if schedule_info.state_cd == 'PE':
-                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id,
-                                                                      state_cd='PE')
-                    if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
-                        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count \
-                                                         - len(lecture_schedule_data)
-
-                    else:
-                        error = '예약 가능한 횟수를 확인해주세요.'
-                        raise ValidationError()
+                    error = func_refresh_lecture_count(schedule_info.lecture_tb_id)
 
                 lecture_repeat_schedule_data = None
                 if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
@@ -651,11 +334,18 @@ def finish_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError as e:
             error = '예약 가능 횟수를 확인해주세요.'
-    # print(error)
 
     if error is None:
+
+        push_info_schedule_start_date = str(start_date).split(':')
+        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
         func_save_log_data(start_date, end_date, class_id, '', request.user.last_name+request.user.first_name,
-                      member_name, '1', 'LS03', request)
+                           member_name, '1', 'LS03', request)
+        func_send_push_trainer(schedule_info.lecture_tb_id, class_type_name + ' 수업 - 일정 알림',
+                               request.user.last_name + request.user.first_name + '님이 '\
+                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+                               + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[
+                                   1] + ' 일정을 완료했습니다')
 
     if error is None:
         return redirect(next_page)
@@ -665,84 +355,65 @@ def finish_schedule_logic(request):
         return redirect(next_page)
 
 
-# 일정 완료
-def finish_group_schedule_logic(request):
+@csrf_exempt
+def upload_sign_image_logic(request):
+
+    schedule_id = request.POST.get('schedule_id', '')
+    image_test = request.POST.get('upload_file', '')
+    next_page = '/trainer/get_trainer_schedule/'
+
+    s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
+                        aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
+    bucket = s3.Bucket(getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
+    exists = True
+
+    try:
+        s3.meta.client.head_bucket(Bucket='pters-image')
+    except botocore.exceptions.ClientError as e:
+        # If a client error is thrown, then check that it was a 404 error.
+        # If it was a 404 error, then the bucket does not exist.
+        error_code = int(e.response['Error']['Code'])
+        if error_code == 404:
+            exists = False
+
+    if exists is True:
+        format, img_str = image_test.split(';base64,')
+        ext = format.split('/')[-1]
+
+        data = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+
+        bucket.put_object(Key=schedule_id+'.png', Body=data, ContentType='image/png',
+                          ACL='public-read')
+
+    return redirect(next_page)
+
+
+# 메모 수정
+@csrf_exempt
+def update_memo_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
-    class_id = request.session.get('class_id', '')
+    note = request.POST.get('add_memo', '')
     next_page = request.POST.get('next_page')
-    class_type_name = request.session.get('class_type_name', '')
 
     error = None
-    schedule_info = None
-    group_info = None
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
 
     if error is None:
-
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '스케쥴 정보를 불러오지 못했습니다.'
 
     if error is None:
-        try:
-            group_info = GroupTb.objects.get(group_id=schedule_info.group_tb_id)
-        except ObjectDoesNotExist:
-            error = '그룹 정보를 불러오지 못했습니다.'
+        schedule_info.note = note
+        schedule_info.mod_dt = timezone.now()
+        schedule_info.save()
 
-    if error is None:
-        start_date = schedule_info.start_dt
-        end_date = schedule_info.end_dt
-        if schedule_info.state_cd == 'PE':
-            error = '이미 확정된 스케쥴입니다.'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                schedule_info.mod_dt = timezone.now()
-                schedule_info.state_cd = 'PE'
-                schedule_info.save()
-
-                repeat_schedule_data = None
-                if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
-                    try:
-                        repeat_schedule_data = RepeatScheduleTb.objects.get(
-                            repeat_schedule_id=schedule_info.repeat_schedule_tb_id)
-                    except ObjectDoesNotExist:
-                        repeat_schedule_data = None
-
-                if repeat_schedule_data is not None:
-                    if repeat_schedule_data.state_cd == 'NP':
-                        repeat_schedule_data.state_cd = 'IP'
-                        repeat_schedule_data.save()
-
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except ValidationError as e:
-            error = '예약 가능한 횟수를 확인해주세요.'
-        except InternalError as e:
-            error = '예약 가능 횟수를 확인해주세요.'
-
-    if error is None:
-
-        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 레슨 일정', log_how='완료',
-                         log_detail=str(start_date) + '/' + str(
-                             end_date),
-                         reg_dt=timezone.now(), use=1)
-        log_data.save()
     if error is None:
         return redirect(next_page)
     else:
-        logger.error(
-            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -751,7 +422,6 @@ def finish_group_schedule_logic(request):
 def add_repeat_schedule_logic(request):
     member_id = request.POST.get('member_id')
     lecture_id = request.POST.get('lecture_id', '')
-    member_name = request.POST.get('member_name')
     repeat_type = request.POST.get('repeat_freq')
     repeat_schedule_start_date = request.POST.get('repeat_start_date')
     repeat_schedule_end_date = request.POST.get('repeat_end_date')
@@ -1074,7 +744,6 @@ def add_repeat_schedule_confirm(request):
 
         else:
             member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
-            # member_lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id, state_cd='IP', member_view_state_cd='VIEW', use=1)
             for member_lecture_data_info in member_lecture_data:
                 member_lecture_info = member_lecture_data_info.lecture_tb
                 member_lecture_info.schedule_check = 1
@@ -1087,17 +756,7 @@ def add_repeat_schedule_confirm(request):
                 func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
                                        request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
                                        + '~' + str(end_date) + ' 반복일정을 등록했습니다')
-                # request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
-                # request.session['push_info'] = request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-                #                               + '~' + str(end_date) + ' 반복일정을 등록했습니다'
-                # request.session['lecture_id'] = lecture_id
-                request.session['push_title'] = ''
-                request.session['push_info'] = ''
-                request.session['lecture_id'] = ''
-            else:
-                request.session['push_title'] = ''
-                request.session['push_info'] = ''
-                request.session['lecture_id'] = ''
+
             information = '반복일정 등록이 완료됐습니다.'
 
     # print(error)
@@ -1267,196 +926,6 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
         return context
 
 
-@csrf_exempt
-def upload_sign_image_logic(request):
-
-    # user_id = request.POST.get('user_id', '')
-    schedule_id = request.POST.get('schedule_id', '')
-    image_test = request.POST.get('upload_file', '')
-    next_page = '/trainer/get_trainer_schedule/'
-
-    s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
-                        aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
-    bucket = s3.Bucket(getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
-    exists = True
-
-    try:
-        s3.meta.client.head_bucket(Bucket='pters-image')
-    except botocore.exceptions.ClientError as e:
-        # If a client error is thrown, then check that it was a 404 error.
-        # If it was a 404 error, then the bucket does not exist.
-        error_code = int(e.response['Error']['Code'])
-        if error_code == 404:
-            exists = False
-
-    if exists is True:
-        format, img_str = image_test.split(';base64,')
-        ext = format.split('/')[-1]
-
-        data = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
-
-        bucket.put_object(Key=schedule_id+'.png', Body=data, ContentType='image/png',
-                          ACL='public-read')
-
-    return redirect(next_page)
-
-
-# 수정 필요 - hkkim - 2018.03.28
-@method_decorator(csrf_exempt, name='dispatch')
-class GetFinishScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
-    template_name = 'ajax/finish_schedule_ajax.html'
-
-    def get(self, request, *args, **kwargs):
-        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
-
-        lecture_id = request.GET.get('lecture_id', '')
-        member_id = request.GET.get('member_id', '')
-
-        finish_schedule_list = None
-        if lecture_id is None or lecture_id == '':
-            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
-
-            if len(class_lecture_list) > 0:
-                for idx, class_lecture_info in enumerate(class_lecture_list):
-                    if idx == 0:
-                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
-                    else:
-                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
-        else:
-            finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
-
-        context['finish_schedule_list'] = finish_schedule_list
-
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
-
-        lecture_id = request.POST.get('lecture_id', '')
-        member_id = request.POST.get('member_id', '')
-
-        finish_schedule_list = None
-        if lecture_id is None or lecture_id == '':
-            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
-
-            if len(class_lecture_list) > 0:
-                for idx, class_lecture_info in enumerate(class_lecture_list):
-                    if idx == 0:
-                        finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
-                    else:
-                        finish_schedule_list |= ScheduleTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id, state_cd='PE').order_by('-end_dt')
-        else:
-            finish_schedule_list = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').order_by('-end_dt')
-
-        context['finish_schedule_list'] = finish_schedule_list
-
-        return render(request, self.template_name, context)
-
-
-# hkkim - 2018.04.23
-@method_decorator(csrf_exempt, name='dispatch')
-class GetDeleteScheduleViewAjax(LoginRequiredMixin, ContextMixin, View):
-    template_name = 'ajax/delete_schedule_ajax.html'
-
-    def get(self, request, *args, **kwargs):
-        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
-
-        lecture_id = request.GET.get('lecture_id', '')
-        member_id = request.GET.get('member_id', '')
-
-        delete_schedule_list = None
-        if lecture_id is None or lecture_id == '':
-            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
-
-            if len(class_lecture_list) > 0:
-                for idx, class_lecture_info in enumerate(class_lecture_list):
-                    error = None
-                    try:
-                        MemberLectureTb.objects.get(member_id=member_id, lecture_tb_id=class_lecture_info.lecture_tb_id, use=1)
-                    except ObjectDoesNotExist:
-                        error = '수강정보를 불러오지 못했습니다.'
-                    if error is None:
-                        if idx == 0:
-                            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
-                        else:
-                            delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
-        else:
-            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_id).order_by('-end_dt')
-
-        context['delete_schedule_list'] = delete_schedule_list
-
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        context = super(GetFinishScheduleViewAjax, self).get_context_data(**kwargs)
-
-        lecture_id = request.POST.get('lecture_id', '')
-        member_id = request.POST.get('member_id', '')
-
-        delete_schedule_list = None
-        if lecture_id is None or lecture_id == '':
-            class_lecture_list = ClassLectureTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=1)
-
-            if len(class_lecture_list) > 0:
-                for idx, class_lecture_info in enumerate(class_lecture_list):
-                    error = None
-                    try:
-                        MemberLectureTb.objects.get(member_id=member_id, lecture_tb_id=class_lecture_info.lecture_tb_id, use=1)
-                    except ObjectDoesNotExist:
-                        error = '수강정보를 불러오지 못했습니다.'
-                    if error is None:
-                        if idx == 0:
-                            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
-                        else:
-                            delete_schedule_list |= DeleteScheduleTb.objects.filter(lecture_tb_id=class_lecture_list.lecture_tb_id).order_by('-end_dt')
-        else:
-            delete_schedule_list = DeleteScheduleTb.objects.filter(lecture_tb_id=lecture_id).order_by('-end_dt')
-
-        context['delete_schedule_list'] = delete_schedule_list
-
-        return render(request, self.template_name, context)
-
-
-# 메모 수정
-@csrf_exempt
-def update_memo_schedule_logic(request):
-    schedule_id = request.POST.get('schedule_id')
-    note = request.POST.get('add_memo', '')
-    class_id = request.session.get('class_id', '')
-    next_page = request.POST.get('next_page')
-
-    error = None
-    if schedule_id == '':
-        error = '스케쥴을 선택하세요.'
-
-    if error is None:
-        try:
-            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
-        except ObjectDoesNotExist:
-            error = '스케쥴 정보를 불러오지 못했습니다.'
-
-    if error is None:
-        schedule_info.note = note
-        schedule_info.mod_dt = timezone.now()
-        schedule_info.save()
-
-    if error is None:
-        '''
-        log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info='일정 메모', log_how='수정',
-                         reg_dt=timezone.now(), use=1)
-
-        log_data.save()
-        '''
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-        return redirect(next_page)
-
-
 # 일정 추가
 @csrf_exempt
 def add_group_schedule_logic(request):
@@ -1557,9 +1026,9 @@ def add_group_schedule_logic(request):
 
     if error is None:
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name+request.user.first_name,
+                         from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+' 그룹 일정', log_how='등록',
+                         log_info=group_info.name + ' 그룹 일정', log_how='등록',
                          log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
@@ -1594,7 +1063,8 @@ def add_group_schedule_logic(request):
                                 error_temp = func_refresh_lecture_count(lecture_id)
 
                             if error_temp is None:
-                                error_temp = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
+                                error_temp = func_check_group_available_member_after(class_id, group_id,
+                                                                                     group_schedule_id)
 
                             if error_temp is not None:
                                 raise InternalError
@@ -1635,22 +1105,18 @@ def add_group_schedule_logic(request):
                     info_message = member_info.name
                 else:
                     info_message = info_message + ',' + member_info.name
-                # if error is None:
-                #    error = error_temp
-                # else:
-                #    error = error+'/'+error_temp
+                    # if error is None:
+                    #    error = error_temp
+                    # else:
+                    #    error = error+'/'+error_temp
 
     if error is None:
-        request.session['push_title'] = ''
-        request.session['push_info'] = ''
-        request.session['lecture_id'] = ''
         if info_message is not None:
             info_message += ' 님의 일정이 등록되지 않았습니다.'
             messages.info(request, info_message)
         return redirect(next_page)
     else:
-        logger.error(
-            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
         return redirect(next_page)
 
@@ -1723,9 +1189,9 @@ def delete_group_schedule_logic(request):
             member_lecture_info.save()
 
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name+request.user.first_name,
+                         from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+' 그룹 레슨 일정', log_how='삭제',
+                         log_info=group_info.name + ' 그룹 레슨 일정', log_how='삭제',
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
@@ -1738,11 +1204,90 @@ def delete_group_schedule_logic(request):
         return redirect(next_page)
 
 
+# 일정 완료
+def finish_group_schedule_logic(request):
+    schedule_id = request.POST.get('schedule_id')
+    class_id = request.session.get('class_id', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    schedule_info = None
+    group_info = None
+    if schedule_id == '':
+        error = '스케쥴을 선택하세요.'
+
+    if error is None:
+
+        try:
+            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+        except ObjectDoesNotExist:
+            error = '스케쥴 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            group_info = GroupTb.objects.get(group_id=schedule_info.group_tb_id)
+        except ObjectDoesNotExist:
+            error = '그룹 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        start_date = schedule_info.start_dt
+        end_date = schedule_info.end_dt
+        if schedule_info.state_cd == 'PE':
+            error = '이미 확정된 스케쥴입니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                schedule_info.mod_dt = timezone.now()
+                schedule_info.state_cd = 'PE'
+                schedule_info.save()
+
+                repeat_schedule_data = None
+                if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
+                    try:
+                        repeat_schedule_data = RepeatScheduleTb.objects.get(
+                            repeat_schedule_id=schedule_info.repeat_schedule_tb_id)
+                    except ObjectDoesNotExist:
+                        repeat_schedule_data = None
+
+                if repeat_schedule_data is not None:
+                    if repeat_schedule_data.state_cd == 'NP':
+                        repeat_schedule_data.state_cd = 'IP'
+                        repeat_schedule_data.save()
+
+        except TypeError as e:
+            error = '등록 값의 형태에 문제가 있습니다.'
+        except ValueError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError as e:
+            error = '등록 값에 문제가 있습니다.'
+        except ValidationError as e:
+            error = '예약 가능한 횟수를 확인해주세요.'
+        except InternalError as e:
+            error = '예약 가능 횟수를 확인해주세요.'
+
+    if error is None:
+
+        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name + ' 그룹 레슨 일정', log_how='완료',
+                         log_detail=str(start_date) + '/' + str(
+                             end_date),
+                         reg_dt=timezone.now(), use=1)
+        log_data.save()
+    if error is None:
+        return redirect(next_page)
+    else:
+        logger.error(
+            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+        return redirect(next_page)
+
+
 # 일정 추가
 @csrf_exempt
 def add_member_group_schedule_logic(request):
-    # group_id = request.POST.get('group_id')
-    # lecture_id = request.POST.get('lecture_id')
     member_id = request.POST.get('member_id')
     group_schedule_id = request.POST.get('schedule_id')
     note = request.POST.get('add_memo', '')
@@ -1851,14 +1396,6 @@ def add_member_group_schedule_logic(request):
                                request.user.last_name + request.user.first_name + '님이 '
                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' 그룹 일정을 등록했습니다')
-        # request.session['push_title'] = class_type_name + ' 수업 - 일정 알림'
-        # request.session['push_info'] = request.user.last_name+request.user.first_name+'님이 '\
-        #                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-        #                               + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' 그룹 일정을 등록했습니다'
-        # request.session['lecture_id'] = lecture_id
-        request.session['push_title'] = ''
-        request.session['push_info'] = ''
-        request.session['lecture_id'] = ''
 
         return redirect(next_page)
     else:
@@ -2111,7 +1648,6 @@ def add_group_repeat_schedule_confirm(request):
     group_info = None
     start_date = None
     end_date = None
-    member_info = None
     information = None
     request.session['date'] = date
     request.session['day'] = day
@@ -2157,9 +1693,6 @@ def add_group_repeat_schedule_confirm(request):
                 error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
             if error is None:
                 information = '반복일정 등록이 취소됐습니다.'
-            request.session['push_title'] = ''
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
 
         else:
             member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)
@@ -2244,9 +1777,6 @@ def add_group_repeat_schedule_confirm(request):
                                            request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
                                            + '~' + str(end_date) + ' 그룹 반복일정을 등록했습니다')
 
-            request.session['push_title'] = ''
-            request.session['push_info'] = ''
-            request.session['lecture_id'] = ''
             information = '반복일정 등록이 완료됐습니다.'
 
     # print(error)
@@ -2271,7 +1801,6 @@ def delete_group_repeat_schedule_logic(request):
     day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
-    class_type_name = request.session.get('class_type_name', '')
     error = None
     schedule_data = None
     start_date = None
@@ -2377,13 +1906,99 @@ def delete_group_repeat_schedule_logic(request):
                          reg_dt=timezone.now(), use=1)
         log_data.save()
 
-        request.session['push_title'] = ''
-        request.session['push_info'] = ''
-        request.session['lecture_id'] = ''
-
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
         return redirect(next_page)
 
+
+def delete_schedule_logic_func(schedule_info, member_id):
+
+    error = None
+    lecture_info = None
+    en_dis_type = schedule_info.en_dis_type
+
+    if en_dis_type == '1':
+        if error is None:
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
+            except ObjectDoesNotExist:
+                error = '회원 수강정보를 불러오지 못했습니다.'
+
+    # print()
+    if error is None:
+        try:
+            with transaction.atomic():
+                delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
+                                                   class_tb_id=schedule_info.class_tb_id,
+                                                   group_tb_id=schedule_info.group_tb_id,
+                                                   lecture_tb_id=schedule_info.lecture_tb_id,
+                                                   delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
+                                                   start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                                   permission_state_cd=schedule_info.permission_state_cd,
+                                                   state_cd=schedule_info.state_cd, note=schedule_info.note,
+                                                   en_dis_type=schedule_info.en_dis_type, member_note=schedule_info.member_note,
+                                                   reg_member_id=schedule_info.reg_member_id,
+                                                   del_member_id=str(member_id),
+                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+
+                delete_schedule.save()
+                schedule_info.delete()
+
+                if en_dis_type == '1':
+                    error = func_refresh_lecture_count(schedule_info.lecture_tb_id)
+                    lecture_repeat_schedule_data = None
+
+                    if delete_schedule.delete_repeat_schedule_tb is not None and delete_schedule.delete_repeat_schedule_tb != '':
+                        try:
+                            lecture_repeat_schedule_data = RepeatScheduleTb.objects.get(
+                                repeat_schedule_id=delete_schedule.delete_repeat_schedule_tb)
+                        except ObjectDoesNotExist:
+                            lecture_repeat_schedule_data = None
+
+                    if lecture_repeat_schedule_data is not None:
+                        repeat_schedule_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=delete_schedule.delete_repeat_schedule_tb).count()
+                        repeat_schedule_finish_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=delete_schedule.delete_repeat_schedule_tb,
+                                                                                 state_cd='PE').count()
+                        if repeat_schedule_count == 0:
+                            delete_repeat_schedule = DeleteRepeatScheduleTb(
+                                class_tb_id=lecture_repeat_schedule_data.class_tb_id,
+                                group_tb_id=lecture_repeat_schedule_data.group_tb_id,
+                                lecture_tb_id=lecture_repeat_schedule_data.lecture_tb_id,
+                                repeat_schedule_id=lecture_repeat_schedule_data.repeat_schedule_id,
+                                repeat_type_cd=lecture_repeat_schedule_data.repeat_type_cd,
+                                week_info=lecture_repeat_schedule_data.week_info,
+                                start_date=lecture_repeat_schedule_data.start_date,
+                                end_date=lecture_repeat_schedule_data.end_date,
+                                start_time=lecture_repeat_schedule_data.start_time,
+                                time_duration=lecture_repeat_schedule_data.time_duration,
+                                state_cd=lecture_repeat_schedule_data.state_cd, en_dis_type=lecture_repeat_schedule_data.en_dis_type,
+                                reg_member_id=lecture_repeat_schedule_data.reg_member_id,
+                                reg_dt=lecture_repeat_schedule_data.reg_dt, mod_dt=timezone.now(), use=0)
+                            delete_repeat_schedule.save()
+                            lecture_repeat_schedule_data.delete()
+                        else:
+                            if repeat_schedule_finish_count == 0:
+                                lecture_repeat_schedule_data.state_cd = 'NP'
+                                lecture_repeat_schedule_data.save()
+
+                    if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
+                        lecture_info.state_cd = 'IP'
+
+                    lecture_info.mod_dt = timezone.now()
+                    lecture_info.schedule_check = 1
+                    lecture_info.save()
+
+        except TypeError:
+            error = '등록 값의 형태에 문제가 있습니다.'
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '이미 삭제된 일정입니다.'
+        except InternalError:
+            error = '이미 삭제된 일정입니다.'
+        except ValidationError:
+            error = '예약 가능한 횟수를 확인해주세요.'
+
+    return error
