@@ -4021,6 +4021,7 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
 
 //개인의 반복일정을 지운다
 function send_repeat_delete_personal(repeat_schedule_id, use, callback){
+    console.log(repeat_schedule_id)
     $.ajax({
         url:'/schedule/delete_repeat_schedule/',
         type:'POST',
@@ -4033,7 +4034,9 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
 
         //통신성공시 처리
         success:function(data){
+            console.log('repeat_schedule_id:',repeat_schedule_id,'data' ,data)
             var jsondata = JSON.parse(data);
+            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
