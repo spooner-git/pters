@@ -327,15 +327,21 @@
 	font-weight: bold;
 }
 
-.planchecktime,.plancheckname{
+.planchecktime, .plancheckname{
 	display: inline-grid;
-	width: 40%;
 	text-align: left;
+}
+
+.planchecktime{
+	width: 34%;
 }
 
 .plancheckname{
 	position: relative;
-	font-weight: bold;
+	width: 46%;
+	text-overflow: ellipsis;
+	overflow:hidden;
+	white-space: nowrap;
 }
 
 .plancheckmorningday{
@@ -351,6 +357,7 @@
 	top: 50%;
 	transform: translateY(-50%);
 }
+
 /*월간달력 팝업*/
 
 
