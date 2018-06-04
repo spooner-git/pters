@@ -16,6 +16,7 @@ $(document).ready(function(){
 	    if($('#subpopup_addByList_plan').css('display') == 'block'){
 	    	close_addByList_popup()
 	    }else{
+	    	closeMiniPopup()
 	    	close_info_popup('cal_popup_plandelete')
 	    	close_info_popup('cal_popup_planinfo')
 	    	close_info_popup('page-addplan')
