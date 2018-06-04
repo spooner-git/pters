@@ -145,15 +145,14 @@ def func_add_repeat_schedule(class_id, lecture_id, group_id, group_schedule_id, 
                              week_type, start_date, end_date, start_time, end_time, time_duration, en_dis_type,
                              user_id):
     error = None
-    context = {'error': None, 'schedule_info': ''}
+    context = {'error': None, 'schedule_info': None}
 
     if lecture_id == '':
         lecture_id = None
-
     try:
         with transaction.atomic():
             repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                    group_tb=group_id, group_schedule_id=group_schedule_id,
+                                                    group_tb_id=group_id, group_schedule_id=group_schedule_id,
                                                     repeat_type_cd=repeat_type,
                                                     week_info=week_type,
                                                     start_date=start_date,

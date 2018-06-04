@@ -399,13 +399,13 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                 state_cd = 'IP'
 
                 lecture_info = LectureTb(member_id=member_id,
-                                    lecture_reg_count=counts, lecture_rem_count=counts,
-                                    lecture_avail_count=counts, price=price, option_cd='DC',
-                                    state_cd=state_cd,
-                                    start_date=start_date, end_date=end_date,
-                                    note=contents,
-                                    mod_dt=timezone.now(),
-                                    reg_dt=timezone.now(), use=1)
+                                         lecture_reg_count=counts, lecture_rem_count=counts,
+                                         lecture_avail_count=counts, price=price, option_cd='DC',
+                                         state_cd=state_cd,
+                                         start_date=start_date, end_date=end_date,
+                                         note=contents,
+                                         mod_dt=timezone.now(),
+                                         reg_dt=timezone.now(), use=1)
                 lecture_info.save()
 
                 member_lecture_info = MemberLectureTb(member_id=member_id, lecture_tb_id=lecture_info.lecture_id,
@@ -513,11 +513,11 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                                                                               use=1).count()
                         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                             use=1).exclude(lecture_tb__state_cd='IP').count()
-
-                        try:
-                            group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                        except ObjectDoesNotExist:
-                            error = '그룹 정보를 불러오지 못했습니다.'
+                        group_info_data = group_info.group_tb
+                        # try:
+                        #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                        # except ObjectDoesNotExist:
+                        #     error = '그룹 정보를 불러오지 못했습니다.'
                         if error is None:
                             if group_data_total_size == group_data_end_size:
                                 group_info_data.state_cd = 'PE'
@@ -550,11 +550,11 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                                                                               use=1).count()
                         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                             use=1).exclude(lecture_tb__state_cd='IP').count()
-
-                        try:
-                            group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                        except ObjectDoesNotExist:
-                            error = '그룹 정보를 불러오지 못했습니다.'
+                        group_info_data = group_info.group_tb
+                        # try:
+                        #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                        # except ObjectDoesNotExist:
+                        #     error = '그룹 정보를 불러오지 못했습니다.'
                         if error is None:
                             if group_data_total_size == group_data_end_size:
                                 group_info_data.state_cd = 'PE'
@@ -581,7 +581,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
 
                     if group_data_total_size == group_data_end_size:
                         try:
-                            group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                            group_info_data = group_info.group_tb
                             group_info_data.state_cd = 'PE'
                             group_info_data.save()
                         except ObjectDoesNotExist:

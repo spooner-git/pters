@@ -492,10 +492,11 @@ def delete_trainee_schedule_logic(request):
             error = '이미 종료된 일정입니다.'
 
     if error is None:
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
-        except ObjectDoesNotExist:
-            error = '회원 수강 정보를 불러오지 못했습니다.'
+        lecture_info = schedule_info.lecture_tb
+        # try:
+        #     lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
+        # except ObjectDoesNotExist:
+        #     error = '회원 수강 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:

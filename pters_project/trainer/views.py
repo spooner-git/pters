@@ -1061,11 +1061,12 @@ def delete_member_info_logic(request):
                                     group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id, use=1).count()
                                     group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                                         use=1).exclude(lecture_tb__state_cd='IP').count()
+                                    group_info_data = group_info.group_tb
 
-                                    try:
-                                        group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                                    except ObjectDoesNotExist:
-                                        error = '그룹 정보를 불러오지 못했습니다.'
+                                    # try:
+                                    #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                                    # except ObjectDoesNotExist:
+                                    #     error = '그룹 정보를 불러오지 못했습니다.'
                                     if error is None:
                                         if group_data_total_size == group_data_end_size:
                                             group_info_data.state_cd = 'PE'
@@ -1103,11 +1104,12 @@ def delete_member_info_logic(request):
                                                                                       use=1).count()
                                 group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                                     use=1).exclude(lecture_tb__state_cd='IP').count()
+                                group_info_data = group_info.group_tb
 
-                                try:
-                                    group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                                except ObjectDoesNotExist:
-                                    error = '그룹 정보를 불러오지 못했습니다.'
+                                # try:
+                                #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                                # except ObjectDoesNotExist:
+                                #     error = '그룹 정보를 불러오지 못했습니다.'
                                 if error is None:
                                     if group_data_total_size == group_data_end_size:
                                         group_info_data.state_cd = 'PE'
@@ -1766,19 +1768,26 @@ def finish_lecture_info_logic(request):
                                                                       use=1).count()
                 group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                     use=1).exclude(lecture_tb__state_cd='IP').count()
-                try:
-                    group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                except ObjectDoesNotExist:
-                    error = '그룹 정보를 불러오지 못했습니다.'
-                if error is None:
-                    if group_data_total_size == group_data_end_size:
-                        group_info_data.state_cd = 'PE'
-                        group_info_data.save()
-                    else:
-                        group_info_data.state_cd = 'IP'
-                        group_info_data.save()
+                group_info_data = group_info.group_tb
+                # try:
+                #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                # except ObjectDoesNotExist:
+                #     error = '그룹 정보를 불러오지 못했습니다.'
+                if group_data_total_size == group_data_end_size:
+                    group_info_data.state_cd = 'PE'
+                    group_info_data.save()
                 else:
-                    error = None
+                    group_info_data.state_cd = 'IP'
+                    group_info_data.save()
+                # if error is None:
+                #     if group_data_total_size == group_data_end_size:
+                #         group_info_data.state_cd = 'PE'
+                #         group_info_data.save()
+                #     else:
+                #         group_info_data.state_cd = 'IP'
+                #         group_info_data.save()
+                # else:
+                #     error = None
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -1855,20 +1864,26 @@ def refund_lecture_info_logic(request):
                                                                       use=1).count()
                 group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                     use=1).exclude(lecture_tb__state_cd='IP').count()
-
-                try:
-                    group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                except ObjectDoesNotExist:
-                    error = '그룹 정보를 불러오지 못했습니다.'
-                if error is None:
-                    if group_data_total_size == group_data_end_size:
-                        group_info_data.state_cd = 'PE'
-                        group_info_data.save()
-                    else:
-                        group_info_data.state_cd = 'IP'
-                        group_info_data.save()
+                group_info_data = group_info.group_tb
+                if group_data_total_size == group_data_end_size:
+                    group_info_data.state_cd = 'PE'
+                    group_info_data.save()
                 else:
-                    error = None
+                    group_info_data.state_cd = 'IP'
+                    group_info_data.save()
+                # try:
+                #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                # except ObjectDoesNotExist:
+                #     error = '그룹 정보를 불러오지 못했습니다.'
+                # if error is None:
+                #     if group_data_total_size == group_data_end_size:
+                #         group_info_data.state_cd = 'PE'
+                #         group_info_data.save()
+                #     else:
+                #         group_info_data.state_cd = 'IP'
+                #         group_info_data.save()
+                # else:
+                #     error = None
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -1926,20 +1941,26 @@ def progress_lecture_info_logic(request):
                                                                       use=1).count()
                 group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                     use=1).exclude(lecture_tb__state_cd='IP').count()
-
-                try:
-                    group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                except ObjectDoesNotExist:
-                    error = '그룹 정보를 불러오지 못했습니다.'
-                if error is None:
-                    if group_data_total_size == group_data_end_size:
-                        group_info_data.state_cd = 'PE'
-                        group_info_data.save()
-                    else:
-                        group_info_data.state_cd = 'IP'
-                        group_info_data.save()
+                group_info_data = group_info.group_tb
+                if group_data_total_size == group_data_end_size:
+                    group_info_data.state_cd = 'PE'
+                    group_info_data.save()
                 else:
-                    error = None
+                    group_info_data.state_cd = 'IP'
+                    group_info_data.save()
+                # try:
+                #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                # except ObjectDoesNotExist:
+                #     error = '그룹 정보를 불러오지 못했습니다.'
+                # if error is None:
+                #     if group_data_total_size == group_data_end_size:
+                #         group_info_data.state_cd = 'PE'
+                #         group_info_data.save()
+                #     else:
+                #         group_info_data.state_cd = 'IP'
+                #         group_info_data.save()
+                # else:
+                #     error = None
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -2225,13 +2246,13 @@ def add_group_member_logic(request):
                 if error is None:
                     for user_info in user_db_id_list:
                         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                                        class_id, json_loading_data['lecture_info']['group_id'],
-                                                        json_loading_data['lecture_info']['counts'],
-                                                        json_loading_data['lecture_info']['price'],
-                                                        json_loading_data['lecture_info']['start_date'],
-                                                        json_loading_data['lecture_info']['end_date'],
-                                                        json_loading_data['lecture_info']['memo'],
-                                                        user_info)
+                                                      class_id, json_loading_data['lecture_info']['group_id'],
+                                                      json_loading_data['lecture_info']['counts'],
+                                                      json_loading_data['lecture_info']['price'],
+                                                      json_loading_data['lecture_info']['start_date'],
+                                                      json_loading_data['lecture_info']['end_date'],
+                                                      json_loading_data['lecture_info']['memo'],
+                                                      user_info)
                 if error is not None:
                     raise InternalError
         except InternalError:
@@ -2538,7 +2559,8 @@ class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextM
 
         group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')
         for group_schedule_info in group_schedule_data:
-            member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
+            # member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
+            member_info = group_schedule_info.lecture_tb.member
             if member_info.reg_info is None or str(member_info.reg_info) != str(self.request.user.id):
                 lecture_count = MemberLectureTb.objects.filter(auth_cd='VIEW', use=1).count()
                 if lecture_count == 0:
