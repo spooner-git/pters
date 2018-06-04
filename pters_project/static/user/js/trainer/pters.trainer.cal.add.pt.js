@@ -1396,7 +1396,7 @@ function get_repeat_info(dbID){
             selectedMemberAvailCountArray = jsondata.memberAvailCountArray;
             selectedMemberLectureIdArray = jsondata.memberLectureIdArray;
             selectedMemberNameArray = jsondata.memberNameArray
-            fill_repeat_info(jsondata, fill_option);
+            fill_repeat_info(dbID, jsondata, fill_option);
           }
         },
 
@@ -1455,12 +1455,12 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
       })
 }
 
-function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
+function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우기
   console.log('fill_repeat_info--add',jsondata)
     switch(option){
         case 'class':
           var len = jsondata.ptRepeatScheduleIdArray.length
-          var dbId = jsondata.memberIdArray
+          var dbId = dbID
           var repeat_id_array = jsondata.ptRepeatScheduleIdArray
           var repeat_type_array = jsondata.ptRepeatScheduleTypeArray
           var repeat_day_info_raw_array = jsondata.ptRepeatScheduleWeekInfoArray
