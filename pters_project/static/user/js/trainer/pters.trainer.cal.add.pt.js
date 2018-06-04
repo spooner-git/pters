@@ -913,12 +913,12 @@ $(document).ready(function(){
                 get_repeat_info(id)
 
                 $('#members_mobile, #members_pc').html('')
-                /*
+                
                 get_current_member_list('callback',function(jsondata){
                   set_member_dropdown_list(jsondata)
                   $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
                 })
-                */
+                
                 get_member_lecture_list(id, 'callback', function(jsondata){
                     var availCount_personal = 0
                     for(var i= 0; i<jsondata.availCountArray.length; i++){
@@ -1548,6 +1548,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_time_array = jsondata.ptRepeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.ptRepeatScheduleTimeDurationArray
           var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray
+          var repeat_title = ""
         break;
         case 'off':
           var len = jsondata.offRepeatScheduleIdArray.length
@@ -1560,6 +1561,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_time_array = jsondata.offRepeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.offRepeatScheduleTimeDurationArray
           var repeat_group_name = []
+          var repeat_title = ""
         break;
         case 'group':
           var len = jsondata.repeatScheduleIdArray.length
@@ -1571,7 +1573,8 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_end_array = jsondata.repeatScheduleEndDateArray
           var repeat_time_array = jsondata.repeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.repeatScheduleTimeDurationArray
-          var repeat_group_name = [""]
+          var repeat_group_name = []
+          var repeat_title = "[그룹]"
         break;
     }
     var repeat_info_dict= { 'KOR':
@@ -1586,9 +1589,8 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
                            }
     var schedulesHTML = []
     for(var i=0; i<len; i++){
-      var repeat_title = "[그룹]"
-      if(repeat_group_name[i] == undefined){
-        var repeat_title = ""
+      if(repeat_group_name[i] != 0 && option != "off"){
+        var repeat_title = "[그룹]"
       }
 
       var repeat_id = repeat_id_array[i]
