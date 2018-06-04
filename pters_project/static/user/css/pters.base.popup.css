@@ -312,6 +312,8 @@
 	font-size: 14px;
 	font-weight: bold;
 	cursor: pointer;
+
+	overflow:hidden;
 }
 
 .popup_inner_month{

@@ -916,7 +916,6 @@ img,a,div,span,p{
 		line-height: 50px;
 		position: absolute;
 		right: 0;
-		min-width: 220px;
 	}
 	
 
@@ -924,7 +923,7 @@ img,a,div,span,p{
 		display: inline;
 		margin-right: 5px;
 		padding:5px;
-		font-size: 14px;
+		font-size: 13px;
 		border:1px solid #282828;
 		cursor: pointer;
 	}
@@ -938,7 +937,7 @@ img,a,div,span,p{
 		margin-left: 5px;
 		padding:5px;
 		color: #fe4e65;
-		font-size: 14px;
+		font-size: 13px;
 		border:1px solid #fe4e65;
 		cursor: pointer;
 	}

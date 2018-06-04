@@ -323,7 +323,7 @@ function added_member_info_to_jsonformat(){
 
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
-$(document).on('click','div.groupWrap',function(){
+$(document).on('click','div.groupWrap',function(e){
 	var group_id = $(this).attr('data-groupid');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap')
 	var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap')
