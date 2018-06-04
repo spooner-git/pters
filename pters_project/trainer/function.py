@@ -6,6 +6,7 @@ from django.db import IntegrityError
 from django.db import transaction
 from django.utils import timezone
 
+from configs.const import ON_SCHEDULE_TYPE
 from login.models import MemberTb, LogTb, CommonCdTb
 from schedule.models import ClassLectureTb, ClassTb, GroupLectureTb, MemberLectureTb, GroupTb, LectureTb, ScheduleTb, \
     SettingTb, RepeatScheduleTb
@@ -350,7 +351,7 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
 
                 if error is None:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type='1').order_by('start_dt')
+                                                                 en_dis_type=ON_SCHEDULE_TYPE).order_by('start_dt')
 
                     if pt_schedule_data is not None and len(pt_schedule_data) > 0:
                         idx = 0

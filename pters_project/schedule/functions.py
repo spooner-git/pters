@@ -11,6 +11,7 @@ from django.utils import timezone
 from httplib2 import Http
 
 from configs import settings
+from configs.const import REPEAT_TYPE_2WEAK
 from login.models import LogTb, PushInfoTb, CommonCdTb
 from schedule.models import GroupLectureTb, ClassLectureTb, LectureTb, ScheduleTb, GroupTb, MemberLectureTb, \
     MemberClassTb, ClassTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
@@ -134,6 +135,43 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
         error = '등록 값의 형태에 문제가 있습니다.'
     except ValueError:
         error = '등록 값에 문제가 있습니다.'
+    context['error'] = error
+
+    return context
+
+
+# 일정 등록
+def func_add_repeat_schedule(class_id, lecture_id, repeat_type,
+                             week_type, start_date, end_date, start_time, end_time, time_duration, en_dis_type,
+                             user_id):
+    error = None
+    context = {'error': None, 'schedule_info': ''}
+
+    if lecture_id == '':
+        lecture_id = None
+
+    try:
+        with transaction.atomic():
+            repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                    repeat_type_cd=repeat_type,
+                                                    week_info=week_type,
+                                                    start_date=start_date,
+                                                    end_date=end_date,
+                                                    start_time=start_time,
+                                                    end_time=end_time,
+                                                    time_duration=time_duration,
+                                                    state_cd='NP', en_dis_type=en_dis_type,
+                                                    reg_member_id=user_id,
+                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
+
+            repeat_schedule_info.save()
+            context['schedule_info'] = repeat_schedule_info
+            print(str(context['schedule_info'].repeat_schedule_id))
+    except TypeError:
+        error = '등록 값의 형태에 문제가 있습니다.'
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    print(str(error))
     context['error'] = error
 
     return context
@@ -439,6 +477,7 @@ def func_get_available_group_member_list(group_id):
     return member_list
 
 
+# 그룹회원중 예약 가능하지 않은 회원들의 리스트
 def func_get_not_available_group_member_list(group_id):
     member_list = []
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
@@ -462,6 +501,7 @@ def func_get_not_available_group_member_list(group_id):
     return member_list
 
 
+# 강사 -> 회원 push 메시지 전달
 def func_send_push_trainer(lecture_id, title, message):
     push_data = []
     if lecture_id is not None and lecture_id != '':
@@ -666,3 +706,58 @@ def func_get_trainer_off_repeat_schedule(context, class_id):
     context['off_repeat_schedule_data'] = off_repeat_schedule_list
 
     return error
+
+
+def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_start_date, repeat_schedule_end_date):
+    week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+    repeat_week_type_data = []
+    repeat_schedule_date_list = []
+
+    temp_data = week_type.split('/')
+    for week_type_info in temp_data:
+        for idx, week_info_detail in enumerate(week_info):
+            if week_info_detail == week_type_info:
+                repeat_week_type_data.append(idx)
+                break
+
+    # 반복일정 처음 날짜 설정
+    check_date = repeat_schedule_start_date
+
+    # 반복일정 종료 날짜 보다 크면 종료
+    while check_date <= repeat_schedule_end_date:
+
+        # 반복일정 등록해야하는 첫번째 요일 검색 -> 자신보다 뒤에있는 요일중에 가장 가까운것
+        week_idx = -1
+        for week_type_info in repeat_week_type_data:
+            if week_type_info >= int(check_date.strftime('%w')):
+                week_idx = week_type_info
+                break
+        # 가장 가까운 요일이 뒤에 없다면 다음주중에 가장 가까운 요일 선택 +7 or +14 더하기
+        if week_idx == -1:
+            week_idx = repeat_week_type_data[0]
+            if repeat_type == REPEAT_TYPE_2WEAK:
+                week_idx += 14
+            else:
+                week_idx += 7
+
+        # 가야하는 요일에서 현재 요일 빼기 -> 더해야 하는 날짜 계산
+        week_idx -= int(check_date.strftime('%w'))
+
+        # 요일 계산된 값을 더하기
+        check_date = check_date + datetime.timedelta(days=week_idx)
+
+        # 날짜 계산을 했는데 일정 넘어가면 멈추기
+        if check_date > repeat_schedule_end_date:
+            break
+        # 반복일정 추가
+        repeat_schedule_date_list.append(check_date)
+        # 날짜값 입력후 날짜 증가
+        check_date = check_date + datetime.timedelta(days=1)
+
+        # 날짜값 입력후 날짜 증가했는데 일요일이고 격주인경우 일주일 더하기
+        if int(check_date.strftime('%w')) == 0:
+            if repeat_type == REPEAT_TYPE_2WEAK:
+                check_date = check_date + datetime.timedelta(days=7)
+
+    return repeat_schedule_date_list
+

@@ -27,6 +27,7 @@ from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
 from center.models import CenterTrainerTb
+from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
@@ -200,7 +201,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
             today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                            start_dt__gte=today, start_dt__lt=one_day_after,
-                                                           en_dis_type='1').count()
+                                                           en_dis_type=ON_SCHEDULE_TYPE).count()
 
         context['today_schedule_num'] = today_schedule_num
 
@@ -401,7 +402,7 @@ class MyPageView(AccessTestMixin, TemplateView):
                 center_name = class_info.center_tb.center_name
         if error is None:
             off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                       en_dis_type='0')
+                                                                       en_dis_type=OFF_SCHEDULE_TYPE)
 
         if error is None:
             for off_repeat_schedule_info in off_repeat_schedule_data:
@@ -459,7 +460,7 @@ class MyPageView(AccessTestMixin, TemplateView):
 
         if error is None:
             end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                         en_dis_type='1', state_cd='PE').count()
+                                                         en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE').count()
         if error is None:
             if user_member_info.birthday_dt is None:
                 user_member_info.birthday_dt = '미입력'
@@ -473,7 +474,7 @@ class MyPageView(AccessTestMixin, TemplateView):
             user_member_info.reg_dt = str(user_member_info.reg_dt).split('.')[0]
 
         pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                     en_dis_type='1',
+                                                     en_dis_type=ON_SCHEDULE_TYPE,
                                                      start_dt__gte=now, use=1).order_by('start_dt')
         if len(pt_schedule_data) > 0:
             next_schedule_start_dt = pt_schedule_data[0].start_dt
@@ -726,7 +727,6 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
         context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', None)
-
         context['error'] = None
         context = get_trainee_repeat_schedule_data_func(context, class_id, member_id)
 
@@ -1386,7 +1386,7 @@ def export_excel_member_info_logic(request):
                 ws1['H3'] = lecture_info.note
 
                 pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                             en_dis_type='1', use=1).order_by('-start_dt')
+                                                             en_dis_type=ON_SCHEDULE_TYPE, use=1).order_by('-start_dt')
 
                 if pt_schedule_data is not None and len(pt_schedule_data) > 0:
                     schedule_idx = len(pt_schedule_data)
@@ -2984,6 +2984,7 @@ class GetTrainerInfoView(AccessTestMixin, TemplateView):
         off_repeat_schedule_start_date = []
         off_repeat_schedule_end_date = []
         off_repeat_schedule_start_time = []
+        off_repeat_schedule_end_time = []
         off_repeat_schedule_time_duration = []
         context['total_member_num'] = 0
         context['current_total_member_num'] = 0
@@ -3012,7 +3013,7 @@ class GetTrainerInfoView(AccessTestMixin, TemplateView):
                 center_name = class_info.center_tb.center_name
         if error is None:
             off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                       en_dis_type='0')
+                                                                       en_dis_type=OFF_SCHEDULE_TYPE)
 
         if error is None:
             for off_repeat_schedule_info in off_repeat_schedule_data:
@@ -3022,6 +3023,7 @@ class GetTrainerInfoView(AccessTestMixin, TemplateView):
                 off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_date))
                 off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_date))
                 off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
+                off_repeat_schedule_end_time.append(off_repeat_schedule_info.end_time)
                 off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
         # error = 'test'
         if error is None:
@@ -3070,7 +3072,7 @@ class GetTrainerInfoView(AccessTestMixin, TemplateView):
 
         if error is None:
             end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                         en_dis_type='1',
+                                                         en_dis_type=ON_SCHEDULE_TYPE,
                                                          state_cd='PE', use=1).count()
             # new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
             #                                          start_date__gte=month_first_day,
@@ -3087,7 +3089,7 @@ class GetTrainerInfoView(AccessTestMixin, TemplateView):
                 user_member_info.address = '미입력'
 
         pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                     en_dis_type='1',
+                                                     en_dis_type=ON_SCHEDULE_TYPE,
                                                      start_dt__gte=now,
                                                      use=1).order_by('start_dt')
         if len(pt_schedule_data) > 0:
@@ -3106,6 +3108,7 @@ class GetTrainerInfoView(AccessTestMixin, TemplateView):
         context['off_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
         context['off_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
         context['off_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
+        context['off_repeat_schedule_end_time_data'] = off_repeat_schedule_end_time
         context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
 
         return context

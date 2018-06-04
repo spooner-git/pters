@@ -23,13 +23,15 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 
 from configs import settings
+from configs.const import ON_SCHEDULE_TYPE
 from login.models import LogTb, MemberTb, CommonCdTb
 from schedule.functions import func_get_lecture_id, func_add_schedule, func_refresh_lecture_count, func_date_check, \
     func_update_member_schedule_alarm, func_save_log_data, func_check_group_schedule_enable, \
     func_get_available_group_member_list, func_get_group_lecture_id, \
     func_check_group_available_member_before, func_check_group_available_member_after, \
     func_send_push_trainer, func_get_not_available_group_member_list, func_send_push_trainee, func_delete_schedule, \
-    func_delete_repeat_schedule, func_update_repeat_schedule
+    func_delete_repeat_schedule, func_update_repeat_schedule, func_get_repeat_schedule_date_list, \
+    func_add_repeat_schedule
 from schedule.models import LectureTb, ClassLectureTb, MemberLectureTb, GroupLectureTb, GroupTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
@@ -56,8 +58,6 @@ def add_schedule_logic(request):
     schedule_time_duration = request.POST.get('time_duration')
     en_dis_type = request.POST.get('en_dis_type')
     note = request.POST.get('add_memo', '')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
@@ -67,10 +67,7 @@ def add_schedule_logic(request):
     lecture_id = ''
     member_info = None
 
-    request.session['date'] = date
-    request.session['day'] = day
-
-    if en_dis_type == '1':
+    if en_dis_type == ON_SCHEDULE_TYPE:
         if member_id == '':
             error = '회원을 선택해 주세요.'
 
@@ -113,7 +110,7 @@ def add_schedule_logic(request):
             error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
-        if en_dis_type == '1':
+        if en_dis_type == ON_SCHEDULE_TYPE:
             lecture_id = func_get_lecture_id(class_id, member_id)
             if lecture_id is None or lecture_id == '':
                 error = '등록할수 있는 일정이 없습니다.'
@@ -157,7 +154,7 @@ def add_schedule_logic(request):
     if error is None:
         push_info_schedule_start_date = str(schedule_start_datetime).split(':')
         push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
-        if en_dis_type == '1':
+        if en_dis_type == ON_SCHEDULE_TYPE:
             func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
                                    request.user.last_name+request.user.first_name+'님이 '
                                    + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
@@ -176,17 +173,13 @@ def delete_schedule_logic(request):
     off_schedule_id = request.POST.get('off_schedule_id', '')
     member_name = request.POST.get('member_name')
     en_dis_type = request.POST.get('en_dis_type')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
 
     error = None
-    request.session['date'] = date
-    request.session['day'] = day
 
-    if en_dis_type == '1':
+    if en_dis_type == ON_SCHEDULE_TYPE:
         schedule_id = pt_schedule_id
     else:
         schedule_id = off_schedule_id
@@ -205,7 +198,7 @@ def delete_schedule_logic(request):
             with transaction.atomic():
                 schedule_result = func_delete_schedule(schedule_id, request.user.id)
                 error = schedule_result['error']
-                if schedule_info.en_dis_type == '1':
+                if schedule_info.en_dis_type == ON_SCHEDULE_TYPE:
                     error = func_refresh_lecture_count(schedule_info.lecture_tb_id)
 
                     if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
@@ -235,7 +228,7 @@ def delete_schedule_logic(request):
         push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
         push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
 
-        if schedule_info.en_dis_type == '1':
+        if schedule_info.en_dis_type == ON_SCHEDULE_TYPE:
             func_send_push_trainer(schedule_info.lecture_tb_id, class_type_name + ' 수업 - 일정 알림',
                                    request.user.last_name + request.user.first_name + '님이 '\
                                    + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
@@ -441,28 +434,27 @@ def update_memo_schedule_logic(request):
 # 반복 일정 추가
 def add_repeat_schedule_logic(request):
     member_id = request.POST.get('member_id')
-    lecture_id = request.POST.get('lecture_id', '')
     repeat_type = request.POST.get('repeat_freq')
     repeat_schedule_start_date = request.POST.get('repeat_start_date')
     repeat_schedule_end_date = request.POST.get('repeat_end_date')
     repeat_week_type = request.POST.get('repeat_day', '')
-    repeat_schedule_time = request.POST.get('repeat_start_time')
+    repeat_start_time = request.POST.get('repeat_start_time')
     repeat_schedule_time_duration = request.POST.get('repeat_dur')
-    en_dis_type = request.POST.get('en_dis_type', '')
+    en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
     error = None
-    # error_message = None
     error_date_message = None
     class_info = None
-    # lecture_id = ''
-    repeat_week_type_data = []
+    lecture_id = None
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
     repeat_schedule_info = None
     pt_schedule_input_counter = 0
-    week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+    repeat_schedule_start_time = None
+    repeat_schedule_end_time = None
+    repeat_schedule_date_list = []
     if repeat_type == '':
         error = '반복 빈도를 선택해주세요.'
 
@@ -471,32 +463,33 @@ def add_repeat_schedule_logic(request):
             error = '반복 요일을 설정해주세요.'
 
     if error is None:
-        temp_data = repeat_week_type.split('/')
-        for week_type_info in temp_data:
-            for idx, week_info_detail in enumerate(week_info):
-                if week_info_detail == week_type_info:
-                    repeat_week_type_data.append(idx)
-                    break
-
-    if error is None:
         if repeat_schedule_start_date == '':
             error = '반복일정 시작 날짜를 선택해 주세요.'
-
-    if error is None:
-        repeat_schedule_start_date_info = datetime.datetime.strptime(repeat_schedule_start_date, '%Y-%m-%d')
         if repeat_schedule_end_date == '':
-            repeat_schedule_end_date_info = repeat_schedule_start_date_info + datetime.timedelta(days=365)
-        else:
-            repeat_schedule_end_date_info = datetime.datetime.strptime(repeat_schedule_end_date, '%Y-%m-%d')
+            error = '반복일정 종료 날짜를 선택해 주세요.'
 
     if error is None:
-        if repeat_schedule_time == '':
+        try:
+            repeat_schedule_start_date_info = datetime.datetime.strptime(repeat_schedule_start_date, '%Y-%m-%d')
+            repeat_schedule_end_date_info = datetime.datetime.strptime(repeat_schedule_end_date, '%Y-%m-%d')
+        except ValueError:
+            error = '날짜에서 오류가 발생했습니다.'
+        except IntegrityError:
+            error = '날짜에서 오류가 발생했습니다.'
+        except TypeError:
+            error = '날짜에서 오류가 발생했습니다.'
+    if error is None:
+        if (repeat_schedule_end_date_info - repeat_schedule_start_date_info) > datetime.timedelta(days=186):
+            error = '6개월 초과 반복일정을 등록할수 없습니다.'
+
+    if error is None:
+        if repeat_start_time == '':
             error = '시작 시간을 선택해 주세요.'
         elif repeat_schedule_time_duration == '':
             error = '진행 시간을 선택해 주세요.'
 
     if error is None:
-        if en_dis_type == '1':
+        if en_dis_type == ON_SCHEDULE_TYPE:
             if member_id == '':
                 error = '회원을 선택해 주세요.'
             else:
@@ -504,7 +497,7 @@ def add_repeat_schedule_logic(request):
                 if lecture_id is None or lecture_id == '':
                     error = '등록할수 있는 일정이 없습니다.'
         else:
-            lecture_id = ''
+            lecture_id = None
 
     if error is None:
         try:
@@ -513,145 +506,114 @@ def add_repeat_schedule_logic(request):
             error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
-        # 반복 일정 데이터 등록
-        repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                repeat_type_cd=repeat_type,
-                                                week_info=repeat_week_type,
-                                                start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date_info,
-                                                start_time=repeat_schedule_time, time_duration=repeat_schedule_time_duration,
-                                                state_cd='NP', en_dis_type=en_dis_type,
-                                                reg_member_id=request.user.id,
-                                                reg_dt=timezone.now(), mod_dt=timezone.now())
-
-        repeat_schedule_info.save()
-        if repeat_schedule_info.repeat_schedule_id is None:
-            request.session['repeat_schedule_id'] = ''
-        request.session['repeat_schedule_id'] = repeat_schedule_info.repeat_schedule_id
+        repeat_schedule_start_time = datetime.datetime.strptime(repeat_start_time, '%H:%M:%S.%f')
+        temp_time_duration = class_info.class_hour*int(repeat_schedule_time_duration)
+        repeat_schedule_end_time = repeat_schedule_start_time + datetime.timedelta(minutes=int(temp_time_duration))
+        repeat_schedule_start_time = repeat_schedule_start_time.time()
+        repeat_schedule_end_time = repeat_schedule_end_time.time()
+    if error is None:
+        repeat_schedule_date_list = func_get_repeat_schedule_date_list(repeat_type, repeat_week_type,
+                                                                       repeat_schedule_start_date_info,
+                                                                       repeat_schedule_end_date_info)
+        if len(repeat_schedule_date_list) == 0:
+            error = '등록할 수 있는 일정이 없습니다.'
 
     if error is None:
+        # 반복 일정 데이터 등록
+        repeat_schedule_result = func_add_repeat_schedule(class_id, lecture_id, repeat_type,
+                                                          repeat_week_type,
+                                                          repeat_schedule_start_date, repeat_schedule_end_date,
+                                                          str(repeat_schedule_start_time),
+                                                          str(repeat_schedule_end_time),
+                                                          repeat_schedule_time_duration, en_dis_type,
+                                                          request.user.id)
+        if repeat_schedule_result['error'] is None:
+            if repeat_schedule_result['schedule_info'] is None:
+                request.session['repeat_schedule_id'] = ''
+            else:
+                request.session['repeat_schedule_id'] = repeat_schedule_result['schedule_info'].repeat_schedule_id
+                repeat_schedule_info = repeat_schedule_result['schedule_info']
 
-        # 반복일정 처음 날짜 설정
-        check_date = repeat_schedule_start_date_info
-
-        # 반복일정 종료 날짜 보다 크면 종료
-        while check_date <= repeat_schedule_end_date_info:
-
-            # 반복일정 등록해야하는 첫번째 요일 검색 -> 자신보다 뒤에있는 요일중에 가장 가까운것
-            week_idx = -1
-            for week_type_info in repeat_week_type_data:
-                if week_type_info >= int(check_date.strftime('%w')):
-                    week_idx = week_type_info
-                    break
-            # 가장 가까운 요일이 뒤에 없다면 다음주중에 가장 가까운 요일 선택
-            if week_idx == -1:
-                week_idx = repeat_week_type_data[0]
-
-            # 현재 요일에서 가야하는 요일 빼기 -> 더해야 하는 날짜 계산
-            week_idx -= int(check_date.strftime('%w'))
-
-            # 만약 요일을 뺐는데 음수라면 +7 or +14 더하기
-            if week_idx < 0:
-                if repeat_type == '2W':
-                    week_idx += 14
-                else:
-                    week_idx += 7
-
-            # 요일 계산된 값을 더하기
-            check_date = check_date + datetime.timedelta(days=week_idx)
-
-            # 날짜 계산을 했는데 일정 넘어가면 멈추기
-            if check_date > repeat_schedule_end_date_info:
-                break
+    if error is None:
+        for repeat_schedule_date_info in repeat_schedule_date_list:
+            error_date = None
             # 데이터 넣을 날짜 setting
             try:
-                schedule_start_datetime = datetime.datetime.strptime(str(check_date).split(' ')[0]
-                                                                     + ' ' + repeat_schedule_time,
-                                                                     '%Y-%m-%d %H:%M:%S.%f')
+                schedule_start_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
+                                                                     + ' ' + str(repeat_schedule_start_time),
+                                                                     '%Y-%m-%d %H:%M:%S')
+                schedule_end_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
+                                                                   + ' ' + str(repeat_schedule_end_time),
+                                                                   '%Y-%m-%d %H:%M:%S')
 
-                time_duration_temp = class_info.class_hour*int(repeat_schedule_time_duration)
-                schedule_end_datetime = schedule_start_datetime + \
-                                        datetime.timedelta(minutes=int(time_duration_temp))
-            except ValueError as e:
-                error = '등록 값에 문제가 있습니다.'
-            except IntegrityError as e:
-                error = '등록 값에 문제가 있습니다.'
-            except TypeError as e:
-                error = '등록 값의 형태에 문제가 있습니다.'
+            except ValueError:
+                error_date = str(repeat_schedule_date_info).split(' ')[0]
+            except IntegrityError:
+                error_date = str(repeat_schedule_date_info).split(' ')[0]
+            except TypeError:
+                error_date = str(repeat_schedule_date_info).split(' ')[0]
 
-            if error is None:
-
+            if error_date is None:
                 try:
                     with transaction.atomic():
                         # PT 일정 추가라면 일정 추가해야할 lecture id 찾기
-                        if en_dis_type == '1':
+                        if en_dis_type == ON_SCHEDULE_TYPE:
                             lecture_id = func_get_lecture_id(class_id, member_id)
                             if lecture_id is None or lecture_id == '':
-                                error = '등록할수 있는 일정이 없습니다.'
+                                error_date = str(repeat_schedule_date_info).split(' ')[0]
 
-                        if error is None:
-                            schedule_result = func_add_schedule(class_id, lecture_id, repeat_schedule_info.repeat_schedule_id,
+                        if error_date is None:
+                            schedule_result = func_add_schedule(class_id, lecture_id,
+                                                                repeat_schedule_info.repeat_schedule_id,
                                                                 None, None,
                                                                 schedule_start_datetime, schedule_end_datetime, '',
                                                                 en_dis_type, request.user.id)
-                            error = schedule_result['error']
+                            if schedule_result['error'] is not None:
+                                error_date = str(repeat_schedule_date_info).split(' ')[0]
 
-                        if error is None:
+                        if error_date is None:
                             if lecture_id is not None and lecture_id != '':
-                                error = func_refresh_lecture_count(lecture_id)
+                                error_temp = func_refresh_lecture_count(lecture_id)
+                                if error_temp is not None:
+                                    error_date = str(repeat_schedule_date_info).split(' ')[0]
 
-                        if error is None:
-                            error = func_date_check(class_id, schedule_result['schedule_id'],
-                                                    str(check_date).split(' ')[0], schedule_start_datetime, schedule_end_datetime)
-                            if error is not None:
-                                raise ValidationError()
-                            else:
-                                pt_schedule_input_counter += 1
+                        if error_date is None:
+                            error_date = func_date_check(class_id, schedule_result['schedule_id'],
+                                                         str(repeat_schedule_date_info).split(' ')[0],
+                                                         schedule_start_datetime, schedule_end_datetime)
 
-                        error = None
+                        if error_date is not None:
+                            raise ValidationError()
+                        else:
+                            pt_schedule_input_counter += 1
 
-                except TypeError as e:
-                    error = error
-                except ValueError as e:
-                    error = error
-                except IntegrityError as e:
-                    error = error
-                except ValidationError as e:
-                    error = error
-                except InternalError as e:
-                    error = error
+                except TypeError:
+                    error_date = str(repeat_schedule_date_info).split(' ')[0]
+                except ValueError:
+                    error_date = str(repeat_schedule_date_info).split(' ')[0]
+                except IntegrityError:
+                    error_date = str(repeat_schedule_date_info).split(' ')[0]
+                except ValidationError:
+                    error_date = str(repeat_schedule_date_info).split(' ')[0]
+                except InternalError:
+                    error_date = str(repeat_schedule_date_info).split(' ')[0]
 
-                if error == '예약 가능한 횟수를 확인해주세요.' or error == '날짜가 중복됐습니다.' or error == '등록 값에 문제가 있습니다.' or error == '등록중 오류가 발생했습니다.':
-                    logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-                    messages.error(request, error)
-                elif error == '등록 값의 형태에 문제가 있습니다.' or error == '회원 수강 정보를 불러오지 못했습니다.' or error == '등록할수 있는 일정이 없습니다.':
-                    logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-                    messages.error(request, error)
-                elif error is not None:
-                    if error_date_message is None:
-                        error_date_message = error
-                    else:
-                        error_date_message = error_date_message + '/' + error
-
-            else:
-                logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-                messages.error(request, error)
-
-            error = None
-
-            # 날짜값 입력후 날짜 증가
-            check_date = check_date + datetime.timedelta(days=1)
-
-            # 날짜값 입력후 날짜 증가했는데 일요일이고 격주인경우 일주일 더하기
-            if int(check_date.strftime('%w')) == 0:
-                if repeat_type == '2W':
-                    check_date = check_date + datetime.timedelta(days=7)
-
+            if error_date is not None:
+                if error_date_message is None:
+                    error_date_message = error_date
+                else:
+                    error_date_message = error_date_message + '/' + error_date
     if error is None:
         if pt_schedule_input_counter == 0:
             repeat_schedule_info.delete()
-    request.session['repeat_schedule_input_counter'] = pt_schedule_input_counter
-    if error_date_message is not None:
-        messages.info(request, error_date_message)
+
+        request.session['repeat_schedule_input_counter'] = pt_schedule_input_counter
+
+        if error_date_message is not None:
+            messages.info(request, error_date_message)
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
 
     return redirect(next_page)
 
@@ -696,7 +658,7 @@ def add_repeat_schedule_confirm(request):
         en_dis_type = repeat_schedule_data.en_dis_type
 
     if error is None:
-        if en_dis_type == '1':
+        if en_dis_type == ON_SCHEDULE_TYPE:
             try:
                 lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_data.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
@@ -720,7 +682,7 @@ def add_repeat_schedule_confirm(request):
                         if delete_schedule_info.state_cd != 'PE':
                             delete_lecture_id = delete_schedule_info.lecture_tb_id
                             delete_schedule_info.delete()
-                            if en_dis_type == '1':
+                            if en_dis_type == ON_SCHEDULE_TYPE:
                                 error = func_refresh_lecture_count(delete_lecture_id)
                         if error is not None:
                             break
@@ -751,7 +713,7 @@ def add_repeat_schedule_confirm(request):
                                request.user.last_name+request.user.first_name,
                                member_name, en_dis_type, 'LR01', request)
 
-            if en_dis_type == '1':
+            if en_dis_type == ON_SCHEDULE_TYPE:
                 func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
                                        request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
                                        + '~' + str(end_date) + ' 반복일정을 등록했습니다')
@@ -807,7 +769,7 @@ def delete_repeat_schedule_logic(request):
         en_dis_type = repeat_schedule_info.en_dis_type
 
     if error is None:
-        if en_dis_type == '1':
+        if en_dis_type == ON_SCHEDULE_TYPE:
             try:
                 lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_info.lecture_tb_id, use=1)
             except ObjectDoesNotExist:
@@ -832,7 +794,7 @@ def delete_repeat_schedule_logic(request):
                     if delete_schedule_info.state_cd != 'PE':
                         delete_lecture_id = delete_schedule_info.lecture_tb_id
                         delete_schedule_info.delete()
-                        if en_dis_type == '1':
+                        if en_dis_type == ON_SCHEDULE_TYPE:
                             error = func_refresh_lecture_count(delete_lecture_id)
                     if error is not None:
                         break
@@ -864,7 +826,7 @@ def delete_repeat_schedule_logic(request):
                            request.user.last_name+request.user.first_name,
                            member_name, en_dis_type, 'LR02', request)
 
-        if en_dis_type == '1':
+        if en_dis_type == ON_SCHEDULE_TYPE:
             func_send_push_trainer(lecture_info.lecture_tb_id, class_type_name + ' 수업 - 일정 알림',
                                    request.user.last_name + request.user.first_name + '님이 ' + str(start_date)\
                                    + '~' + str(end_date) + ' 반복일정을 취소했습니다')
@@ -1489,7 +1451,7 @@ def add_group_repeat_schedule_logic(request):
                                                 week_info=repeat_week_type,
                                                 start_date=repeat_schedule_start_date_info, end_date=repeat_schedule_end_date_info,
                                                 start_time=repeat_schedule_time, time_duration=repeat_schedule_time_duration,
-                                                state_cd='NP', en_dis_type='1',
+                                                state_cd='NP', en_dis_type=ON_SCHEDULE_TYPE,
                                                 reg_member_id=request.user.id,
                                                 reg_dt=timezone.now(), mod_dt=timezone.now())
 
@@ -1915,7 +1877,7 @@ def delete_schedule_logic_func(schedule_id, lecture_id, repeat_schedule_id, en_d
             with transaction.atomic():
                 schedule_result = func_delete_schedule(schedule_id, member_id)
                 error = schedule_result['error']
-                if en_dis_type == '1':
+                if en_dis_type == ON_SCHEDULE_TYPE:
                     error = func_refresh_lecture_count(lecture_id)
 
                     if repeat_schedule_id is not None and repeat_schedule_id != '':

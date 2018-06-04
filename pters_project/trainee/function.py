@@ -2,6 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils import timezone
 
+from configs.const import ON_SCHEDULE_TYPE
 from login.models import MemberTb, HolidayTb, CommonCdTb
 from schedule.models import ClassTb, MemberLectureTb, ClassLectureTb, ScheduleTb, RepeatScheduleTb, GroupLectureTb
 
@@ -25,11 +26,11 @@ def func_get_trainee_on_schedule(context, user_id, class_id, start_date, end_dat
     for member_lecture_info in member_lecture_data:
         idx += 1
         if all_schedule_check == 0:
-            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type='1',
+            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
                                                       start_dt__gte=start_date, end_dt__lt=end_date).order_by('start_dt')
         else:
-            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type='1',
+            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                       lecture_tb_id=member_lecture_info.lecture_tb_id).order_by('start_dt')
         idx2 = 0
 
@@ -64,7 +65,7 @@ def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_
         group_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                         group_tb_id=group_info.group_tb.group_id,
                                                         lecture_tb__isnull=True,
-                                                        en_dis_type='1',
+                                                        en_dis_type=ON_SCHEDULE_TYPE,
                                                         start_dt__gte=start_date,
                                                         start_dt__lt=end_date).order_by('start_dt')
         for group_schedule_info in group_schedule_data:
@@ -106,7 +107,7 @@ def func_get_trainee_off_schedule(context, user_id, class_id, start_date, end_da
     for schedule_info in schedule_data:
         if schedule_info.group_tb_id is None or schedule_info.group_tb_id == '':
             # on 스케쥴
-            if schedule_info.en_dis_type == '1':
+            if schedule_info.en_dis_type == ON_SCHEDULE_TYPE:
                 if schedule_info.lecture_tb.member_id != user_id:
                     schedule_info.start_dt = str(schedule_info.start_dt)
                     schedule_info.end_dt = str(schedule_info.end_dt)
@@ -142,7 +143,7 @@ def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
     for member_lecture_info in member_lecture_data:
         pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   lecture_tb_id=member_lecture_info.lecture_tb_id,
-                                                                  en_dis_type='1')
+                                                                  en_dis_type=ON_SCHEDULE_TYPE)
     # 강사 클래스의 반복일정 불러오기
         for pt_repeat_schedule_info in pt_repeat_schedule_data:
             pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
