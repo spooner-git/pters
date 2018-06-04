@@ -103,6 +103,7 @@ body{
 #page_managemember th{
 	text-align: center;
 	background:#eeeeee;
+	vertical-align: middle;
 }
 
 #page_managemember button:focus{
@@ -267,6 +268,10 @@ select:focus > option:checked {
 	vertical-align: middle !important;
 	padding-top: 8px;
 	padding-bottom: 8px;
+}
+
+._grouptype{
+	display: none;
 }
 
 ._id{
@@ -1162,10 +1167,10 @@ select:focus > option:checked {
 
 .newRegImg{
 	display: none;
-	width: 35px;
+	width: 17px;
 	position: absolute;
 	left: 0;
-	margin-left: 0px;
+	margin-left: 2px;
 }
 
 
@@ -1269,6 +1274,11 @@ select:focus > option:checked {
 
 	#float_btn_wrap{
 		display: none !important;
+	}
+
+	._grouptype{
+		display: table-cell;
+		width: 17%;
 	}
 
 	._regcount{

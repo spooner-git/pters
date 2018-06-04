@@ -96,6 +96,11 @@ $(document).on('click','#subpopup_addByList .listTitle_addByList span',function(
 	$('#subpopup_addByList').hide()
 })
 
+function close_addByList_popup(){
+    $('#subpopup_addByList').hide()
+    $('#subpopup_addByList_plan').hide()
+}
+
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 $(document).on('click','img.add_listedMember',function(){

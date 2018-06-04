@@ -1,5 +1,18 @@
 $(document).ready(function(){
 
+    //ESC키를 눌러서 팝업 닫기
+    $(document).keyup(function(e){
+      if(e.keyCode == 27){
+        if($('#memberInfoPopup_PC').css('display') == 'block'){
+            closePopup('member_info_PC')
+        }else{
+            close_info_popup('cal_popup_plandelete')
+            closePopup('member_add')
+        }
+      }
+    })
+    //ESC키를 눌러서 팝업 닫기
+
 
 $('form button').click(function(e){
     e.preventDefault()
