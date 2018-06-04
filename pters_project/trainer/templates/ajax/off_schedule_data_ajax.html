@@ -14,6 +14,8 @@
       [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offRepeatScheduleStartTimeArray" :
       [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.start_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleEndTimeArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.end_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offRepeatScheduleTimeDurationArray" :
       [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.time_duration }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offRepeatScheduleStateCdArray" :

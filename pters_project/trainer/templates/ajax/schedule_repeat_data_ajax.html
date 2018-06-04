@@ -12,6 +12,8 @@
       [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "repeatScheduleStartTimeArray" :
       [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.start_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleEndTimeArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.end_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "repeatScheduleTimeDurationArray" :
       [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.time_duration }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "repeatScheduleStateCdArray" :

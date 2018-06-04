@@ -23,6 +23,7 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
+from configs.const import ON_SCHEDULE_TYPE
 from configs.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
 from schedule.functions import func_send_push_trainee, func_get_lecture_id, func_get_group_lecture_id, \
@@ -1381,6 +1382,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     pt_repeat_schedule_start_date = []
     pt_repeat_schedule_end_date = []
     pt_repeat_schedule_start_time = []
+    pt_repeat_schedule_end_time = []
     pt_repeat_schedule_time_duration = []
     pt_repeat_schedule_state_cd = []
     pt_repeat_schedule_state_cd_nm = []
@@ -1412,10 +1414,10 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
                 lecture_info = lecture_list_info.lecture_tb
                 if idx == 0:
                     pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                              en_dis_type='1')
+                                                                              en_dis_type=ON_SCHEDULE_TYPE)
                 else:
                     pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                               en_dis_type='1')
+                                                                               en_dis_type=ON_SCHEDULE_TYPE)
             for pt_repeat_schedule_info in pt_repeat_schedule_data:
                 pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
                 pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
@@ -1423,6 +1425,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
                 pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
                 pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
                 pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
+                pt_repeat_schedule_end_time.append(pt_repeat_schedule_info.end_time)
                 pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
                 pt_repeat_schedule_state_cd.append(pt_repeat_schedule_info.state_cd)
                 pt_repeat_schedule_group_data.append(pt_repeat_schedule_info.group_tb)
@@ -1440,6 +1443,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     context['pt_repeat_schedule_start_date_data'] = pt_repeat_schedule_start_date
     context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
     context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
+    context['pt_repeat_schedule_end_time_data'] = pt_repeat_schedule_end_time
     context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
     context['pt_repeat_schedule_state_cd'] = pt_repeat_schedule_state_cd
     context['pt_repeat_schedule_state_cd_nm'] = pt_repeat_schedule_state_cd_nm
