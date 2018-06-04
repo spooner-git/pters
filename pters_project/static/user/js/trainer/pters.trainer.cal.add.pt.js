@@ -1587,7 +1587,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
     var schedulesHTML = []
     for(var i=0; i<len; i++){
       var repeat_title = "[그룹]"
-      if(repeat_group_name[i].length == 0){
+      if(repeat_group_name[i] == undefined){
         var repeat_title = ""
       }
 
