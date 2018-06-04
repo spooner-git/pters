@@ -520,7 +520,7 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
         # 반복 일정 데이터 등록
-        repeat_schedule_result = func_add_repeat_schedule(class_id, lecture_id, repeat_type,
+        repeat_schedule_result = func_add_repeat_schedule(class_id, lecture_id, None, None, repeat_type,
                                                           repeat_week_type,
                                                           repeat_schedule_start_date, repeat_schedule_end_date,
                                                           str(repeat_schedule_start_time),
@@ -737,8 +737,6 @@ def add_repeat_schedule_confirm(request):
 def delete_repeat_schedule_logic(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
@@ -747,13 +745,13 @@ def delete_repeat_schedule_logic(request):
     schedule_data = None
     start_date = None
     end_date = None
+    lecture_id = None
     en_dis_type = None
     lecture_info = None
     member_info = None
     member_name = ''
     repeat_schedule_info = None
-    request.session['date'] = date
-    request.session['day'] = day
+
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
 
@@ -767,11 +765,11 @@ def delete_repeat_schedule_logic(request):
         start_date = repeat_schedule_info.start_date
         end_date = repeat_schedule_info.end_date
         en_dis_type = repeat_schedule_info.en_dis_type
-
+        lecture_id = repeat_schedule_info.lecture_tb_id
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
             try:
-                lecture_info = LectureTb.objects.get(lecture_id=repeat_schedule_info.lecture_tb_id, use=1)
+                lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=1)
             except ObjectDoesNotExist:
                 error = '회원 수강정보를 불러오지 못했습니다.'
             if error is None:
@@ -822,12 +820,12 @@ def delete_repeat_schedule_logic(request):
             member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
-        func_save_log_data(start_date, end_date, class_id, lecture_info.lecture_tb_id,
+        func_save_log_data(start_date, end_date, class_id, lecture_id,
                            request.user.last_name+request.user.first_name,
                            member_name, en_dis_type, 'LR02', request)
 
         if en_dis_type == ON_SCHEDULE_TYPE:
-            func_send_push_trainer(lecture_info.lecture_tb_id, class_type_name + ' 수업 - 일정 알림',
+            func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
                                    request.user.last_name + request.user.first_name + '님이 ' + str(start_date)\
                                    + '~' + str(end_date) + ' 반복일정을 취소했습니다')
 

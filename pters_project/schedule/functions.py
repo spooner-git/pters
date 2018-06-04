@@ -141,7 +141,7 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
 
 
 # 일정 등록
-def func_add_repeat_schedule(class_id, lecture_id, repeat_type,
+def func_add_repeat_schedule(class_id, lecture_id, group_id, group_schedule_id, repeat_type,
                              week_type, start_date, end_date, start_time, end_time, time_duration, en_dis_type,
                              user_id):
     error = None
@@ -153,6 +153,7 @@ def func_add_repeat_schedule(class_id, lecture_id, repeat_type,
     try:
         with transaction.atomic():
             repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                    group_tb=group_id, group_schedule_id=group_schedule_id,
                                                     repeat_type_cd=repeat_type,
                                                     week_info=week_type,
                                                     start_date=start_date,
@@ -166,12 +167,10 @@ def func_add_repeat_schedule(class_id, lecture_id, repeat_type,
 
             repeat_schedule_info.save()
             context['schedule_info'] = repeat_schedule_info
-            print(str(context['schedule_info'].repeat_schedule_id))
     except TypeError:
         error = '등록 값의 형태에 문제가 있습니다.'
     except ValueError:
         error = '등록 값에 문제가 있습니다.'
-    print(str(error))
     context['error'] = error
 
     return context
@@ -390,7 +389,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
         log_type_detail = '삭제'
 
     if en_dis_type == '1':
-        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+        log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='1:1 레슨 '+log_type_name, log_how=log_type_detail,
@@ -398,7 +397,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
                          reg_dt=timezone.now(), use=1)
         log_data.save()
     else:
-        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+        log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name,
                          class_tb_id=class_id,
                          log_info='OFF '+log_type_name, log_how=log_type_detail,
