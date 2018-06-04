@@ -318,15 +318,7 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
     class_info = None
 
     lecture_list = None
-    pt_schedule_id = []
-    pt_schedule_lecture_id = []
-    pt_schedule_start_datetime = []
-    pt_schedule_end_datetime = []
-    pt_schedule_state_cd = []
-    pt_schedule_note = []
-    pt_schedule_reg_datetime = []
-    pt_schedule_mod_datetime = []
-    pt_schedule_idx = []
+    pt_schedule_list = []
 
     # 강좌 정보 가져오기
     try:
@@ -338,11 +330,14 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                      lecture_tb__member_id=member_id,
                                                      lecture_tb__use='1', use=1)
+
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
-            for idx, lecture_list_info in enumerate(lecture_list):
+            idx = 0
+            for lecture_list_info in lecture_list:
                 lecture_info = lecture_list_info.lecture_tb
+                idx += 1
                 try:
                     MemberLectureTb.objects.get(auth_cd='VIEW', member_id=member_id,
                                                 lecture_tb=lecture_info.lecture_id)
@@ -354,38 +349,26 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
                                                                  en_dis_type=ON_SCHEDULE_TYPE).order_by('start_dt')
 
                     if pt_schedule_data is not None and len(pt_schedule_data) > 0:
-                        idx = 0
+                        idx2 = 0
                         for pt_schedule_info in pt_schedule_data:
-                            idx += 1
-                            # lecture schedule id 셋팅
-                            pt_schedule_id.append(pt_schedule_info.schedule_id)
-                            # lecture schedule 에 해당하는 lecture id 셋팅
-                            pt_schedule_lecture_id.append(pt_schedule_info.lecture_tb_id)
-
-                            pt_schedule_start_datetime.append(str(pt_schedule_info.start_dt))
-                            pt_schedule_end_datetime.append(str(pt_schedule_info.end_dt))
-                            pt_schedule_reg_datetime.append(str(pt_schedule_info.mod_dt))
-                            pt_schedule_mod_datetime.append(str(pt_schedule_info.reg_dt))
-                            pt_schedule_idx.append(idx)
+                            idx2 += 1
+                            pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
+                            pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
+                            pt_schedule_info.mod_dt = str(pt_schedule_info.mod_dt)
+                            pt_schedule_info.reg_dt = str(pt_schedule_info.reg_dt)
+                            pt_schedule_info.idx = str(idx)+'-'+str(idx)
 
                             if pt_schedule_info.note is None:
-                                pt_schedule_note.append('')
-                            else:
-                                pt_schedule_note.append(pt_schedule_info.note)
+                                pt_schedule_info.note = ''
                             # 끝난 스케쥴인지 확인
-                            pt_schedule_state_cd.append(str(pt_schedule_info.state_cd))
+                            if pt_schedule_info.state_cd == 'PE':
+                                pt_schedule_info.finish_check = 1
+                            else:
+                                pt_schedule_info.finish_check = 0
+                            pt_schedule_list.append(pt_schedule_info)
                 else:
                     error = None
-
-    context['pt_schedule_id'] = pt_schedule_id
-    context['pt_schedule_lecture_id'] = pt_schedule_lecture_id
-    context['pt_schedule_start_datetime'] = pt_schedule_start_datetime
-    context['pt_schedule_end_datetime'] = pt_schedule_end_datetime
-    context['pt_schedule_reg_datetime'] = pt_schedule_reg_datetime
-    context['pt_schedule_mod_datetime'] = pt_schedule_mod_datetime
-    context['pt_schedule_state_cd'] = pt_schedule_state_cd
-    context['pt_schedule_note'] = pt_schedule_note
-    context['pt_schedule_idx'] = pt_schedule_idx
+    context['pt_schedule_data'] = pt_schedule_list
 
     if error is None:
         context['error'] = error

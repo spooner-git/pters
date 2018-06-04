@@ -1375,18 +1375,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
 
     error = None
     class_info = None
-
-    pt_repeat_schedule_id = []
-    pt_repeat_schedule_type = []
-    pt_repeat_schedule_week_info = []
-    pt_repeat_schedule_start_date = []
-    pt_repeat_schedule_end_date = []
-    pt_repeat_schedule_start_time = []
-    pt_repeat_schedule_end_time = []
-    pt_repeat_schedule_time_duration = []
-    pt_repeat_schedule_state_cd = []
-    pt_repeat_schedule_state_cd_nm = []
-    pt_repeat_schedule_group_data = []
+    pt_repeat_schedule_list = []
     lecture_list = None
 
     # 강좌 정보 가져오기
@@ -1419,35 +1408,19 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
                     pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                                en_dis_type=ON_SCHEDULE_TYPE)
             for pt_repeat_schedule_info in pt_repeat_schedule_data:
-                pt_repeat_schedule_id.append(pt_repeat_schedule_info.repeat_schedule_id)
-                pt_repeat_schedule_type.append(pt_repeat_schedule_info.repeat_type_cd)
-                pt_repeat_schedule_week_info.append(pt_repeat_schedule_info.week_info)
-                pt_repeat_schedule_start_date.append(str(pt_repeat_schedule_info.start_date))
-                pt_repeat_schedule_end_date.append(str(pt_repeat_schedule_info.end_date))
-                pt_repeat_schedule_start_time.append(pt_repeat_schedule_info.start_time)
-                pt_repeat_schedule_end_time.append(pt_repeat_schedule_info.end_time)
-                pt_repeat_schedule_time_duration.append(pt_repeat_schedule_info.time_duration)
-                pt_repeat_schedule_state_cd.append(pt_repeat_schedule_info.state_cd)
-                pt_repeat_schedule_group_data.append(pt_repeat_schedule_info.group_tb)
+                pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
+                pt_repeat_schedule_info.end_date = str(pt_repeat_schedule_info.end_date)
 
                 try:
                     state_cd_name = CommonCdTb.objects.get(common_cd=pt_repeat_schedule_info.state_cd)
                 except ObjectDoesNotExist:
                     error = '반복일정의 상태를 불러오지 못했습니다.'
                 if error is None:
-                    pt_repeat_schedule_state_cd_nm.append(state_cd_name.common_cd_nm)
+                    pt_repeat_schedule_info.state_cd_nm = state_cd_name.common_cd_nm
 
-    context['pt_repeat_schedule_id_data'] = pt_repeat_schedule_id
-    context['pt_repeat_schedule_type_data'] = pt_repeat_schedule_type
-    context['pt_repeat_schedule_week_info_data'] = pt_repeat_schedule_week_info
-    context['pt_repeat_schedule_start_date_data'] = pt_repeat_schedule_start_date
-    context['pt_repeat_schedule_end_date_data'] = pt_repeat_schedule_end_date
-    context['pt_repeat_schedule_start_time_data'] = pt_repeat_schedule_start_time
-    context['pt_repeat_schedule_end_time_data'] = pt_repeat_schedule_end_time
-    context['pt_repeat_schedule_time_duration_data'] = pt_repeat_schedule_time_duration
-    context['pt_repeat_schedule_state_cd'] = pt_repeat_schedule_state_cd
-    context['pt_repeat_schedule_state_cd_nm'] = pt_repeat_schedule_state_cd_nm
-    context['pt_repeat_schedule_group_data'] = pt_repeat_schedule_group_data
+                pt_repeat_schedule_list.append(pt_repeat_schedule_info)
+
+    context['pt_repeat_schedule_data'] = pt_repeat_schedule_list
     if error is None:
         context['error'] = error
 
