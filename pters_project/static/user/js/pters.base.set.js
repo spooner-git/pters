@@ -14,6 +14,7 @@ $(document).on("touchend",'html',function(e){
 });
 //플로팅 버튼 스크롤시 숨기기 End
 
+
 function upTouchEvent(){
     if($('#mshade').css('z-index')<0){
       $("#float_btn_wrap").show()

@@ -11,6 +11,26 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 $(document).ready(function(){
 
+	//ESC키를 눌러서 팝업 닫기
+	$(document).keyup(function(e){
+	  if(e.keyCode == 27){
+	    if($('#subpopup_addByList_plan').css('display') == 'block'){
+	    	close_addByList_popup()
+	    }else{
+	    	if($('#memberInfoPopup_PC').css('display') == "block"){
+	    		closePopup('member_info_PC')
+	    	}else{
+	    		close_info_popup('cal_popup_plandelete')
+		    	close_info_popup('cal_popup_planinfo')
+		    	close_info_popup('cal_popup_plancheck')
+		    	close_info_popup('page-addplan')
+	    	}
+	    }
+	  }
+	})
+	//ESC키를 눌러서 팝업 닫기
+
+
 	var schedule_on_off = 0;
 
 
