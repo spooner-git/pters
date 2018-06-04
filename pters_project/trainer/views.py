@@ -676,7 +676,6 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView
     def get_context_data(self, **kwargs):
         context = super(GetOffRepeatScheduleView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        error = None
         error = func_get_trainer_off_repeat_schedule(context, class_id)
         if error is None:
             context['error'] = error

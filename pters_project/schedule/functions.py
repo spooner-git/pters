@@ -13,7 +13,7 @@ from httplib2 import Http
 from configs import settings
 from login.models import LogTb, PushInfoTb, CommonCdTb
 from schedule.models import GroupLectureTb, ClassLectureTb, LectureTb, ScheduleTb, GroupTb, MemberLectureTb, \
-    MemberClassTb, ClassTb, RepeatScheduleTb
+    MemberClassTb, ClassTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
 
 # 1:1 Lecture Id 조회
@@ -139,6 +139,119 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
     return context
 
 
+# 일정 삭제
+def func_delete_schedule(schedule_id,  user_id):
+    error = None
+    context = {'error': None, 'schedule_id': ''}
+
+    if schedule_id is None or schedule_id == '':
+        error = '스케쥴 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+        except ObjectDoesNotExist:
+            error = '스케쥴 정보를 불러오지 못했습니다.'
+
+    try:
+        with transaction.atomic():
+            delete_schedule_info = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
+                                                    class_tb_id=schedule_info.class_tb_id,
+                                                    group_tb_id=schedule_info.group_tb_id,
+                                                    lecture_tb_id=schedule_info.lecture_tb_id,
+                                                    delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
+                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                                    permission_state_cd=schedule_info.permission_state_cd,
+                                                    state_cd=schedule_info.state_cd, note=schedule_info.note,
+                                                    en_dis_type=schedule_info.en_dis_type,
+                                                    member_note=schedule_info.member_note,
+                                                    reg_member_id=schedule_info.reg_member_id,
+                                                    del_member_id=user_id,
+                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+
+            delete_schedule_info.save()
+            schedule_info.delete()
+            context['schedule_id'] = delete_schedule_info.delete_schedule_id
+    except TypeError:
+        error = '등록 값의 형태에 문제가 있습니다.'
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    context['error'] = error
+
+    return context
+
+
+# 반복 일정 삭제
+def func_delete_repeat_schedule(repeat_schedule_id):
+    error = None
+    context = {'error': None, 'schedule_info': ''}
+
+    if repeat_schedule_id is None or repeat_schedule_id == '':
+        error = '반복일정 정보를 불러오지 못했습니다.'
+
+    if error is None:
+
+        try:
+            repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
+        except ObjectDoesNotExist:
+            error = '반복일정 정보를 불러오지 못했습니다.'
+
+    try:
+        with transaction.atomic():
+            delete_repeat_schedule = DeleteRepeatScheduleTb(
+                class_tb_id=repeat_schedule_info.class_tb_id,
+                group_tb_id=repeat_schedule_info.group_tb_id,
+                lecture_tb_id=repeat_schedule_info.lecture_tb_id,
+                repeat_schedule_id=repeat_schedule_info.repeat_schedule_id,
+                repeat_type_cd=repeat_schedule_info.repeat_type_cd,
+                week_info=repeat_schedule_info.week_info,
+                start_date=repeat_schedule_info.start_date,
+                end_date=repeat_schedule_info.end_date,
+                start_time=repeat_schedule_info.start_time,
+                time_duration=repeat_schedule_info.time_duration,
+                state_cd=repeat_schedule_info.state_cd, en_dis_type=repeat_schedule_info.en_dis_type,
+                reg_member_id=repeat_schedule_info.reg_member_id,
+                reg_dt=repeat_schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+            delete_repeat_schedule.save()
+            repeat_schedule_info.delete()
+            context['schedule_info'] = delete_repeat_schedule
+    except TypeError:
+        error = '등록 값의 형태에 문제가 있습니다.'
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    context['error'] = error
+
+    return context
+
+
+def func_update_repeat_schedule(repeat_schedule_id):
+    error = None
+
+    if repeat_schedule_id is None or repeat_schedule_id == '':
+        error = '반복일정 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
+        except ObjectDoesNotExist:
+            error = '반복일정 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        repeat_schedule_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id).count()
+        repeat_schedule_finish_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id,
+                                                                 state_cd='PE').count()
+        if repeat_schedule_count == 0:
+            repeat_schedule_result = func_delete_repeat_schedule(repeat_schedule_id)
+            error = repeat_schedule_result['error']
+        else:
+            if repeat_schedule_finish_count == 0:
+                repeat_schedule_info.state_cd = 'NP'
+                repeat_schedule_info.save()
+
+    return error
+
+
+# 그룹일정 등록전 그룹에 허용 가능 인원 확인
 def func_check_group_available_member_before(class_id, group_id, group_schedule_id):
     error = None
     group_info = None
@@ -157,6 +270,7 @@ def func_check_group_available_member_before(class_id, group_id, group_schedule_
     return error
 
 
+# 그룹일정 등록후 그룹에 허용 가능 인원 확인
 def func_check_group_available_member_after(class_id, group_id, group_schedule_id):
     error = None
     group_info = None
@@ -531,6 +645,7 @@ def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
 
 
 def func_get_trainer_off_repeat_schedule(context, class_id):
+    error = None
     off_repeat_schedule_list = []
 
     # 강사 클래스의 반복일정 불러오기
