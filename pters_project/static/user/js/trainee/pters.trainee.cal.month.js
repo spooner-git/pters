@@ -1787,7 +1787,8 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 	};
 };
 
-function classInfoProcessed(jsondata){
+function classInfoProcessed(jsondata){ //일정 갯수 세기
+
 	var len = jsondata.scheduleIdArray.length;
 	var len2 = jsondata.group_schedule_id.length;
 	var countResult = [];
@@ -1798,17 +1799,17 @@ function classInfoProcessed(jsondata){
 	var datasum = [];
 	for(var i=0; i<len; i++){ //개인일정 객체화로 중복 제거
 		summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0]
-		if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
-			datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0])
-		}else{
+		/*if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+		*/	datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0])
+		/*}else{
 
-		}
+		}*/
 	}
 	for(var i in summaryArray){ //개인일정 중복 제거된 배열
 		summaryArrayResult.push(i)
 	}
 
-
+	/*
 	for(var i=0; i<len2; i++){ //그룹 객체화로 중복 제거
 		summaryArray_group[jsondata.group_schedule_start_datetime[i].split(' ')[0]] = jsondata.group_schedule_start_datetime[i].split(' ')[0]
 		datasum.push(jsondata.group_schedule_start_datetime[i].split(' ')[0])
@@ -1816,10 +1817,10 @@ function classInfoProcessed(jsondata){
 	for(var i in summaryArray_group){ //그룹 중복 제거된 배열
 		summaryArrayResult.push(i)
 	}
+	*/
 
 
 	var len2 = summaryArrayResult.length;
-
 	for(var i=0; i<len2; i++){
 		var scan = summaryArrayResult[i]
 		countResult[i]=0
