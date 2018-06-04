@@ -1559,7 +1559,7 @@ function fill_repeat_info(jsondata, option){ //반복일정 요약 채우기
           var repeat_end_array = jsondata.offRepeatScheduleEndDateArray
           var repeat_time_array = jsondata.offRepeatScheduleStartTimeArray
           var repeat_dur_array = jsondata.offRepeatScheduleTimeDurationArray
-          var repeat_group_name = [""]
+          var repeat_group_name = []
         break;
         case 'group':
           var len = jsondata.repeatScheduleIdArray.length
