@@ -22,7 +22,7 @@ $(document).ready(function(){
             $("#id_repeat_member_id").val($('#id_member_id').val());
             $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
             $("#id_repeat_member_name").val($('#id_member_name').val());
-            check_dropdown_selected()
+            check_dropdown_selected_addplan()
             //console.log("$('#membersSelected button').val().length",$('#membersSelected button').val().length, $('#membersSelected button').val())
             if($('#membersSelected button').val().length == 0){
               $('#offRepeatSummary').html('').hide()
@@ -36,7 +36,7 @@ $(document).ready(function(){
             /*애니메이션*/
             addTypeSelect = "repeatoffadd"
             deleteTypeSelect = "repeatoffdelete"
-            check_dropdown_selected()
+            check_dropdown_selected_addplan()
           }else if((addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd") && pageSelector == ''){
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','block')
@@ -52,7 +52,7 @@ $(document).ready(function(){
               addTypeSelect = "groupptadd"
             }
             
-            check_dropdown_selected()
+            check_dropdown_selected_addplan()
           }else if(addTypeSelect == "repeatoffadd" && pageSelector == ''){
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','block')
@@ -62,7 +62,7 @@ $(document).ready(function(){
             }
             /*애니메이션*/
             addTypeSelect = "offadd"
-            check_dropdown_selected()
+            check_dropdown_selected_addplan()
           }
 
           else if(pageSelector == "thisgroup"){
@@ -91,7 +91,7 @@ $(document).ready(function(){
           $("#id_repeat_freq_off").val($(this).attr('data-repeat'));
         }
           
-          check_dropdown_selected();
+          check_dropdown_selected_addplan();
       }); 
 
       $(document).on('click', '#repeatstarttimes li a',function(){
@@ -107,7 +107,7 @@ $(document).ready(function(){
           $("#durationsSelected button").removeClass("dropdown_selected");
           $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
           $("#durationsSelected .btn:first-child").val("");
-          check_dropdown_selected();
+          check_dropdown_selected_addplan();
           repeatDurationTimeSet()
       })
 
@@ -225,7 +225,7 @@ $(document).ready(function(){
             $('#id_repeat_day_off').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
           }
           console.log($('#id_repeat_day_off').val())
-          check_dropdown_selected();
+          check_dropdown_selected_addplan();
       })
 
     $("#submitBtn").click(function(){
