@@ -10,6 +10,18 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 */
 $(document).ready(function(){
 
+
+	$(document).keyup(function(e){
+		if(e.keyCode == 27){
+			close_cal_popup()
+			close_reserve_popup()
+			close_class_select_popup()
+			close_info_popup('cal_popup_plancheck')
+		}
+	})
+
+
+
 	//setInterval(function(){ajaxCheckSchedule()}, 2000)// 자동 ajax 새로고침(일정가져오기)
 
 
@@ -658,12 +670,20 @@ $(document).ready(function(){
 
 
 	$("#btn_close").click(function(){  //일정삭제 팝업 X버튼 눌렀을때 팝업 닫기
-			if($('#cal_popup').css('display')=='block'){
-				$("#cal_popup").css({'display':'none'})
-				shade_index(100)
-				$('#popup_text1 span').removeClass('limited')
-			}
+			close_cal_popup()
 	})
+
+	function close_cal_popup(){
+		if($('#cal_popup').css('display')=='block'){
+			$("#cal_popup").css({'display':'none'})
+			shade_index(100)
+			$('#popup_text1 span').removeClass('limited')
+		}
+	}
+
+	function close_class_select_popup(){
+		$('#popup_lecture_select').fadeOut('fast')
+	}
 
 	/*
 	$("#btn_close2").click(function(){ //일정추가 팝업 X버튼 눌렀을때 팝업 닫기
