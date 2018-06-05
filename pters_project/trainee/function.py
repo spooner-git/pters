@@ -20,27 +20,27 @@ def func_get_trainee_on_schedule(context, user_id, class_id, start_date, end_dat
     all_schedule_check = 0
     if start_date is None and end_date is None:
         all_schedule_check = 1
-    idx = 0
-    member_lecture_data = MemberLectureTb.objects.filter(auth_cd='VIEW', member_id=user_id).order_by('lecture_tb__start_date')
+    member_lecture_data = MemberLectureTb.objects.filter(auth_cd='VIEW', member_id=user_id).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
+    idx = len(member_lecture_data)+1
     for member_lecture_info in member_lecture_data:
-        idx += 1
+        idx -= 1
         if all_schedule_check == 0:
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
-                                                      start_dt__gte=start_date, end_dt__lt=end_date).order_by('start_dt')
+                                                      start_dt__gte=start_date, end_dt__lt=end_date).order_by('-start_dt')
         else:
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                                      lecture_tb_id=member_lecture_info.lecture_tb_id).order_by('start_dt')
-        idx2 = 0
+                                                      lecture_tb_id=member_lecture_info.lecture_tb_id).order_by('-start_dt')
+        idx2 = len(schedule_data)+1
 
         for schedule_info in schedule_data:
-            idx2 += 1
+            idx2 -= 1
             schedule_info.start_dt = str(schedule_info.start_dt)
             schedule_info.end_dt = str(schedule_info.end_dt)
             schedule_info.mod_dt = str(schedule_info.mod_dt)
             schedule_info.reg_dt = str(schedule_info.reg_dt)
-            schedule_info.idx = str(idx)+'-'+str(idx)
+            schedule_info.idx = str(idx)+'-'+str(idx2)
             if schedule_info.note is None:
                 schedule_info.note = ''
             # 끝난 스케쥴인지 확인
