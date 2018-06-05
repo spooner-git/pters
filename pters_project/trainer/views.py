@@ -200,8 +200,15 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         if error is None:
             today_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                           group_tb__isnull=True,
+                                                           lecture_tb__isnull=False,
                                                            start_dt__gte=today, start_dt__lt=one_day_after,
                                                            en_dis_type=ON_SCHEDULE_TYPE).count()
+            today_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                            group_tb__isnull=False,
+                                                            lecture_tb__isnull=True,
+                                                            start_dt__gte=today, start_dt__lt=one_day_after,
+                                                            en_dis_type=ON_SCHEDULE_TYPE).count()
 
         context['today_schedule_num'] = today_schedule_num
 
