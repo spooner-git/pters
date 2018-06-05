@@ -69,7 +69,7 @@ def func_get_member_ing_list(class_id, user_id):
             member_data.end_date = None
             member_data.mod_dt = None
             member_data.group_info = ''
-            member_data.lecture_available_id = ''
+            # member_data.lecture_available_id = ''
 
             lecture_count = 0
 
@@ -115,17 +115,17 @@ def func_get_member_ing_list(class_id, user_id):
                         member_data.lecture_rem_count += lecture_info.lecture_rem_count
                         member_data.lecture_avail_count += lecture_info.lecture_avail_count
                         member_data.end_date = lecture_info.end_date
-                        if member_data.lecture_available_id == '':
-                            if lecture_info.lecture_avail_count > 0:
-                                member_data.lecture_available_id = lecture_info.lecture_id
+                        # if member_data.lecture_available_id == '':
+                        #     if lecture_info.lecture_avail_count > 0:
+                        #         member_data.lecture_available_id = lecture_info.lecture_id
 
                         if member_data.start_date is None or member_data.start_date == '':
                             member_data.start_date = lecture_info.start_date
                         else:
                             if member_data.start_date > lecture_info.start_date:
                                 member_data.start_date = lecture_info.start_date
-                                if lecture_info.lecture_avail_count > 0:
-                                    member_data.lecture_available_id = lecture_info.lecture_id
+                                # if lecture_info.lecture_avail_count > 0:
+                                #     member_data.lecture_available_id = lecture_info.lecture_id
 
                         if member_data.end_date is None or member_data.end_date == '':
                             member_data.end_date = lecture_info.end_date
@@ -195,10 +195,6 @@ def func_get_member_end_list(class_id, user_id):
                                                      lecture_tb__use=1,
                                                      use=1)
         lecture_count = lecture_list.filter(lecture_tb__state_cd='IP').count()
-        # lecture_finish_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-        #                                                     lecture_tb__member_id=member_data.member_id,
-        #                                                     auth_cd='VIEW', lecture_tb__use=1,
-        #                                                     use=1).exclude(lecture_tb__state_cd='IP')
 
         if lecture_count == 0 and len(lecture_list) > 0:
             lecture_finish_check = 1
@@ -220,7 +216,7 @@ def func_get_member_end_list(class_id, user_id):
             member_data.end_date = None
             member_data.mod_dt = None
             member_data.group_info = ''
-            member_data.lecture_available_id = ''
+            # member_data.lecture_available_id = ''
             lecture_finish_count = 0
 
             for lecture_info_data in lecture_list:
@@ -264,16 +260,16 @@ def func_get_member_end_list(class_id, user_id):
                     member_data.lecture_avail_count += lecture_info.lecture_avail_count
                     member_data.end_date = lecture_info.end_date
 
-                    if member_data.lecture_available_id == '':
-                        if lecture_info.lecture_avail_count > 0:
-                            member_data.lecture_available_id = lecture_info.lecture_id
+                    # if member_data.lecture_available_id == '':
+                    #     if lecture_info.lecture_avail_count > 0:
+                    #         member_data.lecture_available_id = lecture_info.lecture_id
                     if member_data.start_date is None or member_data.start_date == '':
                         member_data.start_date = lecture_info.start_date
                     else:
                         if member_data.start_date > lecture_info.start_date:
                             member_data.start_date = lecture_info.start_date
-                            if lecture_info.lecture_avail_count > 0:
-                                member_data.lecture_available_id = lecture_info.lecture_id
+                            # if lecture_info.lecture_avail_count > 0:
+                            #     member_data.lecture_available_id = lecture_info.lecture_id
 
                     if member_data.end_date is None or member_data.end_date == '':
                         member_data.end_date = lecture_info.end_date
@@ -315,48 +311,43 @@ def func_get_member_end_list(class_id, user_id):
 def func_get_trainee_schedule_list(context, class_id, member_id):
 
     error = None
-    class_info = None
 
     lecture_list = None
     pt_schedule_list = []
 
-    # 강좌 정보 가져오기
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '강좌 정보를 불러오지 못했습니다.'
     # 수강 정보 불러 오기
     if error is None:
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                     auth_cd='VIEW',
                                                      lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', use=1)
+                                                     lecture_tb__use='1', use=1).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
-            idx = 0
+            idx = len(lecture_list)+1
             for lecture_list_info in lecture_list:
                 lecture_info = lecture_list_info.lecture_tb
-                idx += 1
-                try:
-                    MemberLectureTb.objects.get(auth_cd='VIEW', member_id=member_id,
-                                                lecture_tb=lecture_info.lecture_id)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
+                idx -= 1
+                # try:
+                #     MemberLectureTb.objects.get(auth_cd='VIEW', member_id=member_id,
+                #                                 lecture_tb=lecture_info.lecture_id)
+                # except ObjectDoesNotExist:
+                #     error = '수강정보를 불러오지 못했습니다.'
 
                 if error is None:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type=ON_SCHEDULE_TYPE).order_by('start_dt')
+                                                                 en_dis_type=ON_SCHEDULE_TYPE).order_by('-start_dt')
 
                     if pt_schedule_data is not None and len(pt_schedule_data) > 0:
-                        idx2 = 0
+                        idx2 = len(pt_schedule_data)+1
                         for pt_schedule_info in pt_schedule_data:
-                            idx2 += 1
+                            idx2 -= 1
                             pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
                             pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
                             pt_schedule_info.mod_dt = str(pt_schedule_info.mod_dt)
                             pt_schedule_info.reg_dt = str(pt_schedule_info.reg_dt)
-                            pt_schedule_info.idx = str(idx)+'-'+str(idx)
+                            pt_schedule_info.idx = str(idx)+'-'+str(idx2)
 
                             if pt_schedule_info.note is None:
                                 pt_schedule_info.note = ''
@@ -713,8 +704,7 @@ def func_get_lecture_list(context, class_id, member_id):
 
     if error is None:
         lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
-                                                     lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date', 'lecture_tb__reg_dt')
-        # lecture_data = LectureTb.objects.filter(class_tb_id=class_id, member_id=member_id, use=1).order_by('-start_date')
+                                                     lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
 
         for lecture_info_data in lecture_data:
             lecture_info = lecture_info_data.lecture_tb
@@ -731,6 +721,10 @@ def func_get_lecture_list(context, class_id, member_id):
             lecture_info.group_note = ''
             group_check = 0
             group_info = None
+
+            lecture_info.lecture_finish_count = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                          lecture_tb_id=lecture_info.lecture_id,
+                                                                          state_cd='PE').count()
 
             try:
                 group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)

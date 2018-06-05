@@ -3109,7 +3109,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                     regCount_group_personal.push('G'+jsondata.regCountArray[i])
                     remCount_group_personal.push('G'+jsondata.remCountArray[i])
                     availCount_group_personal.push('G'+jsondata.availCountArray[i])
-                    finishCount_group_personal.push('G'+(Number(jsondata.regCountArray[i])-Number(jsondata.remCountArray[i]))) 
+                    finishCount_group_personal.push('G'+jsondata.finishCountArray[i])
                 }
                 
             }else if(jsondata.groupNameArray[i] == '1:1'){
@@ -3118,7 +3118,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                     regCount_group_personal.push(jsondata.regCountArray[i])
                     remCount_group_personal.push(jsondata.remCountArray[i])
                     availCount_group_personal.push(jsondata.availCountArray[i])
-                    finishCount_group_personal.push(jsondata.regCountArray[i]-jsondata.remCountArray[i])
+                    finishCount_group_personal.push(jsondata.finishCountArray[i])
                 }
             }
             var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
@@ -3146,7 +3146,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
         $('#memberRegCount_info_PC').html(sumCount(jsondata.regCountArray)+'<span style="font-size:11px;"> ('+regCount_group_personal.join(',')+')</span>')  //전체 등록횟수
         $('#memberRemainCount_info_PC').html(sumCount(jsondata.remCountArray)+'<span style="font-size:11px;"> ('+remCount_group_personal.join(',')+')</span>')  //전체 남은횟수
         $('#memberAvailCount_info_PC').html(sumCount(jsondata.availCountArray)+'<span style="font-size:11px;"> ('+availCount_group_personal.join(',')+')</span>')  //전체 예약가능횟수
-        $('#memberFinishCount_info_PC').html(sumCount(jsondata.regCountArray)-sumCount(jsondata.remCountArray)+'<span style="font-size:11px;"> ('+finishCount_group_personal.join(',')+')</span>')  //전체 완료횟수
+        $('#memberFinishCount_info_PC').html(sumCount(jsondata.finishCountArray)+'<span style="font-size:11px;"> ('+finishCount_group_personal.join(',')+')</span>')  //전체 완료횟수
 
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
@@ -3194,7 +3194,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                     regCount_group_personal.push('G'+jsondata.regCountArray[i])
                     remCount_group_personal.push('G'+jsondata.remCountArray[i])
                     availCount_group_personal.push('G'+jsondata.availCountArray[i])
-                    finishCount_group_personal.push('G'+(Number(jsondata.regCountArray[i])-Number(jsondata.remCountArray[i]))) 
+                    finishCount_group_personal.push('G'+jsondata.finishCountArray[i])
                 }
                 
             }else if(jsondata.groupNameArray[i] == '1:1'){
@@ -3203,7 +3203,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                     regCount_group_personal.push(jsondata.regCountArray[i])
                     remCount_group_personal.push(jsondata.remCountArray[i])
                     availCount_group_personal.push(jsondata.availCountArray[i])
-                    finishCount_group_personal.push(jsondata.regCountArray[i]-jsondata.remCountArray[i])
+                    finishCount_group_personal.push(jsondata.finishCountArray[i])
                 }
             }
             var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
@@ -3236,7 +3236,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
         $('#memberRegCount_info').val(sumCount(jsondata.regCountArray)+' ('+regCount_group_personal.join(',')+')')  //전체 등록횟수
         $('#memberRemainCount_info').val(sumCount(jsondata.remCountArray)+' ('+remCount_group_personal.join(',')+')')  //전체 남은횟수
         $('#memberAvailCount_info').val(sumCount(jsondata.availCountArray)+' ('+availCount_group_personal.join(',')+')')  //전체 예약가능횟수
-        $('#memberFinishCount_info').val(sumCount(jsondata.regCountArray)-sumCount(jsondata.remCountArray)+' ('+finishCount_group_personal.join(',')+')')  //전체 완료횟수
+        $('#memberFinishCount_info').val(sumCount(jsondata.finishCountArray)+' ('+finishCount_group_personal.join(',')+')')  //전체 완료횟수
 
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
@@ -3270,7 +3270,7 @@ function get_member_history_list(dbID){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_member_history_list',dbID)
+            console.log('get_member_history_list',jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -3335,7 +3335,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
 
     var result_history_html = ['<div><div>'+text10+'</div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>']
     var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7}
-    for(var i=jsondata.ptScheduleStartDtArray.length-1; i>=0; i--){
+    for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay()
         var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2])
         var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2])

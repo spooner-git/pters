@@ -1458,7 +1458,7 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View
     def get(self, request, *args, **kwargs):
         context = super(GetLectureListView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        member_id = request.POST.get('member_id', '')
+        member_id = request.GET.get('member_id', '')
         context['error'] = None
 
         context = func_get_lecture_list(context, class_id, member_id)

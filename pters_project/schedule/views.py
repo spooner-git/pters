@@ -276,10 +276,6 @@ def finish_schedule_logic(request):
 
     if error is None:
         lecture_info = schedule_info.lecture_tb
-        # try:
-        #     lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
-        # except ObjectDoesNotExist:
-        #     error = '회원 수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -294,10 +290,6 @@ def finish_schedule_logic(request):
                 lecture_repeat_schedule_data = None
                 if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
                     lecture_repeat_schedule_data = schedule_info.repeat_schedule_tb
-                    # try:
-                    #   lecture_repeat_schedule_data = RepeatScheduleTb.objects.get(repeat_schedule_id=schedule_info.repeat_schedule_tb_id)
-                    # except ObjectDoesNotExist:
-                    #     lecture_repeat_schedule_data = None
 
                 if lecture_repeat_schedule_data is not None:
                     if lecture_repeat_schedule_data.state_cd == 'NP':
@@ -1186,10 +1178,6 @@ def finish_group_schedule_logic(request):
 
     if error is None:
         group_info = schedule_info.group_tb
-        # try:
-        #     group_info = GroupTb.objects.get(group_id=schedule_info.group_tb_id)
-        # except ObjectDoesNotExist:
-        #     error = '그룹 정보를 불러오지 못했습니다.'
 
     if error is None:
         start_date = schedule_info.start_dt
@@ -1207,10 +1195,6 @@ def finish_group_schedule_logic(request):
                 repeat_schedule_data = None
                 if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
                     repeat_schedule_data = schedule_info.repeat_schedule_tb
-                    # try:
-                    #     repeat_schedule_data = RepeatScheduleTb.objects.get(repeat_schedule_id=schedule_info.repeat_schedule_tb_id)
-                    # except ObjectDoesNotExist:
-                    #     repeat_schedule_data = None
 
                 if repeat_schedule_data is not None:
                     if repeat_schedule_data.state_cd == 'NP':
@@ -1234,8 +1218,7 @@ def finish_group_schedule_logic(request):
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
                          log_info=group_info.name + ' 그룹 레슨 일정', log_how='완료',
-                         log_detail=str(start_date) + '/' + str(
-                             end_date),
+                         log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), use=1)
         log_data.save()
     if error is None:
