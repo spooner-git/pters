@@ -353,25 +353,36 @@ $(document).ready(function(){
 						
 					}else if(schedule_on_off == 2){
 						var len = $('#groupParticipants .groupParticipantsRow').length;
-						
 						var z = 0
 						$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule_id'))
-						send_group_plan_complete()
-						for(var i=0; i<len; i++){
-							$('#id_schedule_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
-							$('#id_lecture_id_finish').val($('#groupParticipants .groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
-							send_plan_complete('callback', function(json, senddata){
-								z++
-								console.log('for문',z, len)
-								if(z==len){
+						if(len == 0){
+							send_group_plan_complete('callback', function(json, senddata){
+								send_memo()
+								signImageSend(senddata);
+								completeSend();
+								set_schedule_time(json);
+								close_info_popup('cal_popup_planinfo')
+								ajax_block_during_complete_weekcal = true
+							})
+							
+						}else{
+							send_group_plan_complete()
+							for(var i=0; i<len; i++){
+								$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
+								$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
+								console.log('그룹일정완료',$('#id_schedule_id_finish').val(),$('#id_lecture_id_finish').val())
+								send_plan_complete('callback', function(json, senddata){
+									z++
 									send_memo()
 									signImageSend(senddata);
-									completeSend();
-									set_schedule_time(json);
-									close_info_popup('cal_popup_planinfo')
-									ajax_block_during_complete_monthcal = true
-								}
-							})
+									if(z==len){
+										completeSend();
+										set_schedule_time(json);
+										close_info_popup('cal_popup_planinfo')
+										ajax_block_during_complete_weekcal = true
+									}
+								})
+							}
 						}
 					}
 				}
