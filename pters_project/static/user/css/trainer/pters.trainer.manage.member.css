@@ -1333,7 +1333,6 @@ select:focus > option:checked {
 		display: inline-block;
 		line-height: 33px;
 		position: relative;
-		margin-left: 10px;
 		width: 250px;
 	}
 
@@ -1381,7 +1380,7 @@ select:focus > option:checked {
 
 	.ymdText-pc-add-member{
 		display: inline;
-		margin-left: 5px;
+		margin-left: 2px;
 		padding:3px 13px 3px 13px;
 		color: #fe4e65;
 		font-size: 14px;
@@ -1570,14 +1569,14 @@ select:focus > option:checked {
 	.alignSelect{
 		position: absolute;
 		top: 0;
-		right: 0;
+		right: 120px;
 		margin-top: 0 !important;
 		border:1px solid #eeeeee;
 		width: 160px !important;
-		height: 30px !important;
+		height: 29px !important;
 		font-size: 13px;
 		color: #afafaf;
-		padding-left: 29px;
+		padding: 2px 0 0 29px;
 		text-align-last: unset;
 	}
 
@@ -1590,12 +1589,15 @@ select:focus > option:checked {
 		max-width: 1080px;
 		height: 30px;
 		margin-bottom: 5px;
+		margin-top: 20px;
 		padding-right: 190px;
 	}
 
 	.memberNum{
-		float:left;
-		line-height: 30px;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		line-height: 24px;
 	}
 
 	.memberAlign{
@@ -1608,19 +1610,36 @@ select:focus > option:checked {
 		width: 350px;
 		height: 45px;
 	}
-	#selectBox_type{
-		border:1px solid #cccccc;
-		width: 150px;
+	#selectBox_type.list_switch_wrap{
+		border: 0;
 		height: 33px;
-		margin-top: 10px;
+		margin-top: 20px;
+		color: #cccccc;
+		font-weight: 300;
+		font-size: 15px;
+		text-align: center;
 	}
-		#selectBox_type div{
+		#selectBox_type.list_switch_wrap div.list_switch{
 			padding: 0;
+			display: inline-block;
+			cursor: pointer;
 		}
-		#selectBox_type span{
-			font-size: 13px;
+		#selectBox_type.list_switch_wrap div.list_switch:hover{
+			color: #282828;
+			font-weight: 400;
+		}
+		#selectBox_type.list_switch_wrap span.list_switch_divider{
+			margin-right: 15px;
+			margin-left: 15px;
+			color: #cccccc;
+		}
+		.list_switch_selected{
+			color: #282828;
 			font-weight: 500;
 		}
+
+
+
 
 	.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
 		border-color:#282828;
