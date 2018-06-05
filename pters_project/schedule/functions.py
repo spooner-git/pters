@@ -61,7 +61,7 @@ def func_get_group_lecture_id(group_id, member_id):
 # 수강정보 - 횟수관련 update
 def func_refresh_lecture_count(lecture_id):
     error = None
-
+    lecture_info = None
     if lecture_id is None or lecture_id == '':
         error = '회원 수강정보를 불러오지 못했습니다.'
 
@@ -87,14 +87,12 @@ def func_refresh_lecture_count(lecture_id):
         if lecture_info.lecture_reg_count >= end_schedule_counter:
             lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
                                                - end_schedule_counter
-
             if lecture_info.lecture_rem_count == 0:
                 lecture_info.state_cd = 'PE'
             else:
                 lecture_info.state_cd = 'IP'
             lecture_info.mod_dt = timezone.now()
             lecture_info.save()
-
         else:
             error = '오류가 발생했습니다.'
 

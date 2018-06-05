@@ -285,7 +285,9 @@ def finish_schedule_logic(request):
                 schedule_info.save()
                 # 남은 횟수 차감
                 if schedule_info.state_cd == 'PE':
-                    error = func_refresh_lecture_count(schedule_info.lecture_tb_id)
+                    error = func_refresh_lecture_count(lecture_info.lecture_id)
+
+                lecture_info.refresh_from_db()
 
                 lecture_repeat_schedule_data = None
                 if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
@@ -329,7 +331,6 @@ def finish_schedule_logic(request):
                             group_info_data.state_cd = 'PE'
                             group_info_data.save()
 
-                lecture_info.mod_dt = timezone.now()
                 lecture_info.schedule_check = 1
                 lecture_info.save()
 
