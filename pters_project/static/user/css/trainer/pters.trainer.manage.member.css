@@ -1589,6 +1589,7 @@ select:focus > option:checked {
 		max-width: 1080px;
 		height: 30px;
 		margin-bottom: 5px;
+		margin-top: 20px;
 		padding-right: 190px;
 	}
 
@@ -1612,7 +1613,7 @@ select:focus > option:checked {
 	#selectBox_type.list_switch_wrap{
 		border: 0;
 		height: 33px;
-		margin-top: 25px;
+		margin-top: 20px;
 		color: #cccccc;
 		font-weight: 300;
 		font-size: 15px;
