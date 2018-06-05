@@ -1087,7 +1087,7 @@ def delete_group_schedule_logic(request):
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
-
+    schedule_info = None
     if error is None:
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
@@ -1096,41 +1096,9 @@ def delete_group_schedule_logic(request):
 
     if error is None:
         group_info = schedule_info.group_tb
-        # try:
-        #     group_info = GroupTb.objects.get(group_id=schedule_info.group_tb_id)
-        # except ObjectDoesNotExist:
-        #     error = '그룹 정보를 불러오지 못했습니다.'
-
     if error is None:
-
-        try:
-            with transaction.atomic():
-                delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
-                                                   class_tb_id=schedule_info.class_tb_id,
-                                                   group_tb_id=schedule_info.group_tb_id,
-                                                   lecture_tb_id=schedule_info.lecture_tb_id,
-                                                   delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
-                                                   start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
-                                                   permission_state_cd=schedule_info.permission_state_cd,
-                                                   state_cd=schedule_info.state_cd, note=schedule_info.note,
-                                                   en_dis_type=schedule_info.en_dis_type,
-                                                   member_note=schedule_info.member_note,
-                                                   reg_member_id=schedule_info.reg_member_id,
-                                                   del_member_id=str(request.user.id),
-                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
-
-                delete_schedule.save()
-                schedule_info.delete()
-
-        except TypeError as e:
-            error = '등록 값의 형태에 문제가 있습니다.'
-        except ValueError as e:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
-            error = '이미 삭제된 일정입니다'
-        except InternalError as e:
-            error = '이미 삭제된 일정입니다'
-
+        schedule_result = func_delete_schedule(schedule_id, request.user.id)
+        error = schedule_result['error']
     if error is None:
 
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP',
@@ -1753,56 +1721,25 @@ def delete_group_repeat_schedule_logic(request):
                     end_schedule_counter = ScheduleTb.objects.filter(group_schedule_id=delete_schedule_info.schedule_id,
                                                                      state_cd='PE', use=1).count()
                     if end_schedule_counter == 0:
-                        delete_schedule = DeleteScheduleTb(schedule_id=delete_schedule_info.schedule_id,
-                                                           class_tb_id=delete_schedule_info.class_tb_id,
-                                                           group_tb_id=delete_schedule_info.group_tb_id,
-                                                           lecture_tb_id=delete_schedule_info.lecture_tb_id,
-                                                           delete_repeat_schedule_tb=delete_schedule_info.repeat_schedule_tb_id,
-                                                           start_dt=delete_schedule_info.start_dt, end_dt=delete_schedule_info.end_dt,
-                                                           permission_state_cd=delete_schedule_info.permission_state_cd,
-                                                           state_cd=delete_schedule_info.state_cd, note=delete_schedule_info.note,
-                                                           en_dis_type=delete_schedule_info.en_dis_type,
-                                                           member_note=delete_schedule_info.member_note,
-                                                           reg_member_id=delete_schedule_info.reg_member_id,
-                                                           del_member_id=str(request.user.id),
-                                                           reg_dt=delete_schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+                        schedule_result = func_delete_schedule(delete_schedule_info.schedule_id, request.user.id)
+                        error = schedule_result['error']
 
-                        delete_schedule.save()
-                        delete_schedule_info.delete()
-                    if error is not None:
-                        break
+                schedule_result = func_delete_repeat_schedule(group_repeat_schedule_info.repeat_schedule_id)
+                error = schedule_result['error']
 
                 if error is not None:
                     raise ValidationError()
 
-                delete_repeat_schedule = DeleteRepeatScheduleTb(class_tb_id=group_repeat_schedule_info.class_tb_id,
-                                                                lecture_tb_id=group_repeat_schedule_info.lecture_tb_id,
-                                                                group_tb_id=group_repeat_schedule_info.group_tb_id,
-                                                                repeat_schedule_id=group_repeat_schedule_info.repeat_schedule_id,
-                                                                repeat_type_cd=group_repeat_schedule_info.repeat_type_cd,
-                                                                week_info=group_repeat_schedule_info.week_info,
-                                                                start_date=group_repeat_schedule_info.start_date,
-                                                                end_date=group_repeat_schedule_info.end_date,
-                                                                start_time=group_repeat_schedule_info.start_time,
-                                                                time_duration=group_repeat_schedule_info.time_duration,
-                                                                state_cd=group_repeat_schedule_info.state_cd,
-                                                                en_dis_type=group_repeat_schedule_info.en_dis_type,
-                                                                reg_member_id=group_repeat_schedule_info.reg_member_id,
-                                                                reg_dt=group_repeat_schedule_info.reg_dt,
-                                                                mod_dt=timezone.now(), use=0)
-                delete_repeat_schedule.save()
-                group_repeat_schedule_info.delete()
-
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태에 문제가 있습니다.'
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '이미 삭제된 일정입니다'
-        except InternalError as e:
+        except InternalError:
             error = '이미 삭제된 일정입니다'
-        except ValidationError as e:
-            error = '예약 가능한 횟수를 확인해주세요.'
+        except ValidationError:
+            error = error
 
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=1)

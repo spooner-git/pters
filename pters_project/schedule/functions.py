@@ -195,6 +195,7 @@ def func_delete_schedule(schedule_id,  user_id):
                                                     class_tb_id=schedule_info.class_tb_id,
                                                     group_tb_id=schedule_info.group_tb_id,
                                                     lecture_tb_id=schedule_info.lecture_tb_id,
+                                                    group_schedule_id=schedule_info.group_schedule_id,
                                                     delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
                                                     start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
                                                     permission_state_cd=schedule_info.permission_state_cd,
@@ -213,7 +214,6 @@ def func_delete_schedule(schedule_id,  user_id):
     except ValueError:
         error = '등록 값에 문제가 있습니다.'
     context['error'] = error
-
     return context
 
 
@@ -235,10 +235,11 @@ def func_delete_repeat_schedule(repeat_schedule_id):
     try:
         with transaction.atomic():
             delete_repeat_schedule = DeleteRepeatScheduleTb(
-                class_tb_id=repeat_schedule_info.class_tb_id,
-                group_tb_id=repeat_schedule_info.group_tb_id,
-                lecture_tb_id=repeat_schedule_info.lecture_tb_id,
                 repeat_schedule_id=repeat_schedule_info.repeat_schedule_id,
+                class_tb_id=repeat_schedule_info.class_tb_id,
+                lecture_tb_id=repeat_schedule_info.lecture_tb_id,
+                group_tb_id=repeat_schedule_info.group_tb_id,
+                group_schedule_id=repeat_schedule_info.group_schedule_id,
                 repeat_type_cd=repeat_schedule_info.repeat_type_cd,
                 week_info=repeat_schedule_info.week_info,
                 start_date=repeat_schedule_info.start_date,
@@ -248,6 +249,7 @@ def func_delete_repeat_schedule(repeat_schedule_id):
                 state_cd=repeat_schedule_info.state_cd, en_dis_type=repeat_schedule_info.en_dis_type,
                 reg_member_id=repeat_schedule_info.reg_member_id,
                 reg_dt=repeat_schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+
             delete_repeat_schedule.save()
             repeat_schedule_info.delete()
             context['schedule_info'] = delete_repeat_schedule
