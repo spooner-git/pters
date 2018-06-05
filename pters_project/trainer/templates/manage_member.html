@@ -230,12 +230,12 @@
     </div>
     <div id="selectBox" class="btn-group btn-group-justified">
       <div id="btnCallCurrent" onclick="shiftMemberList('current')" class="btn btn-primary active">
-        <span class="KRtext">진행중 회원</span>
+        <span class="KRtext">진행중</span>
         <span class="JPtext">進行中</span>
         <span class="ENtext">Ongoing</span>
       </div>
       <div id="btnCallFinished" onclick="shiftMemberList('finished')" class="btn btn-primary">
-       <span class="KRtext">종료된 회원</span>
+       <span class="KRtext">종료</span>
        <span class="JPtext">終了</span>
        <span class="ENtext">Finished</span>
       </div>
@@ -254,12 +254,14 @@
       </div>
     </div> 
     <div id="alignBox">
+      <span id="memberNumber_current_member" class="memberNum"></span>
+      <span id="memberNumber_finish_member" class="memberNum"></span>
+      <span id="memberNumber_current_group" class="memberNum"></span>
+      <span id="memberNumber_finish_group" class="memberNum"></span>
       <div style="font-size:14px; position: absolute; right: 290px;">
         <span class="memberAlign KRtext _ALIGN_DROPDOWN">정렬 기준</span>
         <span class="memberAlign JPtext">並べ替え</span>
         <span class="memberAlign ENtext">Sort by</span>
-        <span id="currentMemberNum" class="memberNum"></span>
-        <span id="finishMemberNum" class="memberNum"></span>
       </div>
       <div class="ymdText-pc-add-member-wrap">
         <div id="please_add_member_pc">
