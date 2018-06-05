@@ -1570,11 +1570,11 @@ select:focus > option:checked {
 	.alignSelect{
 		position: absolute;
 		top: 0;
-		right: 0;
+		right: 120px;
 		margin-top: 0 !important;
 		border:1px solid #eeeeee;
 		width: 160px !important;
-		height: 30px !important;
+		height: 29px !important;
 		font-size: 13px;
 		color: #afafaf;
 		padding-left: 29px;
@@ -1608,19 +1608,33 @@ select:focus > option:checked {
 		width: 350px;
 		height: 45px;
 	}
-	#selectBox_type{
-		border:1px solid #cccccc;
-		width: 150px;
+	#selectBox_type.list_switch_wrap{
+		border: 0;
 		height: 33px;
-		margin-top: 10px;
+		margin-top: 25px;
+		color: #cccccc;
+		font-weight: 300;
+		font-size: 15px;
+		text-align: center;
 	}
-		#selectBox_type div{
+		#selectBox_type.list_switch_wrap div.list_switch{
 			padding: 0;
+			display: inline-block;
+			cursor: pointer;
 		}
-		#selectBox_type span{
-			font-size: 13px;
+
+		#selectBox_type.list_switch_wrap span.list_switch_divider{
+			margin-right: 15px;
+			margin-left: 15px;
+			color: #cccccc;
+		}
+		.list_switch_selected{
+			color: #282828;
 			font-weight: 500;
 		}
+
+
+
 
 	.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
 		border-color:#282828;

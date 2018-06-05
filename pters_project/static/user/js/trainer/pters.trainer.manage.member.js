@@ -48,6 +48,10 @@ if (agent.indexOf("firefox") != -1) {
  		$(this).addClass("active").siblings().removeClass("active");
 	});
 
+    $('.list_switch').click(function(){
+        $(this).addClass("list_switch_selected").siblings().removeClass("list_switch_selected")
+    })
+
 
 
 
@@ -162,6 +166,7 @@ if (agent.indexOf("firefox") != -1) {
         }
     })
 
+    /*
     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 진행중 멤버)
     $(document).on('click','#currentMemberList div._info_download',function(){
 
@@ -181,6 +186,25 @@ if (agent.indexOf("firefox") != -1) {
         }else {
             alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
             location.href = "/trainer/export_excel_member_list/?finish_flag=1"
+        }
+    })
+    */
+
+    $(document).on('click', '#alignBox div._info_download', function(){
+        if(platform_check == 'mobile'){
+            alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.')
+        }else{
+            if($('#currentMemberList').css('display') == "block"){ //진행중인 회원 전체 목록
+                alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+                location.href = "/trainer/export_excel_member_list/?finish_flag=0"
+            }else if($('#finishedMemberList').css('display') == "block"){ //종료된 회원 전체 목록
+                alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+                location.href = "/trainer/export_excel_member_list/?finish_flag=1"
+            }else if($('#currentGroupList').css('display') == "block"){ //진행중인 그룹 전체 목록
+                alert('진행중 그룹 전체 목록 다운로드!!')
+            }else if($('#finishedGroupList').css('display') == "block"){ //종료된 그룹 전체 목록
+                alert('종료된 그룹 전체 목록 다운로드!!')
+            }
         }
     })
 
@@ -1387,13 +1411,13 @@ function pc_add_member(option){
 function shiftMemberList(type){
     switch(type){
         case "current":
-            if($('#btnCallMemberList').hasClass('active')){
+            if($('#btnCallMemberList').hasClass('list_switch_selected')){
                 get_member_ing_list()
                 $('#currentMemberList, #currentMemberNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').show()
-            }else if($('#btnCallGroupList').hasClass('active')){
+            }else if($('#btnCallGroupList').hasClass('list_switch_selected')){
                 $('#currentGroupList, #currentGroupNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').show()
@@ -1401,13 +1425,13 @@ function shiftMemberList(type){
             }
         break;
         case "finished":
-            if($('#btnCallMemberList').hasClass('active')){
+            if($('#btnCallMemberList').hasClass('list_switch_selected')){
                 get_member_end_list()
                 $('#finishedMemberList, #finishMemberNum').css('display','block');
                 $('#currentMemberList, #currentMemberNum, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').show()
-            }else if($('#btnCallGroupList').hasClass('active')){
+            }else if($('#btnCallGroupList').hasClass('list_switch_selected')){
                 $('#finishedGroupList, #finishGroupNum').css('display','block');
                 $('#finishedMemberList, #finishMemberNum, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').show()
