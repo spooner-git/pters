@@ -373,48 +373,103 @@ $(document).ready(function(){
 */
 
       $(document).on('mousedown','.td00, .td30', function(){
-        $('#page-addplan-pc').hide()
-        if(!$(this).hasClass('_on')){
-          $('.blankSelected30').removeClass('blankSelected30')
-          $(this).find('div').addClass('blankSelected30')
+          $('#page-addplan-pc').hide()
+          if(Options.classDur == 30){
+              if(!$(this).hasClass('_on')){
+                  $('.blankSelected30').removeClass('blankSelected30')
+                  $(this).find('div').addClass('blankSelected30')
 
-          var thisID     = $(this).attr('id')
-          var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
-          var thisIDHour = $(this).attr('id').split('_')[3]
-          var thisIDMin  = $(this).attr('id').split('_')[4]
+                  var thisID     = $(this).attr('id')
+                  var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
+                  var thisIDHour = $(this).attr('id').split('_')[3]
+                  var thisIDMin  = $(this).attr('id').split('_')[4]
 
 
-          $(document).on('mouseover','.td00, .td30', function(){
-              var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
-              var overIDHour = $(this).attr('id').split('_')[3]
-              var overIDMin  = $(this).attr('id').split('_')[4]
-              if(overIDMin == '30'){
-                var prevIDHour = overIDHour 
-                var prevIDMin  = '00'
-              }else if(overIDMin == '00'){
-                var prevIDHour = Number(overIDHour)-1
-                var prevIDMin  = '30'
-              } var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin)
+                  $(document).on('mouseover','.td00, .td30', function(){
+                      var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
+                      var overIDHour = $(this).attr('id').split('_')[3]
+                      var overIDMin  = $(this).attr('id').split('_')[4]
+                      if(overIDMin == '30'){
+                        var prevIDHour = overIDHour 
+                        var prevIDMin  = '00'
+                      }else if(overIDMin == '00'){
+                        var prevIDHour = Number(overIDHour)-1
+                        var prevIDMin  = '30'
+                      } var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin)
 
-              if($('.blankSelected30').length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected30') && !$(this).hasClass('_on')){
-                $(this).find('div').addClass('blankSelected30')
-              }else if($(this).hasClass('_on')){
-                $(document).off('mouseover')
-                show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
-                check_dropdown_selected_addplan()
+                      if($('.blankSelected30').length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected30') && !$(this).hasClass('_on')){
+                        $(this).find('div').addClass('blankSelected30')
+                      }else if($(this).hasClass('_on')){
+                        $(document).off('mouseover')
+                        show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
+                        check_dropdown_selected_addplan()
+                      }
+                  })
+
+                  $(document).on('mouseup', '.td00, .td30', function(){
+                      $(document).off('mouseover')
+                      show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
+                      check_dropdown_selected_addplan()
+                  })
               }
-          })
+          }else if(Options.classDur == 60){
+                var thisID     = $(this).attr('id')
+                var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
+                var thisIDHour = $(this).attr('id').split('_')[3]
+                var thisIDMin  = $(this).attr('id').split('_')[4]
+                if(thisIDMin == '00'){
+                  var next30IDHour = Number(thisIDHour)
+                  var next30IDMin  = '30'
+                }else if(thisIDMin == '30'){
+                  var next30IDHour = Number(thisIDHour) + 1
+                  var next30IDMin  = '00'
+                }
+                var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin)
 
-          $(document).on('mouseup', '.td00, .td30', function(){
-              $(document).off('mouseover')
-              show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
-              check_dropdown_selected_addplan()
-          })
-        }
+                if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on')){
+                    $('.blankSelected').removeClass('blankSelected')
+                    $(this).find('div').addClass('blankSelected')
+
+                    $(document).on('mouseover','.td00, .td30', function(){
+                        var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
+                        var overIDHour = $(this).attr('id').split('_')[3]
+                        var overIDMin  = $(this).attr('id').split('_')[4]
+                        if(overIDMin == '30'){
+                          var prevIDHour = Number(overIDHour)-1 
+                          var prevIDMin  = '30'
+                          var nextIDHour = Number(overIDHour)+1
+                          var nextIDMin  = '00'
+                        }else if(overIDMin == '00'){
+                          var prevIDHour = Number(overIDHour)-1
+                          var prevIDMin  = '00'
+                          var nextIDHour = Number(overIDHour)
+                          var nextIDMin  = '30'
+                        } 
+                        var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin)
+                        var $nextOvered = $('#'+overIDDate+'_'+nextIDHour+'_'+nextIDMin)
+
+                        console.log($(this).attr('id'))
+                        if($('.blankSelected').length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected') && !$(this).hasClass('_on') && !$nextOvered.hasClass('_on')){
+                          $(this).find('div').addClass('blankSelected')
+                        }else if($(this).hasClass('_on')){
+                          $(document).off('mouseover')
+                          show_mini_plan_add_popup(thisID, $('.blankSelected').length)
+                          check_dropdown_selected_addplan()
+                        }
+                    })
+
+                    $(document).on('mouseup', '.td00, .td30', function(){
+                        $(document).off('mouseover')
+                        show_mini_plan_add_popup(thisID, $('.blankSelected').length)
+                        check_dropdown_selected_addplan()
+                    })
+                }
+          }
+          
+        
       })
 
       function show_mini_plan_add_popup(thisID, dur){
-          console.log(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
           $("#id_training_date, #id_training_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
           $("#id_training_time, #id_training_time_off").val(time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4]+':00.000000');
 
@@ -425,8 +480,8 @@ $(document).ready(function(){
             $("#id_time_duration").val(dur);
             $("#id_time_duration_off").val(dur);
           }
-          $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((30*Number(dur))/60)+'시간').val(dur);
-          $('#datetext_mini').text(thisID+'_'+((30*Number(dur))/60)+'시간')
+          $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((Options.classDur*Number(dur))/60)+'시간').val(dur);
+          $('#datetext_mini').text(thisID+'_'+((Options.classDur*Number(dur))/60)+'시간')
 
           //minipopup 위치 보정
           var toploc = $('#'+thisID).offset().top;
@@ -1734,6 +1789,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
   $('.blankSelected_addview').removeClass('blankSelected blankSelected30')
   $('.blankSelected30').removeClass('blankSelected30')
+  $('.blankSelected').removeClass('blankSelected')
   switch(option){
     case 'class':
       var plan = option
