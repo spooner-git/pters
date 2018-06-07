@@ -181,7 +181,7 @@ $(document).ready(function(){
 			if($(this).attr('data-memo') == undefined){
 				var selectedMemo = ""
 			}
-			$("#cal_popup_planinfo").fadeIn('fast').attr({'schedule_id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype')})
+			$("#cal_popup_planinfo").fadeIn('fast').attr({'schedule_id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
 			$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
 			$('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
 			$('#popup_info').text(selectedDate);
