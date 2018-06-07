@@ -460,7 +460,7 @@ def delete_trainee_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
-
+    print('next_page::'+str(next_page))
     error = None
     lecture_info = None
     class_info = None
@@ -493,10 +493,7 @@ def delete_trainee_schedule_logic(request):
 
     if error is None:
         lecture_info = schedule_info.lecture_tb
-        # try:
-        #     lecture_info = LectureTb.objects.get(lecture_id=schedule_info.lecture_tb_id, use=1)
-        # except ObjectDoesNotExist:
-        #     error = '회원 수강 정보를 불러오지 못했습니다.'
+        lecture_id = schedule_info.lecture_tb.lecture_id
 
     if error is None:
         try:
@@ -556,7 +553,7 @@ def delete_trainee_schedule_logic(request):
         if nowtime > reserve_avail_end_time:
             error = '현재는 삭제할수 없는 시간입니다.'
         if reserve_stop == '1':
-            error = '강사 설정에 의해 현재 예약이 일시 정지 되어있습니다.'
+            error = '현재는 예약할수 없습니다.'
 
     avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
 
@@ -590,30 +587,10 @@ def delete_trainee_schedule_logic(request):
                 delete_schedule.save()
                 schedule_info.delete()
 
-                lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id)
-                if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
-                    lecture_info.lecture_avail_count = lecture_info.lecture_reg_count \
-                                                              - len(lecture_schedule_data)
-                else:
-                    error = '예약 가능한 횟수를 확인해주세요.'
-                    raise ValidationError()
+                if error is None:
+                    error = func_refresh_lecture_count(lecture_id)
 
-                #진행 완료된 일정을 삭제하는경우 예약가능 횟수 및 남은 횟수 증가
-                if schedule_info.state_cd == 'PE':
-                    lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id,
-                                                                      state_cd='PE')
-                    if lecture_info.lecture_reg_count >= len(lecture_schedule_data):
-                        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count \
-                                                           - len(lecture_schedule_data)
-
-                    else:
-                        error = '예약 가능한 횟수를 확인해주세요.'
-                        raise ValidationError()
-
-                lecture_info.mod_dt = timezone.now()
-                lecture_info.save()
-
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
             error = '등록 값의 형태에 문제가 있습니다.'
@@ -621,10 +598,9 @@ def delete_trainee_schedule_logic(request):
             error = '이미 삭제된 일정입니다.'
         except InternalError:
             error = '이미 삭제된 일정입니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 
-    # print(error)
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                             lecture_tb__state_cd='IP',

@@ -643,6 +643,7 @@ $(document).ready(function(){
 	          },
 
 	          success:function(data){
+	          	console.log(data)
 	          	var jsondata = JSON.parse(data);
 	          	console.log(jsondata)
 	          	if(jsondata.messageArray.length>0){

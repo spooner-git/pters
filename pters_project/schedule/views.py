@@ -354,7 +354,7 @@ def finish_schedule_logic(request):
         func_send_push_trainer(schedule_info.lecture_tb_id, class_type_name + ' 수업 - 일정 알림',
                                push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[
-                                   1] + ' 일정을 완료했습니다')
+                                   1] + ' 일정이 완료됐습니다')
 
     if error is None:
         return redirect(next_page)
