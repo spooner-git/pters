@@ -54,7 +54,7 @@ $(document).ready(function(){
                       timeGraphSet("group","pink","AddClass", initialJSON);
                       timeGraphSet("off","grey","AddClass", initialJSON)
                       */
-                      startTimeSet('class');
+                      //startTimeSet('class');
                   }
                   else if(addTypeSelect =="offadd"){
                       //$("#id_training_date_off").val($("#datepicker").val()).submit();
@@ -76,7 +76,7 @@ $(document).ready(function(){
                       timeGraphSet("group","pink","AddClass", initialJSON);
                       timeGraphSet("off","grey","AddClass", initialJSON)
                       */
-                      startTimeSet('class');
+                      //startTimeSet('class');
                   }
                   else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
                       $("#datepicker_repeat_end").datepicker('option','minDate',$("#datepicker_repeat_start").val())
@@ -1501,6 +1501,7 @@ function ajaxTimeGraphSet(date, use, callback){
             timeGraphSet("class","pink","mini", jsondata);  //시간 테이블 채우기
             timeGraphSet("group","pink","mini", initialJSON);
             timeGraphSet("off","grey","mini", jsondata)
+            startTimeSet('class');
             if(use == "callback"){
               callback()
             }
