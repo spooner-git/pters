@@ -437,7 +437,7 @@ $(document).ready(function(){
 		$('#canvasWrap span').hide();
 
 		$('#page-addplan-pc').hide()
-		$("#cal_popup_planinfo").fadeIn('fast');
+		$("#cal_popup_planinfo").fadeIn('fast').attr('group_plan_finish_check', $(this).attr('data-schedule-check'));
 		shade_index(100)
 		closeAlarm('pc')
 
