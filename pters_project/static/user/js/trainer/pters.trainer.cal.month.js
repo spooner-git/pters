@@ -338,11 +338,11 @@ $(document).ready(function(){
 						//PT 일정 완료 처리시
 						send_plan_complete('callback',function(json, senddata){
 							send_memo()
-							signImageSend(send_data);
+							signImageSend(senddata);
 			          		console.log('555')
 			          		close_info_popup('cal_popup_planinfo')
 		                    completeSend();
-		                    set_schedule_time(jsondata)
+		                    set_schedule_time(json)
 		                    ajax_block_during_complete_monthcal = true
 							$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 	                    	$('#canvas').hide().css({'border-color':'#282828'})

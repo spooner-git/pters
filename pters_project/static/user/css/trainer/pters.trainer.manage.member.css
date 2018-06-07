@@ -168,12 +168,32 @@ body{
 	margin-left: auto;
 	margin-right: auto;
 }
-#selectBox_type{
-	border-top: 1px solid black;
-	max-width: 800px;
-	margin-left: auto;
-	margin-right: auto;
-}
+
+#selectBox_type.list_switch_wrap{
+		max-width: 800px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 20px;
+		font-size: 15px;
+		text-align: center;
+	}
+		#selectBox_type.list_switch_wrap div.list_switch{
+			display: inline-block;
+			cursor: pointer;
+		}
+		#selectBox_type.list_switch_wrap div.list_switch:hover{
+			color: #282828;
+			font-weight: 400;
+		}
+		#selectBox_type.list_switch_wrap span.list_switch_divider{
+			margin-right: 15px;
+			margin-left: 15px;
+			color: #cccccc;
+		}
+		.list_switch_selected{
+			color: #282828;
+			font-weight: 500;
+		}
 
 .alignSelect{
 	width: 100%;
@@ -186,6 +206,9 @@ body{
 	text-align-last:center;
 	-webkit-text-align: center;
 }
+	#align_select_dropdown_arrow{
+		right: 5%;
+	}
 
 select:focus > option:checked { 
     color: #fe4e65 !important;
@@ -200,6 +223,17 @@ select:focus > option:checked {
 	width: 91.6%;
 	max-width: 800px;
 }
+	#align_type_text{
+		display: none;
+		/*
+		font-size:14px; 
+		position: absolute; 
+		left: 0;
+		*/
+	}
+	#alignBox div._info_download{
+		display: none;
+	}
 
 .btn{
 	border-radius: 0;
@@ -1123,13 +1157,6 @@ select:focus > option:checked {
 /*-----------------PC 회원정보 팝업-----------------------*/
 
 
-
-
-
-
-
-
-
 ._tdname,._tdnamee{
 	font-size: 105%;
 }
@@ -1437,6 +1464,15 @@ select:focus > option:checked {
 
 @media(min-width: 1000px){
 
+	#align_type_text{
+		display: inline;
+		right: 290px;
+	}
+
+	#align_select_dropdown_arrow{
+		right: 130px;
+	}
+
 	.tableThead{
 		width: 1080px;
 		display: table;
@@ -1592,6 +1628,9 @@ select:focus > option:checked {
 		margin-top: 20px;
 		padding-right: 190px;
 	}
+		#alignBox div._info_download{
+			display: inline;
+		}
 
 	.memberNum{
 		position: absolute;
