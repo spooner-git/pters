@@ -694,7 +694,7 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_id = jsondata.group_id[i];
         var group_type = jsondata.group_type_cd[i];
         var group_capacity = jsondata.member_num[i];
-        var group_createdate = jsondata.reg_dt[i];
+        var group_createdate = date_format_to_yyyymmdd(jsondata.reg_dt[i].split(' ')[0]+' '+jsondata.reg_dt[i].split(' ')[1]+' '+jsondata.reg_dt[i].split(' ')[2], '-');
         var group_memo = jsondata.note[i];
         var group_memberlist = []
         var group_membernum = jsondata.group_member_num[i]
