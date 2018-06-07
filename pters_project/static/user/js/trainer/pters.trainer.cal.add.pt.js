@@ -459,6 +459,7 @@ $(document).ready(function(){
                           $(this).find('div').addClass('blankSelected')
                         }else if($(this).hasClass('_on')){
                           $(document).off('mouseover')
+                          console.log('addddd11111')
                           show_mini_plan_add_popup(thisID, $('.blankSelected').length)
                           check_dropdown_selected_addplan()
                         }
@@ -466,7 +467,10 @@ $(document).ready(function(){
 
                     $(document).on('mouseup', '.td00, .td30', function(){
                         $(document).off('mouseover')
-                        show_mini_plan_add_popup(thisID, $('.blankSelected').length)
+                        console.log('addddd22222')
+                        if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                          show_mini_plan_add_popup(thisID, $('.blankSelected').length)
+                        }
                         check_dropdown_selected_addplan()
                     })
                 }
@@ -475,6 +479,9 @@ $(document).ready(function(){
       //긁어서 일정 추가
 
       function show_mini_plan_add_popup(thisID, dur){
+
+          console.log('show mini plan')
+
           $("#id_training_date, #id_training_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
           $("#id_training_time, #id_training_time_off").val(time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4]+':00.000000');
 
