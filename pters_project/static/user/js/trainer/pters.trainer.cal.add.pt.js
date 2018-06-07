@@ -2683,7 +2683,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 //그룹일정에 참석자 추가 img.add_listedMember(플러스버튼)을 누르면 호출된다.
-function send_add_groupmember_plan(){
+function send_add_groupmember_plan(use, callback){
     var $form = $('#add_groupmember-plan-form').serializeArray()
     var sendData = send_Data($form)
     var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/schedule/add_member_group_schedule')
@@ -2704,11 +2704,16 @@ function send_add_groupmember_plan(){
               $('#errorMessageBar').show()
               $('#errorMessageText').text(jsondata.messageArray)
             }else{
-              scheduleTime('class', jsondata)
-              scheduleTime('off', jsondata)
-              scheduleTime('group', jsondata)
-              get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
-              alert('그룹일정 참석자 정상 등록되었습니다.')
+              
+              if(use == 'callback'){
+                callback(jsondata)
+              }else{
+                scheduleTime('class', jsondata)
+                scheduleTime('off', jsondata)
+                scheduleTime('group', jsondata)
+                get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
+                alert('그룹일정 참석자 정상 등록되었습니다.')
+              }
             }
       },
 
