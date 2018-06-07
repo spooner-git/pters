@@ -477,7 +477,7 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
         if (repeat_schedule_end_date_info - repeat_schedule_start_date_info) > datetime.timedelta(days=365):
-            error = '1 초과 반복일정을 등록할수 없습니다.'
+            error = '1년까지만 반복일정을 등록할수 있습니다.'
 
     if error is None:
         if repeat_start_time == '':
@@ -1346,7 +1346,7 @@ def add_group_repeat_schedule_logic(request):
 
     if error is None:
         if (repeat_schedule_end_date_info - repeat_schedule_start_date_info) > datetime.timedelta(days=365):
-            error = '1년 초과 반복일정을 등록할수 없습니다.'
+            error = '1년까지만 반복일정을 등록할수 있습니다.'
 
     if error is None:
         if repeat_start_time == '':

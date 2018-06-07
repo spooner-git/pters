@@ -510,7 +510,8 @@ if (agent.indexOf("firefox") != -1) {
     //진행 완료 처리 버튼
     $('.lectureStateChangeSelectPopup ._complete').click(function(){
         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid')
+        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+        console.log('test:::'+dbID)
         complete_member_reg_data_pc(lectureID, dbID)
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
@@ -2822,7 +2823,7 @@ function complete_member_reg_data_pc(lectureID, dbID){
     $.ajax({
         url:'/trainer/finish_lecture_info/',
         type:'POST',
-        data:{"lecture_id":lectureID,"member_id": dbID, "next_page":'/trainer/get_member_list/'},
+        data:{"lecture_id":lectureID,"member_id": dbID, "next_page":'/trainer/get_error_info/'},
         dataType : 'html',
 
         beforeSend:function(){
@@ -3210,18 +3211,18 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 
             //var whatGroupType = '<div class="whatGroupType"><select disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-                var lectureTypeName = '<div class="lecConnectType_IP" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+                var lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }else if(jsondata.lectureStateArray[i] == "PE"){
-                var lectureTypeName = '<div class="lecConnectType_PE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+                var lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }else if(jsondata.lectureStateArray[i] == "RF"){
-                var lectureTypeName = '<div class="lecConnectType_RF" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+                var lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
             }
             if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
-                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
             }else if(jsondata.memberViewStateArray[i] == "DELETE"){
-                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
             }else if(jsondata.memberViewStateArray[i] == "VIEW"){
-                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
             }
 
             var note = '<div class="mobile_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'

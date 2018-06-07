@@ -96,8 +96,6 @@ def login_trainer(request):
                     token_info.save()
 
             request.session['push_token'] = keyword
-            # request.session['is_first_login'] = True
-            # request.session['member_id'] = member_detail.member_id
 
             return redirect(next_page)
         elif user is not None and user.is_active == 0:
@@ -107,7 +105,7 @@ def login_trainer(request):
                 error = 'ID/비밀번호를 확인해주세요.'
             if error is None:
                 if member.use == 1:
-                    request.session['username'] = user.username
+                    request.session['user_id'] = user.id
                     if user.email is None or user.email == '':
                         next_page = '/login/send_email_member/'
                     else:
@@ -185,64 +183,30 @@ class ResendEmailAuthenticationView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
-        username = request.POST.get('before_user_id', '')
-        user_id = request.POST.get('id', '')
+        user_id = request.POST.get('username', '')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
         member_type = request.POST.get('member_type', '')
+        member_id = request.POST.get('member_id', '')
         error = None
         user = None
-
-        if username is None or username == '':
-            error = 'ID를 입력해주세요.'
-
-        if error is None:
-            if member_type == 'new':
-                if password is None or password == '':
-                    error = '비밀번호를 입력해주세요.'
-                else:
-                    if len(password) < 8:
-                        error = '비밀번호는 8자 이상 입력해주세요.'
+        username = None
 
         if error is None:
             if member_type == 'new':
                 if email is None or email == '':
-                    error = 'email을 입력해주세요'
-
-        if error is None:
-            if member_type == 'id':
-                if email is None or email == '':
-                    error = 'id를 입력해주세요'
-
-        if error is None:
-            if member_type == 'new':
-                try:
-                    User.objects.get(username=user_id)
-                except ObjectDoesNotExist:
-                    error = '존재 하지 않음'
-                if error is None:
-                    error = '이미 가입된 ID 입니다.'
-                else:
-                    error = None
-
-        if error is None:
-            if member_type == 'new':
-                try:
-                    User.objects.get(email=email)
-                except ObjectDoesNotExist:
-                    error = '존재 하지 않음'
-                if error is None:
-                    error = '이미 가입된 email 입니다.'
-                else:
-                    error = None
+                    error = 'Email을 입력해주세요.'
+                elif user_id is None or user_id == '':
+                    error = 'ID를 입력해주세요.'
 
         if error is None:
             try:
-                user = User.objects.get(username=username)
+                user = User.objects.get(id=member_id)
             except ObjectDoesNotExist:
                 error = '가입되지 않은 회원입니다.'
 
         if error is None:
+            username = user.username
             if member_type == 'new':
                 if error is None:
                     user.username = user_id
@@ -841,12 +805,21 @@ def question_reg_logic(request):
 
 def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthday_dt):
     error = None
-    name = last_name + first_name
+    name = ''
     context = {'error': None, 'username': ''}
-    if name == '':
+
+    if last_name is None or last_name == '':
+        error = '성을 입력해 주세요.'
+
+    if first_name is None or first_name == '':
         error = '이름을 입력해 주세요.'
-    else:
-        name = name.replace(' ', '')
+
+    if error is None:
+        name = last_name + first_name
+        if name == '':
+            error = '이름을 입력해 주세요.'
+        else:
+            name = name.replace(' ', '')
     if sex == '':
         sex = None
 

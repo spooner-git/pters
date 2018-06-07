@@ -1738,7 +1738,8 @@ def finish_lecture_info_logic(request):
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
-
+    lecture_info = None
+    member_info = None
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
@@ -1758,8 +1759,10 @@ def finish_lecture_info_logic(request):
         group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-        schedule_data.delete()
-        repeat_schedule_data.delete()
+        if len(schedule_data) > 0:
+            schedule_data.delete()
+        if len(repeat_schedule_data) > 0:
+            repeat_schedule_data.delete()
         lecture_info.lecture_avail_count = 0
         lecture_info.lecture_rem_count = 0
         lecture_info.mod_dt = timezone.now()
@@ -2139,20 +2142,24 @@ def add_group_member_logic(request):
 
     class_id = request.session.get('class_id', '')
     json_data = request.body.decode('utf-8')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     json_loading_data = None
     error = None
     user_db_id_list = []
     user_name_list = []
     group_info = None
 
+    print('test1')
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-
-    group_id = json_loading_data['lecture_info']['group_id']
+    print('test2')
+    if error is None:
+        group_id = json_loading_data['lecture_info']['group_id']
+    print('test3')
     if error is None:
         if group_id != '' and group_id is not None:
             try:
@@ -2167,6 +2174,7 @@ def add_group_member_logic(request):
                     if group_counter > group_info.member_num:
                         error = '그룹 허용 인원을 초과했습니다.'
 
+    print('test4')
     if error is None:
         if group_info.group_type_cd == 'NORMAL':
             if json_loading_data['old_member_data'] != '[]':
@@ -2192,9 +2200,11 @@ def add_group_member_logic(request):
                     if error is not None:
                         break
 
+    print('test5')
     if error is None:
         try:
             with transaction.atomic():
+
                 if json_loading_data['new_member_data'] != '[]':
                     for json_info in json_loading_data['new_member_data']:
                         context = add_member_no_email_func(request.user.id,
@@ -2235,8 +2245,7 @@ def add_group_member_logic(request):
         except InternalError:
             error = error
 
-    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
-
+    print('test6')
     if error is None:
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
