@@ -43,7 +43,7 @@ $(document).ready(function(){
             $('._REPEAT_ADD_wrap').css('display','none')
 
             if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').show('slow')
+                $('._NORMAL_ADD_timegraph').css('display','block')
             }
             /*애니메이션*/
             if(addTypeSelect == "repeatptadd"){
@@ -58,7 +58,7 @@ $(document).ready(function(){
             $('._NORMAL_ADD_wrap').css('display','block')
             $('._REPEAT_ADD_wrap').css('display','none')
             if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').show('slow')
+                $('._NORMAL_ADD_timegraph').css('display','block')
             }
             /*애니메이션*/
             addTypeSelect = "offadd"

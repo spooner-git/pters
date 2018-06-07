@@ -41,7 +41,8 @@ $(document).ready(function(){
                       //$("#id_training_date").val($("#datepicker").val()).submit();
                       $("#id_training_date").val($("#datepicker").val());
                       if($('#timeGraph').css('display')=='none'){
-                        $('#timeGraph').show(110,"swing");
+                        //$('#timeGraph').show(110,"swing");
+                        $('#timeGraph').css('display','block')
                       }
                       $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
                       clear_start_dur_dropdown()
@@ -59,7 +60,8 @@ $(document).ready(function(){
                       //$("#id_training_date_off").val($("#datepicker").val()).submit();
                       $("#id_training_date_off").val($("#datepicker").val());
                       if($('#timeGraph').css('display')=='none'){
-                        $('#timeGraph').show(110,"swing");
+                        //$('#timeGraph').show(110,"swing");
+                        $('#timeGraph').css('display','block')
                       }
                       $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
                       clear_start_dur_dropdown()

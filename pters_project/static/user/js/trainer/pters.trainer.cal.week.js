@@ -1745,12 +1745,11 @@ function toggleGroupParticipantsList(onoff){
 
 function fake_show(){
 	//var faketarget = selector.parent('div').siblings('.fake_for_blankpage')
-	console.log('fake_show', $('.swiper-slide-active').find('.classTime').length, $('.swiper-slide-active').find('.offTime').length)
-	if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
+	if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0 && $('.swiper-slide-active').find('.groupTime').length == 0){
 		$('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
-	}else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
+	}/*else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
 		$('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
-	}
+	}*/
 }
 
 
