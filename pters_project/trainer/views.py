@@ -44,7 +44,7 @@ logger = logging.getLogger(__name__)
 
 
 class GetErrorInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/error_ajax.html'
+    template_name = 'ajax/trainer_error_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(GetErrorInfoView, self).get_context_data(**kwargs)
@@ -1679,9 +1679,6 @@ def update_lecture_info_logic(request):
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
     if error is None:
-        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
-        #               + member_name + ' 회원님의</span> 수강정보를 <span class="status">수정</span>했습니다.'
-
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='수정',
@@ -1776,26 +1773,13 @@ def finish_lecture_info_logic(request):
                 group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                     use=1).exclude(lecture_tb__state_cd='IP').count()
                 group_info_data = group_info.group_tb
-                # try:
-                #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                # except ObjectDoesNotExist:
-                #     error = '그룹 정보를 불러오지 못했습니다.'
+
                 if group_data_total_size == group_data_end_size:
                     group_info_data.state_cd = 'PE'
                     group_info_data.save()
                 else:
                     group_info_data.state_cd = 'IP'
                     group_info_data.save()
-                # if error is None:
-                #     if group_data_total_size == group_data_end_size:
-                #         group_info_data.state_cd = 'PE'
-                #         group_info_data.save()
-                #     else:
-                #         group_info_data.state_cd = 'IP'
-                #         group_info_data.save()
-                # else:
-                #     error = None
-
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
@@ -1878,20 +1862,6 @@ def refund_lecture_info_logic(request):
                 else:
                     group_info_data.state_cd = 'IP'
                     group_info_data.save()
-                # try:
-                #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                # except ObjectDoesNotExist:
-                #     error = '그룹 정보를 불러오지 못했습니다.'
-                # if error is None:
-                #     if group_data_total_size == group_data_end_size:
-                #         group_info_data.state_cd = 'PE'
-                #         group_info_data.save()
-                #     else:
-                #         group_info_data.state_cd = 'IP'
-                #         group_info_data.save()
-                # else:
-                #     error = None
-
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
@@ -2878,14 +2848,7 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         error = None
         class_info = None
-        print(str(class_id))
-        print(str(subject_cd))
-        print(str(subject_detail_nm))
-        print(str(start_date))
-        print(str(end_date))
-        print(str(class_hour))
-        print(str(start_hour_unit))
-        print(str(class_member_num))
+
         if class_id is None or class_id == '':
             error = '강좌 정보를 불러오지 못했습니다.'
 
@@ -2917,11 +2880,9 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             if class_member_num is not None and class_member_num != '':
                 class_info.class_member_num = class_member_num
 
-        print('test1')
         if error is None:
             class_info.mod_dt = timezone.now()
             class_info.save()
-        print('test2')
 
         if error is None:
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -2931,7 +2892,6 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
             log_data.save()
 
-        print('test3')
         if error is not None:
             logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
             messages.error(request, error)

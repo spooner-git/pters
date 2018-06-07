@@ -95,40 +95,18 @@ def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_
     return context
 
 
-def func_get_trainee_off_schedule(context, user_id, class_id, start_date, end_date):
+def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
     off_schedule_list = []
-    group_list = func_get_trainee_group_ing_list(class_id, user_id)
 
     # off 스케쥴 전달
     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                               start_dt__gte=start_date,
-                                              end_dt__lt=end_date).order_by('-lecture_tb__start_date', 'start_dt')
+                                              end_dt__lt=end_date).order_by('start_dt')
 
     for schedule_info in schedule_data:
-        if schedule_info.group_tb_id is None or schedule_info.group_tb_id == '':
-            # on 스케쥴
-            if schedule_info.en_dis_type == ON_SCHEDULE_TYPE:
-                if schedule_info.lecture_tb.member_id != user_id:
-                    schedule_info.start_dt = str(schedule_info.start_dt)
-                    schedule_info.end_dt = str(schedule_info.end_dt)
-                    off_schedule_list.append(schedule_info)
-            else:
-                # off 스케쥴
-                schedule_info.start_dt = str(schedule_info.start_dt)
-                schedule_info.end_dt = str(schedule_info.end_dt)
-                off_schedule_list.append(schedule_info)
-
-        else:
-            # 그룹 스케쥴
-            group_check = 0
-            for group_info in group_list:
-                if schedule_info.group_tb_id != group_info.group_tb.group_id:
-                    group_check = 1
-
-            if group_check == 0:
-                schedule_info.start_dt = str(schedule_info.start_dt)
-                schedule_info.end_dt = str(schedule_info.end_dt)
-                off_schedule_list.append(schedule_info)
+        schedule_info.start_dt = str(schedule_info.start_dt)
+        schedule_info.end_dt = str(schedule_info.end_dt)
+        off_schedule_list.append(schedule_info)
 
     context['off_schedule_data'] = off_schedule_list
 

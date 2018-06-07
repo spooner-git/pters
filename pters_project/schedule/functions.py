@@ -542,7 +542,6 @@ def func_send_push_trainee(class_id, title, message):
             for token_info in token_data:
                 token_info.badge_counter += 1
                 token_info.save()
-
                 instance_id = token_info.token
                 badge_counter = token_info.badge_counter
                 data = {

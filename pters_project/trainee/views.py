@@ -228,7 +228,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             # context = func_get_trainee_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
             context = func_get_holiday_schedule(context)
             context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, start_date, end_date)
-            context = func_get_trainee_off_schedule(context, self.request.user.id, class_id, start_date, end_date)
+            context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
             context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
 
             # 회원 setting 값 로드
@@ -250,7 +250,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(MyPageView, self).get_context_data(**kwargs)
         error = None
         class_id = self.request.session.get('class_id', '')
-        # lecture_id = self.request.session.get('lecture_id', '')
 
         today = datetime.date.today()
         start_date = today - datetime.timedelta(days=46)
@@ -267,7 +266,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
 
-        #    error = '수강정보를 확인해 주세요.'
         if error is None:
             context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, None, None)
             context = func_get_trainee_on_repeat_schedule(context, self.request.user.id, class_id)
@@ -418,10 +416,6 @@ def add_trainee_schedule_logic(request):
     if error is None:
         error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, lecture_id, class_id, request, group_schedule_id)
 
-    if error is not None:
-        if '-' in error:
-            error += ' 일정이 중복되었습니다. '
-    # print(error)
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                             lecture_tb__state_cd='IP',
@@ -460,7 +454,7 @@ def delete_trainee_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
-    print('next_page::'+str(next_page))
+    start_func_time = timezone.now()
     error = None
     lecture_info = None
     class_info = None
@@ -575,7 +569,9 @@ def delete_trainee_schedule_logic(request):
                 delete_schedule = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
                                                    class_tb_id=schedule_info.class_tb_id,
                                                    lecture_tb_id=schedule_info.lecture_tb_id,
+                                                   group_tb_id=schedule_info.group_tb_id,
                                                    delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
+                                                   group_schedule_id=schedule_info.group_schedule_id,
                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
                                                    permission_state_cd=schedule_info.permission_state_cd,
                                                    state_cd=schedule_info.state_cd, en_dis_type=schedule_info.en_dis_type,
@@ -601,6 +597,8 @@ def delete_trainee_schedule_logic(request):
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 
+    end_func_time = timezone.now()
+    print('except push:'+str(end_func_time-start_func_time))
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                             lecture_tb__state_cd='IP',
@@ -626,12 +624,12 @@ def delete_trainee_schedule_logic(request):
                        request.user.last_name + request.user.first_name + '님이 ' \
                        + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
                        + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다.')
-
+        end_push_func_time = timezone.now()
+        print('url func end:'+str(end_push_func_time - start_func_time))
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        next_page = 'trainee:cal_month'
         return redirect(next_page)
 
 
@@ -655,7 +653,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
         context = func_get_holiday_schedule(context)
         context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, start_date, end_date)
-        context = func_get_trainee_off_schedule(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
         context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
@@ -680,7 +678,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         context['error'] = None
         context = func_get_holiday_schedule(context)
         context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, start_date, end_date)
-        context = func_get_trainee_off_schedule(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
         context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
@@ -1313,17 +1311,17 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
                         if error is not None:
                             error += ' 일정이 중복되었습니다.'
 
-                if error is not None:
-                    raise InternalError()
+                        if error is not None:
+                            raise InternalError()
 
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태에 문제가 있습니다.'
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
             error = '날짜가 중복됐습니다.'
         except InternalError:
-            error = '예약 가능한 횟수를 확인해주세요.'
+            error = error
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 
