@@ -373,7 +373,7 @@ $(document).ready(function(){
 */
 
       $(document).on('mousedown','.td00, .td30', function(){
-          $('#page-addplan-pc').hide()
+          closeAddPopup_mini()
           if(Options.classDur == 30){
               if(!$(this).hasClass('_on')){
                   $('.blankSelected30').removeClass('blankSelected30')
@@ -448,7 +448,6 @@ $(document).ready(function(){
                         var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin)
                         var $nextOvered = $('#'+overIDDate+'_'+nextIDHour+'_'+nextIDMin)
 
-                        console.log($(this).attr('id'))
                         if($('.blankSelected').length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected') && !$(this).hasClass('_on') && !$nextOvered.hasClass('_on')){
                           $(this).find('div').addClass('blankSelected')
                         }else if($(this).hasClass('_on')){
@@ -666,6 +665,7 @@ $(document).ready(function(){
                   }
                 }
                 $("#countsSelected_mini").show().text(availCount_personal);
+                check_dropdown_selected_addplan();
             })
             
             $('#remainCount_mini_text').css('display','inline-block')
@@ -2003,7 +2003,7 @@ function closeAddPopup(){
 }
 
 function closeAddPopup_mini(){
-  $('#page-addplan-pc').fadeOut();
+  $('#page-addplan-pc').hide();
   clear_pt_off_add_popup_mini()
 }
 
@@ -2814,6 +2814,9 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
     console.log('addTypeSelect check_dropdown_selected',addTypeSelect)
 
     if(addTypeSelect == "ptadd"){
+
+        console.log((memberSelect_mini).hasClass("dropdown_selected"), $('#countsSelected_mini').text(), durSelect_mini.hasClass("dropdown_selected"))
+
         if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true && $('#countsSelected').text() != 0){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
