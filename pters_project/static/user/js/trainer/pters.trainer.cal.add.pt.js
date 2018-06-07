@@ -93,8 +93,10 @@ $(document).ready(function(){
               }
       });
 
+      
 /*
-      $(document).on('click','.td00, .td30',function(){ //주간달력 미니 팝업
+      //직접 진행시간 선택해서 추가
+      $(document).on('click','.td00, .td30', function(){ //주간달력 미니 팝업
             closeAlarm('pc')
             if($('._MINI_ptadd').css('display')=='inline'){
               addTypeSelect = 'ptadd'
@@ -370,8 +372,10 @@ $(document).ready(function(){
                 }
             }   
       })
+      //직접 진행시간 선택해서 추가
 */
-
+      
+      //긁어서 일정 추가
       $(document).on('mousedown','.td00, .td30', function(e){
           e.stopPropagation();
           closeAddPopup_mini()
@@ -466,6 +470,7 @@ $(document).ready(function(){
                 }
           }
       })
+      //긁어서 일정 추가
 
       function show_mini_plan_add_popup(thisID, dur){
           $("#id_training_date, #id_training_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
