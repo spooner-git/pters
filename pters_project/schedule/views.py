@@ -334,15 +334,15 @@ def finish_schedule_logic(request):
                 lecture_info.schedule_check = 1
                 lecture_info.save()
 
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태에 문제가 있습니다.'
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
-        except InternalError as e:
+        except InternalError:
             error = '예약 가능 횟수를 확인해주세요.'
 
     if error is None:
@@ -352,8 +352,7 @@ def finish_schedule_logic(request):
         func_save_log_data(start_date, end_date, class_id, '', request.user.last_name+request.user.first_name,
                            member_name, '1', 'LS03', request)
         func_send_push_trainer(schedule_info.lecture_tb_id, class_type_name + ' 수업 - 일정 알림',
-                               request.user.last_name + request.user.first_name + '님이 '\
-                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
+                               push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[
                                    1] + ' 일정을 완료했습니다')
 
