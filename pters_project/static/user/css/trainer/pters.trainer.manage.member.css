@@ -1285,10 +1285,6 @@ select:focus > option:checked {
 
 @media(min-width: 600px){
 
-	body{
-		overflow-y: overlay;
-	}
-
 	.input_available{
 		background: #ffffff !important;
 		color: #fe4e65 !important;
