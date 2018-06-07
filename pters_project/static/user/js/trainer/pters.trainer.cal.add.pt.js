@@ -538,7 +538,7 @@ $(document).ready(function(){
       $('#datetext_mini').click(function(){console.log(addTypeSelect)})
 
       if($('#calendar').width()<=600){
-          $(document).off('click','.td00, .td30')
+          $(document).off('mouseup mouseover mousedown','.td00, .td30')
       }
 
       $('#typeSelector .toggleBtnWrap').click(function(){
