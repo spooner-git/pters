@@ -372,10 +372,11 @@ $(document).ready(function(){
       })
 */
 
-      $(document).on('mousedown','.td00, .td30', function(){
+      $(document).on('mousedown','.td00, .td30', function(e){
+          e.stopPropagation();
           closeAddPopup_mini()
           if(Options.classDur == 30){
-              if(!$(this).hasClass('_on')){
+              if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                   $('.blankSelected30').removeClass('blankSelected30')
                   $(this).find('div').addClass('blankSelected30')
 
@@ -426,7 +427,7 @@ $(document).ready(function(){
                 }
                 var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin)
 
-                if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on')){
+                if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                     $('.blankSelected').removeClass('blankSelected')
                     $(this).find('div').addClass('blankSelected')
 
@@ -464,8 +465,6 @@ $(document).ready(function(){
                     })
                 }
           }
-          
-        
       })
 
       function show_mini_plan_add_popup(thisID, dur){

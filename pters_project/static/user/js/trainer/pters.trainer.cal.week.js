@@ -197,7 +197,8 @@ $(document).ready(function(){
 
 
 	//스케쥴 클릭시 팝업 Start
-	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
+	$(document).on('click','div.classTime',function(e){ //일정을 클릭했을때 팝업 표시
+		e.stopPropagation()
 		$('.pt_memo_guide_popup').css('display','block')
 		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
@@ -299,7 +300,8 @@ $(document).ready(function(){
 	})
 	
 	//Off 일정 클릭시 팝업 Start
-	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
+	$(document).on('click','div.offTime',function(e){ //일정을 클릭했을때 팝업 표시
+		e.stopPropagation();
 		$('.pt_memo_guide_popup').css('display','none')
 		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
