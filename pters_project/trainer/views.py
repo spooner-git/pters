@@ -207,8 +207,8 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             today_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
                                                             group_tb__isnull=False,
                                                             lecture_tb__isnull=True,
-                                                            start_dt__gte=today, start_dt__lt=one_day_after,
-                                                            en_dis_type=ON_SCHEDULE_TYPE).count()
+                                                           start_dt__gte=today, start_dt__lt=one_day_after,
+                                                           en_dis_type=ON_SCHEDULE_TYPE).count()
 
         context['today_schedule_num'] = today_schedule_num
 
@@ -1458,7 +1458,7 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View
     def get(self, request, *args, **kwargs):
         context = super(GetLectureListView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        member_id = request.GET.get('member_id', '')
+        member_id = request.POST.get('member_id', '')
         context['error'] = None
 
         context = func_get_lecture_list(context, class_id, member_id)
@@ -2053,13 +2053,13 @@ def add_group_info_logic(request):
                                  mod_dt=timezone.now(), reg_dt=timezone.now(), use=1)
 
             group_info.save()
-    except ValueError as e:
+    except ValueError:
         error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
-    except IntegrityError as e:
+    except IntegrityError:
         error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
-    except TypeError as e:
+    except TypeError:
         error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
-    except ValidationError as e:
+    except ValidationError:
         error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
     except InternalError:
         error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'

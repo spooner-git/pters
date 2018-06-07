@@ -66,6 +66,8 @@ def login_trainer(request):
     if next_page is None:
         next_page = '/trainer/'
 
+    user_agent = request.META['HTTP_USER_AGENT']
+
     if not error:
         user = authenticate(username=username, password=password)
 
@@ -74,7 +76,6 @@ def login_trainer(request):
             if auto_login_check == '0':
                 request.session.set_expiry(0)
 
-            token_exist = False
             try:
                 token_data = PushInfoTb.objects.get(token=keyword, use=1)
                 if token_data.member_id == user.id:
@@ -89,8 +90,9 @@ def login_trainer(request):
 
             if token_exist is False:
                 if keyword is not None and keyword != '':
-                    token_info = PushInfoTb(member_id=user.id, token=keyword,last_login=timezone.now(),
-                                            session_info=request.session.session_key, use=1)
+                    token_info = PushInfoTb(member_id=user.id, token=keyword, last_login=timezone.now(),
+                                            session_info=request.session.session_key,
+                                            device_info=str(user_agent), use=1)
                     token_info.save()
 
             request.session['push_token'] = keyword
@@ -719,14 +721,9 @@ class AddPushTokenView(View):
     template_name = 'ajax/token_check_ajax.html'
     error = ''
 
-    def get(self, request, *args, **kwargs):
-
-        return render(request, self.template_name)
-
     def post(self, request, *args, **kwargs):
         keyword = request.POST.get('keyword', '')
-        token_exist = False
-        # print(keyword)
+        user_agent = request.META['HTTP_USER_AGENT']
         try:
             token_data = PushInfoTb.objects.get(token=keyword, use=1)
             if token_data.member_id == request.user.id:
@@ -742,7 +739,8 @@ class AddPushTokenView(View):
         if token_exist is False:
             if keyword is not None and keyword != '':
                 token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(),
-                                        session_info=request.session.session_key, use=1)
+                                        session_info=request.session.session_key,
+                                        device_info=str(user_agent), use=1)
                 token_info.save()
 
         request.session['push_token'] = keyword
