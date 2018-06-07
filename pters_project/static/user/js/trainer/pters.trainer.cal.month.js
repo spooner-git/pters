@@ -390,82 +390,7 @@ $(document).ready(function(){
 			}
 		})
 
-		function send_plan_complete(use, callback){
-			var $pt_finish_form = $('#pt-finish-form');
-			var drawCanvas = document.getElementById('canvas');
-			var send_data = $pt_finish_form.serializeArray();
-			send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
-			$.ajax({
-                url:'/schedule/finish_schedule/',
-                type:'POST',
-                data:send_data,
-
-                beforeSend:function(){
-                	beforeSend();
-                },
-                //통신성공시 처리
-                success:function(data){
-                	var jsondata = JSON.parse(data)
-                	if(jsondata.messageArray.length>0){
-	                  	$('#errorMessageBar').show()
-	                  	$('#errorMessageText').text(jsondata.messageArray)
-	                }else{
-	                    if(use == "callback"){
-	                    	callback(jsondata, send_data)
-	                    }
-	                }
-                  },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-                	
-                  },
-
-                //통신 실패시 처리
-                error:function(){
-                },
-            })
-		}
-
-		function send_group_plan_complete(use, callback){
-			var $group_finish_form = $('#group-finish-form');
-			var drawCanvas = document.getElementById('canvas');
-			var send_data = $group_finish_form.serializeArray();
-			send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
-			console.log(send_data)
-			$.ajax({
-                url:'/schedule/finish_group_schedule/',
-                type:'POST',
-                data: send_data,
-
-                beforeSend:function(){
-                	beforeSend();
-                },
-                //통신성공시 처리
-                success:function(data){
-                	var jsondata = JSON.parse(data)
-                	if(jsondata.messageArray.length>0){
-	                  	$('#errorMessageBar').show()
-	                  	$('#errorMessageText').text(jsondata.messageArray)
-	                }else{
-	                    if(use == "callback"){
-	                    	callback(jsondata, send_data)
-	                    }
-	                }
-                  },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-                	
-                  },
-
-                //통신 실패시 처리
-                error:function(){
-                },
-            })
-		}
-
-
+		
 
 		//미니 팝업 메모수정
 		$('#popup_info3_memo_modify').click(function(){
@@ -485,36 +410,6 @@ $(document).ready(function(){
 	      	$('._REPEAT_ADD_wrap').css('display','none')
 	      	$('#timeGraph').css('display','none')
 	  	}
-	}
-
-	function send_memo(){
-		var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
-		var memo = $('#popup_info3_memo').val()
-		console.log(schedule_id,memo)
-		$.ajax({
-            url:'/schedule/update_memo_schedule/',
-            type:'POST',
-            data:{"schedule_id":schedule_id,"add_memo":memo,"next_page":'/trainer/cal_week'},
-
-            beforeSend:function(){
-            	//beforeSend();
-            },
-
-            //통신성공시 처리
-            success:function(data){
-            	
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function(){
-            	ajaxClassTime()
-            },
-
-            //통신 실패시 처리
-            error:function(){
-    
-            },
-        })
 	}
 
 	function send_push(push_server_id, intance_id, title, message, badge_counter){
@@ -578,38 +473,7 @@ $(document).ready(function(){
 
 
 
-	function signImageSend(send_data){
-		$.ajax({
-            url:'/schedule/upload_sign_image/',
-            type:'POST',
-            data:send_data,
-
-            beforeSend:function(){
-            	//beforeSend();
-            },
-
-            //통신성공시 처리
-            success:function(data){
-            	var jsondata = JSON.parse(data)
-            	if(jsondata.messageArray.length>0){
-                  	$('#errorMessageBar').show()
-                  	$('#errorMessageText').text(jsondata.messageArray)
-                }else{
-                	console.log('sign_image_save_success')
-                }
-              },
-
-            //보내기후 팝업창 닫기
-            complete:function(){
-
-              },
-
-            //통신 실패시 처리
-            error:function(){
-            	console.log('sign_image_save_fail')
-            },
-         })
-	}
+	
 
 
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1252,7 +1116,145 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 	$('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
 }
 
+function send_plan_complete(use, callback){
+	var $pt_finish_form = $('#pt-finish-form');
+	var drawCanvas = document.getElementById('canvas');
+	var send_data = $pt_finish_form.serializeArray();
+	send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
+	$.ajax({
+        url:'/schedule/finish_schedule/',
+        type:'POST',
+        data:send_data,
 
+        beforeSend:function(){
+        	beforeSend();
+        },
+        //통신성공시 처리
+        success:function(data){
+        	var jsondata = JSON.parse(data)
+        	if(jsondata.messageArray.length>0){
+              	$('#errorMessageBar').show()
+              	$('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                if(use == "callback"){
+                	callback(jsondata, send_data)
+                }
+            }
+          },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+        	
+          },
+
+        //통신 실패시 처리
+        error:function(){
+        },
+    })
+}
+
+function send_group_plan_complete(use, callback){
+	var $group_finish_form = $('#group-finish-form');
+	var drawCanvas = document.getElementById('canvas');
+	var send_data = $group_finish_form.serializeArray();
+	send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
+	console.log(send_data)
+	$.ajax({
+        url:'/schedule/finish_group_schedule/',
+        type:'POST',
+        data: send_data,
+
+        beforeSend:function(){
+        	beforeSend();
+        },
+        //통신성공시 처리
+        success:function(data){
+        	var jsondata = JSON.parse(data)
+        	if(jsondata.messageArray.length>0){
+              	$('#errorMessageBar').show()
+              	$('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                if(use == "callback"){
+                	callback(jsondata, send_data)
+                }
+            }
+          },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+        	
+          },
+
+        //통신 실패시 처리
+        error:function(){
+        },
+    })
+}
+
+
+
+function send_memo(){
+	var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
+	var memo = $('#popup_info3_memo').val()
+	console.log(schedule_id,memo)
+	$.ajax({
+        url:'/schedule/update_memo_schedule/',
+        type:'POST',
+        data:{"schedule_id":schedule_id,"add_memo":memo,"next_page":'/trainer/cal_week'},
+
+        beforeSend:function(){
+        	//beforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+        	
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+        	ajaxClassTime()
+        },
+
+        //통신 실패시 처리
+        error:function(){
+
+        },
+    })
+}
+
+function signImageSend(send_data){
+	$.ajax({
+        url:'/schedule/upload_sign_image/',
+        type:'POST',
+        data:send_data,
+
+        beforeSend:function(){
+        	//beforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+        	var jsondata = JSON.parse(data)
+        	if(jsondata.messageArray.length>0){
+              	$('#errorMessageBar').show()
+              	$('#errorMessageText').text(jsondata.messageArray)
+            }else{
+            	console.log('sign_image_save_success')
+            }
+          },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+          },
+
+        //통신 실패시 처리
+        error:function(){
+        	console.log('sign_image_save_fail')
+        },
+     })
+}
 
 
 function clear_badge_counter(){

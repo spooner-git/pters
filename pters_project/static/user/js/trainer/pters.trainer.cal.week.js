@@ -197,7 +197,8 @@ $(document).ready(function(){
 
 
 	//스케쥴 클릭시 팝업 Start
-	$(document).on('click','div.classTime',function(){ //일정을 클릭했을때 팝업 표시
+	$(document).on('click','div.classTime',function(e){ //일정을 클릭했을때 팝업 표시
+		e.stopPropagation()
 		$('.pt_memo_guide_popup').css('display','block')
 		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
@@ -299,7 +300,8 @@ $(document).ready(function(){
 	})
 	
 	//Off 일정 클릭시 팝업 Start
-	$(document).on('click','div.offTime',function(){ //일정을 클릭했을때 팝업 표시
+	$(document).on('click','div.offTime',function(e){ //일정을 클릭했을때 팝업 표시
+		e.stopPropagation();
 		$('.pt_memo_guide_popup').css('display','none')
 		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
@@ -471,6 +473,7 @@ $(document).ready(function(){
 			$("#popup_sign_img").css("display","none")
         }
         else{
+        	$('#cal_popup_planinfo').attr('group_schedule_finish_check',1)
 			$("#popup_btn_complete").hide()
 			$("#popup_text1").css("display","none")
 			$("#popup_sign_img").css("display","block")
@@ -552,80 +555,7 @@ $(document).ready(function(){
 		})
 
 
-		function send_plan_complete(use, callback){
-			var $pt_finish_form = $('#pt-finish-form');
-			var drawCanvas = document.getElementById('canvas');
-			var send_data = $pt_finish_form.serializeArray();
-			send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
-			$.ajax({
-                url:'/schedule/finish_schedule/',
-                type:'POST',
-                data:send_data,
-
-                beforeSend:function(){
-                	beforeSend();
-                },
-                //통신성공시 처리
-                success:function(data){
-                	var jsondata = JSON.parse(data)
-                	if(jsondata.messageArray.length>0){
-	                  	$('#errorMessageBar').show()
-	                  	$('#errorMessageText').text(jsondata.messageArray)
-	                }else{
-	                    if(use == "callback"){
-	                    	callback(jsondata, send_data)
-	                    }
-	                }
-                  },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-                	
-                  },
-
-                //통신 실패시 처리
-                error:function(){
-                },
-            })
-		}
-
-		function send_group_plan_complete(use, callback){
-			var $group_finish_form = $('#group-finish-form');
-			var drawCanvas = document.getElementById('canvas');
-			var send_data = $group_finish_form.serializeArray();
-			send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
-			console.log(send_data)
-			$.ajax({
-                url:'/schedule/finish_group_schedule/',
-                type:'POST',
-                data: send_data,
-
-                beforeSend:function(){
-                	beforeSend();
-                },
-                //통신성공시 처리
-                success:function(data){
-                	var jsondata = JSON.parse(data)
-                	if(jsondata.messageArray.length>0){
-	                  	$('#errorMessageBar').show()
-	                  	$('#errorMessageText').text(jsondata.messageArray)
-	                }else{
-	                    if(use == "callback"){
-	                    	callback(jsondata, send_data)
-	                    }
-	                }
-                  },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-                	
-                  },
-
-                //통신 실패시 처리
-                error:function(){
-                },
-            })
-		}
+		
 
 
 
@@ -654,34 +584,7 @@ $(document).ready(function(){
 			}
 		})
 
-		function send_memo(){
-			var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
-			var memo = $('#popup_info3_memo').val()
-			$.ajax({
-	            url:'/schedule/update_memo_schedule/',
-	            type:'POST',
-	            data:{"schedule_id":schedule_id,"add_memo":memo,"next_page":'/trainer/cal_week'},
-
-	            beforeSend:function(){
-	            	//beforeSend();
-	            },
-
-	            //통신성공시 처리
-	            success:function(data){
-	            	
-	            },
-
-	            //보내기후 팝업창 닫기
-	            complete:function(){
-	            	ajaxClassTime()
-	            },
-
-	            //통신 실패시 처리
-	            error:function(){
-	    
-	            },
-	        })
-		}
+		
 
 		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
 		var ajax_block_during_delete_weekcal = true
@@ -812,39 +715,7 @@ $(document).ready(function(){
 			})
 		}
 	
-	function signImageSend(send_data){
-		$.ajax({
-            url:'/schedule/upload_sign_image/',
-            type:'POST',
-            data:send_data,
-
-            beforeSend:function(){
-            	//beforeSend();
-            },
-
-            //통신성공시 처리
-            success:function(data){
-            	var jsondata = JSON.parse(data)
-            	if(jsondata.messageArray.length>0){
-                  	$('#errorMessageBar').show()
-                  	$('#errorMessageText').text(jsondata.messageArray)
-                }else{
-                	console.log('sign_image_save_success')
-                }
-              },
-
-            //보내기후 팝업창 닫기
-            complete:function(){
-
-              },
-
-            //통신 실패시 처리
-            error:function(){
-            	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
-            	console.log('sign_image_save_fail')
-            },
-         })
-	}
+	
 
 	//PC버전 새로고침 버튼
 	$('.ymdText-pc-add-refresh').click(function(){ 
@@ -1743,12 +1614,11 @@ function toggleGroupParticipantsList(onoff){
 
 function fake_show(){
 	//var faketarget = selector.parent('div').siblings('.fake_for_blankpage')
-	console.log('fake_show', $('.swiper-slide-active').find('.classTime').length, $('.swiper-slide-active').find('.offTime').length)
-	if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
+	if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0 && $('.swiper-slide-active').find('.groupTime').length == 0){
 		$('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
-	}else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
+	}/*else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
 		$('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
-	}
+	}*/
 }
 
 
@@ -1808,6 +1678,144 @@ function set_schedule_time(jsondata){
 	scheduleTime('off', jsondata)
 	scheduleTime('group', jsondata);
 	fake_show()
+}
+
+function send_plan_complete(use, callback){
+	var $pt_finish_form = $('#pt-finish-form');
+	var drawCanvas = document.getElementById('canvas');
+	var send_data = $pt_finish_form.serializeArray();
+	send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
+	$.ajax({
+        url:'/schedule/finish_schedule/',
+        type:'POST',
+        data:send_data,
+
+        beforeSend:function(){
+        	beforeSend();
+        },
+        //통신성공시 처리
+        success:function(data){
+        	var jsondata = JSON.parse(data)
+        	if(jsondata.messageArray.length>0){
+              	$('#errorMessageBar').show()
+              	$('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                if(use == "callback"){
+                	callback(jsondata, send_data)
+                }
+            }
+          },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+        	
+          },
+
+        //통신 실패시 처리
+        error:function(){
+        },
+    })
+}
+
+function send_group_plan_complete(use, callback){
+	var $group_finish_form = $('#group-finish-form');
+	var drawCanvas = document.getElementById('canvas');
+	var send_data = $group_finish_form.serializeArray();
+	send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
+	console.log(send_data)
+	$.ajax({
+        url:'/schedule/finish_group_schedule/',
+        type:'POST',
+        data: send_data,
+
+        beforeSend:function(){
+        	beforeSend();
+        },
+        //통신성공시 처리
+        success:function(data){
+        	var jsondata = JSON.parse(data)
+        	if(jsondata.messageArray.length>0){
+              	$('#errorMessageBar').show()
+              	$('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                if(use == "callback"){
+                	callback(jsondata, send_data)
+                }
+            }
+          },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+        	
+          },
+
+        //통신 실패시 처리
+        error:function(){
+        },
+    })
+}
+
+function send_memo(){
+	var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
+	var memo = $('#popup_info3_memo').val()
+	$.ajax({
+        url:'/schedule/update_memo_schedule/',
+        type:'POST',
+        data:{"schedule_id":schedule_id,"add_memo":memo,"next_page":'/trainer/cal_week'},
+
+        beforeSend:function(){
+        	//beforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+        	
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+        	ajaxClassTime()
+        },
+
+        //통신 실패시 처리
+        error:function(){
+
+        },
+    })
+}
+
+function signImageSend(send_data){
+	$.ajax({
+        url:'/schedule/upload_sign_image/',
+        type:'POST',
+        data:send_data,
+
+        beforeSend:function(){
+        	//beforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+        	var jsondata = JSON.parse(data)
+        	if(jsondata.messageArray.length>0){
+              	$('#errorMessageBar').show()
+              	$('#errorMessageText').text(jsondata.messageArray)
+            }else{
+            	console.log('sign_image_save_success')
+            }
+          },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+          },
+
+        //통신 실패시 처리
+        error:function(){
+        	alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
+        	console.log('sign_image_save_fail')
+        },
+     })
 }
 
 

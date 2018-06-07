@@ -41,7 +41,8 @@ $(document).ready(function(){
                       //$("#id_training_date").val($("#datepicker").val()).submit();
                       $("#id_training_date").val($("#datepicker").val());
                       if($('#timeGraph').css('display')=='none'){
-                        $('#timeGraph').show(110,"swing");
+                        //$('#timeGraph').show(110,"swing");
+                        $('#timeGraph').css('display','block')
                       }
                       $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
                       clear_start_dur_dropdown()
@@ -53,13 +54,14 @@ $(document).ready(function(){
                       timeGraphSet("group","pink","AddClass", initialJSON);
                       timeGraphSet("off","grey","AddClass", initialJSON)
                       */
-                      startTimeSet('class');
+                      //startTimeSet('class');
                   }
                   else if(addTypeSelect =="offadd"){
                       //$("#id_training_date_off").val($("#datepicker").val()).submit();
                       $("#id_training_date_off").val($("#datepicker").val());
                       if($('#timeGraph').css('display')=='none'){
-                        $('#timeGraph').show(110,"swing");
+                        //$('#timeGraph').show(110,"swing");
+                        $('#timeGraph').css('display','block')
                       }
                       $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
                       clear_start_dur_dropdown()
@@ -74,7 +76,7 @@ $(document).ready(function(){
                       timeGraphSet("group","pink","AddClass", initialJSON);
                       timeGraphSet("off","grey","AddClass", initialJSON)
                       */
-                      startTimeSet('class');
+                      //startTimeSet('class');
                   }
                   else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
                       $("#datepicker_repeat_end").datepicker('option','minDate',$("#datepicker_repeat_start").val())
@@ -93,8 +95,10 @@ $(document).ready(function(){
               }
       });
 
+      
 /*
-      $(document).on('click','.td00, .td30',function(){ //주간달력 미니 팝업
+      //직접 진행시간 선택해서 추가
+      $(document).on('click','.td00, .td30', function(){ //주간달력 미니 팝업
             closeAlarm('pc')
             if($('._MINI_ptadd').css('display')=='inline'){
               addTypeSelect = 'ptadd'
@@ -370,12 +374,15 @@ $(document).ready(function(){
                 }
             }   
       })
+      //직접 진행시간 선택해서 추가
 */
-
-      $(document).on('mousedown','.td00, .td30', function(){
+      
+      //긁어서 일정 추가
+      $(document).on('mousedown','.td00, .td30', function(e){
+          e.stopPropagation();
           closeAddPopup_mini()
           if(Options.classDur == 30){
-              if(!$(this).hasClass('_on')){
+              if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                   $('.blankSelected30').removeClass('blankSelected30')
                   $(this).find('div').addClass('blankSelected30')
 
@@ -426,7 +433,7 @@ $(document).ready(function(){
                 }
                 var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin)
 
-                if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on')){
+                if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                     $('.blankSelected').removeClass('blankSelected')
                     $(this).find('div').addClass('blankSelected')
 
@@ -452,6 +459,7 @@ $(document).ready(function(){
                           $(this).find('div').addClass('blankSelected')
                         }else if($(this).hasClass('_on')){
                           $(document).off('mouseover')
+                          console.log('addddd11111')
                           show_mini_plan_add_popup(thisID, $('.blankSelected').length)
                           check_dropdown_selected_addplan()
                         }
@@ -459,16 +467,21 @@ $(document).ready(function(){
 
                     $(document).on('mouseup', '.td00, .td30', function(){
                         $(document).off('mouseover')
-                        show_mini_plan_add_popup(thisID, $('.blankSelected').length)
+                        console.log('addddd22222')
+                        if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                          show_mini_plan_add_popup(thisID, $('.blankSelected').length)
+                        }
                         check_dropdown_selected_addplan()
                     })
                 }
           }
-          
-        
       })
+      //긁어서 일정 추가
 
       function show_mini_plan_add_popup(thisID, dur){
+
+          console.log('show mini plan')
+
           $("#id_training_date, #id_training_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
           $("#id_training_time, #id_training_time_off").val(time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4]+':00.000000');
 
@@ -1488,6 +1501,7 @@ function ajaxTimeGraphSet(date, use, callback){
             timeGraphSet("class","pink","mini", jsondata);  //시간 테이블 채우기
             timeGraphSet("group","pink","mini", initialJSON);
             timeGraphSet("off","grey","mini", jsondata)
+            startTimeSet('class');
             if(use == "callback"){
               callback()
             }
@@ -2677,7 +2691,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 //그룹일정에 참석자 추가 img.add_listedMember(플러스버튼)을 누르면 호출된다.
-function send_add_groupmember_plan(){
+function send_add_groupmember_plan(use, callback){
     var $form = $('#add_groupmember-plan-form').serializeArray()
     var sendData = send_Data($form)
     var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/schedule/add_member_group_schedule')
@@ -2698,11 +2712,16 @@ function send_add_groupmember_plan(){
               $('#errorMessageBar').show()
               $('#errorMessageText').text(jsondata.messageArray)
             }else{
-              scheduleTime('class', jsondata)
-              scheduleTime('off', jsondata)
-              scheduleTime('group', jsondata)
-              get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
-              alert('그룹일정 참석자 정상 등록되었습니다.')
+              
+              if(use == 'callback'){
+                callback(jsondata)
+              }else{
+                scheduleTime('class', jsondata)
+                scheduleTime('off', jsondata)
+                scheduleTime('group', jsondata)
+                get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
+                alert('그룹일정 참석자 정상 등록되었습니다.')
+              }
             }
       },
 
