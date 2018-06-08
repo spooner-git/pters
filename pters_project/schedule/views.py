@@ -284,12 +284,12 @@ def finish_schedule_logic(request):
                 schedule_info.state_cd = 'PE'
                 schedule_info.save()
                 # 남은 횟수 차감
-                if schedule_info.state_cd == 'PE':
-                    error = func_refresh_lecture_count(lecture_info.lecture_id)
-
+                error = func_refresh_lecture_count(lecture_info.lecture_id)
                 lecture_info.refresh_from_db()
 
                 lecture_repeat_schedule_data = None
+                group_repeat_schedule_info = None
+
                 if schedule_info.repeat_schedule_tb_id is not None and schedule_info.repeat_schedule_tb_id != '':
                     lecture_repeat_schedule_data = schedule_info.repeat_schedule_tb
 
@@ -317,7 +317,7 @@ def finish_schedule_logic(request):
                         group_repeat_schedule_info.state_cd = 'PE'
                         group_repeat_schedule_info.save()
 
-                    group_data = GroupLectureTb.objects.filter(lecture_tb_id=schedule_info.lecture_tb_id)
+                    group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                     if len(group_data) > 0:
                         for group_info in group_data:
                             # group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
@@ -532,6 +532,7 @@ def add_repeat_schedule_logic(request):
                 repeat_schedule_info = repeat_schedule_result['schedule_info']
 
     if error is None:
+        success_end_date = None
         for repeat_schedule_date_info in repeat_schedule_date_list:
             error_date = None
             # 데이터 넣을 날짜 setting
@@ -556,17 +557,17 @@ def add_repeat_schedule_logic(request):
                         # PT 일정 추가라면 일정 추가해야할 lecture id 찾기
                         if en_dis_type == ON_SCHEDULE_TYPE:
                             lecture_id = func_get_lecture_id(class_id, member_id)
-                            if lecture_id is None or lecture_id == '':
-                                error_date = str(repeat_schedule_date_info).split(' ')[0]
-
+                            # if lecture_id is None or lecture_id == '':
+                            #     error_date = str(repeat_schedule_date_info).split(' ')[0]
                         if error_date is None:
-                            schedule_result = func_add_schedule(class_id, lecture_id,
-                                                                repeat_schedule_info.repeat_schedule_id,
-                                                                None, None,
-                                                                schedule_start_datetime, schedule_end_datetime, '',
-                                                                en_dis_type, request.user.id)
-                            if schedule_result['error'] is not None:
-                                error_date = str(repeat_schedule_date_info).split(' ')[0]
+                            if lecture_id is not None and lecture_id != '':
+                                schedule_result = func_add_schedule(class_id, lecture_id,
+                                                                    repeat_schedule_info.repeat_schedule_id,
+                                                                    None, None,
+                                                                    schedule_start_datetime, schedule_end_datetime, '',
+                                                                    en_dis_type, request.user.id)
+                                if schedule_result['error'] is not None:
+                                    error_date = str(repeat_schedule_date_info).split(' ')[0]
 
                         if error_date is None:
                             if lecture_id is not None and lecture_id != '':
@@ -575,14 +576,17 @@ def add_repeat_schedule_logic(request):
                                     error_date = str(repeat_schedule_date_info).split(' ')[0]
 
                         if error_date is None:
-                            error_date = func_date_check(class_id, schedule_result['schedule_id'],
-                                                         str(repeat_schedule_date_info).split(' ')[0],
-                                                         schedule_start_datetime, schedule_end_datetime)
+                            if lecture_id is not None and lecture_id != '':
+                                error_date = func_date_check(class_id, schedule_result['schedule_id'],
+                                                             str(repeat_schedule_date_info).split(' ')[0],
+                                                             schedule_start_datetime, schedule_end_datetime)
 
                         if error_date is not None:
                             raise ValidationError()
                         else:
-                            pt_schedule_input_counter += 1
+                            if lecture_id is not None and lecture_id != '':
+                                success_end_date = str(repeat_schedule_date_info).split(' ')[0]
+                                pt_schedule_input_counter += 1
 
                 except TypeError:
                     error_date = str(repeat_schedule_date_info).split(' ')[0]
@@ -604,6 +608,9 @@ def add_repeat_schedule_logic(request):
     if error is None:
         if pt_schedule_input_counter == 0:
             repeat_schedule_info.delete()
+        else:
+            repeat_schedule_info.end_date = success_end_date
+            repeat_schedule_info.save()
 
         request.session['repeat_schedule_input_counter'] = pt_schedule_input_counter
 
