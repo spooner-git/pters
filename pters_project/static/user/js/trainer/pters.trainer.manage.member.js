@@ -511,7 +511,6 @@ if (agent.indexOf("firefox") != -1) {
     $('.lectureStateChangeSelectPopup ._complete').click(function(){
         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
         var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-        console.log('test:::'+dbID)
         complete_member_reg_data_pc(lectureID, dbID)
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
@@ -630,13 +629,10 @@ if (agent.indexOf("firefox") != -1) {
     
     $('#popup_delete_btn_yes').click(function(){
         //if($('#calendar').length==0){
-            console.log(deleteTypeSelect)
            if(deleteTypeSelect == "repeatinfodelete"){
                 var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
                 var dbID = $(this).parent('#cal_popup_plandelete').attr('data-dbid');
-                console.log('popup_delete_btn_yes!!!!!!!!!!!!!!!!!!!!!!!',dbID)
                 send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
-                    console.log('popup_delete_btn_yes!!!!!!!!!!!!!!!!!!!!!!!--------',dbID)
                     get_indiv_repeat_info(dbID);
                     get_member_lecture_list(dbID);
                     get_member_history_list(dbID);
@@ -678,7 +674,6 @@ if (agent.indexOf("firefox") != -1) {
                     }
                 })
                 get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
-                    console.log("repeat id로 그 안에 회원 repeat id 받아오기",jsondata)
                     for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
                         send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
                     }
@@ -702,7 +697,6 @@ if (agent.indexOf("firefox") != -1) {
             success:function(data){
               TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
               var jsondata = JSON.parse(data);
-              console.log("get_member_repeat_id_in_group_repeat",jsondata)
               if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -1135,7 +1129,6 @@ if (agent.indexOf("firefox") != -1) {
 
 function send_modified_member_base_data(){
 	var $form = $('#member-add-form-modify');
-	console.log($form.serialize())
 	$.ajax({
         url:'/trainer/update_member_info/',
         type:'POST',
@@ -1900,7 +1893,6 @@ function get_member_list(use, callback){
                     callback(jsondata)
 
                 }else{
-                    console.log('get_member_list',jsondata)
                     //memberListSet('current','name','no',jsondata);
                     //memberListSet('finished','name','no',jsondata);
                 }
@@ -1957,7 +1949,6 @@ function get_member_ing_list(use, callback){
                     callback(jsondata)
 
                 }else{
-                    console.log('get_member_list',jsondata)
                     memberListSet('current','name','no',jsondata);
                 }
                 console.log('success');
@@ -2012,7 +2003,6 @@ function get_member_end_list(use, callback){
                     callback(jsondata)
 
                 }else{
-                    console.log('get_member_list',jsondata)
                     memberListSet('finished','name','no',jsondata);
                 }
                 console.log('success');
@@ -2326,7 +2316,6 @@ function check_dropdown_selected(){
 
     //그룹원 추가 창일때
     }else if($('._ADD_GROUPMEMBER_NEW').css('display')=="block"){
-        console.log('._ADD_GROUPMEMBER_NEW  check_dropdown_selected')
         if(fast=='1'){ //상세 입력 방식
             if((countInput).hasClass("dropdown_selected")==true && (priceInput_detail).length>0 && (startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
@@ -2441,7 +2430,6 @@ function get_indiv_member_info(dbID){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log('get_indiv_member_info: ',jsondata)
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -2571,7 +2559,6 @@ function open_member_info_popup_pc(dbID, jsondata){
 
     }
     
-    console.log(userBirth[0], 'birth')
     if(userBirth[0] != 'None' && userBirth[0] != '' ){
       $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0], '-'))
     }else{
@@ -2778,7 +2765,6 @@ function resend_member_reg_data_pc(lectureID, dbID){
 
 //회원의 수강정보를 삭제한다.
 function delete_member_reg_data_pc(lectureID, dbID){
-    console.log('delete_member_reg_data_pc',lectureID,dbID)
     $.ajax({
         url:'/trainer/delete_lecture_info/',
         type:'POST',
@@ -2796,7 +2782,6 @@ function delete_member_reg_data_pc(lectureID, dbID){
 
         //통신성공시 처리
         success:function(data){
-            console.log(data)
             var jsondata = JSON.parse(data)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
@@ -3014,7 +2999,6 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
 
 //회원의 등록 이력을 서버로부터 받아온다.
 function get_member_lecture_list(dbID, use, callback){
-    console.log('dbID',dbID)
     $.ajax({
         url:'/trainer/get_lecture_list/',
         type:'POST',
@@ -3033,7 +3017,6 @@ function get_member_lecture_list(dbID, use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_member_lecture_list',jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -3064,7 +3047,6 @@ function get_member_lecture_list(dbID, use, callback){
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
 function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
-    console.log('draw_member_lecture_list_table', jsondata)
     if(PCorMobile == "pc"){
         var $regHistory = $('#memberRegHistory_info_PC')
     }else if(PCorMobile == "mobile"){
@@ -3272,7 +3254,6 @@ function get_member_history_list(dbID){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_member_history_list',jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -3588,7 +3569,6 @@ function add_group_form_func(){
 
 //새로운 그룹멤버 정보 서버로 보내 등록하기
 function add_groupmember_form_func(){
-    console.log(added_member_info_to_jsonformat())
     $.ajax({
         url:'/trainer/add_group_member/',
         type:'POST',
@@ -3649,7 +3629,6 @@ function add_groupmember_form_func(){
 //회원을 삭제 요청을 서버로 보낸다.
 function deleteMemberAjax(){
     var $form = $('#member-delete-form');
-    console.log('$form.serialize()',$form.serialize())
     $.ajax({
         url: '/trainer/delete_member_info/',
         type:'POST',
@@ -3920,7 +3899,6 @@ function get_indiv_repeat_info(dbID){
 
               success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log('get_indiv_repeat_info',jsondata)
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -3978,7 +3956,6 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
                              }
     var len = jsondata.ptRepeatScheduleIdArray.length
     var dbId = dbID
-    console.log(jsondata)
     var repeat_id_array = jsondata.ptRepeatScheduleIdArray
     var repeat_type_array = jsondata.ptRepeatScheduleTypeArray
     var repeat_day_info_raw_array = jsondata.ptRepeatScheduleWeekInfoArray
@@ -4056,7 +4033,6 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
 
 //개인의 반복일정을 지운다
 function send_repeat_delete_personal(repeat_schedule_id, use, callback){
-    console.log(repeat_schedule_id)
     $.ajax({
         url:'/schedule/delete_repeat_schedule/',
         type:'POST',
@@ -4097,7 +4073,6 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
 
 //그룹의 반복일정을 지운다
 function send_repeat_delete_group(repeat_schedule_id, use, callback){
-        console.log('send_repeat_delete_group',repeat_schedule_id)
     $.ajax({
             url:'/schedule/delete_group_repeat_schedule/',
             type:'POST',
@@ -4111,7 +4086,6 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
             //통신성공시 처리
             success:function(data){
                   var jsondata = JSON.parse(data);
-                  console.log(jsondata)
                   if(jsondata.messageArray.length>0){
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)

@@ -534,7 +534,6 @@ $(document).ready(function(){
 								for(var i=0; i<len; i++){
 									$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
 									$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
-									console.log('그룹일정완료',$('#id_schedule_id_finish').val(),$('#id_lecture_id_finish').val())
 									send_plan_complete('callback', function(json, senddata){
 										z++
 										send_memo()
@@ -655,7 +654,6 @@ $(document).ready(function(){
 					
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule_id')
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
-						console.log("get_group_plan_participants",jsondata)
 						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
 							$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
 							send_plan_delete('pt')
@@ -1652,7 +1650,6 @@ function ajaxClassTime(reference){
 		  success:function(data){
 			var jsondata = JSON.parse(data);
 			TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
-			console.log('ajaxclasstime', jsondata)
 			if(jsondata.messageArray.length>0){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
@@ -1726,7 +1723,6 @@ function send_group_plan_complete(use, callback){
 	var drawCanvas = document.getElementById('canvas');
 	var send_data = $group_finish_form.serializeArray();
 	send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
-	console.log(send_data)
 	$.ajax({
         url:'/schedule/finish_group_schedule/',
         type:'POST',
