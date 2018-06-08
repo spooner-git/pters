@@ -332,9 +332,7 @@ $(document).ready(function(){
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id')
 					send_plan_delete('group', 'callback', function(){})
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
-						console.log('group plan delete!!!!!', jsondata)
 						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
-							console.log(jsondata.scheduleIdArray[i])
 							$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
 							if(i == jsondata.scheduleIdArray.length-1){
 								send_plan_delete('pt', 'callback', function(json){
@@ -402,7 +400,6 @@ $(document).ready(function(){
 							for(var i=0; i<len; i++){
 								$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
 								$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
-								console.log('그룹일정완료',$('#id_schedule_id_finish').val(),$('#id_lecture_id_finish').val())
 								send_plan_complete('callback', function(json, senddata){
 									z++
 									send_memo()
@@ -918,7 +915,6 @@ function ajaxClassTime(){
 		  success:function(data){
 			var jsondata = JSON.parse(data);
 			TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
-			console.log(jsondata)
 			if(jsondata.messageArray.length>0){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
@@ -964,7 +960,6 @@ function completeSend(){
 
 
 function classDatesTrainer(jsondata){
-	console.log('classDatesTrainer', jsondata)
 	$('._classTime').html('')
 	var planInfo = classInfoProcessed(jsondata)
 	var dateResult = planInfo.dateResult
@@ -1190,7 +1185,6 @@ function send_group_plan_complete(use, callback){
 	var drawCanvas = document.getElementById('canvas');
 	var send_data = $group_finish_form.serializeArray();
 	send_data.push({"name":"upload_file", "value":drawCanvas.toDataURL('image/png')})
-	console.log(send_data)
 	$.ajax({
         url:'/schedule/finish_group_schedule/',
         type:'POST',
@@ -1228,7 +1222,6 @@ function send_group_plan_complete(use, callback){
 function send_memo(){
 	var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
 	var memo = $('#popup_info3_memo').val()
-	console.log(schedule_id,memo)
 	$.ajax({
         url:'/schedule/update_memo_schedule/',
         type:'POST',

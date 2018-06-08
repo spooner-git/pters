@@ -685,7 +685,6 @@ $(document).ready(function(){
             //회원 이름을 클릭했을때, 회원의 수강일정중 1:1 레슨의 예약가능 횟수만을 표기해준다.
             get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
                 var availCount_personal = 0
-                console.log('get_member_lecture_list',jsondata)
                 for(var i= 0; i<jsondata.availCountArray.length; i++){
                   if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
                     availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
@@ -883,7 +882,6 @@ $(document).ready(function(){
             if(ajax_block_during_submit == true){
                 ajax_block_during_submit = false;
                 var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(serverURL)
-                console.log(sendData)
                 $.ajax({
                     url: serverURL,
                     type:'POST',
@@ -1052,7 +1050,6 @@ $(document).ready(function(){
           var group_id = $(this).attr('data-groupid')
           var max = $(this).attr('data-membernum')
           var group_schedule_id = $(this).attr('group-schedule-id')
-          console.log("group_id:",group_id,"max:",max,"group_schedule_id:",group_schedule_id)
           get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);completeSend();})
 
         }else if(toggleGroupParticipants == 'on'){
@@ -1390,7 +1387,6 @@ function get_current_group_list(use, callback){
 }
 
 function set_member_dropdown_list(jsondata){
-  console.log("set_member_dropdown_list:", jsondata)
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
     var memberSize = jsondata.db_id.length;
@@ -1462,7 +1458,6 @@ function ajaxRepeatConfirmSend(use, callback){
         success:function(data){
           TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
-          console.log('ajaxRepeatConfirmSend',jsondata)
           if(jsondata.messageArray.length>0){
             $('#errorMessageBar').show()
             $('#errorMessageText').text(jsondata.messageArray)
@@ -1573,10 +1568,8 @@ function get_repeat_info(dbID){
         },
 
         success:function(data){
-          console.log(data)
           TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
-          console.log('fill_repeat_info',jsondata)
           if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show();
               $('#errorMessageText').text(jsondata.messageArray)
@@ -1601,12 +1594,6 @@ function get_repeat_info(dbID){
 }
 
 
-$('#week').click(function(){
-  get_member_repeat_id_in_group_repeat('809')
-  console.log('test, test')
-})
-
-
 function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
     var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
     $.ajax({
@@ -1622,7 +1609,6 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
         success:function(data){
           TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
-          console.log(jsondata)
           if(jsondata.messageArray.length>0){
             $('#errorMessageBar').show()
             $('#errorMessageText').text(jsondata.messageArray)
@@ -1645,7 +1631,6 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
 }
 
 function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우기
-  console.log('fill_repeat_info--add',jsondata)
     switch(option){
         case 'class':
           var len = jsondata.ptRepeatScheduleIdArray.length
@@ -2643,7 +2628,6 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         success:function(data){
             TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER);
             var jsondata = JSON.parse(data);
-            console.log('get_group_plan_participants',jsondata)
             if(callbackoption == "callback"){
               callback(jsondata)
             }
@@ -2662,7 +2646,6 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
 
 //그룹에 일정에 속한 회원목록을 그린다. get_group_plan_participants와 같이 쓴다.
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
-    console.log('draw_groupParticipantsList_to_popup',jsondata)
     var target = $('#groupParticipants')
     var htmlToJoin = []
     for(var i=0; i<jsondata.db_id.length; i++){
@@ -2757,7 +2740,6 @@ $(document).on('click','.group_member_cancel',function(){
     var group_id = $(this).attr('data-groupid');
     var group_schedule_id = $(this).attr('group-schedule-id')
     var max = $(this).attr('data-max')
-    console.log('groupmember_cancel:',group_id,group_schedule_id,max)
     send_plan_delete('pt', 'callback', function(){
         get_group_plan_participants(group_schedule_id,'callback',
           function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)
@@ -2798,7 +2780,6 @@ function send_plan_delete(option, callbackoption, callback){
             success:function(data){
                 TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
                 var jsondata = JSON.parse(data)
-                console.log('send_plan_delete',jsondata)
                 if(jsondata.messageArray.length>0){
                       $('#errorMessageBar').show()
                       $('#errorMessageText').text(jsondata.messageArray)
@@ -2847,11 +2828,7 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
     var dateSelect_repeat_start = $("#datepicker_repeat_start").parent('p');
     var dateSelect_repeat_end = $("#datepicker_repeat_end").parent('p');
 
-    console.log('addTypeSelect check_dropdown_selected',addTypeSelect)
-
     if(addTypeSelect == "ptadd"){
-
-        console.log((memberSelect_mini).hasClass("dropdown_selected"), $('#countsSelected_mini').text(), durSelect_mini.hasClass("dropdown_selected"))
 
         if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true && $('#countsSelected').text() != 0){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
@@ -2895,7 +2872,6 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
             select_all_check=false;
         }
     }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-      console.log('체크드랍다운 repeatptadd, repeatgroupptadd')
         if((memberSelect).hasClass("dropdown_selected")==true && (repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
@@ -2907,7 +2883,6 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
             select_all_check=false;
         }
     }else if(addTypeSelect == "repeatoffadd"){
-      console.log('체크드랍다운 repeatoffadd')
         if((repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
