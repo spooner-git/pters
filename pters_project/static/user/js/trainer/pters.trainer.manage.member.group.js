@@ -741,11 +741,16 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_name = jsondata.name[i];
         var group_id = jsondata.group_id[i];
         var group_type = jsondata.group_type_cd[i];
-        var group_capacity = jsondata.member_num[i];
         var group_createdate = date_format_to_yyyymmdd(jsondata.reg_dt[i].split(' ')[0]+' '+jsondata.reg_dt[i].split(' ')[1]+' '+jsondata.reg_dt[i].split(' ')[2], '-');
         var group_memo = jsondata.note[i];
         var group_memberlist = []
-        var group_membernum = jsondata.group_member_num[i]
+        var group_membernum = jsondata.group_member_num[i];
+        var group_capacity = jsondata.member_num[i];
+        
+        var full_group = ""
+        if(group_membernum == group_capacity && group_type == "NORMAL"){
+            var full_group = "red_color_text"
+        }
         
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
@@ -759,8 +764,8 @@ function groupListSet(option, jsondata){ //option : current, finished
         var main = '<div class="_groupnum">'+(i+1)+'</div>'+
                     '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
                     '<div class="_grouptypecd"><input class="group_listinput input_disabled_true" value="'+group_type+'" disabled>'+'</div>'+
-                    '<div class="_groupparticipants">'+ group_membernum+'</div>'+
-                    '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable" value="'+group_capacity+'" disabled>'+'</div>'+
+                    '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
+                    '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+group_createdate+'" disabled>'+'</div>'+
                     '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>'

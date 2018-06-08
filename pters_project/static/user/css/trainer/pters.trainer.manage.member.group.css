@@ -205,6 +205,12 @@
 	font-weight: bold;
 	
 }
+
+.red_color_text{
+	color: #fe4e65;
+	-webkit-text-fill-color: #fe4e65 !important;
+}
+
 .groupWrap:active{
 	background: #cccccc;
 }
