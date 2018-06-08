@@ -1411,8 +1411,9 @@ def add_group_repeat_schedule_logic(request):
         for repeat_schedule_date_info in repeat_schedule_date_list:
 
             # 그룹 스케쥴 등록 횟수 설정
-            if group_schedule_reg_counter <= 0:
-                break
+            if group_info.group_type_cd == 'NORMAL':
+                if group_schedule_reg_counter <= 0:
+                    break
 
             error_date = None
             # 데이터 넣을 날짜 setting
@@ -1454,7 +1455,7 @@ def add_group_repeat_schedule_logic(request):
                         else:
                             success_end_date = str(repeat_schedule_date_info).split(' ')[0]
                             pt_schedule_input_counter += 1
-                            if error is None and group_info.group_type_cd == 'NORMAL':
+                            if group_info.group_type_cd == 'NORMAL':
                                 group_schedule_reg_counter -= 1
 
                         error = None
