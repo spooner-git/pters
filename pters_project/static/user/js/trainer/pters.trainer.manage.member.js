@@ -2571,8 +2571,9 @@ function open_member_info_popup_pc(dbID, jsondata){
 
     }
     
+    console.log(userBirth[0], 'birth')
     if(userBirth[0] != 'None' && userBirth[0] != '' ){
-      $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0]))
+      $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0], '-'))
     }else{
       $('#form_birth_modify').val('')
     }
