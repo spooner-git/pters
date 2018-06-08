@@ -781,6 +781,7 @@ $(document).ready(function(){
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlideNextEnd',function(){
+			closeAddPopup_mini()
 			slideControl.append();
 			weekNum_Set_fixed()
 			toDay();
@@ -789,10 +790,12 @@ $(document).ready(function(){
 			reserveAvailable()
 			todayFinderArrow();
 			krHoliday()
+			
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlidePrevEnd',function(){
+			closeAddPopup_mini()
 			slideControl.prepend();
 			weekNum_Set_fixed()
 			toDay();
@@ -801,6 +804,7 @@ $(document).ready(function(){
 			reserveAvailable()
 			todayFinderArrow();	
 			krHoliday()
+
 	});
 
 	
