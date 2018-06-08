@@ -306,10 +306,8 @@ $(document).ready(function(){
 					}
 					ajax_block_during_delete_monthcal = true
 				}else if(deleteTypeSelect == "groupptdelete"){
-					console.log('deletetype groupptdelete!!!!!!!!!!!!!!!!!!!!')
 					send_plan_delete('group')
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id')
-					console.log('group_schedule_id',group_schedule_id)
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
 						console.log('group plan delete!!!!!', jsondata)
 						for(var i=0; i<jsondata.scheduleIdArray.length; i++){

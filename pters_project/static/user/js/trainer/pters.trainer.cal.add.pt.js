@@ -2760,12 +2760,12 @@ function send_plan_delete(option, callbackoption, callback){
   }else if(option == "off"){
     var $form = $('#daily-off-delete-form');
     var serializeArray = $form.serializeArray();
-      var sendData = send_Data(serializeArray)
+    var sendData = send_Data(serializeArray)
     var url_ = '/schedule/delete_schedule/'
   }else if(option == "group"){
     var $form = $('#daily-pt-delete-form');
     var serializeArray = $form.serializeArray();
-      var sendData = send_Data(serializeArray)
+    var sendData = send_Data(serializeArray)
     var url_ = '/schedule/delete_group_schedule/'
   }
   var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
@@ -2793,8 +2793,9 @@ function send_plan_delete(option, callbackoption, callback){
                       callback(jsondata)
                     }else{
                       close_info_popup('cal_popup_plandelete')
+                      console.log('----------------',$('._calmonth').length, $('._calweek').length)
                       if($('._calmonth').length == 1){
-
+                        shade_index(100)
                       }else if($('._calweek').length == 1){
                         shade_index(-100)
                       }
