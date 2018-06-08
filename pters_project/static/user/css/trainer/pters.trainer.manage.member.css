@@ -181,10 +181,6 @@ body{
 			display: inline-block;
 			cursor: pointer;
 		}
-		#selectBox_type.list_switch_wrap div.list_switch:hover{
-			color: #282828;
-			font-weight: 400;
-		}
 		#selectBox_type.list_switch_wrap span.list_switch_divider{
 			margin-right: 15px;
 			margin-left: 15px;
