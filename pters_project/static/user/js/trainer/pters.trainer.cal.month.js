@@ -211,7 +211,7 @@ $(document).ready(function(){
 				$("#popup_sign_img").css("display","block")
 				$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
 			}
-			schedule_on_off = 1;
+			
 
 			
 			$('#subpopup_addByList_plan').hide()
@@ -221,9 +221,11 @@ $(document).ready(function(){
 																	'group-schedule-id':$(this).attr('schedule-id'),
 																	})
 				toggleGroupParticipantsList('on')
+				schedule_on_off = 2;
 			}else{
 				$('#popup_btn_viewGroupParticipants').hide()
 				toggleGroupParticipantsList('off')
+				schedule_on_off = 1;
 			}
 		})
 
@@ -339,10 +341,10 @@ $(document).ready(function(){
 						send_plan_complete('callback',function(json, senddata){
 							send_memo()
 							signImageSend(senddata);
-			          		console.log('555')
 			          		close_info_popup('cal_popup_planinfo')
 		                    completeSend();
 		                    set_schedule_time(json)
+
 		                    ajax_block_during_complete_monthcal = true
 							$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 	                    	$('#canvas').hide().css({'border-color':'#282828'})
