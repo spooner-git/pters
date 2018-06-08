@@ -381,17 +381,15 @@ $(document).ready(function(){
       $(document).on('mousedown','.td00, .td30', function(e){
           e.stopPropagation();
           closeAddPopup_mini()
+          $(document).off('mouseup')
+          var thisID     = $(this).attr('id')
+          var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
+          var thisIDHour = $(this).attr('id').split('_')[3]
+          var thisIDMin  = $(this).attr('id').split('_')[4]
           if(Options.classDur == 30){
               if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                   $('.blankSelected30').removeClass('blankSelected30')
                   $(this).find('div').addClass('blankSelected30')
-
-                  var thisID     = $(this).attr('id')
-                  var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
-                  var thisIDHour = $(this).attr('id').split('_')[3]
-                  var thisIDMin  = $(this).attr('id').split('_')[4]
-
-
                   $(document).on('mouseover','.td00, .td30', function(){
                       var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
                       var overIDHour = $(this).attr('id').split('_')[3]
@@ -416,16 +414,17 @@ $(document).ready(function(){
                   $(document).on('mouseup', '.td00, .td30', function(){
                       $(document).off('mouseover')
                       if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
-                          show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
+                        show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
                       }
                       check_dropdown_selected_addplan()
                   })
+
+                  $(document).on('mouseup','#gap',function(){
+                      closeAddPopup_mini()
+                      $('.blankSelected30').removeClass('blankSelected30')
+                  })
               }
           }else if(Options.classDur == 60){
-                var thisID     = $(this).attr('id')
-                var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]
-                var thisIDHour = $(this).attr('id').split('_')[3]
-                var thisIDMin  = $(this).attr('id').split('_')[4]
                 if(thisIDMin == '00'){
                   var next30IDHour = Number(thisIDHour)
                   var next30IDMin  = '30'
@@ -461,7 +460,6 @@ $(document).ready(function(){
                           $(this).find('div').addClass('blankSelected')
                         }else if($(this).hasClass('_on')){
                           $(document).off('mouseover')
-                          console.log('addddd11111')
                           show_mini_plan_add_popup(thisID, $('.blankSelected').length)
                           check_dropdown_selected_addplan()
                         }
@@ -469,20 +467,24 @@ $(document).ready(function(){
 
                     $(document).on('mouseup', '.td00, .td30', function(){
                         $(document).off('mouseover')
-                        console.log('addddd22222')
                         if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                           show_mini_plan_add_popup(thisID, $('.blankSelected').length)
                         }
                         check_dropdown_selected_addplan()
                     })
+
+
+                    $(document).on('mouseup','#gap',function(){
+                        closeAddPopup_mini()
+                        $('.blankSelected').removeClass('blankSelected')
+                    })
+
                 }
           }
       })
       //긁어서 일정 추가
 
       function show_mini_plan_add_popup(thisID, dur){
-
-          console.log('show mini plan')
 
           $("#id_training_date, #id_training_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
           $("#id_training_time, #id_training_time_off").val(time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4]+':00.000000');
@@ -497,15 +499,21 @@ $(document).ready(function(){
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((Options.classDur*Number(dur))/60)+'시간').val(dur);
           $('#datetext_mini').text(thisID+'_'+((Options.classDur*Number(dur))/60)+'시간')
 
+          var endTime = (Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60))
+          if(endTime == Options.workEndTime){
+            var endTime = Options.workEndTime-1
+          }
+          var endID = thisID.split('_')[0]+'_'+thisID.split('_')[1]+'_'+thisID.split('_')[2]+'_'+endTime+'_'+thisID.split('_')[4]
+
           //minipopup 위치 보정
-          var toploc = $('#'+thisID).offset().top;
-          var leftloc = $('#'+thisID).offset().left;
-          var tdwidth = $('#'+thisID).width();
-          var tdheight = $('#'+thisID).height();
+          var toploc = $('#'+endID).offset().top;
+          var leftloc = $('#'+endID).offset().left;
+          var tdwidth = $('#'+endID).width();
+          var tdheight = $('#'+endID).height();
           var minipopupwidth = 300;
           var minipopupheight = 250;
-          var splitID = $('#'+thisID).attr('id').split('_')
-          var weekID = $('#'+thisID).attr('data-week')
+          var splitID = $('#'+endID).attr('id').split('_')
+          var weekID = $('#'+endID).attr('data-week')
 
           $('.typeSelected').removeClass('typeSelected')
           $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
