@@ -1385,8 +1385,10 @@ function set_member_dropdown_list(jsondata){
     if(memberSize>0){
       for(var i=0; i<memberSize; i++){
         if(jsondata.groupInfoArray[i] != "그룹"){
-          member_array_mobile[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
-          member_array_pc[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+            if(jsondata.avail_count[i] > 0){
+              member_array_mobile[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+              member_array_pc[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+            }
         }
       }
     }else if(memberSize == 0){
