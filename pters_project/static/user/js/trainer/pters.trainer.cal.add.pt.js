@@ -415,7 +415,9 @@ $(document).ready(function(){
 
                   $(document).on('mouseup', '.td00, .td30', function(){
                       $(document).off('mouseover')
-                      show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
+                      if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                          show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
+                      }
                       check_dropdown_selected_addplan()
                   })
               }
@@ -653,7 +655,7 @@ $(document).ready(function(){
 
       function closeMiniPopupByChange(){
         $("#id_time_duration_off").val("")
-        $('#page-addplan-pc').fadeOut();
+        $('#page-addplan-pc').hide();
         $('.blankSelected, .blankSelected30').removeClass('blankSelected blankSelected30 blankSelected_addview')
         clear_pt_off_add_popup_mini()
       }
