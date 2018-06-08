@@ -415,7 +415,7 @@ $(document).ready(function(){
 
                   $(document).on('mouseup', '.td00, .td30', function(){
                       $(document).off('mouseover')
-                      if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                      if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                           show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
                       }
                       check_dropdown_selected_addplan()
