@@ -471,6 +471,8 @@ select:focus > option:checked {
 	z-index: 150;
 	max-width: 700px !important;
 	top: 50px;
+
+	height: auto;
 }
 
 	#mobile_basic_info{
