@@ -344,6 +344,11 @@ $(document).ready(function(){
 								send_plan_delete('pt', 'callback', function(){})
 							}
 						}
+						if(jsondata.scheduleIdArray.length == 0){
+							ajaxClassTime()
+                      		close_info_popup('cal_popup_plandelete')
+                      		completeSend();
+						}
 					})
 					ajax_block_during_delete_monthcal = true
 				}
