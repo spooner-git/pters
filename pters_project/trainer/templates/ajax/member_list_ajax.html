@@ -29,8 +29,6 @@
     [{% for member_info in member_data %}"{{ member_info.rj_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
 
-    "rem_count" :
-    [{% for member_info in member_data %}"{{ member_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "start_date" :
     [{% for member_info in member_data %}"{{ member_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "mod_dt" :
@@ -41,6 +39,15 @@
     [{% for member_info in member_data %}"{{ member_info.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "avail_count" :
     [{% for member_info in member_data %}"{{ member_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "rem_count" :
+    [{% for member_info in member_data %}"{{ member_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+    "group_reg_count" :
+    [{% for member_info in member_data %}"{{ member_info.group_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "group_avail_count" :
+    [{% for member_info in member_data %}"{{ member_info.group_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "group_rem_count" :
+    [{% for member_info in member_data %}"{{ member_info.group_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
     "yetCountArray" :
     [{% for member_info in member_data %}"{{ member_info.lecture_rem_count_yet }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
