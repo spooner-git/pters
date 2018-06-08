@@ -573,6 +573,7 @@ ul a{
 	box-shadow: unset !important;
 	height: 100%;
 	border:0 !important;
+	top: 0;
 }
 	.dropdown_trainee_popup button{
 		height: 100%;

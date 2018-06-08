@@ -165,6 +165,23 @@ $(document).ready(function(){
 	function mini_popup_event(){
 		//날짜를 클릭해서 나오는 일정들을 클릭했을때
 		$(document).on('click','.plan_raw',function(){
+			switch(Options.language){
+				case "KOR" :
+				var member = " 회원님의 ";
+				var yourplan = " 일정";
+				var text = '레슨 일정'
+				break;
+				case "JPN" :
+				var member = "様の ";
+				var yourplan = " 日程";
+				var text = 'PT 日程'
+				break;
+				case "ENG" :
+				var member = "'s schedule at ";
+				var yourplan = "";
+				var text = 'PT Plan'
+				break; 
+			}
 			shade_index(150)
 			$('#popup_planinfo_title').text('레슨 일정')
 			if($('body').width()>600){
@@ -172,20 +189,24 @@ $(document).ready(function(){
 			}else{
 				$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
 			}
-			
+			var schedule_finish_check = $(this).attr('data-schedule-check')
+			var dbid = $(this).attr('data-dbid');
+			var name = $(this).attr('data-membername')
 			var selectedDate = $('.popup_ymdText').text()
 			var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
 			var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0]
-			var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+$(this).attr('data-dbid')+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
+			var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
 			var selectedMemo = $(this).attr('data-memo')
 			if($(this).attr('data-memo') == undefined){
 				var selectedMemo = ""
 			}
+			
+			var infoText2 = '[그룹]'+name+' '+selectedTime+':'+selectedMinute+yourplan
 			$("#cal_popup_planinfo").fadeIn('fast').attr({'schedule_id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
 			$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
 			$('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
 			$('#popup_info').text(selectedDate);
-			$('#popup_info2').html(selectedPerson+'의 '+ selectedTime+':'+selectedMinute + ' 일정');
+			
 			$('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
 
 			$('#canvas').hide().css({'border-color':'#282828'})
@@ -199,7 +220,7 @@ $(document).ready(function(){
 			$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
 			$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 
-			var schedule_finish_check = $(this).attr('data-schedule-check')
+			
 			if(schedule_finish_check=="0"){
 				$("#popup_btn_complete").show()
 				$("#popup_text1").css("display","block")
@@ -216,6 +237,7 @@ $(document).ready(function(){
 			
 			$('#subpopup_addByList_plan').hide()
 			if($(this).attr('data-grouptype') == "group"){
+				$('#popup_info2').text(infoText2);
 				$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'),
 																	'data-groupid': $(this).attr('data-groupid'),
 																	'group-schedule-id':$(this).attr('schedule-id'),
@@ -223,6 +245,7 @@ $(document).ready(function(){
 				toggleGroupParticipantsList('on')
 				schedule_on_off = 2;
 			}else{
+				$('#popup_info2').html(selectedPerson+'의 '+ selectedTime+':'+selectedMinute + ' 일정');
 				$('#popup_btn_viewGroupParticipants').hide()
 				toggleGroupParticipantsList('off')
 				schedule_on_off = 1;
@@ -306,10 +329,8 @@ $(document).ready(function(){
 					}
 					ajax_block_during_delete_monthcal = true
 				}else if(deleteTypeSelect == "groupptdelete"){
-					console.log('deletetype groupptdelete!!!!!!!!!!!!!!!!!!!!')
 					send_plan_delete('group')
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id')
-					console.log('group_schedule_id',group_schedule_id)
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
 						console.log('group plan delete!!!!!', jsondata)
 						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
