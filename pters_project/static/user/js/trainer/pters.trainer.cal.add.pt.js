@@ -548,6 +548,10 @@ $(document).ready(function(){
           $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
       }
 
+      //shift키 눌러서 일정을 쭉 잡기
+      function fill_blankSelected_by_shift_key(thisID, endID){
+        // TO - DO
+      }
       
 
       $('#datetext_mini').click(function(){console.log(addTypeSelect)})
