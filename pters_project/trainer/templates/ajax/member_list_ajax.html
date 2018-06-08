@@ -42,6 +42,13 @@
     "rem_count" :
     [{% for member_info in member_data %}"{{ member_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+    "lesson_reg_count" :
+    [{% for member_info in member_data %}"{{ member_info.lesson_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "lesson_avail_count" :
+    [{% for member_info in member_data %}"{{ member_info.lesson_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "lesson_rem_count" :
+    [{% for member_info in member_data %}"{{ member_info.lesson_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
     "group_reg_count" :
     [{% for member_info in member_data %}"{{ member_info.group_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "group_avail_count" :

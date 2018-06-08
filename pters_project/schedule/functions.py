@@ -99,6 +99,62 @@ def func_refresh_lecture_count(lecture_id):
     return error
 
 
+# 수강정보 - 횟수관련 update
+def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule_id):
+    # 그룹 스케쥴 종료 및 그룹 반복일정 종료
+    if group_schedule_id is not None and group_schedule_id != '':
+        try:
+            group_schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id,
+                                                         use=1)
+        except ObjectDoesNotExist:
+            group_schedule_info = None
+        group_schedule_total_count = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).count()
+        group_schedule_end_count = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, state_cd='PE',
+                                                             use=1).count()
+
+        if group_schedule_info is not None:
+            if group_schedule_total_count == group_schedule_end_count:
+                if group_schedule_info.state_cd != 'PE':
+                    group_schedule_info.state_cd = 'PE'
+                    group_schedule_info.save()
+
+    # 그룹 반복일정 종료
+    if group_repeat_schedule_id is not None and group_repeat_schedule_id != '':
+        try:
+            group_repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=group_repeat_schedule_id)
+        except ObjectDoesNotExist:
+            group_repeat_schedule_info = None
+
+        group_repeat_schedule_total_count = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id).count()
+        group_repeat_schedule_end_count = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id,
+                                                                          state_cd='PE').count()
+        if group_repeat_schedule_info is not None:
+            if group_repeat_schedule_total_count == group_repeat_schedule_end_count:
+                group_repeat_schedule_info.state_cd = 'PE'
+                group_repeat_schedule_info.save()
+
+    # 그룹 종료 처리
+    if group_id is not None and group_id != '':
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id, use=1)
+        except ObjectDoesNotExist:
+            group_info = None
+        if groupo_info.group_type_cd == 'NORMAL':
+            group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                                                                      lecture_tb__use=1,
+                                                                      use=1).count()
+            group_lecture_end_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                                                                    lecture_tb__use=1,
+                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
+            if group_info is not None:
+                if group_lecture_total_count == group_lecture_end_count:
+                    group_info.state_cd = 'PE'
+                    group_info.save()
+                else:
+                    group_info.state_cd = 'IP'
+                    group_info.save()
+
+
 # 일정 등록
 def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                       group_id, group_schedule_id,

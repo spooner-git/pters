@@ -31,7 +31,8 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
-from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule
+from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
+    func_refresh_group_status
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -1713,6 +1714,13 @@ def delete_lecture_info_logic(request):
 
     if error is None:
         error = func_delete_lecture_info(request.user.id, class_id, lecture_id, member_id)
+    if error is None:
+        try:
+            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=1)
+        except ObjectDoesNotExist:
+            group_info = None
+        if group_info is not None:
+            func_refresh_group_status(group_info.group_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -1740,6 +1748,7 @@ def finish_lecture_info_logic(request):
     error = None
     lecture_info = None
     member_info = None
+    group_info = None
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
@@ -1756,7 +1765,11 @@ def finish_lecture_info_logic(request):
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
+        try:
+            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=1)
+        except ObjectDoesNotExist:
+            group_info = None
+        # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         if len(schedule_data) > 0:
@@ -1769,20 +1782,23 @@ def finish_lecture_info_logic(request):
         lecture_info.state_cd = 'PE'
         lecture_info.save()
 
-        if len(group_data) > 0:
-            for group_info in group_data:
-                group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                      use=1).count()
-                group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
-                group_info_data = group_info.group_tb
-
-                if group_data_total_size == group_data_end_size:
-                    group_info_data.state_cd = 'PE'
-                    group_info_data.save()
-                else:
-                    group_info_data.state_cd = 'IP'
-                    group_info_data.save()
+    if error is None:
+        if group_info is not None:
+            func_refresh_group_status(group_info.group_id, None, None)
+        # if len(group_data) > 0:
+        #     for group_info in group_data:
+        #         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+        #                                                               use=1).count()
+        #         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+        #                                                             use=1).exclude(lecture_tb__state_cd='IP').count()
+        #         group_info_data = group_info.group_tb
+        #
+        #         if group_data_total_size == group_data_end_size:
+        #             group_info_data.state_cd = 'PE'
+        #             group_info_data.save()
+        #         else:
+        #             group_info_data.state_cd = 'IP'
+        #             group_info_data.save()
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
@@ -1810,6 +1826,7 @@ def refund_lecture_info_logic(request):
     input_refund_price = 0
     error = None
     member_info = None
+    group_info = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1841,7 +1858,11 @@ def refund_lecture_info_logic(request):
             error = '환불 금액이 등록 금액보다 많습니다.'
 
     if error is None:
-        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
+        try:
+            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=1)
+        except ObjectDoesNotExist:
+            group_info = None
+        # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         schedule_data.delete()
@@ -1852,19 +1873,23 @@ def refund_lecture_info_logic(request):
         lecture_info.state_cd = 'RF'
         lecture_info.save()
 
-        if len(group_data) > 0:
-            for group_info in group_data:
-                group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                      use=1).count()
-                group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
-                group_info_data = group_info.group_tb
-                if group_data_total_size == group_data_end_size:
-                    group_info_data.state_cd = 'PE'
-                    group_info_data.save()
-                else:
-                    group_info_data.state_cd = 'IP'
-                    group_info_data.save()
+    if error is None:
+        if group_info is not None:
+            func_refresh_group_status(group_info.group_id, None, None)
+        # if len(group_data) > 0:
+        #     for group_info in group_data:
+        #         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+        #                                                               use=1).count()
+        #         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+        #                                                             use=1).exclude(lecture_tb__state_cd='IP').count()
+        #         group_info_data = group_info.group_tb
+        #
+        #         if group_data_total_size == group_data_end_size:
+        #             group_info_data.state_cd = 'PE'
+        #             group_info_data.save()
+        #         else:
+        #             group_info_data.state_cd = 'IP'
+        #             group_info_data.save()
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
@@ -1890,6 +1915,7 @@ def progress_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
     member_info = None
+    group_info = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1907,7 +1933,11 @@ def progress_lecture_info_logic(request):
             error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
-        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
+        try:
+            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=1)
+        except ObjectDoesNotExist:
+            group_info = None
+        # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
@@ -1915,19 +1945,22 @@ def progress_lecture_info_logic(request):
         lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'IP'
         lecture_info.save()
-        if len(group_data) > 0:
-            for group_info in group_data:
-                group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                      use=1).count()
-                group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
-                group_info_data = group_info.group_tb
-                if group_data_total_size == group_data_end_size:
-                    group_info_data.state_cd = 'PE'
-                    group_info_data.save()
-                else:
-                    group_info_data.state_cd = 'IP'
-                    group_info_data.save()
+    if error is None:
+        if group_info is not None:
+            func_refresh_group_status(group_info.group_id, None, None)
+        # if len(group_data) > 0:
+        #     for group_info in group_data:
+        #         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+        #                                                               use=1).count()
+        #         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+        #                                                             use=1).exclude(lecture_tb__state_cd='IP').count()
+        #         group_info_data = group_info.group_tb
+        #         if group_data_total_size == group_data_end_size:
+        #             group_info_data.state_cd = 'PE'
+        #             group_info_data.save()
+        #         else:
+        #             group_info_data.state_cd = 'IP'
+        #             group_info_data.save()
                 # try:
                 #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
                 # except ObjectDoesNotExist:
@@ -2149,17 +2182,14 @@ def add_group_member_logic(request):
     user_name_list = []
     group_info = None
 
-    print('test1')
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-    print('test2')
     if error is None:
         group_id = json_loading_data['lecture_info']['group_id']
-    print('test3')
     if error is None:
         if group_id != '' and group_id is not None:
             try:
@@ -2174,7 +2204,6 @@ def add_group_member_logic(request):
                     if group_counter > group_info.member_num:
                         error = '그룹 허용 인원을 초과했습니다.'
 
-    print('test4')
     if error is None:
         if group_info.group_type_cd == 'NORMAL':
             if json_loading_data['old_member_data'] != '[]':
@@ -2200,7 +2229,6 @@ def add_group_member_logic(request):
                     if error is not None:
                         break
 
-    print('test5')
     if error is None:
         try:
             with transaction.atomic():
@@ -2245,7 +2273,6 @@ def add_group_member_logic(request):
         except InternalError:
             error = error
 
-    print('test6')
     if error is None:
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
