@@ -605,14 +605,14 @@ class NewMemberReSendEmailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(NewMemberReSendEmailView, self).get_context_data(**kwargs)
-        user_name = self.request.session.get('username', '')
+        user_id = self.request.session.get('user_id', '')
         error = None
         user = None
-        if user_name is None or user_name == '':
+        if user_id is None or user_id == '':
             error = '회원 정보를 불러오지 못했습니다.'
         if error is None:
             try:
-                user = User.objects.get(username=user_name)
+                user = User.objects.get(id=user_id)
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
 

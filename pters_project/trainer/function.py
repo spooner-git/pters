@@ -357,11 +357,6 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
             for lecture_list_info in lecture_list:
                 lecture_info = lecture_list_info.lecture_tb
                 idx -= 1
-                # try:
-                #     MemberLectureTb.objects.get(auth_cd='VIEW', member_id=member_id,
-                #                                 lecture_tb=lecture_info.lecture_id)
-                # except ObjectDoesNotExist:
-                #     error = '수강정보를 불러오지 못했습니다.'
 
                 if error is None:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
