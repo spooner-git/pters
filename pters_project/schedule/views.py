@@ -318,14 +318,12 @@ def finish_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError:
             error = '예약 가능 횟수를 확인해주세요.'
-
     # 그룹 스케쥴 종료 및 그룹 반복일정 종료
     if error is None:
-        if schedule_info.group_tb is not None and schedule_info.group_tb != '':
+        if schedule_info.group_tb_id is not None and schedule_info.group_tb_id != '':
             group_repeat_schedule_id = None
             if lecture_repeat_schedule_data is not None and lecture_repeat_schedule_data != '':
                 group_repeat_schedule_id = lecture_repeat_schedule_data.group_schedule_id
-
             func_refresh_group_status(schedule_info.group_tb_id, schedule_info.group_schedule_id, group_repeat_schedule_id)
 
     if error is None:

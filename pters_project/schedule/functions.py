@@ -139,7 +139,7 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
             group_info = GroupTb.objects.get(group_id=group_id, use=1)
         except ObjectDoesNotExist:
             group_info = None
-        if groupo_info.group_type_cd == 'NORMAL':
+        if group_info.group_type_cd == 'NORMAL':
             group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                                       lecture_tb__use=1,
                                                                       use=1).count()

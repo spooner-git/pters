@@ -126,7 +126,7 @@ def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
         for pt_repeat_schedule_info in pt_repeat_schedule_data:
             pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
             pt_repeat_schedule_info.end_date = str(pt_repeat_schedule_info.end_date)
-            repeat_schedule_list = pt_repeat_schedule_info
+            repeat_schedule_list.append(pt_repeat_schedule_info)
 
     context['repeat_schedule_data'] = repeat_schedule_list
 

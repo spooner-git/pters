@@ -53,7 +53,7 @@
                     <a><img src={% static_url "user/res/icon-user-setting.png" %} style="width:25px;"></a>
                  </button> 
                  {% block nav_center_img %}
-                 <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:blank' %}'">{{ user.last_name }}{{ user.first_name }}님 일정</span>
+                 <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:cal_month_blank' %}'">{{ user.last_name }}{{ user.first_name }}님 일정</span>
                 {% endblock %}
                  <!--
                  <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">
@@ -69,13 +69,13 @@
 
      <nav class="navbar navbar-fixed-top" id="pcver">
             <div class="centermenu">
-                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'trainee:blank'%}'" style="cursor: pointer;">
+                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'trainee:cal_month_blank'%}'" style="cursor: pointer;">
                 <div class="centermenu_box" style="margin-left: 97px;text-align: left;">
                     <div class="centermenu_div">
                         <a href="{% url 'trainee:mypage_trainee_blank' %}" class="centermenu_text"></a>
                     </div>
                     <div class="centermenu_div">
-                        <a class="centermenu_text"   onclick="location.href='{% url 'trainee:blank'%}'">달력</a>
+                        <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month_blank'%}'">달력</a>
                     </div>
                     <div class="centermenu_div">
                         <a class="centermenu_text" onclick="open_lecture_select_popup()">클래스 선택</a>
