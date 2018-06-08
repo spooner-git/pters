@@ -329,13 +329,22 @@ $(document).ready(function(){
 					}
 					ajax_block_during_delete_monthcal = true
 				}else if(deleteTypeSelect == "groupptdelete"){
-					send_plan_delete('group')
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id')
+					send_plan_delete('group', 'callback', function(){})
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
 						console.log('group plan delete!!!!!', jsondata)
 						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
+							console.log(jsondata.scheduleIdArray[i])
 							$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
-							send_plan_delete('pt')
+							if(i == jsondata.scheduleIdArray.length-1){
+								send_plan_delete('pt', 'callback', function(json){
+									set_schedule_time(json)
+                      				close_info_popup('cal_popup_plandelete')
+                      				completeSend();
+								})
+							}else{
+								send_plan_delete('pt', 'callback', function(){})
+							}
 						}
 					})
 					ajax_block_during_delete_monthcal = true

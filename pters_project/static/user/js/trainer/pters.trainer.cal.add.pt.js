@@ -2791,25 +2791,25 @@ function send_plan_delete(option, callbackoption, callback){
                       $('#errorMessageBar').show()
                       $('#errorMessageText').text(jsondata.messageArray)
                 }else{
-                    set_schedule_time(jsondata)
                     console.log('success')
                     if(callbackoption == 'callback'){
                       callback(jsondata)
                     }else{
+                      set_schedule_time(jsondata)
                       close_info_popup('cal_popup_plandelete')
-                      console.log('----------------',$('._calmonth').length, $('._calweek').length)
                       if($('._calmonth').length == 1){
                         shade_index(100)
                       }else if($('._calweek').length == 1){
                         shade_index(-100)
                       }
+                      completeSend();
                     }
                 }
               },
 
             //보내기후 팝업창 닫기
             complete:function(){
-                completeSend();
+                
               },
 
             //통신 실패시 처리
