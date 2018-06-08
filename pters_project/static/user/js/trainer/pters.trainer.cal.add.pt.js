@@ -415,7 +415,9 @@ $(document).ready(function(){
 
                   $(document).on('mouseup', '.td00, .td30', function(){
                       $(document).off('mouseover')
-                      show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
+                      if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                          show_mini_plan_add_popup(thisID, $('.blankSelected30').length)
+                      }
                       check_dropdown_selected_addplan()
                   })
               }
@@ -546,6 +548,10 @@ $(document).ready(function(){
           $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
       }
 
+      //shift키 눌러서 일정을 쭉 잡기
+      function fill_blankSelected_by_shift_key(thisID, endID){
+        // TO - DO
+      }
       
 
       $('#datetext_mini').click(function(){console.log(addTypeSelect)})
@@ -653,7 +659,7 @@ $(document).ready(function(){
 
       function closeMiniPopupByChange(){
         $("#id_time_duration_off").val("")
-        $('#page-addplan-pc').fadeOut();
+        $('#page-addplan-pc').hide();
         $('.blankSelected, .blankSelected30').removeClass('blankSelected blankSelected30 blankSelected_addview')
         clear_pt_off_add_popup_mini()
       }
@@ -2789,25 +2795,25 @@ function send_plan_delete(option, callbackoption, callback){
                       $('#errorMessageBar').show()
                       $('#errorMessageText').text(jsondata.messageArray)
                 }else{
-                    set_schedule_time(jsondata)
                     console.log('success')
                     if(callbackoption == 'callback'){
                       callback(jsondata)
                     }else{
+                      set_schedule_time(jsondata)
                       close_info_popup('cal_popup_plandelete')
-                      console.log('----------------',$('._calmonth').length, $('._calweek').length)
                       if($('._calmonth').length == 1){
                         shade_index(100)
                       }else if($('._calweek').length == 1){
                         shade_index(-100)
                       }
+                      completeSend();
                     }
                 }
               },
 
             //보내기후 팝업창 닫기
             complete:function(){
-                completeSend();
+                
               },
 
             //통신 실패시 처리

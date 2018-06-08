@@ -154,7 +154,7 @@ $(document).ready(function(){
 
    	function closeMiniPopup(){
    		$("#id_time_duration_off").val("")
-	    $('#page-addplan-pc').fadeOut();
+	    $('#page-addplan-pc').hide();
 	    $('.blankSelected, .blankSelected30').removeClass('blankSelected blankSelected30 blankSelected_addview')
 	    $('.submitBtn').removeClass('submitBtnActivated')
 	    $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected')
