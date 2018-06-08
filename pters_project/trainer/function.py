@@ -64,6 +64,9 @@ def func_get_member_ing_list(class_id, user_id):
             member_data.lecture_reg_count = 0
             member_data.lecture_rem_count = 0
             member_data.lecture_avail_count = 0
+            member_data.lesson_reg_count = 0
+            member_data.lesson_rem_count = 0
+            member_data.lesson_avail_count = 0
             member_data.group_reg_count = 0
             member_data.group_rem_count = 0
             member_data.group_avail_count = 0
@@ -119,9 +122,12 @@ def func_get_member_ing_list(class_id, user_id):
                             member_data.group_rem_count += lecture_info.lecture_rem_count
                             member_data.group_avail_count += lecture_info.lecture_avail_count
                         else:
-                            member_data.lecture_reg_count += lecture_info.lecture_reg_count
-                            member_data.lecture_rem_count += lecture_info.lecture_rem_count
-                            member_data.lecture_avail_count += lecture_info.lecture_avail_count
+                            member_data.lesson_reg_count += lecture_info.lecture_reg_count
+                            member_data.lesson_rem_count += lecture_info.lecture_rem_count
+                            member_data.lesson_avail_count += lecture_info.lecture_avail_count
+                        member_data.lecture_reg_count += lecture_info.lecture_reg_count
+                        member_data.lecture_rem_count += lecture_info.lecture_rem_count
+                        member_data.lecture_avail_count += lecture_info.lecture_avail_count
                         member_data.end_date = lecture_info.end_date
                         # if member_data.lecture_available_id == '':
                         #     if lecture_info.lecture_avail_count > 0:
@@ -219,6 +225,12 @@ def func_get_member_end_list(class_id, user_id):
             member_data.lecture_reg_count = 0
             member_data.lecture_rem_count = 0
             member_data.lecture_avail_count = 0
+            member_data.lesson_reg_count = 0
+            member_data.lesson_rem_count = 0
+            member_data.lesson_avail_count = 0
+            member_data.group_reg_count = 0
+            member_data.group_rem_count = 0
+            member_data.group_avail_count = 0
 
             member_data.start_date = None
             member_data.end_date = None
@@ -263,6 +275,14 @@ def func_get_member_end_list(class_id, user_id):
                                                                        use=1).count()
 
                 if lecture_info.use != 0:
+                    if group_check == 0:
+                        member_data.group_reg_count += lecture_info.lecture_reg_count
+                        member_data.group_rem_count += lecture_info.lecture_rem_count
+                        member_data.group_avail_count += lecture_info.lecture_avail_count
+                    else:
+                        member_data.lesson_reg_count += lecture_info.lecture_reg_count
+                        member_data.lesson_rem_count += lecture_info.lecture_rem_count
+                        member_data.lesson_avail_count += lecture_info.lecture_avail_count
                     member_data.lecture_reg_count += lecture_info.lecture_reg_count
                     member_data.lecture_rem_count += lecture_info.lecture_rem_count
                     member_data.lecture_avail_count += lecture_info.lecture_avail_count

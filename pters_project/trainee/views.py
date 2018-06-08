@@ -1378,10 +1378,10 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
                 lecture_info = lecture_list_info.lecture_tb
                 if idx == 0:
                     pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                              en_dis_type=ON_SCHEDULE_TYPE)
+                                                                              en_dis_type=ON_SCHEDULE_TYPE).order_by('-reg_dt')
                 else:
                     pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                               en_dis_type=ON_SCHEDULE_TYPE)
+                                                                               en_dis_type=ON_SCHEDULE_TYPE).order_by('-reg_dt')
             for pt_repeat_schedule_info in pt_repeat_schedule_data:
                 pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
                 pt_repeat_schedule_info.end_date = str(pt_repeat_schedule_info.end_date)
