@@ -1405,35 +1405,40 @@ function pc_add_member(option){
 function shiftMemberList(type){
     switch(type){
         case "current":
-            if($('#btnCallMemberList').hasClass('list_switch_selected')){
+            //if($('#btnCallMemberList').hasClass('list_switch_selected')){
                 get_member_ing_list()
                 $('#currentMemberList, #memberNumber_current_member').css('display','block');
                 $('#finishedMemberList, #memberNumber_finish_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').show()
-            }else if($('#btnCallGroupList').hasClass('list_switch_selected')){
+            //}else if($('#btnCallGroupList').hasClass('list_switch_selected')){
+                /*
                 get_group_ing_list()
                 $('#currentGroupList, #memberNumber_current_group').css('display','block');
                 $('#finishedMemberList, #memberNumber_current_member, #memberNumber_finish_member, #memberNumber_finish_group, #currentMemberList, #currentMemberNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').show()
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
-            }
+                */
+            //}
         break;
         case "finished":
-            if($('#btnCallMemberList').hasClass('list_switch_selected')){
+            //if($('#btnCallMemberList').hasClass('list_switch_selected')){
                 get_member_end_list()
                 $('#finishedMemberList, #memberNumber_finish_member').css('display','block');
                 $('#currentMemberList, #memberNumber_current_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').hide()
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').show()
-            }else if($('#btnCallGroupList').hasClass('list_switch_selected')){
+            //}else if($('#btnCallGroupList').hasClass('list_switch_selected')){
+                /*
                 get_group_end_list()
                 $('#finishedGroupList, #memberNumber_finish_group').css('display','block');
                 $('#finishedMemberList, #memberNumber_current_member, #memberNumber_finish_member, #memberNumber_current_group, #currentGroupList, #currentGroupNum, #currentMemberList, #currentMemberNum').css('display','none')
                 $('._GROUP_THEAD, ._groupaddbutton').show()
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
-            }
+                */
+            //}
         break;
+        /*
         case "member":
             if($('#btnCallCurrent').hasClass('active')){
                 get_member_ing_list()
@@ -1465,6 +1470,7 @@ function shiftMemberList(type){
                 $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
             }
         break;
+        */
     }
 }
 
