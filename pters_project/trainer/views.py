@@ -311,6 +311,12 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageMemberView, self).get_context_data(**kwargs)
         return context
 
+class ManageGroupView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'manage_group.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageGroupView, self).get_context_data(**kwargs)
+        return context
 
 class HelpPtersView(AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'

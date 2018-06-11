@@ -140,6 +140,8 @@ urlpatterns = [
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
     # 회원 관리 페이지
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
+    # 그룹 관리 페이지
+    url(r'^group_manage/$', views.ManageGroupView.as_view(), name='group_manage'),
     # 이용 문의 페이지
     url(r'^help_setting/$', views.HelpPtersView.as_view(), name='help_setting'),
     # 강좌 선택 페이지
