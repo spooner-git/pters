@@ -26,37 +26,35 @@ $(document).ready(function(){
 
 
 	function ajaxCheckSchedule(){
+        $.ajax({
+          url: '/schedule/check_schedule_update/',
+		  dataType : 'html',
 
-            $.ajax({
-              url: '/schedule/check_schedule_update/',
-			  dataType : 'html',
+          beforeSend:function(){
+          	//beforeSend();
+          },
 
-              beforeSend:function(){
-              	//beforeSend();
-              },
+          success:function(data){
+          	var jsondata = JSON.parse(data);
+          	if(jsondata.messageArray.length>0){
+              	$('#errorMessageBar').show()
+              	$('#errorMessageText').text(jsondata.messageArray)
+            }else{
+            	var update_data_changed = jsondata.data_changed;
+				if(update_data_changed[0]=="1"){
+					ajaxClassTime("this");
+				}
+            }
+		  },
 
-              success:function(data){
-              	var jsondata = JSON.parse(data);
-              	if(jsondata.messageArray.length>0){
-                  	$('#errorMessageBar').show()
-                  	$('#errorMessageText').text(jsondata.messageArray)
-                }else{
-                	var update_data_changed = jsondata.data_changed;
-					if(update_data_changed[0]=="1"){
-						ajaxClassTime("this");
-					}
-                }
-                
-			  },
+          complete:function(){
+          	//completeSend();
+          },
 
-              complete:function(){
-              	//completeSend();
-              },
-
-              error:function(){
-                console.log('server error')
-              }
-            })
+          error:function(){
+            console.log('server error')
+          }
+        })
     }
 
 
@@ -1738,6 +1736,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
 			$('.dateMytime').removeClass('dateMytime')
 			$('.memo, .greymemo').text('').removeClass('greymemo')
 			classDates(jsondata)
+			groupDates(jsondata)
 
 			if(use == "callback"){
 				callback(jsondata)
@@ -1760,6 +1759,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 	$('div._classTime').html('')
 	var count_date_info = classInfoProcessed(jsondata)
 	var len = jsondata.classTimeArray_start_date.length;
+	console.log('classDates',jsondata)
 	console.log('count_date_info',count_date_info)
 	var already_added = []
 	for(var i=0; i<len; i++){
@@ -1840,6 +1840,41 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 		
 	};
 };
+
+function groupDates(jsondata){	//그룹 PT가 있는 날짜에 표기
+	var len = jsondata.group_schedule_id.length;
+	for(var i=0; i<len; i++){
+		var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0], '_')
+		var arr = classDate.split('_')
+		var yy = arr[0]
+		var mm = arr[1]
+		var dd = arr[2]
+		var omm = String(oriMonth)
+		var odd = String(oriDate)
+		if(mm.length==1){
+			var mm = '0'+arr[1]
+		}
+		if(dd.length==1){
+			var dd='0'+arr[2]
+		}
+		if(omm.length==1){
+			var omm = '0'+oriMonth
+		}
+		if(odd.length==1){
+			var odd='0'+oriDate
+		}
+
+		var group_plan_indicate = "<img src='/static/user/res/icon-group-setting.png' class='group_plan_indicate'>"
+		var group_plan_indicate_past = "<img src='/static/user/res/icon-group-setting.png' class='group_plan_indicate_past'>"
+
+		if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
+			$("td[data-date="+classDate+"]").prepend(group_plan_indicate_past)
+		}else{
+			$("td[data-date="+classDate+"]").prepend(group_plan_indicate)
+		}
+		
+	};
+}
 
 function classInfoProcessed(jsondata){ //일정 갯수 세기
 
