@@ -586,6 +586,7 @@ def func_send_push_trainer(lecture_id, title, message):
                                                        'Authorization': 'key=' + push_server_id})
 
 
+# 회원 -> 강사 push 메시지 전달
 def func_send_push_trainee(class_id, title, message):
     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
     if class_id is not None and class_id != '':

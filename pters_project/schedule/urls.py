@@ -54,4 +54,9 @@ urlpatterns = [
     # 그룹 반복일정 삭제
     url(r'^delete_group_repeat_schedule/$', views.delete_group_repeat_schedule_logic, name='delete_group_repeat_schedule'),
 
+
+    # 푸시 알림 기능 #####################################################################################################
+    url(r'^send_push_to_trainer/$', views.send_push_to_trainer_logic, name='send_push_to_trainer'),
+    url(r'^send_push_to_trainee/$', views.send_push_to_trainee_logic, name='send_push_to_trainee'),
+
 ]

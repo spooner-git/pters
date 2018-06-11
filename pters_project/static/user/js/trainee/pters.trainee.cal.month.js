@@ -543,6 +543,11 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
+	          		if(jsondata.push_class_id.length>0){
+						for(var i=0; i<=jsondata.push_class_id.length; i++) {
+                            send_push_func(jsondata.push_class_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                        }
+					}
 					ajaxClassTime("this", 46, "callback", function(json){
 						plancheck(clicked_td_date_info, json)
 					});
@@ -567,9 +572,7 @@ $(document).ready(function(){
     	$('#id_time_duration').val('') //add
     	$('#id_training_time').val('') //add
     }
-
 	function send_push(push_server_id, intance_id, title, message, badge_counter){
-
         $.ajax({
           url: 'https://fcm.googleapis.com/fcm/send',
           type : 'POST',
@@ -590,6 +593,31 @@ $(document).ready(function(){
 
           beforeSend:function(){
           	console.log('test_ajax')
+          	beforeSend();
+          },
+
+          success:function(response){
+			  console.log(response);
+          },
+
+          complete:function(){
+          	completeSend();
+          },
+
+          error:function(){
+            console.log('server error')
+          }
+        })
+    }
+	function send_push_func(class_id, title, message){
+
+        $.ajax({
+          url: '/schedule/send_push_to_trainer/',
+          type : 'POST',
+		  dataType: 'html',
+			data : {"class_id":class_id, "title":title, "message":message, "next_page":'/trainee/get_trainee_error_info/'},
+
+          beforeSend:function(){
           	beforeSend();
           },
 
@@ -650,6 +678,11 @@ $(document).ready(function(){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
+	          		if(jsondata.push_class_id.length>0){
+						for(var i=0; i<=jsondata.push_class_id.length; i++) {
+                            send_push_func(jsondata.push_class_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                        }
+					}
 					ajaxClassTime("this", 46, "callback", function(json){
 						plancheck(clicked_td_date_info, json)
 					});

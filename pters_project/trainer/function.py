@@ -394,6 +394,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
 
     error = None
     lecture_info = None
+    group_info = None
     if group_id != '' and group_id is not None:
         try:
             group_info = GroupTb.objects.get(group_id=group_id)
@@ -421,11 +422,16 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                                          mod_dt=timezone.now(),
                                          reg_dt=timezone.now(), use=1)
                 lecture_info.save()
+                auth_cd = 'DELETE'
+                if group_id != '' and group_id is not None:
+                    if group_info.group_type_cd == 'EMPTY':
+                        auth_cd = 'WAIT'
 
                 member_lecture_info = MemberLectureTb(member_id=member_id, lecture_tb_id=lecture_info.lecture_id,
-                                                      auth_cd='DELETE', mod_member_id=user_id,
+                                                      auth_cd=auth_cd, mod_member_id=user_id,
                                                       reg_dt=timezone.now(), mod_dt=timezone.now(),
                                                       use=1)
+
                 member_lecture_info.save()
                 class_lecture_info = ClassLectureTb(class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                                                     auth_cd='VIEW', mod_member_id=user_id,
