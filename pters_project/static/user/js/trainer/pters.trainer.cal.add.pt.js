@@ -905,8 +905,8 @@ $(document).ready(function(){
                         }else{
 
                                 if(jsondata.push_class_id.length>0){
-                                    for(var i=0; i<=jsondata.push_class_id.length; i++) {
-                                        send_push_func(jsondata.push_class_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                                    for(var i=0; i<=jsondata.push_lecture_id.length; i++) {
+                                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
                                     }
                                 }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
@@ -2607,7 +2607,7 @@ function send_push_func(lecture_id, title, message){
       url: '/schedule/send_push_to_trainee/',
       type : 'POST',
       dataType: 'html',
-        data : {"lecture_id":lecture_id, "title":title, "message":message, "next_page":'/trainee/get_trainee_error_info/'},
+        data : {"lecture_id":lecture_id, "title":title, "message":message, "next_page":'/trainer/get_error_info/'},
 
       beforeSend:function(){
         beforeSend();
