@@ -903,6 +903,12 @@ $(document).ready(function(){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray)
                         }else{
+
+                                if(jsondata.push_class_id.length>0){
+                                    for(var i=0; i<=jsondata.push_lecture_id.length; i++) {
+                                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                                    }
+                                }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
                                 if(total_count == RepeatDuplicationDateArray[0].split('/').length){
@@ -2594,6 +2600,32 @@ function send_push(push_server_id, intance_id,title, message, badge_counter){
     })
 }
 
+
+function send_push_func(lecture_id, title, message){
+
+    $.ajax({
+      url: '/schedule/send_push_to_trainee/',
+      type : 'POST',
+      dataType: 'html',
+        data : {"lecture_id":lecture_id, "title":title, "message":message, "next_page":'/trainer/get_error_info/'},
+
+      beforeSend:function(){
+        beforeSend();
+      },
+
+      success:function(response){
+          console.log(response);
+      },
+
+      complete:function(){
+        completeSend();
+      },
+
+      error:function(){
+        console.log('server error')
+      }
+    })
+}
 
 
 //그룹..

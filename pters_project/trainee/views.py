@@ -314,10 +314,15 @@ def add_trainee_schedule_logic(request):
     class_info = None
     start_date = None
     end_date = None
+    push_class_id = []
+    push_title = []
+    push_message = []
+
     today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     disable_time = timezone.now()
     nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
     reserve_avail_date = 14
+
     if class_id is None or class_id == '':
         error = '강좌 정보를 불러오지 못했습니다.'
     if training_date == '':
@@ -431,16 +436,31 @@ def add_trainee_schedule_logic(request):
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
         if group_schedule_id == '' or group_schedule_id is None:
-            func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
-                           request.user.last_name + request.user.first_name + '님이 ' \
-                           + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
-                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다')
-        else:
-            func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
-                           request.user.last_name + request.user.first_name + '님이 ' \
-                           + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
-                           + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 그룹 일정을 등록했습니다')
 
+            push_class_id.append(class_id)
+            push_title.append(class_type_name + ' 수업 - 일정 알림')
+            push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다')
+            # func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
+            #                request.user.last_name + request.user.first_name + '님이 ' \
+            #                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+            #                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다')
+        else:
+
+            push_class_id.append(class_id)
+            push_title.append(class_type_name + ' 수업 - 일정 알림')
+            push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 그룹 일정을 등록했습니다')
+            # func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
+            #                request.user.last_name + request.user.first_name + '님이 ' \
+            #                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+            #                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 그룹 일정을 등록했습니다')
+
+        request.session['push_class_id'] = push_class_id
+        request.session['push_title'] = push_title
+        request.session['push_message'] = push_message
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -465,6 +485,9 @@ def delete_trainee_schedule_logic(request):
     disable_time = timezone.now()
     nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
     reserve_avail_date = 14
+    push_class_id = []
+    push_title = []
+    push_message = []
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
@@ -598,7 +621,7 @@ def delete_trainee_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
 
     end_func_time = timezone.now()
-    print('except push:'+str(end_func_time-start_func_time))
+    # print('except push:'+str(end_func_time-start_func_time))
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                             lecture_tb__state_cd='IP',
@@ -620,12 +643,21 @@ def delete_trainee_schedule_logic(request):
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
-        func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
-                       request.user.last_name + request.user.first_name + '님이 ' \
-                       + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
-                       + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다.')
+        # func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
+        #                request.user.last_name + request.user.first_name + '님이 ' \
+        #                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+        #                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다.')
+
+        push_class_id.append(class_id)
+        push_title.append(class_type_name + ' 수업 - 일정 알림')
+        push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다.')
+        request.session['push_class_id'] = push_class_id
+        request.session['push_title'] = push_title
+        request.session['push_message'] = push_message
         end_push_func_time = timezone.now()
-        print('url func end:'+str(end_push_func_time - start_func_time))
+        # print('url func end:'+str(end_push_func_time - start_func_time))
         return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)

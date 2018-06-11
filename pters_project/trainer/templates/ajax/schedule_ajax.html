@@ -46,6 +46,13 @@
       "group_schedule_note":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+        "push_lecture_id":
+      [{% for push_lecture_id_info in request.session.push_lecture_id %}"{{ push_lecture_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "push_title":
+      [{% for push_title_info in request.session.push_title %}"{{ push_title_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "push_message":
+      [{% for push_message_info in request.session.push_message %}"{{ push_message_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
       "RepeatDuplicationDateArray" :
