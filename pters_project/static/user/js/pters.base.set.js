@@ -417,14 +417,24 @@ function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd, resultSplit){
 
 
 function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d,resultSplit){
-    var yyyy = String(yyyy_m_d.split('-')[0])
-    var mm = String(yyyy_m_d.split('-')[1])
-    var dd = String(yyyy_m_d.split('-')[2])
+    if(yyyy_m_d.split('-').length == 3){
+      var yyyy = String(yyyy_m_d.split('-')[0])
+      var mm = String(yyyy_m_d.split('-')[1])
+      var dd = String(yyyy_m_d.split('-')[2])
+    }else if(yyyy_m_d.split('_').length == 3){
+      var yyyy = String(yyyy_m_d.split('_')[0])
+      var mm = String(yyyy_m_d.split('_')[1])
+      var dd = String(yyyy_m_d.split('_')[2])
+    }
+
+    console.log(yyyy,mm,dd,'-----')
+
+
     if(mm.length<2){
-      var mm = '0' + String(yyyy_m_d.split('-')[1])
+      var mm = '0' + mm
     }
     if(dd.length<2){
-      var dd = '0' + String(yyyy_m_d.split('-')[2])
+      var dd = '0' + dd
     }
     return yyyy+resultSplit+mm+resultSplit+dd
 }

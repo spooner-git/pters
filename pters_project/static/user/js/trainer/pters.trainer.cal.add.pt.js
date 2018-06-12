@@ -1195,7 +1195,7 @@ function float_btn_addplan(option){
         shade_index(100)
         //scrollToDom($('#calendar'))
         
-    }else if(option ==2){
+    }else if(option == 2){
         clear_pt_off_add_popup()
         open_pt_off_add_popup('offadd')
         //addTypeSelect = "offadd"
@@ -1206,13 +1206,21 @@ function float_btn_addplan(option){
     }
 }
 
-function open_pt_off_add_popup(option){ //option 'ptadd', 'offadd'
+function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     addTypeSelect = option
 
-    $('#datepicker').datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate)
-    $('#datepicker').parent('p').addClass('dropdown_selected')
-    $('#datepicker_repeat_start').datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate)
-    $('#datepicker_repeat_start').parent('p').addClass('dropdown_selected')
+    if(date != undefined){
+        $('#datepicker').datepicker('setDate', date)
+        $('#datepicker').parent('p').addClass('dropdown_selected')
+        $('#datepicker_repeat_start').datepicker('setDate', date)
+        $('#datepicker_repeat_start').parent('p').addClass('dropdown_selected')
+    }else{
+        $('#datepicker').datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate)
+        $('#datepicker').parent('p').addClass('dropdown_selected')
+        $('#datepicker_repeat_start').datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate)
+        $('#datepicker_repeat_start').parent('p').addClass('dropdown_selected')
+    }
+
     $('#page-addplan #timeGraph').css('display','block')
 
     if(option == "ptadd"){

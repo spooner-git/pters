@@ -252,6 +252,18 @@ $(document).ready(function(){
 			}
 		})
 
+		$(document).on('click','.plan_raw_add',function(){
+			var thisDate = date_format_yyyy_m_d_to_yyyy_mm_dd($(this).attr('data-date'),'-');
+
+			close_info_popup('cal_popup_plancheck')
+			clear_pt_off_add_popup()
+	        open_pt_off_add_popup('ptadd', thisDate)
+	        ajaxTimeGraphSet()
+	        shade_index(100)
+	        
+		})
+
+
 		//plan_raw 클릭해서 나오는 개별일정 [일정완료][일정삭제] 팝업의 X버튼
 		$("#btn_close").click(function(){  
 			if($('#cal_popup_planinfo').css('display')=='block'){
@@ -1149,6 +1161,8 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 		htmltojoin.push('<div class="plan_raw_blank">등록된 일정이 없습니다.</div>')
 
 	}
+	htmltojoin.push('<div class="plan_raw_blank plan_raw_add" data-date="'+dateinfo+'"><img src="/static/user/res/floatbtn/btn-plus.png" style="width:20px;cursor:pointer;"></div>')		
+
 
 	$('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
 }
