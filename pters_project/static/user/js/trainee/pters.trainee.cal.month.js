@@ -1867,9 +1867,13 @@ function groupDates(jsondata){	//그룹 PT가 있는 날짜에 표기
 		var group_plan_indicate_past = "<img src='/static/user/res/icon-group-setting.png' class='group_plan_indicate_past'>"
 
 		if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
-			$("td[data-date="+classDate+"]").prepend(group_plan_indicate_past)
+			if($("td[data-date="+classDate+"] .group_plan_indicate_past").length == 0){
+				$("td[data-date="+classDate+"]").prepend(group_plan_indicate_past)
+			}
 		}else{
-			$("td[data-date="+classDate+"]").prepend(group_plan_indicate)
+			if($("td[data-date="+classDate+"] .group_plan_indicate").length == 0){
+				$("td[data-date="+classDate+"]").prepend(group_plan_indicate)
+			}
 		}
 		
 	};
