@@ -641,12 +641,20 @@ def func_get_trainer_setting_list(context, user_id, class_id):
         lt_res_04 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_04 = '00:00-23:59'
-
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_05', use=1)
         lt_res_05 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_05 = '14'
+
+    try:
+        lt_res_cancel_time = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME')
+    except ObjectDoesNotExist:
+        lt_res_cancel_time = lt_res_02
+    try:
+        lt_res_enable_time = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME')
+    except ObjectDoesNotExist:
+        lt_res_enable_time = lt_res_02
 
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_LAN_01', use=1)
@@ -690,7 +698,8 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     context['lt_res_04'] = lt_res_04
     context['lt_res_05'] = lt_res_05
     context['lt_lan_01'] = lt_lan_01
-
+    context['lt_res_enable_time'] = lt_res_enable_time
+    context['lt_res_cancel_time'] = lt_res_cancel_time
     context['lt_pus_01'] = lt_pus_01
     context['lt_pus_02'] = lt_pus_02
     context['lt_pus_03'] = lt_pus_03

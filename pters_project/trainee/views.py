@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
-from configs.const import ON_SCHEDULE_TYPE
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE
 from configs.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
 from schedule.functions import func_send_push_trainee, func_get_lecture_id, func_get_group_lecture_id, \
@@ -37,7 +37,7 @@ from django.utils import timezone
 
 from trainee.function import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
-    func_get_holiday_schedule, func_get_trainee_on_repeat_schedule
+    func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting
 
 logger = logging.getLogger(__name__)
 
@@ -319,11 +319,6 @@ def add_trainee_schedule_logic(request):
     push_message = []
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
-    today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-    disable_time = timezone.now()
-    nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
-    reserve_avail_date = 14
-
     if class_id is None or class_id == '':
         error = '강좌 정보를 불러오지 못했습니다.'
     if training_date == '':
@@ -345,56 +340,7 @@ def add_trainee_schedule_logic(request):
         end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
 
     if error is None:
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id, setting_type_cd='LT_RES_01', use=1)
-            lt_res_01 = setting_data_info.setting_info
-        except ObjectDoesNotExist:
-            lt_res_01 = '00:00-23:59'
-
-        reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
-        reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id, setting_type_cd='LT_RES_02', use=1)
-            lt_res_02 = setting_data_info.setting_info
-        except ObjectDoesNotExist:
-            lt_res_02 = '0'
-        reserve_prohibition_time = lt_res_02
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id, setting_type_cd='LT_RES_03', use=1)
-            lt_res_03 = setting_data_info.setting_info
-        except ObjectDoesNotExist:
-            lt_res_03 = '0'
-
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id, setting_type_cd='LT_RES_05', use=1)
-            lt_res_05 = int(setting_data_info.setting_info)
-        except ObjectDoesNotExist:
-            lt_res_05 = 14
-        reserve_stop = lt_res_03
-        reserve_avail_date = lt_res_05
-
-        if reserve_prohibition_time != '':
-            if int(reserve_prohibition_time) >= 24:
-                reserve_prohibition_time = '0'
-            disable_time = disable_time + datetime.timedelta(hours=int(reserve_prohibition_time))
-
-        if reserve_stop == '1':
-            error = '강사 설정에 의해 현재 예약이 일시 정지 되어있습니다.'
-
-        if error is None:
-            if nowtime < reserve_avail_start_time:
-                error = '현재는 입력할수 없는 시간입니다.'
-            if nowtime > reserve_avail_end_time:
-                error = '현재는 입력할수 없는 시간입니다.'
-
-    avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
-
-    if error is None:
-        if start_date >= avail_end_date:
-            error = '입력할 수 없는 날짜입니다.'
-    if error is None:
-        if start_date < disable_time:
-            error = '입력할 수 없는 일정입니다.'
+        error = func_check_schedule_setting(class_id, start_date, ADD_SCHEDULE)
 
     if error is None:
         if group_schedule_id == '' or group_schedule_id is None:
@@ -476,17 +422,12 @@ def delete_trainee_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
-    start_func_time = timezone.now()
     error = None
     lecture_info = None
     class_info = None
     schedule_info = None
     start_date = None
     end_date = None
-    today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-    disable_time = timezone.now()
-    nowtime = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
-    reserve_avail_date = 14
     push_class_id = []
     push_title = []
     push_message = []
@@ -526,68 +467,9 @@ def delete_trainee_schedule_logic(request):
             error = '회원 정보가 일치하지 않습니다.'
 
     if error is None:
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
-                                                      setting_type_cd='LT_RES_01', use=1)
-            lt_res_01 = setting_data_info.setting_info
-        except ObjectDoesNotExist:
-            lt_res_01 = '00:00-23:59'
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
-                                                      setting_type_cd='LT_RES_02', use=1)
-            lt_res_02 = setting_data_info.setting_info
-        except ObjectDoesNotExist:
-            lt_res_02 = '0'
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
-                                                      setting_type_cd='LT_RES_03', use=1)
-            lt_res_03 = setting_data_info.setting_info
-        except ObjectDoesNotExist:
-            lt_res_03 = '0'
+        if error is None:
+            error = func_check_schedule_setting(class_id, start_date, DEL_SCHEDULE)
 
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
-                                                      setting_type_cd='LT_RES_04', use=1)
-            lt_res_04 = setting_data_info.setting_info
-        except ObjectDoesNotExist:
-            lt_res_04 = '00:00-23:59'
-
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_info.class_id,
-                                                      setting_type_cd='LT_RES_05', use=1)
-            lt_res_05 = int(setting_data_info.setting_info)
-        except ObjectDoesNotExist:
-            lt_res_05 = 14
-
-        reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
-        reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
-        reserve_avail_date = lt_res_05
-        reserve_prohibition_time = lt_res_02
-        reserve_stop = lt_res_03
-
-        if reserve_prohibition_time != '':
-            disable_time = disable_time + datetime.timedelta(hours=int(reserve_prohibition_time))
-
-        if nowtime < reserve_avail_start_time:
-            error = '현재는 삭제할수 없는 시간입니다.'
-        if nowtime > reserve_avail_end_time:
-            error = '현재는 삭제할수 없는 시간입니다.'
-        if reserve_stop == '1':
-            error = '현재는 예약할수 없습니다.'
-
-    avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
-
-    if error is None:
-        if lecture_info.member_id != str(request.user.id):
-            error = '회원 정보가 일치하지 않습니다.'
-
-    if error is None:
-        if start_date >= avail_end_date:
-            error = '삭제할 수 없는 날짜입니다.'
-
-    if error is None:
-        if start_date < disable_time:
-            error = '삭제할 수 없는 일정입니다.'
     if error is None:
         try:
             with transaction.atomic():
@@ -623,7 +505,6 @@ def delete_trainee_schedule_logic(request):
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 
-    # print('except push:'+str(end_func_time-start_func_time))
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                             lecture_tb__state_cd='IP',
@@ -1460,12 +1341,31 @@ def get_trainer_setting_data(context, user_id, class_id):
         lt_res_05 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_05 = '14'
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME')
+        lt_res_cancel_time = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_cancel_time = lt_res_02
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME')
+        lt_res_enable_time = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_enable_time = lt_res_02
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE')
+        lt_res_enable = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_enable = lt_res_03
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
     context['lt_res_04'] = lt_res_04
     context['lt_res_05'] = lt_res_05
+    context['lt_res_enable_time'] = lt_res_enable_time
+    context['lt_res_cancel_time'] = lt_res_cancel_time
+    context['lt_res_enable'] = lt_res_enable
+
     return context
 
 

@@ -1,10 +1,13 @@
+import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils import timezone
+import datetime
 
-from configs.const import ON_SCHEDULE_TYPE
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE
 from login.models import MemberTb, HolidayTb, CommonCdTb
-from schedule.models import ClassTb, MemberLectureTb, ClassLectureTb, ScheduleTb, RepeatScheduleTb, GroupLectureTb
+from schedule.models import ClassTb, MemberLectureTb, ClassLectureTb, ScheduleTb, RepeatScheduleTb, GroupLectureTb, \
+    SettingTb
 
 
 def func_get_holiday_schedule(context):
@@ -401,3 +404,88 @@ def func_get_class_list(context, member_id):
         context['error'] = error
 
     return context
+
+
+def func_check_schedule_setting(class_id, start_date, add_del_type):
+    error = None
+    disable_time = timezone.now()
+    now_time = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
+    today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    try:
+        class_info = ClassTb.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        error = '강좌 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
+                                                      setting_type_cd='LT_RES_01', use=1)
+            lt_res_01 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_01 = '00:00-23:59'
+
+        reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
+        reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
+                                                      setting_type_cd='LT_RES_02', use=1)
+            lt_res_02 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_02 = '0'
+        reserve_prohibition_time = lt_res_02
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
+                                                      setting_type_cd='LT_RES_03', use=1)
+            lt_res_03 = setting_data_info.setting_info
+        except ObjectDoesNotExist:
+            lt_res_03 = '0'
+
+        try:
+            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
+                                                      setting_type_cd='LT_RES_05', use=1)
+            lt_res_05 = int(setting_data_info.setting_info)
+        except ObjectDoesNotExist:
+            lt_res_05 = 14
+        reserve_stop = lt_res_03
+        reserve_avail_date = lt_res_05
+
+        if reserve_prohibition_time != '':
+            if int(reserve_prohibition_time) >= 24:
+                reserve_prohibition_time = '0'
+            disable_time = disable_time + datetime.timedelta(hours=int(reserve_prohibition_time))
+
+        if reserve_stop == '1':
+            if add_del_type == ADD_SCHEDULE:
+                error = '현재 예약 등록이 불가능합니다.'
+            else:
+                error = '현재 예약 취소가 불가능합니다.'
+
+        if error is None:
+            if now_time < reserve_avail_start_time:
+                if add_del_type == ADD_SCHEDULE:
+                    error = '예약 등록할 수 없는 시간입니다.'
+                else:
+                    error = '예약 삭제할 수 없는 시간입니다.'
+            if now_time > reserve_avail_end_time:
+                if add_del_type == ADD_SCHEDULE:
+                    error = '예약 등록할 수 없는 시간입니다.'
+                else:
+                    error = '예약 삭제할 수 없는 시간입니다.'
+
+    avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
+
+    if error is None:
+        if start_date >= avail_end_date:
+            if add_del_type == ADD_SCHEDULE:
+                error = '예약 등록할 수 없는 날짜입니다.'
+            else:
+                error = '예약 삭제할 수 없는 날짜입니다.'
+    if error is None:
+        if start_date < disable_time:
+            if add_del_type == ADD_SCHEDULE:
+                error = '예약 등록할 수 없는 일정입니다.'
+            else:
+                error = '예약 삭제할 수 없는 날짜입니다.'
+
+    return error
