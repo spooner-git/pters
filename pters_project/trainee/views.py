@@ -623,7 +623,6 @@ def delete_trainee_schedule_logic(request):
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 
-    end_func_time = timezone.now()
     # print('except push:'+str(end_func_time-start_func_time))
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
@@ -646,21 +645,11 @@ def delete_trainee_schedule_logic(request):
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
-        # func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
-        #                request.user.last_name + request.user.first_name + '님이 ' \
-        #                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
-        #                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다.')
-
         push_class_id.append(class_id)
         push_title.append(class_type_name + ' 수업 - 일정 알림')
         push_message.append(request.user.last_name + request.user.first_name + '님이 '
                             + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                             + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다.')
-        # request.session['push_class_id'] = push_class_id
-        # request.session['push_title'] = push_title
-        # request.session['push_message'] = push_message
-        end_push_func_time = timezone.now()
-        # print('url func end:'+str(end_push_func_time - start_func_time))
 
         context['push_class_id'] = push_class_id
         context['push_title'] = push_title

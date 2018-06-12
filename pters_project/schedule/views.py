@@ -1190,6 +1190,7 @@ def delete_group_schedule_logic(request):
     day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
+    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     error = None
     request.session['date'] = date
@@ -1232,7 +1233,10 @@ def delete_group_schedule_logic(request):
                          reg_dt=timezone.now(), use=1)
         log_data.save()
 
-        return redirect(next_page)
+        context['push_lecture_id'] = ''
+        context['push_title'] = ''
+        context['push_message'] = ''
+        return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(
             request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -1249,6 +1253,8 @@ def finish_group_schedule_logic(request):
     error = None
     schedule_info = None
     group_info = None
+    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
 
@@ -1305,7 +1311,11 @@ def finish_group_schedule_logic(request):
                          reg_dt=timezone.now(), use=1)
         log_data.save()
     if error is None:
-        return redirect(next_page)
+
+        context['push_lecture_id'] = ''
+        context['push_title'] = ''
+        context['push_message'] = ''
+        return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(
             request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
