@@ -3384,6 +3384,7 @@ def update_setting_reserve_logic(request):
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition', '')
     setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '')
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '')
+    setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '')
 
     class_id = request.session.get('class_id', '')
 
@@ -3391,10 +3392,11 @@ def update_setting_reserve_logic(request):
 
     error = None
     lt_res_01 = None
-    lt_res_02 = None
     lt_res_03 = None
     lt_res_04 = None
     lt_res_05 = None
+    lt_res_cancel_time = None
+    lt_res_enable_time = None
 
     if error is None:
         if setting_member_reserve_time_available == '':
@@ -3407,16 +3409,14 @@ def update_setting_reserve_logic(request):
             setting_trainer_work_time_available = '00:00-23:59'
         if setting_member_reserve_date_available == '':
             setting_member_reserve_date_available = '14'
+        if setting_member_cancel_time == '':
+            setting_member_cancel_time = '120'
 
     if error is None:
         try:
             lt_res_01 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_01')
         except ObjectDoesNotExist:
             lt_res_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_01', reg_dt=timezone.now(), use=1)
-        try:
-            lt_res_02 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_02')
-        except ObjectDoesNotExist:
-            lt_res_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_02', reg_dt=timezone.now(), use=1)
         try:
             lt_res_03 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_03')
         except ObjectDoesNotExist:
@@ -3429,6 +3429,14 @@ def update_setting_reserve_logic(request):
             lt_res_05 = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_05')
         except ObjectDoesNotExist:
             lt_res_05 = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_05', reg_dt=timezone.now(), use=1)
+        try:
+            lt_res_cancel_time = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME')
+        except ObjectDoesNotExist:
+            lt_res_cancel_time = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME', reg_dt=timezone.now(), use=1)
+        try:
+            lt_res_enable_time = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME')
+        except ObjectDoesNotExist:
+            lt_res_enable_time = SettingTb(member_id=request.user.id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME', reg_dt=timezone.now(), use=1)
 
     if error is None:
         try:
@@ -3436,10 +3444,6 @@ def update_setting_reserve_logic(request):
                 lt_res_01.mod_dt = timezone.now()
                 lt_res_01.setting_info = setting_member_reserve_time_available
                 lt_res_01.save()
-
-                lt_res_02.mod_dt = timezone.now()
-                lt_res_02.setting_info = setting_member_reserve_time_prohibition
-                lt_res_02.save()
 
                 lt_res_03.mod_dt = timezone.now()
                 lt_res_03.setting_info = setting_member_reserve_prohibition
@@ -3452,6 +3456,14 @@ def update_setting_reserve_logic(request):
                 lt_res_05.mod_dt = timezone.now()
                 lt_res_05.setting_info = setting_member_reserve_date_available
                 lt_res_05.save()
+
+                lt_res_cancel_time.mod_dt = timezone.now()
+                lt_res_cancel_time.setting_info = lt_res_cancel_time
+                lt_res_cancel_time.save()
+
+                lt_res_enable_time.mod_dt = timezone.now()
+                lt_res_enable_time.setting_info = setting_member_reserve_time_prohibition
+                lt_res_enable_time.save()
 
         except ValueError as e:
             error = '등록 값에 문제가 있습니다.'
@@ -3470,6 +3482,10 @@ def update_setting_reserve_logic(request):
         request.session['setting_member_reserve_time_prohibition'] = setting_member_reserve_time_prohibition
         request.session['setting_trainer_work_time_available'] = setting_trainer_work_time_available
         request.session['setting_member_reserve_date_available'] = setting_member_reserve_date_available
+
+        request.session['setting_member_reserve_enable'] = setting_member_reserve_prohibition
+        request.session['setting_member_reserve_enable_time'] = setting_member_reserve_time_prohibition
+        request.session['setting_member_reserve_cancel_time'] = setting_member_cancel_time
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
         #               + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
