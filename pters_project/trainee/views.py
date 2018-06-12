@@ -317,6 +317,7 @@ def add_trainee_schedule_logic(request):
     push_class_id = []
     push_title = []
     push_message = []
+    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     disable_time = timezone.now()
@@ -458,10 +459,11 @@ def add_trainee_schedule_logic(request):
             #                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
             #                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 그룹 일정을 등록했습니다')
 
-        request.session['push_class_id'] = push_class_id
-        request.session['push_title'] = push_title
-        request.session['push_message'] = push_message
-        return redirect(next_page)
+        context['push_class_id'] = push_class_id
+        context['push_title'] = push_title
+        context['push_message'] = push_message
+
+        return render(request, 'ajax/trainee_error_info.html', context)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
@@ -488,6 +490,7 @@ def delete_trainee_schedule_logic(request):
     push_class_id = []
     push_title = []
     push_message = []
+    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
@@ -653,12 +656,17 @@ def delete_trainee_schedule_logic(request):
         push_message.append(request.user.last_name + request.user.first_name + '님이 '
                             + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                             + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다.')
-        request.session['push_class_id'] = push_class_id
-        request.session['push_title'] = push_title
-        request.session['push_message'] = push_message
+        # request.session['push_class_id'] = push_class_id
+        # request.session['push_title'] = push_title
+        # request.session['push_message'] = push_message
         end_push_func_time = timezone.now()
         # print('url func end:'+str(end_push_func_time - start_func_time))
-        return redirect(next_page)
+
+        context['push_class_id'] = push_class_id
+        context['push_title'] = push_title
+        context['push_message'] = push_message
+
+        return render(request, 'ajax/trainee_error_info.html', context)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)

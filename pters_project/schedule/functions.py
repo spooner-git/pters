@@ -559,31 +559,31 @@ def func_get_not_available_group_member_list(group_id):
 def func_send_push_trainer(lecture_id, title, message):
     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
     if lecture_id is not None and lecture_id != '':
-        member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
-        for class_lecture_info in member_lecture_data:
-            lecture_info = MemberLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id,
-                                                          auth_cd='VIEW', use=1)
-            for lecture_info in lecture_info:
-                token_data = PushInfoTb.objects.filter(member_id=lecture_info.member.member_id)
-                for token_info in token_data:
-                    token_info.badge_counter += 1
-                    token_info.save()
-                    instance_id = token_info.token
-                    badge_counter = token_info.badge_counter
-                    data = {
-                        'to': instance_id,
-                        'notification': {
-                            'title': title,
-                            'body': message,
-                            'badge': badge_counter,
-                            'sound': 'default'
-                        }
+        # member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
+        # for class_lecture_info in member_lecture_data:
+        lecture_info = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id,
+                                                      auth_cd='VIEW', use=1)
+        for lecture_info in lecture_info:
+            token_data = PushInfoTb.objects.filter(member_id=lecture_info.member.member_id)
+            for token_info in token_data:
+                token_info.badge_counter += 1
+                token_info.save()
+                instance_id = token_info.token
+                badge_counter = token_info.badge_counter
+                data = {
+                    'to': instance_id,
+                    'notification': {
+                        'title': title,
+                        'body': message,
+                        'badge': badge_counter,
+                        'sound': 'default'
                     }
-                    body = json.dumps(data)
-                    h = httplib2.Http()
-                    resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
-                                              headers={'Content-Type': 'application/json;',
-                                                       'Authorization': 'key=' + push_server_id})
+                }
+                body = json.dumps(data)
+                h = httplib2.Http()
+                resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
+                                          headers={'Content-Type': 'application/json;',
+                                                   'Authorization': 'key=' + push_server_id})
 
 
 # 회원 -> 강사 push 메시지 전달

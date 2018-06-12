@@ -506,7 +506,8 @@ $(document).ready(function(){
 			                	signImageSend(senddata);
 			                    close_info_popup('cal_popup_planinfo')
 			                    completeSend();
-			                    set_schedule_time(json);
+			                    // set_schedule_time(json);
+								ajaxClassTime();
 
 			                    ajax_block_during_complete_weekcal = true
 			         			$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
@@ -524,7 +525,8 @@ $(document).ready(function(){
 									send_memo()
 									signImageSend(senddata);
 									completeSend();
-									set_schedule_time(json);
+									// set_schedule_time(json);
+									ajaxClassTime();
 									close_info_popup('cal_popup_planinfo')
 									ajax_block_during_complete_weekcal = true
 								})
@@ -540,7 +542,8 @@ $(document).ready(function(){
 										signImageSend(senddata);
 										if(z==len){
 											completeSend();
-											set_schedule_time(json);
+											// set_schedule_time(json);
+											ajaxClassTime();
 											close_info_popup('cal_popup_planinfo')
 											ajax_block_during_complete_weekcal = true
 										}
@@ -667,9 +670,6 @@ $(document).ready(function(){
 		})
 	}
 
-	
-
-	
 
     function send_push(push_server_id, intance_id, title, message, badge_counter){
 
@@ -1701,6 +1701,11 @@ function send_plan_complete(use, callback){
               	$('#errorMessageBar').show()
               	$('#errorMessageText').text(jsondata.messageArray)
             }else{
+                if(jsondata.push_lecture_id.length>0){
+                    for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                    }
+                }
                 if(use == "callback"){
                 	callback(jsondata, send_data)
                 }

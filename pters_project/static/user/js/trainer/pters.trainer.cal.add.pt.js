@@ -904,15 +904,10 @@ $(document).ready(function(){
                             $('#errorMessageText').text(jsondata.messageArray)
                         }else{
 
-                                if(jsondata.push_class_id.length>0){
-                                    for(var i=0; i<=jsondata.push_lecture_id.length; i++) {
-                                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
-                                    }
-                                }
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
                                 if(total_count == RepeatDuplicationDateArray[0].split('/').length){
-                                    alert('선택한 반복일정과 동일한 일정의 반복일정이 등록 되어있습니다.\n 일정을 다시 확인 후 등록해주세요.')
+                                    alert('동일할수 있는 일정이 없습니다.\n 일정을 다시 확인 후 등록해주세요.')
                                     completeSend(); //ajax 로딩 이미지 숨기기
                                 }else{
                                   var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
@@ -940,13 +935,21 @@ $(document).ready(function(){
                                     shade_index(200)
                                 //}
                             }else{
+                                if(jsondata.push_lecture_id.length>0){
+                                    for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                                    }
+                                }
                                 if($('._calweek').length == 1){
-                                  scheduleTime('class', jsondata);
-                                  scheduleTime('off', jsondata);
-                                  scheduleTime('group', jsondata);
+                                  // scheduleTime('class', jsondata);
+                                  // scheduleTime('off', jsondata);
+                                  // scheduleTime('group', jsondata);
+                                    ajaxClassTime()
                                 }
                                 else if($('._calmonth').length == 1){
-                                  classDatesTrainer(jsondata);
+                                  // classDatesTrainer(jsondata);
+                                   ajaxClassTime()
+
                                 }
                                 $('#members_mobile, #members_pc').html('')
                                 get_current_member_list()
@@ -1468,7 +1471,14 @@ function ajaxRepeatConfirmSend(use, callback){
             $('#errorMessageBar').show()
             $('#errorMessageText').text(jsondata.messageArray)
           }else{
-            set_schedule_time(jsondata)
+
+            if(jsondata.push_lecture_id.length>0){
+                for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                    send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
+                }
+            }
+            ajaxClassTime();
+            // set_schedule_time(jsondata)
             if(use == "callback"){
               callback(jsondata)
             }
@@ -2743,7 +2753,11 @@ function send_add_groupmember_plan(use, callback){
               $('#errorMessageBar').show()
               $('#errorMessageText').text(jsondata.messageArray)
             }else{
-              
+                if(jsondata.push_lecture_id.length>0){
+                    for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                    }
+                }
               if(use == 'callback'){
                 callback(jsondata)
               }else{
@@ -2816,11 +2830,16 @@ function send_plan_delete(option, callbackoption, callback){
                       $('#errorMessageBar').show()
                       $('#errorMessageText').text(jsondata.messageArray)
                 }else{
-                    console.log('success')
+                    if(jsondata.push_lecture_id.length>0){
+                        for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                            send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                        }
+                    }
                     if(callbackoption == 'callback'){
                       callback(jsondata)
                     }else{
-                      set_schedule_time(jsondata)
+                      ajaxClassTime();
+                      // set_schedule_time(jsondata)
                       close_info_popup('cal_popup_plandelete')
                       if($('._calmonth').length == 1){
                         shade_index(100)

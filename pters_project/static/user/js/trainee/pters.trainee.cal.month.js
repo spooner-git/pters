@@ -536,13 +536,12 @@ $(document).ready(function(){
 
 	          success:function(data){
 	          	var jsondata = JSON.parse(data);
-	          	console.log(jsondata)
 	          	if(jsondata.messageArray.length>0){
 	              	$('#errorMessageBar').show()
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
 	          		if(jsondata.push_class_id.length>0){
-						for(var i=0; i<=jsondata.push_class_id.length; i++) {
+						for(var i=0; i<jsondata.push_class_id.length; i++) {
                             send_push_func(jsondata.push_class_id[i], jsondata.push_title[i], jsondata.push_message[i])
                         }
 					}
@@ -677,7 +676,7 @@ $(document).ready(function(){
 	              	$('#errorMessageText').text(jsondata.messageArray)
 	            }else{
 	          		if(jsondata.push_class_id.length>0){
-						for(var i=0; i<=jsondata.push_class_id.length; i++) {
+						for(var i=0; i<jsondata.push_class_id.length; i++) {
                             send_push_func(jsondata.push_class_id[i], jsondata.push_title[i], jsondata.push_message[i])
                         }
 					}

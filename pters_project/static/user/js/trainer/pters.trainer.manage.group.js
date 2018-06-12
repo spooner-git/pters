@@ -4003,6 +4003,12 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
+
+                if(jsondata.push_lecture_id.length>0){
+                    for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                    }
+                }
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(use == "callback"){
@@ -4021,6 +4027,32 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         },
+    })
+}
+
+function send_push_func(lecture_id, title, message){
+
+    $.ajax({
+      url: '/schedule/send_push_to_trainee/',
+      type : 'POST',
+      dataType: 'html',
+        data : {"lecture_id":lecture_id, "title":title, "message":message, "next_page":'/trainer/get_error_info/'},
+
+      beforeSend:function(){
+        beforeSend();
+      },
+
+      success:function(response){
+          console.log(response);
+      },
+
+      complete:function(){
+        completeSend();
+      },
+
+      error:function(){
+        console.log('server error')
+      }
     })
 }
 
