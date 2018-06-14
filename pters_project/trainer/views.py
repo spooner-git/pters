@@ -2214,7 +2214,7 @@ def add_group_member_logic(request):
     if error is None:
         if group_id != '' and group_id is not None:
             try:
-                group_info = GroupTb.objects.get(group_id=group_id)
+                group_info = GroupTb.objects.get(group_id=group_id, use=1)
             except ObjectDoesNotExist:
                 error = '그룹 정보를 불러오지 못했습니다.'
 
@@ -2235,12 +2235,13 @@ def add_group_member_logic(request):
                     except ObjectDoesNotExist:
                         error = '회원 정보를 불러오지 못했습니다.'
 
-                    member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'])
+                    member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'], use=1)
 
                     for member_lecture_info in member_lecture_data:
                         lecture_group_check = 0
                         try:
-                            GroupLectureTb.objects.get(group_tb_id=group_id, lecture_tb_id=member_lecture_info.lecture_tb_id)
+                            GroupLectureTb.objects.get(group_tb_id=group_id,
+                                                       lecture_tb_id=member_lecture_info.lecture_tb_id, use=1)
                         except ObjectDoesNotExist:
                             lecture_group_check = 1
                         if group_info.group_type_cd == 'NORMAL':
@@ -2334,7 +2335,7 @@ def delete_group_member_info_logic(request):
         idx = 0
         for member_id_info in json_loading_data['ids']:
             if error is None:
-
+                print(str(member_id_info))
                 try:
                     user = User.objects.get(id=member_id_info)
                 except ObjectDoesNotExist:
@@ -2344,30 +2345,39 @@ def delete_group_member_info_logic(request):
                     member = MemberTb.objects.get(user_id=user.id)
                 except ObjectDoesNotExist:
                     error = '회원 ID를 확인해 주세요.'
+            print(str(error))
             if error is None:
                 group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__member_id=user.id, use=1)
-
+            print(str(error))
             if error is None:
                 try:
                     with transaction.atomic():
                         for group_lecture_info in group_lecture_data:
-                            error = func_delete_lecture_info(request.user.id, class_id, group_lecture_info.lecture_tb.lecture_id, member_id_info)
+                            print(str(request.user.id))
+                            print(str(class_id))
+                            print(str(group_lecture_info.lecture_tb.lecture_id))
+                            print(str(member_id_info))
+                            error = func_delete_lecture_info(request.user.id, class_id,
+                                                             group_lecture_info.lecture_tb.lecture_id,
+                                                             member_id_info)
+                            print(str(error))
                             if error is not None:
                                 break
 
                         if error is not None:
                             raise InternalError
 
-                except ValueError as e:
+                except ValueError:
                     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-                except IntegrityError as e:
+                except IntegrityError:
                     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-                except TypeError as e:
+                except TypeError:
                     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-                except ValidationError as e:
+                except ValidationError:
                     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
                 except InternalError:
                     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            print(str(error))
 
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                              to_member_name=json_loading_data['fullnames'][idx], class_tb_id=class_id,
