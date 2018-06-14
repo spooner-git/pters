@@ -718,23 +718,37 @@ def lecture_processing(request):
     next_page = request.POST.get('next_page')
 
     error = None
-    lecture_info = None
+    # lecture_info = None
+    member_lecture_wait_list = []
+
     if lecture_id == '':
         error = '수강정보를 선택해 주세요.'
 
     if check == '':
         error = '수강정보를 선택해 주세요.'
 
+    # if error is None:
+    #     try:
+    #         lecture_info = MemberLectureTb.objects.get(member=request.user.id, lecture_tb=lecture_id)
+    #     except ObjectDoesNotExist:
+    #         error = '수강정보를 불러오지 못했습니다.'
+
     if error is None:
-        try:
-            lecture_info = MemberLectureTb.objects.get(member=request.user.id, lecture_tb=lecture_id)
-        except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+        class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=1)
+        for class_lecture_info in class_lecture_list:
+            try:
+                member_lecture_info = MemberLectureTb.objects.get(member_id=request.user.id, auth_cd='WAIT',
+                                                                  lecture_tb_id=class_lecture_info.lecture_tb_id, use=1)
+                member_lecture_wait_list.append(member_lecture_info)
+            except ObjectDoesNotExist:
+                member_lecture_info = None
 
     if error is None:
         if check == '1':
-            lecture_info.auth_cd = 'DELETE'
-            lecture_info.save()
+            for member_lecture_wait_info in member_lecture_wait_list:
+                member_lecture_wait_info.auth_cd = 'DELETE'
+                member_lecture_wait_info.save()
+
         elif check == '0':
             request.session['class_id'] = class_id
             request.session['lecture_id'] = lecture_id
@@ -769,8 +783,12 @@ def lecture_processing(request):
                     request.session['class_center_name'] = ''
                 else:
                     request.session['class_center_name'] = class_info.center_tb.center_name
-            lecture_info.auth_cd = 'VIEW'
-            lecture_info.save()
+            # lecture_info.auth_cd = 'VIEW'
+            # lecture_info.save()
+            for member_lecture_wait_info in member_lecture_wait_list:
+                member_lecture_wait_info.auth_cd = 'VIEW'
+                member_lecture_wait_info.save()
+
         elif check == '2':
             request.session['class_id'] = class_id
             request.session['lecture_id'] = lecture_id

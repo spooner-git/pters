@@ -454,8 +454,10 @@
             function fill_lecture_connect_select_popup(classid){
                 var len = lec_select_trainerNameArray.length;
                 var list_table_to_join = []
-                  for(var j=0; j<lec_select_stateArray.length; j++){
+                  //for(var j=0; j<lec_select_stateArray.length; j++){
+                  for(var j=0; j<1; j++){
                       if(lec_select_stateArray[j] == 'WAIT'){
+                          console.log(lec_select_startArray[j])
                           var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">'
                           var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
                           var trainerName = '<div class="pters_table_cell table_trainer_name">'+'수강 정보 연동'+'</div>'
