@@ -10,6 +10,7 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 */
 
 $(document).ready(function(){
+      $('#uptext').text("월간 일정")
 
 	//ESC키를 눌러서 팝업 닫기
 	$(document).keyup(function(e){

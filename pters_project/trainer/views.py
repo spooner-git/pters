@@ -2335,7 +2335,6 @@ def delete_group_member_info_logic(request):
         idx = 0
         for member_id_info in json_loading_data['ids']:
             if error is None:
-                print(str(member_id_info))
                 try:
                     user = User.objects.get(id=member_id_info)
                 except ObjectDoesNotExist:
@@ -2345,22 +2344,15 @@ def delete_group_member_info_logic(request):
                     member = MemberTb.objects.get(user_id=user.id)
                 except ObjectDoesNotExist:
                     error = '회원 ID를 확인해 주세요.'
-            print(str(error))
             if error is None:
                 group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__member_id=user.id, use=1)
-            print(str(error))
             if error is None:
                 try:
                     with transaction.atomic():
                         for group_lecture_info in group_lecture_data:
-                            print(str(request.user.id))
-                            print(str(class_id))
-                            print(str(group_lecture_info.lecture_tb.lecture_id))
-                            print(str(member_id_info))
                             error = func_delete_lecture_info(request.user.id, class_id,
                                                              group_lecture_info.lecture_tb.lecture_id,
                                                              member_id_info)
-                            print(str(error))
                             if error is not None:
                                 break
 
@@ -2377,7 +2369,6 @@ def delete_group_member_info_logic(request):
                     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
                 except InternalError:
                     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-            print(str(error))
 
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                              to_member_name=json_loading_data['fullnames'][idx], class_tb_id=class_id,

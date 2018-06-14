@@ -126,7 +126,7 @@
                 <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
            </div>
 
-
+<!--
            <div class="outerbox">
                <span>생일</span>
                <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:14px;margin-left:59px;opacity: 0.5;">
@@ -421,7 +421,7 @@
                    <option>경상북도</option>
                </select>
            </div>
-
+-->
            <div class="buttongroup">
                 <button id="cancelMember" onclick="goPrev()">
                     <img src="/static/user/res/btn-today-left.png">
@@ -1033,7 +1033,8 @@
         result = '성을 입력해주세요'
       }else if($('#newsex').val().length == 0 ){
         result = '성별을 입력해주세요'
-      }else if($('#newbirth').val().length == 0 ){
+      }
+      /*else if($('#newbirth').val().length == 0 ){
         result = '생일을 입력해주세요'
       }else if($('#newcountry').val().length == 0 ){
         result = '거주 국가를 입력해주세요'
@@ -1043,7 +1044,7 @@
         }else{
             result = 1
         }
-      }
+      }*/
       else{
           result = 1
       }

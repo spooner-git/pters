@@ -507,7 +507,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
-    print(str(error))
     if error is None:
         group_data = None
         schedule_data = None
@@ -522,12 +521,9 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
         # schedule_data.delete()
         # repeat_schedule_data.delete()
-        print('test1')
         member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id).exclude(auth_cd='VIEW')
-        print('test2')
         if user.is_active:
             if len(member_lecture_list) > 0:
-                print('test3')
                 class_lecture_info.delete()
                 member_lecture_list.delete()
                 schedule_data.delete()
@@ -556,29 +552,22 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                         else:
                             error = None
             else:
-                print('test4')
                 if len(group_data) > 0:
-                    print('test4-1')
                     group_data.update(use=0)
-                    print('test4-2')
-                print('test5')
                 schedule_data.update(mod_dt=timezone.now(), use=0)
                 schedule_data_finish.update(mod_dt=timezone.now(), use=0)
-                print('test6')
                 class_lecture_info.auth_cd = 'DELETE'
                 # lecture_info.use = 0
                 # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                 class_lecture_info.mod_dt = timezone.now()
                 # if lecture_info.state_cd == 'IP':
                 #    lecture_info.state_cd = 'PE'
-                print('test7')
                 class_lecture_info.save()
                 if lecture_info.state_cd == 'IP':
                     lecture_info.state_cd = 'PE'
                     lecture_info.mod_dt = timezone.now()
                     lecture_info.save()
 
-                print('test8')
                 if len(group_data) > 0:
                     for group_info in group_data:
                         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
@@ -599,7 +588,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                                 group_info_data.save()
                         else:
                             error = None
-                print('test9')
         else:
             class_lecture_info.delete()
             member_lecture_list.delete()

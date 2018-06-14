@@ -76,6 +76,8 @@ if (agent.indexOf("firefox") != -1) {
         if($('body').width()<600){
             $('#calendar').css('display','block')
         }
+        $('#uptext3').text('회원 정보');
+        $('#uptext-pc-modify').text('회원 정보');
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
