@@ -496,7 +496,9 @@ $(document).ready(function(){
             $("#id_time_duration").val(dur);
             $("#id_time_duration_off").val(dur);
           }
-          $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((Options.classDur*Number(dur))/60)+'시간').val(dur);
+          //$("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((Options.classDur*Number(dur))/60)+'시간').val(dur);
+          $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(duration_number_to_hangul((Options.classDur*Number(dur))/60)).val(dur);
+
           $('#datetext_mini').text(thisID+'_'+((Options.classDur*Number(dur))/60)+'시간')
 
           var endTime = (Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60))
@@ -2466,10 +2468,10 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
               }
               var $nextTime = $('#'+nums+'g_'+mins+options)
               if($nextTime.hasClass('greytimegraph') || $nextTime.hasClass('pinktimegraph')){
-                durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+nums+':'+mins+')'+'</a></li>')
+                durTimeList.append('<li><a data-dur="'+duration_number_to_hangul(tt*2)+'" class="pointerList">'+duration_number_to_hangul(tt)+'  (~ '+nums+':'+mins+')'+'</a></li>')
                 break Loop1;
               }else{
-                durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+nums+':'+mins+')'+'</a></li>')
+                durTimeList.append('<li><a data-dur="'+duration_number_to_hangul(tt*2)+'" class="pointerList">'+duration_number_to_hangul(tt)+'  (~ '+nums+':'+mins+')'+'</a></li>')
               }
 
               tt = tt+0.5
@@ -2482,13 +2484,13 @@ function durTimeSet(selectedTime,selectedMin,option){ // durAddOkArray 채우기
               }
               var $nextTime = $('#'+(Number(i)+1)+'g_'+mins+options)
               if($nextTime.hasClass('greytimegraph') || $nextTime.hasClass('pinktimegraph')){
-                durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
+                durTimeList.append('<li><a data-dur="'+duration_number_to_hangul(tt*2)+'" class="pointerList">'+duration_number_to_hangul(tt)+'  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
                 break Loop1;
               }else{
                 if(Options.workEndTime == (Number(i)+1) && mins == "30"){
 
                 }else{
-                  durTimeList.append('<li><a data-dur="'+(tt)*2+'" class="pointerList">'+(tt)+'시간  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
+                  durTimeList.append('<li><a data-dur="'+duration_number_to_hangul(tt*2)+'" class="pointerList">'+duration_number_to_hangul(tt)+'  (~ '+(Number(i)+1)+':'+mins+')'+'</a></li>')
                 }
               }
               tt = tt+0.5

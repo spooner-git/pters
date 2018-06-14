@@ -516,7 +516,6 @@ function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, p
       var planDura = planEndHour - planHour;
     }
     
-    /*
     //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
     if(planEDate == planDate+1 && planEndHour==planHour){
       var planDura = 24
@@ -525,7 +524,8 @@ function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, p
     }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
       var planDura = 24-planHour
     }
-
+    
+    /*
     if(planMinute == '00'){
       if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
         
@@ -546,6 +546,19 @@ function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, p
     */
 
     return planDura
+}
+
+function duration_number_to_hangul(number){  // 0.5시간, 1.5시간, 1시간 --> 30분, 1시간 30분, 1시간
+  if(number - parseInt(number) == 0.5){
+      if(parseInt(number) != 0){
+          var number = parseInt(number)+'시간' + ' 30분'
+      }else if(parseInt(number) == 0){
+          var number = '30분'
+      }
+  }else{
+      var number = number + '시간'
+  }
+  return number
 }
 
 
