@@ -35,6 +35,8 @@ urlpatterns = [
     url(r'^get_trainee_class_list/$', views.GetTraineeClassListView.as_view(), name='get_trainee_class_list'),
     # 수강 정보 list 조회 - auth_cd(연결상태) 종류별
     url(r'^get_trainee_lecture_list/$', views.GetTraineeLectureListView.as_view(), name='get_trainee_lecture_list'),
+    # 수강 정보 연결 안된 정보 조회
+    url(r'^get_trainee_lecture_connection_list/$', views.GetTraineeLectureConnectionListView.as_view(), name='get_trainee_lecture_connection_list'),
     # 수강 횟수 정보 가져오기
     url(r'^get_trainee_count/$', views.GetTraineeCountView.as_view(), name='get_trainee_count'),
     # 수강정보 선택/연동 기능

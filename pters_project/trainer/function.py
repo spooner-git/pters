@@ -427,6 +427,11 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                     if group_info.group_type_cd == 'EMPTY':
                         auth_cd = 'WAIT'
 
+                member_lecture_counts = MemberLectureTb.objects.filter(member_id=member_id, mod_member_id=user_id,
+                                                                       auth_cd='VIEW', use=1).count()
+                if member_lecture_counts > 0:
+                    auth_cd = 'VIEW'
+
                 member_lecture_info = MemberLectureTb(member_id=member_id, lecture_tb_id=lecture_info.lecture_id,
                                                       auth_cd=auth_cd, mod_member_id=user_id,
                                                       reg_dt=timezone.now(), mod_dt=timezone.now(),

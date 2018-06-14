@@ -346,6 +346,84 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
     return context
 
 
+def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
+    error = None
+    context['error'] = None
+    lecture_counts = 0
+    output_lecture_list = []
+
+    if class_id is None or class_id == '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if member_id is None or member_id == '':
+        error = '회원 정보를 불러오지 못했습니다.'
+
+    if auth_cd is None or auth_cd == '':
+        auth_cd = 'VIEW'
+    auth_cd_list = auth_cd.split('/')
+
+    if error is None:
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                     lecture_tb__member_id=member_id,
+                                                     use=1).order_by('-lecture_tb__start_date')
+
+        for lecture_info in lecture_list:
+
+            for auth_cd_info in auth_cd_list:
+                try:
+                    lecture_info_data = MemberLectureTb.objects.get(auth_cd=auth_cd_info,
+                                                                    member_id=member_id,
+                                                                    lecture_tb=lecture_info.lecture_tb_id)
+                except ObjectDoesNotExist:
+                    lecture_info_data = None
+
+                if lecture_info_data is not None:
+                    break
+
+            if lecture_info_data is not None:
+                lecture_info_data.lecture_tb.start_date = str(lecture_info_data.lecture_tb.start_date)
+                lecture_info_data.lecture_tb.end_date = str(lecture_info_data.lecture_tb.end_date)
+                lecture_info_data.lecture_tb.mod_dt = str(lecture_info_data.lecture_tb.mod_dt)
+                lecture_info_data.lecture_tb.reg_dt = str(lecture_info_data.lecture_tb.reg_dt)
+                try:
+                    lecture_info_data.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.auth_cd)
+                except ObjectDoesNotExist:
+                    lecture_info_data.auth_cd_name = ''
+                try:
+                    lecture_info_data.lecture_tb.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.lecture_tb.state_cd)
+                except ObjectDoesNotExist:
+                    lecture_info_data.lecture_tb.state_cd_name = ''
+
+                lecture_counts += 1
+
+                group_info = None
+                group_check = 0
+                try:
+                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+                except ObjectDoesNotExist:
+                    group_check = 1
+                if group_check == 0:
+                    lecture_info_data.group_name = group_info.group_tb.name
+                    lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
+                    lecture_info_data.group_member_num = group_info.group_tb.member_num
+                    lecture_info_data.group_note = group_info.group_tb.note
+                    lecture_info_data.group_state_cd = group_info.group_tb.state_cd
+                    try:
+                        state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
+                        lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
+                    except ObjectDoesNotExist:
+                        error = '그룹 정보를 불러오지 못했습니다.'
+
+                output_lecture_list.append(lecture_info_data)
+
+    context['lecture_data'] = output_lecture_list
+
+    if error is not None:
+        context['error'] = error
+
+    return context
+
+
 def func_get_class_list(context, member_id):
 
     error = None
