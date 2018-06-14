@@ -3285,6 +3285,7 @@ function get_member_history_list(dbID){
 }
 
 function draw_member_history_list_table(jsondata, PCorMobile){
+    console.log('draw_history',jsondata)
     if(PCorMobile == "pc"){
         var $regHistory = $('#memberLectureHistory_info_PC')
     }else if(PCorMobile == "mobile"){
@@ -3331,6 +3332,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60
         var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60
         
+        /*
         if(endDate == startDate+1 && endTime==0){
             var duration = 24 - startTime
         }else if(endTime==0 && endDate == 1){
@@ -3338,11 +3340,24 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         }else{
             var duration = endTime - startTime
         }
+        */
+
+        var repeat_dur = calc_duration_by_start_end(jsondata.ptScheduleStartDtArray[i].split(' ')[0], jsondata.ptScheduleStartDtArray[i].split(' ')[1], jsondata.ptScheduleEndDtArray[i].split(' ')[0], jsondata.ptScheduleEndDtArray[i].split(' ')[1])
+
+        if(repeat_dur - parseInt(repeat_dur) == 0.5){
+            if(parseInt(repeat_dur) != 0){
+                var repeat_dur = parseInt(repeat_dur)+'시간' + ' 30분'
+            }else if(parseInt(repeat_dur) == 0){
+                var repeat_dur = '30분'
+            }
+        }else{
+            var repeat_dur = repeat_dur + '시간'
+        }
 
         var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleIdxArray[i]+'</div>'
         var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleStartDtArray[i].split(' ')[0]+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
-        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration+text9+'</div>'
+        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+repeat_dur+'</div>'
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
         if(jsondata.ptScheduleIdxArray[i] == "1" && i!=0){
             result_history_html.push('<div style="border-bottom:1px solid #cccccc;" data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleNo+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
@@ -3996,7 +4011,6 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
             var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
         }
 
-        var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i])
         var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i])
         if(repeat_dur - parseInt(repeat_dur) == 0.5){
             if(parseInt(repeat_dur) != 0){
