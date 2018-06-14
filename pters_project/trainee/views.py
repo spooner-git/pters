@@ -37,7 +37,8 @@ from django.utils import timezone
 
 from trainee.function import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
-    func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting
+    func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
+    func_get_lecture_connection_list
 
 logger = logging.getLogger(__name__)
 
@@ -389,10 +390,6 @@ def add_trainee_schedule_logic(request):
             push_message.append(request.user.last_name + request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다')
-            # func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
-            #                request.user.last_name + request.user.first_name + '님이 ' \
-            #                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
-            #                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다')
         else:
 
             push_class_id.append(class_id)
@@ -400,10 +397,6 @@ def add_trainee_schedule_logic(request):
             push_message.append(request.user.last_name + request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 그룹 일정을 등록했습니다')
-            # func_send_push_trainee(class_info.class_id, class_type_name + ' 수업 - 일정 알림',
-            #                request.user.last_name + request.user.first_name + '님이 ' \
-            #                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
-            #                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 그룹 일정을 등록했습니다')
 
         context['push_class_id'] = push_class_id
         context['push_title'] = push_title
@@ -635,6 +628,38 @@ class GetTraineeClassListView(LoginRequiredMixin, AccessTestMixin, TemplateView)
             messages.error(self.request, context['error'])
 
         return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetTraineeLectureConnectionListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'ajax/trainee_lecture_list_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetTraineeLectureConnectionListView, self).get_context_data(**kwargs)
+        class_id = request.GET.get('class_id', '')
+        auth_cd = request.GET.get('auth_cd', '')
+        context['error'] = None
+        context = func_get_lecture_connection_list(context, class_id, request.user.id, auth_cd)
+
+        if context['error'] is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
+            messages.error(self.request, context['error'])
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetTraineeLectureConnectionListView, self).get_context_data(**kwargs)
+        class_id = request.POST.get('class_id', '')
+        auth_cd = request.POST.get('auth_cd', '')
+
+        context['error'] = None
+        context = func_get_lecture_connection_list(context, class_id, request.user.id, auth_cd)
+
+        if context['error'] is not None:
+            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
+            messages.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+self.request, context['error'])
+
+        return render(request, self.template_name, context)
 
 
 @method_decorator(csrf_exempt, name='dispatch')

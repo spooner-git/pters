@@ -3465,13 +3465,13 @@ def update_setting_reserve_logic(request):
                 lt_res_enable_time.setting_info = setting_member_reserve_time_prohibition
                 lt_res_enable_time.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'

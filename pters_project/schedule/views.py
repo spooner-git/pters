@@ -626,13 +626,18 @@ def add_repeat_schedule_logic(request):
             if error_date is None:
                 try:
                     with transaction.atomic():
+                        schedule_check = 0
                         # PT 일정 추가라면 일정 추가해야할 lecture id 찾기
                         if en_dis_type == ON_SCHEDULE_TYPE:
                             lecture_id = func_get_lecture_id(class_id, member_id)
+                            if lecture_id is not None and lecture_id != '':
+                                schedule_check = 1
+                        else:
+                            schedule_check = 1
                             # if lecture_id is None or lecture_id == '':
                             #     error_date = str(repeat_schedule_date_info).split(' ')[0]
                         if error_date is None:
-                            if lecture_id is not None and lecture_id != '':
+                            if schedule_check == 1:
                                 schedule_result = func_add_schedule(class_id, lecture_id,
                                                                     repeat_schedule_info.repeat_schedule_id,
                                                                     None, None,
@@ -656,7 +661,7 @@ def add_repeat_schedule_logic(request):
                         if error_date is not None:
                             raise ValidationError()
                         else:
-                            if lecture_id is not None and lecture_id != '':
+                            if schedule_check == 1:
                                 success_end_date = str(repeat_schedule_date_info).split(' ')[0]
                                 pt_schedule_input_counter += 1
 
