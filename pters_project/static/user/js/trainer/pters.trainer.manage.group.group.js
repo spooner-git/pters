@@ -83,6 +83,7 @@ function addByNew_input_eventGroup(){
 /////////////리스트에서 추가 버튼 누르면 회원리스트 팝업//////////////////////////////////
 $('button#addByList, button#addBySearch').click(function(e){
 	e.preventDefault()
+    e.stopPropagation()
 	$('#subpopup_'+$(this).attr('id')).show()
 
 	if($(this).attr('id')=="addByList"){
@@ -92,8 +93,10 @@ $('button#addByList, button#addBySearch').click(function(e){
 	}
 })
 
-$(document).on('click','#subpopup_addByList .listTitle_addByList span',function(){
-	$('#subpopup_addByList').hide()
+$(document).on('click','#subpopup_addByList .listTitle_addByList span, ._ADD_MEMBER_REG',function(){
+	if($('#subpopup_addByList').css('display') == "block"){
+        $('#subpopup_addByList').hide()
+    }
 })
 
 function close_addByList_popup(){
@@ -287,11 +290,12 @@ $('button#addBySearch_search').click(function(e){
         });
 })
 
-$('#subpopup_addBySearch .listTitle_addByList span').click(function(){
-	$('#subpopup_addBySearch').hide()
-	$('#searchedMemberListBox').html('')
-	$('#addBySearch_input').val('')
-
+$('#subpopup_addBySearch .listTitle_addByList span, ._ADD_MEMBER_REG').click(function(){
+    if($('#subpopup_addBySearch').css('display') == "block"){
+        $('#subpopup_addBySearch').hide()
+        $('#searchedMemberListBox').html('')
+        $('#addBySearch_input').val('')
+    }
 })
 
 function draw_memberlist_for_addBySearch(jsondata){
