@@ -2028,6 +2028,21 @@ def update_lecture_connection_info_logic(request):
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
+        class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=1)
+        check_lecture_connection = 0
+        for class_lecture_info in class_lecture_list:
+            try:
+                MemberLectureTb.objects.get(member_id=member_id,auth_cd='VIEW',
+                                            lecture_tb_id=class_lecture_info.lecture_tb_id, use=1)
+                check_lecture_connection = 1
+            except ObjectDoesNotExist:
+                check_lecture_connection = 0
+            if check_lecture_connection == 1:
+                break
+
+        if check_lecture_connection > 0:
+            if auth_cd == 'WAIT':
+                auth_cd = 'VIEW'
         member_lecture_info.auth_cd = auth_cd
         member_lecture_info.mod_dt = timezone.now()
         member_lecture_info.save()
