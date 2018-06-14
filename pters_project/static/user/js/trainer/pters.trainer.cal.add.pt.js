@@ -541,8 +541,6 @@ $(document).ready(function(){
           var splitID = $('#'+endID).attr('id').split('_')
           var weekID = $('#'+endID).attr('data-week')
 
-          $('.typeSelected').removeClass('typeSelected')
-          $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
           if($('._MINI_ptadd').css('display')=='inline'){
             addTypeSelect = 'ptadd'
             var compensate_off = 0
@@ -550,6 +548,9 @@ $(document).ready(function(){
             addTypeSelect = 'offadd'
             var compensate_off = +30
           }
+          $('.typeSelected').removeClass('typeSelected')
+          $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
+
           if(splitID[3]>=(Options.workEndTime-5)){
             //$('.dropdown_mini').addClass('dropup')
             if(splitID[3]== (Options.workEndTime-1)){
@@ -641,12 +642,12 @@ $(document).ready(function(){
 
           if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){ //Form 셋팅
             var durationTime_class =  Number($(this).attr('data-dur').replace(/시간/gi,''))*(30/Options.classDur)
-            $("#id_time_duration").val(durationTime_class);
+            $("#id_time_duration, #id_time_duration_off").val(durationTime_class);
             planAddView($(this).attr('data-dur'));
 
           }else if(addTypeSelect == "offadd"){
             var durationTime = Number($(this).attr('data-dur').replace(/시간/gi,''))*(30/Options.classDur)
-            $("#id_time_duration_off").val(durationTime);
+            $("#id_time_duration, #id_time_duration_off").val(durationTime);
             planAddView($(this).attr('data-dur'));
           }
           check_dropdown_selected_addplan();
