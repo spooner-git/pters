@@ -1034,7 +1034,6 @@ def add_group_schedule_logic(request):
 
     if error is None:
         error = func_check_group_schedule_enable(group_id)
-
     if error is None:
         # 최초 날짜 값 셋팅
         time_duration_temp = class_info.class_hour * int(schedule_time_duration)

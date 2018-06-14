@@ -61,7 +61,7 @@
         <p><span>{{lecture_avail_count}} </span>회</p>
       </div>
       <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">진행 완료</p>
-        <p class="countBoard_explain">트레이너님과 진행완료한 횟수</p>
+        <p class="countBoard_explain">담당 강사와 진행완료한 횟수</p>
         <p><span>{{lecture_finish_count}} </span>회</p>
       </div>
   </div>
@@ -153,11 +153,11 @@
 
 
   <div class="mypage_label">
-      <img src="/static/user/res/member/icon-user.png" alt=""><span>담당 트레이너 정보</span>
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>담당 강사 정보</span>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
-        <span>{{ class_info.mem_info.name }} 트레이너</span>
+        <span>{{ class_info.mem_info.name }} 강사</span>
         <a href='tel:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-call.png"></a>
         <a href='sms:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-message.png" alt=""></a>
       </div>
@@ -170,7 +170,7 @@
 <div id="history_wrap" class="mypage_page"> 
     <div class="mypage_label">
       <img src="/static/user/res/member/icon-user.png" alt=""><span>등록 이력</span>
-      <p class="label_explain">{{ class_info.mem_info.name }} 트레이너에게 등록한 이력</p>
+      <p class="label_explain">{{ class_info.mem_info.name }} 강사에게 등록한 이력</p>
     </div>
 
     <div id="myRegHistory" class="boardWrap">
@@ -179,7 +179,7 @@
 
     <div class="mypage_label">
       <img src="/static/user/res/member/icon-user.png" alt=""><span>활동 이력</span>
-      <p class="label_explain">{{ class_info.mem_info.name }} 트레이너에게 현재 등록된 강의의 수행 이력</p>
+      <p class="label_explain">{{ class_info.mem_info.name }} 강사에게 현재 등록된 강의의 수행 이력</p>
     </div>
 
     <div id="myActiveHistory" class="boardWrap">
