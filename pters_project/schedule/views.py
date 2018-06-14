@@ -193,7 +193,7 @@ def delete_schedule_logic(request):
     pt_schedule_id = request.POST.get('schedule_id', '')
     off_schedule_id = request.POST.get('off_schedule_id', '')
     member_name = request.POST.get('member_name')
-    en_dis_type = request.POST.get('en_dis_type')
+    en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
@@ -205,11 +205,9 @@ def delete_schedule_logic(request):
     group_id = None
     lecture_id = None
     repeat_schedule_id = None
-    en_dis_type = ON_SCHEDULE_TYPE
     start_dt = None
     end_dt = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
-
     if en_dis_type == ON_SCHEDULE_TYPE:
         schedule_id = pt_schedule_id
     else:
