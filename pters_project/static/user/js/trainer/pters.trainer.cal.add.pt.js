@@ -499,13 +499,37 @@ $(document).ready(function(){
           //$("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((Options.classDur*Number(dur))/60)+'시간').val(dur);
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(duration_number_to_hangul((Options.classDur*Number(dur))/60)).val(dur);
 
-          $('#datetext_mini').text(thisID+'_'+((Options.classDur*Number(dur))/60)+'시간')
-
           var endTime = (Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60))
           if(endTime == Options.workEndTime){
             var endTime = Options.workEndTime-1
           }
+
+          var endMin;
+          if((Options.classDur*Number(dur))/60 - parseInt((Options.classDur*Number(dur))/60) == 0.5){
+            if(thisID.split('_')[4] == "00"){
+              var endMin = "30"
+              var endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60)
+            }else{
+              var endMin = "00"
+              var endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60)+1
+            }
+          }else{
+            var endMin = thisID.split('_')[4]
+            var endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60)
+          }
+
           var endID = thisID.split('_')[0]+'_'+thisID.split('_')[1]+'_'+thisID.split('_')[2]+'_'+endTime+'_'+thisID.split('_')[4]
+
+          $('#datetext_mini').text(thisID.split('_')[0]+'년 '+
+                                    thisID.split('_')[1]+'월 '+
+                                    thisID.split('_')[2]+'일 '+
+                                    thisID.split('_')[3]+':'+
+                                    thisID.split('_')[4]+'~ '+
+                                    endHour+':'+
+                                    endMin
+                                    //' ('+
+                                    //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
+                                  ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
 
           //minipopup 위치 보정
           var toploc = $('#'+endID).offset().top;
@@ -517,8 +541,6 @@ $(document).ready(function(){
           var splitID = $('#'+endID).attr('id').split('_')
           var weekID = $('#'+endID).attr('data-week')
 
-          $('.typeSelected').removeClass('typeSelected')
-          $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
           if($('._MINI_ptadd').css('display')=='inline'){
             addTypeSelect = 'ptadd'
             var compensate_off = 0
@@ -526,6 +548,9 @@ $(document).ready(function(){
             addTypeSelect = 'offadd'
             var compensate_off = +30
           }
+          $('.typeSelected').removeClass('typeSelected')
+          $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
+
           if(splitID[3]>=(Options.workEndTime-5)){
             //$('.dropdown_mini').addClass('dropup')
             if(splitID[3]== (Options.workEndTime-1)){
@@ -555,6 +580,14 @@ $(document).ready(function(){
           }
           //minipopup 위치 보정
 
+          ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'), "callback", function(jsondata){
+            timeGraphSet("class","pink","mini", jsondata);  //시간 테이블 채우기
+            timeGraphSet("group","pink","mini", jsondata);
+            timeGraphSet("off","grey","mini", jsondata)
+            //startTimeSet('class');
+            durTimeSet(Number(thisID.split('_')[3]), Number(thisID.split('_')[4]),"mini");
+          })
+          
           $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
       }
 
@@ -608,13 +641,13 @@ $(document).ready(function(){
           $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
 
           if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){ //Form 셋팅
-            var durationTime_class =  Number($(this).attr('data-dur'))*(30/Options.classDur)
-            $("#id_time_duration").val(durationTime_class);
+            var durationTime_class =  Number($(this).attr('data-dur').replace(/시간/gi,''))*(30/Options.classDur)
+            $("#id_time_duration, #id_time_duration_off").val(durationTime_class);
             planAddView($(this).attr('data-dur'));
 
           }else if(addTypeSelect == "offadd"){
-            var durationTime = Number($(this).attr('data-dur'))*(30/Options.classDur)
-            $("#id_time_duration_off").val(durationTime);
+            var durationTime = Number($(this).attr('data-dur').replace(/시간/gi,''))*(30/Options.classDur)
+            $("#id_time_duration, #id_time_duration_off").val(durationTime);
             planAddView($(this).attr('data-dur'));
           }
           check_dropdown_selected_addplan();
@@ -625,6 +658,7 @@ $(document).ready(function(){
         $('#id_memo_mini, #id_memo_mini_off').val($(this).val())
       })
 
+      /*
       function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
           if(Options.classDur == 60){
             var selectedDuration = Number(duration)/2
@@ -662,6 +696,53 @@ $(document).ready(function(){
                 var hh_ = hh_ + 1
               }
               $('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi).find('div').addClass(blankSelected+' blankSelected_addview')
+              mi = Number(mi) + 30
+            }
+          }
+      }
+      */
+
+      function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
+          if(Options.classDur == 60){
+            var selectedDuration = Number(duration)/2
+            var blankSelected = 'blankSelected'
+            var selectedTime = $('.'+blankSelected).parent('div').attr('id').split('_')
+            var selectedTimeID = $('.'+blankSelected+':first-child').parent('div').attr('id')
+            var mi = selectedTime[4]
+            var yy = Number(selectedTime[0])
+            var mm = Number(selectedTime[1])
+            var dd = Number(selectedTime[2])
+            var hh = Number(selectedTime[3])
+            
+            $('.'+blankSelected).removeClass(blankSelected)
+            $('#'+selectedTimeID).find('div').addClass(blankSelected)
+            for(i=hh+1; i<hh+selectedDuration; i++){
+              $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected)
+            }
+          }else if(Options.classDur == 30){
+            var selectedDuration = Number(duration.replace(/시간/gi,''))
+            var blankSelected = 'blankSelected30'
+            var selectedTime = $('.'+blankSelected+':first-child').parent('div').attr('id').split('_')
+            var selectedTimeID = $('.'+blankSelected+':first-child').parent('div').attr('id')
+            if(selectedTime[4] == "00"){
+              var mi = "30"
+              var hh = Number(selectedTime[3])
+            }else if(selectedTime[4] =="30"){
+              var mi = "00"
+              var hh = Number(selectedTime[3])+1
+            }
+            var yy = Number(selectedTime[0])
+            var mm = Number(selectedTime[1])
+            var dd = Number(selectedTime[2])
+            var hh_ = Number(selectedTime[3])
+            $('.'+blankSelected).removeClass(blankSelected)
+            $('#'+selectedTimeID).find('div').addClass(blankSelected)
+            for(i=hh; i<hh+selectedDuration-1; i++){
+              if(mi == 60 || mi == 0){
+                var mi = "00"
+                var hh_ = hh_ + 1
+              }
+              $('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi).find('div').addClass(blankSelected)
               mi = Number(mi) + 30
             }
           }
@@ -1542,7 +1623,7 @@ function ajaxTimeGraphSet(date, use, callback){
             timeGraphSet("off","grey","mini", jsondata)
             startTimeSet('class');
             if(use == "callback"){
-              callback()
+              callback(jsondata)
             }
           }
           
