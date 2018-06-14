@@ -1867,6 +1867,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
       var planMemberNum = ''
       var planMemberDbid = ''
       var planCode = ''
+      console.log('scheduleTime("off")',jsondata)
     break;
     case 'group':
 
