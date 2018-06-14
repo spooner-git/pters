@@ -66,9 +66,20 @@ body{
 }
 
 .summaryInnerBoxText2{
-	float: right;
+	position: absolute;
+	right: 0;
+	top: 3px;
 	margin-right: 20px;
-	line-height: 35px;
+	font-size: 75%;
+	letter-spacing: -0.2px;
+	color: #666666;
+}
+
+.summaryInnerBoxText3{
+	position: absolute;
+	right: 0;
+	bottom: 3px;
+	margin-right: 20px;
 	font-size: 75%;
 	letter-spacing: -0.2px;
 	color: #666666;

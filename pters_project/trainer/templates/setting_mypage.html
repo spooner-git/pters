@@ -661,10 +661,27 @@
                                                 };
                         var off_startdate = jsondata.off_repeat_schedule_start_date_data[i]
                         var off_enddate = jsondata.off_repeat_schedule_end_date_data[i]
+                        var off_starttime = jsondata.off_repeat_schedule_start_time_data[i]
+                        var off_starttimehour = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
+                        var off_starttimemin = jsondata.off_repeat_schedule_start_time_data[i].split(':')[1]
+                        var off_endtime = jsondata.off_repeat_schedule_end_time_data[i]
+                        var off_endtimehour = jsondata.off_repeat_schedule_end_time_data[i].split(':')[0]
+                        var off_endtimemin = jsondata.off_repeat_schedule_end_time_data[i].split(':')[1]
                         var off_time = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
-                        var off_dur = jsondata.off_repeat_schedule_time_duration_data[i]
-                        var off_endtime = Number(off_time)+Number(off_dur)
-                        var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_time+'시 ~ '+off_endtime+'시 ('+off_dur+'시간)'+'</p>'
+                        //var off_dur = jsondata.off_repeat_schedule_time_duration_data[i]
+                        var off_dur = calc_duration_by_start_end(off_startdate, off_starttime, off_enddate, off_endtime)
+                        
+                        if(off_dur - parseInt(off_dur) == 0.5){
+                            if(parseInt(off_dur) != 0){
+                                var off_dur = parseInt(off_dur)+'시간' + ' 30분'
+                            }else if(parseInt(off_dur) == 0){
+                                var off_dur = '30분'
+                            }
+                        }else{
+                            var off_dur = off_dur + '시간'
+                        }
+
+                        var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_starttimehour+':'+off_starttimemin+' ~ '+off_endtimehour+':'+off_endtimemin+' ('+off_dur+')'+'</p>'
                         var offText2 = '<span>'+off_startdate+'부터 ~ '+off_enddate+"까지"+'</span>'
                         repeatList.push(offText+offText2)
                         //$('._Repeat_Info p:nth-child(2)').text(offText)

@@ -1026,26 +1026,28 @@ $(document).ready(function(){
                 }
                 get_repeat_info(id)
 
-                $('#members_mobile, #members_pc').html('')
+                if(addTypeSelect != repeatoffadd){
+                    $('#members_mobile, #members_pc').html('')
+                    get_current_member_list('callback',function(jsondata){
+                      set_member_dropdown_list(jsondata)
+                      $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
+                    })
+                    
+                    get_member_lecture_list(id, 'callback', function(jsondata){
+                        var availCount_personal = 0
+                        for(var i= 0; i<jsondata.availCountArray.length; i++){
+                          if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                            availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
+                          }
+                        }
+                        $("#countsSelected").text(availCount_personal);
+                    })
+                    get_current_group_list('callback',function(jsondata){
+                      set_group_dropdown_list(jsondata)
+                      $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
+                    })
+                }
                 
-                get_current_member_list('callback',function(jsondata){
-                  set_member_dropdown_list(jsondata)
-                  $('#countsSelected').text($('#members_mobile a[data-dbid="'+id+'"]').attr('data-lecturecount'))
-                })
-                
-                get_member_lecture_list(id, 'callback', function(jsondata){
-                    var availCount_personal = 0
-                    for(var i= 0; i<jsondata.availCountArray.length; i++){
-                      if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
-                        availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
-                      }
-                    }
-                    $("#countsSelected").text(availCount_personal);
-                })
-                get_current_group_list('callback',function(jsondata){
-                  set_group_dropdown_list(jsondata)
-                  $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
-                })
             });
             check_dropdown_selected_addplan()
         }
@@ -1719,6 +1721,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
       var repeat_id = repeat_id_array[i]
       var repeat_type = repeat_info_dict['KOR'][repeat_type_array[i]]
       var repeat_start = repeat_start_array[i].replace(/-/gi,".");
+      var repeat_start_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복시작 : </span>"
       var repeat_end_text_small = "<span class='summaryInnerBoxText_Repeatendtext_small'>~</span>"
       var repeat_end_text = "<span class='summaryInnerBoxText_Repeatendtext'>반복종료 : </span>"
       var repeat_end = repeat_end_array[i].replace(/-/gi,".");
@@ -1729,6 +1732,15 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
       }
 
       var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i])
+      if(repeat_dur - parseInt(repeat_dur) == 0.5){
+          if(parseInt(repeat_dur) != 0){
+              var repeat_dur = parseInt(repeat_dur)+'시간' + ' 30분'
+          }else if(parseInt(repeat_dur) == 0){
+              var repeat_dur = '30분'
+          }
+      }else{
+          var repeat_dur = repeat_dur + '시간'
+      }
 
       //var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
       var repeat_sum = Number(repeat_time) + Number(repeat_dur)
@@ -1745,10 +1757,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
       }
     
       var repeat_start_time = repeat_time_array[i].split(':')[0] +':'+ repeat_time_array[i].split(':')[1]
-      var repeat_end_time = repeat_end_time_hour + ':' + repeat_end_time_min
-
-      
-
+      var repeat_end_time = repeat_endTime_array[i].split(':')[0] +':'+ repeat_endTime_array[i].split(':')[1]
 
       var repeat_day =  function(){
                           var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
@@ -1766,10 +1775,11 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
                             return repeat_day_info
                         };
 
-      var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+'<span style="color:#fe4e65;">'+repeat_title+'</span>'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +'시간)</span>'
-      var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>'
+      var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+'<span style="color:#fe4e65;">'+repeat_title+'</span>'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur+')</span>'
+      var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_start_text+repeat_end_text_small+repeat_start+'</span>'
+      var summaryInnerBoxText_3 = '<span class="summaryInnerBoxText3">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>'
       var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-dbid="'+dbId+'" data-deletetype="'+option+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
-      schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
+      schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+summaryInnerBoxText_3+deleteButton+'</div>'
     }
 
     var summaryText = '<span id="summaryText">일정요약</span>'
