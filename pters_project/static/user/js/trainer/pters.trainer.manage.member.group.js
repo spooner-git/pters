@@ -994,6 +994,7 @@ function set_group_repeat_info(jsondata, group_id){
     var repeat_start_array = jsondata.repeatScheduleStartDateArray
     var repeat_end_array = jsondata.repeatScheduleEndDateArray
     var repeat_time_array = jsondata.repeatScheduleStartTimeArray
+    var repeat_endTime_array = jsondata.repeatScheduleEndTimeArray
     var repeat_dur_array = jsondata.repeatScheduleTimeDurationArray
 
     var schedulesHTML = []
@@ -1011,7 +1012,9 @@ function set_group_repeat_info(jsondata, group_id){
         if(repeat_min == "30"){
             var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
         }
-        var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
+
+        var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i])
+        //var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
         var repeat_sum = Number(repeat_time) + Number(repeat_dur)
 
         var repeat_end_time_hour = parseInt(repeat_sum)

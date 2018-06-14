@@ -1655,6 +1655,7 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
 }
 
 function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우기
+  console.log(jsondata)
     switch(option){
         case 'class':
           var len = jsondata.ptRepeatScheduleIdArray.length
@@ -1665,6 +1666,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
           var repeat_start_array = jsondata.ptRepeatScheduleStartDateArray
           var repeat_end_array = jsondata.ptRepeatScheduleEndDateArray
           var repeat_time_array = jsondata.ptRepeatScheduleStartTimeArray
+          var repeat_endTime_array = jsondata.ptRepeatScheduleEndTimeArray
           var repeat_dur_array = jsondata.ptRepeatScheduleTimeDurationArray
           var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray
           var repeat_title = ""
@@ -1678,6 +1680,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
           var repeat_start_array = jsondata.offRepeatScheduleStartDateArray
           var repeat_end_array = jsondata.offRepeatScheduleEndDateArray
           var repeat_time_array = jsondata.offRepeatScheduleStartTimeArray
+          var repeat_endTime_array = jsondata.offRepeatScheduleEndTimeArray
           var repeat_dur_array = jsondata.offRepeatScheduleTimeDurationArray
           var repeat_group_name = []
           var repeat_title = ""
@@ -1691,6 +1694,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
           var repeat_start_array = jsondata.repeatScheduleStartDateArray
           var repeat_end_array = jsondata.repeatScheduleEndDateArray
           var repeat_time_array = jsondata.repeatScheduleStartTimeArray
+          var repeat_endTime_array = jsondata.repeatScheduleEndTimeArray
           var repeat_dur_array = jsondata.repeatScheduleTimeDurationArray
           var repeat_group_name = []
           var repeat_title = "[그룹]"
@@ -1723,8 +1727,12 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
       if(repeat_min == "30"){
         var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
       }
-      var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
+
+      var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i])
+
+      //var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
       var repeat_sum = Number(repeat_time) + Number(repeat_dur)
+
 
       var repeat_end_time_hour = parseInt(repeat_sum)
       if(parseInt(repeat_sum)<10){
@@ -1941,6 +1949,8 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
          //2018_4_22_8_30_2_OFF_10_30 
       }
     }
+
+
     if(planHour < 12){
       var hourType = '오전'
     }else{

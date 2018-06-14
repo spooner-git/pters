@@ -858,7 +858,7 @@ $(document).ready(function(){
 	}
 
 
-
+	/*
 	function fill_repeat_info_off(){ //반복일정 요약 채우기
       var len = offRepeatScheduleTypeArray.length
       var repeat_info_dict= { 'KOR':
@@ -906,6 +906,7 @@ $(document).ready(function(){
       var summaryText = '<span id="summaryText">일정요약</span>'
       $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
     }
+    */
 
 
 });//document(ready)
