@@ -191,6 +191,9 @@ body{
 			font-weight: 500;
 		}
 
+._ALIGN_DROPDOWN{
+	display: none;
+}
 .alignSelect{
 	width: 100%;
 	height: 35px;

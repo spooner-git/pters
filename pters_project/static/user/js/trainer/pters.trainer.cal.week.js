@@ -596,6 +596,8 @@ $(document).ready(function(){
 				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
 					var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
 		            send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
+		            	console.log('반복일정 삭제할때 jsondata', jsondata)
+		            	ajax_block_during_delete_weekcal = true
 				        close_info_popup('cal_popup_plandelete')
 			            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
 			            set_schedule_time(jsondata)
@@ -614,7 +616,6 @@ $(document).ready(function(){
 			            if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
-	                	ajax_block_during_delete_weekcal = true
 	                })
 
 				}else if(deleteTypeSelect == "repeatgroupptdelete"){
@@ -638,6 +639,7 @@ $(document).ready(function(){
 		            })
 
 				}else if(deleteTypeSelect == "ptoffdelete"){
+					ajax_block_during_delete_weekcal = true
 					if(schedule_on_off==1){
 						//PT 일정 삭제시
 						send_plan_delete('pt')
@@ -651,10 +653,8 @@ $(document).ready(function(){
 						get_current_member_list()
       					get_current_group_list()
 					}
-					ajax_block_during_delete_weekcal = true
-
 				}else if(deleteTypeSelect == "groupptdelete"){
-					
+					ajax_block_during_delete_weekcal = true
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule_id')
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
 						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
@@ -663,8 +663,6 @@ $(document).ready(function(){
 						}
 					})
 					send_plan_delete('group')
-
-					ajax_block_during_delete_weekcal = true
 				}
 			}
 		})

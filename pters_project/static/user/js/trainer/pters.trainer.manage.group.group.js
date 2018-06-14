@@ -723,14 +723,15 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
 
 //그룹 목록을 화면에 뿌리기
 function groupListSet(option, jsondata){ //option : current, finished
-    console.log('grouplist',jsondata)
     switch(option){
         case 'current':
             var $membernum = $('#memberNumber_current_group')
+            var $targetHTML = $('#currentGroupList')
             var text_membernum = "진행중인 그룹 " 
         break;
         case 'finished':
             var $membernum = $('#memberNumber_finish_group')
+            var $targetHTML = $('#finishedGroupList')
             var text_membernum = "종료된 그룹 " 
         break;
     }
@@ -766,13 +767,14 @@ function groupListSet(option, jsondata){ //option : current, finished
                     '<div class="_grouptypecd"><input class="group_listinput input_disabled_true" value="'+group_type+'" disabled>'+'</div>'+
                     '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
+                    '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '/' + group_capacity+'</div>'+
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+group_createdate+'" disabled>'+'</div>'+
                     '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>'
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+groupNum+'</span>');
-    $('#currentGroupList').html(htmlToJoin.join(''))
+    $targetHTML.html(htmlToJoin.join(''))
 }
 //그룹 목록을 화면에 뿌리기
 
@@ -882,7 +884,7 @@ function groupMemberListSet(group_id, jsondata){
 
     if(grouptype == 'EMPTY'){
         //var group_type = group_capacity+"인 공개"
-        var EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 참여인원은 이 그룹명으로 개설된 레슨에 예약 가능하며, 그룹 참여인원수는 제한이 없습니다. 한 레슨단위 정원은 "+groupcapacity+" 명입니다.</p>"
+        var EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 소속인원은 이 그룹명으로 개설된 레슨에 예약 가능하며, 그룹 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>"
     }else if(grouptype == "NORMAL"){
         //var group_type = group_capacity+"인 비공개"
         var EMPTY_EXPLAIN = ""
@@ -895,7 +897,7 @@ function groupMemberListSet(group_id, jsondata){
 
     var html = htmlToJoin.join('') + addButton
     if(jsondata.db_id.length == 0){
-        var html = '<p">이 그룹에 참여중인 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
+        var html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
     }
 
     $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html)
@@ -1013,6 +1015,15 @@ function set_group_repeat_info(jsondata, group_id){
             var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
         }
         var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i])
+        if(repeat_dur - parseInt(repeat_dur) == 0.5){
+            if(parseInt(repeat_dur) != 0){
+                var repeat_dur = parseInt(repeat_dur)+'시간' + ' 30분'
+            }else if(parseInt(repeat_dur) == 0){
+                var repeat_dur = '30분'
+            }
+        }else{
+            var repeat_dur = repeat_dur + '시간'
+        }
         //var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
         var repeat_sum = Number(repeat_time) + Number(repeat_dur)
 
@@ -1027,7 +1038,7 @@ function set_group_repeat_info(jsondata, group_id){
         }
 
         var repeat_start_time = repeat_time_array[i].split(':')[0] +':'+ repeat_time_array[i].split(':')[1]
-        var repeat_end_time = repeat_end_time_hour + ':' + repeat_end_time_min
+        var repeat_end_time = repeat_endTime_array[i].split(':')[0] +':'+ repeat_endTime_array[i].split(':')[1]
 
 
 
@@ -1046,7 +1057,7 @@ function set_group_repeat_info(jsondata, group_id){
                             }
                               return repeat_day_info
                           };
-        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur +text2+')'+'</p>'
+        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur+')'+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-deletetype="grouprepeatinfo" data-groupid="'+group_id+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-repeatid="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'

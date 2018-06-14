@@ -231,9 +231,14 @@
 	}
 	._groupparticipants{
 		width: 7%;
+		display: none !important;
 	}
 	._groupcapacity{
 		width: 7%;
+		display: none !important;
+	}
+	._grouppartystatus{
+		width: 10%;
 	}
 	._groupmemo{
 		width: 22%;
