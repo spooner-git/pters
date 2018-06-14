@@ -539,6 +539,12 @@ img,a,div,span,p{
 	.bluetext{
 		color: blue;
 	}
+	.inlineelement{
+		display: inline;
+	}
+	.hideelement{
+		display: none;
+	}
 
 .hourType{
 	display: none;

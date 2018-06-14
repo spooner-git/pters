@@ -64,11 +64,13 @@
 		#subpopup_addByList{
 			overflow-y: auto;
 			height: 350px;
+			top: 92px;
 		}
 		#subpopup_addBySearch{
 			height: auto;
 			min-height: 100px;
 			text-align: center;
+			top: 92px;
 		}
 
 

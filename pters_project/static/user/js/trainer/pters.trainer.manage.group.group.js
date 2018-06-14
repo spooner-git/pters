@@ -83,6 +83,7 @@ function addByNew_input_eventGroup(){
 /////////////리스트에서 추가 버튼 누르면 회원리스트 팝업//////////////////////////////////
 $('button#addByList, button#addBySearch').click(function(e){
 	e.preventDefault()
+    e.stopPropagation()
 	$('#subpopup_'+$(this).attr('id')).show()
 
 	if($(this).attr('id')=="addByList"){
@@ -92,8 +93,10 @@ $('button#addByList, button#addBySearch').click(function(e){
 	}
 })
 
-$(document).on('click','#subpopup_addByList .listTitle_addByList span',function(){
-	$('#subpopup_addByList').hide()
+$(document).on('click','#subpopup_addByList .listTitle_addByList span, ._ADD_MEMBER_REG',function(){
+	if($('#subpopup_addByList').css('display') == "block"){
+        $('#subpopup_addByList').hide()
+    }
 })
 
 function close_addByList_popup(){
@@ -224,8 +227,10 @@ function draw_memberlist_for_addByList(targetHTML){
                 var len = jsondata.dIdArray.length;
                 var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
                 for(var i=1; i<=len; i++){
-                    var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">'
-                    htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                    if($('#addedMemberListBox div[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0){
+                        var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">'
+                        htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                    }
                 }
                 var html = htmlToJoin.join('')
                 targetHTML.html(html)
@@ -285,11 +290,12 @@ $('button#addBySearch_search').click(function(e){
         });
 })
 
-$('#subpopup_addBySearch .listTitle_addByList span').click(function(){
-	$('#subpopup_addBySearch').hide()
-	$('#searchedMemberListBox').html('')
-	$('#addBySearch_input').val('')
-
+$('#subpopup_addBySearch .listTitle_addByList span, ._ADD_MEMBER_REG').click(function(){
+    if($('#subpopup_addBySearch').css('display') == "block"){
+        $('#subpopup_addBySearch').hide()
+        $('#searchedMemberListBox').html('')
+        $('#addBySearch_input').val('')
+    }
 })
 
 function draw_memberlist_for_addBySearch(jsondata){
