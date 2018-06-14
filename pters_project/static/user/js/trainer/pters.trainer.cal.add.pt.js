@@ -2822,6 +2822,7 @@ $(document).on('click','.group_member_cancel',function(){
     var group_schedule_id = $(this).attr('group-schedule-id')
     var max = $(this).attr('data-max')
     send_plan_delete('pt', 'callback', function(){
+        ajaxClassTime();
         get_group_plan_participants(group_schedule_id,'callback',
           function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)
           })

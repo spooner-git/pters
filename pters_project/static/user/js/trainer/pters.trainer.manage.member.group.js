@@ -114,14 +114,11 @@ $(document).on('click','img.add_listedMember',function(){
     if($('#calendar').length != 0 ){
          $('#form_add_member_group_plan_memberid').val(selected_dbid);
          send_add_groupmember_plan('callback', function(data){
-                
-
                 var group_schedule_id = $('#cal_popup_planinfo').attr('schedule_id')
                 var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
                 var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
 
                 get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
-                    console.log('여기',jsondata)
                     if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
                         for(var i=0; i<jsondata.scheduleIdArray.length; i++){
                             if(jsondata.scheduleFinishArray[i] == 0){
@@ -133,7 +130,8 @@ $(document).on('click','img.add_listedMember',function(){
                                     send_memo()
                                     signImageSend(senddata);
                                     completeSend();
-                                    set_schedule_time(json);
+                                    ajaxClassTime();
+                                    //set_schedule_time(json);
                                     get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max)})
                                     alert('지난 그룹일정 참석자 정상 등록되었습니다.')
                                     /*
@@ -150,9 +148,7 @@ $(document).on('click','img.add_listedMember',function(){
                             }
                         }
                     }else{
-                        scheduleTime('class', data)
-                        scheduleTime('off', data)
-                        scheduleTime('group', data)
+                        ajaxClassTime()
                         draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max)
                         alert('그룹일정 참석자 정상 등록되었습니다.')
                     }
@@ -224,8 +220,10 @@ function draw_memberlist_for_addByList(targetHTML){
                 var len = jsondata.dIdArray.length;
                 var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
                 for(var i=1; i<=len; i++){
-                    var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">'
-                    htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                    if($('#addedMemberListBox div[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0){
+                        var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">'
+                        htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                    }
                 }
                 var html = htmlToJoin.join('')
                 targetHTML.html(html)
