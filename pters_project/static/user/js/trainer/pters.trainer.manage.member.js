@@ -3968,6 +3968,7 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
     var repeat_start_array = jsondata.ptRepeatScheduleStartDateArray
     var repeat_end_array = jsondata.ptRepeatScheduleEndDateArray
     var repeat_time_array = jsondata.ptRepeatScheduleStartTimeArray
+    var repeat_endTime_array = jsondata.ptRepeatScheduleEndTimeArray
     var repeat_dur_array = jsondata.ptRepeatScheduleTimeDurationArray
 
     var schedulesHTML = []
@@ -3994,7 +3995,9 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
         if(repeat_min == "30"){
             var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
         }
-        var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
+
+        var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i])
+        //var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
         var repeat_sum = Number(repeat_time) + Number(repeat_dur)
 
         var repeat_end_time_hour = parseInt(repeat_sum)

@@ -492,6 +492,63 @@ function db_datatimehangul_format_realign(dbhangul){
    return realign.join(' ')
 }
 
+
+function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, planEndTime){ //반복일정 요약에 진행시간 계산 (시작시간이랑 종료시간으로 구함)
+    var planYear    = Number(planStartDate.split('-')[0])
+    var planMonth   = Number(planStartDate.split('-')[1])
+    var planDate    = Number(planStartDate.split('-')[2])
+    var planHour    = Number(planStartTime.split(':')[0])
+    var planMinute  =        planStartTime.split(':')[1]
+
+    var planEDate   = Number(planEndDate.split('-')[2]) 
+    var planEndHour = Number(planEndTime.split(':')[0])
+    var planEndMin  =        planEndTime.split(':')[1]
+
+    if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00 
+        if(planEndHour-planHour == 0){
+          var planDura = "0.5"
+        }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
+          var planDura = String((planEndHour-planHour-1))+'.5'
+        }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == 30){
+          var planDura = String((planEndHour-planHour))+'.5'
+        }
+    }else{
+      var planDura = planEndHour - planHour;
+    }
+    
+    /*
+    //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+    if(planEDate == planDate+1 && planEndHour==planHour){
+      var planDura = 24
+    }else if(planEDate == planDate+1 && planEndHour == 0){
+      var planDura = 24-planHour
+    }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
+      var planDura = 24-planHour
+    }
+
+    if(planMinute == '00'){
+      if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
+        
+        var planDura = planDura - (Options.workStartTime - planHour) // 2 - (10 - 8)
+        var planHour = Options.workStartTime
+         //2018_4_22_8_30_2_OFF_10_30 
+      }
+    }else if(planMinute == '30'){
+        //(10>8)  (2>=10-8)
+      if(Options.workStartTime>planHour && planDura >= Options.workStartTime - planHour){
+        
+        var planDura = planDura - (Options.workStartTime - planHour)+0.5 // 2 - (10 - 8)
+        var planHour = Options.workStartTime
+        var planMinute = '00'
+         //2018_4_22_8_30_2_OFF_10_30 
+      }
+    }
+    */
+
+    return planDura
+}
+
+
 function count_format_to_nnnn(rawData){
   if(rawData == '0'){
     return rawData
