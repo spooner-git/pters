@@ -97,7 +97,7 @@ $(document).ready(function(){
 
 
 	$('#upbutton-x').click(function(){
-		$('#calendar').css('height','90%')
+		//$('#calendar').css('height','90%')
 	    $('#page-addplan').fadeOut('fast','swing');
 	    if($('body').width()<600){
 	        $('#calendar').show();

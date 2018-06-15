@@ -528,15 +528,16 @@
             Shade 클릭해서 팝업 닫기*/ 
 
             $('#errorMessageBar span:nth-child(2)').click(function(){
-                window.location.reload()
+                //window.location.reload()
                 $('#errorMessageBar').fadeOut();
                 $('#errorMessageText').text('');
                 $('html').css("cursor","auto");
                 $('.ajaxloadingPC').hide();
+
                 if($('body').width()>600){
-                    $('#calendar').css('position','relative')
-                    $('.popups').hide();
-                    shade_index(-100)
+                    //$('#calendar').css('position','relative')
+                    //$('.popups').hide();
+                    //shade_index(-100)
                 }else{
                     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 }
