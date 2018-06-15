@@ -161,16 +161,18 @@
         <a href='tel:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-call.png"></a>
         <a href='sms:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-message.png" alt=""></a>
       </div>
+      <!--
       <div class="trainerWorkTimeInfo">
         <span>업무 시간</span><span></span>
       </div>
+      -->
   </div>
 </div>
 
 <div id="history_wrap" class="mypage_page"> 
     <div class="mypage_label">
-      <img src="/static/user/res/member/icon-user.png" alt=""><span>등록 이력</span>
-      <p class="label_explain">{{ class_info.mem_info.name }} 강사에게 등록한 이력</p>
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>수강 이력</span>
+{#      <p class="label_explain">{{ class_info.mem_info.name }} 강사에게 등록한 이력</p>#}
     </div>
 
     <div id="myRegHistory" class="boardWrap">
@@ -178,8 +180,8 @@
     </div>
 
     <div class="mypage_label">
-      <img src="/static/user/res/member/icon-user.png" alt=""><span>활동 이력</span>
-      <p class="label_explain">{{ class_info.mem_info.name }} 강사에게 현재 등록된 강의의 수행 이력</p>
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>레슨 이력</span>
+{#      <p class="label_explain">{{ class_info.mem_info.name }} 강사에게 현재 등록된 강의의 수행 이력</p>#}
     </div>
 
     <div id="myActiveHistory" class="boardWrap">

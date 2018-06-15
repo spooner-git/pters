@@ -629,7 +629,7 @@ def func_get_trainer_schedule(context, class_id, start_date, end_date):
         error = '강좌 정보를 불러오지 못했습니다.'
     func_get_trainer_on_schedule(context, class_id, start_date, end_date)
     func_get_trainer_off_schedule(context, class_id, start_date, end_date)
-    func_get_trainer_group_schedule(context, class_id, start_date, end_date)
+    func_get_trainer_group_schedule(context, class_id, start_date, end_date, None)
 
     if error is None:
         class_info.schedule_check = 0
@@ -673,16 +673,23 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
     context['pt_schedule_data'] = pt_schedule_data
 
 
-def func_get_trainer_group_schedule(context, class_id, start_date, end_date):
+def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
     group_schedule_list = []
-
     # 강좌별로 연결된 그룹 스케쥴 가져오기
-    group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                    group_tb__isnull=False,
-                                                    lecture_tb__isnull=True,
-                                                    en_dis_type='1',
-                                                    start_dt__gte=start_date,
-                                                    start_dt__lt=end_date, use=1).order_by('start_dt')
+    if group_id is None or group_id == '':
+        group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                        group_tb__isnull=False,
+                                                        lecture_tb__isnull=True,
+                                                        en_dis_type='1',
+                                                        start_dt__gte=start_date,
+                                                        start_dt__lt=end_date, use=1).order_by('start_dt')
+    else:
+        group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                        group_tb=group_id,
+                                                        lecture_tb__isnull=True,
+                                                        en_dis_type='1',
+                                                        start_dt__gte=start_date,
+                                                        start_dt__lt=end_date, use=1).order_by('start_dt')
 
     idx = 0
     for group_schedule_info in group_schedule_data:

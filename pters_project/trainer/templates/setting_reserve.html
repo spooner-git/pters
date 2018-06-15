@@ -14,9 +14,11 @@
     {% csrf_token %}
   <input type="hidden" name="setting_trainer_work_time_available"       id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
   <input type="hidden" name="setting_member_reserve_time_available"     id="id_setting_member_reserve_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
-  <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->
+  <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자 (분단위)-->
+  <input type="hidden" name="setting_member_cancel_time"   id="id_setting_member_cancel_time" value=""> <!--시간 숫자 (분단위)-->
   <input type="hidden" name="setting_member_reserve_prohibition"        id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
   <input type="hidden" name="setting_member_reserve_date_available"     id="id_setting_member_reserve_available_date" value=""> <!--예약금지 활성 1, 비활성 0-->
+
   <input type="hidden" name="next_page" value = '{% url 'trainer:trainer_setting' %}'>
 </form>
 
@@ -108,20 +110,20 @@
         <div id="dateSelect" class="dropdown">
               <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
               <ul id="ulTimes_availDate" class="dropdown-menu pters_dropdown_custom ulTimes">
-                <li><a data-time="1">1일</a></li>
-                <li><a data-time="2">2일</a></li>
-                <li><a data-time="3">3일</a></li>
-                <li><a data-time="4">4일</a></li>
-                <li><a data-time="5">5일</a></li>
-                <li><a data-time="6">6일</a></li>
-                <li><a data-time="7">7일</a></li>
-                <li><a data-time="8">8일</a></li>
-                <li><a data-time="9">9일</a></li>
-                <li><a data-time="10">10일</a></li>
-                <li><a data-time="11">11일</a></li>
-                <li><a data-time="12">12일</a></li>
-                <li><a data-time="13">13일</a></li>
-                <li><a data-time="14">14일</a></li>
+                <li><a data-time="1">+1일</a></li>
+                <li><a data-time="2">+2일</a></li>
+                <li><a data-time="3">+3일</a></li>
+                <li><a data-time="4">+4일</a></li>
+                <li><a data-time="5">+5일</a></li>
+                <li><a data-time="6">+6일</a></li>
+                <li><a data-time="7">+7일</a></li>
+                <li><a data-time="8">+8일</a></li>
+                <li><a data-time="9">+9일</a></li>
+                <li><a data-time="10">+10일</a></li>
+                <li><a data-time="11">+11일</a></li>
+                <li><a data-time="12">+12일</a></li>
+                <li><a data-time="13">+13일</a></li>
+                <li><a data-time="14">+14일</a></li>
               </ul>
         </div>
     </div> 
@@ -333,7 +335,7 @@
 
           /*회원 예약 허용 날짜 설정 DB저장값으로 초기셋팅*/
           $('#id_setting_member_reserve_available_date').val(Options.availDate)
-          $("#dateSelect button").addClass("dropdown_selected").text(Options.availDate+"일 후").val(Options.limit);
+          $("#dateSelect button").addClass("dropdown_selected").text("+"+Options.availDate+"일").val(Options.limit);
           /*회원 예약 허용 날짜 설정 DB저장값으로 초기셋팅*/
 
 

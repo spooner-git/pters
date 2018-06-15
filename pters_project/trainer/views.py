@@ -32,7 +32,7 @@ from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
-    func_refresh_group_status
+    func_refresh_group_status, func_get_trainer_group_schedule
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -696,6 +696,47 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView
             context['error'] = error
 
         return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'ajax/schedule_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        date = request.session.get('date', '')
+        day = request.session.get('day', '')
+        group_id = request.GET.get('group_id', None)
+        today = datetime.date.today()
+
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(47))
+        func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id)
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        date = request.POST.get('date', '')
+        day = request.POST.get('day', '')
+        group_id = request.POST.get('group_id', None)
+        today = datetime.date.today()
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 18
+
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day)+1)
+
+        func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id)
+        return render(request, self.template_name, context)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -2581,15 +2622,15 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
 
     def get(self, request, *args, **kwargs):
-        context = super(GetGroupScheduleListViewAjax, self).get_context_data(**kwargs)
+        context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = super(GetGroupScheduleListViewAjax, self).get_context_data(**kwargs)
+        context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
         group_schedule_id = request.POST.get('group_schedule_id', '')
 
         group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')
@@ -3396,7 +3437,8 @@ def update_setting_push_logic(request):
 # 강사 예약허용시간 setting 업데이트 api
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
-    setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '')
+    setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '60')
+    setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '60')
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition', '')
     setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '')
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '')
@@ -3418,15 +3460,15 @@ def update_setting_reserve_logic(request):
         if setting_member_reserve_time_available == '':
             setting_member_reserve_time_available = '00:00-23:59'
         if setting_member_reserve_time_prohibition == '':
-            setting_member_reserve_time_prohibition = '1'
+            setting_member_reserve_time_prohibition = '60'
+        if setting_member_cancel_time == '':
+            setting_member_cancel_time = '60'
         if setting_member_reserve_prohibition == '':
             setting_member_reserve_prohibition = '1'
         if setting_trainer_work_time_available == '':
             setting_trainer_work_time_available = '00:00-23:59'
         if setting_member_reserve_date_available == '':
             setting_member_reserve_date_available = '14'
-        if setting_member_cancel_time == '':
-            setting_member_cancel_time = '120'
 
     if error is None:
         try:
@@ -3474,7 +3516,7 @@ def update_setting_reserve_logic(request):
                 lt_res_05.save()
 
                 lt_res_cancel_time.mod_dt = timezone.now()
-                lt_res_cancel_time.setting_info = lt_res_cancel_time
+                lt_res_cancel_time.setting_info = setting_member_cancel_time
                 lt_res_cancel_time.save()
 
                 lt_res_enable_time.mod_dt = timezone.now()

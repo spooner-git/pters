@@ -26,12 +26,14 @@ urlpatterns = [
     url(r'^get_trainer_schedule/$', views.GetTrainerScheduleView.as_view(), name='get_trainer_schedule'),
     # 강사 스케쥴 조회 - Off
     url(r'^get_off_repeat_schedule/$', views.GetOffRepeatScheduleView.as_view(), name='get_off_repeat_schedule'),
+    # 강사 스케쥴 조회 - Group
+    url(r'^get_trainer_group_schedule/$', views.GetTrainerGroupScheduleView.as_view(), name='get_trainer_group_schedule'),
     # 회원 스케쥴 조회 - 1:1/Group
     url(r'^get_member_schedule/$', views.GetMemberScheduleView.as_view(), name='get_member_schedule'),
     # 회원 반복 일정 조회 - 1:1/Group
     url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(), name='get_member_repeat_schedule'),
     # 그룹일정에 속하는 그룹회원 일정 조회
-    url(r'^get_group_schedule_list/$', views.GetGroupScheduleListViewAjax.as_view(), name='get_group_schedule_list'),
+    url(r'^get_group_member_schedule_list/$', views.GetGroupMemberScheduleListViewAjax.as_view(), name='get_group_member_schedule_list'),
     # 그룹 반복 일정 조회
     url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(), name='get_group_repeat_schedule_list'),
     # 그룹 반복일정과 같이 등록된 회원들의 반복일정
