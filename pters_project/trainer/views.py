@@ -707,6 +707,7 @@ class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
         class_id = request.session.get('class_id', '')
         date = request.session.get('date', '')
         day = request.session.get('day', '')
+        group_id = request.GET.get('group_id', None)
         today = datetime.date.today()
 
         if date != '':
@@ -715,7 +716,7 @@ class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(47))
-        func_get_trainer_group_schedule(context, class_id, start_date, end_date)
+        func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id)
 
         return render(request, self.template_name, context)
 
@@ -724,6 +725,7 @@ class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
         class_id = request.session.get('class_id', '')
         date = request.POST.get('date', '')
         day = request.POST.get('day', '')
+        group_id = request.POST.get('group_id', None)
         today = datetime.date.today()
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -733,7 +735,7 @@ class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day)+1)
 
-        func_get_trainer_group_schedule(context, class_id, start_date, end_date)
+        func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id)
         return render(request, self.template_name, context)
 
 
@@ -2620,15 +2622,15 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class GetGroupScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
 
     def get(self, request, *args, **kwargs):
-        context = super(GetGroupScheduleListViewAjax, self).get_context_data(**kwargs)
+        context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = super(GetGroupScheduleListViewAjax, self).get_context_data(**kwargs)
+        context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
         group_schedule_id = request.POST.get('group_schedule_id', '')
 
         group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).order_by('start_dt')

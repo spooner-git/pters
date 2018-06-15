@@ -2774,9 +2774,9 @@ $(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',func
 
 //그룹 일정에 속한 회원목록을 받아온다.
 function get_group_plan_participants(group_schedule_id, callbackoption , callback){
-    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_schedule_list')
+    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_schedule_list')
     $.ajax({
-        url: '/trainer/get_group_schedule_list/',
+        url: '/trainer/get_group_member_schedule_list/',
         type : 'POST',
         dataType: 'html',
         data: {"group_schedule_id": group_schedule_id},
