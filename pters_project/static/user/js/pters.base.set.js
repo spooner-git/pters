@@ -382,7 +382,7 @@ function date_format_to_yyyymmdd(hanguldate, resultSplit){
 }
 
 
-//20180511 을 2018-05-11, 2018/05/11 등 원하는 split
+//20180511 을 2018-5-11, 2018/5/11 등 원하는 split
 function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
   if(String(yyyymmdd).length==8){
     var yyyy = yyyymmdd.substr(0,4)
@@ -391,6 +391,15 @@ function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
     var result = yyyy+resultSplit+mm+resultSplit+dd
   }
   return result
+}
+
+//2018-05-11 을 2018.05.11, 2018/05/11 등 원하는 split
+function date_format_yyyymmdd_to_yyyymmdd_split(yyyymmdd,resultSplit){
+    var yyyy = yyyymmdd.split('-')[0]
+    var mm = yyyymmdd.split('-')[1]
+    var dd = yyyymmdd.split('-')[2]
+    var result = yyyy+resultSplit+mm+resultSplit+dd
+    return result
 }
 
 function date_format_yyyy_m_d_to_yyyymmdd(yyyy_m_d){
@@ -494,6 +503,14 @@ function db_datatimehangul_format_realign(dbhangul){
 
 
 function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, planEndTime){ //반복일정 요약에 진행시간 계산 (시작시간이랑 종료시간으로 구함)
+    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+    if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+      lastDay[1] = 29;
+    }else{
+      lastDay[1] = 28;
+    };
+
+
     var planYear    = Number(planStartDate.split('-')[0])
     var planMonth   = Number(planStartDate.split('-')[1])
     var planDate    = Number(planStartDate.split('-')[2])
