@@ -2446,6 +2446,7 @@ function get_indiv_member_info(dbID){
                     $('#errorMessageText').text('')
                     if($('body').width() < 600){
                         open_member_info_popup_mobile(dbID, jsondata);
+                        shade_index(100)
                     }else{
                         open_member_info_popup_pc(dbID, jsondata);
                     }
@@ -3066,7 +3067,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
         var remCount_group_personal = []
         var availCount_group_personal = []
         var finishCount_group_personal = []
-        var result_history_html = ['<div><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
+        var result_history_html = ['<div style="background:#f5f5f5"><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
         for(var i=0; i<jsondata.lectureIdArray.length; i++){
             var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
             var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
@@ -3994,7 +3995,7 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
         var repeat_group_type = "[그룹레슨]"
         if(repeat_group_name.length == 0 ){
             var repeat_group_name = ""
-            var repeat_group_type = "[개인레슨]"
+            var repeat_group_type = "[1:1레슨]"
         }
         var repeat_title = repeat_group_type+' '+repeat_group_name
 

@@ -732,10 +732,10 @@ $(document).ready(function(){
 
 	var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
 	if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
-			lastDay[1] = 29;
-		}else{
-			lastDay[1] = 28;
-		};
+		lastDay[1] = 29;
+	}else{
+		lastDay[1] = 28;
+	};
 
 	var weekDay = ['일','월','화','수','목','금','토'];
 	var firstDayInfoPrevMonth = new Date(currentYear,currentMonth-1,1);

@@ -839,8 +839,9 @@ select:focus > option:checked {
 			.pc_member_note{
 				color: #7d7d7d;
 				padding-left: 6px !important;
-				margin-bottom: 7px !important;
-				border-bottom: 1px solid #cccccc !important;
+				margin-bottom: 4px !important;
+				margin-top: 2px !important;
+				/*border-bottom: 1px solid #cccccc !important;*/
 			}
 			#memberRegHistory_info_PC img{
 					width: 12px;
@@ -976,13 +977,13 @@ select:focus > option:checked {
 				color: #444444;
 				margin: 0;
 				line-height: unset;
-				font-size: unset;
+				font-size: 13px;
 			}
 			#memberRepeat_info_PC p:nth-child(3), #memberRepeat_info p:nth-child(3){
-				color: #444444;
+				color: #777777;
 				margin: 0;
 				line-height: unset;
-				font-size: unset;
+				font-size: 13px;
 			}
 
 			.deleteBtn{

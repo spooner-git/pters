@@ -494,6 +494,14 @@ function db_datatimehangul_format_realign(dbhangul){
 
 
 function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, planEndTime){ //반복일정 요약에 진행시간 계산 (시작시간이랑 종료시간으로 구함)
+    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+    if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+      lastDay[1] = 29;
+    }else{
+      lastDay[1] = 28;
+    };
+
+
     var planYear    = Number(planStartDate.split('-')[0])
     var planMonth   = Number(planStartDate.split('-')[1])
     var planDate    = Number(planStartDate.split('-')[2])
