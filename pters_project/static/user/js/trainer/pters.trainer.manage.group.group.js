@@ -415,7 +415,6 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
             group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'))
         }
         group_delete_JSON.group_id = group_id
-        console.log(group_delete_JSON)
     }else{
         alert('그룹원 리스트를 펼쳐 확인 후 삭제 해주세요.')
     }
@@ -782,7 +781,7 @@ function groupListSet(option, jsondata){ //option : current, finished
                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '&nbsp;&nbsp; /' + '<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
-                    '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+group_createdate+'" disabled>'+'</div>'+
+                    '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
                     '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>'
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
     }
@@ -884,8 +883,8 @@ function groupMemberListSet(group_id, jsondata){
                         '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
                         '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
                         '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>' +
-                        '<div class="_startdate" data-name="'+groupmember_startdate+'">'+groupmember_startdate+'</div>' +
-                        '<div class="_finday" data-name="'+groupmember_enddate+'">'+groupmember_enddate+'</div>' +
+                        '<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
+                        '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
                         '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
                         '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>' +
                         htmlEnd
