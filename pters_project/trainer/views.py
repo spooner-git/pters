@@ -1621,7 +1621,7 @@ def add_lecture_info_logic(request):
                 group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1).count()
                 if group_info.group_type_cd == 'NORMAL':
                     if group_counter >= group_info.member_num:
-                        error = '그룹 허용 인원을 초과했습니다.'
+                        error = '그룹 정원을 초과했습니다.'
 
     if error is None:
         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
@@ -2210,6 +2210,13 @@ def update_group_info_logic(request):
         if note == '' or note is None:
             note = group_info.note
 
+    if error is None:
+        if group_info.group_type_cd == 'NORMAL':
+            group_member_num = GroupLectureTb.objects.filter(group_id=group_id, use=1).count()
+            if group_member_num > int(member_num):
+                error = '현재 그룹에 추가된 인원이 정원보다 많습니다.'
+
+    if error is None:
         group_info.group_type_cd = group_type_cd
         group_info.member_num = member_num
         group_info.name = name
@@ -2264,7 +2271,7 @@ def add_group_member_logic(request):
                 group_counter += len(json_loading_data['new_member_data']) + len(json_loading_data['old_member_data'])
                 if group_info.group_type_cd == 'NORMAL':
                     if group_counter > group_info.member_num:
-                        error = '그룹 허용 인원을 초과했습니다.'
+                        error = '그룹 정원을 초과했습니다.'
 
     if error is None:
         if group_info.group_type_cd == 'NORMAL':
@@ -2287,7 +2294,7 @@ def add_group_member_logic(request):
                             lecture_group_check = 1
                         if group_info.group_type_cd == 'NORMAL':
                             if lecture_group_check == 0:
-                                error = member_info.name + ' 회원님이 이미 그룹에 포함되어있습니다. 확인해주세요.'
+                                error = member_info.name + ' 회원님이 이미 그룹에 포함되어있습니다.'
                                 break
                     if error is not None:
                         break
@@ -2304,13 +2311,8 @@ def add_group_member_logic(request):
                                                            json_info['birthday_dt'])
 
                         if context['error'] is None:
-                            try:
-                                user_info = User.objects.get(username=context['username'])
-                                user_name_list.append(user_info.last_name+user_info.first_name)
-                                user_db_id_list.append(user_info.id)
-                            except ObjectDoesNotExist:
-                                error = '회원 등록중 오류가 발생했습니다.'
-
+                            user_name_list.append(json_info['last_name']+json_info['first_name'])
+                            user_db_id_list.append(context['user_db_id'])
                         else:
                             error = context['error']
                             messages.error(request, context['error'])

@@ -806,7 +806,7 @@ def question_reg_logic(request):
 def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthday_dt):
     error = None
     name = ''
-    context = {'error': None, 'username': ''}
+    context = {'error': None, 'user_db_id': ''}
 
     if last_name is None or last_name == '':
         error = '성을 입력해 주세요.'
@@ -848,12 +848,6 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
                 else:
                     i += 1
 
-                    # count = MemberTb.objects.filter(name=username).count()
-                    # if count != 0:
-                    #    username += str(count+1)
-                    # elif User.objects.filter(email=email).exists():
-                    #    error = '이미 가입된 회원 입니다.'
-
     if error is None:
         try:
             with transaction.atomic():
@@ -869,15 +863,15 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
                                       birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
                                       user_id=user.id)
                 member.save()
-                context['username'] = username
+                context['user_db_id'] = user.id
 
-        except ValueError as e:
+        except ValueError:
             error = '이미 가입된 회원입니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '이미 가입된 회원입니다.'
