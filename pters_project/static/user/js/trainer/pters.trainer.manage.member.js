@@ -795,6 +795,8 @@ if (agent.indexOf("firefox") != -1) {
                   id_search_memberId = jsondata.idInfo;
                   id_search_memberSex = jsondata.sexInfo;
                   $('#id_username_info').val(jsondata.idInfo);
+                  console.log(jsondata.dbIdInfo)
+                  $('#id_user_id').val(jsondata.dbIdInfo);
                   $('#memberSex .selectboxopt').removeClass('selectbox_checked');
                   fill_member_info_by_ID_search();
                   $('#memberSearchButton').attr('data-type','searched');
@@ -3385,7 +3387,7 @@ function fill_member_info_by_ID_search(){
     $('#form_name').val(id_search_memberLastName+id_search_memberFirstName);
     $('#memberPhone_add').val(id_search_memberPhone); 
     $('#memberEmail_add').val(id_search_memberEmail);
-    $('#id_user_id').val(id_search_memberId);
+    // $('#id_user_id').val(id_search_memberId);
     if(id_search_memberSex != ''){
         $('.selectboxopt[value='+id_search_memberSex+']').addClass('selectbox_checked');
     }
@@ -3508,7 +3510,7 @@ function add_member_form_noemail_func(){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
-                $('#id_username_info').val(jsondata.username)
+                $('#id_user_id').val(jsondata.user_db_id)
                 add_member_form_func();
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');

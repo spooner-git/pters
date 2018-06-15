@@ -919,6 +919,15 @@
                         <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보"></div>
                         <p class="datepicktext dropdown"><input type="text" id="datepicker2_add" name="end_date" placeholder="선택"  readonly></p>
                     </div>
+
+                    <div class="ptaddbox form-group">
+                        <label for="comment" class="ptaddboxtext">
+                            <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> 특이사항
+                        </label>
+                        <div class="dropdown pters_input_custom">
+                            <textarea class="form-control" rows="1" id="comment" name="contents" ></textarea>
+                        </div> 
+                    </div>
                 </div>
 
                 <div id="simpleReg" class="simpleReg"> <!-- 빠른 입력 방식 -->
@@ -1012,17 +1021,20 @@
                             <input type="tel" class="form-control" id="memberDue_add_2"  placeholder="자동 입력" maxlength="3" style="font-size:13.5px;" readonly>
                         </div>
                     </div>
+
+                    <div class="ptaddbox form-group">
+                        <label for="comment" class="ptaddboxtext">
+                            <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> 특이사항
+                        </label>
+                        <div class="dropdown pters_input_custom">
+                            <textarea class="form-control" rows="1" id="comment" name="contents_fast" ></textarea>
+                        </div> 
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="ptaddbox form-group">
-            <label for="comment" class="ptaddboxtext">
-                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}> 특이사항
-            </label>
-            <div class="dropdown pters_input_custom">
-                <textarea class="form-control" rows="1" id="comment" name="contents" ></textarea>
-            </div>  
         </div>
 
         <div id="ptrepeat-btn">

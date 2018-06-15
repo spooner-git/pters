@@ -1562,8 +1562,9 @@ def add_lecture_info_logic(request):
     lecture_info = None
     input_contents = ''
     # username = name
-    if username is None or username == '':
-       error = '오류가 발생했습니다. 다시 시도해주세요.'
+
+    if user_id is None or user_id == '':
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
 
     if search_confirm == '0':
         if name == '':
@@ -1609,7 +1610,7 @@ def add_lecture_info_logic(request):
 
     if error is None:
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(id=user_id)
 
         except ObjectDoesNotExist:
             error = '가입되지 않은 회원입니다.'
