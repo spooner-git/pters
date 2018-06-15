@@ -3396,7 +3396,8 @@ def update_setting_push_logic(request):
 # 강사 예약허용시간 setting 업데이트 api
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
-    setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '')
+    setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '60')
+    setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '60')
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition', '')
     setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '')
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '')
@@ -3418,15 +3419,15 @@ def update_setting_reserve_logic(request):
         if setting_member_reserve_time_available == '':
             setting_member_reserve_time_available = '00:00-23:59'
         if setting_member_reserve_time_prohibition == '':
-            setting_member_reserve_time_prohibition = '1'
+            setting_member_reserve_time_prohibition = '60'
+        if setting_member_cancel_time == '':
+            setting_member_cancel_time = '60'
         if setting_member_reserve_prohibition == '':
             setting_member_reserve_prohibition = '1'
         if setting_trainer_work_time_available == '':
             setting_trainer_work_time_available = '00:00-23:59'
         if setting_member_reserve_date_available == '':
             setting_member_reserve_date_available = '14'
-        if setting_member_cancel_time == '':
-            setting_member_cancel_time = '120'
 
     if error is None:
         try:
@@ -3474,7 +3475,7 @@ def update_setting_reserve_logic(request):
                 lt_res_05.save()
 
                 lt_res_cancel_time.mod_dt = timezone.now()
-                lt_res_cancel_time.setting_info = lt_res_cancel_time
+                lt_res_cancel_time.setting_info = setting_member_cancel_time
                 lt_res_cancel_time.save()
 
                 lt_res_enable_time.mod_dt = timezone.now()
