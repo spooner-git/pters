@@ -494,7 +494,6 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
         error = '강좌 정보를 불러오지 못했습니다.'
-
     if error is None:
         try:
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,

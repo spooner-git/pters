@@ -23,7 +23,7 @@
          </div>
         <div id="yearText">마이 페이지</div>
         <div id="monthText"></div>
-        <div id="menuName">마이 페이지
+        <div id="menuName">
         </div>
         <div id="menuDescription">나의 정보를 확인할 수 있습니다.
         </div>
@@ -72,8 +72,8 @@
   </div>
 
   <div id="dateBoardWrap" class="boardWrap">
-      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">트레이닝 시작일</p><p style="margin:0;">{{ pt_start_date }}</p></div></div>
-      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">트레이닝 종료일</p><p style="margin:0;">{{ pt_end_date }}</p></div></div>
+      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">레슨 시작일</p><p style="margin:0;">{{ pt_start_date }}</p></div></div>
+      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">레슨 종료일</p><p style="margin:0;">{{ pt_end_date }}</p></div></div>
   </div>
 
 
@@ -122,7 +122,7 @@
             </div>
           </div>
           <input type="tel" name="newphone" class="modifyInfoTool" placeholder="'-'를 제외한 숫자만 입력">
-          <span class="_phoneInfo _originalInfo">{{ member_info.phone }}</span>
+          <span class="_phoneInfo _originalInfo">{{ member_info.phone }} </span>
       </div>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
@@ -157,7 +157,7 @@
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
-        <span>{{ class_info.mem_info.name }} 강사</span>
+        <span>{{ class_info.mem_info.name }}님</span>
         <a href='tel:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-call.png"></a>
         <a href='sms:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-message.png" alt=""></a>
       </div>
