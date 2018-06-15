@@ -3089,8 +3089,8 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
             var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
-            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
-            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
+            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.startArray[i],'.')+'" disabled readonly></div>'
+            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.endArray[i],'.')+'" disabled readonly></div>'
             var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
             
@@ -3176,8 +3176,8 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
             var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
-            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+jsondata.startArray[i]+'" disabled readonly></div>'
-            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+jsondata.endArray[i]+'" disabled readonly></div>'
+            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.startArray[i],'.')+'" disabled readonly></div>'
+            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.endArray[i],'.')+'" disabled readonly></div>'
             var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
             
@@ -3358,7 +3358,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         }
 
         var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleIdxArray[i]+'</div>'
-        var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleStartDtArray[i].split(' ')[0]+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
+        var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.ptScheduleStartDtArray[i].split(' ')[0],'.')+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
         var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+repeat_dur+'</div>'
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
