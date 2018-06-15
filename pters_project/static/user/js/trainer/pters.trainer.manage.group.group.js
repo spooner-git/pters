@@ -431,7 +431,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
 	var status = $(this).attr('data-edit')
 
 	var group_name = $(this).parent('div').siblings('._groupname').find('input').val()
-	var group_capacity = $(this).parent('div').siblings('._groupcapacity').find('input').val()
+	var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
 	var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
 	var group_type = $(this).parent('div').siblings('._grouptypecd').find('input').val()
     if(group_capacity == '∞'){ //비정기 그룹일때 무한대로 정원 설정
@@ -449,6 +449,10 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
 			modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type)
 		break;
 	}
+})
+
+$(document).on('click','.groupWrap input',function(e){
+    e.stopPropagation()
 })
 //그룹 리스트에서 그룹 수정버튼을 누른다.
 
@@ -711,9 +715,12 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
-                groupListSet('current',jsondata)
-                groupListSet('finished',jsondata)
-
+                if($('#currentGroupList').css('display') == "block"){
+                    groupListSet('current',jsondata)
+                }else if($('#finishedGroupList').css('display') == "block"){
+                    groupListSet('finished',jsondata)
+                }
+                
                 console.log('success');
             }
         },
@@ -773,7 +780,7 @@ function groupListSet(option, jsondata){ //option : current, finished
                     '<div class="_grouptypecd"><input class="group_listinput input_disabled_true" value="'+group_type+'" disabled>'+'</div>'+
                     '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-                    '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '/' + group_capacity+'</div>'+
+                    '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '/' + '<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+group_createdate+'" disabled>'+'</div>'+
                     '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>'
