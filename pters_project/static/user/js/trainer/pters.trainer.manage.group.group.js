@@ -780,7 +780,7 @@ function groupListSet(option, jsondata){ //option : current, finished
                     '<div class="_grouptypecd"><input class="group_listinput input_disabled_true" value="'+group_type+'" disabled>'+'</div>'+
                     '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-                    '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '/' + '<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
+                    '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '&nbsp;&nbsp; /' + '<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+group_createdate+'" disabled>'+'</div>'+
                     '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>'
