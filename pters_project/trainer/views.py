@@ -1539,7 +1539,8 @@ def add_lecture_info_logic(request):
     username = request.POST.get('username', '')
     name = request.POST.get('name')
     phone = request.POST.get('phone')
-    contents = request.POST.get('contents')
+    contents = request.POST.get('contents', '')
+    contents_fast = request.POST.get('contents_fast', '')
     counts = request.POST.get('counts')
     price = request.POST.get('price')
     start_date = request.POST.get('start_date')
@@ -1559,6 +1560,7 @@ def add_lecture_info_logic(request):
     input_counts = 0
     input_price = 0
     lecture_info = None
+    input_contents = ''
     # username = name
     if username is None or username == '':
        error = '오류가 발생했습니다. 다시 시도해주세요.'
@@ -1585,6 +1587,7 @@ def add_lecture_info_logic(request):
                     input_end_date = '9999-12-31'
                 else:
                     input_end_date = end_date_fast
+            input_contents = contents_fast
 
         elif fast_check == '1':
             if counts == '':
@@ -1602,6 +1605,7 @@ def add_lecture_info_logic(request):
                     input_end_date = '9999-12-31'
                 else:
                     input_end_date = end_date
+            input_contents = contents
 
     if error is None:
         try:
@@ -1626,7 +1630,7 @@ def add_lecture_info_logic(request):
     if error is None:
         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
                                         class_id, group_id, input_counts, input_price,
-                                        input_start_date, input_end_date, contents, user.id)
+                                        input_start_date, input_end_date, input_contents, user.id)
     if error is None:
         return redirect(next_page)
 

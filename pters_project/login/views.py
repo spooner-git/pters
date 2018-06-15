@@ -468,7 +468,6 @@ class AddMemberNoEmailView(View):
         sex = request.POST.get('sex', '')
         birthday_dt = request.POST.get('birthday', '')
         group_id = request.POST.get('group_id', '')
-        # contents = request.POST.get('contents', '')
         context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
         if context['error'] is not None:
             logger.error(name+'[강사 회원가입]'+context['error'])
@@ -806,8 +805,7 @@ def question_reg_logic(request):
 def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthday_dt):
     error = None
     name = ''
-    context = {'error': None, 'user_db_id': ''}
-
+    context = {'error': None, 'user_db_id': '', 'username': ''}
     if last_name is None or last_name == '':
         error = '성을 입력해 주세요.'
 
@@ -863,6 +861,7 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
                                       birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
                                       user_id=user.id)
                 member.save()
+                context['username'] = username
                 context['user_db_id'] = user.id
 
         except ValueError:
