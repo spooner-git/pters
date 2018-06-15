@@ -405,7 +405,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
             group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1).count()
             if group_info.group_type_cd == 'NORMAL':
                 if group_counter >= group_info.member_num:
-                    error = '그룹 허용 인원을 초과했습니다.'
+                    error = '그룹 정원을 초과했습니다.'
 
     if error is None:
         try:
