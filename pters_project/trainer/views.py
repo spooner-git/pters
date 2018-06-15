@@ -2311,13 +2311,8 @@ def add_group_member_logic(request):
                                                            json_info['birthday_dt'])
 
                         if context['error'] is None:
-                            try:
-                                user_info = User.objects.get(username=context['username'])
-                                user_name_list.append(user_info.last_name+user_info.first_name)
-                                user_db_id_list.append(user_info.id)
-                            except ObjectDoesNotExist:
-                                error = '회원 등록중 오류가 발생했습니다.'
-
+                            user_name_list.append(json_info['last_name']+json_info['first_name'])
+                            user_db_id_list.append(context['user_db_id'])
                         else:
                             error = context['error']
                             messages.error(request, context['error'])
