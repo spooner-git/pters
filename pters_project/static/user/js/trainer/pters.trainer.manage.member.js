@@ -334,8 +334,8 @@ if (agent.indexOf("firefox") != -1) {
             $(this).text(text).attr('data-type',"modify");
             $('#form_member_dbid').val(dbID);
             $('#form_lecture_id').val(lectureID);
-            $('#form_start_date').val($(this).parent('div').siblings('div').find('.lec_start_date').val())
-            $('#form_end_date').val($(this).parent('div').siblings('div').find('.lec_end_date').val())
+            $('#form_start_date').val(date_format_yyyymmdd_to_yyyymmdd_split($(this).parent('div').siblings('div').find('.lec_start_date').val(),'-'))
+            $('#form_end_date').val(date_format_yyyymmdd_to_yyyymmdd_split($(this).parent('div').siblings('div').find('.lec_end_date').val(),'-'))
             $('#form_price').val($(this).parent('div').siblings('div').find('#regPrice').val())
             $('#form_lecture_reg_count').val($(this).parent('div').siblings('div').find('.lec_reg_count').val())
             $('#form_note').val(myNoteRow.val())

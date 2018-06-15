@@ -393,11 +393,12 @@ function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
   return result
 }
 
-//2018-05-11 을 2018.05.11, 2018/05/11 등 원하는 split
+//2018-05-11등을 2018.05.11, 2018/05/11 등 원하는 split
 function date_format_yyyymmdd_to_yyyymmdd_split(yyyymmdd,resultSplit){
-    var yyyy = yyyymmdd.split('-')[0]
-    var mm = yyyymmdd.split('-')[1]
-    var dd = yyyymmdd.split('-')[2]
+    var splitChar = yyyymmdd.substr(4,1)
+    var yyyy = yyyymmdd.split(splitChar)[0]
+    var mm = yyyymmdd.split(splitChar)[1]
+    var dd = yyyymmdd.split(splitChar)[2]
     var result = yyyy+resultSplit+mm+resultSplit+dd
     return result
 }
@@ -417,9 +418,11 @@ function date_format_yyyy_m_d_to_yyyymmdd(yyyy_m_d){
 
 //2018-05-11 을 2018-5-11
 function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd, resultSplit){
-    var yyyy = String(yyyy_mm_dd.split('-')[0])
-    var mm = Number(yyyy_mm_dd.split('-')[1])
-    var dd = Number(yyyy_mm_dd.split('-')[2])
+    var splitChar = yyyy_mm_dd.substr(4,1)
+    var yyyy = String(yyyy_mm_dd.split(splitChar)[0])
+    var mm = Number(yyyy_mm_dd.split(splitChar)[1])
+    var dd = Number(yyyy_mm_dd.split(splitChar)[2])
+
     return yyyy+resultSplit+mm+resultSplit+dd
 }
 
@@ -435,9 +438,6 @@ function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d,resultSplit){
       var mm = String(yyyy_m_d.split('_')[1])
       var dd = String(yyyy_m_d.split('_')[2])
     }
-
-    console.log(yyyy,mm,dd,'-----')
-
 
     if(mm.length<2){
       var mm = '0' + mm
