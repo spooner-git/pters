@@ -18,16 +18,19 @@ def func_get_holiday_schedule(context):
     return context
 
 
-def func_get_trainee_on_schedule(context, user_id, class_id, start_date, end_date):
+def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
     pt_schedule_list = []
     all_schedule_check = 0
+
     if start_date is None and end_date is None:
         all_schedule_check = 1
     member_lecture_data = MemberLectureTb.objects.filter(auth_cd='VIEW', member_id=user_id).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
     idx = len(member_lecture_data)+1
+
     for member_lecture_info in member_lecture_data:
         idx -= 1
+
         if all_schedule_check == 0:
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
@@ -35,6 +38,7 @@ def func_get_trainee_on_schedule(context, user_id, class_id, start_date, end_dat
         else:
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                       lecture_tb_id=member_lecture_info.lecture_tb_id).order_by('-start_dt')
+
         idx2 = len(schedule_data)+1
 
         for schedule_info in schedule_data:

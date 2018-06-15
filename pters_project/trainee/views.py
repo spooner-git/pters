@@ -228,7 +228,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
             # context = func_get_trainee_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
             context = func_get_holiday_schedule(context)
-            context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, start_date, end_date)
+            context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
             context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
             context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
 
@@ -268,7 +268,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, None, None)
+            context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, None, None)
             context = func_get_trainee_on_repeat_schedule(context, self.request.user.id, class_id)
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
                                                                  self.request.user.last_name + self.request.user.first_name, class_id, start_date, end_date)
@@ -567,7 +567,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         end_date = today + datetime.timedelta(days=int(day))
 
         context = func_get_holiday_schedule(context)
-        context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
         context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
         context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
@@ -592,7 +592,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         end_date = today + datetime.timedelta(days=int(day)+1)
         context['error'] = None
         context = func_get_holiday_schedule(context)
-        context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, start_date, end_date)
+        context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
         context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
         context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
         context = func_get_class_lecture_count(context, class_id, self.request.user.id)
@@ -608,12 +608,28 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 class GetTraineeScheduleHistoryView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/trainee_all_schedule_ajax.html'
 
+    def get(self, request, *args, **kwargs):
+        context = super(GetTraineeScheduleHistoryView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        member_id = request.user.id
+        context['error'] = None
+        if member_id is None or member_id == '':
+            context['error'] = '회원 정보를 불러오지 못했습니다.'
+
+        if context['error'] is None:
+            context = func_get_trainee_on_schedule(context, class_id, member_id, None, None)
+
+        if context['error'] is not None:
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+context['error'])
+            messages.error(request, context['error'])
+
+        return render(request, self.template_name, context)
+
     def post(self, request, *args, **kwargs):
         context = super(GetTraineeScheduleHistoryView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.user.id
         context['error'] = None
-
         if member_id is None or member_id == '':
             context['error'] = '회원 정보를 불러오지 못했습니다.'
 
@@ -873,7 +889,7 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            context = func_get_trainee_on_schedule(context, self.request.user.id, class_id, None, None)
+            context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, None, None)
             context = func_get_trainee_on_repeat_schedule(context, self.request.user.id, class_id)
             context = get_trainee_schedule_data_by_class_id_func(context, self.request.user.id,
                                                                  self.request.user.last_name + self.request.user.first_name, class_id, start_date, end_date)

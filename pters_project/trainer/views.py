@@ -32,7 +32,7 @@ from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
-    func_refresh_group_status
+    func_refresh_group_status, func_get_trainer_group_schedule
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -696,6 +696,45 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView
             context['error'] = error
 
         return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+    template_name = 'ajax/schedule_ajax.html'
+
+    def get(self, request, *args, **kwargs):
+        context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        date = request.session.get('date', '')
+        day = request.session.get('day', '')
+        today = datetime.date.today()
+
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(47))
+        func_get_trainer_group_schedule(context, class_id, start_date, end_date)
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        date = request.POST.get('date', '')
+        day = request.POST.get('day', '')
+        today = datetime.date.today()
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 18
+
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day)+1)
+
+        func_get_trainer_group_schedule(context, class_id, start_date, end_date)
+        return render(request, self.template_name, context)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
