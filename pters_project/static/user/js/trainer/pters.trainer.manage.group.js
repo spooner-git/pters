@@ -1264,8 +1264,8 @@ function float_btn_managemember(option){
         $('#uptext2, #uptext2_PC').text('신규 그룹 레슨 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        $('._ADD_GROUPMEMBER_NEW').show()
-        //$('._ADD_GROUP_NEW, ._ADD_MEMBER_REG').show();
+        //$('._ADD_GROUPMEMBER_NEW').show()
+        $('._ADD_GROUP_NEW').show();
     }else if(option == "openlesson"){
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
