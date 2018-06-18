@@ -49,8 +49,8 @@ class GetClassDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             error = '센터 정보를 불러오지 못했습니다.'
 
         if error is None:
-            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=1).order_by('-reg_dt')
-            class_data = ClassTb.objects.filter(center_tb_id=center_id, use=1).order_by('-reg_dt')
+            # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
+            class_data = ClassTb.objects.filter(center_tb_id=center_id, use=USE).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
@@ -79,7 +79,7 @@ class GetTrainerDataViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             error = '센터 정보를 불러오지 못했습니다.'
 
         if error is None:
-            member_data = CenterTrainerTb.objects.filter(center_id=center_id, use=1).order_by('-mod_dt')
+            member_data = CenterTrainerTb.objects.filter(center_id=center_id, use=USE).order_by('-mod_dt')
 
         context['member_data'] = member_data
 

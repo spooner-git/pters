@@ -1,17 +1,12 @@
 import datetime
 import json
-import urllib
-
 import httplib2
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.db import IntegrityError
-from django.db import InternalError
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.utils import timezone
-from httplib2 import Http
 
 from configs import settings
-from configs.const import REPEAT_TYPE_2WEAK
+from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
 from login.models import LogTb, PushInfoTb, CommonCdTb
 from schedule.models import GroupLectureTb, ClassLectureTb, LectureTb, ScheduleTb, GroupTb, MemberLectureTb, \
     MemberClassTb, ClassTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
@@ -23,15 +18,15 @@ def func_get_lecture_id(class_id, member_id):
     lecture_id = None
     # 강좌에 해당하는 수강/회원 정보 가져오기
     lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                 class_tb__use=1,
+                                                 class_tb__use=USE,
                                                  lecture_tb__member_id=member_id,
                                                  lecture_tb__state_cd='IP',
                                                  lecture_tb__lecture_avail_count__gt=0,
-                                                 lecture_tb__use=1).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
+                                                 lecture_tb__use=USE).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
     for lecture_info in lecture_data:
         try:
-            GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb.lecture_id, use=1)
+            GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb.lecture_id, use=USE)
         except ObjectDoesNotExist:
             lecture_id = lecture_info.lecture_tb.lecture_id
             break
@@ -45,12 +40,12 @@ def func_get_group_lecture_id(group_id, member_id):
     lecture_id = None
 
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                       group_tb__use=1,
+                                                       group_tb__use=USE,
                                                        lecture_tb__member_id=member_id,
                                                        lecture_tb__state_cd='IP',
                                                        lecture_tb__lecture_avail_count__gt=0,
-                                                       lecture_tb__use=1,
-                                                       use=1).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
+                                                       lecture_tb__use=USE,
+                                                       use=USE).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
     if len(group_lecture_data) > 0:
         lecture_id = group_lecture_data[0].lecture_tb.lecture_id
@@ -67,7 +62,7 @@ def func_refresh_lecture_count(lecture_id):
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=1)
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
 
         except ObjectDoesNotExist:
             error = '회원 수강정보를 불러오지 못했습니다.'
@@ -105,12 +100,12 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
     if group_schedule_id is not None and group_schedule_id != '':
         try:
             group_schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id,
-                                                         use=1)
+                                                         use=USE)
         except ObjectDoesNotExist:
             group_schedule_info = None
-        group_schedule_total_count = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=1).count()
+        group_schedule_total_count = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=USE).count()
         group_schedule_end_count = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, state_cd='PE',
-                                                             use=1).count()
+                                                             use=USE).count()
 
         if group_schedule_info is not None:
             if group_schedule_total_count == group_schedule_end_count:
@@ -136,17 +131,17 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
     # 그룹 종료 처리
     if group_id is not None and group_id != '':
         try:
-            group_info = GroupTb.objects.get(group_id=group_id, use=1)
+            group_info = GroupTb.objects.get(group_id=group_id, use=USE)
         except ObjectDoesNotExist:
             group_info = None
         if group_info is not None:
             if group_info.group_type_cd == 'NORMAL':
                 group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                          lecture_tb__use=1,
-                                                                          use=1).count()
+                                                                          lecture_tb__use=USE,
+                                                                          use=USE).count()
                 group_lecture_end_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                        lecture_tb__use=1,
-                                                                        use=1).exclude(lecture_tb__state_cd='IP').count()
+                                                                        lecture_tb__use=USE,
+                                                                        use=USE).exclude(lecture_tb__state_cd='IP').count()
                 if group_info is not None:
                     if group_lecture_total_count == group_lecture_end_count:
                         group_info.state_cd = 'PE'
@@ -259,7 +254,7 @@ def func_delete_schedule(schedule_id,  user_id):
                                                     member_note=schedule_info.member_note,
                                                     reg_member_id=schedule_info.reg_member_id,
                                                     del_member_id=user_id,
-                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
 
             delete_schedule_info.save()
             schedule_info.delete()
@@ -303,7 +298,7 @@ def func_delete_repeat_schedule(repeat_schedule_id):
                 time_duration=repeat_schedule_info.time_duration,
                 state_cd=repeat_schedule_info.state_cd, en_dis_type=repeat_schedule_info.en_dis_type,
                 reg_member_id=repeat_schedule_info.reg_member_id,
-                reg_dt=repeat_schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+                reg_dt=repeat_schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
 
             delete_repeat_schedule.save()
             repeat_schedule_info.delete()
@@ -356,7 +351,7 @@ def func_check_group_available_member_before(class_id, group_id, group_schedule_
         error = '그룹 정보를 불러오지 못했습니다.'
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 group_schedule_id=group_schedule_id, use=1).count()
+                                                 group_schedule_id=group_schedule_id, use=USE).count()
     if schedule_counter == group_info.member_num:
         error = '그룹 정원을 초과했습니다.'
 
@@ -375,7 +370,7 @@ def func_check_group_available_member_after(class_id, group_id, group_schedule_i
         error = '그룹 정보를 불러오지 못했습니다.'
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 group_schedule_id=group_schedule_id, use=1).count()
+                                                 group_schedule_id=group_schedule_id, use=USE).count()
     if schedule_counter > group_info.member_num:
         error = '그룹 정원을 초과했습니다.'
 
@@ -390,7 +385,7 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
     seven_days_after = add_end_dt + datetime.timedelta(days=2)
     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                               start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
-                                              use=1).exclude(schedule_id=schedule_id)
+                                              use=USE).exclude(schedule_id=schedule_id)
 
     for schedule_info in schedule_data:
         if schedule_info.start_dt >= add_start_dt:
@@ -411,7 +406,7 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
 # 강좌에 해당하는 회원들 스케쥴 알람 업데이트
 def func_update_member_schedule_alarm(class_id):
     member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP',
-                                                        lecture_tb__use=1, use=1)
+                                                        lecture_tb__use=USE, use=USE)
     for member_lecture_data_info in member_lecture_data:
         member_lecture_info = member_lecture_data_info.lecture_tb
         member_lecture_info.schedule_check = 1
@@ -444,13 +439,13 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
         log_type_name = '반복 일정'
         log_type_detail = '삭제'
 
-    if en_dis_type == '1':
+    if en_dis_type == ON_SCHEDULE_TYPE:
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='1:1 레슨 '+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), use=1)
+                         reg_dt=timezone.now(), use=USE)
         log_data.save()
     else:
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
@@ -458,7 +453,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
                          class_tb_id=class_id,
                          log_info='OFF '+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), use=1)
+                         reg_dt=timezone.now(), use=USE)
         log_data.save()
 
 
@@ -473,11 +468,11 @@ def func_check_group_schedule_enable(group_id):
 
     if group_info.group_type_cd == 'NORMAL':
         group_lecture_data_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                 group_tb__use=1,
+                                                                 group_tb__use=USE,
                                                                  lecture_tb__state_cd='IP',
                                                                  lecture_tb__lecture_avail_count__gt=0,
-                                                                 lecture_tb__use=1,
-                                                                 use=1).count()
+                                                                 lecture_tb__use=USE,
+                                                                 use=USE).count()
 
         if group_lecture_data_count == 0:
             error = '그룹에 해당하는 회원들의 예약 가능 횟수가 없습니다.'
@@ -489,10 +484,10 @@ def func_get_group_member_list(group_id):
     member_list = []
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                        group_tb__group_type_cd='NORMAL',
-                                                       group_tb__use=1,
+                                                       group_tb__use=USE,
                                                        lecture_tb__state_cd='IP',
-                                                       lecture_tb__use=1,
-                                                       use=1)
+                                                       lecture_tb__use=USE,
+                                                       use=USE)
 
     for group_lecture_info in group_lecture_data:
         if len(member_list) == 0:
@@ -512,11 +507,11 @@ def func_get_available_group_member_list(group_id):
     member_list = []
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                        group_tb__group_type_cd='NORMAL',
-                                                       group_tb__use=1,
+                                                       group_tb__use=USE,
                                                        lecture_tb__state_cd='IP',
-                                                       lecture_tb__use=1,
+                                                       lecture_tb__use=USE,
                                                        lecture_tb__lecture_avail_count__gt=0,
-                                                       use=1)
+                                                       use=USE)
 
     for group_lecture_info in group_lecture_data:
         if len(member_list) == 0:
@@ -537,10 +532,10 @@ def func_get_not_available_group_member_list(group_id):
     member_list = []
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                        group_tb__group_type_cd='NORMAL',
-                                                       group_tb__use=1,
+                                                       group_tb__use=USE,
                                                        lecture_tb__lecture_avail_count=0,
-                                                       lecture_tb__use=1,
-                                                       use=1)
+                                                       lecture_tb__use=USE,
+                                                       use=USE)
 
     for group_lecture_info in group_lecture_data:
         if len(member_list) == 0:
@@ -560,10 +555,10 @@ def func_get_not_available_group_member_list(group_id):
 def func_send_push_trainer(lecture_id, title, message):
     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
     if lecture_id is not None and lecture_id != '':
-        # member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
+        # member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         # for class_lecture_info in member_lecture_data:
         lecture_info = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id,
-                                                      auth_cd='VIEW', use=1)
+                                                      auth_cd='VIEW', use=USE)
         for lecture_info in lecture_info:
             token_data = PushInfoTb.objects.filter(member_id=lecture_info.member.member_id)
             for token_info in token_data:
@@ -592,7 +587,7 @@ def func_send_push_trainee(class_id, title, message):
     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
     if class_id is not None and class_id != '':
 
-        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=1)
+        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
 
         for member_class_info in member_class_data:
 
@@ -643,16 +638,16 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
     pt_schedule_data = []
     # PT 일정 조회
     # 강사에 해당하는 강좌 정보 불러오기
-    lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=1)
+    lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
 
     for lecture_datum_info in lecture_data:
         lecture_datum = lecture_datum_info.lecture_tb
         # 강좌별로 연결된 PT 스케쥴 가져오기
         lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                                    lecture_tb=lecture_datum.lecture_id,
-                                                                   en_dis_type='1',
+                                                                   en_dis_type=ON_SCHEDULE_TYPE,
                                                                    start_dt__gte=start_date,
-                                                                   start_dt__lt=end_date, use=1).order_by('start_dt')
+                                                                   start_dt__lt=end_date, use=USE).order_by('start_dt')
         # PT 스케쥴 정보 셋팅
         idx = 0
         for pt_schedule_info in lecture_datum.pt_schedule_data:
@@ -681,16 +676,16 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
         group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                         group_tb__isnull=False,
                                                         lecture_tb__isnull=True,
-                                                        en_dis_type='1',
+                                                        en_dis_type=ON_SCHEDULE_TYPE,
                                                         start_dt__gte=start_date,
-                                                        start_dt__lt=end_date, use=1).order_by('start_dt')
+                                                        start_dt__lt=end_date, use=USE).order_by('start_dt')
     else:
         group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                         group_tb=group_id,
                                                         lecture_tb__isnull=True,
-                                                        en_dis_type='1',
+                                                        en_dis_type=ON_SCHEDULE_TYPE,
                                                         start_dt__gte=start_date,
-                                                        start_dt__lt=end_date, use=1).order_by('start_dt')
+                                                        start_dt__lt=end_date, use=USE).order_by('start_dt')
 
     idx = 0
     for group_schedule_info in group_schedule_data:
@@ -702,7 +697,7 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
                                                                     group_tb_id=group_schedule_info.group_tb.group_id,
                                                                     lecture_tb__isnull=False,
                                                                     group_schedule_id=group_schedule_info.schedule_id,
-                                                                    use=1).count()
+                                                                    use=USE).count()
             group_schedule_info.current_member_num = schedule_current_member_num
 
         group_schedule_info.start_dt = str(group_schedule_info.start_dt)
@@ -725,7 +720,7 @@ def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
 
     # OFF 일정 조회
     off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                  en_dis_type='0', start_dt__gte=start_date,
+                                                  en_dis_type=OFF_SCHEDULE_TYPE, start_dt__gte=start_date,
                                                   start_dt__lt=end_date)
     for off_schedule_datum in off_schedule_data:
         off_schedule_info = off_schedule_datum
@@ -743,7 +738,7 @@ def func_get_trainer_off_repeat_schedule(context, class_id):
 
     # 강사 클래스의 반복일정 불러오기
     off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                               en_dis_type='0')
+                                                               en_dis_type=OFF_SCHEDULE_TYPE)
 
     for off_repeat_schedule_info in off_repeat_schedule_data:
         off_repeat_schedule_info.start_date = str(off_repeat_schedule_info.start_date)

@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE
 from configs.views import date_check_func, AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
 from schedule.functions import func_send_push_trainee, func_get_lecture_id, func_get_group_lecture_id, \
@@ -56,7 +56,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
     def get(self, request, **kwargs):
 
-        lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id, use=1).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
+        lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id, use=USE).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
 
         class_counter = 0
         class_data = None
@@ -66,10 +66,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             for idx, lecture_info in enumerate(lecture_data):
                 if idx == 0:
                     class_data = ClassLectureTb.objects.filter(lecture_tb=lecture_info.lecture_tb,
-                                                               use=1).order_by('-lecture_tb__start_date')
+                                                               use=USE).order_by('-lecture_tb__start_date')
                 else:
                     class_data |= ClassLectureTb.objects.filter(lecture_tb=lecture_info.lecture_tb,
-                                                                use=1).order_by('-lecture_tb__start_date')
+                                                                use=USE).order_by('-lecture_tb__start_date')
 
         if class_data is None or len(class_data) == 0:
             self.url = '/trainee/cal_month_blank/'
@@ -192,7 +192,7 @@ class CalMonthBlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CalMonthBlankView, self).get_context_data(**kwargs)
         context = get_trainee_setting_data(context, self.request.user.id)
-        holiday = HolidayTb.objects.filter(use=1)
+        holiday = HolidayTb.objects.filter(use=USE)
         self.request.session['setting_language'] = context['lt_lan_01']
         context['holiday'] = holiday
         return context
@@ -384,7 +384,7 @@ def add_trainee_schedule_logic(request):
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                             lecture_tb__state_cd='IP',
-                                                            auth_cd='VIEW', lecture_tb__use=1, use=1)
+                                                            auth_cd='VIEW', lecture_tb__use=USE, use=USE)
         for member_lecture_data_info in member_lecture_data:
             member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
@@ -491,7 +491,7 @@ def delete_trainee_schedule_logic(request):
                                                    note=schedule_info.note, member_note=schedule_info.member_note,
                                                    reg_member_id=schedule_info.reg_member_id,
                                                    del_member_id=request.user.id,
-                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=0)
+                                                   reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
 
                 delete_schedule.save()
                 schedule_info.delete()
@@ -513,7 +513,7 @@ def delete_trainee_schedule_logic(request):
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                             lecture_tb__state_cd='IP',
-                                                            auth_cd='VIEW', lecture_tb__use=1, use=1)
+                                                            auth_cd='VIEW', lecture_tb__use=USE, use=USE)
 
         for member_lecture_data_info in member_lecture_data:
             member_lecture_info = member_lecture_data_info.lecture_tb
@@ -525,7 +525,7 @@ def delete_trainee_schedule_logic(request):
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='PT 일정', log_how='삭제', log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), use=1)
+                         reg_dt=timezone.now(), use=USE)
         log_data.save()
 
         push_info_schedule_start_date = str(start_date).split(':')
@@ -762,11 +762,11 @@ def lecture_processing(request):
     #         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=1)
+        class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
         for class_lecture_info in class_lecture_list:
             try:
                 member_lecture_info = MemberLectureTb.objects.get(member_id=request.user.id, auth_cd='WAIT',
-                                                                  lecture_tb_id=class_lecture_info.lecture_tb_id, use=1)
+                                                                  lecture_tb_id=class_lecture_info.lecture_tb_id, use=USE)
                 member_lecture_wait_list.append(member_lecture_info)
             except ObjectDoesNotExist:
                 member_lecture_info = None
@@ -998,7 +998,7 @@ def update_trainee_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          log_info='회원 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=1)
+                         reg_dt=timezone.now(), use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -1124,7 +1124,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
             error = '수강정보를 불러오지 못했습니다.'
 
         if error is None:
-            log_data = LogTb.objects.filter(lecture_tb_id=lecture_id, use=1).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(lecture_tb_id=lecture_id, use=USE).order_by('-reg_dt')
 
         if error is None:
             for log_info in log_data:
@@ -1181,9 +1181,9 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 for idx, lecture_data_info in enumerate(lecture_data):
                     lecture_info = lecture_data_info.lecture_tb
                     if idx == 0:
-                        log_data = LogTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=1).order_by('-reg_dt')
+                        log_data = LogTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE).order_by('-reg_dt')
                     else:
-                        log_data |= LogTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=1).order_by('-reg_dt')
+                        log_data |= LogTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE).order_by('-reg_dt')
                 log_data.order_by('-reg_dt')
 
         if error is None:
@@ -1243,7 +1243,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
         end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
 
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=1)
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
         except ValueError:
@@ -1278,7 +1278,7 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             with transaction.atomic():
                 schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                     group_id, group_schedule_id,
-                                                    start_date, end_date, '', '1', request.user.id)
+                                                    start_date, end_date, '', ON_SCHEDULE_TYPE, request.user.id)
                 error = schedule_result['error']
 
                 if error is None:
@@ -1316,13 +1316,13 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
                              lecture_tb_id=lecture_id,
                              log_info=group_schedule_info.group_tb.name + ' 레슨 일정', log_how='등록',
                              log_detail=str(start_date) + '/' + str(end_date),
-                             reg_dt=timezone.now(), use=1)
+                             reg_dt=timezone.now(), use=USE)
             log_data.save()
         else:
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                              class_tb_id=class_id, lecture_tb_id=lecture_id,
                              log_info='1:1 레슨 일정', log_how='등록', log_detail=str(start_date) + '/' + str(end_date),
-                             reg_dt=timezone.now(), use=1)
+                             reg_dt=timezone.now(), use=USE)
             log_data.save()
 
     else:
@@ -1346,11 +1346,11 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     if error is None:
         if member_id is None or member_id == '':
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                         lecture_tb__use='1', use=1)
+                                                         lecture_tb__use=USE, use=USE)
         else:
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
                                                          lecture_tb__member_id=member_id,
-                                                         lecture_tb__use='1', use=1)
+                                                         lecture_tb__use=USE, use=USE)
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
@@ -1532,7 +1532,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                 else:
                     error = None
 
-    holiday = HolidayTb.objects.filter(use=1)
+    holiday = HolidayTb.objects.filter(use=USE)
 
     if error is not None:
         context['error'] = error

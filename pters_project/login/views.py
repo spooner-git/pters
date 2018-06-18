@@ -29,6 +29,7 @@ from django.views.generic.base import ContextMixin
 from registration.forms import RegistrationForm
 
 from configs import settings
+from configs.const import USE
 from login.forms import MyPasswordResetForm
 from login.models import MemberTb, PushInfoTb, QATb
 # from schedule.models import ClassTb
@@ -77,7 +78,7 @@ def login_trainer(request):
                 request.session.set_expiry(0)
 
             try:
-                token_data = PushInfoTb.objects.get(token=keyword, use=1)
+                token_data = PushInfoTb.objects.get(token=keyword, use=USE)
                 if token_data.member_id == user.id:
                     token_exist = True
                     token_data.last_login = timezone.now()
@@ -92,7 +93,7 @@ def login_trainer(request):
                 if keyword is not None and keyword != '':
                     token_info = PushInfoTb(member_id=user.id, token=keyword, last_login=timezone.now(),
                                             session_info=request.session.session_key,
-                                            device_info=str(user_agent), use=1)
+                                            device_info=str(user_agent), use=USE)
                     token_info.save()
 
             request.session['push_token'] = keyword
@@ -337,16 +338,16 @@ def add_member_info_logic_test(request):
                 user.save()
                 if birthday_dt == '':
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=USE)
                 else:
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                      birthday_dt=birthday_dt,user_id=user.id, use=1)
+                                      birthday_dt=birthday_dt,user_id=user.id, use=USE)
                 member.save()
                 # if group_type == 'trainer':
                 #     class_info = ClassTb(member_id=user.id, class_type_cd='PT',
                 #                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
                 #                         class_hour=1, start_hour_unit=1, class_member_num=100,
-                #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
 
                 #    class_info.save()
 
@@ -412,18 +413,18 @@ class AddMemberView(RegistrationView, View):
                         if birthday_dt == '':
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                               country=country, address=address,
-                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=USE)
                         else:
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                               country=country, address=address,
                                               birthday_dt=birthday_dt,
-                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=USE)
                         member.save()
                         # if group_type == 'trainer':
                         #    class_info = ClassTb(member_id=user.id, subject_cd='WP',
                         #                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
                         #                         class_hour=1, start_hour_unit=1, class_member_num=100,
-                        #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                        #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
 
                         #    class_info.save()
                 except ValueError as e:
@@ -643,7 +644,7 @@ def out_member_logic(request):
 
     if error is None:
         try:
-            member = MemberTb.objects.get(user_id=user.id, use=1)
+            member = MemberTb.objects.get(user_id=user.id, use=USE)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
@@ -688,7 +689,7 @@ class AddPushTokenView(View):
         keyword = request.POST.get('keyword', '')
         user_agent = request.META['HTTP_USER_AGENT']
         try:
-            token_data = PushInfoTb.objects.get(token=keyword, use=1)
+            token_data = PushInfoTb.objects.get(token=keyword, use=USE)
             if token_data.member_id == request.user.id:
                 token_exist = True
                 token_data.last_login = timezone.now()
@@ -703,7 +704,7 @@ class AddPushTokenView(View):
             if keyword is not None and keyword != '':
                 token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(),
                                         session_info=request.session.session_key,
-                                        device_info=str(user_agent), use=1)
+                                        device_info=str(user_agent), use=USE)
                 token_info.save()
 
         request.session['push_token'] = keyword
@@ -722,7 +723,7 @@ class DeletePushTokenView(View):
     def post(self, request, *args, **kwargs):
         keyword = request.POST.get('keyword', '')
         try:
-            token_data = PushInfoTb.objects.get(token=keyword, use=1)
+            token_data = PushInfoTb.objects.get(token=keyword, use=USE)
             token_data.delete()
             token_exist = False
         except ObjectDoesNotExist:
@@ -753,7 +754,7 @@ def clear_badge_counter_logic(request):
     logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+push_token)
     if error is None:
         try:
-            token_data = PushInfoTb.objects.get(token=push_token, use=1)
+            token_data = PushInfoTb.objects.get(token=push_token, use=USE)
         except ObjectDoesNotExist:
             error = '푸시 정보를 가져올 수 없습니다'
 
@@ -784,7 +785,7 @@ def question_reg_logic(request):
 
     if error is None:
         qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents,
-                       status='0', mod_dt=timezone.now(), reg_dt=timezone.now(), use=1)
+                       status='0', mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
         qa_info.save()
 
     if error is None:

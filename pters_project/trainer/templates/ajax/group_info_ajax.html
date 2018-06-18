@@ -3,6 +3,8 @@
       [{% for group_info in group_data %}"{{ group_info.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_type_cd":
       [{% for group_info in group_data %}"{{ group_info.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_type_cd_nm":
+      [{% for group_info in group_data %}"{{ group_info.group_type_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "member_num":
       [{% for group_info in group_data %}"{{ group_info.member_num  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "name":

@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from django.db import transaction
 from django.utils import timezone
 
-from configs.const import ON_SCHEDULE_TYPE
+from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE
 from login.models import MemberTb, LogTb, CommonCdTb
 from schedule.models import ClassLectureTb, ClassTb, GroupLectureTb, MemberLectureTb, GroupTb, LectureTb, ScheduleTb, \
     SettingTb, RepeatScheduleTb
@@ -16,7 +16,7 @@ def func_get_class_member_id_list(class_id):
     all_member = []
     class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                        auth_cd='VIEW',
-                                                       lecture_tb__use=1, use=1).order_by('lecture_tb__member__name').values('lecture_tb__member').distinct()
+                                                       lecture_tb__use=USE, use=USE).order_by('lecture_tb__member__name').values('lecture_tb__member').distinct()
 
     for class_lecture_info in class_lecture_data:
         all_member.append(class_lecture_info['lecture_tb__member'])
@@ -47,8 +47,8 @@ def func_get_member_ing_list(class_id, user_id):
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                      lecture_tb__member_id=member_data.member_id,
                                                      auth_cd='VIEW',
-                                                     lecture_tb__use=1,
-                                                     use=1)
+                                                     lecture_tb__use=USE,
+                                                     use=USE)
         lecture_count = lecture_list.filter(lecture_tb__state_cd='IP').count()
 
         if lecture_count > 0:
@@ -89,7 +89,7 @@ def func_get_member_ing_list(class_id, user_id):
 
                 group_check = 0
                 try:
-                    GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
+                    GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
                 except ObjectDoesNotExist:
                     group_check = 1
 
@@ -112,8 +112,8 @@ def func_get_member_ing_list(class_id, user_id):
 
                 lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                 lecture_tb=lecture_info.lecture_id,
-                                                                auth_cd='VIEW', lecture_tb__use=1,
-                                                                use=1).count()
+                                                                auth_cd='VIEW', lecture_tb__use=USE,
+                                                                use=USE).count()
 
                 if lecture_info.use != 0:
                     if lecture_info.state_cd == 'IP':
@@ -208,8 +208,8 @@ def func_get_member_end_list(class_id, user_id):
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                      lecture_tb__member_id=member_data.member_id,
                                                      auth_cd='VIEW',
-                                                     lecture_tb__use=1,
-                                                     use=1)
+                                                     lecture_tb__use=USE,
+                                                     use=USE)
         lecture_count = lecture_list.filter(lecture_tb__state_cd='IP').count()
 
         if lecture_count == 0 and len(lecture_list) > 0:
@@ -250,7 +250,7 @@ def func_get_member_end_list(class_id, user_id):
 
                 group_check = 0
                 try:
-                    GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
+                    GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
                 except ObjectDoesNotExist:
                     group_check = 1
 
@@ -273,8 +273,8 @@ def func_get_member_end_list(class_id, user_id):
 
                 lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
                                                                        lecture_tb=lecture_info.lecture_id,
-                                                                       auth_cd='VIEW', lecture_tb__use=1,
-                                                                       use=1).count()
+                                                                       auth_cd='VIEW', lecture_tb__use=USE,
+                                                                       use=USE).count()
 
                 if lecture_info.use != 0:
                     if group_check == 0:
@@ -352,7 +352,7 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                      auth_cd='VIEW',
                                                      lecture_tb__member_id=member_id,
-                                                     lecture_tb__use='1', use=1).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
+                                                     lecture_tb__use=USE, use=USE).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
@@ -407,7 +407,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
             error = '그룹 정보를 불러오지 못했습니다.'
 
         if error is None:
-            group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1).count()
+            group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
             if group_info.group_type_cd == 'NORMAL':
                 if group_counter >= group_info.member_num:
                     error = '그룹 정원을 초과했습니다.'
@@ -424,7 +424,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                                          start_date=start_date, end_date=end_date,
                                          note=contents,
                                          mod_dt=timezone.now(),
-                                         reg_dt=timezone.now(), use=1)
+                                         reg_dt=timezone.now(), use=USE)
                 lecture_info.save()
                 auth_cd = 'DELETE'
                 if group_id != '' and group_id is not None:
@@ -432,24 +432,24 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                         auth_cd = 'WAIT'
 
                 member_lecture_counts = MemberLectureTb.objects.filter(member_id=member_id, mod_member_id=user_id,
-                                                                       auth_cd='VIEW', use=1).count()
+                                                                       auth_cd='VIEW', use=USE).count()
                 if member_lecture_counts > 0:
                     auth_cd = 'VIEW'
 
                 member_lecture_info = MemberLectureTb(member_id=member_id, lecture_tb_id=lecture_info.lecture_id,
                                                       auth_cd=auth_cd, mod_member_id=user_id,
                                                       reg_dt=timezone.now(), mod_dt=timezone.now(),
-                                                      use=1)
+                                                      use=USE)
 
                 member_lecture_info.save()
                 class_lecture_info = ClassLectureTb(class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                                                     auth_cd='VIEW', mod_member_id=user_id,
                                                     reg_dt=timezone.now(), mod_dt=timezone.now(),
-                                                    use=1)
+                                                    use=USE)
                 class_lecture_info.save()
 
                 if group_id != '' and group_id is not None:
-                    group_info = GroupLectureTb(group_tb_id=group_id, lecture_tb_id=lecture_info.lecture_id, use=1)
+                    group_info = GroupLectureTb(group_tb_id=group_id, lecture_tb_id=lecture_info.lecture_id, use=USE)
                     group_info.save()
 
         except ValueError:
@@ -472,7 +472,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
         log_data = LogTb(log_type='LB01', auth_member_id=user_id, from_member_name=user_last_name+user_first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
                          log_info='수강 정보', log_how='등록',
-                         reg_dt=timezone.now(), use=1)
+                         reg_dt=timezone.now(), use=USE)
 
         log_data.save()
 
@@ -488,7 +488,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
 
     if error is None:
         try:
-            class_lecture_info = ClassLectureTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id, use=1)
+            class_lecture_info = ClassLectureTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id, use=USE)
             # lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
@@ -518,7 +518,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
         schedule_data_finish = None
         repeat_schedule_data = None
         member_lecture_list = None
-        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
+        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
                                                   state_cd='NP')
         schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
@@ -539,9 +539,9 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                 if len(group_data) > 0:
                     for group_info in group_data:
                         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                              use=1).count()
+                                                                              use=USE).count()
                         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                            use=1).exclude(lecture_tb__state_cd='IP').count()
+                                                                            use=USE).exclude(lecture_tb__state_cd='IP').count()
                         group_info_data = group_info.group_tb
                         # try:
                         #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
@@ -558,9 +558,9 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                             error = None
             else:
                 if len(group_data) > 0:
-                    group_data.update(use=0)
-                schedule_data.update(mod_dt=timezone.now(), use=0)
-                schedule_data_finish.update(mod_dt=timezone.now(), use=0)
+                    group_data.update(use=UN_USE)
+                schedule_data.update(mod_dt=timezone.now(), use=UN_USE)
+                schedule_data_finish.update(mod_dt=timezone.now(), use=UN_USE)
                 class_lecture_info.auth_cd = 'DELETE'
                 # lecture_info.use = 0
                 # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
@@ -576,9 +576,9 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                 if len(group_data) > 0:
                     for group_info in group_data:
                         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                              use=1).count()
+                                                                              use=USE).count()
                         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                            use=1).exclude(lecture_tb__state_cd='IP').count()
+                                                                            use=USE).exclude(lecture_tb__state_cd='IP').count()
                         group_info_data = group_info.group_tb
                         # try:
                         #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
@@ -604,9 +604,9 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
 
             if len(group_data) > 0:
                 for group_info in group_data:
-                    group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id, use=1).count()
+                    group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id, use=USE).count()
                     group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                        use=1).exclude(lecture_tb__state_cd='IP').count()
+                                                                        use=USE).exclude(lecture_tb__state_cd='IP').count()
 
                     if group_data_total_size == group_data_end_size:
                         try:
@@ -628,53 +628,53 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
 def func_get_trainer_setting_list(context, user_id, class_id):
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_01', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_01', use=USE)
         lt_res_01 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_01 = '00:00-23:59'
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_02', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_02', use=USE)
         lt_res_02 = int(setting_data.setting_info)
     except ObjectDoesNotExist:
         lt_res_02 = 0
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_03', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_03', use=USE)
         lt_res_03 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_03 = '0'
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_04', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_04', use=USE)
         lt_res_04 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_04 = '00:00-23:59'
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_05', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_05', use=USE)
         lt_res_05 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_05 = '14'
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME', use=USE)
         lt_res_cancel_time = int(setting_data.setting_info)
     except ObjectDoesNotExist:
         lt_res_cancel_time = lt_res_02*60
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME', use=USE)
         lt_res_enable_time = int(setting_data.setting_info)
     except ObjectDoesNotExist:
         lt_res_enable_time = lt_res_02*60
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_LAN_01', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_LAN_01', use=USE)
         lt_lan_01 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_lan_01 = 'KOR'
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_01', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_01', use=USE)
         lt_pus_data = setting_data.setting_info.split('/')
         lt_pus_01 = lt_pus_data[0]
         lt_pus_02 = lt_pus_data[1]
@@ -683,19 +683,19 @@ def func_get_trainer_setting_list(context, user_id, class_id):
         lt_pus_02 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_02', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_02', use=USE)
         lt_pus_03 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_pus_03 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_03', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_03', use=USE)
         lt_pus_04 = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_pus_04 = ''
 
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_04', use=1)
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_PUS_04', use=USE)
         lt_pus_data = setting_data.setting_info.split('/')
         lt_pus_05 = lt_pus_data[0]
         lt_pus_06 = lt_pus_data[1]
@@ -753,7 +753,7 @@ def func_get_lecture_list(context, class_id, member_id):
 
     if error is None:
         lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
-                                                     lecture_tb__use=1, auth_cd='VIEW').order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
+                                                     lecture_tb__use=USE, auth_cd='VIEW').order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
 
         for lecture_info_data in lecture_data:
             lecture_info = lecture_info_data.lecture_tb
@@ -776,7 +776,7 @@ def func_get_lecture_list(context, class_id, member_id):
                                                                           state_cd='PE').count()
 
             try:
-                group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=1)
+                group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
             except ObjectDoesNotExist:
                 group_check = 1
 

@@ -797,6 +797,7 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_name = jsondata.name[i];
         var group_id = jsondata.group_id[i];
         var group_type = jsondata.group_type_cd[i];
+        var group_type_nm = jsondata.group_type_cd_nm[i];
         var group_createdate = date_format_to_yyyymmdd(jsondata.reg_dt[i].split(' ')[0]+' '+jsondata.reg_dt[i].split(' ')[1]+' '+jsondata.reg_dt[i].split(' ')[2], '-');
         var group_memo = jsondata.note[i];
         var group_memberlist = []
@@ -820,7 +821,7 @@ function groupListSet(option, jsondata){ //option : current, finished
 
         var main = '<div class="_groupnum">'+(i+1)+'</div>'+
                     '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
-                    '<div class="_grouptypecd"><input class="group_listinput input_disabled_true" value="'+group_type+'" disabled>'+'</div>'+
+                    '<div class="_grouptypecd"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
                     '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '&nbsp;&nbsp; /' + '<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
