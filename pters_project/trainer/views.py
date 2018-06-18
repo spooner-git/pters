@@ -2563,6 +2563,8 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
             if error is None:
                 member_info.member.lecture_tb = lecture_info.lecture_tb
+                if member_info.member.sex is None:
+                    member_info.member.sex = ''
                 if member_info.member.birthday_dt is None or member_info.member.birthday_dt == '':
                     member_info.member.birthday_dt = ''
                 else:
