@@ -280,6 +280,24 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
 
+        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+
+        self.request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        self.request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        self.request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        self.request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        self.request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        self.request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        self.request.session['setting_language'] = context['lt_lan_01']
+
+        self.request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        self.request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        self.request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        self.request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        self.request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+
         return context
 
 
@@ -303,6 +321,24 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         holiday = HolidayTb.objects.filter(use=1)
         context['holiday'] = holiday
 
+        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+
+        self.request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        self.request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        self.request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        self.request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        self.request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        self.request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        self.request.session['setting_language'] = context['lt_lan_01']
+
+        self.request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        self.request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        self.request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        self.request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        self.request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+
         return context
 
 
@@ -313,12 +349,14 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageMemberView, self).get_context_data(**kwargs)
         return context
 
+
 class ManageGroupView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_group.html'
 
     def get_context_data(self, **kwargs):
         context = super(ManageGroupView, self).get_context_data(**kwargs)
         return context
+
 
 class HelpPtersView(AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'
@@ -3553,8 +3591,8 @@ def update_setting_reserve_logic(request):
         request.session['setting_member_reserve_date_available'] = setting_member_reserve_date_available
 
         request.session['setting_member_reserve_enable'] = setting_member_reserve_prohibition
-        request.session['setting_member_reserve_enable_time'] = setting_member_reserve_time_prohibition
-        request.session['setting_member_reserve_cancel_time'] = setting_member_cancel_time
+        request.session['setting_member_reserve_enable_time'] = int(setting_member_reserve_time_prohibition)
+        request.session['setting_member_reserve_cancel_time'] = int(setting_member_cancel_time)
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
         #               + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
