@@ -1053,6 +1053,9 @@ if (agent.indexOf("firefox") != -1) {
             $('#memberSex_info_PC .selectboxopt').show()
   			$('#memberSex_info_PC .selectboxopt[value="'+$('#form_sex_modify').val()+'"]').addClass('selectbox_checked')
 
+            $('#memberPhone_info_PC').attr('placeholder','숫자만 입력해주세요.')
+
+
   			$('#memberName_info_PC').hide()
   			$('#memberName_info_lastName_PC, #memberName_info_firstName_PC').show()
 
@@ -1063,6 +1066,8 @@ if (agent.indexOf("firefox") != -1) {
             $('#memberPhone_info_PC, #memberBirth_select_wrap select, #memberName_info_PC, #memberName_info_lastName_PC, #memberName_info_firstName_PC').removeClass('input_available').attr('disabled',true);
             $('#memberSex_info_PC .selectboxopt').hide()
             $('#memberSex_info_PC .selectbox_checked').show().removeClass('selectbox_checked')
+
+            $('#memberPhone_info_PC').attr('placeholder','')
 
             $('#memberName_info_PC').show().val($('#memberName_info_lastName_PC').val()+$('#memberName_info_firstName_PC').val())
   			$('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide()
@@ -1169,12 +1174,15 @@ function send_modified_member_base_data(){
                 }
                 $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/ptadd/icon-pencil.png');
-                get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','date','yes',jsondata);
-                })
-                get_member_end_list("callback",function(jsondata){
-                    memberListSet('finished','date','yes',jsondata);
-                })
+                if($('#currentMemberList').css('display') == "block"){
+                    get_member_ing_list("callback",function(jsondata){
+                        memberListSet('current','date','yes',jsondata);
+                    })
+                }else if($('#finishedMemberList').css('display') == "block"){
+                    get_member_end_list("callback",function(jsondata){
+                        memberListSet('finished','date','yes',jsondata);
+                    })
+                }
                 $('#startR').attr('selected','selected');
                 console.log('success');
 

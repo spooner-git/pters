@@ -1235,6 +1235,10 @@ select:focus > option:checked {
 	margin-right: 8px;
 	cursor: pointer;
 }
+	._info_cancel{
+		display: none;
+		height: 14px;
+	}
 
 
 #upperImg{

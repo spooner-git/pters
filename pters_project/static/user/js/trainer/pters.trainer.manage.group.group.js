@@ -378,6 +378,7 @@ function added_member_info_to_jsonformat(){
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 $(document).on('click','div.groupWrap',function(e){
+    e.stopPropagation()
 	var group_id = $(this).attr('data-groupid');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap')
 	var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap')
@@ -394,6 +395,10 @@ $(document).on('click','div.groupWrap',function(e){
         $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4)
 	}
 })
+    //그룹 관리 아이콘 클릭시 자꾸 그룹원 정보가 닫히는 것을 방지
+    $(document).on('click','div._groupmanage',function(e){
+        e.stopPropagation()
+    })
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
@@ -440,14 +445,35 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
 	switch(status){
 		case 'view':
 			$(this).attr({'data-edit':'edit', 'src':'/static/user/res/btn-pt-complete-small.png'})
+            $(this).siblings('img._info_cancel').show()
+            $(this).siblings('img._info_download, img._info_delete').hide()
+
 			toggle_lock_unlock_inputfield_grouplist(group_id, false)
 		break;
 		case 'edit':
 			$(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
-			toggle_lock_unlock_inputfield_grouplist(group_id, true)
+			//toggle_lock_unlock_inputfield_grouplist(group_id, true)
 			modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type)
 		break;
 	}
+
+    //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
+    $(document).on('click', 'img._info_cancel', function(e){
+        $(this).hide()
+        $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
+        if($('body').width()>600){
+            $('img._info_download, img._info_delete').show()
+        }else{
+            $('img._info_delete').show()
+        }
+        $(this).parent('div').siblings('._groupname').find('input').val(group_name)
+        $(this).parent('div').siblings('._grouppartystatus').find('input').val(group_capacity)
+        $(this).parent('div').siblings('._groupmemo').find('input').val(group_memo)
+        toggle_lock_unlock_inputfield_grouplist(group_id, true)
+        e.stopPropagation()
+        
+    })
+    //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
 })
 
 $(document).on('click','.groupWrap input',function(e){
@@ -617,8 +643,11 @@ function delete_group_from_list(group_id){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
-                groupListSet('current',jsondata)
-                groupListSet('finished',jsondata)
+                if($('#currentGroupList').css('display') == "block"){
+                    groupListSet('current',jsondata)
+                }else if($('#finishedGroupList').css('display') == "block"){
+                    groupListSet('finished',jsondata)
+                }
 
                 console.log('success');
             }
@@ -719,7 +748,13 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 }else if($('#finishedGroupList').css('display') == "block"){
                     groupListSet('finished',jsondata)
                 }
-                
+                toggle_lock_unlock_inputfield_grouplist(group_id, true)
+                $('img._info_cancel').hide()
+                if($('body').width()>600){
+                    $('img._info_download, img._info_delete').show()
+                }else{
+                    $('img._info_delete').show()
+                }
                 console.log('success');
             }
         },
@@ -768,6 +803,7 @@ function groupListSet(option, jsondata){ //option : current, finished
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
+        var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="'+group_id+'">';
 
         var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">'
         var htmlend = '</div>'
@@ -782,7 +818,7 @@ function groupListSet(option, jsondata){ //option : current, finished
                     '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '&nbsp;&nbsp; /' + '<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
-                    '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>'
+                    '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+groupNum+'</span>');
