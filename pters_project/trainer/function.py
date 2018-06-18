@@ -170,11 +170,13 @@ def func_get_member_ing_list(class_id, user_id):
 
             if member_data.phone is None:
                 member_data.phone = ''
-
+            if member_data.sex is None:
+                member_data.sex = ''
             if member_data.birthday_dt is None or member_data.birthday_dt == '':
                 member_data.birthday_dt = ''
             else:
                 member_data.birthday_dt = str(member_data.birthday_dt)
+
             member_list.append(member_data)
 
     return member_list
@@ -323,11 +325,13 @@ def func_get_member_end_list(class_id, user_id):
                         member_data.phone = '***-****-' + member_data.phone[7:]
                     member_data.user.email = ''
 
-            if member_data.phone is None:
-                member_data.phone = ''
             member_data.start_date = str(member_data.start_date)
             member_data.end_date = str(member_data.end_date)
             member_data.mod_dt = str(member_data.mod_dt)
+            if member_data.phone is None:
+                member_data.phone = ''
+            if member_data.sex is None:
+                member_data.sex = ''
             if member_data.birthday_dt is None or member_data.birthday_dt == '':
                 member_data.birthday_dt = ''
             else:
