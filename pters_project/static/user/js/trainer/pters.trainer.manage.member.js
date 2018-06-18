@@ -1105,7 +1105,6 @@ if (agent.indexOf("firefox") != -1) {
                send_modified_member_base_data()
                $('#memberName_info').show().val($('#memberName_info_lastName').val()+$('#memberName_info_firstName').val())
                $('#memberName_info_lastName, #memberName_info_firstName').hide()
-            
             }else{
                 scrollToDom($('#memberInfoPopup'));
                 $('#errorMessageBar').show();
@@ -1114,6 +1113,8 @@ if (agent.indexOf("firefox") != -1) {
             }
         }      
     });
+
+    $('#mshade_popup').click(function(){console.log(select_all_check)})
 
 
     //작은달력 설정
@@ -2632,7 +2633,11 @@ function open_member_info_popup_mobile(dbID, jsondata){
 
 
     //회원정보 수정 Form도 현재 보는 회원 정보값으로 채워두기
-    $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0]))
+    if(userBirth[0] != 'None' && userBirth[0] != '' ){
+      $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0], '-'))
+    }else{
+      $('#form_birth_modify').val('')
+    }
     $('#form_name_modify').val(userName)
     $('#form_sex_modify').val(userSex)
     $('#form_dbid_modify').val(dbID)
