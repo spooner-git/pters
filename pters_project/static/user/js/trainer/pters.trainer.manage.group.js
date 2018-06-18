@@ -1256,6 +1256,7 @@ function float_btn_managemember(option){
         $('#grouptype').hide()
         $('#explain_group_lesson').show()
         $('#explain_open_lesson').hide()
+
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
         $('#addgrouptypename').text('신규 그룹 레슨')
@@ -1263,7 +1264,8 @@ function float_btn_managemember(option){
         $('#uptext2, #uptext2_PC').text('신규 그룹 레슨 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        $('._ADD_GROUP_NEW').show();
+        $('._ADD_GROUPMEMBER_NEW').show()
+        $('._ADD_GROUP_NEW, ._ADD_MEMBER_REG').show();
     }else if(option == "openlesson"){
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
