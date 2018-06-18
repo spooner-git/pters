@@ -538,6 +538,7 @@ $(document).ready(function(){
 								for(var i=0; i<len; i++){
 									$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
 									$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
+									$('#id_member_dbid_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
 									send_plan_complete('callback', function(json, senddata){
 										z++
 										send_memo()
@@ -662,6 +663,7 @@ $(document).ready(function(){
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule_id')
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
 						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
+							$('#id_member_dbid_delete').val(jsondata.db_id[i])
 							$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
 							send_plan_delete('pt')
 						}
