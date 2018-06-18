@@ -308,7 +308,7 @@
             $('#switch1').find('.switchball').removeClass('switchoff').addClass('switchon')
             $('#switch1').find('.switchback').addClass('switchon-back')
             $('#memberDisableSetting').show()
-            $("#timeSelect button").addClass("dropdown_selected").text(Options.limit+"시간 전").val(Options.limit);
+            $("#timeSelect button").addClass("dropdown_selected").text(Options.limit/60+"시간 전").val(Options.limit);
           }else if(Options.limit==0){
             $('#switch1').find('.switchball').removeClass('switchon')
             $('#switch1').find('.switchback').removeClass('switchon-back')
@@ -317,7 +317,7 @@
            $('#switch_cancel_limit').find('.switchball').removeClass('switchoff').addClass('switchon')
             $('#switch_cancel_limit').find('.switchback').addClass('switchon-back')
             $('#memberCancelDisableSetting').show()
-            $("#timeSelect2 button").addClass("dropdown_selected").text(Options.cancellimit+"시간 전").val(Options.cancellimit);
+            $("#timeSelect2 button").addClass("dropdown_selected").text(Options.cancellimit/60+"시간 전").val(Options.cancellimit);
           }else if(Options.cancellimit==0){
             $('#switch_cancel_limit').find('.switchball').removeClass('switchon')
             $('#switch_cancel_limit').find('.switchback').removeClass('switchon-back')
@@ -502,13 +502,13 @@
           /*회원 예약 허용 시간대 설정*/
 
           $("#ulTimes3 li a").click(function(){
-                $("#timeSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+                $("#timeSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time')*60);
                 $('#id_setting_member_reserve_time_prohibition').val($('#timeSelect button').val())
                 check_dropdown_selected();
           });
 
           $("#ulTimes4 li a").click(function(){
-                $("#timeSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+                $("#timeSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time')*60);
                 $('#id_setting_member_cancel_time_prohibition').val($('#timeSelect2 button').val())
                 check_dropdown_selected();
           });
