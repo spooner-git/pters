@@ -471,7 +471,6 @@ $(document).ready(function(){
         check_dropdown_selected();
         //var selected_start_time = Number($('td.graphindicator_leftborder').attr('id').replace(/g/gi,""))
         var selected_start_time = Number($(this).attr('data-trainingtime').split(':')[0])
-        console.log(selected_start_time,Options.cancellimit,';;;;')
         if(Options.cancellimit <= 12){
         	$('.cancellimit_time').text(Options.cancellimit+"시간 전"+(selected_start_time-Options.cancellimit)+":00)")
         }else{
