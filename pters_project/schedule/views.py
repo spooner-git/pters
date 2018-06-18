@@ -16,15 +16,12 @@ from django.shortcuts import redirect, render
 
 # Create your views here.
 from django.utils import timezone
-from django.utils.decorators import method_decorator
-from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-from django.views.generic.base import ContextMixin
 
 from configs import settings
-from configs.const import ON_SCHEDULE_TYPE
-from login.models import LogTb, MemberTb, CommonCdTb
+from configs.const import ON_SCHEDULE_TYPE, USE
+from login.models import LogTb, MemberTb
 from schedule.functions import func_get_lecture_id, func_add_schedule, func_refresh_lecture_count, func_date_check, \
     func_update_member_schedule_alarm, func_save_log_data, func_check_group_schedule_enable, \
     func_get_available_group_member_list, func_get_group_lecture_id, \
@@ -34,7 +31,7 @@ from schedule.functions import func_get_lecture_id, func_add_schedule, func_refr
     func_add_repeat_schedule, func_refresh_group_status
 from schedule.models import LectureTb, ClassLectureTb, MemberLectureTb, GroupLectureTb, GroupTb
 from schedule.models import ClassTb
-from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, DeleteRepeatScheduleTb
+from schedule.models import ScheduleTb, RepeatScheduleTb
 
 from django.core.files.base import ContentFile
 

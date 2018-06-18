@@ -13,7 +13,6 @@ from django.db import InternalError
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
-from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -24,16 +23,12 @@ from registration.backends.hmac.views import RegistrationView
 # Create your views here.
 from django.views.generic import TemplateView
 
-#from login.forms import ProfileForm
-from django.views.generic.base import ContextMixin
 from registration.forms import RegistrationForm
 
 from configs import settings
 from configs.const import USE
 from login.forms import MyPasswordResetForm
 from login.models import MemberTb, PushInfoTb, QATb
-# from schedule.models import ClassTb
-from schedule.models import MemberLectureTb, GroupTb, GroupLectureTb
 
 logger = logging.getLogger(__name__)
 

@@ -5,7 +5,7 @@ from django.utils import timezone
 import datetime
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE
-from login.models import MemberTb, HolidayTb, CommonCdTb
+from login.models import HolidayTb, CommonCdTb
 from schedule.models import ClassTb, MemberLectureTb, ClassLectureTb, ScheduleTb, RepeatScheduleTb, GroupLectureTb, \
     SettingTb
 

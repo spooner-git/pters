@@ -2,19 +2,15 @@ import datetime
 
 import logging
 from django.contrib import messages
-from django.contrib.auth import SESSION_KEY
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import InternalError
 from django.db import transaction
 from django.db import IntegrityError
-from django.db.models import Q
 from django.shortcuts import redirect, render
 
 # Create your views here.
-from configs import settings
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -23,13 +19,13 @@ from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE
-from configs.views import date_check_func, AccessTestMixin
-from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, PushInfoTb
-from schedule.functions import func_send_push_trainee, func_get_lecture_id, func_get_group_lecture_id, \
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE
+from configs.views import AccessTestMixin
+from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
+from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
     func_check_group_available_member_before, func_check_group_available_member_after, func_add_schedule, \
     func_date_check, func_refresh_lecture_count
-from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, MemberClassTb, GroupTb, GroupLectureTb
+from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, GroupLectureTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
 
