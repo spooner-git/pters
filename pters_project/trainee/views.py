@@ -1021,14 +1021,13 @@ class GetTraineeGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
 
         lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id,
                                                       lecture_tb__state_cd='IP',
-                                                      auth_cd='VIEW',
-                                                      use=1).order_by('-lecture_tb__start_date')
+                                                      auth_cd='VIEW').order_by('-lecture_tb__start_date')
 
         for lecture_info in lecture_data:
             group_lecture_check = 0
             try:
                 group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
-                                                                lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+                                                                lecture_tb_id=lecture_info.lecture_tb_id)
             except ObjectDoesNotExist:
                 group_lecture_check = 1
 
@@ -1072,15 +1071,13 @@ class GetTraineeGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
         group_list = []
 
         lecture_data = MemberLectureTb.objects.filter(member_id=self.request.user.id,
-                                                      lecture_tb__state_cd='IP',
-                                                      use=1).exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
+                                                      lecture_tb__state_cd='IP').exclude(auth_cd='DELETE').order_by('-lecture_tb__start_date')
 
         for lecture_info in lecture_data:
             group_lecture_check = 0
             try:
                 group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
-                                                                lecture_tb_id=lecture_info.lecture_tb_id,
-                                                                use=1)
+                                                                lecture_tb_id=lecture_info.lecture_tb_id)
             except ObjectDoesNotExist:
                 group_lecture_check = 1
 
@@ -1491,7 +1488,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                     lecture_tb__member_id=user_id, use=1).order_by('lecture_tb')
+                                                     lecture_tb__member_id=user_id).order_by('lecture_tb')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
@@ -1524,12 +1521,12 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, user_name, clas
                                 if pt_end_date < lecture_info.end_date:
                                     pt_end_date = lecture_info.end_date
 
+                    lecture_reg_count_sum += lecture_info.lecture_reg_count
                     if lecture_info.state_cd == 'IP':
-                        lecture_reg_count_sum += lecture_info.lecture_reg_count
                         lecture_rem_count_sum += lecture_info.lecture_rem_count
                         lecture_avail_count_sum += lecture_info.lecture_avail_count
-                    lecture_info.schedule_check = 0
-                    lecture_info.save()
+                    # lecture_info.schedule_check = 0
+                    # lecture_info.save()
                 else:
                     error = None
 

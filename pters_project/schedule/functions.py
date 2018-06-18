@@ -99,9 +99,8 @@ def func_refresh_lecture_count(lecture_id):
     return error
 
 
-# 수강정보 - 횟수관련 update
+# 그룹정보 update
 def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule_id):
-    print(str(group_id))
     # 그룹 스케쥴 종료 및 그룹 반복일정 종료
     if group_schedule_id is not None and group_schedule_id != '':
         try:

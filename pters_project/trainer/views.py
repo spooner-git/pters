@@ -32,7 +32,7 @@ from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
-    func_refresh_group_status, func_get_trainer_group_schedule
+    func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -1053,7 +1053,7 @@ def delete_member_info_logic(request):
 
     if member_id == '':
         error = '회원 ID를 확인해 주세요.'
-    print('test1')
+
     if error is None:
 
         try:
@@ -1066,20 +1066,15 @@ def delete_member_info_logic(request):
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
-    print('test2')
     if error is None:
         class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id, use=1, auth_cd='VIEW')
         member_name = member.name
 
-    print('test3')
     if error is None:
         try:
             with transaction.atomic():
-                print('test4')
                 if user.is_active == 1:
-                    print('test5')
                     for class_lecture_info in class_lecture_data:
-                        print('test5-1')
                         lecture_info = class_lecture_info.lecture_tb
                         group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=1)
                         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
@@ -1096,7 +1091,6 @@ def delete_member_info_logic(request):
                                                                              lecture_tb_id=lecture_info.lecture_id).exclude(auth_cd='VIEW')
 
                         # group_info = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=1)
-                        print('test5-2')
 
                         if len(member_lecture_list) > 0:
                             schedule_data.delete()
@@ -1104,31 +1098,26 @@ def delete_member_info_logic(request):
                             repeat_schedule_data.delete()
                             lecture_info.delete()
                             # group_info.delete()
-                            print('test5-3')
                         else:
                             # schedule_data.delete()
                             # repeat_schedule_data.delete()
-                            print('test5-4')
                             if len(schedule_data) > 0:
                                 schedule_data.delete()
                             if len(schedule_data_finish) > 0:
                                 schedule_data_finish.update(mod_dt=timezone.now(), use=0)
-                            print('test5-5')
                             # lecture_info.use = 0
                             # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                             if lecture_info.state_cd == 'IP':
                                 lecture_info.state_cd = 'PE'
                                 lecture_info.mod_dt = timezone.now()
                                 lecture_info.save()
-                            print('test5-6::'+str(len(group_data)))
+
                             if len(group_data) > 0:
                                 for group_info in group_data:
-                                    print('tttt1')
                                     group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id, use=1).count()
                                     group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                                         use=1).exclude(lecture_tb__state_cd='IP').count()
                                     group_info_data = group_info.group_tb
-                                    print('tttt2')
 
                                     if group_data_total_size == group_data_end_size:
                                         group_info_data.state_cd = 'PE'
@@ -1136,27 +1125,19 @@ def delete_member_info_logic(request):
                                     else:
                                         group_info_data.state_cd = 'IP'
                                         group_info_data.save()
-                                    print('tttt3')
 
-                                print('tttt4')
                                 group_data.update(use=0)
-                                print('tttt5')
-                            print('test5-7')
                                 # lecture_info.mod_dt = timezone.now()
                             # lecture_info.save()
                     class_lecture_data.update(auth_cd='DELETE', mod_member_id=request.user.id, mod_dt=timezone.now())
-                    print('test5-8')
                 else:
-                    print('test6')
                     for class_lecture_info in class_lecture_data:
-                        print('test6-1')
                         lecture_info = class_lecture_info.lecture_tb
                         group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   lecture_tb_id=lecture_info.lecture_id)
                         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                                lecture_tb_id=lecture_info.lecture_id)
-                        print('test6-2')
 
                         # schedule_data.delete()
                         if len(schedule_data) > 0:
@@ -1165,7 +1146,6 @@ def delete_member_info_logic(request):
                         # lecture_info.use = 0
                         # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                         lecture_info.delete()
-                        print('test6-3')
 
                         if len(group_data) > 0:
                             for group_info in group_data:
@@ -1186,14 +1166,12 @@ def delete_member_info_logic(request):
                                     group_info_data.state_cd = 'IP'
                                     group_info_data.save()
                         group_data.delete()
-                        print('test6-4')
 
                         # lecture_info.mod_dt = timezone.now()
                         # lecture_info.save()
                         member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                         if len(member_lecture_list) > 0:
                             member_lecture_list.delete()
-                    print('test7')
 
                     class_lecture_data.delete()
                     if member.reg_info is not None:
@@ -1202,7 +1180,6 @@ def delete_member_info_logic(request):
                             if len(member_lecture_list_confirm) == 0:
                                 member.delete()
                                 user.delete()
-                    print('test8')
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -1840,6 +1817,7 @@ def finish_lecture_info_logic(request):
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+        # func_refresh_lecture_count(lecture_id)
         if len(schedule_data) > 0:
             schedule_data.delete()
         if len(repeat_schedule_data) > 0:
@@ -1938,7 +1916,8 @@ def refund_lecture_info_logic(request):
         schedule_data.delete()
         repeat_schedule_data.delete()
         lecture_info.refund_price = input_refund_price
-        lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
+        lecture_info.lecture_avail_count = 0
+        lecture_info.lecture_rem_count = 0
         lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'RF'
         lecture_info.save()

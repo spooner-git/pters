@@ -27,10 +27,12 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         all_schedule_check = 1
 
     lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                 lecture_tb__member_id=user_id).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
+                                                 lecture_tb__member_id=user_id,
+                                                 use=1).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
     for lecture_info in lecture_list:
         try:
-            member_lecture = MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id, lecture_tb_id=lecture_info.lecture_tb_id)
+            member_lecture = MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id,
+                                                         lecture_tb_id=lecture_info.lecture_tb_id)
         except ObjectDoesNotExist:
             member_lecture = None
         if member_lecture is not None:
