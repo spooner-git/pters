@@ -346,7 +346,13 @@
 		display: none !important;
 	}
 
+	/*
 	div._groupmanage img._info_download, div._groupmanage img._info_delete{
+		display: none;
+	}
+	*/
+
+	div._groupmanage img._info_download{
 		display: none;
 	}
 

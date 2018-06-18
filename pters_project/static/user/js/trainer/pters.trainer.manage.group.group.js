@@ -461,7 +461,11 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
     $(document).on('click', 'img._info_cancel', function(e){
         $(this).hide()
         $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
-        $(this).siblings('img._info_download, img._info_delete').show()
+        if($('body').width()>600){
+            $('img._info_download, img._info_delete').show()
+        }else{
+            $('img._info_delete').show()
+        }
         $(this).parent('div').siblings('._groupname').find('input').val(group_name)
         $(this).parent('div').siblings('._grouppartystatus').find('input').val(group_capacity)
         $(this).parent('div').siblings('._groupmemo').find('input').val(group_memo)
@@ -746,7 +750,11 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 }
                 toggle_lock_unlock_inputfield_grouplist(group_id, true)
                 $('img._info_cancel').hide()
-                $('img._info_download, img._info_delete').show()
+                if($('body').width()>600){
+                    $('img._info_download, img._info_delete').show()
+                }else{
+                    $('img._info_delete').show()
+                }
                 console.log('success');
             }
         },
