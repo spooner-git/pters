@@ -15,7 +15,7 @@
   <input type="hidden" name="setting_trainer_work_time_available"       id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
   <input type="hidden" name="setting_member_reserve_time_available"     id="id_setting_member_reserve_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
   <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자 (분단위)-->
-  <input type="hidden" name="setting_member_cancel_time"   id="id_setting_member_cancel_time" value=""> <!--시간 숫자 (분단위)-->
+  <input type="hidden" name="setting_member_cancel_time_prohibition"   id="id_setting_member_cancel_time_prohibition" value=""> <!--시간 숫자 (분단위)-->
   <input type="hidden" name="setting_member_reserve_prohibition"        id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
   <input type="hidden" name="setting_member_reserve_date_available"     id="id_setting_member_reserve_available_date" value=""> <!--예약금지 활성 1, 비활성 0-->
 
@@ -207,8 +207,8 @@
 </div>
 
 <div id="memberDisableSettingText" class="settingMenu wrap800" style="margin-top:10px;">
-  <p class="settingText">근접시간 예약/취소 금지 설정</p>
-  <p class="settingText2">회원이 근접해서 예약/취소하는 것을 방지하는 설정입니다.</p>
+  <p class="settingText">근접 예약 금지 설정</p>
+  <p class="settingText2">회원이 근접해서 예약하는 것을 방지하는 설정입니다.</p>
   <div id="switch1" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
 </div>
 <div id="memberDisableSetting" class="settingBox wrap800" style="display: none;">
@@ -217,6 +217,37 @@
         <div id="timeSelect" class="dropdown">
               <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
               <ul id="ulTimes3" class="dropdown-menu pters_dropdown_custom ulTimes">
+                <li><a data-time="1">1시간 전</a></li>
+                <li><a data-time="2">2시간 전</a></li>
+                <li><a data-time="3">3시간 전</a></li>
+                <li><a data-time="4">4시간 전</a></li>
+                <li><a data-time="5">5시간 전</a></li>
+                <li><a data-time="6">6시간 전</a></li>
+                <li><a data-time="7">7시간 전</a></li>
+                <li><a data-time="8">8시간 전</a></li>
+                <li><a data-time="9">9시간 전</a></li>
+                <li><a data-time="10">10시간 전</a></li>
+                <li><a data-time="11">11시간 전</a></li>
+                <li><a data-time="12">12시간 전</a></li>
+                <li><a data-time="24">1일 전</a></li>
+                <li><a data-time="48">2일 전</a></li>
+                <li><a data-time="72">3일 전</a></li>
+              </ul>
+        </div>
+    </div> 
+</div>
+
+<div id="memberCancelDisableSettingText" class="settingMenu wrap800" style="margin-top:10px;">
+  <p class="settingText">근접 취소 금지 설정</p>
+  <p class="settingText2">회원이 근접해서 취소하는 것을 방지하는 설정입니다.</p>
+  <div id="switch_cancel_limit" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
+</div>
+<div id="memberCancelDisableSetting" class="settingBox wrap800" style="display: none;">
+    <div class="iconText" style="width: 100%;">
+        <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 시간 설정</span>
+        <div id="timeSelect2" class="dropdown">
+              <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+              <ul id="ulTimes4" class="dropdown-menu pters_dropdown_custom ulTimes">
                 <li><a data-time="1">1시간 전</a></li>
                 <li><a data-time="2">2시간 전</a></li>
                 <li><a data-time="3">3시간 전</a></li>
@@ -270,9 +301,9 @@
 
           $('#id_setting_member_reserve_available_time').val(Options.stoptimeStart+':00-'+Options.stoptimeEnd+':00')
           $('#id_setting_member_reserve_time_prohibition').val(Options.limit)
+          $('#id_setting_member_cancel_time_prohibition').val(Options.cancellimit)
           $('#id_setting_member_reserve_prohibition').val(Options.reserve)
 
-          $('#id_setting_member_reserve_time_prohibition').val(Options.limit)
           if(Options.limit>0){ //근접시간 예약 금지 설정
             $('#switch1').find('.switchball').removeClass('switchoff').addClass('switchon')
             $('#switch1').find('.switchback').addClass('switchon-back')
@@ -281,6 +312,15 @@
           }else if(Options.limit==0){
             $('#switch1').find('.switchball').removeClass('switchon')
             $('#switch1').find('.switchback').removeClass('switchon-back')
+          }
+          if(Options.cancellimit>0){
+           $('#switch_cancel_limit').find('.switchball').removeClass('switchoff').addClass('switchon')
+            $('#switch_cancel_limit').find('.switchback').addClass('switchon-back')
+            $('#memberCancelDisableSetting').show()
+            $("#timeSelect2 button").addClass("dropdown_selected").text(Options.cancellimit+"시간 전").val(Options.cancellimit);
+          }else if(Options.cancellimit==0){
+            $('#switch_cancel_limit').find('.switchball').removeClass('switchon')
+            $('#switch_cancel_limit').find('.switchback').removeClass('switchon-back')
           }
 
           $('#id_setting_member_reserve_prohibition').val(Options.reserve)
@@ -391,6 +431,18 @@
             check_dropdown_selected();
           })
 
+          $('#switch_cancel_limit').click(function(){
+            if($(this).find('.switchball').hasClass('switchoff')){
+              $('#memberCancelDisableSetting').hide('fast','swing')
+              $('#id_setting_member_cancel_time_prohibition').val(0)
+
+            }else{
+              $('#memberCancelDisableSetting').show('fast','swing')
+              $('#id_setting_member_cancel_time_prohibition').val($('#timeSelect2 button').val())
+            }
+            check_dropdown_selected();
+          })
+
           
 
 
@@ -455,6 +507,12 @@
                 check_dropdown_selected();
           });
 
+          $("#ulTimes4 li a").click(function(){
+                $("#timeSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
+                $('#id_setting_member_cancel_time_prohibition').val($('#timeSelect2 button').val())
+                check_dropdown_selected();
+          });
+
           $('#ulTimes_availDate li a').click(function(){
               $("#dateSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
               $('#id_setting_member_reserve_available_date').val($(this).attr('data-time'))
@@ -495,10 +553,11 @@
           function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
             var availableTime = $('#id_setting_member_reserve_available_time').val()
             var limit = $('#id_setting_member_reserve_time_prohibition').val()
+            var cancellimit = $('#id_setting_member_cancel_time_prohibition').val()
             var reservedisable =  $('#id_setting_member_reserve_prohibition').val()
             var workTime = $('#id_setting_trainer_work_time').val()
             var availDate = $('#id_setting_member_reserve_available_date').val()
-            if(availableTime == stoptime && limit == Options.limit && reservedisable == Options.reserve && workTime == worktime && availDate == Options.availDate){
+            if(availableTime == stoptime && limit == Options.limit && reservedisable == Options.reserve && workTime == worktime && availDate == Options.availDate && cancellimit == Options.cancellimit){
               $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
               select_all_check=false;
               console.log('false')
