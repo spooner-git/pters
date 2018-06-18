@@ -192,7 +192,8 @@ def add_schedule_logic(request):
 def delete_schedule_logic(request):
     pt_schedule_id = request.POST.get('schedule_id', '')
     off_schedule_id = request.POST.get('off_schedule_id', '')
-    member_name = request.POST.get('member_name')
+    # member_name = request.POST.get('member_name')
+    member_id = request.POST.get('member_id')
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
@@ -207,6 +208,8 @@ def delete_schedule_logic(request):
     repeat_schedule_id = None
     start_dt = None
     end_dt = None
+    # member_info = None
+    member_name = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
     if en_dis_type == ON_SCHEDULE_TYPE:
         schedule_id = pt_schedule_id
@@ -221,6 +224,14 @@ def delete_schedule_logic(request):
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '스케쥴 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+            member_name = member_info.name
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
+
     if error is None:
         lecture_id = schedule_info.lecture_tb_id
         repeat_schedule_id = schedule_info.repeat_schedule_tb_id
@@ -313,7 +324,8 @@ def delete_schedule_logic(request):
 # 일정 완료
 def finish_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
-    member_name = request.POST.get('member_name')
+    # member_name = request.POST.get('member_name')
+    member_id = request.POST.get('member_id')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
@@ -322,6 +334,7 @@ def finish_schedule_logic(request):
     schedule_info = None
     lecture_info = None
     lecture_repeat_schedule_data = None
+    member_name = None
     push_lecture_id = []
     push_title = []
     push_message = []
@@ -336,6 +349,13 @@ def finish_schedule_logic(request):
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '스케쥴 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+            member_name = member_info.name
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
         start_date = schedule_info.start_dt
