@@ -473,7 +473,7 @@ class AddMemberNoEmailView(View):
             logger.error(name+'[강사 회원가입]'+context['error'])
             messages.error(request, context['error'])
 
-        return render(request, self.template_name, {'username': context['username']})
+        return render(request, self.template_name, {'username': context['username'], 'user_db_id': context['user_db_id']})
 
 
 @method_decorator(csrf_exempt, name='dispatch')

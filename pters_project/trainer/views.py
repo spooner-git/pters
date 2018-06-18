@@ -1614,7 +1614,6 @@ def add_lecture_info_logic(request):
 
         except ObjectDoesNotExist:
             error = '가입되지 않은 회원입니다.'
-
     if error is None:
         if group_id != '' and group_id is not None:
             try:
@@ -2216,8 +2215,8 @@ def update_group_info_logic(request):
             note = group_info.note
 
     if error is None:
-        if group_info.group_type_cd == 'NORMAL':
-            group_member_num = GroupLectureTb.objects.filter(group_id=group_id, use=1).count()
+        if group_type_cd == 'NORMAL':
+            group_member_num = GroupLectureTb.objects.filter(group_tb_id=group_id, use=1).count()
             if group_member_num > int(member_num):
                 error = '현재 그룹에 추가된 인원이 정원보다 많습니다.'
 

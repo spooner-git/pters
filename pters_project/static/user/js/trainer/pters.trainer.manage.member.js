@@ -929,8 +929,8 @@ if (agent.indexOf("firefox") != -1) {
             $(this).removeClass("dropdown_selected");
             check_dropdown_selected();
         }
-        $('#id_username').val($('#memberPhone_add').val());
-        $('#id_user_id').val($('#memberPhone_add').val());
+        // $('#id_username').val($('#memberPhone_add').val());
+        // $('#id_user_id').val($('#memberPhone_add').val());
     });
 
     $("#memberCount_add").keyup(function(){  //남은횟수 입력시 하단에 핑크선
@@ -3442,6 +3442,7 @@ function fill_member_info_by_ID_search(){
 
 //새로운 회원 정보 서버로 보내 등록하기
 function add_member_form_func(){
+
     $.ajax({
         url:'/trainer/add_lecture_info/',
         type:'POST',

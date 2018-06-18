@@ -170,11 +170,13 @@ def func_get_member_ing_list(class_id, user_id):
 
             if member_data.phone is None:
                 member_data.phone = ''
-
+            if member_data.sex is None:
+                member_data.sex = ''
             if member_data.birthday_dt is None or member_data.birthday_dt == '':
                 member_data.birthday_dt = ''
             else:
                 member_data.birthday_dt = str(member_data.birthday_dt)
+
             member_list.append(member_data)
 
     return member_list
@@ -323,11 +325,13 @@ def func_get_member_end_list(class_id, user_id):
                         member_data.phone = '***-****-' + member_data.phone[7:]
                     member_data.user.email = ''
 
-            if member_data.phone is None:
-                member_data.phone = ''
             member_data.start_date = str(member_data.start_date)
             member_data.end_date = str(member_data.end_date)
             member_data.mod_dt = str(member_data.mod_dt)
+            if member_data.phone is None:
+                member_data.phone = ''
+            if member_data.sex is None:
+                member_data.sex = ''
             if member_data.birthday_dt is None or member_data.birthday_dt == '':
                 member_data.birthday_dt = ''
             else:
@@ -395,6 +399,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
     error = None
     lecture_info = None
     group_info = None
+
     if group_id != '' and group_id is not None:
         try:
             group_info = GroupTb.objects.get(group_id=group_id)
@@ -412,7 +417,6 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
             with transaction.atomic():
 
                 state_cd = 'IP'
-
                 lecture_info = LectureTb(member_id=member_id,
                                          lecture_reg_count=counts, lecture_rem_count=counts,
                                          lecture_avail_count=counts, price=price, option_cd='DC',
@@ -448,19 +452,19 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                     group_info = GroupLectureTb(group_tb_id=group_id, lecture_tb_id=lecture_info.lecture_id, use=1)
                     group_info.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '오류가 발생했습니다. 다시 시도해주세요.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
 
     if error is None:
         member_name = ''
         try:
-            user_info = MemberTb.objects.get(member_id=user_id)
+            user_info = MemberTb.objects.get(member_id=member_id)
             member_name = user_info.name
         except ObjectDoesNotExist:
             error = '회원 정보를 불러오지 못했습니다.'
@@ -471,6 +475,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                          reg_dt=timezone.now(), use=1)
 
         log_data.save()
+
     return error
 
 
