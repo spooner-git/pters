@@ -233,6 +233,13 @@ function draw_memberlist_for_addByList(targetHTML){
                         htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
                     }
                 }
+                var len_finish = jsondata.finishDidArray.length;
+                for(var j=1; j<=len_finish; j++){
+                    if($('#addedMemberListBox div[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0 && $('div.groupMembersWrap[data-groupid="'+$('#form_member_groupid').val()+'"] div.memberline[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0){ //추가될 리스트에 이미 있으면 목록에 보여주지 않는다.
+                        var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.finishsexArray[j-1]+'.png">'
+                        htmlToJoin[i+j-1] = '<div class="list_addByList" data-lastname="'+jsondata.finishLastNameArray[j-1]+'" data-firstname="'+jsondata.finishFirstNameArray[j-1]+'" data-dbid="'+jsondata.finishDidArray[j-1]+'" data-id="'+jsondata.finishIdArray[j-1]+'" data-sex="'+jsondata.finishsexArray[j-1]+'" data-phone="'+jsondata.finishphoneArray[j-1]+'"><div data-dbid="'+jsondata.finishDidArray[j-1]+'">'+sexInfo+jsondata.finishnameArray[j-1]+' (ID: '+jsondata.finishIdArray[j-1]+')'+'</div>'+'<div>'+jsondata.finishphoneArray[j-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                    }
+                }
                 var html = htmlToJoin.join('')
                 targetHTML.html(html)
             }

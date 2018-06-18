@@ -2676,6 +2676,8 @@ class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
                         member_info.phone = '***-****-'+member_info.phone[7:]
                     member_info.user.email = ''
 
+            if member_info.sex is None:
+                member_info.sex = ''
             if member_info.phone is None:
                 member_info.phone = ''
             group_schedule_info.member_info = member_info
