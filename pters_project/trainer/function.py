@@ -36,6 +36,7 @@ def func_get_member_ing_list(class_id, user_id):
             member_data = MemberTb.objects.get(member_id=member_info)
         except ObjectDoesNotExist:
             error = None
+
         if member_data.user.is_active:
             member_data.is_active = True
         else:
