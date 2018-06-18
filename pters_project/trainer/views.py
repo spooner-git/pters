@@ -1614,7 +1614,6 @@ def add_lecture_info_logic(request):
 
         except ObjectDoesNotExist:
             error = '가입되지 않은 회원입니다.'
-
     if error is None:
         if group_id != '' and group_id is not None:
             try:
