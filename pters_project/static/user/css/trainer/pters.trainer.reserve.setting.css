@@ -42,6 +42,14 @@ li a{
 	z-index: 3;
 }
 
+#memberDisableSetting{
+	z-index: 2;
+}
+
+#memberCancelDisableSetting{
+	z-index: 1;
+}
+
 #hourSelect, #hourSelect2, #workTimehourSelect, #workTimehourSelect2{
 	display: inline-flex;
 	width: 50%;
@@ -174,6 +182,10 @@ li a{
 .ulTimes{
 	height: 260px;
 	overflow-y: overlay;
+}
+
+#ulTimes4{
+	max-height: 150px;
 }
 
 .dropdown-menu li{
