@@ -670,6 +670,7 @@ $(document).ready(function(){
 	}
 
 
+
     function send_push(push_server_id, intance_id, title, message, badge_counter){
 
 			$.ajax({

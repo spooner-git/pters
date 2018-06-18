@@ -988,6 +988,7 @@ $(document).ready(function(){
 
 
 	function draw_time_group_graph(jsondata, dateinfo){
+		console.log(jsondata)
 		var len = jsondata.group_schedule_group_id.length;
 		var htmlTojoin = []
 		for(var i=0; i<len; i++){
