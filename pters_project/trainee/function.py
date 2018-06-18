@@ -19,18 +19,26 @@ def func_get_holiday_schedule(context):
 
 
 def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
+    member_lecture_list = []
     pt_schedule_list = []
     all_schedule_check = 0
 
     if start_date is None and end_date is None:
         all_schedule_check = 1
-    member_lecture_data = MemberLectureTb.objects.filter(auth_cd='VIEW', member_id=user_id).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
-    idx = len(member_lecture_data)+1
+    lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                 lecture_tb__member_id=user_id).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
+    for lecture_info in lecture_list:
+        try:
+            member_lecture = MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id, lecture_tb_id=lecture_info.lecture_tb_id)
+        except ObjectDoesNotExist:
+            member_lecture = None
+        if member_lecture is not None:
+            member_lecture_list.append(member_lecture)
 
-    for member_lecture_info in member_lecture_data:
+    idx = len(member_lecture_list)+1
+    for member_lecture_info in member_lecture_list:
         idx -= 1
-
         if all_schedule_check == 0:
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
@@ -291,7 +299,7 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                      lecture_tb__member_id=member_id,
-                                                     use=1).order_by('-lecture_tb__start_date')
+                                                     use=1).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
 
         for lecture_info in lecture_list:
 
@@ -325,7 +333,7 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 group_info = None
                 group_check = 0
                 try:
-                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=1)
+                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id)
                 except ObjectDoesNotExist:
                     group_check = 1
                 if group_check == 0:
