@@ -659,11 +659,11 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     try:
         lt_res_cancel_time = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME')
     except ObjectDoesNotExist:
-        lt_res_cancel_time = lt_res_02
+        lt_res_cancel_time = lt_res_02*60
     try:
         lt_res_enable_time = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME')
     except ObjectDoesNotExist:
-        lt_res_enable_time = lt_res_02
+        lt_res_enable_time = lt_res_02*60
 
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_LAN_01', use=1)

@@ -1415,15 +1415,17 @@ def get_trainer_setting_data(context, user_id, class_id):
     except ObjectDoesNotExist:
         lt_res_05 = '14'
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
+                                             setting_type_cd='LT_RES_CANCEL_TIME')
         lt_res_cancel_time = setting_data.setting_info
     except ObjectDoesNotExist:
-        lt_res_cancel_time = lt_res_02
+        lt_res_cancel_time = lt_res_02*60
     try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME')
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
+                                             setting_type_cd='LT_RES_ENABLE_TIME')
         lt_res_enable_time = setting_data.setting_info
     except ObjectDoesNotExist:
-        lt_res_enable_time = lt_res_02
+        lt_res_enable_time = lt_res_02*60
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE')
         lt_res_enable = setting_data.setting_info
