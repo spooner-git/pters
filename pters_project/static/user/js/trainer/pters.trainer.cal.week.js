@@ -481,6 +481,7 @@ $(document).ready(function(){
 			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('off-schedule-id')+'.png');
 		}
 		schedule_on_off = 2;
+		$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
 		toggleGroupParticipantsList('on')
 	})
 
@@ -490,14 +491,14 @@ $(document).ready(function(){
 		//일정 완료 기능 추가 - hk.kim 180106
 		var ajax_block_during_complete_weekcal = true
 		$("#popup_btn_complete").click(function(){  //일정 완료 버튼 클릭
-				if($(this).val()!="filled"){
+				if($(this).val()!="filled" && !$(this).hasClass('disabled_button')){
 					$('#canvas').show()
 					$('#canvasWrap').animate({'height':'200px'},200)
 					$('#canvasWrap span').show();
 					if(schedule_on_off == 2){
 						toggleGroupParticipantsList('on')
 					}
-				}else if($(this).val()=="filled"){
+				}else if($(this).val()=="filled" && !$(this).hasClass('disabled_button')){
 					if(ajax_block_during_complete_weekcal == true){
 						ajax_block_during_complete_weekcal = false
 						if(schedule_on_off==1){
@@ -564,13 +565,15 @@ $(document).ready(function(){
 
 		//일정 삭제 기능 추가 - hk.kim 171007
 		$("#popup_btn_delete").click(function(){  //일정 삭제 버튼 클릭
-			if($(this).parent('#cal_popup_planinfo').attr('data-grouptype') == "group"){
-				deleteTypeSelect = "groupptdelete"
-			}else{
-				deleteTypeSelect = "ptoffdelete"
+			if(!$(this).hasClass('disabled_button')){
+				if($(this).parent('#cal_popup_planinfo').attr('data-grouptype') == "group"){
+					deleteTypeSelect = "groupptdelete"
+				}else{
+					deleteTypeSelect = "ptoffdelete"
+				}
+				$('#cal_popup_planinfo').hide();
+				$('#cal_popup_plandelete').fadeIn('fast').attr({"schedule_id":$(this).parent('#cal_popup_planinfo').attr("schedule_id")});
 			}
-			$('#cal_popup_planinfo').hide();
-			$('#cal_popup_plandelete').fadeIn('fast').attr({"schedule_id":$(this).parent('#cal_popup_planinfo').attr("schedule_id")});
 		})
 
 		//미니 팝업 메모수정
