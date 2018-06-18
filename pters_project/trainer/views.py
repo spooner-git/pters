@@ -3447,7 +3447,7 @@ def update_setting_push_logic(request):
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
     setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '60')
-    setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '60')
+    setting_member_cancel_time = request.POST.get('setting_member_cancel_time_prohibition', '60')
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition', '')
     setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '')
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '')
