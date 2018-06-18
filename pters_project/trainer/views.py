@@ -3447,11 +3447,11 @@ def update_setting_push_logic(request):
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
     setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '60')
-    setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '60')
+    setting_member_cancel_time = request.POST.get('setting_member_cancel_time_prohibition', '60')
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition', '')
     setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '')
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '')
-    setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '')
+    # setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '')
 
     class_id = request.session.get('class_id', '')
 
@@ -3466,17 +3466,17 @@ def update_setting_reserve_logic(request):
     lt_res_enable_time = None
 
     if error is None:
-        if setting_member_reserve_time_available == '':
+        if setting_member_reserve_time_available is None or setting_member_reserve_time_available == '':
             setting_member_reserve_time_available = '00:00-23:59'
-        if setting_member_reserve_time_prohibition == '':
+        if setting_member_reserve_time_prohibition is None or setting_member_reserve_time_prohibition == '':
             setting_member_reserve_time_prohibition = '60'
-        if setting_member_cancel_time == '':
+        if setting_member_cancel_time is None or setting_member_cancel_time == '':
             setting_member_cancel_time = '60'
-        if setting_member_reserve_prohibition == '':
+        if setting_member_reserve_prohibition is None or setting_member_reserve_prohibition == '':
             setting_member_reserve_prohibition = '1'
-        if setting_trainer_work_time_available == '':
+        if setting_trainer_work_time_available is None or setting_trainer_work_time_available == '':
             setting_trainer_work_time_available = '00:00-23:59'
-        if setting_member_reserve_date_available == '':
+        if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
             setting_member_reserve_date_available = '14'
 
     if error is None:
