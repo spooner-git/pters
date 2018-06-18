@@ -101,6 +101,7 @@ def func_refresh_lecture_count(lecture_id):
 
 # 수강정보 - 횟수관련 update
 def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule_id):
+    print(str(group_id))
     # 그룹 스케쥴 종료 및 그룹 반복일정 종료
     if group_schedule_id is not None and group_schedule_id != '':
         try:
@@ -139,20 +140,21 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
             group_info = GroupTb.objects.get(group_id=group_id, use=1)
         except ObjectDoesNotExist:
             group_info = None
-        if group_info.group_type_cd == 'NORMAL':
-            group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                      lecture_tb__use=1,
-                                                                      use=1).count()
-            group_lecture_end_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                    lecture_tb__use=1,
-                                                                    use=1).exclude(lecture_tb__state_cd='IP').count()
-            if group_info is not None:
-                if group_lecture_total_count == group_lecture_end_count:
-                    group_info.state_cd = 'PE'
-                    group_info.save()
-                else:
-                    group_info.state_cd = 'IP'
-                    group_info.save()
+        if group_info is not None:
+            if group_info.group_type_cd == 'NORMAL':
+                group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                                                                          lecture_tb__use=1,
+                                                                          use=1).count()
+                group_lecture_end_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                                                                        lecture_tb__use=1,
+                                                                        use=1).exclude(lecture_tb__state_cd='IP').count()
+                if group_info is not None:
+                    if group_lecture_total_count == group_lecture_end_count:
+                        group_info.state_cd = 'PE'
+                        group_info.save()
+                    else:
+                        group_info.state_cd = 'IP'
+                        group_info.save()
 
 
 # 일정 등록

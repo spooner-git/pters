@@ -1835,6 +1835,8 @@ def finish_lecture_info_logic(request):
             group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             group_info = None
+
+    if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
@@ -1850,7 +1852,7 @@ def finish_lecture_info_logic(request):
 
     if error is None:
         if group_info is not None:
-            func_refresh_group_status(group_info.group_id, None, None)
+            func_refresh_group_status(group_info.group_tb_id, None, None)
         # if len(group_data) > 0:
         #     for group_info in group_data:
         #         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
@@ -1865,6 +1867,7 @@ def finish_lecture_info_logic(request):
         #         else:
         #             group_info_data.state_cd = 'IP'
         #             group_info_data.save()
+
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
@@ -1928,6 +1931,7 @@ def refund_lecture_info_logic(request):
             group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             group_info = None
+    if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
@@ -1941,7 +1945,7 @@ def refund_lecture_info_logic(request):
 
     if error is None:
         if group_info is not None:
-            func_refresh_group_status(group_info.group_id, None, None)
+            func_refresh_group_status(group_info.group_tb_id, None, None)
         # if len(group_data) > 0:
         #     for group_info in group_data:
         #         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
@@ -2003,6 +2007,7 @@ def progress_lecture_info_logic(request):
             group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=1)
         except ObjectDoesNotExist:
             group_info = None
+    if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=1)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
         schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
@@ -2013,7 +2018,7 @@ def progress_lecture_info_logic(request):
         lecture_info.save()
     if error is None:
         if group_info is not None:
-            func_refresh_group_status(group_info.group_id, None, None)
+            func_refresh_group_status(group_info.group_tb_id, None, None)
         # if len(group_data) > 0:
         #     for group_info in group_data:
         #         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
