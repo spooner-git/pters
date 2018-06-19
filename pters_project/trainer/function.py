@@ -400,6 +400,12 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
     error = None
     lecture_info = None
     group_info = None
+    if price is None or price == '':
+        error = '금액 정보를 입력해주세요.'
+
+    if error is None:
+        if counts is None or counts == '':
+            error = '레슨 횟수 입력해주세요.'
 
     if group_id != '' and group_id is not None:
         try:
