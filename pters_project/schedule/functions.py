@@ -331,9 +331,13 @@ def func_update_repeat_schedule(repeat_schedule_id):
             repeat_schedule_result = func_delete_repeat_schedule(repeat_schedule_id)
             error = repeat_schedule_result['error']
         else:
+            if repeat_schedule_count == repeat_schedule_finish_count:
+                repeat_schedule_info.state_cd = 'PE'
+            else:
+                repeat_schedule_info.state_cd = 'IP'
             if repeat_schedule_finish_count == 0:
                 repeat_schedule_info.state_cd = 'NP'
-                repeat_schedule_info.save()
+            repeat_schedule_info.save()
 
     return error
 

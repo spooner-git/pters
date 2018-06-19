@@ -351,28 +351,30 @@ $(document).ready(function(){
 					ajax_block_during_delete_monthcal = true
 				}else if(deleteTypeSelect == "groupptdelete"){
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id')
-					send_plan_delete('group', 'callback', function(){})
-					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
-						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
-							$('#id_member_dbid_delete').val(jsondata.db_id[i])
-							$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
-							if(i == jsondata.scheduleIdArray.length-1){
-								send_plan_delete('pt', 'callback', function(json){
-									// set_schedule_time(json)
-									ajaxClassTime()
-                      				close_info_popup('cal_popup_plandelete')
-                      				completeSend();
-								})
-							}else{
-								send_plan_delete('pt', 'callback', function(){})
-							}
-						}
-						if(jsondata.scheduleIdArray.length == 0){
-							ajaxClassTime()
-                      		close_info_popup('cal_popup_plandelete')
-                      		completeSend();
-						}
-					})
+
+					send_plan_delete('group')
+					// send_plan_delete('group', 'callback', function(){})
+					// get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
+					// 	for(var i=0; i<jsondata.scheduleIdArray.length; i++){
+					// 		$('#id_member_dbid_delete').val(jsondata.db_id[i])
+					// 		$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
+					// 		if(i == jsondata.scheduleIdArray.length-1){
+					// 			send_plan_delete('pt', 'callback', function(json){
+					// 				// set_schedule_time(json)
+					// 				ajaxClassTime()
+                     //  				close_info_popup('cal_popup_plandelete')
+                     //  				completeSend();
+					// 			})
+					// 		}else{
+					// 			send_plan_delete('pt', 'callback', function(){})
+					// 		}
+					// 	}
+					// 	if(jsondata.scheduleIdArray.length == 0){
+					// 		ajaxClassTime()
+                     //  		close_info_popup('cal_popup_plandelete')
+                     //  		completeSend();
+					// 	}
+					// })
 					ajax_block_during_delete_monthcal = true
 				}
 			}
@@ -425,24 +427,32 @@ $(document).ready(function(){
 							})
 							
 						}else{
-							send_group_plan_complete()
-							for(var i=0; i<len; i++){
-								$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
-								$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
-								$('#id_member_dbid_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
-								send_plan_complete('callback', function(json, senddata){
-									z++
-									send_memo()
-									signImageSend(senddata);
-									if(z==len){
-										completeSend();
-										// set_schedule_time(json);
-										ajaxClassTime()
-										close_info_popup('cal_popup_planinfo')
-										ajax_block_during_complete_weekcal = true
-									}
-								})
-							}
+							send_group_plan_complete('callback', function(json, senddata){
+								send_memo()
+								signImageSend(senddata);
+								completeSend();
+								// set_schedule_time(json);
+								ajaxClassTime()
+								close_info_popup('cal_popup_planinfo')
+								ajax_block_during_complete_weekcal = true
+							})
+							// for(var i=0; i<len; i++){
+							// 	$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
+							// 	$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
+							// 	$('#id_member_dbid_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
+							// 	send_plan_complete('callback', function(json, senddata){
+							// 		z++
+							// 		send_memo()
+							// 		signImageSend(senddata);
+							// 		if(z==len){
+							// 			completeSend();
+							// 			// set_schedule_time(json);
+							// 			ajaxClassTime()
+							// 			close_info_popup('cal_popup_planinfo')
+							// 			ajax_block_during_complete_weekcal = true
+							// 		}
+							// 	})
+							// }
 						}
 					}
 				}
