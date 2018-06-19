@@ -1056,13 +1056,13 @@ def update_member_info_logic(request):
                 member.mod_dt = timezone.now()
                 member.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
@@ -2891,13 +2891,13 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                       reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
                     member_class_info.save()
 
-            except ValueError as e:
+            except ValueError:
                 error = '등록 값에 문제가 있습니다.'
-            except IntegrityError as e:
+            except IntegrityError:
                 error = '등록 값에 문제가 있습니다.'
-            except TypeError as e:
+            except TypeError:
                 error = '등록 값의 형태가 문제 있습니다.'
-            except ValidationError as e:
+            except ValidationError:
                 error = '등록 값의 형태가 문제 있습니다.'
             except InternalError:
                 error = '등록 값에 문제가 있습니다.'
@@ -3376,13 +3376,13 @@ def update_trainer_info_logic(request):
                 member.mod_dt = timezone.now()
                 member.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
@@ -3460,13 +3460,13 @@ def update_setting_push_logic(request):
                 lt_pus_04.setting_info = setting_trainer_no_schedule_confirm1+'/'+setting_trainer_no_schedule_confirm2
                 lt_pus_04.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
@@ -3737,21 +3737,18 @@ def update_setting_sales_logic(request):
                     lt_sal_00.setting_info = setting_sal_00
                     lt_sal_00.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-
-        log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
-                       + '강의금액 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
@@ -3792,21 +3789,19 @@ def update_setting_language_logic(request):
                 lt_lan_01.setting_info = setting_member_language
                 lt_lan_01.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
         request.session['setting_language'] = setting_member_language
-        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
-        #               + '언어 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id, log_info='언어 설정 정보', log_how='수정',

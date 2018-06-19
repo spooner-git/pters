@@ -295,6 +295,10 @@ $(document).ready(function(){
 			$("#popup_text1").css("display","none")
 			$("#popup_sign_img").css("display","block")
 			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('class-schedule-id')+'.png');
+			myImage = document.getElementById("id_sign_img");
+			 myImage.onerror = function() {
+				  this.src="";
+			 }
 		}
 		schedule_on_off = 1;
 
@@ -480,6 +484,10 @@ $(document).ready(function(){
 			$("#popup_text1").css("display","none")
 			$("#popup_sign_img").css("display","block")
 			$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('off-schedule-id')+'.png');
+        	myImage = document.getElementById("id_sign_img");
+			 myImage.onerror = function() {
+				  this.src="";
+			 }
 		}
 		schedule_on_off = 2;
 		$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
