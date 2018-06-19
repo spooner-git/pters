@@ -521,6 +521,8 @@ def add_repeat_schedule_logic(request):
     repeat_schedule_start_time = None
     repeat_schedule_end_time = None
     repeat_schedule_date_list = []
+    success_start_date = None
+    success_end_date = None
 
     if repeat_type == '':
         error = '반복 빈도를 선택해주세요.'
@@ -603,7 +605,6 @@ def add_repeat_schedule_logic(request):
                 repeat_schedule_info = repeat_schedule_result['schedule_info']
 
     if error is None:
-        success_end_date = None
         for repeat_schedule_date_info in repeat_schedule_date_list:
             error_date = None
             # 데이터 넣을 날짜 setting
@@ -661,6 +662,8 @@ def add_repeat_schedule_logic(request):
                             raise ValidationError()
                         else:
                             if schedule_check == 1:
+                                if pt_schedule_input_counter == 0:
+                                    success_start_date = str(repeat_schedule_date_info).split(' ')[0]
                                 success_end_date = str(repeat_schedule_date_info).split(' ')[0]
                                 pt_schedule_input_counter += 1
 
@@ -685,6 +688,7 @@ def add_repeat_schedule_logic(request):
         if pt_schedule_input_counter == 0:
             repeat_schedule_info.delete()
         else:
+            repeat_schedule_info.start_date = success_start_date
             repeat_schedule_info.end_date = success_end_date
             repeat_schedule_info.save()
 
@@ -1477,6 +1481,7 @@ def add_group_repeat_schedule_logic(request):
 
     error = None
     error_date_message = None
+    success_start_date = None
     success_end_date = None
     class_info = None
     group_info = None
@@ -1581,7 +1586,6 @@ def add_group_repeat_schedule_logic(request):
                 repeat_schedule_info = repeat_schedule_result['schedule_info']
 
     if error is None:
-
         for repeat_schedule_date_info in repeat_schedule_date_list:
 
             # 그룹 스케쥴 등록 횟수 설정
@@ -1627,6 +1631,8 @@ def add_group_repeat_schedule_logic(request):
                         if error_date is not None:
                             raise ValidationError()
                         else:
+                            if pt_schedule_input_counter == 0:
+                                success_start_date = str(repeat_schedule_date_info).split(' ')[0]
                             success_end_date = str(repeat_schedule_date_info).split(' ')[0]
                             pt_schedule_input_counter += 1
                             if group_info.group_type_cd == 'NORMAL':
@@ -1655,6 +1661,7 @@ def add_group_repeat_schedule_logic(request):
         if pt_schedule_input_counter == 0:
             repeat_schedule_info.delete()
         else:
+            repeat_schedule_info.start_date = success_start_date
             repeat_schedule_info.end_date = success_end_date
             repeat_schedule_info.save()
 
@@ -1704,10 +1711,6 @@ def add_group_repeat_schedule_confirm(request):
 
     if error is None:
         group_info = repeat_schedule_info.group_tb
-        # try:
-        #     group_info = GroupTb.objects.get(group_id=repeat_schedule_info.group_tb_id)
-        # except ObjectDoesNotExist:
-        #     error = '그룹 정보를 불러오지 못했습니다.'
 
     if error is None:
         start_date = repeat_schedule_info.start_date
@@ -1817,12 +1820,8 @@ def add_group_repeat_schedule_confirm(request):
                     log_data.save()
                     push_lecture_id.append(lecture_id)
                     push_title.append(class_type_name + ' 수업 - 일정 알림')
-                    push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)\
-                                                      + '~' + str(end_date) + ' 그룹 반복일정을 등록했습니다')
-
-                    # func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
-                    #                        request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-                    #                        + '~' + str(end_date) + ' 그룹 반복일정을 등록했습니다')
+                    push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
+                                        + '~' + str(end_date) + ' 그룹 반복일정을 등록했습니다')
 
             information = '반복일정 등록이 완료됐습니다.'
 
