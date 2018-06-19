@@ -20,7 +20,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from configs import settings
-from configs.const import ON_SCHEDULE_TYPE, USE
+from configs.const import ON_SCHEDULE_TYPE, USE, GROUP_SCHEDULE_TYPE
 from login.models import LogTb, MemberTb
 from schedule.functions import func_get_lecture_id, func_add_schedule, func_refresh_lecture_count, func_date_check, \
     func_update_member_schedule_alarm, func_save_log_data, func_check_group_schedule_enable, \
@@ -219,11 +219,12 @@ def delete_schedule_logic(request):
             error = '스케쥴 정보를 불러오지 못했습니다.'
 
     if error is None:
-        try:
-            member_info = MemberTb.objects.get(member_id=member_id)
-            member_name = member_info.name
-        except ObjectDoesNotExist:
-            error = '회원 정보를 불러오지 못했습니다.'
+        if en_dis_type == ON_SCHEDULE_TYPE:
+            try:
+                member_info = MemberTb.objects.get(member_id=member_id)
+                member_name = member_info.name
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
         lecture_id = schedule_info.lecture_tb_id
@@ -231,6 +232,7 @@ def delete_schedule_logic(request):
         en_dis_type = schedule_info.en_dis_type
         start_dt = schedule_info.start_dt
         end_dt = schedule_info.end_dt
+        group_id = schedule_info.group_tb_id
 
     if error is None:
         try:
@@ -265,8 +267,14 @@ def delete_schedule_logic(request):
             member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
-        func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
-                           member_name, en_dis_type, 'LS02', request)
+
+        if group_id is None or group_id == '':
+            func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
+                               member_name, en_dis_type, 'LS02', request)
+
+        else:
+            func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
+                               member_name, GROUP_SCHEDULE_TYPE, 'LS02', request)
 
         push_info_schedule_start_date = str(start_dt).split(':')
         push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
@@ -838,6 +846,7 @@ def delete_repeat_schedule_logic(request):
         end_date = repeat_schedule_info.end_date
         en_dis_type = repeat_schedule_info.en_dis_type
         lecture_id = repeat_schedule_info.lecture_tb_id
+        group_id = repeat_schedule_info.group_tb_id
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
             try:
@@ -861,13 +870,18 @@ def delete_repeat_schedule_logic(request):
                     if delete_schedule_info.state_cd != 'PE':
                         delete_lecture_id = delete_schedule_info.lecture_tb_id
                         delete_schedule_info.delete()
-                        if en_dis_type == ON_SCHEDULE_TYPE:
-                            error = func_refresh_lecture_count(delete_lecture_id)
-                    if error is not None:
-                        break
+                        # if en_dis_type == ON_SCHEDULE_TYPE:
+                        #     error = func_refresh_lecture_count(delete_lecture_id)
+                    # if error is not None:
+                    #     break
 
-                schedule_result = func_delete_repeat_schedule(repeat_schedule_id)
-                error = schedule_result['error']
+                if en_dis_type == ON_SCHEDULE_TYPE:
+                    error = func_refresh_lecture_count(delete_lecture_id)
+
+                if error is None:
+                    schedule_result = func_delete_repeat_schedule(repeat_schedule_id)
+                    error = schedule_result['error']
+
                 if error is not None:
                     raise ValidationError()
 
@@ -889,9 +903,15 @@ def delete_repeat_schedule_logic(request):
             member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
-        func_save_log_data(start_date, end_date, class_id, lecture_id,
-                           request.user.last_name+request.user.first_name,
-                           member_name, en_dis_type, 'LR02', request)
+        if group_id is None or group_id == '':
+            func_save_log_data(start_date, end_date, class_id, lecture_id,
+                               request.user.last_name+request.user.first_name,
+                               member_name, en_dis_type, 'LR02', request)
+
+        else:
+            func_save_log_data(start_date, end_date, class_id, lecture_id,
+                               request.user.last_name+request.user.first_name,
+                               member_name, GROUP_SCHEDULE_TYPE, 'LR02', request)
 
         if en_dis_type == ON_SCHEDULE_TYPE:
             push_lecture_id.append(lecture_id)

@@ -426,7 +426,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
 
     if log_type == 'LS02':
         log_type_name = '일정'
-        log_type_detail = '삭제'
+        log_type_detail = '취소'
 
     if log_type == 'LS03':
         log_type_name = '일정'
@@ -437,7 +437,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
 
     if log_type == 'LR02':
         log_type_name = '반복 일정'
-        log_type_detail = '삭제'
+        log_type_detail = '취소'
 
     if en_dis_type == ON_SCHEDULE_TYPE:
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
@@ -447,11 +447,19 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
                          log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), use=USE)
         log_data.save()
-    else:
+    elif en_dis_type == OFF_SCHEDULE_TYPE:
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name,
                          class_tb_id=class_id,
                          log_info='OFF '+log_type_name, log_how=log_type_detail,
+                         log_detail=str(start_date) + '/' + str(end_date),
+                         reg_dt=timezone.now(), use=USE)
+        log_data.save()
+    else:
+        log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
+                         from_member_name=user_name, to_member_name=member_name,
+                         class_tb_id=class_id, lecture_tb_id=lecture_id,
+                         log_info='그룹 레슨 '+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), use=USE)
         log_data.save()

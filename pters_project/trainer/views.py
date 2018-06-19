@@ -588,6 +588,22 @@ class ReserveSettingView(AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id', '')
         context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
 
+        self.request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        self.request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        self.request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        self.request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        self.request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        self.request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        self.request.session['setting_language'] = context['lt_lan_01']
+
+        self.request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        self.request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        self.request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        self.request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        self.request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+
         return context
 
 
