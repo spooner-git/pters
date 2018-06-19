@@ -272,13 +272,14 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').html(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr({'schedule_id': $(this).attr('class-schedule-id'),'data-grouptype':'class'})
+		$('#cal_popup_planinfo').attr({'schedule-id': $(this).attr('class-schedule-id'),'data-grouptype':'class'})
 		$("#id_schedule_id").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_modify").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_finish").val($(this).attr('class-schedule-id')); // shcedule 정보 저장
 		$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_repeat_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
+		$('#id_member_dbid_delete').val($(this).attr('data-dbid'))		  //회원 dbid를 저장
 		$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
 		$("#id_repeat_member_id").val($(this).attr('data-dbid')); //member id 정보 저장
 		$("#id_repeat_lecture_id").val($(this).attr('data-lectureId')); //lecture id 정보 저장
@@ -366,7 +367,7 @@ $(document).ready(function(){
 		$('#popup_info').text(infoText);
 		$('#popup_info2').text(infoText2);
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr({'schedule_id':$(this).attr('off-schedule-id'), 'data-grouptype':'off'})
+		$('#cal_popup_planinfo').attr({'schedule-id':$(this).attr('off-schedule-id'), 'data-grouptype':'off'})
 		$("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
 		$("#popup_btn_complete").hide()
@@ -456,7 +457,7 @@ $(document).ready(function(){
 		//$('#popup_info2').html(infoText2);
 		$('#popup_info2').text('[그룹]'+info[6]+' '+time+':'+minute+yourplan)
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr({'schedule_id': $(this).attr('group-schedule-id'), 'data-grouptype':'group'})
+		$('#cal_popup_planinfo').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group'})
 		$("#id_schedule_id").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_modify").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_finish").val($(this).attr('group-schedule-id')); // shcedule 정보 저장
@@ -521,7 +522,7 @@ $(document).ready(function(){
 						}else if(schedule_on_off == 2){
 							var len = $('#groupParticipants .groupParticipantsRow').length;
 							var z = 0
-							$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule_id'))
+							$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'))
 							if(len == 0){
 								send_group_plan_complete('callback', function(json, senddata){
 									send_memo()
@@ -573,7 +574,7 @@ $(document).ready(function(){
 					deleteTypeSelect = "ptoffdelete"
 				}
 				$('#cal_popup_planinfo').hide();
-				$('#cal_popup_plandelete').fadeIn('fast').attr({"schedule_id":$(this).parent('#cal_popup_planinfo').attr("schedule_id")});
+				$('#cal_popup_plandelete').fadeIn('fast').attr({"schedule-id":$(this).parent('#cal_popup_planinfo').attr("schedule-id")});
 			}
 		})
 
@@ -660,7 +661,7 @@ $(document).ready(function(){
 					}
 				}else if(deleteTypeSelect == "groupptdelete"){
 					ajax_block_during_delete_weekcal = true
-					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule_id')
+					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id')
 					get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
 						for(var i=0; i<jsondata.scheduleIdArray.length; i++){
 							$('#id_member_dbid_delete').val(jsondata.db_id[i])
@@ -1640,7 +1641,7 @@ function ajaxClassTime(reference){
 			var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
 		}
 
-		var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
+		//var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
 		$.ajax({
 		  url: '/trainer/get_trainer_schedule/',
 		  type : 'POST',
@@ -1654,7 +1655,7 @@ function ajaxClassTime(reference){
 
 		  success:function(data){
 			var jsondata = JSON.parse(data);
-			TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+			//TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
 			if(jsondata.messageArray.length>0){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
@@ -1766,7 +1767,7 @@ function send_group_plan_complete(use, callback){
 }
 
 function send_memo(){
-	var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
+	var schedule_id = $('#cal_popup_planinfo').attr('schedule-id');
 	var memo = $('#popup_info3_memo').val()
 	$.ajax({
         url:'/schedule/update_memo_schedule/',

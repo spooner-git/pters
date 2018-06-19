@@ -683,7 +683,7 @@ if (agent.indexOf("firefox") != -1) {
 
 
     function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
-        var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
+        //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
         $.ajax({
             url: '/trainer/get_group_member_repeat_schedule_list/',
             type : 'POST',
@@ -695,7 +695,7 @@ if (agent.indexOf("firefox") != -1) {
             },
 
             success:function(data){
-              TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+              //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
               var jsondata = JSON.parse(data);
               if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
