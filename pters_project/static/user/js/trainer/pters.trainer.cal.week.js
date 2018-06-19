@@ -553,23 +553,29 @@ $(document).ready(function(){
 									close_info_popup('cal_popup_planinfo')
 									ajax_block_during_complete_weekcal = true
 								})
+								// send_group_plan_complete("callback", function(){
+								// 	ajaxClassTime();
+								// })
 								// for(var i=0; i<len; i++){
 								// 	$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
 								// 	$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
 								// 	$('#id_member_dbid_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
+								// 	console.log('스케쥴아이디: ',$('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
+								// 	console.log('렉쳐아이디: ',$('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
+								// 	console.log('디비아이디: ',$('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
 								// 	send_plan_complete('callback', function(json, senddata){
 								// 		z++
-								// 		send_memo()
+								// 		send_memo("blank")
 								// 		signImageSend(senddata);
 								// 		if(z==len){
 								// 			completeSend();
-								// 			// set_schedule_time(json);
-								// 			ajaxClassTime();
+								// 			//ajaxClassTime();
 								// 			close_info_popup('cal_popup_planinfo')
 								// 			ajax_block_during_complete_weekcal = true
 								// 		}
 								// 	})
 								// }
+
 							}
 							
 						}
@@ -683,7 +689,20 @@ $(document).ready(function(){
 					// 	for(var i=0; i<jsondata.scheduleIdArray.length; i++){
 					// 		$('#id_member_dbid_delete').val(jsondata.db_id[i])
 					// 		$('#id_schedule_id').val(jsondata.scheduleIdArray[i])
-					// 		send_plan_delete('pt')
+					// 		send_plan_delete('pt', 'callback', function(){
+					// 			if(i == jsondata.scheduleIdArray.length-1){
+					// 				ajaxClassTime();
+				     //                // set_schedule_time(jsondata)
+				     //                close_info_popup('cal_popup_plandelete')
+				     //                if($('._calmonth').length == 1){
+				     //                  shade_index(100)
+				     //                }else if($('._calweek').length == 1){
+				     //                  shade_index(-100)
+				     //                }
+					// 			}else{
+					// 				ajaxClassTime();
+					// 			}
+					// 		})
 					// 	}
 					// })
 					send_plan_delete('group')
@@ -1783,7 +1802,7 @@ function send_group_plan_complete(use, callback){
     })
 }
 
-function send_memo(){
+function send_memo(option){
 	var schedule_id = $('#cal_popup_planinfo').attr('schedule-id');
 	var memo = $('#popup_info3_memo').val()
 	$.ajax({
@@ -1797,12 +1816,16 @@ function send_memo(){
 
         //통신성공시 처리
         success:function(data){
-        	
+        	if(option == "blank"){
+
+        	}else{
+        		ajaxClassTime()
+        	}
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-        	ajaxClassTime()
+        	//ajaxClassTime()
         },
 
         //통신 실패시 처리
