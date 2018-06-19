@@ -554,7 +554,7 @@ $(document).ready(function(){
 									console.log('디비아이디: ',$('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
 									send_plan_complete('callback', function(json, senddata){
 										z++
-										send_memo()
+										send_memo("blank")
 										signImageSend(senddata);
 										if(z==len){
 											completeSend();
@@ -689,7 +689,7 @@ $(document).ready(function(){
 				                      shade_index(-100)
 				                    }
 								}else{
-
+									//ajaxClassTime();
 								}
 							})
 						}
@@ -1791,7 +1791,7 @@ function send_group_plan_complete(use, callback){
     })
 }
 
-function send_memo(){
+function send_memo(option){
 	var schedule_id = $('#cal_popup_planinfo').attr('schedule-id');
 	var memo = $('#popup_info3_memo').val()
 	$.ajax({
@@ -1805,12 +1805,16 @@ function send_memo(){
 
         //통신성공시 처리
         success:function(data){
-        	
+        	if(option == "blank"){
+
+        	}else{
+        		ajaxClassTime()
+        	}
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-        	ajaxClassTime()
+        	//ajaxClassTime()
         },
 
         //통신 실패시 처리
