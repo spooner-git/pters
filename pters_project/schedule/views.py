@@ -1993,14 +1993,20 @@ def delete_group_repeat_schedule_logic(request):
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
+    class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
     error = None
     schedule_data = None
     start_date = None
     end_date = None
     group_repeat_schedule_info = None
+    push_lecture_id = []
+    push_title = []
+    push_message = []
     request.session['date'] = date
     request.session['day'] = day
+    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
 
@@ -2047,6 +2053,78 @@ def delete_group_repeat_schedule_logic(request):
             error = '이미 삭제된 일정입니다'
         except ValidationError:
             error = error
+
+    if error is None:
+        repeat_schedule_list = RepeatScheduleTb.objects.filter(group_schedule_id=repeat_schedule_id)
+
+        for repeat_schedule_info in repeat_schedule_list:
+            error_temp = None
+            start_date = repeat_schedule_info.start_date
+            end_date = repeat_schedule_info.end_date
+            lecture_id = repeat_schedule_info.lecture_tb_id
+            member_name = None
+            member_repeat_schedule_id = repeat_schedule_info.repeat_schedule_id
+
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
+            except ObjectDoesNotExist:
+                error_temp = '회원 수강정보를 불러오지 못했습니다.'
+            if error_temp is None:
+                member_name = lecture_info.member.name
+
+            if error_temp is None:
+                # 오늘 날짜 이후의 반복일정 삭제 -> 전체 삭제 확인 필요 hk.kim
+                schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=member_repeat_schedule_id,
+                                                          start_dt__gt=timezone.now())
+
+            if error_temp is None:
+                try:
+                    with transaction.atomic():
+                        delete_lecture_id_list = []
+                        old_lecture_id = None
+                        for delete_schedule_info in schedule_data:
+                            if delete_schedule_info.state_cd != 'PE':
+                                current_lecture_id = delete_schedule_info.lecture_tb_id
+                                delete_schedule_info.delete()
+
+                                if old_lecture_id != current_lecture_id:
+                                    old_lecture_id = current_lecture_id
+                                    delete_lecture_id_list.append(old_lecture_id)
+
+                        for delete_lecture_id_info in delete_lecture_id_list:
+                            error_temp = func_refresh_lecture_count(delete_lecture_id_info)
+
+                        if error_temp is None:
+                            schedule_result = func_delete_repeat_schedule(member_repeat_schedule_id)
+                            error_temp = schedule_result['error']
+
+                        if error_temp is not None:
+                            raise ValidationError()
+
+                except TypeError:
+                    error_temp = '등록 값의 형태에 문제가 있습니다.'
+                except ValueError:
+                    error_temp = '등록 값에 문제가 있습니다.'
+                except IntegrityError:
+                    error_temp = '이미 삭제된 일정입니다.'
+                except InternalError:
+                    error_temp = '이미 삭제된 일정입니다.'
+                except ValidationError:
+                    error_temp = '예약 가능한 횟수를 확인해주세요.'
+
+            if error_temp is None:
+                func_save_log_data(start_date, end_date, class_id, lecture_id,
+                                   request.user.last_name + request.user.first_name,
+                                   member_name, GROUP_SCHEDULE_TYPE, 'LR02', request)
+
+                push_lecture_id.append(lecture_id)
+                push_title.append(class_type_name + ' 수업 - 일정 알림')
+                push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
+                                    + '~' + str(end_date) + ' 반복일정을 취소했습니다')
+
+                context['push_lecture_id'] = push_lecture_id
+                context['push_title'] = push_title
+                context['push_message'] = push_message
 
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=USE)

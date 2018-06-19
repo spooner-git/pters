@@ -673,11 +673,11 @@ if (agent.indexOf("firefox") != -1) {
                         $('#calendar').css('position','relative')   
                     }
                 })
-                get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
-                    for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
-                        send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
-                    }
-                })
+                // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
+                //     for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
+                //         send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
+                //     }
+                // })
             }               
     });
 
