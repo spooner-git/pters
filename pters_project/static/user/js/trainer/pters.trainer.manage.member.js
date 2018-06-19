@@ -84,38 +84,56 @@ if (agent.indexOf("firefox") != -1) {
     $('.alignSelect').change(function(){
         //var jsondata = global_json
         if($(this).val()=="회원명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
-            get_member_ing_list("callback",function(jsondata){
-                memberListSet('current','name','no',jsondata);
-            })
-            get_member_end_list("callback",function(jsondata){
-                memberListSet('finished','name','no',jsondata);
-            })
+            if($('#currentMemberList').css('display') == "block"){
+                get_member_ing_list("callback",function(jsondata){
+                    memberListSet('current','name','no',jsondata);
+                })
+            }else if($('#finishedMemberList').css('display') == "block"){
+                get_member_end_list("callback",function(jsondata){
+                    memberListSet('finished','name','no',jsondata);
+                })
+            }
             alignType = 'name'
         }else if($(this).val()=="남은 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
-            get_member_ing_list("callback",function(jsondata){
-                memberListSet('current','count','yes',jsondata);
-            })
+            if($('#currentMemberList').css('display') == "block"){
+                get_member_ing_list("callback",function(jsondata){
+                    memberListSet('current','count','yes',jsondata);
+                })
+            }else if($('#finishedMemberList').css('display') == "block"){
+
+            }
+            
             alignType = 'countH'
         }else if($(this).val()=="남은 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
-            get_member_ing_list("callback",function(jsondata){
-                memberListSet('current','count','no',jsondata);
-            })
+            if($('#currentMemberList').css('display') == "block"){
+                get_member_ing_list("callback",function(jsondata){
+                    memberListSet('current','count','no',jsondata);
+                })
+            }else if($('#finishedMemberList').css('display') == "block"){
+
+            }
             alignType = 'countL'
         }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
-            get_member_ing_list("callback",function(jsondata){
-                memberListSet('current','date','no',jsondata);
-            })
-            get_member_end_list("callback",function(jsondata){
-                memberListSet('finished','date','no',jsondata);
-            })
+            if($('#currentMemberList').css('display') == "block"){
+                get_member_ing_list("callback",function(jsondata){
+                    memberListSet('current','date','no',jsondata);
+                })
+            }else if($('#finishedMemberList').css('display') == "block"){
+                get_member_end_list("callback",function(jsondata){
+                    memberListSet('finished','date','no',jsondata);
+                })
+            }
             alignType = 'startP'
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
-            get_member_ing_list("callback",function(jsondata){
-                memberListSet('current','date','yes',jsondata);
-            })
-            get_member_end_list("callback",function(jsondata){
-                memberListSet('finished','date','yes',jsondata);
-            })
+            if($('#currentMemberList').css('display') == "block"){
+                get_member_ing_list("callback",function(jsondata){
+                    memberListSet('current','date','yes',jsondata);
+                })
+            }else if($('#finishedMemberList').css('display') == "block"){
+                get_member_end_list("callback",function(jsondata){
+                    memberListSet('finished','date','yes',jsondata);
+                })
+            }
             alignType = 'startR'
         }
     })
@@ -2814,7 +2832,15 @@ function delete_member_reg_data_pc(lectureID, dbID){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                get_member_list()
+                if($('#currentMemberList').css('display') == "block"){
+                    get_member_ing_list("callback",function(jsondata){
+                        memberListSet('current','date','yes',jsondata);
+                    })
+                }else if($('#finishedMemberList').css('display') == "block"){
+                    get_member_end_list("callback",function(jsondata){
+                        memberListSet('finished','date','yes',jsondata);
+                    })
+                }
                 get_member_lecture_list(dbID)
                 console.log('success');
             }
@@ -2856,7 +2882,15 @@ function complete_member_reg_data_pc(lectureID, dbID){
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
                 $('#startR').attr('selected','selected')
-                get_member_list()
+                if($('#currentMemberList').css('display') == "block"){
+                    get_member_ing_list("callback",function(jsondata){
+                        memberListSet('current','date','yes',jsondata);
+                    })
+                }else if($('#finishedMemberList').css('display') == "block"){
+                    get_member_end_list("callback",function(jsondata){
+                        memberListSet('finished','date','yes',jsondata);
+                    })
+                }
                 get_member_lecture_list(dbID)
                 console.log('success');
             }
@@ -2898,7 +2932,15 @@ function resume_member_reg_data_pc(lectureID, dbID){
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
                 $('#startR').attr('selected','selected')
-                get_member_list()
+                if($('#currentMemberList').css('display') == "block"){
+                    get_member_ing_list("callback",function(jsondata){
+                        memberListSet('current','date','yes',jsondata);
+                    })
+                }else if($('#finishedMemberList').css('display') == "block"){
+                    get_member_end_list("callback",function(jsondata){
+                        memberListSet('finished','date','yes',jsondata);
+                    })
+                }
                 get_member_lecture_list(dbID)
                 console.log('success');
             }
@@ -2952,7 +2994,15 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
                         $('#errorMessageBar').hide()
                         $('#errorMessageText').text('')
                         $('#startR').attr('selected','selected')
-                        get_member_list()
+                        if($('#currentMemberList').css('display') == "block"){
+                            get_member_ing_list("callback",function(jsondata){
+                                memberListSet('current','date','yes',jsondata);
+                            })
+                        }else if($('#finishedMemberList').css('display') == "block"){
+                            get_member_end_list("callback",function(jsondata){
+                                memberListSet('finished','date','yes',jsondata);
+                            })
+                        }
                         get_member_lecture_list(dbID)
 
                         $('#shade3').css('display','none')
@@ -3482,7 +3532,15 @@ function add_member_form_func(){
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 
                 $('#startR').attr('selected','selected')
-                get_member_list()
+                if($('#currentMemberList').css('display') == "block"){
+                    get_member_ing_list("callback",function(jsondata){
+                        memberListSet('current','date','yes',jsondata);
+                    })
+                }else if($('#finishedMemberList').css('display') == "block"){
+                    get_member_end_list("callback",function(jsondata){
+                        memberListSet('finished','date','yes',jsondata);
+                    })
+                }
                 
                 closePopup('member_add')
                 console.log('success');
@@ -3647,7 +3705,7 @@ function add_groupmember_form_func(){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
-                get_member_list()
+                //get_member_list()
                 groupListSet('current',jsondata)
                 groupListSet('finished',jsondata)
                 $('#startR').attr('selected','selected')
@@ -3702,38 +3760,50 @@ function deleteMemberAjax(){
                 $('#startR').attr('selected','selected')
                 switch(alignType){
                   case 'name':
-                        get_member_ing_list('callback',function(json){
-                            memberListSet ('current','name','no',json)
-                            $('#name').attr('selected','selected')
-                        })
-                        get_member_end_list('callback',function(json){
-                            memberListSet('finished','name','no',json)
-                            $('#name').attr('selected','selected')
-                        })
-                        
+                        if($('#currentMemberList').css('display') == "block"){
+                            get_member_ing_list('callback',function(json){
+                                memberListSet ('current','name','no',json)
+                                $('#name').attr('selected','selected')
+                            })
+                        }else if($('#finishedMemberList').css('display') == "block"){
+                            get_member_end_list('callback',function(json){
+                                memberListSet('finished','name','no',json)
+                                $('#name').attr('selected','selected')
+                            })
+                        }
                   break;
                   case 'countH':
-                        get_member_ing_list('callback',function(json){
-                            memberListSet('current','count','yes',json);
-                            $('#countH').attr('selected','selected')
-                        })
-                        get_member_end_list('callback',function(json){
-                            memberListSet('finished','count','yes',json);
-                            $('#countH').attr('selected','selected')
-                        })
-                        
+                        if($('#currentMemberList').css('display') == "block"){
+                            get_member_ing_list('callback',function(json){
+                                memberListSet('current','count','yes',json);
+                                $('#countH').attr('selected','selected')
+                            })
+                        }else if($('#finishedMemberList').css('display') == "block"){
+                            get_member_end_list('callback',function(json){
+                                memberListSet('finished','count','yes',json);
+                                $('#countH').attr('selected','selected')
+                            })
+                        }  
                   break;
                   case 'countL':
-                        get_member_ing_list('callback',function(json){
+                        if($('#currentMemberList').css('display') == "block"){
+                            get_member_ing_list('callback',function(json){
                                 memberListSet('current','count','no',json);
                                 $('#countL').attr('selected','selected')
-                        })
-                        get_member_end_list('callback',function(json){
+                            })
+                        }else if($('#finishedMemberList').css('display') == "block"){
+                            get_member_end_list('callback',function(json){
                                 memberListSet('finished','count','no',json);
                                 $('#countL').attr('selected','selected')
-                        })
+                            })
+                        }
                   break;
                   case 'startP':
+                        if($('#currentMemberList').css('display') == "block"){
+
+                        }else if($('#finishedMemberList').css('display') == "block"){
+
+                        }
                         get_member_ing_list('callback',function(json){
                                 memberListSet('current','date','no',json);
                                 $('#startP').attr('selected','selected')
@@ -3744,24 +3814,30 @@ function deleteMemberAjax(){
                         })
                   break;
                   case 'startR':
-                        get_member_ing_list('callback',function(json){
+                        if($('#currentMemberList').css('display') == "block"){
+                           get_member_ing_list('callback',function(json){
                                 memberListSet('current','date','yes',json);
                                 $('#startR').attr('selected','selected')
-                        })
-                        get_member_end_list('callback',function(json){
+                            }) 
+                        }else if($('#finishedMemberList').css('display') == "block"){
+                            get_member_end_list('callback',function(json){
                                 memberListSet('finished','date','yes',json);
                                 $('#startR').attr('selected','selected')
-                        })
+                            })
+                        }
                   break;
                   case 'recent':
-                        get_member_ing_list('callback',function(json){
+                        if($('#currentMemberList').css('display') == "block"){
+                            get_member_ing_list('callback',function(json){
                                 memberListSet('current','date','yes',json);
                                 $('#recent').attr('selected','selected')
-                        })
-                        get_member_end_list('callback',function(json){
+                            })
+                        }else if($('#finishedMemberList').css('display') == "block"){
+                            get_member_end_list('callback',function(json){
                                 memberListSet('finished','date','yes',json);
                                 $('#recent').attr('selected','selected')
-                        })
+                            })
+                        }
                   break;
                 }
                 console.log('success');
