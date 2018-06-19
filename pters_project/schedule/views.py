@@ -778,12 +778,7 @@ def add_repeat_schedule_confirm(request):
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
                 push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
                                     + '~' + str(end_date) + ' 반복일정을 등록했습니다')
-                # func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
-                #                        request.user.last_name + request.user.first_name + '님이 ' + str(start_date) \
-                #                        + '~' + str(end_date) + ' 반복일정을 등록했습니다')
-                # request.session['push_lecture_id'] = push_lecture_id
-                # request.session['push_title'] = push_title
-                # request.session['push_message'] = push_message
+
                 context['push_lecture_id'] = push_lecture_id
                 context['push_title'] = push_title
                 context['push_message'] = push_message
@@ -903,9 +898,7 @@ def delete_repeat_schedule_logic(request):
             push_title.append(class_type_name + ' 수업 - 일정 알림')
             push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
                                 + '~' + str(end_date) + ' 반복일정을 취소했습니다')
-            # func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
-            #                        request.user.last_name + request.user.first_name + '님이 ' + str(start_date)\
-            #                        + '~' + str(end_date) + ' 반복일정을 취소했습니다')
+
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
@@ -1029,11 +1022,11 @@ def add_group_schedule_logic(request):
             schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time,
                                                                  '%Y-%m-%d %H:%M:%S.%f')
             schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태에 문제가 있습니다.'
 
     if error is None:
@@ -1129,13 +1122,6 @@ def add_group_schedule_logic(request):
                                                                   + push_info_schedule_end_date[0] + ':'\
                                                                   + push_info_schedule_end_date[1] + ' 그룹 일정을 등록했습니다')
 
-                                # func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
-                                #                        request.user.last_name + request.user.first_name + '님이 '
-                                #                        + push_info_schedule_start_date[0] + ':' +
-                                #                        push_info_schedule_start_date[1]
-                                #                        + '~' + push_info_schedule_end_date[0] + ':' +
-                                #                        push_info_schedule_end_date[1] + ' 그룹 일정을 등록했습니다')
-
                     except TypeError:
                         error_temp = error_temp
                     except ValueError:
@@ -1162,9 +1148,6 @@ def add_group_schedule_logic(request):
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
-            # request.session['push_lecture_id'] = push_lecture_id
-            # request.session['push_title'] = push_title
-            # request.session['push_message'] = push_message
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -1430,16 +1413,9 @@ def add_member_group_schedule_logic(request):
         push_message.append(request.user.last_name + request.user.first_name + '님이 '
                             + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                             + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' 그룹 일정을 등록했습니다')
-        # request.session['push_lecture_id'] = push_lecture_id
-        # request.session['push_title'] = push_title
-        # request.session['push_message'] = push_message
         context['push_lecture_id'] = push_lecture_id
         context['push_title'] = push_title
         context['push_message'] = push_message
-        # func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
-        #                        request.user.last_name + request.user.first_name + '님이 '
-        #                        + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-        #                        + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]+' 그룹 일정을 등록했습니다')
 
         return render(request, 'ajax/schedule_error_info.html', context)
     else:

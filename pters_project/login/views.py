@@ -346,14 +346,14 @@ def add_member_info_logic_test(request):
 
                 #    class_info.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '이미 가입된 회원입니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.1'
-        except ValidationError as e:
-            error = '등록 값의 형태가 문제 있습니다.2'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다.'
         except InternalError:
             error = '이미 가입된 회원입니다.'
 
@@ -422,13 +422,13 @@ class AddMemberView(RegistrationView, View):
                         #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
 
                         #    class_info.save()
-                except ValueError as e:
+                except ValueError:
                     error = '이미 가입된 회원입니다.'
-                except IntegrityError as e:
+                except IntegrityError:
                     error = '등록 값에 문제가 있습니다.'
-                except TypeError as e:
+                except TypeError:
                     error = '등록 값의 형태가 문제 있습니다.'
-                except ValidationError as e:
+                except ValidationError:
                     error = '등록 값의 형태가 문제 있습니다.'
                 except InternalError:
                     error = '이미 가입된 회원입니다.'
@@ -655,13 +655,13 @@ def out_member_logic(request):
                 member.mod_dt = timezone.now()
                 member.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
