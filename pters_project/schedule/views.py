@@ -310,7 +310,7 @@ def delete_schedule_logic(request):
 # 일정 완료
 def finish_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
-    member_id = request.POST.get('member_id')
+    member_id = request.POST.get('member_id', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
@@ -329,7 +329,6 @@ def finish_schedule_logic(request):
         error = '스케쥴을 선택하세요.'
 
     if error is None:
-
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
@@ -347,7 +346,6 @@ def finish_schedule_logic(request):
         end_date = schedule_info.end_dt
         if schedule_info.state_cd == 'PE':
             error = '이미 완료된 스케쥴입니다.'
-
     if error is None:
         lecture_info = schedule_info.lecture_tb
 
@@ -395,6 +393,7 @@ def finish_schedule_logic(request):
                 group_repeat_schedule_id = lecture_repeat_schedule_data.group_schedule_id
             func_refresh_group_status(schedule_info.group_tb_id, schedule_info.group_schedule_id, group_repeat_schedule_id)
 
+    print('test5')
     if error is None:
 
         push_info_schedule_start_date = str(start_date).split(':')
@@ -416,6 +415,7 @@ def finish_schedule_logic(request):
         context['push_title'] = push_title
         context['push_message'] = push_message
 
+    print('test6')
     if error is None:
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
@@ -812,7 +812,7 @@ def add_repeat_schedule_confirm(request):
 @csrf_exempt
 def delete_repeat_schedule_logic(request):
 
-    repeat_schedule_id = request.POST.get('repeat_schedule_id')
+    repeat_schedule_id = request.POST.get('repeat_schedule_id', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
@@ -847,6 +847,7 @@ def delete_repeat_schedule_logic(request):
         en_dis_type = repeat_schedule_info.en_dis_type
         lecture_id = repeat_schedule_info.lecture_tb_id
         group_id = repeat_schedule_info.group_tb_id
+
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
             try:
@@ -866,17 +867,25 @@ def delete_repeat_schedule_logic(request):
     if error is None:
         try:
             with transaction.atomic():
+                delete_lecture_id_list = []
+                old_lecture_id = None
                 for delete_schedule_info in schedule_data:
                     if delete_schedule_info.state_cd != 'PE':
-                        delete_lecture_id = delete_schedule_info.lecture_tb_id
+                        current_lecture_id = delete_schedule_info.lecture_tb_id
                         delete_schedule_info.delete()
+
+                        if en_dis_type == ON_SCHEDULE_TYPE:
+                            if old_lecture_id != current_lecture_id:
+                                old_lecture_id = current_lecture_id
+                                delete_lecture_id_list.append(old_lecture_id)
+
                         # if en_dis_type == ON_SCHEDULE_TYPE:
                         #     error = func_refresh_lecture_count(delete_lecture_id)
                     # if error is not None:
                     #     break
-
                 if en_dis_type == ON_SCHEDULE_TYPE:
-                    error = func_refresh_lecture_count(delete_lecture_id)
+                    for delete_lecture_id_info in delete_lecture_id_list:
+                        error = func_refresh_lecture_count(delete_lecture_id_info)
 
                 if error is None:
                     schedule_result = func_delete_repeat_schedule(repeat_schedule_id)
@@ -903,6 +912,7 @@ def delete_repeat_schedule_logic(request):
             member_lecture_info = member_lecture_data_info.lecture_tb
             member_lecture_info.schedule_check = 1
             member_lecture_info.save()
+
         if group_id is None or group_id == '':
             func_save_log_data(start_date, end_date, class_id, lecture_id,
                                request.user.last_name+request.user.first_name,
@@ -1187,7 +1197,7 @@ def delete_group_schedule_logic(request):
     error = None
     request.session['date'] = date
     request.session['day'] = day
-
+    print()
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
     schedule_info = None
@@ -1527,7 +1537,7 @@ def add_group_repeat_schedule_logic(request):
                                                            use=USE)
 
         if len(group_lecture_data) == 0:
-            error = '그룹에 해당하는 회원들의 예약 가능 횟수가 없습니다.'
+            error = '그룹 회원들의 예약 가능 횟수가 없습니다.'
 
         for group_lecture_info in group_lecture_data:
             if group_schedule_reg_counter < group_lecture_info.lecture_tb.lecture_avail_count:
