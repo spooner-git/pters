@@ -1259,9 +1259,9 @@ function float_btn_managemember(option){
 
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
-        $('#addgrouptypename').text('신규 그룹 레슨')
+        $('#addgrouptypename').text('신규 고정 그룹')
         
-        $('#uptext2, #uptext2_PC').text('신규 그룹 레슨 추가');
+        $('#uptext2, #uptext2_PC').text('신규 고정 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         //$('._ADD_GROUPMEMBER_NEW').show()
@@ -1286,9 +1286,9 @@ function float_btn_managemember(option){
         $('#explain_group_lesson').hide()
         $('#grouptype option[value="EMPTY"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('EMPTY')
-        $('#addgrouptypename').text('신규 오픈 레슨')
+        $('#addgrouptypename').text('신규 자유 그룹')
 
-        $('#uptext2, #uptext2_PC').text('신규 오픈 레슨 추가');
+        $('#uptext2, #uptext2_PC').text('신규 자유 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
@@ -1422,9 +1422,9 @@ function pc_add_member(option){
         $('#explain_open_lesson').hide()
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
-        $('#addgrouptypename').text('신규 그룹 레슨')
+        $('#addgrouptypename').text('신규 고정 그룹')
         
-        $('#uptext2, #uptext2_PC').text('신규 그룹 레슨 추가');
+        $('#uptext2, #uptext2_PC').text('신규 고정 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
@@ -1440,9 +1440,9 @@ function pc_add_member(option){
         $('#explain_group_lesson').hide()
         $('#grouptype option[value="EMPTY"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('EMPTY')
-        $('#addgrouptypename').text('신규 오픈 레슨')
+        $('#addgrouptypename').text('신규 자유 그룹')
 
-        $('#uptext2, #uptext2_PC').text('신규 오픈 레슨 추가');
+        $('#uptext2, #uptext2_PC').text('신규 자유 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
@@ -2317,7 +2317,8 @@ function check_dropdown_selected(){
         }
     //그룹 추가 창일때
     }else if($('._ADD_GROUP_NEW').css('display')=="block"){
-        if(groupname.val().length > 0 && grouptype.val().length > 0 && groupcapacity.val().length > 0){
+        //if(groupname.val().length > 0 && grouptype.val().length > 0 && groupcapacity.val().length > 0){
+        if(groupname.val().length > 0 && $('#form_grouptype').val().length > 0 && groupcapacity.val().length > 0){
 
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
@@ -3560,10 +3561,12 @@ function add_group_form_func(){
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
 
-
-                groupListSet('current',jsondata)
-                groupListSet('finished',jsondata)
-
+                if($('#currentGroupList').css('display') == "block"){
+                    groupListSet('current',jsondata)
+                }else if($('#finishedGroupList').css('display') == "block"){
+                    groupListSet('finished',jsondata)
+                }
+                
                 closePopup('member_add')
                 console.log('success');
             }
@@ -3623,8 +3626,11 @@ function add_groupmember_form_func(){
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 get_member_list()
-                groupListSet('current',jsondata)
-                groupListSet('finished',jsondata)
+                if($('#currentGroupList').css('display') == "block"){
+                    groupListSet('current',jsondata)
+                }else if($('#finishedGroupList').css('display') == "block"){
+                    groupListSet('finished',jsondata)
+                }
                 $('#startR').attr('selected','selected')
                 closePopup('member_add')
                 console.log('success');
