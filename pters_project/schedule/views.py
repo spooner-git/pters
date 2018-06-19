@@ -1197,7 +1197,6 @@ def delete_group_schedule_logic(request):
     error = None
     request.session['date'] = date
     request.session['day'] = day
-    print()
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
     schedule_info = None
