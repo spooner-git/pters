@@ -425,7 +425,9 @@ $(document).ready(function(){
 							})
 							
 						}else{
-							send_group_plan_complete()
+							send_group_plan_complete("callback", function(){
+								ajaxClassTime();
+							})
 							for(var i=0; i<len; i++){
 								$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
 								$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
@@ -436,8 +438,7 @@ $(document).ready(function(){
 									signImageSend(senddata);
 									if(z==len){
 										completeSend();
-										// set_schedule_time(json);
-										ajaxClassTime()
+										//ajaxClassTime()
 										close_info_popup('cal_popup_planinfo')
 										ajax_block_during_complete_weekcal = true
 									}
