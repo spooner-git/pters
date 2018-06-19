@@ -453,7 +453,7 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
         var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
         for(var k=2; k<=memberLen+1; k++){
             //group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
-            group_delete_JSON.ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-id'))
+            group_delete_JSON.ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-dbid'))
             group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'))
         }
         group_delete_JSON.group_id = group_id
@@ -701,9 +701,7 @@ function delete_group_from_list(group_id){
 
 //그룹원 지우기
 function delete_groupmember_from_grouplist(){
-
-        console.log('delete_groupmember_from_grouplist')
-        console.log(group_delete_JSON)
+    console.log('group_delete_JSON', group_delete_JSON)
     $.ajax({
         url:'/trainer/delete_group_member_info/',
         type:'POST',
