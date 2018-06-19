@@ -166,10 +166,7 @@ def add_schedule_logic(request):
             push_message.append(request.user.last_name+request.user.first_name+'님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다.')
-            # func_send_push_trainer(lecture_id, class_type_name + ' 수업 - 일정 알림',
-            #                        request.user.last_name+request.user.first_name+'님이 '
-            #                        + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-            #                        + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 등록했습니다.')
+
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
@@ -305,7 +302,6 @@ def delete_schedule_logic(request):
 # 일정 완료
 def finish_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
-    # member_name = request.POST.get('member_name')
     member_id = request.POST.get('member_id')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
@@ -408,26 +404,12 @@ def finish_schedule_logic(request):
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                 + ' 일정이 완료됐습니다.')
-        # request.session['push_lecture_id'] = push_lecture_id
-        # request.session['push_title'] = push_title
-        # request.session['push_message'] = push_message
         context['push_lecture_id'] = push_lecture_id
         context['push_title'] = push_title
         context['push_message'] = push_message
-        # if schedule_info.group_tb_id is not None and schedule_info.group_tb_id != '':
-        #     func_send_push_trainer(schedule_info.lecture_tb_id, class_type_name + ' 수업 - 일정 알림',
-        #                            push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-        #                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[
-        #                                1] + ' 그룹 일정이 완료됐습니다')
-        # else:
-        #     func_send_push_trainer(schedule_info.lecture_tb_id, class_type_name + ' 수업 - 일정 알림',
-        #                            push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]\
-        #                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[
-        #                                1] + ' 일정이 완료됐습니다')
 
     if error is None:
         return render(request, 'ajax/schedule_error_info.html', context)
-        # return redirect(next_page)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
