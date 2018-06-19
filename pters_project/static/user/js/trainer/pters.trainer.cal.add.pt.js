@@ -2972,7 +2972,7 @@ function send_plan_delete(option, callbackoption, callback){
                       }else if($('._calweek').length == 1){
                         shade_index(-100)
                       }
-                      completeSend();
+                      //completeSend();
                     }
                 }
               },

@@ -216,6 +216,7 @@ $(document).ready(function(){
 			$("#id_member_name_delete").val(name); //회원 이름 저장
 			$('#id_member_dbid_delete').val(dbid)
 			$("#id_member_name_finish").val(name); //회원 이름 저장
+			$('#id_member_dbid_finish').val(dbid)
 			$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 
 			

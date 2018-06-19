@@ -281,6 +281,7 @@ $(document).ready(function(){
 		$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
 		$('#id_member_dbid_delete').val($(this).attr('data-dbid'))		  //회원 dbid를 저장
 		$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
+		$('#id_member_dbid_finish').val($(this).attr('data-dbid'))//member id 정보 저장
 		$("#id_repeat_member_id").val($(this).attr('data-dbid')); //member id 정보 저장
 		$("#id_repeat_lecture_id").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 		$("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
