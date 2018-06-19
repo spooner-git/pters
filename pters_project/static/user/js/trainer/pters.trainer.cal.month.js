@@ -203,7 +203,7 @@ $(document).ready(function(){
 			}
 			
 			var infoText2 = '[그룹]'+name+' '+selectedTime+':'+selectedMinute+yourplan
-			$("#cal_popup_planinfo").fadeIn('fast').attr({'schedule_id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
+			$("#cal_popup_planinfo").fadeIn('fast').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
 			$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
 			$('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
 			$('#popup_info').text(selectedDate);
@@ -216,9 +216,10 @@ $(document).ready(function(){
 
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
-			$("#id_member_name").val($(this).attr('data-memberName')); //회원 이름 저장
-			$("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
-			$("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
+			$("#id_member_name").val(name); //회원 이름 저장
+			$("#id_member_name_delete").val(name); //회원 이름 저장
+			$('#id_member_dbid_delete').val(dbid)
+			$("#id_member_name_finish").val(name); //회원 이름 저장
 			$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 
 			
@@ -283,7 +284,7 @@ $(document).ready(function(){
 				}
 				shade_index(200)
 				$('#cal_popup_planinfo').hide()
-				$('#cal_popup_plandelete').fadeIn('fast').attr({'schedule-id': $(this).parent('#cal_popup_planinfo').attr('schedule_id')})
+				$('#cal_popup_plandelete').fadeIn('fast').attr({'schedule-id': $(this).parent('#cal_popup_planinfo').attr('schedule-id')})
 			}
 			
 		})
@@ -410,7 +411,7 @@ $(document).ready(function(){
 					}else if(schedule_on_off == 2){
 						var len = $('#groupParticipants .groupParticipantsRow').length;
 						var z = 0
-						$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule_id'))
+						$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'))
 						if(len == 0){
 							send_group_plan_complete('callback', function(json, senddata){
 								send_memo()
@@ -930,7 +931,7 @@ function ajaxClassTime(){
 		}
 		var today_form = yyyy+'-'+ mm +'-'+"01"
 
-		var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('ajaxClassTime')
+		//var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('ajaxClassTime')
 		$.ajax({
 		  url: '/trainer/get_trainer_schedule/',
 		  type : 'POST',
@@ -944,7 +945,7 @@ function ajaxClassTime(){
 
 		  success:function(data){
 			var jsondata = JSON.parse(data);
-			TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+			//TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
 			if(jsondata.messageArray.length>0){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
@@ -1214,6 +1215,8 @@ function send_plan_complete(use, callback){
 
         //통신 실패시 처리
         error:function(){
+        	$('#errorMessageBar').show()
+            $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
         },
     })
 }
@@ -1251,6 +1254,8 @@ function send_group_plan_complete(use, callback){
 
         //통신 실패시 처리
         error:function(){
+        	$('#errorMessageBar').show()
+          	$('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
         },
     })
 }
@@ -1258,7 +1263,7 @@ function send_group_plan_complete(use, callback){
 
 
 function send_memo(){
-	var schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
+	var schedule_id = $('#cal_popup_planinfo').attr('schedule-id');
 	var memo = $('#popup_info3_memo').val()
 	$.ajax({
         url:'/schedule/update_memo_schedule/',
@@ -1281,7 +1286,8 @@ function send_memo(){
 
         //통신 실패시 처리
         error:function(){
-
+        	$('#errorMessageBar').show()
+          	$('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
         },
     })
 }

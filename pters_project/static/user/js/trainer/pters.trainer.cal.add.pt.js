@@ -964,7 +964,7 @@ $(document).ready(function(){
              //ajax 회원정보 입력된 데이터 송신
             if(ajax_block_during_submit == true){
                 ajax_block_during_submit = false;
-                var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(serverURL)
+                //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(serverURL)
                 $.ajax({
                     url: serverURL,
                     type:'POST',
@@ -977,7 +977,7 @@ $(document).ready(function(){
 
                     //통신성공시 처리
                     success:function(data){
-                        TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+                        //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
                         var jsondata = JSON.parse(data);
                         initialJSON = jsondata
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
@@ -1059,7 +1059,7 @@ $(document).ready(function(){
                     //통신 실패시 처리
                     error:function(){
                         $('#errorMessageBar').show()
-                        $('#errorMessageText').text('통신 에러: 관리자 문의')
+                        $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
                     },
                  })
             }
@@ -1408,7 +1408,7 @@ function clear_pt_off_add_popup(){
 
 
 function get_current_member_list(use, callback){
-    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_member_ing_list')
+    //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_member_ing_list')
     $.ajax({
           url: '/trainer/get_member_ing_list/',
           dataType : 'html',
@@ -1420,7 +1420,7 @@ function get_current_member_list(use, callback){
           },
 
           success:function(data){
-            TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+            //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
@@ -1442,14 +1442,14 @@ function get_current_member_list(use, callback){
 
           error:function(){
                 $('#errorMessageBar').show()
-                $('#errorMessageText').text('통신 에러: 관리자 문의')
+                $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
           }
         }) 
 }
 
 
 function get_current_group_list(use, callback){
-  var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_ing_list')
+  //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_ing_list')
     $.ajax({
           url: '/trainer/get_group_ing_list/',
           dataType : 'html',
@@ -1461,7 +1461,7 @@ function get_current_group_list(use, callback){
           },
 
           success:function(data){
-            TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+            //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
@@ -1476,14 +1476,14 @@ function get_current_group_list(use, callback){
           },
 
           complete:function(){
-            //completeSend(); //ajax 로딩이미지 숨기기
+              //completeSend(); //ajax 로딩이미지 숨기기
               $('#membersSelected span, #membersSelected_mini span').show()
               $('#membersSelected img.ajaxloading_dropdown, #membersSelected_mini img.ajaxloading_dropdown').hide()
           },
 
           error:function(){
                 $('#errorMessageBar').show()
-                $('#errorMessageText').text('통신 에러: 관리자 문의')
+                $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
           }
         })
 }
@@ -1546,7 +1546,7 @@ function ajaxRepeatConfirmSend(use, callback){
         var serverURL = '/schedule/add_repeat_schedule_confirm/'
       }
       var $form = $('#confirm-repeat-schedule-form')
-      var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(serverURL)
+      //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(serverURL)
       $.ajax({
         url: serverURL,
         type:'POST',
@@ -1558,7 +1558,7 @@ function ajaxRepeatConfirmSend(use, callback){
         },
 
         success:function(data){
-          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+          //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           if(jsondata.messageArray.length>0){
             $('#errorMessageBar').show()
@@ -1585,7 +1585,7 @@ function ajaxRepeatConfirmSend(use, callback){
 
         error:function(){
               $('#errorMessageBar').show()
-              $('#errorMessageText').text('통신 에러: 관리자 문의')
+              $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
         }
       })    
 }
@@ -1597,7 +1597,7 @@ function ajaxTimeGraphSet(date, use, callback){
       durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
       $('#durations_mini, #durations_mini').html('')
       $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
-      var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule')
+      //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule')
       $.ajax({
         url: '/trainer/get_trainer_schedule/',
         type : 'POST',
@@ -1609,7 +1609,7 @@ function ajaxTimeGraphSet(date, use, callback){
         },
 
         success:function(data){
-          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+          //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           if(jsondata.messageArray.length>0){
             $('#errorMessageBar').show()
@@ -1635,7 +1635,7 @@ function ajaxTimeGraphSet(date, use, callback){
 
         error:function(){
           $('#errorMessageBar').show()
-          $('#errorMessageText').text('통신 에러: 관리자 문의')
+          $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
         }
       }) 
 }
@@ -1665,7 +1665,7 @@ function get_repeat_info(dbID){
       var fill_option = 'off'
       var type_;
     }
-    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
+    //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
     $.ajax({
         url: url_,
         type: type_,
@@ -1677,7 +1677,7 @@ function get_repeat_info(dbID){
         },
 
         success:function(data){
-          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+          //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show();
@@ -1697,14 +1697,14 @@ function get_repeat_info(dbID){
 
         error:function(){
           $('#errorMessageBar').show()
-          $('#errorMessageText').text('통신 에러: 관리자 문의----')
+          $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
         }
       })
 }
 
 
 function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
-    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
+    //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
     $.ajax({
         url: '/trainer/get_group_member_repeat_schedule_list/',
         type : 'POST',
@@ -1716,7 +1716,7 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
         },
 
         success:function(data){
-          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+          //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data);
           if(jsondata.messageArray.length>0){
             $('#errorMessageBar').show()
@@ -1734,7 +1734,7 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
 
         error:function(){
           $('#errorMessageBar').show()
-          $('#errorMessageText').text('통신 에러: 관리자 문의')
+          $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
         }
       })
 }
@@ -2774,7 +2774,7 @@ $(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',func
 
 //그룹 일정에 속한 회원목록을 받아온다.
 function get_group_plan_participants(group_schedule_id, callbackoption , callback){
-    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_schedule_list')
+    //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_schedule_list')
     $.ajax({
         url: '/trainer/get_group_member_schedule_list/',
         type : 'POST',
@@ -2786,7 +2786,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         },
 
         success:function(data){
-            TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER);
+            //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER);
             var jsondata = JSON.parse(data);
             if(callbackoption == "callback"){
               callback(jsondata)
@@ -2798,7 +2798,8 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         },
 
         error:function(){
-          console.log('server error')
+          $('#errorMessageBar').show()
+          $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
         }
       })
 }
@@ -2819,7 +2820,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
       }
       var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i]+'.png">'
       var name = '<span data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+finish+'</span>'
-      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata.scheduleIdArray[i]+'">'
+      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" data-dbid="'+jsondata.db_id[i]+'" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata.scheduleIdArray[i]+'">'
       var htmlend = '</div>'
       htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
     }
@@ -2853,7 +2854,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 function send_add_groupmember_plan(use, callback){
     var $form = $('#add_groupmember-plan-form').serializeArray()
     var sendData = send_Data($form)
-    var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/schedule/add_member_group_schedule')
+    //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/schedule/add_member_group_schedule')
      $.ajax({
       url: '/schedule/add_member_group_schedule/',
       type : 'POST',
@@ -2865,7 +2866,7 @@ function send_add_groupmember_plan(use, callback){
       },
 
       success:function(data){
-          TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+          //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
           var jsondata = JSON.parse(data)
             if(jsondata.messageArray.length>0){
               $('#errorMessageBar').show()
@@ -2893,7 +2894,8 @@ function send_add_groupmember_plan(use, callback){
       },
 
       error:function(){
-        console.log('server error')
+        $('#errorMessageBar').show()
+        $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
       }
     })
 }
@@ -2901,14 +2903,15 @@ function send_add_groupmember_plan(use, callback){
 
 $(document).on('click','.group_member_cancel',function(){
     $('#id_schedule_id').val($(this).attr('schedule-id'))
+    $('#id_member_dbid_delete').val($(this).attr('data-dbid'))
     var group_id = $(this).attr('data-groupid');
     var group_schedule_id = $(this).attr('group-schedule-id')
     var max = $(this).attr('data-max')
     send_plan_delete('pt', 'callback', function(){
         ajaxClassTime();
-        get_group_plan_participants(group_schedule_id,'callback',
-          function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)
-          })
+        get_group_plan_participants(group_schedule_id,'callback',function(jsondata){
+            draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)
+        })
     })
 })
 
@@ -2920,6 +2923,7 @@ function send_plan_delete(option, callbackoption, callback){
     var serializeArray = $form.serializeArray();
     var sendData = send_Data(serializeArray)
     var url_ = '/schedule/delete_schedule/'
+    console.log(serializeArray,'pt')
   }else if(option == "off"){
     var $form = $('#daily-off-delete-form');
     var serializeArray = $form.serializeArray();
@@ -2927,12 +2931,13 @@ function send_plan_delete(option, callbackoption, callback){
     var url_ = '/schedule/delete_schedule/'
   }else if(option == "group"){
     var $form = $('#daily-pt-delete-form');
-    $('#id_schedule_id').val($('#cal_popup_plandelete').attr('schedule_id'))
+    $('#id_schedule_id').val($('#cal_popup_plandelete').attr('schedule-id'))
     var serializeArray = $form.serializeArray();
     var sendData = send_Data(serializeArray)
     var url_ = '/schedule/delete_group_schedule/'
+    console.log(serializeArray,'group')
   }
-  var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
+  //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
   $.ajax({
             url: url_,
             type:'POST',
@@ -2944,7 +2949,7 @@ function send_plan_delete(option, callbackoption, callback){
 
             //통신성공시 처리
             success:function(data){
-                TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+                //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
                 var jsondata = JSON.parse(data)
                 if(jsondata.messageArray.length>0){
                       $('#errorMessageBar').show()
@@ -2978,8 +2983,8 @@ function send_plan_delete(option, callbackoption, callback){
 
             //통신 실패시 처리
             error:function(){
-              alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
-              console.log("error")
+              $('#errorMessageBar').show()
+              $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.")
             },
         })
 }
