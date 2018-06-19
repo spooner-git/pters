@@ -1514,9 +1514,6 @@ $('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
 
 
 
-
-
-
 //생일입력 드랍다운
 function birth_dropdown_set(){
     if(Options.language == "KOR"){

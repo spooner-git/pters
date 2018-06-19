@@ -19,19 +19,33 @@ $('#groupcapacity').change(function(){
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
 var added_New_Member_Num = 0
 $('button#addByNew').click(function(e){
-	addByNew_input_eventGroup()
-	e.preventDefault()
-	added_New_Member_Num++
-	var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="">'
-	var nameinput = '<input class="new_member_lastname" placeholder="회원 성"><input class="new_member_firstname" placeholder="회원 이름">'
-	var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
-	var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'
-	var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">'
-	var htmlend = '</div>'
+    var group_id = $('#form_member_groupid').val()
+    var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype')
+    var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity')
+    var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length
+    var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length
 
-	var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend
-	$('#addedMemberListBox span').text(added_New_Member_Num+' 명')
-	$('#addedMemberListBox').prepend(html)
+    console.log(alreadyParticipateNumber, addedParticipateNumber, group_capacity, group_type)
+    if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
+        alert('고정 그룹 : 이미 정원이 가득 찼습니다.')
+    }else{
+        addByNew_input_eventGroup()
+        e.preventDefault()
+        added_New_Member_Num++
+        var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="">'
+        var nameinput = '<input class="new_member_lastname" placeholder="회원 성"><input class="new_member_firstname" placeholder="회원 이름">'
+        var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
+        var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'
+        var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">'
+        var htmlend = '</div>'
+
+        var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend
+        $('#addedMemberListBox span').text(added_New_Member_Num+' 명')
+        $('#addedMemberListBox').prepend(html)
+    }
+
+
+	
 })
 
 //회원추가된 항목에서 x버튼을 누르면 목록에서 뺀다.
@@ -168,25 +182,40 @@ $(document).on('click','img.add_listedMember',function(){
 
     //회원관리 : 리스트로 그룹회원 추가
     }else{
-        if(selected_sex=="M"){
-            var sexInfo = "남"
-        }else if(selected_sex=="W"){
-            var sexInfo = "여"
+
+        var group_id = $('#form_member_groupid').val()
+        var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype')
+        var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity')
+        var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length
+        var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length
+
+        console.log(alreadyParticipateNumber, addedParticipateNumber, group_capacity, group_type)
+        if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
+            alert('고정 그룹 : 이미 정원이 가득 찼습니다.')
         }else{
-            var sexInfo = "-"
+            if(selected_sex=="M"){
+                var sexInfo = "남"
+            }else if(selected_sex=="W"){
+                var sexInfo = "여"
+            }else{
+                var sexInfo = "-"
+            }
+            var selected_phone = $(this).parents('div.list_addByList').attr('data-phone')
+            if(selected_phone.length == 0){
+                var selected_phone = "-"
+            }
+
+            var html = '<div class="addByNewRaw" data-lastname="'+selected_lastname+'" data-firstname="'+selected_firstname+'" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>'
+
+            $('#addedMemberListBox').prepend(html)
+
+            added_New_Member_Num++
+            $('#addedMemberListBox span').text(added_New_Member_Num+' 명')
+            $(this).parents('div.list_addByList').remove()
         }
-        var selected_phone = $(this).parents('div.list_addByList').attr('data-phone')
-        if(selected_phone.length == 0){
-            var selected_phone = "-"
-        }
 
-        var html = '<div class="addByNewRaw" data-lastname="'+selected_lastname+'" data-firstname="'+selected_firstname+'" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>'
 
-        $('#addedMemberListBox').prepend(html)
-
-        added_New_Member_Num++
-        $('#addedMemberListBox span').text(added_New_Member_Num+' 명')
-        $(this).parents('div.list_addByList').remove()
+        
      }
    
 })
@@ -937,8 +966,6 @@ function groupMemberListSet(group_id, jsondata){
         htmlToJoin.push(memberRow)
     }
 
-    console.log(grouptype)
-
     if(grouptype == 'EMPTY'){
         //var group_type = group_capacity+"인 공개"
         var EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 소속인원은 이 그룹명으로 개설된 레슨에 예약 가능하며, 그룹 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>"
@@ -949,12 +976,12 @@ function groupMemberListSet(group_id, jsondata){
     if(groupcapacity <= len && grouptype =='NORMAL'){
         var addButton = ''
     }else{
-        var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
+        var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>'
     }
 
     var html = htmlToJoin.join('') + addButton
     if(jsondata.db_id.length == 0){
-        var html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-groupid="'+group_id+'"></div>'
+        var html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>'
     }
 
     $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html)

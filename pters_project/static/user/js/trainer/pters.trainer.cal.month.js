@@ -185,11 +185,7 @@ $(document).ready(function(){
 			}
 			shade_index(150)
 			$('#popup_planinfo_title').text('레슨 일정')
-			if($('body').width()>600){
-				$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
-			}else{
-				$('#popup_btn_complete').css({'color':'#ffffff','background':'#282828'}).val('')
-			}
+			$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
 			var schedule_finish_check = $(this).attr('data-schedule-check')
 			var dbid = $(this).attr('data-dbid');
 			var name = $(this).attr('data-membername')
