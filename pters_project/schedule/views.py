@@ -261,16 +261,15 @@ def delete_schedule_logic(request):
         func_refresh_group_status(group_id, None, None)
 
     if error is None:
-
-        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=USE)
-        for member_lecture_data_info in member_lecture_data:
-            member_lecture_info = member_lecture_data_info.lecture_tb
-            member_lecture_info.schedule_check = 1
-            member_lecture_info.save()
-
         if group_id is None or group_id == '':
             func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
                                member_name, en_dis_type, 'LS02', request)
+            member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP',
+                                                                lecture_tb__use=USE)
+            for member_lecture_data_info in member_lecture_data:
+                member_lecture_info = member_lecture_data_info.lecture_tb
+                member_lecture_info.schedule_check = 1
+                member_lecture_info.save()
 
         else:
             func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
@@ -298,7 +297,6 @@ def delete_schedule_logic(request):
             context['push_lecture_id'] = ''
             context['push_title'] = ''
             context['push_message'] = ''
-
         # return redirect(next_page)
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
@@ -393,7 +391,6 @@ def finish_schedule_logic(request):
                 group_repeat_schedule_id = lecture_repeat_schedule_data.group_schedule_id
             func_refresh_group_status(schedule_info.group_tb_id, schedule_info.group_schedule_id, group_repeat_schedule_id)
 
-    print('test5')
     if error is None:
 
         push_info_schedule_start_date = str(start_date).split(':')
@@ -415,7 +412,6 @@ def finish_schedule_logic(request):
         context['push_title'] = push_title
         context['push_message'] = push_message
 
-    print('test6')
     if error is None:
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
@@ -1195,11 +1191,12 @@ def delete_group_schedule_logic(request):
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     error = None
+    schedule_info = None
     request.session['date'] = date
     request.session['day'] = day
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
-    schedule_info = None
+
     if error is None:
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
@@ -1208,6 +1205,7 @@ def delete_group_schedule_logic(request):
 
     if error is None:
         group_info = schedule_info.group_tb
+
     if error is None:
         schedule_result = func_delete_schedule(schedule_id, request.user.id)
         error = schedule_result['error']
@@ -1218,13 +1216,12 @@ def delete_group_schedule_logic(request):
 
     if error is None:
 
-        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP',
-                                                            lecture_tb__use=USE)
-
-        for member_lecture_data_info in member_lecture_data:
-            member_lecture_info = member_lecture_data_info.lecture_tb
-            member_lecture_info.schedule_check = 1
-            member_lecture_info.save()
+        # member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP',
+        #                                                     lecture_tb__use=USE, use=USE)
+        # for member_lecture_data_info in member_lecture_data:
+        #     member_lecture_info = member_lecture_data_info.lecture_tb
+        #     member_lecture_info.schedule_check = 1
+        #     member_lecture_info.save()
 
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
@@ -1239,8 +1236,7 @@ def delete_group_schedule_logic(request):
         context['push_message'] = ''
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
-        logger.error(
-            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
         return redirect(next_page)
 
