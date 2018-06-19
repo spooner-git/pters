@@ -2430,8 +2430,6 @@ def delete_group_member_info_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
     group_id = json_loading_data['group_id']
-    # if member_id == '':
-    #    error = '회원 ID를 확인해 주세요.'
 
     if error is None:
         idx = 0
@@ -2441,7 +2439,6 @@ def delete_group_member_info_logic(request):
                     user = User.objects.get(id=member_id_info)
                 except ObjectDoesNotExist:
                     error = '회원 ID를 확인해 주세요.'
-
                 try:
                     member = MemberTb.objects.get(user_id=user.id)
                 except ObjectDoesNotExist:

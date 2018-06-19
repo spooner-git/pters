@@ -63,7 +63,6 @@ def func_refresh_lecture_count(lecture_id):
     if error is None:
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
-
         except ObjectDoesNotExist:
             error = '회원 수강정보를 불러오지 못했습니다.'
 
