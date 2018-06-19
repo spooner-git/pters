@@ -2929,6 +2929,7 @@ function send_plan_delete(option, callbackoption, callback){
     var serializeArray = $form.serializeArray();
     var sendData = send_Data(serializeArray)
     var url_ = '/schedule/delete_schedule/'
+    console.log(serializeArray, 'off')
   }else if(option == "group"){
     var $form = $('#daily-pt-delete-form');
     $('#id_schedule_id').val($('#cal_popup_plandelete').attr('schedule-id'))
@@ -2971,7 +2972,7 @@ function send_plan_delete(option, callbackoption, callback){
                       }else if($('._calweek').length == 1){
                         shade_index(-100)
                       }
-                      completeSend();
+                      //completeSend();
                     }
                 }
               },
