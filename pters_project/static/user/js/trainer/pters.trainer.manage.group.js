@@ -1507,6 +1507,7 @@ function priceInput(price, type, selector){
 $('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
     var priceInputValue = $(this).val().replace(/,/g, "");
     $(this).val(numberWithCommas(priceInputValue));
+    $('#lecturePrice_add_value, #lecturePrice_add_value_fast').val(priceInputValue);
     check_dropdown_selected()
 });
 
