@@ -1289,6 +1289,17 @@ select:focus > option:checked {
 	display:none;
 }
 
+.button_add_member_lecture{
+	font-weight: bold !important;
+	border: 1px solid #cccccc !important;
+	color:#fe4e65 !important;
+	width: 15px !important;
+	line-height: 15px !important;
+	text-align:center !important;
+	padding:0 !important;
+	cursor: pointer !important;
+}
+
 @media(min-width: 600px){
 
 	.input_available{
@@ -1437,17 +1448,6 @@ select:focus > option:checked {
 			background: #282828;
 			color: #ffffff;
 		}
-	.button_add_member_lecture{
-		font-weight: bold !important;
-		border: 1px solid #cccccc !important;
-		color:#fe4e65 !important;
-		width: 15px !important;
-		line-height: 15px !important;
-		text-align:center !important;
-		padding:0 !important;
-		cursor: pointer !important;
-	}
-
 	#float_btn{
 		display: none !important;
 	}
