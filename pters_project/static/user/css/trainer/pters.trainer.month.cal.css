@@ -8,7 +8,8 @@ body{
 
 .swiper-container{
 	overflow-y: overlay;
-	height: 100%;
+	/*height: 100%;*/
+	height: auto;
 }
 
 img,a,div,span,p{
@@ -962,4 +963,25 @@ img,a,div,span,p{
 	width: 100px;
 	margin-right: 14.845px;
 	margin-left: 14.845px;
+}
+
+
+
+html{
+	background: #ffffff;
+}
+
+#gap{
+	width: 100%;
+	height: 50px;
+	background: #ffffff;
+}
+@media(min-width: 600px){
+	html{
+		background: #f7f7f7;
+	}
+
+	#gap{
+		background: #f7f7f7;
+	}
 }

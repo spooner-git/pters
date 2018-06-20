@@ -592,6 +592,13 @@
 		background: #f4f4f4 !important;
 		-webkit-background:#f4f4f4 !important;
 	}
+			#popup_delete_btn_yes:hover, #popup_delete_btn_yes:active{
+				background: #ff6478 !important;
+			}
+
+			#popup_delete_btn_no:hover, #popup_delete_btn_no:active{
+				background: #3c3c3c !important;
+			}
 
 
 	/*월간 달력 팝업*/
