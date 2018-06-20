@@ -786,7 +786,7 @@ $(document).ready(function(){
             $('#remainCount_mini, #remainCount_mini_text, #countsSelected_mini').hide()
             $('#groupInfo, #groupInfo_mini, #groupInfo_mini_text, #groupInfoSelected').show()
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-grouptype','group');
-            $('#grouptypenumInfo, #groupInfoSelected').text('('+$(this).attr('data-grouptypecd')+' 정원'+$(this).attr('data-membernum')+'명)')
+            $('#grouptypenumInfo, #groupInfoSelected').text('('+$(this).attr('data-grouptypecd_nm')+' 정원'+$(this).attr('data-membernum')+'명)')
             $("#id_group_id").val($(this).attr('data-groupid'));
           }
           
@@ -844,7 +844,7 @@ $(document).ready(function(){
 
               $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':$(this).attr('data-groupid')})
               $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-              $('#grouptypenumInfo').text($(this).attr('data-grouptypecd')+' ('+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum')+')')
+              $('#grouptypenumInfo').text($(this).attr('data-grouptypecd_nm')+' ('+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum')+')')
               $("#id_group_id").val($(this).attr('data-groupid'));
           }
           
@@ -1127,7 +1127,7 @@ $(document).ready(function(){
                     })
                     get_current_group_list('callback',function(jsondata){
                       set_group_dropdown_list(jsondata)
-                      $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
+                      $('#grouptypenumInfo').text($('#members_mobile a[data-groupid="'+id+'"]').attr('data-grouptypecd_nm') +' '+ $('#members_mobile a[data-groupid="'+id+'"]').attr('data-groupmembernum') + ' / ' + $('#members_mobile a[data-groupid="'+id+'"]').attr('data-membernum'))
                     })
                 }
                 
@@ -1523,8 +1523,8 @@ function set_group_dropdown_list(jsondata){
 
     if(memberSize>0){
       for(var i=0; i<memberSize; i++){
-        member_array_mobile[i] = '<li><a  data-grouptype="group" data-grouptypecd="'+jsondata.group_type_cd[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
-        member_array_pc[i] = '<li><a  data-grouptype="group" data-grouptypecd="'+jsondata.group_type_cd[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
+        member_array_mobile[i] = '<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
+        member_array_pc[i] = '<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
       }
     }else if(memberSize == 0){
         //member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 그룹이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';

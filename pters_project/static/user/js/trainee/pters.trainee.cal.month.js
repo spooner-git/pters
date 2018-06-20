@@ -9,7 +9,8 @@ year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
 
 */
 $(document).ready(function(){
-
+	var reg_check = 0;
+	var click_check = 0;
 
 	$(document).keyup(function(e){
 		if(e.keyCode == 27){
@@ -290,6 +291,7 @@ $(document).ready(function(){
 		var day = dayarry[dayraw];
 		var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
 		clicked_td_date_info = yy+'_'+mm+'_'+dd
+		click_check = 0
 		if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
 			$('#shade2').css({'display':'block'});
 			$('#ng_popup_text').html('<p>현재시간은 일정 예약변경이 불가한 시간입니다.</p><p style="color:#fe4e65;font-size=13px;">예약변경 가능 시간대<br> '+availableStartTime+'시 ~ '+availableEndTime+'시</p>')
@@ -525,6 +527,7 @@ $(document).ready(function(){
     })
 
     function send_reservation(){
+    	click_check = 0
 		$.ajax({
 	          url: '/trainee/add_trainee_schedule/',
 	          data: $('#pt-add-form').serialize(),
@@ -658,6 +661,7 @@ $(document).ready(function(){
 	})
 
 	function send_delete(){
+		click_check = 1
 		$.ajax({
 	          url: '/trainee/delete_trainee_schedule/',
 	          data: $('#pt-delete-form').serialize(),
@@ -681,10 +685,11 @@ $(document).ready(function(){
                             send_push_func(jsondata.push_class_id[i], jsondata.push_title[i], jsondata.push_message[i])
                         }
 					}
+					close_delete_confirm_popup();
+				 	close_info_popup('cal_popup_plancheck');
 					ajaxClassTime("this", 46, "callback", function(json){
 						plancheck(clicked_td_date_info, json)
 					});
-					close_delete_confirm_popup()
 	            }
 	            
 			  },
@@ -762,6 +767,13 @@ $(document).ready(function(){
 			$("#addpopup").css({'display':'none'})
 			$('#shade2').css({'display':'none'});
 		}
+		if(reg_check==0) {
+            if ($('#pshade').css('z-index') == 150 || $('#mshade').css('z-index') == 150) {
+                shade_index(100)
+            } else {
+                shade_index(-100)
+            }
+        }
 	}
 
 	$('#ng_popup').click(function(){
@@ -1040,6 +1052,13 @@ $(document).ready(function(){
 		}
 		if(htmlTojoin.length == 0){
 			htmlTojoin.push('<div style="text-align:center;margin-top:18px;margin-bottom:18px;font-weight:bold;">예약 가능한 일정이 없습니다.</div>')
+			if(jsondata.lecture_reg_count[0] == 0){
+				$('#submitBtn').hide()
+			}
+		}else{
+			if(jsondata.lecture_reg_count[0] == 0){
+				$('#submitBtn').show()
+			}
 		}
 		$('#groupTimeSelect').html(htmlTojoin.join(''))
 	}
@@ -1152,6 +1171,7 @@ $(document).ready(function(){
 		
 		dateplans.sort();
 		var htmltojoin = []
+		reg_check = dateplans.length
 		if(dateplans.length>0){
 			for(var i=1;i<=dateplans.length;i++){
 				var splited = dateplans[i-1].split('_')
@@ -1185,11 +1205,20 @@ $(document).ready(function(){
 		}
 		if(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) >= date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate)){
 			htmltojoin.push('<div class="plan_raw_blank plan_raw_add" data-date="'+dateinfo+'"><img src="/static/user/res/floatbtn/btn-plus.png" style="width:20px;cursor:pointer;"></div>')
+
 		}
 
 		$('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
 		var countNumber = $('.popup_inner_month .plan_raw').length
 		$('#countNum').text(countNumber)
+		if(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) >= date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate)){
+			// if(dateplans.length==0 && click_check == 0) {
+			if(dateplans.length==0 && click_check == 0) {
+				 close_info_popup('cal_popup_plancheck');
+				 $('.plan_raw_add').trigger('click');
+			}
+		}
+
 	}
 
     function ajaxTimeGraphSet(clicked){
@@ -1731,7 +1760,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
             }
 			else{
 				$('#countRemainData span:first-child').text(jsondata.lecture_avail_count)
-				$('#countRemainData span:nth-of-type(2)').text('회')
+				$('#countRemainData span:nth-of-type(2)').text('회 (1:1)')
 			}
 			
 
