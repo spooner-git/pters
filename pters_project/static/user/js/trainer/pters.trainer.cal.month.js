@@ -300,10 +300,12 @@ $(document).ready(function(){
 		
 
 		//일정삭제 확인 팝업 예 버튼
-		var ajax_block_during_delete_monthcal = true
+		//var ajax_block_during_delete_monthcal = true
 		$('#popup_delete_btn_yes').click(function(){
-			if(ajax_block_during_delete_monthcal == true){
-				ajax_block_during_delete_monthcal = false;
+			//if(ajax_block_during_delete_monthcal == true){
+			if(!$(this).hasClass('disabled_button')){
+				//ajax_block_during_delete_monthcal = false;
+				disable_delete_btns_during_ajax()
 				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
 		            var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
 		            send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
@@ -311,7 +313,8 @@ $(document).ready(function(){
 	                	// set_schedule_time(jsondata)
 						ajaxClassTime()
 	                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
-	                  	ajax_block_during_delete_monthcal = true;
+	                  	//ajax_block_during_delete_monthcal = true;
+		                enable_delete_btns_after_ajax()
 		                $('#id_repeat_schedule_id_confirm').val('')
 	                })
 				}else if(deleteTypeSelect == "repeatgroupptdelete"){
@@ -327,7 +330,8 @@ $(document).ready(function(){
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
-	                	ajax_block_during_delete_monthcal = true
+	                	//ajax_block_during_delete_monthcal = true
+	                	enable_delete_btns_after_ajax()
 		            })
 		            // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
 		            // 	for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
@@ -348,7 +352,8 @@ $(document).ready(function(){
 						get_current_member_list()
       					get_current_group_list()
 					}
-					ajax_block_during_delete_monthcal = true
+					//ajax_block_during_delete_monthcal = true
+					enable_delete_btns_after_ajax()
 				}else if(deleteTypeSelect == "groupptdelete"){
 					var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id')
 
@@ -375,14 +380,24 @@ $(document).ready(function(){
                      //  		completeSend();
 					// 	}
 					// })
-					ajax_block_during_delete_monthcal = true
+					//ajax_block_during_delete_monthcal = true
+					enable_delete_btns_after_ajax()
 				}
 			}
-			
+
+			function disable_delete_btns_during_ajax(){
+				$('#popup_delete_btn_yes, #popup_delete_btn_no').addClass('disabled_button')
+				//ajax_block_during_delete_weekcal = false;
+			}
+
+			function enable_delete_btns_after_ajax(){
+				$('#popup_delete_btn_yes, #popup_delete_btn_no').removeClass('disabled_button')
+				//ajax_block_during_delete_weekcal = false;
+			}
 		})
 
 		//일정 완료 버튼 클릭
-		var ajax_block_during_complete_monthcal = true
+		//var ajax_block_during_complete_monthcal = true
 		$("#popup_btn_complete").click(function(){
 			if($(this).val()!="filled" && !$(this).hasClass('disabled_button')){
 				$('#canvas').show()
@@ -392,78 +407,86 @@ $(document).ready(function(){
 					toggleGroupParticipantsList('on')
 				}
 			}else if($(this).val()=="filled" && !$(this).hasClass('disabled_button')){
-				if(ajax_block_during_complete_monthcal == true){
-					ajax_block_during_complete_monthcal = false
-					if(schedule_on_off == 1){
-						//PT 일정 완료 처리시
-						send_plan_complete('callback',function(json, senddata){
+				//ajax_block_during_complete_monthcal = false
+				disable_popup_btns_during_ajax()
+				if(schedule_on_off == 1){
+					//PT 일정 완료 처리시
+					send_plan_complete('callback',function(json, senddata){
+						send_memo()
+						signImageSend(senddata);
+		          		close_info_popup('cal_popup_planinfo')
+	                    completeSend();
+	                    // set_schedule_time(json)
+						ajaxClassTime()
+	                    //ajax_block_during_complete_monthcal = true
+	                    enable_popup_btns_after_ajax()
+						$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
+                    	$('#canvas').hide().css({'border-color':'#282828'})
+                    	$('#canvasWrap span').hide();
+						$('#canvasWrap').css({'height':'0px'})
+						shade_index(100)
+					})
+					
+				}else if(schedule_on_off == 2){
+					var len = $('#groupParticipants .groupParticipantsRow').length;
+					var z = 0
+					$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'))
+					if(len == 0){
+						send_group_plan_complete('callback', function(json, senddata){
 							send_memo()
 							signImageSend(senddata);
-			          		close_info_popup('cal_popup_planinfo')
-		                    completeSend();
-		                    // set_schedule_time(json)
+							completeSend();
+							// set_schedule_time(json);
 							ajaxClassTime()
-		                    ajax_block_during_complete_monthcal = true
-							$('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
-	                    	$('#canvas').hide().css({'border-color':'#282828'})
-	                    	$('#canvasWrap span').hide();
-							$('#canvasWrap').css({'height':'0px'})
-							shade_index(100)
+							close_info_popup('cal_popup_planinfo')
+							//ajax_block_during_complete_monthcal = true
+							enable_popup_btns_after_ajax()
 						})
 						
-					}else if(schedule_on_off == 2){
-						var len = $('#groupParticipants .groupParticipantsRow').length;
-						var z = 0
-						$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'))
-						if(len == 0){
-							send_group_plan_complete('callback', function(json, senddata){
-								send_memo()
-								signImageSend(senddata);
-								completeSend();
-								// set_schedule_time(json);
-								ajaxClassTime()
-								close_info_popup('cal_popup_planinfo')
-								ajax_block_during_complete_weekcal = true
-							})
-							
-						}else{
-							send_group_plan_complete('callback', function(json, senddata){
-								send_memo()
-								signImageSend(senddata);
-								completeSend();
-								// set_schedule_time(json);
-								ajaxClassTime()
-								close_info_popup('cal_popup_planinfo')
-								ajax_block_during_complete_weekcal = true
-							})
+					}else{
+						send_group_plan_complete('callback', function(json, senddata){
+							send_memo()
+							signImageSend(senddata);
+							completeSend();
+							// set_schedule_time(json);
+							ajaxClassTime()
+							close_info_popup('cal_popup_planinfo')
+							//ajax_block_during_complete_monthcal = true
+							enable_popup_btns_after_ajax()
+						})
 
-							// send_group_plan_complete("callback", function(){
-							// 	ajaxClassTime();
-							// })
-							// for(var i=0; i<len; i++){
-							// 	$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
-							// 	$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
-							// 	$('#id_member_dbid_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
-							// 	send_plan_complete('callback', function(json, senddata){
-							// 		z++
-							// 		send_memo("blank")
-							// 		signImageSend(senddata);
-							// 		if(z==len){
-							// 			completeSend();
-							// 			//ajaxClassTime()
-							// 			close_info_popup('cal_popup_planinfo')
-							// 			ajax_block_during_complete_weekcal = true
-							// 		}
-							// 	})
-							// }
+						// send_group_plan_complete("callback", function(){
+						// 	ajaxClassTime();
+						// })
+						// for(var i=0; i<len; i++){
+						// 	$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
+						// 	$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
+						// 	$('#id_member_dbid_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
+						// 	send_plan_complete('callback', function(json, senddata){
+						// 		z++
+						// 		send_memo("blank")
+						// 		signImageSend(senddata);
+						// 		if(z==len){
+						// 			completeSend();
+						// 			//ajaxClassTime()
+						// 			close_info_popup('cal_popup_planinfo')
+						// 			ajax_block_during_complete_monthcal = true
+						// 		}
+						// 	})
+						// }
 
-						}
 					}
 				}
-				
 			}
 		})
 
+		function disable_popup_btns_during_ajax(){
+			$("#popup_btn_complete, #popup_btn_delete").addClass('disabled_button')
+		}
+
+		function enable_popup_btns_after_ajax(){
+			$("#popup_btn_complete, #popup_btn_delete").removeClass('disabled_button')
+		}
 		
 
 		//미니 팝업 메모수정
