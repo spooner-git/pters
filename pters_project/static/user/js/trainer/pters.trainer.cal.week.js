@@ -1785,6 +1785,11 @@ function send_group_plan_complete(use, callback){
               	$('#errorMessageBar').show()
               	$('#errorMessageText').text(jsondata.messageArray)
             }else{
+                if(jsondata.push_lecture_id.length>0){
+                    for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                    }
+                }
                 if(use == "callback"){
                 	callback(jsondata, send_data)
                 }

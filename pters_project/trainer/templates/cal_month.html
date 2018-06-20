@@ -19,7 +19,7 @@
   <input type="hidden" name="member_name"   id="id_member_name_delete">
   <input type="hidden" name="member_id"   id="id_member_dbid_delete">
   <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
-  <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
 
 <form action="{% url 'schedule:finish_schedule' %}" id="pt-finish-form" method="get">
@@ -28,20 +28,20 @@
   <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
   <input type="hidden" name="member_name"   id="id_member_name_finish">
   <input type="hidden" name="member_id"   id="id_member_dbid_finish">
-  <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
 
 <form action="{% url 'schedule:finish_group_schedule' %}" id="group-finish-form" method="post" enctype='multipart/form-data'>
     {% csrf_token %}
   <input type="hidden" name="schedule_id" id="id_group_schedule_id_finish">
-  <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
 
 <form action="{% url 'schedule:add_repeat_schedule_confirm' %}" id="confirm-repeat-schedule-form" method="get">
     {% csrf_token %}
   <input type="hidden" name="repeat_schedule_id" id="id_repeat_schedule_id_confirm"> <!--ajax로 받은 id-->
   <input type="hidden" name="repeat_confirm"   id="id_repeat_confirm">  <!--val 1, 0-->
-  <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
 
 <form action="{% url 'schedule:add_member_group_schedule' %}" id="add_groupmember-plan-form" method="get">
@@ -49,7 +49,7 @@
     <input type="hidden" name="member_id" id="form_add_member_group_plan_memberid"> <!--ajax로 받은 id-->
     <input type="hidden" name="schedule_id" id="form_add_member_group_plan_scheduleid"> <!--ajax로 받은 id-->
     <input type="hidden" name="add_memo" id="form_add_member_group_plan_addmemo"> <!--ajax로 받은 id-->
-    <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 
     <input type="hidden" name="group_id" id="form_add_member_group_plan_groupid"> <!--추가정보-->
     <input type="hidden" name="max" id="form_add_member_group_plan_max"> <!--추가정보-->

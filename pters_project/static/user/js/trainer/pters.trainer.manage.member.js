@@ -4236,7 +4236,7 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
     $.ajax({
             url:'/schedule/delete_group_repeat_schedule/',
             type:'POST',
-            data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_trainer_schedule/'},
+            data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_error_info/'},
             dataType:'html',
 
             beforeSend:function(){
@@ -4246,10 +4246,18 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
             //통신성공시 처리
             success:function(data){
                   var jsondata = JSON.parse(data);
+                  console.log(jsondata)
                   if(jsondata.messageArray.length>0){
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)
                   }else{
+
+                        if(jsondata.push_lecture_id.length>0){
+                            for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                                send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                            }
+                        }
+                        ajaxClassTime()
                         if(use == 'callback'){
                             callback(jsondata)
                         }
