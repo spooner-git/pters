@@ -2962,6 +2962,14 @@ function send_plan_delete(option, callbackoption, callback){
                         }
                     }
                     if(callbackoption == 'callback'){
+                      ajaxClassTime();
+                      // set_schedule_time(jsondata)
+                      close_info_popup('cal_popup_plandelete')
+                      if($('._calmonth').length == 1){
+                        shade_index(100)
+                      }else if($('._calweek').length == 1){
+                        shade_index(-100)
+                      }
                       callback(jsondata)
                     }else{
                       ajaxClassTime();
