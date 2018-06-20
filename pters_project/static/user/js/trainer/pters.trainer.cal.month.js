@@ -103,7 +103,6 @@ $(document).ready(function(){
 			$('#page-addplan').fadeOut('fast','swing');
 		    if($('body').width()<600){
 		        //$('#calendar').show();
-		        $('#calendar').css('display','none')
 		        $('#calendar').css('height','100%')
 		    }
 		    $('#float_btn_wrap').fadeIn();
@@ -138,6 +137,7 @@ $(document).ready(function(){
 	        $('._NORMAL_ADD_wrap').css('display','block')
 	        $('._REPEAT_ADD_wrap').css('display','none')
 	        $('#timeGraph').css('display','none')
+	        shade_index(-100)
 		}
 	    
   	})
