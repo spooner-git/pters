@@ -71,13 +71,16 @@ if (agent.indexOf("firefox") != -1) {
 
 
     $(document).on('click','#upbutton-x, #upbutton-x-modify',function(){
-        closePopup('member_info');
-        closePopup('member_add');
-        if($('body').width()<600){
-            $('#calendar').css('display','block')
+        if($(this).attr("data-page") == "memberinfo"){
+            closePopup('member_info');
+            closePopup('member_add');
+            if($('body').width()<600){
+                //$('#calendar').css('display','block')
+                $('#calendar').css('height','100%')
+            }
+            $('#uptext3').text('회원 정보');
+            $('#uptext-pc-modify').text('회원 정보');
         }
-        $('#uptext3').text('회원 정보');
-        $('#uptext-pc-modify').text('회원 정보');
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
@@ -1124,16 +1127,18 @@ if (agent.indexOf("firefox") != -1) {
             $('#memberInfoPopup button._info_delete').hide()
 
         }else if($(this).attr('data-type') == "modify" ){
-            if(select_all_check==false){
+           // if(select_all_check==false){
                send_modified_member_base_data()
                $('#memberName_info').show().val($('#memberName_info_lastName').val()+$('#memberName_info_firstName').val())
                $('#memberName_info_lastName, #memberName_info_firstName').hide()
+            /*
             }else{
                 scrollToDom($('#memberInfoPopup'));
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(text2);
                 //입력값 확인 메시지 출력 가능
             }
+            */
         }      
     });
 
@@ -2676,6 +2681,8 @@ function open_member_info_popup_mobile(dbID, jsondata){
     }else if(userSex == "W"){
       $('#memberFemale_info').addClass('selectbox_checked')
     }
+
+    $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberinfo')
     $('#memberInfoPopup').fadeIn('fast').attr({'data-username': userName, 'data-userid' : userID});
     $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
     $('#memberName_info').show()
