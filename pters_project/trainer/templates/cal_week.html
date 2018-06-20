@@ -765,11 +765,13 @@
         </div>
     </div>
         <div id="mobile_basic_info">
+            <!--
             <div class="member_info_tool">
                 <button class="_info_delete _info_delete_img">
                     <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:17px;">
                 </button>
             </div>
+            -->
             <div class="mobileinfo_wrap form-group">
                 <label for="memberName_info" class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원/그룹명
@@ -867,7 +869,7 @@
 
             <div id="memberRegHistory_info_wrap" class="member_info_wrap">
                 <label class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록 이력
+                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 이력
                     <!--<span class="button_add_member_lecture" onclick="pc_add_member(3)">+</span>-->
                 </label>
                 <div id="memberRegHistory_info">
@@ -891,7 +893,7 @@
         <div id="mobile_history_info">
             <div id="memberLectureHistory_info_wrap" class="member_info_wrap history_view">
                 <label for="memberHistory" class="ptaddboxtext">
-                        <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 등록 내역
+                        <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 활동 이력
                 </label>
                 <div id="memberLectureHistory_info">
                           
@@ -973,7 +975,7 @@
     <div id="member_info_type_select">
         <div class="button_shift_info  button_active" id="select_info_shift_lecture">수강 정보</div>
         <div class="button_shift_info" id="select_info_shift_schedule">반복 일정</div>
-        <div class="button_shift_info" id="select_info_shift_history">일정 이력</div>
+        <div class="button_shift_info" id="select_info_shift_history">레슨 이력</div>
         <!--
         <button class="submitBtn _info_download _info_download_img">
                 <img src="/static/user/res/member/pters-download.png" style="margin-bottom: 4px;height:17px;">
@@ -1003,7 +1005,7 @@
             <span id="memberFinishCount_info_PC" readonly></span>회
         </div>
         <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">수강 이력
                 <!--<span class="button_add_member_lecture" onclick="pc_add_member(2)">+</span>-->
             </label>
             <div id="memberRegHistory_info_PC">
