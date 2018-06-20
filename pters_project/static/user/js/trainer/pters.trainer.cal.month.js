@@ -103,7 +103,7 @@ $(document).ready(function(){
 			$('#page-addplan').fadeOut('fast','swing');
 		    if($('body').width()<600){
 		        //$('#calendar').show();
-		        $('#calendar').css('display','none')
+		        //$('#calendar').css('display','none')
 		        $('#calendar').css('height','100%')
 		    }
 		    $('#float_btn_wrap').fadeIn();
