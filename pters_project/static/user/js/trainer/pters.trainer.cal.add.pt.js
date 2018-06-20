@@ -1109,7 +1109,7 @@ $(document).ready(function(){
                 }
                 get_repeat_info(id)
 
-                if(addTypeSelect != repeatoffadd){
+                if(addTypeSelect != "repeatoffadd"){
                     $('#members_mobile, #members_pc').html('')
                     get_current_member_list('callback',function(jsondata){
                       set_member_dropdown_list(jsondata)

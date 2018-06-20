@@ -310,6 +310,10 @@ a:focus, a:hover{
     width: 40px;
     cursor: pointer;
 }
+    #upbutton-x:active, #upbutton-x-modify:active{
+        background: #cccccc;
+    }
+
 
 #upbutton-right, #upbutton-alarm, #upbutton-check , #upbutton-modify{
     float:right;
@@ -321,7 +325,7 @@ a:focus, a:hover{
 }
 
 #upbutton-right:active ,#upbutton-alarm:active, #upbutton-check:active, #upbutton-modify:active{
-    background: #4e4c4c;
+    background: #cccccc;
 }
 
 .uptext{

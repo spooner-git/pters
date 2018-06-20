@@ -224,7 +224,7 @@
                     </button>
                     {% block nav_center_img %}
                         <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
-                        <a id="uptext" class="uptext" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  <span></span></a>
+                        <a id="uptext" class="uptext">{{ user.last_name}} {{user.first_name }}  <span></span></a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="openAlarm('mobile')">
                         <a><img src={% static_url "user/res/main/alarm-on.png" %} style="width:20px;"></a>
@@ -543,7 +543,9 @@
                 }
             })
 
-
+            $('#uptext').click(function(){
+                window.location.reload()
+            })
 
              function openNav(){
                $("#outer_Sidenav").show();
