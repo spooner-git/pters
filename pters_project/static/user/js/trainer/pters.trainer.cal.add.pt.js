@@ -2840,14 +2840,28 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
 function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     var len = jsondata.db_id.length;
     var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
+    var addedCount = 0
     for(var i=1; i<=len; i++){
         if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
+            addedCount++
             var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">'
-            htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.last_name[i-1]+'" data-firstname="'+jsondata.first_name[i-1]+'" data-dbid="'+jsondata.db_id[i-1]+'" data-id="'+jsondata.member_id[i-1]+'" data-sex="'+jsondata.sex[i-1]+'" data-phone="'+jsondata.phone[i-1]+'"><div data-dbid="'+jsondata.db_id[i-1]+'">'+sexInfo+jsondata.name[i-1]+' (ID: '+jsondata.member_id[i-1]+')'+'</div>'+'<div>'+jsondata.phone[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+            htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.last_name[i-1]+
+                                                      '" data-firstname="'+jsondata.first_name[i-1]+
+                                                      '" data-dbid="'+jsondata.db_id[i-1]+
+                                                      '" data-id="'+jsondata.member_id[i-1]+
+                                                      '" data-sex="'+jsondata.sex[i-1]+
+                                                      '" data-phone="'+jsondata.phone[i-1]+
+                                                      '"><div data-dbid="'+jsondata.db_id[i-1]+'">'+
+                                                      //sexInfo+jsondata.name[i-1]+' (ID: '+jsondata.member_id[i-1]+')'+'</div>'+
+                                                      sexInfo+jsondata.name[i-1]+'</div>'+
+                                                      '<div>'+jsondata.phone[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
         }
     }
     if(len == 0){
-      htmlToJoin.push("<div class='list_addByList'>해당하는 회원이 없습니다.</div>")
+      htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>그룹에 소속된 회원이 없습니다.</div>")
+    }
+    if(addedCount == 0){
+      htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>추가 가능한  회원이 없습니다.</div>")
     }
     var html = htmlToJoin.join('')
     targetHTML.html(html)

@@ -965,6 +965,22 @@ img,a,div,span,p{
 	margin-left: 14.845px;
 }
 
+.listTitle_addByList{
+	position: relative;
+}
+	#subpopup_addByList_thisgroup, #subpopup_addByList_whole{
+		max-height: 400px;
+		overflow-y: auto;
+	}
+	.list_addByList > div:nth-child(1){
+		width: 43% !important;
+	}
+	.list_addByList > div:nth-child(2){
+		width: 37% !important;
+	}
+	.list_addByList > div:nth-child(3){
+		width: 20% !important;
+	}
 
 
 html{
