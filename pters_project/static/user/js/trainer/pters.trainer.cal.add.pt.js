@@ -1520,6 +1520,7 @@ function set_group_dropdown_list(jsondata){
     var memberSize = jsondata.group_id.length;
     var member_array_mobile = [];
     var member_array_pc = [];
+
     if(memberSize>0){
       for(var i=0; i<memberSize; i++){
         member_array_mobile[i] = '<li><a  data-grouptype="group" data-grouptypecd="'+jsondata.group_type_cd[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
@@ -2789,6 +2790,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         success:function(data){
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER);
             var jsondata = JSON.parse(data);
+            console.log('get_group_plan_participants', jsondata)
             if(callbackoption == "callback"){
               callback(jsondata)
             }
@@ -2810,6 +2812,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
     var target = $('#groupParticipants')
     var htmlToJoin = []
+    console.log(jsondata, max)
     for(var i=0; i<jsondata.db_id.length; i++){
       var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'" schedule-id="'+jsondata.scheduleIdArray[i]+'" data-leid="'+jsondata.classArray_lecture_id[i]+'">'
       //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
@@ -2838,8 +2841,10 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     var len = jsondata.db_id.length;
     var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
     for(var i=1; i<=len; i++){
-        var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">'
-        htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.last_name[i-1]+'" data-firstname="'+jsondata.first_name[i-1]+'" data-dbid="'+jsondata.db_id[i-1]+'" data-id="'+jsondata.member_id[i-1]+'" data-sex="'+jsondata.sex[i-1]+'" data-phone="'+jsondata.phone[i-1]+'"><div data-dbid="'+jsondata.db_id[i-1]+'">'+sexInfo+jsondata.name[i-1]+' (ID: '+jsondata.member_id[i-1]+')'+'</div>'+'<div>'+jsondata.phone[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+        if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
+            var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">'
+            htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.last_name[i-1]+'" data-firstname="'+jsondata.first_name[i-1]+'" data-dbid="'+jsondata.db_id[i-1]+'" data-id="'+jsondata.member_id[i-1]+'" data-sex="'+jsondata.sex[i-1]+'" data-phone="'+jsondata.phone[i-1]+'"><div data-dbid="'+jsondata.db_id[i-1]+'">'+sexInfo+jsondata.name[i-1]+' (ID: '+jsondata.member_id[i-1]+')'+'</div>'+'<div>'+jsondata.phone[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+        }
     }
     if(len == 0){
       htmlToJoin.push("<div class='list_addByList'>해당하는 회원이 없습니다.</div>")
@@ -2910,6 +2915,11 @@ $(document).on('click','.group_member_cancel',function(){
     var max = $(this).attr('data-max')
     send_plan_delete('pt', 'callback', function(){
         ajaxClassTime();
+        if($('._calmonth').length > 0){
+          shade_index(150)
+        }else if($('._calweek').length > 0){
+          shade_index(100)
+        }
         get_group_plan_participants(group_schedule_id,'callback',function(jsondata){
             draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max)
         })
