@@ -98,10 +98,16 @@
           <div id="dateInfo"></div>
         </div>
 
-        <div class="mode_switch_button_wrap_cal" style="margin-top: 0;"> 
+        <div class="mode_switch_button_wrap_cal" style="margin-top: 0;">
+            {% if lecture_flag %}
           <div class="mode_switch_button mode_active" data-page="personalreserve">1:1 레슨</div>
-          <div class="mode_switch_button" data-page="groupreserve">그룹 레슨</div>
+            {% endif %}
+            {% if group_lecture_flag %}
+          <div class="mode_switch_button {% if not lecture_flag %}mode_active{% endif %}" data-page="groupreserve">그룹 레슨</div>
+            {% endif %}
         </div>
+
+            {% if lecture_flag %}
         <div id="timeGraph" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph personalreserve" style="display: block;">
           <div class="ptaddboxtext" style="margin-top: 10px;margin-bottom:4px;">예약 가능 시간 
             <div class="tdgraph" style="display: inline-block;margin-bottom:1px;margin-left:3px;width:17px;height:9px;border:1px solid #cccccc;background: #ffffff;"></div>
@@ -109,14 +115,6 @@
           <table class="timegraphtext">
 
           </table>
-          <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
-        </div>
-
-        <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph groupreserve">
-          <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">그룹
-            <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
-          </div>
-          <div id="groupTimeSelect"></div>
           <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
         </div>
 
@@ -138,6 +136,18 @@
             </ul>
           </div>
         </div>
+            {% endif %}
+
+            {% if group_lecture_flag %}
+        <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph groupreserve" {% if not lecture_flag %}style="display: block;"{% endif %}>
+          <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">그룹
+            <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
+          </div>
+          <div id="groupTimeSelect"></div>
+          <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
+        </div>
+            {% endif %}
+
         <div id="submitBtn" class="popup_inner popup_inner_delete" name=submit><span>일정 예약</span></div>
     </div>
 

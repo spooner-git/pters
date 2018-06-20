@@ -238,6 +238,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
             context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
             context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
+            context = func_get_class_lecture_count(context, class_id, self.request.user.id)
 
             # 회원 setting 값 로드
             context = get_trainee_setting_data(context, self.request.user.id)

@@ -234,6 +234,8 @@ def func_get_class_lecture_count(context, class_id, user_id):
     group_lecture_reg_count_sum = 0
     group_lecture_rem_count_sum = 0
     group_lecture_avail_count_sum = 0
+    lecture_flag = False
+    group_lecture_flag = False
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
@@ -270,10 +272,15 @@ def func_get_class_lecture_count(context, class_id, user_id):
                             group_lecture_reg_count_sum += lecture_info.lecture_reg_count
                             group_lecture_rem_count_sum += lecture_info.lecture_rem_count
                             group_lecture_avail_count_sum += lecture_info.lecture_avail_count
-
+    if lecture_reg_count_sum > 0:
+        lecture_flag = True
+    if group_lecture_reg_count_sum > 0:
+        group_lecture_flag = True
+    context['lecture_flag'] = lecture_flag
     context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
     context['lecture_avail_count'] = lecture_avail_count_sum
+    context['group_lecture_flag'] = group_lecture_flag
     context['group_lecture_reg_count'] = group_lecture_reg_count_sum
     context['group_lecture_finish_count'] = group_lecture_reg_count_sum - group_lecture_rem_count_sum
     context['group_lecture_avail_count'] = group_lecture_avail_count_sum

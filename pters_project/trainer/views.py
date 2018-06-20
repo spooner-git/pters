@@ -1677,8 +1677,8 @@ def add_lecture_info_logic(request):
 
     if error is None:
         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                        class_id, group_id, input_counts, input_price,
-                                        input_start_date, input_end_date, input_contents, user.id)
+                                      class_id, group_id, input_counts, input_price,
+                                      input_start_date, input_end_date, input_contents, user.id)
     if error is None:
         return redirect(next_page)
 
