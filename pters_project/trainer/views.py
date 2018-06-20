@@ -2399,7 +2399,7 @@ def add_group_member_logic(request):
     if error is None:
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+' 그룹에 회원을', log_how='등록',
+                         log_info=group_info.name+' 그룹에 회원 정보', log_how='등록',
                          reg_dt=timezone.now(), use=USE)
         log_data.save()
 
@@ -2433,6 +2433,7 @@ def delete_group_member_info_logic(request):
     if error is None:
         idx = 0
         for member_id_info in json_loading_data['ids']:
+            member_name = None
             if error is None:
                 try:
                     user = User.objects.get(id=member_id_info)
@@ -2440,6 +2441,7 @@ def delete_group_member_info_logic(request):
                     error = '회원 ID를 확인해 주세요.'
                 try:
                     member = MemberTb.objects.get(user_id=user.id)
+                    member_name = member.name
                 except ObjectDoesNotExist:
                     error = '회원 ID를 확인해 주세요.'
             if error is None:
@@ -2469,7 +2471,7 @@ def delete_group_member_info_logic(request):
                     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
-                             to_member_name=json_loading_data['fullnames'][idx], class_tb_id=class_id,
+                             to_member_name=member_name, class_tb_id=class_id,
                              log_info='그룹 수강 정보', log_how='삭제',
                              reg_dt=timezone.now(), use=USE)
             log_data.save()
