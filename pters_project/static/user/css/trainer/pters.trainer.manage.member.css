@@ -564,6 +564,9 @@ select:focus > option:checked {
 		margin-bottom: 10px;
 		padding: 10px 0px 10px 0px;
 	}
+		#mobile_lecture_info div.mobileinfo_wrap{
+			display: none;
+		}
 
 	#mobile_repeat_info,#mobile_history_info{
 		display: none;
@@ -732,6 +735,11 @@ select:focus > option:checked {
 			width: 47%;
 			font-size: 14px;
 		}
+
+		#memberRegCount_info_PC_wrap, #memberRemainCount_info_PC_wrap, #memberAvailCount_info_PC_wrap, #memberFinishCount_info_PC_wrap{
+			display: none;
+		}
+
 		#memberRegHistory_info_PC_wrap{
 			width: 100%;
 		}
