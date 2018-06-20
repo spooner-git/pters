@@ -310,7 +310,7 @@ a:focus, a:hover{
     width: 40px;
     cursor: pointer;
 }
-    #upbutton-x:focus, #upbutton-x-modify:focus{
+    #upbutton-x:active, #upbutton-x-modify:active{
         background: #cccccc;
     }
 
