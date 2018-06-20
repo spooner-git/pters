@@ -1716,15 +1716,20 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
 	  success:function(data){
 		var jsondata = JSON.parse(data);
 		initialJSON = jsondata
-		console.log(jsondata)
+
 		if(jsondata.messageArray.length>0){
 			$('#errorMessageBar').show()
 			$('#errorMessageText').text(jsondata.messageArray)
 		}else{
-			if(jsondata.group_lecture_reg_count[0] != 0){
+			if(jsondata.group_lecture_reg_count[0] != 0 && jsondata.lecture_reg_count[0] != 0){
 				$('#countRemainData span:first-child').text(jsondata.lecture_avail_count+' / '+ jsondata.group_lecture_avail_count+' ')
 				$('#countRemainData span:nth-of-type(2)').text('회 (1:1/그룹)')
-			}else{
+			}
+			else if(jsondata.group_lecture_reg_count[0] != 0){
+				$('#countRemainData span:first-child').text(jsondata.group_lecture_avail_count)
+				$('#countRemainData span:nth-of-type(2)').text('회 (그룹)')
+            }
+			else{
 				$('#countRemainData span:first-child').text(jsondata.lecture_avail_count)
 				$('#countRemainData span:nth-of-type(2)').text('회')
 			}
