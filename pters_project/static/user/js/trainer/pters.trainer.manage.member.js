@@ -947,7 +947,7 @@ if (agent.indexOf("firefox") != -1) {
             $(this).removeClass("dropdown_selected");
             check_dropdown_selected();
         }
-        // $('#id_username').val($('#memberPhone_add').val());
+        $('#id_phone').val($('#memberPhone_add').val());
         // $('#id_user_id').val($('#memberPhone_add').val());
     });
 
