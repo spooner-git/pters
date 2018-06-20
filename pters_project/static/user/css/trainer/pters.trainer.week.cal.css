@@ -381,11 +381,16 @@ img,a,div,span,p{
 .arrowButton a{
 	position: absolute;
 	top: 0%;
+	height: 100%;
 	font-size: 35px;
 	font-weight: 600;
 	color: #ffffff;
 	text-decoration: none;
 }
+	.arrowButton a:active{
+		opacity: 0.4;
+		background: #282828;
+	}
 
 .time-style{ /*week ìŠ¤íƒ€ì¼*/
 	background-color: #ffffff;
