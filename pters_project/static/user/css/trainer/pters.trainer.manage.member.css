@@ -564,6 +564,9 @@ select:focus > option:checked {
 		margin-bottom: 10px;
 		padding: 10px 0px 10px 0px;
 	}
+		#mobile_lecture_info div.mobileinfo_wrap{
+			display: none;
+		}
 
 	#mobile_repeat_info,#mobile_history_info{
 		display: none;
