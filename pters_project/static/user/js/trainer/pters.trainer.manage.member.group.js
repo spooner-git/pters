@@ -135,6 +135,7 @@ $(document).on('click','img.add_listedMember',function(){
                                         ajaxClassTime();
                                         //set_schedule_time(json);
                                         get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max)})
+                                        get_groupmember_list(group_id, 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))})//특정그룹 회원목록 업데이트
                                         enable_group_member_add_after_ajax()
                                         alert('지난 그룹일정 참석자 정상 등록되었습니다.')
                                         /*
@@ -153,6 +154,7 @@ $(document).on('click','img.add_listedMember',function(){
                         }else{
                             ajaxClassTime()
                             draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max)
+                            get_groupmember_list(group_id, 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))})//특정그룹 회원목록 업데이트
                             enable_group_member_add_after_ajax()
                             alert('그룹일정 참석자 정상 등록되었습니다.')
                         }
@@ -234,14 +236,34 @@ function draw_memberlist_for_addByList(targetHTML){
                 for(var i=1; i<=len; i++){
                     if($('#addedMemberListBox div[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0){
                         var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">'
-                        htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                        htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+
+                                                                  '" data-firstname="'+jsondata.firstNameArray[i-1]+
+                                                                  '" data-dbid="'+jsondata.dIdArray[i-1]+
+                                                                  '" data-id="'+jsondata.idArray[i-1]+
+                                                                  '" data-sex="'+jsondata.sexArray[i-1]+
+                                                                  '" data-phone="'+jsondata.phoneArray[i-1]+
+                                                                  '"><div data-dbid="'+jsondata.dIdArray[i-1]+
+                                                                  '">'+
+                                                                  sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+
+                                                                  //sexInfo+jsondata.nameArray[i-1]+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+
+                                                                  '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
                     }
                 }
                 var len_finish = jsondata.finishDidArray.length;
                 for(var j=1; j<=len_finish; j++){
                     if($('#addedMemberListBox div[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0 && $('div.groupMembersWrap[data-groupid="'+$('#form_member_groupid').val()+'"] div.memberline[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0){ //추가될 리스트에 이미 있으면 목록에 보여주지 않는다.
                         var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.finishsexArray[j-1]+'.png">'
-                        htmlToJoin[i+j-1] = '<div class="list_addByList" data-lastname="'+jsondata.finishLastNameArray[j-1]+'" data-firstname="'+jsondata.finishFirstNameArray[j-1]+'" data-dbid="'+jsondata.finishDidArray[j-1]+'" data-id="'+jsondata.finishIdArray[j-1]+'" data-sex="'+jsondata.finishsexArray[j-1]+'" data-phone="'+jsondata.finishphoneArray[j-1]+'"><div data-dbid="'+jsondata.finishDidArray[j-1]+'">'+sexInfo+jsondata.finishnameArray[j-1]+' (ID: '+jsondata.finishIdArray[j-1]+')'+'</div>'+'<div>'+jsondata.finishphoneArray[j-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                        htmlToJoin[i+j-1] = '<div class="list_addByList" data-lastname="'+jsondata.finishLastNameArray[j-1]+
+                                                                    '" data-firstname="'+jsondata.finishFirstNameArray[j-1]+
+                                                                    '" data-dbid="'+jsondata.finishDidArray[j-1]+
+                                                                    '" data-id="'+jsondata.finishIdArray[j-1]+
+                                                                    '" data-sex="'+jsondata.finishsexArray[j-1]+
+                                                                    '" data-phone="'+jsondata.finishphoneArray[j-1]+
+                                                                    '"><div data-dbid="'+jsondata.finishDidArray[j-1]+
+                                                                    '">'+
+                                                                    sexInfo+jsondata.finishnameArray[j-1]+' (ID: '+jsondata.finishIdArray[j-1]+')'+'</div>'+'<div>'+jsondata.finishphoneArray[j-1]+'</div>'+
+                                                                    //sexInfo+jsondata.finishnameArray[j-1]+'</div>'+'<div>'+jsondata.finishphoneArray[j-1]+'</div>'+
+                                                                    '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
                     }
                 }
                 var html = htmlToJoin.join('')
