@@ -1271,7 +1271,7 @@ def delete_group_schedule_logic(request):
                 push_info_schedule_start_date = str(start_dt).split(':')
                 push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
 
-                push_lecture_id.append(schedule_info.lecture_tb_id)
+                push_lecture_id.append(member_group_schedule_info.lecture_tb_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
                 if group_id is not None and group_id != '':
                     push_message.append(request.user.last_name+request.user.first_name+'님이 '
@@ -1301,9 +1301,6 @@ def delete_group_schedule_logic(request):
                          reg_dt=timezone.now(), use=USE)
         log_data.save()
 
-        context['push_lecture_id'] = ''
-        context['push_title'] = ''
-        context['push_message'] = ''
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -1471,9 +1468,9 @@ def finish_group_schedule_logic(request):
         log_data.save()
     if error is None:
 
-        context['push_lecture_id'] = ''
-        context['push_title'] = ''
-        context['push_message'] = ''
+        context['push_lecture_id'] = push_lecture_id
+        context['push_title'] = push_title
+        context['push_message'] = push_message
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(
@@ -2120,11 +2117,7 @@ def delete_group_repeat_schedule_logic(request):
                 push_lecture_id.append(lecture_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
                 push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
-                                    + '~' + str(end_date) + ' 반복일정을 취소했습니다')
-
-                context['push_lecture_id'] = push_lecture_id
-                context['push_title'] = push_title
-                context['push_message'] = push_message
+                                    + '~' + str(end_date) + ' 그룹 반복일정을 취소했습니다')
 
     if error is None:
         member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=USE)
@@ -2140,8 +2133,11 @@ def delete_group_repeat_schedule_logic(request):
                          log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), use=USE)
         log_data.save()
+        context['push_lecture_id'] = push_lecture_id
+        context['push_title'] = push_title
+        context['push_message'] = push_message
 
-        return redirect(next_page)
+        return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
@@ -2208,7 +2204,6 @@ def send_push_to_trainee_logic(request):
     next_page = request.POST.get('next_page')
 
     error = None
-
     if lecture_id == '':
         error = 'push를 전송하는중 오류가 발생했습니다.'
 

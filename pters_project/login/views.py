@@ -460,10 +460,11 @@ class AddMemberNoEmailView(View):
         first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
         name = request.POST.get('name', '')
-        phone = request.POST.get('username', '')
+        # phone = request.POST.get('username', '')
         sex = request.POST.get('sex', '')
         birthday_dt = request.POST.get('birthday', '')
-        group_id = request.POST.get('group_id', '')
+        phone = request.POST.get('phone', '')
+        # group_id = request.POST.get('group_id', '')
         context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
         if context['error'] is not None:
             logger.error(name+'[강사 회원가입]'+context['error'])
@@ -803,6 +804,7 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     error = None
     name = ''
     context = {'error': None, 'user_db_id': '', 'username': ''}
+
     if last_name is None or last_name == '':
         error = '성을 입력해 주세요.'
 
@@ -820,6 +822,12 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
 
     if phone == '':
         phone = None
+    else:
+        if len(phone) != 11 and len(phone) != 10:
+            error = '연락처 자릿수를 확인해주세요.'
+        elif not phone.isdigit():
+            error = '연락처는 숫자만 입력 가능합니다.'
+
     if error is None:
         username = name
         password = '0000'

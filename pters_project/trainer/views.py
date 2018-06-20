@@ -1029,9 +1029,9 @@ def update_member_info_logic(request):
             input_phone = member.phone
         else:
             if len(phone) != 11 and len(phone) != 10:
-                error = '연락처를 확인해 주세요.'
+                error = '연락처 자릿수를 확인해주세요.'
             elif not phone.isdigit():
-                error = '연락처를 확인해 주세요.'
+                error = '연락처는 숫자만 입력 가능합니다.'
             else:
                 input_phone = phone
 

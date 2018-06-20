@@ -950,7 +950,7 @@ if (agent.indexOf("firefox") != -1) {
             $(this).removeClass("dropdown_selected");
             check_dropdown_selected();
         }
-        // $('#id_username').val($('#memberPhone_add').val());
+        $('#id_phone').val($('#memberPhone_add').val());
         // $('#id_user_id').val($('#memberPhone_add').val());
     });
 
@@ -1120,6 +1120,7 @@ if (agent.indexOf("firefox") != -1) {
 
             $('#form_sex_modify').val()
             $('#form_birth_modify').val()
+            $('#form_phone_modify').val()
             $('#form_name_modify').val()
             $('#form_id_modify').val($('#memberId').val())
 
@@ -2696,6 +2697,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#inputError_info').css('display','none')
     $('#fast_check').val('0')
     $('#form_birth').val('')
+    $('#id_phone').val('')
 }
 
 modify_member_lec_info_pc()
@@ -3990,6 +3992,7 @@ function initialize_add_member_sheet(){
     $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
 
     $('#form_birth').val('')
+    $('#id_phone').val('')
 
     $('.dropdown_selected').removeClass('dropdown_selected')
     $('.checked').removeClass('checked')
@@ -4243,7 +4246,7 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
     $.ajax({
             url:'/schedule/delete_group_repeat_schedule/',
             type:'POST',
-            data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_trainer_schedule/'},
+            data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_error_info/'},
             dataType:'html',
 
             beforeSend:function(){
@@ -4253,10 +4256,18 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
             //통신성공시 처리
             success:function(data){
                   var jsondata = JSON.parse(data);
+                  console.log(jsondata)
                   if(jsondata.messageArray.length>0){
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)
                   }else{
+
+                        if(jsondata.push_lecture_id.length>0){
+                            for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                                send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                            }
+                        }
+                        ajaxClassTime()
                         if(use == 'callback'){
                             callback(jsondata)
                         }
