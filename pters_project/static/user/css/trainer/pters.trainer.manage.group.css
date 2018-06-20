@@ -735,6 +735,11 @@ select:focus > option:checked {
 			width: 47%;
 			font-size: 14px;
 		}
+
+		#memberRegCount_info_PC_wrap, #memberRemainCount_info_PC_wrap, #memberAvailCount_info_PC_wrap, #memberFinishCount_info_PC_wrap{
+			display: none;
+		}
+		
 		#memberRegHistory_info_PC_wrap{
 			width: 100%;
 		}
