@@ -199,7 +199,18 @@ class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MyPageBlankView, self).get_context_data(**kwargs)
+        member_info = None
+        try:
+            member_info = MemberTb.objects.get(member_id=self.request.user.id)
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
 
+        if error is None:
+            if member_info.phone is None:
+                member_info.phone = ''
+            if member_info.birthday_dt is None:
+                member_info.birthday_dt = ''
+            context['member_info'] = member_info
         return context
 
 
@@ -279,6 +290,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
             if member_info.phone is None:
                 member_info.phone = ''
+            if member_info.birthday_dt is None:
+                member_info.birthday_dt = ''
             context['member_info'] = member_info
 
         return context
@@ -901,6 +914,8 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if error is None:
             if member_info.phone is None:
                 member_info.phone = ''
+            if member_info.birthday_dt is None:
+                member_info.birthday_dt = ''
             context['member_info'] = member_info
 
         return context

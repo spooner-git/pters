@@ -435,8 +435,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                 lecture_info.save()
                 auth_cd = 'DELETE'
                 if group_id != '' and group_id is not None:
-                    if group_info.group_type_cd == 'EMPTY':
-                        auth_cd = 'WAIT'
+                    auth_cd = 'WAIT'
 
                 member_lecture_counts = MemberLectureTb.objects.filter(member_id=member_id, mod_member_id=user_id,
                                                                        auth_cd='VIEW', use=USE).count()
