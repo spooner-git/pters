@@ -1395,6 +1395,9 @@ function pc_add_member(option){
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         initialize_add_member_sheet();
+
+        $('#uptext2').text(text2);
+
         if($('#memberInfoPopup').css('display') == 'block'){
             var userID = $('#memberId').val();
             $('#memberSearch_add').val(userID);

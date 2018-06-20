@@ -1323,7 +1323,7 @@ function float_btn_managemember(option){
 
 function pc_add_member(option){
     if(Options.language == "KOR"){
-        var text = '신규 회원 등록'
+        var text = '신규 회원 등록22'
         var text2 = '회원 재등록'
     }else if(Options.language == "JPN"){
         var text = '新規会員登録'
@@ -1398,19 +1398,18 @@ function pc_add_member(option){
                                                 'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
-
+        $('#memberSearchButton').trigger('click');
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
+
+        closePopup('member_info');
+        float_btn_managemember(1);
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-        initialize_add_member_sheet();
+        $('#uptext2').text(text2);
         if($('#memberInfoPopup').css('display') == 'block'){
             var userID = $('#memberId').val();
             $('#memberSearch_add').val(userID);
         }
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-        closePopup('member_info');
-        float_btn_managemember(1);
-        
-
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -1420,7 +1419,7 @@ function pc_add_member(option){
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
-        
+        $('#memberSearchButton').trigger('click');
     }else if(option == 'group'){
         initialize_add_member_sheet();
         
