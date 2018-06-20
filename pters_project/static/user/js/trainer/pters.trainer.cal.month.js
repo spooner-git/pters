@@ -281,7 +281,7 @@ $(document).ready(function(){
 			}
 		})
 
-		//일정 삭제 버튼 클릭
+		//일정 취소 버튼 클릭
 		$("#popup_btn_delete").click(function(){
 			if(!$(this).hasClass('disabled_button')){
 				if($(this).parent('#cal_popup_planinfo').attr('data-grouptype') == "group"){
@@ -296,7 +296,7 @@ $(document).ready(function(){
 			
 		})
 
-		//일정삭제 확인 팝업 아니오 버튼 눌렀을때 팝업 닫기
+		//일정 취소 확인 팝업 아니오 버튼 눌렀을때 팝업 닫기
 		$('#popup_delete_btn_no').click(function(){ 
 			if($('#cal_popup_plandelete').css('display')=='block'){
 				$("#cal_popup_plandelete").css({'display':'none'})
@@ -312,7 +312,7 @@ $(document).ready(function(){
 			if(!$(this).hasClass('disabled_button')){
 				//ajax_block_during_delete_monthcal = false;
 				disable_delete_btns_during_ajax()
-				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
+				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 취소
 		            var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
 		            send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
 	                	close_info_popup('cal_popup_plandelete')
@@ -346,7 +346,7 @@ $(document).ready(function(){
 		            // })
 				}else if(deleteTypeSelect == "ptoffdelete"){
 					if(schedule_on_off==1){
-						//PT 일정 삭제시
+						//PT 일정 취소시
 						send_plan_delete('pt','callback',function(){
 							enable_delete_btns_after_ajax()
 						})
@@ -354,7 +354,7 @@ $(document).ready(function(){
 						get_current_member_list()
       					get_current_group_list()
 					}else{
-						//OFF 일정 삭제
+						//OFF 일정 취소
 						send_plan_delete('off','callback',function(){
 							enable_delete_btns_after_ajax()
 						})

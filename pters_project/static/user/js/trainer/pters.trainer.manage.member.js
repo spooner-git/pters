@@ -606,7 +606,7 @@ if (agent.indexOf("firefox") != -1) {
     
 
 
-    //회원 정보팝업의 일정정보내 반복일정 삭제버튼
+    //회원 정보팝업의 일정정보내 반복일정 취소버튼
     $(document).on('click','.deleteBtn',function(e){ //일정요약에서 반복일정 오른쪽 화살표 누르면 휴지통 열림
         e.stopPropagation()
         var $btn = $(this).find('div');

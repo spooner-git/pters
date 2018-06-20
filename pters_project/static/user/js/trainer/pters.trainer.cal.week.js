@@ -595,8 +595,8 @@ $(document).ready(function(){
 
 
 
-		//일정 삭제 기능 추가 - hk.kim 171007
-		$("#popup_btn_delete").click(function(){  //일정 삭제 버튼 클릭
+		//일정 취소 기능 추가 - hk.kim 171007
+		$("#popup_btn_delete").click(function(){  //일정 취소 버튼 클릭
 			if(!$(this).hasClass('disabled_button')){
 				if($(this).parent('#cal_popup_planinfo').attr('data-grouptype') == "group"){
 					deleteTypeSelect = "groupptdelete"
@@ -624,17 +624,17 @@ $(document).ready(function(){
 
 		
 
-		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정삭제, OFF 반복일정삭제, PT일정 삭제, OFF일정 삭제)
+		//삭제 확인 팝업에서 Yes 눌렀을떄 동작 (PT 반복일정취소, OFF 반복일정취소, PT일정 취소, OFF일정 취소)
 		//var ajax_block_during_delete_weekcal = true
 		$('#popup_delete_btn_yes').click(function(){
 			//if(ajax_block_during_delete_weekcal == true){
 			if(!$(this).hasClass('disabled_button')){
 				//ajax_block_during_delete_weekcal = false;
 				disable_delete_btns_during_ajax()
-				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
+				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 취소
 					var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
 		            send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
-		            	console.log('반복일정 삭제할때 jsondata', jsondata)
+
 		            	//ajax_block_during_delete_weekcal = true
 		            	enable_delete_btns_after_ajax()
 				        close_info_popup('cal_popup_plandelete')
@@ -680,7 +680,7 @@ $(document).ready(function(){
 
 				}else if(deleteTypeSelect == "ptoffdelete"){
 					if(schedule_on_off==1){
-						//PT 일정 삭제시
+						//PT 일정 취소시
 						send_plan_delete('pt', 'callback', function(){
 							//ajax_block_during_delete_weekcal = true
 							enable_delete_btns_after_ajax()
@@ -689,7 +689,7 @@ $(document).ready(function(){
 						get_current_member_list()
       					get_current_group_list()
 					}else{
-						//OFF 일정 삭제
+						//OFF 일정 취소
 						send_plan_delete('off', 'callback', function(){
 							//ajax_block_during_delete_weekcal = true
 							enable_delete_btns_after_ajax()

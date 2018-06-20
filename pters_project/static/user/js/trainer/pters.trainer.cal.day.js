@@ -10,7 +10,7 @@ $(document).ready(function(){
 	    $('#page-addplan').fadeIn('fast');
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
-	    $('#uptext2').text('레슨 일정 추가')
+	    $('#uptext2').text('레슨 일정 등록')
 	    $('#page-base').fadeOut();
 	    $('#page-base-addstyle').fadeIn();
 	    $("#datepicker").datepicker('setDate',null)
@@ -30,7 +30,7 @@ $(document).ready(function(){
 		
 		$('#memberName,#remainCount').hide();
 	    $('#page-addplan').fadeIn('fast');
-	    $('#uptext2').text('OFF 일정 추가')
+	    $('#uptext2').text('OFF 일정 등록')
 	    $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
 	    $('#float_btn_wrap').fadeOut();
 	    $('#page-base').fadeOut();
@@ -280,8 +280,8 @@ $(document).ready(function(){
 			}
 	})
 
-		//일정 삭제 기능 추가 - hk.kim 171007
-	$("#popup_text2").click(function(){  //일정 삭제 버튼 클릭
+		//일정 삭제 기능 취소 - hk.kim 171007
+	$("#popup_text2").click(function(){  //일정 취소 버튼 클릭
 			$('#cal_popup').hide().css({'z-index':'-2'})
 			$('#cal_popup3').fadeIn('fast').css({'z-index':'103'})
 	})
@@ -290,7 +290,7 @@ $(document).ready(function(){
 		var $ptdelform = $('#daily-pt-delete-form');
 		var $offdelform = $('#daily-off-delete-form');
 		if(schedule_on_off==1){
-				//PT 일정 삭제시
+				//PT 일정 취소시
 				$.ajax({
                     url:'/schedule/delete_schedule/',
                     type:'POST',
@@ -474,7 +474,7 @@ $(document).ready(function(){
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
         $('#shade').css({'display':'none','z-index':'100'});
-        //alert('complete: 일정 삭제 성공')
+        //alert('complete: 일정 취소 성공')
 	}
 
 	//플로팅 버튼 Start
