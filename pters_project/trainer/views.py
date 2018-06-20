@@ -2374,7 +2374,6 @@ def add_group_member_logic(request):
                             user_db_id_list.append(context['user_db_id'])
                         else:
                             error = context['error']
-                            messages.error(request, context['error'])
                             break
 
                 if error is None:
