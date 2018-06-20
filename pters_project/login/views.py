@@ -823,13 +823,11 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     if phone == '':
         phone = None
     else:
-        if len(phone) < 9:
+        if len(phone) != 11 and len(phone) != 10:
             error = '연락처 자릿수를 확인해주세요.'
-        else:
-            try:
-                int(phone)
-            except ValueError:
-                error = '연락처는 숫자만 입력 가능합니다.'
+        elif not phone.isdigit():
+            error = '연락처는 숫자만 입력 가능합니다.'
+
     if error is None:
         username = name
         password = '0000'

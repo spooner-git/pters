@@ -1117,6 +1117,7 @@ if (agent.indexOf("firefox") != -1) {
 
             $('#form_sex_modify').val()
             $('#form_birth_modify').val()
+            $('#form_phone_modify').val()
             $('#form_name_modify').val()
             $('#form_id_modify').val($('#memberId').val())
 
@@ -2689,6 +2690,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#inputError_info').css('display','none')
     $('#fast_check').val('0')
     $('#form_birth').val('')
+    $('#id_phone').val('')
 }
 
 modify_member_lec_info_pc()
@@ -3983,6 +3985,7 @@ function initialize_add_member_sheet(){
     $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
 
     $('#form_birth').val('')
+    $('#id_phone').val('')
 
     $('.dropdown_selected').removeClass('dropdown_selected')
     $('.checked').removeClass('checked')
