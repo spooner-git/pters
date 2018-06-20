@@ -21,9 +21,9 @@ urlpatterns = [
     url(r'^get_trainee_error_info/$', views.GetTraineeErrorInfoView.as_view(), name='get_trainee_error_info'),
 
     # 일정 기능 #####################################################################################################
-    # 회원 일정 추가 - 1:1/Group
+    # 회원 일정 등록 - 1:1/Group
     url(r'^add_trainee_schedule/$', views.add_trainee_schedule_logic, name='add_trainee_schedule'),
-    # 회원 일정 삭제 - 1:1/Group
+    # 회원 일정 취소 - 1:1/Group
     url(r'^delete_trainee_schedule/$', views.delete_trainee_schedule_logic, name='delete_trainee_schedule'),
     # 회원 스케쥴 조회 - 1:1/Group/Off
     url(r'^get_trainee_schedule/$', views.GetTraineeScheduleView.as_view(), name='get_trainee_schedule'),

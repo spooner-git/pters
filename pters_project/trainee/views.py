@@ -430,7 +430,7 @@ def add_trainee_schedule_logic(request):
         return redirect(next_page)
 
 
-# pt 일정 삭제
+# pt 일정 취소
 def delete_trainee_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
@@ -533,7 +533,7 @@ def delete_trainee_schedule_logic(request):
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='PT 일정', log_how='삭제', log_detail=str(start_date) + '/' + str(end_date),
+                         log_info='레슨 일정', log_how='삭제', log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), use=USE)
         log_data.save()
 

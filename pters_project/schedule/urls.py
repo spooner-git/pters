@@ -21,7 +21,7 @@ urlpatterns = [
     # 강사 일정 기능 #####################################################################################################
     # 일정 등록
     url(r'^add_schedule/$', views.add_schedule_logic, name='add_schedule'),
-    # 일정 삭제
+    # 일정 취소
     url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),
     # 일정 완료
     url(r'^finish_schedule/$', views.finish_schedule_logic, name='finish_schedule'),
@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^add_repeat_schedule/$', views.add_repeat_schedule_logic, name='add_repeat_schedule'),
     # 반복일정 확인
     url(r'^add_repeat_schedule_confirm/$', views.add_repeat_schedule_confirm, name='add_repeat_schedule_confirm'),
-    # 반복일정 삭제
+    # 반복일정 취소
     url(r'^delete_repeat_schedule/$', views.delete_repeat_schedule_logic, name='delete_repeat_schedule'),
     # 일정 수정 됐는지 확인
     url(r'^check_schedule_update/$', views.CheckScheduleUpdateViewAjax.as_view(), name='check_schedule_update'),
@@ -41,7 +41,7 @@ urlpatterns = [
     # 그룹 일정 기능 #####################################################################################################
     # 그룹 일정 등록
     url(r'^add_group_schedule/$', views.add_group_schedule_logic, name='add_group_schedule'),
-    # 그룹 일정 삭제
+    # 그룹 일정 취소
     url(r'^delete_group_schedule/$', views.delete_group_schedule_logic, name='delete_group_schedule'),
     # 그룹 일정 완료
     url(r'^finish_group_schedule/$', views.finish_group_schedule_logic, name='finish_group_schedule'),
@@ -51,7 +51,7 @@ urlpatterns = [
     url(r'^add_group_repeat_schedule/$', views.add_group_repeat_schedule_logic, name='add_group_repeat_schedule'),
     # 그룹 반복일정 확인
     url(r'^add_group_repeat_schedule_confirm/$', views.add_group_repeat_schedule_confirm, name='add_group_repeat_schedule_confirm'),
-    # 그룹 반복일정 삭제
+    # 그룹 반복일정 취소
     url(r'^delete_group_repeat_schedule/$', views.delete_group_repeat_schedule_logic, name='delete_group_repeat_schedule'),
 
 

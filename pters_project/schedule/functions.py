@@ -224,7 +224,7 @@ def func_add_repeat_schedule(class_id, lecture_id, group_id, group_schedule_id, 
     return context
 
 
-# 일정 삭제
+# 일정 취소
 def func_delete_schedule(schedule_id,  user_id):
     error = None
     context = {'error': None, 'schedule_id': ''}

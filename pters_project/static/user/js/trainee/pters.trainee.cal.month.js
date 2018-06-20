@@ -633,7 +633,7 @@ $(document).ready(function(){
         })
     }
 
-    $("#popup_text1").click(function(){  //일정 삭제 버튼 클릭
+    $("#popup_text1").click(function(){  //일정 취소 버튼 클릭
 		if($(this).find("span").hasClass('limited')){
 			var clicked = date_format_yyyy_m_d_to_yyyymmdd($('#cal_popup').attr('data-date'))
 			var today = date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate)

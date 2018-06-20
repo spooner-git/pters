@@ -182,7 +182,7 @@ def add_schedule_logic(request):
         return redirect(next_page)
 
 
-# 일정 삭제
+# 일정 취소
 def delete_schedule_logic(request):
     pt_schedule_id = request.POST.get('schedule_id', '')
     off_schedule_id = request.POST.get('off_schedule_id', '')
@@ -760,11 +760,11 @@ def add_repeat_schedule_confirm(request):
             except ValueError:
                 error = '등록 값에 문제가 있습니다.'
             except IntegrityError:
-                error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             except InternalError:
-                error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             except ValidationError:
-                error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             if error is None:
                 information = '반복일정 등록이 취소됐습니다.'
 
@@ -859,7 +859,7 @@ def delete_repeat_schedule_logic(request):
                 member_name = member_info.name
 
     if error is None:
-        # 오늘 날짜 이후의 반복일정 삭제 -> 전체 삭제 확인 필요 hk.kim
+        # 오늘 날짜 이후의 반복일정 취소 -> 전체 취소 확인 필요 hk.kim
         schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id,
                                                   start_dt__gt=timezone.now())
 
@@ -1184,7 +1184,7 @@ def add_group_schedule_logic(request):
         return redirect(next_page)
 
 
-# 그룹 일정 삭제
+# 그룹 일정 취소
 def delete_group_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id', '')
     date = request.POST.get('date', '')
@@ -1871,11 +1871,11 @@ def add_group_repeat_schedule_confirm(request):
             except ValueError:
                 error = '등록 값에 문제가 있습니다.'
             except IntegrityError:
-                error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             except InternalError:
-                error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             except ValidationError:
-                error = '반복일정 삭제중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
 
             if error is None:
                 information = '반복일정 등록이 취소됐습니다.'
@@ -1982,7 +1982,7 @@ def add_group_repeat_schedule_confirm(request):
         return redirect(next_page)
 
 
-# 그룹 반복 일정 삭제
+# 그룹 반복 일정 취소
 @csrf_exempt
 def delete_group_repeat_schedule_logic(request):
 
@@ -2070,7 +2070,7 @@ def delete_group_repeat_schedule_logic(request):
                 member_name = lecture_info.member.name
 
             if error_temp is None:
-                # 오늘 날짜 이후의 반복일정 삭제 -> 전체 삭제 확인 필요 hk.kim
+                # 오늘 날짜 이후의 반복일정 취소 -> 전체 취소 확인 필요 hk.kim
                 schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=member_repeat_schedule_id,
                                                           start_dt__gt=timezone.now())
 
