@@ -73,6 +73,7 @@ $(document).ready(function(){
     $(document).on('click','.memberNameForInfoView, .groupParticipantsRow span',function(){
     	var dbID = $(this).attr('data-dbid')
     	$('.popups').hide()
+        console.log('test0')
     	if($('body').width()<600){
     		//$('#calendar').css('display','none')
             $('#calendar').css('height','0')
