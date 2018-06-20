@@ -2701,6 +2701,9 @@ function open_member_info_popup_mobile(dbID, jsondata){
     if($('body').width()<600){
       //$('#page_managemember').hide();
       $('#page_managemember').css({'height':'0','overflow-y':'hidden'})
+      if($('._calmonth').length != 0 || $('._calweek').length != 0){
+        $('#upbutton-modify, #mobile_basic_info .member_info_tool').css('display','none')
+        }
     }
 
     $('#inputError_info').css('display','none')
