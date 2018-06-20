@@ -1336,10 +1336,11 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
       $('#page-base-addstyle').fadeIn();
       $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
       $('#float_btn_wrap').fadeOut();
-      $('#calendar').hide();
-      //$('#calendar').css('height','0')
+      //$('#calendar').hide();
+      $('#calendar').css('height','0')
       $('#addpopup_pc_label_pt, #addpopup_pc_label_off').css('display','none')
       $('#page-addplan').fadeIn('fast').css('top',50);
+      $('#upbutton-x').attr('data-page','addplan')
     }else{
       $('#page-addplan').fadeIn('fast').css({'top':(($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()),
                                                 'left':(($(window).width()-$('#page-addplan').outerWidth())/2+$(window).scrollLeft())})

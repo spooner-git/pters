@@ -74,7 +74,8 @@ $(document).ready(function(){
     	var dbID = $(this).attr('data-dbid')
     	$('.popups').hide()
     	if($('body').width()<600){
-    		$('#calendar').css('display','none')
+    		//$('#calendar').css('display','none')
+            $('#calendar').css('height','0')
             get_indiv_member_info(dbID)
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
@@ -96,52 +97,48 @@ $(document).ready(function(){
 
 	$('#upbutton-x').click(function(){
 		//$('#calendar').css('height','90%')
-	    $('#page-addplan').fadeOut('fast','swing');
-	    if($('body').width()<600){
-	        $('#calendar').show();
-	    }
-	    $('#float_btn_wrap').show();
-	    $('#float_btn').removeClass('rotate_btn');
-	    $('#page-base').fadeIn();
-	    $('#page-base-addstyle').fadeOut();
+		if($(this).attr('data-page') == "addplan"){
+			$('#page-addplan').fadeOut('fast');
+		    if($('body').width()<600){
+		        //$('#calendar').css('display','block');
+		        $('#calendar').css('height','100%')
+		    }
+		    $('#float_btn_wrap').show();
+		    $('#float_btn').removeClass('rotate_btn');
+		    $('#page-base').fadeIn();
+		    $('#page-base-addstyle').fadeOut();
 
-	    $("#membersSelected button").removeClass("dropdown_selected");
-	    if(Options.language == "KOR"){
-	    	var text1 = '회원/그룹 선택'
-	    	var text2 = '선택'
-	    }else if(Options.language == "JPN"){
-	    	var text1 = '「会員選択」'
-	    	var text2 = '「選択」'
-	    }else if(Options.language == "ENG"){
-	    	var text1 = 'Choose member'
-	    	var text2 = 'Choose'
-	    }
-        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>");
-        $("#membersSelected .btn:first-child").val("");
-        $("#countsSelected,.countsSelected").text("")
-        $("#dateSelector p").removeClass("dropdown_selected");
-        $('#timeGraph').hide();
-        $("#starttimesSelected button").removeClass("dropdown_selected");
-        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text2+"</span>");
-        $("#starttimesSelected .btn:first-child").val("");
-        $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text2+"</span>");
-        $("#durationsSelected .btn:first-child").val("");
-        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-        $("#starttimes").empty();
-        $("#durations").empty();
-        $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
+		    if(Options.language == "KOR"){
+		    	var text1 = '회원/그룹 선택'
+		    	var text2 = '선택'
+		    }else if(Options.language == "JPN"){
+		    	var text1 = '「会員選択」'
+		    	var text2 = '「選択」'
+		    }else if(Options.language == "ENG"){
+		    	var text1 = 'Choose member'
+		    	var text2 = 'Choose'
+		    }
+	        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
+	        $("#countsSelected,.countsSelected").text("")
+	        //$("#dateSelector p").removeClass("dropdown_selected");
+	        $("#starttimesSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+	        $("#durationsSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+	        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+	        $("#starttimes, #durations").empty();
+	        $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder')
 
-        $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
-        $('.dateButton').removeClass('dateButton_selected')
-        $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
-        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
-        //$('#page-addplan form input').val('')
-        selectedDayGroup = []
+	        $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
+	        $('.dateButton').removeClass('dateButton_selected')
+	        $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
+	        $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
+	        //$('#page-addplan form input').val('')
+	        selectedDayGroup = []
 
-        $('._NORMAL_ADD_wrap').css('display','block')
-        $('._REPEAT_ADD_wrap').css('display','none')
-        $('#timeGraph').css('display','none')
+	        $('._NORMAL_ADD_wrap').css('display','block')
+	        $('._REPEAT_ADD_wrap').css('display','none')
+	        $('#timeGraph').css('display','none')
+	        shade_index(-100)
+		}
   	})
   //모바일 스타일
 
