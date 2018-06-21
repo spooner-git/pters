@@ -2268,6 +2268,9 @@ def update_group_info_logic(request):
 
         if note == '' or note is None:
             note = group_info.note
+    if error is None:
+        if int(member_num) <= 0:
+            error = '그룹의 정원은 1명 이상이어야 합니다.'
 
     if error is None:
         if group_type_cd == 'NORMAL':
