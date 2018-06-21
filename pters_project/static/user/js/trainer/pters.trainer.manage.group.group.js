@@ -474,7 +474,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
 	var group_name = $(this).parent('div').siblings('._groupname').find('input').val()
 	var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
 	var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
-	var group_type = $(this).parent('div').siblings('._grouptypecd').find('input').val()
+	var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
     if(group_capacity == '∞'){ //비정기 그룹일때 무한대로 정원 설정
         var group_capacity = 99
     }
@@ -848,7 +848,7 @@ function groupListSet(option, jsondata){ //option : current, finished
 
         var main = '<div class="_groupnum">'+(i+1)+'</div>'+
                     '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
-                    '<div class="_grouptypecd"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
+                    '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
                     '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '&nbsp;&nbsp; /' + '<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
