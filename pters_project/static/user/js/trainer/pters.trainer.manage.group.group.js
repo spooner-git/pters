@@ -470,54 +470,58 @@ var ori_group_capacity;
 var ori_group_memo;
 //그룹 리스트에서 그룹 수정버튼을 누른다.
 $(document).on('click','._groupmanage img._info_modify',function(e){
-    e.stopPropagation()
-	var group_id = $(this).attr('data-groupid')
-	var status = $(this).attr('data-edit')
-    
-	switch(status){
-		case 'view':
-            ori_group_name = $(this).parent('div').siblings('._groupname').find('input').val()
-            ori_group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
-            ori_group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
-            ori_group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
-
-
-			$(this).attr({'data-edit':'edit', 'src':'/static/user/res/btn-pt-complete-small.png'})
-            $(this).siblings('img._info_cancel').show()
-            $(this).siblings('img._info_download, img._info_delete').hide()
-
-			toggle_lock_unlock_inputfield_grouplist(group_id, false)
-		break;
-		case 'edit':
-            var group_name = $(this).parent('div').siblings('._groupname').find('input').val()
-            var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
-            var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
-            var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
-
-
-			$(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
-			//toggle_lock_unlock_inputfield_grouplist(group_id, true)
-			modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type)
-		break;
-	}
-
-    //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
-    $(document).on('click', 'img._info_cancel', function(e){
-        $(this).hide()
-        $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
-        if($('body').width()>600){
-            $('img._info_download, img._info_delete').show()
-        }else{
-            $('img._info_delete').show()
-        }
-        $(this).parent('div').siblings('._groupname').find('input').val(ori_group_name)
-        $(this).parent('div').siblings('._grouppartystatus').find('input').val(ori_group_capacity)
-        $(this).parent('div').siblings('._groupmemo').find('input').val(ori_group_memo)
-        toggle_lock_unlock_inputfield_grouplist(group_id, true)
+    if(!$(this).hasClass('disabled_button')){
         e.stopPropagation()
+        var group_id = $(this).attr('data-groupid')
+        var status = $(this).attr('data-edit')
         
-    })
-    //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
+
+        switch(status){
+            case 'view':
+                ori_group_name = $(this).parent('div').siblings('._groupname').find('input').val()
+                ori_group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
+                ori_group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
+                ori_group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
+
+                $(this).attr({'data-edit':'edit', 'src':'/static/user/res/btn-pt-complete-small.png'})
+                $(this).siblings('img._info_cancel').show()
+                $(this).siblings('img._info_download, img._info_delete').hide()
+                $('img._info_modify[data-edit="view"]').addClass('disabled_button')
+                toggle_lock_unlock_inputfield_grouplist(group_id, false)
+            break;
+            case 'edit':
+                var group_name = $(this).parent('div').siblings('._groupname').find('input').val()
+                var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
+                var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
+                var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
+
+
+                $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
+                //toggle_lock_unlock_inputfield_grouplist(group_id, true)
+                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type)
+            break;
+        }
+
+        //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
+        $(document).on('click', 'img._info_cancel', function(e){
+            $(this).hide()
+            $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
+            if($('body').width()>600){
+                $('img._info_download, img._info_delete').show()
+            }else{
+                $('img._info_delete').show()
+            }
+            $(this).parent('div').siblings('._groupname').find('input').val(ori_group_name)
+            $(this).parent('div').siblings('._grouppartystatus').find('input').val(ori_group_capacity)
+            $(this).parent('div').siblings('._groupmemo').find('input').val(ori_group_memo)
+            toggle_lock_unlock_inputfield_grouplist(group_id, true)
+            e.stopPropagation()
+            
+        })
+        //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
+    }
+
+    
 })
 
 $(document).on('click','.groupWrap input',function(e){
