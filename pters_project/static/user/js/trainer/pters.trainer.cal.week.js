@@ -490,11 +490,11 @@ $(document).ready(function(){
 			 }
 		}
 		schedule_on_off = 2;
-		$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
+		//$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
 		if($('body').width()>600){
 			toggleGroupParticipantsList('on')
 		}else{
-
+			//$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
 		}
 		
 	})

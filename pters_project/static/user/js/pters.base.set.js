@@ -130,6 +130,7 @@ function toggleGroupParticipantsList(onoff){
       var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
       var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
       var group_schedule_id = $('#popup_btn_viewGroupParticipants').attr('group-schedule-id')
+      $('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
       get_group_plan_participants(group_schedule_id,'callback',function(jsondata){
         $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
         draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
