@@ -32,7 +32,7 @@ $('button#addByNew').click(function(e){
         addByNew_input_eventGroup()
         e.preventDefault()
         added_New_Member_Num++
-        var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="">'
+        var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">'
         var nameinput = '<input class="new_member_lastname" placeholder="회원 성"><input class="new_member_firstname" placeholder="회원 이름">'
         var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
         var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'
@@ -75,18 +75,22 @@ function addByNew_input_eventGroup(){
 	//이름 input이 자신이 속한 부모 행의 attr에 이름 정보를 입력해둔다.
 	$(document).on('keyup', '.addByNewRaw input.new_member_lastname', function(){
 		$(this).parent('.addByNewRaw').attr({'data-lastname': $(this).val()})
-	})
+	    check_dropdown_selected()
+    })
 
 	$(document).on('keyup', '.addByNewRaw input.new_member_firstname', function(){
 		$(this).parent('.addByNewRaw').attr({'data-firstname': $(this).val()})
+        check_dropdown_selected()
 	})
 
 	$(document).on('change', '.addByNewRaw select', function(){
 		$(this).parent('.addByNewRaw').attr('data-sex', $(this).val())
+        check_dropdown_selected()
 	})
 
 	$(document).on('keyup', '.addByNewRaw input.new_member_phone', function(){
 		$(this).parent('.addByNewRaw').attr('data-phone', $(this).val())
+        check_dropdown_selected()
 	})
 
 }
@@ -398,19 +402,7 @@ function added_member_info_to_jsonformat(){
             var lastname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname');
             var phone = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone');
             var sex = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex')
-            if(firstname.length == 0){
-                var firstname = ""
-            }
-            if(lastname.length == 0){
-                var lastname = ""
-            }
-            if(phone.length == 0){
-                var phone = ""
-            }
-            if(sex.length == 0){
-                var sex = ""
-            }
-
+            console.log(firstname, lastname, phone, sex)
 			var data = {
                        "first_name" : firstname,
                        "last_name" : lastname,
