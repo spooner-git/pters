@@ -2658,6 +2658,8 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#float_btn_wrap').fadeOut();
     $('#page-base').fadeOut('fast');
     $('#page-base-modifystyle').fadeIn('fast');
+    $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberinfo')
+    $('#memberInfoPopup').fadeIn('fast').attr({'data-username': userName, 'data-userid' : userID});
     $('#memberName_info').val(userName)
     $('#memberName_info_lastName, #form_lastname_modify').val(jsondata.lastnameInfo)
     $('#memberName_info_firstName, #form_firstname_modify').val(jsondata.firstnameInfo)
@@ -2692,12 +2694,10 @@ function open_member_info_popup_mobile(dbID, jsondata){
       $('#memberFemale_info').addClass('selectbox_checked')
     }
 
-    $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberinfo')
-    $('#memberInfoPopup').fadeIn('fast').attr({'data-username': userName, 'data-userid' : userID});
     $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
     $('#memberName_info').show()
     $('#memberName_info_lastName, #memberName_info_firstName').hide()
-    $('#shade3').fadeIn('fast');
+    //$('#shade3').fadeIn('fast');
     scrollToDom($('#page_managemember'));
     if($('body').width()<600){
       //$('#page_managemember').hide();
@@ -3239,84 +3239,103 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
         var remCount_group_personal = []
         var availCount_group_personal = []
         var finishCount_group_personal = []
-        for(var i=0; i<jsondata.lectureIdArray.length; i++){
+        var jsonlen = jsondata.lectureIdArray.length
+
+        var jsondata_availCountArray = jsondata.availCountArray
+        var jsondata_lectureIdArray = jsondata.lectureIdArray
+        var jsondata_lectureStateArray = jsondata.lectureStateArray
+        var jsondata_lectureStateNameArray = jsondata.lectureStateNameArray
+        var jsondata_memberViewStateArray = jsondata.memberViewStateArray
+        var jsondata_memberViewStateNameArray = jsondata.memberViewStateNameArray
+        var jsondata_modDateTimeArray = jsondata.modDateTimeArray
+        var jsondata_regDateTimeArray = jsondata.regDateTimeArray
+        var jsondata_remCountArray = jsondata.remCountArray
+        var jsondata_priceArray = jsondata.priceArray
+        var jsondata_regCountArray = jsondata.regCountArray
+        var jsondata_finishCountArray = jsondata.finishCountArray
+        var jsondata_startArray = jsondata.startArray
+        var jsondata_endArray = jsondata.endArray
+        var jsondata_groupNameArray = jsondata.groupNameArray
+        var jsondata_noteArray = jsondata.noteArray
+
+        for(var i=0; i<jsonlen; i++){
             var table_title1 = '<div><div class="regHistory_table_title">시작</div><div class="regHistory_table_title">종료</div><div class="regHistory_table_title">등록횟수</div><div class="regHistory_table_title">남은횟수</div></div>'
             var table_title2 = '<div><div class="regHistory_table_title">등록금액</div><div class="regHistory_table_title">회당금액</div><div class="regHistory_table_title">진행상태</div><div class="regHistory_table_title">연결상태</div></div>'
 
-            var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
-            var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
-            var lectureType = '<div>'+jsondata.lectureStateArray[i]+'</div>'
-            var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-            var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateArray[i]+'</div>'
-            var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
+            var availcount =  '<div>'+jsondata_availCountArray[i]+'</div>'
+            var lectureId =   '<div>'+jsondata_lectureIdArray[i]+'</div>'
+            var lectureType = '<div>'+jsondata_lectureStateArray[i]+'</div>'
+            var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>'
+            var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateArray[i]+'</div>'
+            var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>'
+            var modDateTime = '<div>'+jsondata_modDateTimeArray[i]+'</div>'
             //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
-            var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
-            var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
+            var regDateTime = '<div>'+jsondata_regDateTimeArray[i]+'</div>'
+            var remcount =    '<div class="lec_rem_count">'+jsondata_remCountArray[i]+'</div>'
             if($('body').width()>600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
-                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>' 
+                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>' 
             }else if($('body').width()<=600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
-                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>' 
+                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>' 
             }
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
-            var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
-            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.startArray[i],'.')+'" disabled readonly></div>'
-            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.endArray[i],'.')+'" disabled readonly></div>'
-            var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
-            var howManyReg = '<div class="howManyReg">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
+            var regcount =    '<div><input class="lec_reg_count" value="'+jsondata_regCountArray[i]+'" disabled></div>'
+            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata_lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata_startArray[i],'.')+'" disabled readonly></div>'
+            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata_lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata_endArray[i],'.')+'" disabled readonly></div>'
+            var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata_lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
+            var howManyReg = '<div class="howManyReg">'+(jsonlen-i)+'회차 등록 '+'</div>'
             
-            if(jsondata.groupNameArray[i] != '1:1'){
-                var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
+            if(jsondata_groupNameArray[i] != '1:1'){
+                var yourgroup = '[그룹] '+jsondata_groupNameArray[i]
                 if(jsondata.lectureStateArray[i] == "IP"){
-                    regCount_group_personal.push('G'+jsondata.regCountArray[i])
-                    remCount_group_personal.push('G'+jsondata.remCountArray[i])
-                    availCount_group_personal.push('G'+jsondata.availCountArray[i])
-                    finishCount_group_personal.push('G'+jsondata.finishCountArray[i])
+                    regCount_group_personal.push('G'+jsondata_regCountArray[i])
+                    remCount_group_personal.push('G'+jsondata_remCountArray[i])
+                    availCount_group_personal.push('G'+jsondata_availCountArray[i])
+                    finishCount_group_personal.push('G'+jsondata_finishCountArray[i])
                 }
                 
-            }else if(jsondata.groupNameArray[i] == '1:1'){
-                var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
-                if(jsondata.lectureStateArray[i] == "IP"){
-                    regCount_group_personal.push(jsondata.regCountArray[i])
-                    remCount_group_personal.push(jsondata.remCountArray[i])
-                    availCount_group_personal.push(jsondata.availCountArray[i])
-                    finishCount_group_personal.push(jsondata.finishCountArray[i])
+            }else if(jsondata_groupNameArray[i] == '1:1'){
+                var yourgroup = jsondata_groupNameArray[i] + ' 레슨'
+                if(jsondata_lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push(jsondata_regCountArray[i])
+                    remCount_group_personal.push(jsondata_remCountArray[i])
+                    availCount_group_personal.push(jsondata_availCountArray[i])
+                    finishCount_group_personal.push(jsondata_finishCountArray[i])
                 }
             }
-            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
+            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata_lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
 
             //var whatGroupType = '<div class="whatGroupType"><select disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
-            if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-                var lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-            }else if(jsondata.lectureStateArray[i] == "PE"){
-                var lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-            }else if(jsondata.lectureStateArray[i] == "RF"){
-                var lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+            if(jsondata_lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
+                var lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>'
+            }else if(jsondata_lectureStateArray[i] == "PE"){
+                var lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>'
+            }else if(jsondata_lectureStateArray[i] == "RF"){
+                var lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>'
             }
-            if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
-                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            }else if(jsondata.memberViewStateArray[i] == "DELETE"){
-                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            }else if(jsondata.memberViewStateArray[i] == "VIEW"){
-                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            if(jsondata_memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
+                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>'
+            }else if(jsondata_memberViewStateArray[i] == "DELETE"){
+                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>'
+            }else if(jsondata_memberViewStateArray[i] == "VIEW"){
+                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>'
             }
 
-            var note = '<div class="mobile_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
+            var note = '<div class="mobile_member_note" data-leid="'+jsondata_lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata_noteArray[i]+'" disabled></span></div>'
 
-            result_history_html.push('<div class="wraps"><div data-leid='+jsondata.lectureIdArray[i]+' style="text-align:right;">'+howManyReg+whatGroupType+'수정: '+modifyActiveBtn+'</div>'+
+            result_history_html.push('<div class="wraps"><div data-leid='+jsondata_lectureIdArray[i]+' style="text-align:right;">'+howManyReg+whatGroupType+'수정: '+modifyActiveBtn+'</div>'+
                                     table_title1+
-                                    '<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+'</div>'+
+                                    '<div data-leid='+jsondata_lectureIdArray[i]+'>'+start+end+regcount+remcount+'</div>'+
                                     table_title2+
-                                    '<div data-leid='+jsondata.lectureIdArray[i]+'>'+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+'</div>'+
+                                    '<div data-leid='+jsondata_lectureIdArray[i]+'>'+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+'</div>'+
                                     note+'</div>')
         }
-        $('#memberRegCount_info').val(sumCount(jsondata.regCountArray)+' ('+regCount_group_personal.join(',')+')')  //전체 등록횟수
-        $('#memberRemainCount_info').val(sumCount(jsondata.remCountArray)+' ('+remCount_group_personal.join(',')+')')  //전체 남은횟수
-        $('#memberAvailCount_info').val(sumCount(jsondata.availCountArray)+' ('+availCount_group_personal.join(',')+')')  //전체 예약가능횟수
-        $('#memberFinishCount_info').val(sumCount(jsondata.finishCountArray)+' ('+finishCount_group_personal.join(',')+')')  //전체 완료횟수
+        $('#memberRegCount_info').val(sumCount(jsondata_regCountArray)+' ('+regCount_group_personal.join(',')+')')  //전체 등록횟수
+        $('#memberRemainCount_info').val(sumCount(jsondata_remCountArray)+' ('+remCount_group_personal.join(',')+')')  //전체 남은횟수
+        $('#memberAvailCount_info').val(sumCount(jsondata_availCountArray)+' ('+availCount_group_personal.join(',')+')')  //전체 예약가능횟수
+        $('#memberFinishCount_info').val(sumCount(jsondata_finishCountArray)+' ('+finishCount_group_personal.join(',')+')')  //전체 완료횟수
 
         var result_history = result_history_html.join('')
         $regHistory.html(result_history)
@@ -3910,19 +3929,24 @@ function closePopup(option){
         $('#uptext-pc-modify').text(text)
 
         $('#memberInfoPopup').fadeOut('fast')
+
+        $('#memberRegHistory_info').html("")
+        $('#memberRepeat_info').html("")
+        $('#memberLectureHistory_info').html("")
+
+
+        /*
         $('#memberName_info').attr('disabled',true)
         $('#memberId').attr('disabled',true);
 
         $('#birth_year_info, #birth_month_info, #birth_date_info').prop('disabled',true).addClass('dropdown_birth_info')
         $('#memberMale_info, #memberFemale_info').addClass('selectbox_disable')
 
-        //$('#memberEmail_info').attr('readonly',true);
         $('#memberPhone_info').attr('disabled',true);
         $('#comment_info').attr('readonly',true);
-        //$('#memberCount_info').attr('readonly',true);
-        //$('#datepicker_info').attr('disabled',true).addClass('input_disabled_color');
-        //$('#datepicker2_info').attr('disabled',true).addClass('input_disabled_color');
-        //$('.confirmPopup').fadeOut('fast');
+        */
+
+
         $('#cal_popup_plandelete').fadeOut('fast')
         if($('#mshade').css('z-index')==150){
             shade_index(150)

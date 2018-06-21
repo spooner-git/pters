@@ -73,10 +73,11 @@ $(document).ready(function(){
     $(document).on('click','.memberNameForInfoView, .groupParticipantsRow span',function(){
     	var dbID = $(this).attr('data-dbid')
     	$('.popups').hide()
-        console.log('test0')
     	if($('body').width()<600){
+    		beforeSend();
     		//$('#calendar').css('display','none')
             $('#calendar').css('height','0')
+
             get_indiv_member_info(dbID)
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
@@ -442,7 +443,7 @@ $(document).ready(function(){
 		$('#canvasWrap span').hide();
 
 		$('#page-addplan-pc').hide()
-		$("#cal_popup_planinfo").fadeIn('fast').attr('group_plan_finish_check', $(this).attr('data-schedule-check'));
+		$('#cal_popup_planinfo').fadeIn('fast').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check') })
 		shade_index(100)
 		closeAlarm('pc')
 
@@ -460,7 +461,7 @@ $(document).ready(function(){
 		//$('#popup_info2').html(infoText2);
 		$('#popup_info2').text('[그룹]'+info[6]+' '+time+':'+minute+yourplan)
 		$('#popup_info3_memo').text(infoText3).val(infoText3)
-		$('#cal_popup_planinfo').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group'})
+		
 		$("#id_schedule_id").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_modify").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
 		$("#id_schedule_id_finish").val($(this).attr('group-schedule-id')); // shcedule 정보 저장
@@ -490,7 +491,12 @@ $(document).ready(function(){
 		}
 		schedule_on_off = 2;
 		$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
-		toggleGroupParticipantsList('on')
+		if($('body').width()>600){
+			toggleGroupParticipantsList('on')
+		}else{
+			
+		}
+		
 	})
 
 	mini_popup_event()

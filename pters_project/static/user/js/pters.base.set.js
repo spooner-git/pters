@@ -73,6 +73,7 @@ function shade_index(option){
 function close_info_popup(option){
   if(option=="cal_popup_planinfo"){
       $("#"+option).css({'display':'none'})
+      $('#groupParticipants').html("")
       toggleGroupParticipantsList('off')
       if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
         shade_index(100)
@@ -129,6 +130,7 @@ function toggleGroupParticipantsList(onoff){
     case 'on':
       toggleGroupParticipants = 'on'
       $('#groupParticipants').animate({'height':'200px'},200)
+      //$('#groupParticipants').css('height','200px')
       $('#popup_btn_viewGroupParticipants img').css('transform','rotate(180deg)')
       var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
       var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
