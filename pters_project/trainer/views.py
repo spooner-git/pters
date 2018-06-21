@@ -265,7 +265,6 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_week.html'
 
     def get_context_data(self, **kwargs):
-        start_time = timezone.now()
         context = super(CalWeekView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         class_info = None
@@ -298,8 +297,6 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         self.request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
         self.request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
         self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
-        end_time = timezone.now()
-        print('calweek_view'+str(end_time-start_time))
         return context
 
 
