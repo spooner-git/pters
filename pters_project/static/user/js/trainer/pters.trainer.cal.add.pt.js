@@ -1281,7 +1281,7 @@ function float_btn_addplan(option){
     }else if(option == 1){
         clear_pt_off_add_popup()
         open_pt_off_add_popup('ptadd')
-        // ajaxTimeGraphSet()
+        ajaxTimeGraphSet()
         shade_index(100)
         //scrollToDom($('#calendar'))
         
@@ -1290,7 +1290,7 @@ function float_btn_addplan(option){
         open_pt_off_add_popup('offadd')
         //addTypeSelect = "offadd"
         get_repeat_info("")
-        // ajaxTimeGraphSet()
+        ajaxTimeGraphSet()
         shade_index(100)
         //scrollToDom($('#calendar'))
     }
