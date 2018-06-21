@@ -109,13 +109,8 @@ function close_info_popup(option){
       if($('body').width()>=600){
           $('#calendar').css('position','relative')
       }else{
-          $('._calmonth').css({'height':'90%','position':'fixed'})
-          $('body').css('overflow-y','overlay');
-          $('#page-addplan').hide('fast','swing');
-          $('#float_btn_wrap').fadeIn();
-          $('#float_btn').removeClass('rotate_btn');
-          $('#page-base').show();
-          $('#page-base-addstyle').hide();
+          //$('._calmonth').css({'height':'90%','position':'fixed'})
+          //$('body').css('overflow-y','overlay');
       }
   }
   else if(option = "cal_popup_plancheck"){

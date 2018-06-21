@@ -1081,10 +1081,12 @@ $(document).ready(function(){
       $('#popup_btn_repeatconfirm_no').click(function(){
         if(ajax_block_during_repeat_confirm == true){
             $('#id_repeat_confirm').val(0);
+            /*
             if($('body').width()<600){
               shade_index(-100) //20180430
               $('#calendar').css('height','100%') //20180430
             }
+            */
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend();
             check_dropdown_selected_addplan()
@@ -1095,11 +1097,13 @@ $(document).ready(function(){
       $('#popup_btn_repeatconfirm_yes').click(function(){
         if(ajax_block_during_repeat_confirm == true){
             $('#id_repeat_confirm').val(1);
+            /*
             if($('body').width()<600){
               close_info_popup('page-addplan')
               shade_index(-100) //20180430
               $('#calendar').css('height','100%') //20180430
             }
+            */
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend('callback',function(){
                 if(addTypeSelect == "repeatgroupptadd"){
