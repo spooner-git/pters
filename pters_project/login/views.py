@@ -179,6 +179,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
+        form = RegistrationForm(request.POST, request.FILES)
         user_id = request.POST.get('username', '')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
@@ -187,43 +188,59 @@ class ResendEmailAuthenticationView(RegistrationView, View):
         error = None
         user = None
         username = None
-
-        if error is None:
-            if member_type == 'new':
-                if email is None or email == '':
-                    error = 'Email을 입력해주세요.'
-                elif user_id is None or user_id == '':
-                    error = 'ID를 입력해주세요.'
-
-        if error is None:
-            try:
-                user = User.objects.get(id=member_id)
-            except ObjectDoesNotExist:
-                error = '가입되지 않은 회원입니다.'
-
-        if error is None:
-            username = user.username
-            if member_type == 'new':
+        if member_id is None or member_id == '':
+            error = 'ID를 입력해주세요.'
+        else:
+            if form.is_valid():
                 if error is None:
-                    user.username = user_id
-                    user.email = email
-                    user.set_password(password)
-                    user.save()
-        if error is None:
-            # user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    error = '이미 인증된 ID 입니다.'
-                else:
-                    self.send_activation_email(user)
+                    if member_type == 'new':
+                        if email is None or email == '':
+                            error = 'Email을 입력해주세요.'
+                        elif user_id is None or user_id == '':
+                            error = 'ID를 입력해주세요.'
+
+                if error is None:
+                    try:
+                        user = User.objects.get(id=member_id)
+                    except ObjectDoesNotExist:
+                        error = '가입되지 않은 회원입니다.'
+
+                if error is None:
+                    username = user.username
+                    if member_type == 'new':
+                        if error is None:
+                            user.username = user_id
+                            user.email = email
+                            user.set_password(password)
+                            user.save()
+                if error is None:
+                    # user = authenticate(username=username, password=password)
+                    if user is not None:
+                        if user.is_active:
+                            error = '이미 인증된 ID 입니다.'
+                        else:
+                            self.send_activation_email(user)
+                    else:
+                        error = 'ID가 존재하지 않습니다.'
+
             else:
-                error = 'ID가 존재하지 않습니다.'
+                for field in form:
+                    if field.errors:
+                        for err in field.errors:
+                            if error is None or error == '':
+                                if field.name == 'username':
+                                    error = '사용할수 없는 ID 입니다.'
+                                else:
+                                    error = err
+                            else:
+                                if field.name != 'username':
+                                    error += err
 
         if error is not None:
-            logger.error(username+'->'+user_id+'['+email+']'+error)
+            logger.error(str(username)+'->'+str(user_id)+'['+str(email)+']'+str(error))
             messages.error(request, error)
         else:
-            logger.error(username+'->'+user_id+'['+email+'] 회원가입 완료')
+            logger.error(str(username)+'->'+str(user_id)+'['+str(email)+'] 회원가입 완료')
 
         return render(request, self.template_name)
 

@@ -181,6 +181,19 @@
       .contract_main_text_long div{
           margin-top:10px;
       }
+
+    #global_error_msg{
+        position: absolute;
+        display: none;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        background: red;
+        color: #ffffff;
+        font-size: 13px;
+        padding-left: 0;
+    }
     </style>
 
 {% endblock %}
@@ -565,6 +578,7 @@
           <div id="legal_cancel">돌아가기</div>
 </div>
 
+<div id="global_error_msg"></div>
 <div class="outerbox_horizontal" data-view="init" style="width:auto;">
 	<div class="explainbox _type_trainee" style="width: 315px;">
 		<img src="/static/user/res/login/icon-reg-user.png">
@@ -576,6 +590,8 @@
                 <input type="hidden" name="member_id" value="{{ request.session.user_id }}">
                 <input type="hidden" name="username" value="" id="id_username">
                 <input type="hidden" name="password" id="id_password">
+                <input type="hidden" name="password1" id="id_password1">
+                <input type="hidden" name="password2" id="id_password2">
                 <input type="hidden" name="email" id="id_email">
                 <input type="hidden" name="member_type" value="new">
 
@@ -661,8 +677,15 @@
                 success:function(data){
                     var jsondata = JSON.parse(data)
                     if(jsondata.messageArray.length>0){
-                      $('#errorMessageBar').show()
-                      $('#errorMessageText').text(jsondata.messageArray)
+                        error_msg = jsondata.messageArray
+                          $('#global_error_msg').show().html(error_msg)
+                          setTimeout(function(){
+                            $('#global_error_msg').fadeOut()
+                            //$('ul.errorlist').remove()
+                          },10000)
+                           return;
+{#                      $('#errorMessageBar').show()#}
+{#                      $('#errorMessageText').text(jsondata.messageArray)#}
                     }else{
                       $('#submit_complete').css('height','240px')
                       $('#submit_input').css('height','0px')
@@ -721,6 +744,8 @@
                 $('.pw_confirm').text('비밀번호 일치').css({'display':'inline','color':'green'})
                 $('.pw_confirm').attr('data-check',1)
                 $('#id_password').attr('value',$(this).val())
+                $('#id_password1').attr('value',$('#pw_input').val())
+                $('#id_password2').attr('value',$('#pw_input_re').val())
             }
         }else{
             $('.pw_confirm').text('영문 대소문자/숫자/특수문자를 포함한 8자이상').css('color','#ffffff')
