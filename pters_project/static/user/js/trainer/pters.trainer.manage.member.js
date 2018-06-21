@@ -660,6 +660,7 @@ if (agent.indexOf("firefox") != -1) {
                     get_indiv_repeat_info(dbID);
                     get_member_lecture_list(dbID);
                     get_member_history_list(dbID);
+                    enable_delete_btns_after_ajax();
                     close_info_popup('cal_popup_plandelete')
                     deleteTypeSelect = "memberinfodelete";
                     if($('#calendar').length!=0){
@@ -669,6 +670,7 @@ if (agent.indexOf("firefox") != -1) {
 
             }else if(deleteTypeSelect == "memberinfodelete"){
                 deleteMemberAjax();
+                enable_delete_btns_after_ajax();
                 closePopup('member_info');
                 closePopup('member_info_PC')
 
@@ -681,6 +683,7 @@ if (agent.indexOf("firefox") != -1) {
                 delete_group_from_list(group_delete_JSON.group_id)
                 //그룹원들에게서 그룹에 대한 수강이력을 지운다.
                 delete_groupmember_from_grouplist()
+                enable_delete_btns_after_ajax();
 
                 group_delete_JSON.group_id = ""
                 group_delete_JSON.fullnames = []
@@ -691,6 +694,7 @@ if (agent.indexOf("firefox") != -1) {
                 var group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid')
                 var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
                 send_repeat_delete_group(repeat_schedule_id, 'callback', function(){
+                    enable_delete_btns_after_ajax();
                     close_info_popup('cal_popup_plandelete')
                     get_group_repeat_info(group_id)
                     if($('body').width()>=600){
@@ -702,7 +706,16 @@ if (agent.indexOf("firefox") != -1) {
                 //         send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
                 //     }
                 // })
-            }               
+            }
+        function disable_delete_btns_during_ajax(){
+            $('#popup_delete_btn_yes, #popup_delete_btn_no').addClass('disabled_button')
+            //ajax_block_during_delete_weekcal = false;
+		}
+
+		function enable_delete_btns_after_ajax(){
+			$('#popup_delete_btn_yes, #popup_delete_btn_no').removeClass('disabled_button')
+			//ajax_block_during_delete_weekcal = false;
+		}
     });
 
 
