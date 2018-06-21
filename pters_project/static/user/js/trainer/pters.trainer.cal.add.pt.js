@@ -1043,7 +1043,7 @@ $(document).ready(function(){
                                 completeSend()
                                 shade_index(-100)
                                 
-                                $('#calendar').show().css('height','100%')
+                                $('#calendar').css('height','100%')
                                 if($('body').width()>=600){
                                     $('#calendar').css('position','relative')
                                 }
@@ -1083,7 +1083,7 @@ $(document).ready(function(){
             $('#id_repeat_confirm').val(0);
             if($('body').width()<600){
               shade_index(-100) //20180430
-              $('#calendar').show() //20180430
+              $('#calendar').css('height','100%') //20180430
             }
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend();
@@ -1098,7 +1098,7 @@ $(document).ready(function(){
             if($('body').width()<600){
               close_info_popup('page-addplan')
               shade_index(-100) //20180430
-              $('#calendar').show() //20180430
+              $('#calendar').css('height','100%') //20180430
             }
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend('callback',function(){
