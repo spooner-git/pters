@@ -64,7 +64,6 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
                 schedule_info.finish_check = 1
             else:
                 schedule_info.finish_check = 0
-            schedule_info.member_name = member_lecture_info.lecture_tb.member.name
             pt_schedule_list.append(schedule_info)
 
     context['pt_schedule_data'] = pt_schedule_list

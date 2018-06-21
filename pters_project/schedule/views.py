@@ -251,9 +251,9 @@ def delete_schedule_logic(request):
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
-            error = '이미 삭제된 일정입니다.'
+            error = '이미 취소된 일정입니다.'
         except InternalError:
-            error = '이미 삭제된 일정입니다.'
+            error = '이미 취소된 일정입니다.'
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 
@@ -450,7 +450,7 @@ def upload_sign_image_logic(request):
 
         data = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
 
-        bucket.put_object(Key=schedule_id+'.png', Body=data, ContentType='image/png',
+        bucket.put_object(Key='/spooner_test/'+schedule_id+'.png', Body=data, ContentType='image/png',
                           ACL='public-read')
 
     return redirect(next_page)
@@ -898,9 +898,9 @@ def delete_repeat_schedule_logic(request):
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
-            error = '이미 삭제된 일정입니다.'
+            error = '이미 취소된 일정입니다.'
         except InternalError:
-            error = '이미 삭제된 일정입니다.'
+            error = '이미 취소된 일정입니다.'
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 
@@ -1091,7 +1091,7 @@ def add_group_schedule_logic(request):
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 일정', log_how='등록',
+                         log_info='그룹 레슨 일정', log_how='등록',
                          log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
                          reg_dt=timezone.now(), use=USE)
         log_data.save()
@@ -1255,9 +1255,9 @@ def delete_group_schedule_logic(request):
                 except ValueError:
                     temp_error = '등록 값에 문제가 있습니다.'
                 except IntegrityError:
-                    temp_error = '이미 삭제된 일정입니다.'
+                    temp_error = '이미 취소된 일정입니다.'
                 except InternalError:
-                    temp_error = '이미 삭제된 일정입니다.'
+                    temp_error = '이미 취소된 일정입니다.'
                 except ValidationError:
                     temp_error = '예약 가능한 횟수를 확인해주세요.'
 
@@ -1296,7 +1296,7 @@ def delete_group_schedule_logic(request):
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 레슨 일정', log_how='삭제',
+                         log_info=group_info.name + ' 그룹 레슨 일정', log_how='취소',
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt),
                          reg_dt=timezone.now(), use=USE)
         log_data.save()
@@ -1444,7 +1444,7 @@ def finish_group_schedule_logic(request):
                 push_info_schedule_start_date = str(start_date).split(':')
                 push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
                 func_save_log_data(start_date, end_date, class_id, '', request.user.last_name + request.user.first_name,
-                                   member_name, ON_SCHEDULE_TYPE, 'LS03', request)
+                                   member_name, GROUP_SCHEDULE_TYPE, 'LS03', request)
 
                 push_lecture_id.append(member_group_schedule_info.lecture_tb_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
@@ -1956,7 +1956,7 @@ def add_group_repeat_schedule_confirm(request):
                                      from_member_name=request.user.last_name + request.user.first_name,
                                      to_member_name=member_info.name,
                                      class_tb_id=class_id,
-                                     log_info=group_info.name + ' 그룹 반복 일정', log_how='등록',
+                                     log_info='그룹 반복 일정', log_how='등록',
                                      log_detail=str(start_date) + '/' + str(end_date),
                                      reg_dt=timezone.now(), use=USE)
                     log_data.save()
@@ -2045,9 +2045,9 @@ def delete_group_repeat_schedule_logic(request):
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
-            error = '이미 삭제된 일정입니다'
+            error = '이미 취소된 일정입니다'
         except InternalError:
-            error = '이미 삭제된 일정입니다'
+            error = '이미 취소된 일정입니다'
         except ValidationError:
             error = error
 
@@ -2103,9 +2103,9 @@ def delete_group_repeat_schedule_logic(request):
                 except ValueError:
                     error_temp = '등록 값에 문제가 있습니다.'
                 except IntegrityError:
-                    error_temp = '이미 삭제된 일정입니다.'
+                    error_temp = '이미 취소된 일정입니다.'
                 except InternalError:
-                    error_temp = '이미 삭제된 일정입니다.'
+                    error_temp = '이미 취소된 일정입니다.'
                 except ValidationError:
                     error_temp = '예약 가능한 횟수를 확인해주세요.'
 
@@ -2129,7 +2129,7 @@ def delete_group_repeat_schedule_logic(request):
         log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 반복 일정', log_how='삭제',
+                         log_info=group_info.name + ' 그룹 반복 일정', log_how='취소',
                          log_detail=str(start_date) + '/' + str(end_date),
                          reg_dt=timezone.now(), use=USE)
         log_data.save()
@@ -2164,9 +2164,9 @@ def delete_schedule_logic_func(schedule_id, lecture_id, repeat_schedule_id, en_d
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
-            error = '이미 삭제된 일정입니다.'
+            error = '이미 취소된 일정입니다.'
         except InternalError:
-            error = '이미 삭제된 일정입니다.'
+            error = '이미 취소된 일정입니다.'
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 

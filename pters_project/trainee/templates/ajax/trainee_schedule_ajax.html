@@ -8,7 +8,7 @@
       "scheduleFinishArray":
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_member_name" :
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb.member.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "scheduleNoteArray":
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
