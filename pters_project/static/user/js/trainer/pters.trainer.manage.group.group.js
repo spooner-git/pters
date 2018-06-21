@@ -32,7 +32,7 @@ $('button#addByNew').click(function(e){
         addByNew_input_eventGroup()
         e.preventDefault()
         added_New_Member_Num++
-        var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="">'
+        var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">'
         var nameinput = '<input class="new_member_lastname" placeholder="회원 성"><input class="new_member_firstname" placeholder="회원 이름">'
         var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
         var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'
@@ -75,18 +75,22 @@ function addByNew_input_eventGroup(){
 	//이름 input이 자신이 속한 부모 행의 attr에 이름 정보를 입력해둔다.
 	$(document).on('keyup', '.addByNewRaw input.new_member_lastname', function(){
 		$(this).parent('.addByNewRaw').attr({'data-lastname': $(this).val()})
-	})
+	    check_dropdown_selected()
+    })
 
 	$(document).on('keyup', '.addByNewRaw input.new_member_firstname', function(){
 		$(this).parent('.addByNewRaw').attr({'data-firstname': $(this).val()})
+        check_dropdown_selected()
 	})
 
 	$(document).on('change', '.addByNewRaw select', function(){
 		$(this).parent('.addByNewRaw').attr('data-sex', $(this).val())
+        check_dropdown_selected()
 	})
 
 	$(document).on('keyup', '.addByNewRaw input.new_member_phone', function(){
 		$(this).parent('.addByNewRaw').attr('data-phone', $(this).val())
+        check_dropdown_selected()
 	})
 
 }
@@ -394,11 +398,16 @@ function added_member_info_to_jsonformat(){
 	var len = $('#addedMemberListBox .addByNewRaw').length;
 	for(var i=1; i<len+1; i++){
 		if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid').length == 0){
+            var firstname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-firstname');
+            var lastname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname');
+            var phone = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone');
+            var sex = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex')
+            console.log(firstname, lastname, phone, sex)
 			var data = {
-                       "first_name" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-firstname'),
-                       "last_name" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname'),
-                       "phone" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone'),
-                       "sex" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex'),
+                       "first_name" : firstname,
+                       "last_name" : lastname,
+                       "phone" : phone,
+                       "sex" : sex,
                        "birthday_dt" : ""
                     }
             dataObject["new_member_data"].push(data)
@@ -465,52 +474,63 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 
 
+var ori_group_name;
+var ori_group_capacity;
+var ori_group_memo;
 //그룹 리스트에서 그룹 수정버튼을 누른다.
 $(document).on('click','._groupmanage img._info_modify',function(e){
-    e.stopPropagation()
-	var group_id = $(this).attr('data-groupid')
-	var status = $(this).attr('data-edit')
+    if(!$(this).hasClass('disabled_button')){
+        e.stopPropagation()
+        var group_id = $(this).attr('data-groupid')
+        var status = $(this).attr('data-edit')
+        
 
-	var group_name = $(this).parent('div').siblings('._groupname').find('input').val()
-	var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
-	var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
-	var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
-    if(group_capacity == '∞'){ //비정기 그룹일때 무한대로 정원 설정
-        var group_capacity = 99
+        switch(status){
+            case 'view':
+                ori_group_name = $(this).parent('div').siblings('._groupname').find('input').val()
+                ori_group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
+                ori_group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
+                ori_group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
+
+                $(this).attr({'data-edit':'edit', 'src':'/static/user/res/btn-pt-complete-small.png'})
+                $(this).siblings('img._info_cancel').show()
+                $(this).siblings('img._info_download, img._info_delete').hide()
+                $('img._info_modify[data-edit="view"]').addClass('disabled_button')
+                toggle_lock_unlock_inputfield_grouplist(group_id, false)
+            break;
+            case 'edit':
+                var group_name = $(this).parent('div').siblings('._groupname').find('input').val()
+                var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
+                var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
+                var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
+
+
+                $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
+                //toggle_lock_unlock_inputfield_grouplist(group_id, true)
+                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type)
+            break;
+        }
+
+        //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
+        $(document).on('click', 'img._info_cancel', function(e){
+            $(this).hide()
+            $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
+            if($('body').width()>600){
+                $('img._info_download, img._info_delete').show()
+            }else{
+                $('img._info_delete').show()
+            }
+            $(this).parent('div').siblings('._groupname').find('input').val(ori_group_name)
+            $(this).parent('div').siblings('._grouppartystatus').find('input').val(ori_group_capacity)
+            $(this).parent('div').siblings('._groupmemo').find('input').val(ori_group_memo)
+            toggle_lock_unlock_inputfield_grouplist(group_id, true)
+            e.stopPropagation()
+            
+        })
+        //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
     }
 
-	switch(status){
-		case 'view':
-			$(this).attr({'data-edit':'edit', 'src':'/static/user/res/btn-pt-complete-small.png'})
-            $(this).siblings('img._info_cancel').show()
-            $(this).siblings('img._info_download, img._info_delete').hide()
-
-			toggle_lock_unlock_inputfield_grouplist(group_id, false)
-		break;
-		case 'edit':
-			$(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
-			//toggle_lock_unlock_inputfield_grouplist(group_id, true)
-			modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type)
-		break;
-	}
-
-    //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
-    $(document).on('click', 'img._info_cancel', function(e){
-        $(this).hide()
-        $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
-        if($('body').width()>600){
-            $('img._info_download, img._info_delete').show()
-        }else{
-            $('img._info_delete').show()
-        }
-        $(this).parent('div').siblings('._groupname').find('input').val(group_name)
-        $(this).parent('div').siblings('._grouppartystatus').find('input').val(group_capacity)
-        $(this).parent('div').siblings('._groupmemo').find('input').val(group_memo)
-        toggle_lock_unlock_inputfield_grouplist(group_id, true)
-        e.stopPropagation()
-        
-    })
-    //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
+    
 })
 
 $(document).on('click','.groupWrap input',function(e){

@@ -251,8 +251,12 @@ $(document).ready(function(){
 																	'data-groupid': $(this).attr('data-groupid'),
 																	'group-schedule-id':$(this).attr('schedule-id'),
 																	})
-				$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
-				toggleGroupParticipantsList('on')
+				//$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
+				if($('body').width()>600){
+					toggleGroupParticipantsList('on')
+				}else{
+					//$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
+				}
 				schedule_on_off = 2;
 			}else{
 				$('#popup_info2').html(selectedPerson+'의 '+ selectedTime+':'+selectedMinute + ' 일정');

@@ -1043,7 +1043,7 @@ $(document).ready(function(){
                                 completeSend()
                                 shade_index(-100)
                                 
-                                $('#calendar').show().css('height','100%')
+                                $('#calendar').css('height','100%')
                                 if($('body').width()>=600){
                                     $('#calendar').css('position','relative')
                                 }
@@ -1081,10 +1081,12 @@ $(document).ready(function(){
       $('#popup_btn_repeatconfirm_no').click(function(){
         if(ajax_block_during_repeat_confirm == true){
             $('#id_repeat_confirm').val(0);
+            /*
             if($('body').width()<600){
               shade_index(-100) //20180430
-              $('#calendar').show() //20180430
+              $('#calendar').css('height','100%') //20180430
             }
+            */
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend();
             check_dropdown_selected_addplan()
@@ -1095,11 +1097,13 @@ $(document).ready(function(){
       $('#popup_btn_repeatconfirm_yes').click(function(){
         if(ajax_block_during_repeat_confirm == true){
             $('#id_repeat_confirm').val(1);
+            /*
             if($('body').width()<600){
               close_info_popup('page-addplan')
               shade_index(-100) //20180430
-              $('#calendar').show() //20180430
+              $('#calendar').css('height','100%') //20180430
             }
+            */
             close_info_popup('cal_popup_repeatconfirm')
             ajaxRepeatConfirmSend('callback',function(){
                 if(addTypeSelect == "repeatgroupptadd"){
@@ -1141,11 +1145,12 @@ $(document).ready(function(){
       $('#popup_btn_viewGroupParticipants').click(function(){
         if(toggleGroupParticipants == 'off'){
           toggleGroupParticipantsList('on')
+          /*
           var group_id = $(this).attr('data-groupid')
           var max = $(this).attr('data-membernum')
           var group_schedule_id = $(this).attr('group-schedule-id')
           get_group_plan_participants(group_schedule_id,'callback',function(jsondata){draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);completeSend();})
-
+          */
         }else if(toggleGroupParticipants == 'on'){
           toggleGroupParticipantsList('off')
         }
@@ -2790,7 +2795,6 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         success:function(data){
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER);
             var jsondata = JSON.parse(data);
-            console.log('get_group_plan_participants', jsondata)
             if(callbackoption == "callback"){
               callback(jsondata)
             }
@@ -2810,25 +2814,32 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
 
 //그룹에 일정에 속한 회원목록을 그린다. get_group_plan_participants와 같이 쓴다.
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max){
-    var target = $('#groupParticipants')
-    var htmlToJoin = []
-    console.log(jsondata, max)
-    for(var i=0; i<jsondata.db_id.length; i++){
-      var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata.db_id[i]+'" schedule-id="'+jsondata.scheduleIdArray[i]+'" data-leid="'+jsondata.classArray_lecture_id[i]+'">'
+    var target = $('#groupParticipants');
+    var htmlToJoin = [];
+    var jsonlen = jsondata.db_id.length;
+    var jsondata_db_id = jsondata.db_id;
+    var jsondata_scheduleIdArray = jsondata.scheduleIdArray;
+    var jsondata_classArray_lecture_id = jsondata.classArray_lecture_id;
+    var jsondata_scheduleFinishArray = jsondata.scheduleFinishArray;
+    var jsondata_sexArray = jsondata.sexArray;
+
+
+    for(var i=0; i<jsonlen; i++){
+      var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata_db_id[i]+'" schedule-id="'+jsondata_scheduleIdArray[i]+'" data-leid="'+jsondata_classArray_lecture_id[i]+'">'
       //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
-      var finishcheck = jsondata.scheduleFinishArray[i]
+      var finishcheck = jsondata_scheduleFinishArray[i]
       if(finishcheck == 1){
         var finish = '(완료)'
       }else if(finishcheck == 0){
         var finish = ''
       }
-      var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i]+'.png">'
-      var name = '<span data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+finish+'</span>'
-      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" data-dbid="'+jsondata.db_id[i]+'" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata.scheduleIdArray[i]+'">'
+      var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata_sexArray[i]+'.png">'
+      var name = '<span data-dbid="'+jsondata_db_id[i]+'">'+jsondata.name[i]+finish+'</span>'
+      var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" data-dbid="'+jsondata_db_id[i]+'" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata_scheduleIdArray[i]+'">'
       var htmlend = '</div>'
       htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend)
     }
-    if(jsondata.db_id.length < max){
+    if(jsonlen < max){
       htmlToJoin.push('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-membernum="'+max+'"></div>')
     }
     target.html(htmlToJoin.join(''))

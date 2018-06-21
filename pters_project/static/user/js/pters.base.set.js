@@ -73,6 +73,7 @@ function shade_index(option){
 function close_info_popup(option){
   if(option=="cal_popup_planinfo"){
       $("#"+option).css({'display':'none'})
+      $('#groupParticipants').html("")
       toggleGroupParticipantsList('off')
       if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
         shade_index(100)
@@ -108,13 +109,8 @@ function close_info_popup(option){
       if($('body').width()>=600){
           $('#calendar').css('position','relative')
       }else{
-          $('._calmonth').css({'height':'90%','position':'fixed'})
-          $('body').css('overflow-y','overlay');
-          $('#page-addplan').hide('fast','swing');
-          $('#float_btn_wrap').fadeIn();
-          $('#float_btn').removeClass('rotate_btn');
-          $('#page-base').show();
-          $('#page-base-addstyle').hide();
+          //$('._calmonth').css({'height':'90%','position':'fixed'})
+          //$('body').css('overflow-y','overlay');
       }
   }
   else if(option = "cal_popup_plancheck"){
@@ -129,10 +125,12 @@ function toggleGroupParticipantsList(onoff){
     case 'on':
       toggleGroupParticipants = 'on'
       $('#groupParticipants').animate({'height':'200px'},200)
+      //$('#groupParticipants').css('height','200px')
       $('#popup_btn_viewGroupParticipants img').css('transform','rotate(180deg)')
       var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
       var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
       var group_schedule_id = $('#popup_btn_viewGroupParticipants').attr('group-schedule-id')
+      $('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
       get_group_plan_participants(group_schedule_id,'callback',function(jsondata){
         $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
         draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
