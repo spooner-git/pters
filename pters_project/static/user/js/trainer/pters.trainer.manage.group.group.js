@@ -465,22 +465,23 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 
 
+var ori_group_name;
+var ori_group_capacity;
+var ori_group_memo;
 //그룹 리스트에서 그룹 수정버튼을 누른다.
 $(document).on('click','._groupmanage img._info_modify',function(e){
     e.stopPropagation()
 	var group_id = $(this).attr('data-groupid')
 	var status = $(this).attr('data-edit')
-
-	var group_name = $(this).parent('div').siblings('._groupname').find('input').val()
-	var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
-	var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
-	var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
-    if(group_capacity == '∞'){ //비정기 그룹일때 무한대로 정원 설정
-        var group_capacity = 99
-    }
-
+    
 	switch(status){
 		case 'view':
+            ori_group_name = $(this).parent('div').siblings('._groupname').find('input').val()
+            ori_group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
+            ori_group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
+            ori_group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
+
+
 			$(this).attr({'data-edit':'edit', 'src':'/static/user/res/btn-pt-complete-small.png'})
             $(this).siblings('img._info_cancel').show()
             $(this).siblings('img._info_download, img._info_delete').hide()
@@ -488,6 +489,12 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
 			toggle_lock_unlock_inputfield_grouplist(group_id, false)
 		break;
 		case 'edit':
+            var group_name = $(this).parent('div').siblings('._groupname').find('input').val()
+            var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
+            var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val()
+            var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type')
+
+
 			$(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
 			//toggle_lock_unlock_inputfield_grouplist(group_id, true)
 			modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type)
@@ -503,9 +510,9 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
         }else{
             $('img._info_delete').show()
         }
-        $(this).parent('div').siblings('._groupname').find('input').val(group_name)
-        $(this).parent('div').siblings('._grouppartystatus').find('input').val(group_capacity)
-        $(this).parent('div').siblings('._groupmemo').find('input').val(group_memo)
+        $(this).parent('div').siblings('._groupname').find('input').val(ori_group_name)
+        $(this).parent('div').siblings('._grouppartystatus').find('input').val(ori_group_capacity)
+        $(this).parent('div').siblings('._groupmemo').find('input').val(ori_group_memo)
         toggle_lock_unlock_inputfield_grouplist(group_id, true)
         e.stopPropagation()
         

@@ -494,7 +494,7 @@ $(document).ready(function(){
 		if($('body').width()>600){
 			toggleGroupParticipantsList('on')
 		}else{
-			
+
 		}
 		
 	})
