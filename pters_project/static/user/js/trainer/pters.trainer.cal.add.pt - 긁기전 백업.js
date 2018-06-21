@@ -726,7 +726,7 @@ $(document).ready(function(){
                                     completeSend(); //ajax 로딩 이미지 숨기기
                                 }else{
                                   var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
-                                  $('._repeatconfirmQuestion').text('선택한 일정 총 '+total_count+' 건 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.');
+                                  $('._repeatconfirmQuestion').text('총 '+total_count+' 건의 일정 중 '+RepeatDuplicationDateArray[0].split('/').length + '건의 일정이 겹칩니다.');
                                   var repeat_info = popup_repeat_confirm()
                                   $('#repeat_confirm_day').text(RepeatDuplicationDateArray[0].replace(/\//gi,','))
                                   $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?')

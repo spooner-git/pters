@@ -265,6 +265,7 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_week.html'
 
     def get_context_data(self, **kwargs):
+        start_time = timezone.now()
         context = super(CalWeekView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         class_info = None
@@ -297,7 +298,8 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         self.request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
         self.request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
         self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
-
+        end_time = timezone.now()
+        print('calweek_view'+str(end_time-start_time))
         return context
 
 
@@ -733,10 +735,8 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
         if day == '':
             day = 18
-
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day)+1)
-
         context = func_get_trainer_schedule(context, class_id, start_date, end_date)
         return render(request, self.template_name, context)
 
@@ -2319,8 +2319,10 @@ def add_group_member_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
     if error is None:
         group_id = json_loading_data['lecture_info']['group_id']
+
     if error is None:
         if group_id != '' and group_id is not None:
             try:

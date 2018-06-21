@@ -359,8 +359,11 @@ def add_trainee_schedule_logic(request):
                 schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id)
             except ObjectDoesNotExist:
                 error = '그룹 스케쥴 정보를 불러오지 못했습니다.'
-            start_date = schedule_info.start_dt
-            end_date = schedule_info.end_dt
+            if error is None:
+                start_date = schedule_info.start_dt
+                end_date = schedule_info.end_dt
+                if schedule_info.state_cd == 'PE':
+                    error = '이미 완료된 그룹 일정입니다.'
 
     if error is None:
         error = func_check_schedule_setting(class_id, start_date, ADD_SCHEDULE)

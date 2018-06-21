@@ -631,10 +631,10 @@ $(document).ready(function(){
 			if(!$(this).hasClass('disabled_button')){
 				//ajax_block_during_delete_weekcal = false;
 				disable_delete_btns_during_ajax()
-				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 취소
+				if(deleteTypeSelect == "repeatoffdelete" || deleteTypeSelect == "repeatptdelete"){ //일정등록창창의 반복일정 삭제
 					var repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
 		            send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
-
+		            	console.log('반복일정 삭제할때 jsondata', jsondata)
 		            	//ajax_block_during_delete_weekcal = true
 		            	enable_delete_btns_after_ajax()
 				        close_info_popup('cal_popup_plandelete')
@@ -680,7 +680,7 @@ $(document).ready(function(){
 
 				}else if(deleteTypeSelect == "ptoffdelete"){
 					if(schedule_on_off==1){
-						//PT 일정 취소시
+						//PT 일정 삭제시
 						send_plan_delete('pt', 'callback', function(){
 							//ajax_block_during_delete_weekcal = true
 							enable_delete_btns_after_ajax()
@@ -689,7 +689,7 @@ $(document).ready(function(){
 						get_current_member_list()
       					get_current_group_list()
 					}else{
-						//OFF 일정 취소
+						//OFF 일정 삭제
 						send_plan_delete('off', 'callback', function(){
 							//ajax_block_during_delete_weekcal = true
 							enable_delete_btns_after_ajax()

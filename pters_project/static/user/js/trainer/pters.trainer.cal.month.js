@@ -1292,6 +1292,7 @@ function send_group_plan_complete(use, callback){
                 	callback(jsondata, send_data)
                 }
             }
+
           },
 
         //보내기후 팝업창 닫기

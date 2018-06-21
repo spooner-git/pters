@@ -21,7 +21,7 @@ urlpatterns = [
     # 강사 일정 기능 #####################################################################################################
     # 일정 등록
     url(r'^add_schedule/$', views.add_schedule_logic, name='add_schedule'),
-    # 일정 취소
+    # 일정 삭제
     url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),
     # 일정 완료
     url(r'^finish_schedule/$', views.finish_schedule_logic, name='finish_schedule'),

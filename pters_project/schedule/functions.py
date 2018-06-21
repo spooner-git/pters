@@ -646,38 +646,43 @@ def func_get_trainer_schedule(context, class_id, start_date, end_date):
 
 
 def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
-    pt_schedule_data = []
+    pt_schedule_list = []
     # PT 일정 조회
     # 강사에 해당하는 강좌 정보 불러오기
-    lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
+    # lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
 
-    for lecture_datum_info in lecture_data:
-        lecture_datum = lecture_datum_info.lecture_tb
-        # 강좌별로 연결된 PT 스케쥴 가져오기
-        lecture_datum.pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                                   lecture_tb=lecture_datum.lecture_id,
-                                                                   en_dis_type=ON_SCHEDULE_TYPE,
-                                                                   start_dt__gte=start_date,
-                                                                   start_dt__lt=end_date, use=USE).order_by('start_dt')
-        # PT 스케쥴 정보 셋팅
-        idx = 0
-        for pt_schedule_info in lecture_datum.pt_schedule_data:
-            # lecture schedule id 셋팅
-            idx += 1
-            pt_schedule_info.member_name = lecture_datum.member.name
-            pt_schedule_info.member_id = lecture_datum.member.member_id
-            pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
-            pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
-            pt_schedule_info.idx = idx
-            if pt_schedule_info.note is None:
-                pt_schedule_info.note = ''
-            if pt_schedule_info.state_cd == 'PE':
-                pt_schedule_info.finish_check = 1
-            else:
-                pt_schedule_info.finish_check = 0
-            pt_schedule_data.append(pt_schedule_info)
+    # for lecture_datum_info in lecture_data:
+    #     lecture_datum = lecture_datum_info.lecture_tb
+    #     # 강좌별로 연결된 PT 스케쥴 가져오기
+    #     pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+    #                                                  lecture_tb=lecture_datum.lecture_id,
+    #                                                  en_dis_type=ON_SCHEDULE_TYPE,
+    #                                                  start_dt__gte=start_date,
+    #                                                  start_dt__lt=end_date, use=USE).order_by('start_dt')
+    # PT 스케쥴 정보 셋팅
+    pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                 lecture_tb__isnull=False,
+                                                 # lecture_tb=lecture_datum.lecture_id,
+                                                 lecture_tb__use=USE,
+                                                 en_dis_type=ON_SCHEDULE_TYPE,
+                                                 start_dt__gte=start_date,
+                                                 start_dt__lt=end_date, use=USE).order_by('start_dt')
+    idx = 0
+    for pt_schedule_info in pt_schedule_data:
+        # lecture schedule id 셋팅
+        idx += 1
+        pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
+        pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
+        pt_schedule_info.idx = idx
+        if pt_schedule_info.note is None:
+            pt_schedule_info.note = ''
+        if pt_schedule_info.state_cd == 'PE':
+            pt_schedule_info.finish_check = 1
+        else:
+            pt_schedule_info.finish_check = 0
+        pt_schedule_list.append(pt_schedule_info)
 
-    context['pt_schedule_data'] = pt_schedule_data
+    context['pt_schedule_data'] = pt_schedule_list
 
 
 def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
