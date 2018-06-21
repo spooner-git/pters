@@ -298,6 +298,7 @@ $(document).ready(function(){
 			myImage = document.getElementById("id_sign_img");
 			 myImage.onerror = function() {
 				  this.src="";
+					$("#popup_sign_img").css("display","none")
 			 }
 		}
 		schedule_on_off = 1;
@@ -487,6 +488,7 @@ $(document).ready(function(){
         	myImage = document.getElementById("id_sign_img");
 			 myImage.onerror = function() {
 				  this.src="";
+					$("#popup_sign_img").css("display","none")
 			 }
 		}
 		schedule_on_off = 2;
