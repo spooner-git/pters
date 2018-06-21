@@ -394,11 +394,28 @@ function added_member_info_to_jsonformat(){
 	var len = $('#addedMemberListBox .addByNewRaw').length;
 	for(var i=1; i<len+1; i++){
 		if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid').length == 0){
+            var firstname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-firstname');
+            var lastname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname');
+            var phone = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone');
+            var sex = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex')
+            if(firstname.length == 0){
+                var firstname = ""
+            }
+            if(lastname.length == 0){
+                var lastname = ""
+            }
+            if(phone.length == 0){
+                var phone = ""
+            }
+            if(sex.length == 0){
+                var sex = ""
+            }
+
 			var data = {
-                       "first_name" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-firstname'),
-                       "last_name" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname'),
-                       "phone" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone'),
-                       "sex" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex'),
+                       "first_name" : firstname,
+                       "last_name" : lastname,
+                       "phone" : phone,
+                       "sex" : sex,
                        "birthday_dt" : ""
                     }
             dataObject["new_member_data"].push(data)
