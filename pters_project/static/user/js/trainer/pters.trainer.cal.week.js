@@ -199,6 +199,9 @@ $(document).ready(function(){
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.classTime',function(e){ //일정을 클릭했을때 팝업 표시
 		e.stopPropagation()
+		shade_index(100)
+		closeAlarm('pc')
+		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','block')
 		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
@@ -257,7 +260,7 @@ $(document).ready(function(){
 		$('#page-addplan-pc').hide()
 		$("#cal_popup_planinfo").fadeIn('fast');
 		//shade_index(100)
-		closeAlarm('pc')
+		//closeAlarm('pc')
 
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
 		var schedule_finish_check = $(this).attr('data-schedule-check')
@@ -303,7 +306,6 @@ $(document).ready(function(){
 		}
 		schedule_on_off = 1;
 
-		toggleGroupParticipantsList('off')
 	})
 	
 	//Off 일정 클릭시 팝업 Start
