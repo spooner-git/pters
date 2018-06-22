@@ -1279,10 +1279,11 @@ function float_btn_addplan(option){
         }
 
     }else if(option == 1){
-        clear_pt_off_add_popup()
-        open_pt_off_add_popup('ptadd')
-        ajaxTimeGraphSet()
         shade_index(100)
+        open_pt_off_add_popup('ptadd')
+        clear_pt_off_add_popup()
+        ajaxTimeGraphSet()
+        
         //scrollToDom($('#calendar'))
         
     }else if(option == 2){
