@@ -305,12 +305,14 @@ $(document).ready(function(){
 			 }
 		}
 		schedule_on_off = 1;
-
 	})
 	
 	//Off 일정 클릭시 팝업 Start
 	$(document).on('click','div.offTime',function(e){ //일정을 클릭했을때 팝업 표시
 		e.stopPropagation();
+		shade_index(100)
+		closeAlarm('pc')
+		toggleGroupParticipantsList('off')
 		$('.pt_memo_guide_popup').css('display','none')
 		$('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide()
 		deleteTypeSelect = ''
@@ -361,9 +363,6 @@ $(document).ready(function(){
 		//$('.td00').css('background','transparent')
 		$("#cal_popup_planinfo").fadeIn('fast');
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
-		shade_index(100)
-		closeAlarm('pc')
-
 		
 		var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')'
 		var infoText2 = comment + time +':'+minute+ yourplan
@@ -380,13 +379,18 @@ $(document).ready(function(){
 		$("#popup_btn_complete").hide()
 		$("#popup_sign_img").css("display","none")
 		schedule_on_off = 0;
-
-		toggleGroupParticipantsList('off')
 	})
 
 	//스케쥴 클릭시 팝업 Start
 	$(document).on('click','div.groupTime',function(e){ //일정을 클릭했을때 팝업 표시
 		e.stopPropagation()
+		shade_index(100)
+		closeAlarm('pc')
+		if($('body').width()>600){
+			toggleGroupParticipantsList('on')
+		}else{
+			//$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
+		}
 		$('#subpopup_addByList_plan').hide()
 		$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 
 															'data-groupid': $(this).attr('data-groupid'),
@@ -446,9 +450,7 @@ $(document).ready(function(){
 		$('#canvasWrap span').hide();
 
 		$('#page-addplan-pc').hide()
-		$('#cal_popup_planinfo').fadeIn('fast').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check') })
-		shade_index(100)
-		closeAlarm('pc')
+		$('#cal_popup_planinfo').fadeIn('fast').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check') });
 
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
 		var schedule_finish_check = $(this).attr('data-schedule-check')
@@ -495,11 +497,7 @@ $(document).ready(function(){
 		}
 		schedule_on_off = 2;
 		//$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
-		if($('body').width()>600){
-			toggleGroupParticipantsList('on')
-		}else{
-			//$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
-		}
+		
 		
 	})
 
