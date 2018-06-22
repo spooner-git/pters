@@ -515,6 +515,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
         $(document).on('click', 'img._info_cancel', function(e){
             $(this).hide()
             $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
+            $('img._info_modify').removeClass('disabled_button')
             if($('body').width()>600){
                 $('img._info_download, img._info_delete').show()
             }else{
