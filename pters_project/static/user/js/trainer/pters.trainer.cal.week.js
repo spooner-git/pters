@@ -1728,6 +1728,8 @@ function ajaxClassTime(use, callfunction){
 		  url: '/trainer/get_trainer_schedule/',
 		  type : 'POST',
 		  data : {"date":today_form, "day":14},
+		  cache : false,
+		  headers:{"cache-control":"no-cache","pragma":"no-cache"},
 		  dataType : 'html',
 
 		  beforeSend:function(){
