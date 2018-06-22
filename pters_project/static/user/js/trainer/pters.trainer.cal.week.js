@@ -1727,7 +1727,7 @@ function ajaxClassTime(use, callfunction){
 		$.ajax({
 		  url: '/trainer/get_trainer_schedule/',
 		  type : 'POST',
-		  data : {"date":today_form, "day":14},
+		  data : {"date":today_form, "day":18},
 		  dataType : 'html',
 
 		  beforeSend:function(){
@@ -1742,7 +1742,7 @@ function ajaxClassTime(use, callfunction){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				set_schedule_time(jsondata)
+				//set_schedule_time(jsondata);
 			}
 		  },
 
