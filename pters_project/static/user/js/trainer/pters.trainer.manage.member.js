@@ -336,7 +336,9 @@ if (agent.indexOf("firefox") != -1) {
         var dbID = $(this).attr('data-dbid');
         var userName = $(this).attr('data-username')
         var lectureID = $(this).attr('data-leid');
-        if($(this).attr('data-type')=="view"){
+
+        
+        if($(this).attr('data-type')=="view" && !$(this).hasClass('disabled_button')){
             if($('body').width()<600){
                var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
                var myRowSelect = $(this).parent('div').siblings('div.whatGroupType').find('select');
@@ -358,6 +360,7 @@ if (agent.indexOf("firefox") != -1) {
 
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide();
             $(this).text(text).attr('data-type',"modify");
+            $('img.regHistoryModifyBtn[data-type="view"]').addClass('disabled_button')
             $('#form_member_dbid').val(dbID);
             $('#form_lecture_id').val(lectureID);
             $('#form_start_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myStartDate,'-'))
@@ -367,6 +370,7 @@ if (agent.indexOf("firefox") != -1) {
             $('#form_note').val(myNoteRow.val())
             
         }else if($(this).attr('data-type')=="modify"){
+            $('img.regHistoryModifyBtn[data-type="view"]').removeClass('disabled_button')
             $('#form_price').val($('#form_price').val().replace(/,/gi,''))
             send_member_modified_data(dbID);
         }else if($(this).attr('data-type')=="resend"){
@@ -3196,7 +3200,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
             var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.startArray[i],'.')+'" disabled readonly></div>'
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.endArray[i],'.')+'" disabled readonly></div>'
-            var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
+            var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" class="regHistoryModifyBtn" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
             
 
@@ -3302,7 +3306,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var regcount =    '<div><input class="lec_reg_count" value="'+jsondata_regCountArray[i]+'" disabled></div>'
             var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata_lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata_startArray[i],'.')+'" disabled readonly></div>'
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata_lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata_endArray[i],'.')+'" disabled readonly></div>'
-            var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata_lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
+            var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" class="regHistoryModifyBtn" data-type="view" data-leid="'+jsondata_lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg">'+(jsonlen-i)+'회차 등록 '+'</div>'
             
             if(jsondata_groupNameArray[i] != '1:1'){
