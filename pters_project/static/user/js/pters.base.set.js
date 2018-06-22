@@ -20,7 +20,7 @@ function beforeSend(use, callback){
   }
   $('html').css("cursor","wait");
   $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-  $('.ajaxloadingPC').show();
+  $('.ajaxloadingPC').css('display','block')
 }
 
 function completeSend(use, callback){
@@ -29,7 +29,7 @@ function completeSend(use, callback){
   }
   $('html').css("cursor","auto");
   $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-  $('.ajaxloadingPC').hide();
+  $('.ajaxloadingPC').css('display','none');
 }
 
 function upTouchEvent(){
