@@ -82,7 +82,8 @@ function shade_index(option){
         if($('#cal_popup_planinfo').css('display')=="block"){
           $('#mshade_popup').css({'display':'none'});
         }
-        $('#mshade').css({'z-index':option,'display':'block'});
+        //$('#mshade').css({'z-index':option,'display':'block'});
+        $('#mshade').css({'display':'block'});
       }
     }
 }
