@@ -1299,6 +1299,22 @@ function float_btn_addplan(option){
 function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     addTypeSelect = option
 
+    if($('body').width()<=600){
+      $('#page-base').fadeOut();
+      $('#page-base-addstyle').fadeIn();
+      $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+      $('#float_btn_wrap').fadeOut();
+      //$('#calendar').hide();
+      $('#calendar').css('height','0')
+      $('#addpopup_pc_label_pt, #addpopup_pc_label_off').css('display','none')
+      $('#page-addplan').fadeIn('fast').css('top',50);
+      $('#upbutton-x').attr('data-page','addplan')
+    }else{
+      $('#page-addplan').fadeIn('fast').css({'top':(($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()),
+                                                'left':(($(window).width()-$('#page-addplan').outerWidth())/2+$(window).scrollLeft())})
+      $('#page-addplan-pc').css('display','none')
+    }
+
     if(date != undefined){
         $('#datepicker').datepicker('setDate', date)
         $('#datepicker').parent('p').addClass('dropdown_selected')
@@ -1310,8 +1326,6 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#datepicker_repeat_start').datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate)
         $('#datepicker_repeat_start').parent('p').addClass('dropdown_selected')
     }
-
-    //$('#page-addplan #timeGraph').show()
 
     if(option == "ptadd"){
         $('#remainCount, #groupInfo').css('display','none');
@@ -1335,31 +1349,20 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         }
         $(".pt_memo_guide").css('display','none')
     }
-    
-    if($('body').width()<=600){
-      $('#page-base').fadeOut();
-      $('#page-base-addstyle').fadeIn();
-      $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-      $('#float_btn_wrap').fadeOut();
-      //$('#calendar').hide();
-      $('#calendar').css('height','0')
-      $('#addpopup_pc_label_pt, #addpopup_pc_label_off').css('display','none')
-      $('#page-addplan').fadeIn('fast').css('top',50);
-      $('#upbutton-x').attr('data-page','addplan')
-    }else{
-      $('#page-addplan').fadeIn('fast').css({'top':(($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()),
-                                                'left':(($(window).width()-$('#page-addplan').outerWidth())/2+$(window).scrollLeft())})
-      $('#page-addplan-pc').css('display','none')
-    }
 
+    $('#page-addplan #timeGraph').show()
+ 
     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder') //선택된 시간 반짝이
     /*ajaxTimeGraphSet($('#datepicker').val(), function(){
         startTimeSet('class');
         })*/
+      
+      /*
       timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
       timeGraphSet("group","pink","AddClass", initialJSON);
       timeGraphSet("off","grey","AddClass", initialJSON)
       startTimeSet('class');
+      */
 }
 
 //PT, OFF추가하는 모바일,PC팝업 선택사항을 초기화
