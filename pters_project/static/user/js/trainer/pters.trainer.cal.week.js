@@ -1742,7 +1742,7 @@ function ajaxClassTime(use, callfunction){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				//set_schedule_time(jsondata);
+				set_schedule_time(jsondata);
 			}
 		  },
 
