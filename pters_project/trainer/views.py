@@ -723,6 +723,7 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        # start_time = timezone.now()
         context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         date = request.POST.get('date', '')
@@ -735,6 +736,7 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day)+1)
         context = func_get_trainer_schedule(context, class_id, start_date, end_date)
+        # end_time = timezone.now()
         return render(request, self.template_name, context)
 
 

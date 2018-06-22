@@ -428,13 +428,13 @@ def upload_sign_image_logic(request):
 
     schedule_id = request.POST.get('schedule_id', '')
     image_test = request.POST.get('upload_file', '')
-    next_page = '/trainer/get_trainer_schedule/'
+    context = {'error': None}
 
     s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
                         aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
     bucket = s3.Bucket(getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
     exists = True
-
+    error_code = 0
     try:
         s3.meta.client.head_bucket(Bucket='pters-image')
     except botocore.exceptions.ClientError as e:
@@ -452,8 +452,10 @@ def upload_sign_image_logic(request):
 
         bucket.put_object(Key='/spooner_test/'+schedule_id+'.png', Body=data, ContentType='image/png',
                           ACL='public-read')
+    else:
+        context['error'] = error_code
 
-    return redirect(next_page)
+    return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 메모 수정
