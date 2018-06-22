@@ -39,6 +39,8 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
 
     idx = len(member_lecture_list)+1
     for member_lecture_info in member_lecture_list:
+        member_lecture_info.lecture_tb.schedule_check = 0
+        member_lecture_info.save()
         idx -= 1
         if all_schedule_check == 0:
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,

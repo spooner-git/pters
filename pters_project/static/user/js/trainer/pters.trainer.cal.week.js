@@ -47,6 +47,7 @@ $(document).ready(function(){
 
               success:function(data){
               	var jsondata = JSON.parse(data);
+              	// console.log(jsondata)
               	if(jsondata.messageArray.length>0){
                   	$('#errorMessageBar').show()
                   	$('#errorMessageText').text(jsondata.messageArray)

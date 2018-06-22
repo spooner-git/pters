@@ -24,7 +24,7 @@ from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
 from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
     func_check_group_available_member_before, func_check_group_available_member_after, func_add_schedule, \
-    func_date_check, func_refresh_lecture_count
+    func_date_check, func_refresh_lecture_count, func_update_member_schedule_alarm
 from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, GroupLectureTb
 from schedule.models import ClassTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
@@ -395,13 +395,7 @@ def add_trainee_schedule_logic(request):
         error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, lecture_id, class_id, request, group_schedule_id)
 
     if error is None:
-        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                            lecture_tb__state_cd='IP',
-                                                            auth_cd='VIEW', lecture_tb__use=USE, use=USE)
-        for member_lecture_data_info in member_lecture_data:
-            member_lecture_info = member_lecture_data_info.lecture_tb
-            member_lecture_info.schedule_check = 1
-            member_lecture_info.save()
+        func_update_member_schedule_alarm(class_id)
         class_info.schedule_check = 1
         class_info.save()
 
@@ -524,14 +518,7 @@ def delete_trainee_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
-        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                            lecture_tb__state_cd='IP',
-                                                            auth_cd='VIEW', lecture_tb__use=USE, use=USE)
-
-        for member_lecture_data_info in member_lecture_data:
-            member_lecture_info = member_lecture_data_info.lecture_tb
-            member_lecture_info.schedule_check = 1
-            member_lecture_info.save()
+        func_update_member_schedule_alarm(class_id)
         class_info.schedule_check = 1
         class_info.save()
 

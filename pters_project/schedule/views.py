@@ -264,12 +264,8 @@ def delete_schedule_logic(request):
         if group_id is None or group_id == '':
             func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
                                member_name, en_dis_type, 'LS02', request)
-            member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP',
-                                                                lecture_tb__use=USE)
-            for member_lecture_data_info in member_lecture_data:
-                member_lecture_info = member_lecture_data_info.lecture_tb
-                member_lecture_info.schedule_check = 1
-                member_lecture_info.save()
+
+            func_update_member_schedule_alarm(class_id)
 
         else:
             func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
@@ -771,12 +767,8 @@ def add_repeat_schedule_confirm(request):
                 information = '반복일정 등록이 취소됐습니다.'
 
         else:
-            member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP',
-                                                                lecture_tb__use=USE)
-            for member_lecture_data_info in member_lecture_data:
-                member_lecture_info = member_lecture_data_info.lecture_tb
-                member_lecture_info.schedule_check = 1
-                member_lecture_info.save()
+
+            func_update_member_schedule_alarm(class_id)
 
             func_save_log_data(start_date, end_date, class_id, lecture_id,
                                request.user.last_name+request.user.first_name,
@@ -907,12 +899,8 @@ def delete_repeat_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
-        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                            lecture_tb__state_cd='IP', lecture_tb__use=USE)
-        for member_lecture_data_info in member_lecture_data:
-            member_lecture_info = member_lecture_data_info.lecture_tb
-            member_lecture_info.schedule_check = 1
-            member_lecture_info.save()
+
+        func_update_member_schedule_alarm(class_id)
 
         if group_id is None or group_id == '':
             func_save_log_data(start_date, end_date, class_id, lecture_id,
@@ -1285,12 +1273,8 @@ def delete_group_schedule_logic(request):
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] + ' 일정을 취소했습니다.')
 
     if error is None:
-        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP',
-                                                            lecture_tb__use=USE)
-        for member_lecture_data_info in member_lecture_data:
-            member_lecture_info = member_lecture_data_info.lecture_tb
-            member_lecture_info.schedule_check = 1
-            member_lecture_info.save()
+
+        func_update_member_schedule_alarm(class_id)
         context['push_lecture_id'] = push_lecture_id
         context['push_title'] = push_title
         context['push_message'] = push_message
@@ -1883,11 +1867,7 @@ def add_group_repeat_schedule_confirm(request):
                 information = '반복일정 등록이 취소됐습니다.'
 
         else:
-            member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=USE)
-            for member_lecture_data_info in member_lecture_data:
-                member_lecture_info = member_lecture_data_info.lecture_tb
-                member_lecture_info.schedule_check = 1
-                member_lecture_info.save()
+            func_update_member_schedule_alarm(class_id)
 
             log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
@@ -2122,11 +2102,8 @@ def delete_group_repeat_schedule_logic(request):
                                     + '~' + str(end_date) + ' 그룹 반복일정을 취소했습니다')
 
     if error is None:
-        member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=USE)
-        for member_lecture_data_info in member_lecture_data:
-            member_lecture_info = member_lecture_data_info.lecture_tb
-            member_lecture_info.schedule_check = 1
-            member_lecture_info.save()
+
+        func_update_member_schedule_alarm(class_id)
 
         log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,

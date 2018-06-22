@@ -409,7 +409,9 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
 # 강좌에 해당하는 회원들 스케쥴 알람 업데이트
 def func_update_member_schedule_alarm(class_id):
     member_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__state_cd='IP',
-                                                        lecture_tb__use=USE, use=USE)
+                                                        lecture_tb__use=USE,
+                                                        auth_cd='VIEW',
+                                                        use=USE)
     for member_lecture_data_info in member_lecture_data:
         member_lecture_info = member_lecture_data_info.lecture_tb
         member_lecture_info.schedule_check = 1
