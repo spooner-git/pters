@@ -1264,15 +1264,12 @@ $(document).ready(function(){
 
 function float_btn_addplan(option){
     if(option == 0){
-        //$("#float_btn").animate({opacity:'1'})
         if($('#mshade').css('display')=='none'){
-            //$('#mshade').css({'z-index':100,'display':'block'})
             $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
             $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
             $('#float_btn').addClass('rotate_btn');
             shade_index(100)
         }else{
-            //$('#mshade').css({'z-index':-100,'display':'none'})
             $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
             $('#float_btn').removeClass('rotate_btn');
             shade_index(-100)
@@ -1297,11 +1294,11 @@ function float_btn_addplan(option){
     }
 }
 
-var bodywidth = $('body').width()
+
 function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     addTypeSelect = option
 
-    if(bodywidth<=600){
+    if($('body').width()<=600){
       $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
       $('#page-base-addstyle, #page-addplan').show();
       $('#page-addplan').css('top',50);
