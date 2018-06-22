@@ -2802,8 +2802,15 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
         success:function(data){
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER);
             var jsondata = JSON.parse(data);
-            if(callbackoption == "callback"){
-              callback(jsondata)
+
+            if(jsondata.messageArray.length>0){
+              $('#errorMessageBar').show()
+              $('#errorMessageText').text(jsondata.messageArray)
+            }
+            else{
+                if(callbackoption == "callback"){
+                  callback(jsondata)
+                }
             }
         },
 
