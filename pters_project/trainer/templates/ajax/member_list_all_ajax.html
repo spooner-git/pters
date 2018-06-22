@@ -29,8 +29,6 @@
     [{% for member_info in member_data %}"{{ member_info.rj_lecture_counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
 
-    "countArray" :
-    [{% for member_info in member_data %}"{{ member_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "startArray" :
     [{% for member_info in member_data %}"{{ member_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "modifyDateArray" :
@@ -41,6 +39,14 @@
     [{% for member_info in member_data %}"{{ member_info.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "availCountArray" :
     [{% for member_info in member_data %}"{{ member_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "countArray" :
+    [{% for member_info in member_data %}"{{ member_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "groupRegCountArray" :
+    [{% for member_info in member_data %}"{{ member_info.group_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "groupAvailCountArray" :
+    [{% for member_info in member_data %}"{{ member_info.group_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "groupCountArray" :
+    [{% for member_info in member_data %}"{{ member_info.group_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
     "yetCountArray" :
     [{% for member_info in member_data %}"{{ member_info.lecture_rem_count_yet }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -50,6 +56,8 @@
     [{% for member_info in member_data %}"{{ member_info.lecture_avail_count_yet }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "activationArray" :
     [{% for member_info in member_data %}"{{ member_info.is_active }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "groupInfoArray" :
+    [{% for member_info in member_data %}"{{ member_info.group_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
     "finishDidArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.user.id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -103,6 +111,8 @@
     "finishActivationArray" :
     [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.is_active }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+    "finishGroupInfoArray" :
+    [{% for member_finish_info in member_finish_data %}"{{ member_finish_info.group_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
     "messageArray" :
     [{% for message in messages %}"{{ message }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

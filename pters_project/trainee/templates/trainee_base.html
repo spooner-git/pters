@@ -55,10 +55,9 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     {% block navbar %}
-    <div id="shade">
-    </div>
-    <div id="shade2">
-    </div>
+
+    <div id="pshade" class="pshade _shade"></div>
+    <div id="mshade" class="mshade _shade"></div>
 
     <div id="errorMessageBar">
         <span id="errorMessageText"></span><span>닫기</span>
@@ -130,7 +129,7 @@
             <p>일정 확인을 원하는 클래스를 선택해 주세요.</p>
             <div class="pters_table">
               <div class="pters_table_cell_head table_lecture_name">클래스</div>
-              <div class="pters_table_cell_head table_trainer_name">트레이너</div>
+              <div class="pters_table_cell_head table_trainer_name">강사</div>
               <!--<div class="pters_table_cell">연락처</div>-->
               <div class="pters_table_cell_head table_selection">선택</div>
             </div>
@@ -215,7 +214,7 @@
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
     <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
     <link rel="manifest" href={% static_url "manifest.json" %}>
-    <script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
+    <!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
 <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
     <script>
     function playSound() {
@@ -223,8 +222,8 @@
           sound.loop = false;
           sound.play();
       }
-    </script>
-    <script type="text/javascript">
+    </script>-->
+   <!-- <script type="text/javascript">
 // var requestButton = document.querySelector(".request-btn");
 
     //});
@@ -243,7 +242,7 @@
             });
         }
         messageCommunicationWithWorker();
-    </script>
+    </script>-->
     <script>
 
             $('#errorMessageBar span:nth-child(2)').click(function(){
@@ -276,10 +275,10 @@
                               "classDur" : 60, // 30 or 60
                               "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
                               "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
-                              "limit":Number('{{ lt_res_02 }}'),      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+                              "limit":Number('{{ lt_res_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
                               "reserve":Number('{{ lt_res_03 }}'),    //회원 일정 기능을 enable 1/disable 0
                               "availDate":Number({{ lt_res_05 }}),
-                              "cancellimit":Number('{{ lt_res_02 }}'), 
+                              "cancellimit":Number('{{ lt_res_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
 
                               "firstPushToMember":'-',
                               "secondPushToMember":'-',
@@ -293,6 +292,8 @@
                               "language" : "KOR",             //Korea, Japan, English, Chinese, Spanish
                               "location" : "Japan",           //Korea, Japan, English, Chinese
             }
+{#            var lt_res_enable_time = ['{{ lt_res_enable_time }}'];#}
+{#            var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];#}
 
             if(Options.language=="JPN"){
                 $(".KRtext, .ENtext").remove();
@@ -333,7 +334,7 @@
                 $.ajax({
 
                       //url: '/trainee/read_trainee_lecture_by_class_ajax/',
-                      url: '/trainee/read_trainee_lecture_ajax/',
+                      url: '/trainee/get_trainee_class_list/',
                       dataType : 'html',
                       //type:'POST',
 
@@ -377,8 +378,8 @@
 
             function ajax_read_lecture_detail_info_from_db(classid){
                 $.ajax({
-                      url: '/trainee/read_trainee_lecture_by_class_ajax/',
-                      data:{"class_id": classid},
+                      url: '/trainee/get_trainee_lecture_list/',
+                      data:{"class_id": classid, "auth_cd":'WAIT'},
                       dataType : 'html',
 
                       beforeSend:function(){
@@ -453,8 +454,10 @@
             function fill_lecture_connect_select_popup(classid){
                 var len = lec_select_trainerNameArray.length;
                 var list_table_to_join = []
-                  for(var j=0; j<lec_select_stateArray.length; j++){
+                  //for(var j=0; j<lec_select_stateArray.length; j++){
+                  for(var j=0; j<1; j++){
                       if(lec_select_stateArray[j] == 'WAIT'){
+                          console.log(lec_select_startArray[j])
                           var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">'
                           var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
                           var trainerName = '<div class="pters_table_cell table_trainer_name">'+'수강 정보 연동'+'</div>'

@@ -33,17 +33,17 @@
         <div class="outerbox_horizontal" data-view="init">
           <div class="explainbox">
             <img src="/static/user/res/login/icon-reg-user.png">
-            <p>담당 트레이너와 일정 관리를 <br><span class="font-pink">고객 회원님</span></p>
+            <p>담당 강사와 일정 관리를 <br><span class="font-pink">고객 회원님</span></p>
             <button class="" >일반 회원 가입</button>
           </div>
           <div class="explainbox">
             <img src="/static/user/res/login/icon-reg-trainer.png" style="height: 20px;margin-bottom: 5px;">
-            <p>회원님과 일정을 관리하고 싶은<br><span class="font-pink">트레이너님</span></p>
-            <button class="" >트레이너 가입</button>
+            <p>회원님과 일정을 관리하고 싶은<br><span class="font-pink">강사님</span></p>
+            <button class="" >강사 가입</button>
           </div>
           <div class="explainbox">
             <img src="/static/user/res/login/icon-reg-gym.png">
-            <p>소속 트레이너와 회원님들의 일정을 한번에<br><span class="font-pink">센터 운영 사업자님</span></p>
+            <p>소속 강사와 회원님들의 일정을 한번에<br><span class="font-pink">센터 운영 사업자님</span></p>
             <button class="" >센터사업자 가입</button>
           </div>
         </div>
@@ -260,7 +260,7 @@
       $('._step2_label span').text($(this).text())
       if($(this).text() == "일반 회원 가입"){
         group_type = 'trainee'
-      }else if($(this).text() == "트레이너 가입"){
+      }else if($(this).text() == "강사 가입"){
         group_type = 'trainer'
       }else if($(this).text() == "센터사업자 가입"){
         group_type = 'business'

@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from schedule.models import RepeatScheduleTb, ScheduleTb, DeleteRepeatScheduleTb, DeleteScheduleTb, SettingTb, ClassTb, \
-    LectureTb, CompanyTb, ClassLectureTb, MemberClassTb, MemberLectureTb
+    LectureTb, CompanyTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb
 
 
 @admin.register(RepeatScheduleTb)
@@ -76,3 +76,14 @@ class MemberClassTbAdmin(admin.ModelAdmin):
 class MemberLectureTbAdmin(admin.ModelAdmin):
     list_display = ('member_lecture_id', 'member', 'lecture_tb', 'auth_cd',
                     'mod_member_id', 'reg_dt', 'mod_dt', 'use')
+
+
+@admin.register(GroupTb)
+class GroupTbAdmin(admin.ModelAdmin):
+    list_display = ('group_id', 'group_type_cd', 'member_num', 'name',
+                    'note', 'reg_dt', 'mod_dt', 'use')
+
+
+@admin.register(GroupLectureTb)
+class GroupLectureTbAdmin(admin.ModelAdmin):
+    list_display = ('group_lecture_id', 'group_tb', 'lecture_tb', 'use')

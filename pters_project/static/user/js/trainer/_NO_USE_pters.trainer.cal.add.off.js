@@ -140,7 +140,7 @@ $(document).ready(function(){
       function ajaxClassTime(){
       
             $.ajax({
-              url: '/trainer/cal_day_ajax',
+              url: '/trainer/get_trainer_schedule',
               dataType : 'html',
 
               beforeSend:function(){

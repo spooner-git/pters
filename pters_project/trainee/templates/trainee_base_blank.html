@@ -53,7 +53,7 @@
                     <a><img src={% static_url "user/res/icon-user-setting.png" %} style="width:25px;"></a>
                  </button> 
                  {% block nav_center_img %}
-                 <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:blank' %}'">{{ user.last_name }}{{ user.first_name }}님 일정</span>
+                 <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:cal_month_blank' %}'">{{ user.last_name }}{{ user.first_name }}님 일정</span>
                 {% endblock %}
                  <!--
                  <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">
@@ -69,13 +69,13 @@
 
      <nav class="navbar navbar-fixed-top" id="pcver">
             <div class="centermenu">
-                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'trainee:blank'%}'" style="cursor: pointer;">
+                <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'trainee:cal_month_blank'%}'" style="cursor: pointer;">
                 <div class="centermenu_box" style="margin-left: 97px;text-align: left;">
                     <div class="centermenu_div">
                         <a href="{% url 'trainee:mypage_trainee_blank' %}" class="centermenu_text"></a>
                     </div>
                     <div class="centermenu_div">
-                        <a class="centermenu_text"   onclick="location.href='{% url 'trainee:blank'%}'">달력</a>
+                        <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month_blank'%}'">달력</a>
                     </div>
                     <div class="centermenu_div">
                         <a class="centermenu_text" onclick="open_lecture_select_popup()">클래스 선택</a>
@@ -113,7 +113,7 @@
             <p>일정 확인을 원하는 클래스를 선택해 주세요.</p>
             <div class="pters_table">
               <div class="pters_table_cell_head table_lecture_name">클래스</div>
-              <div class="pters_table_cell_head table_trainer_name">트레이너</div>
+              <div class="pters_table_cell_head table_trainer_name">강사</div>
               <!--<div class="pters_table_cell">연락처</div>-->
               <div class="pters_table_cell_head table_selection">선택</div>
             </div>
@@ -158,7 +158,7 @@
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
     <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
     <link rel="manifest" href={% static_url "manifest.json" %}>
-    <script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
+    <!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
 <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
     <script>
     function playSound() {
@@ -186,7 +186,7 @@
             });
         }
         messageCommunicationWithWorker();
-    </script>
+    </script>-->
     <script>
 
             $('#errorMessageBar span:nth-child(2)').click(function(){
@@ -266,7 +266,7 @@
                 $.ajax({
 
                       //url: '/trainee/read_trainee_lecture_by_class_ajax/',
-                      url: '/trainee/read_trainee_lecture_ajax/',
+                      url: '/trainee/get_trainee_class_list/',
                       dataType : 'html',
                       //type:'POST',
 
@@ -309,8 +309,8 @@
 
             function ajax_read_lecture_detail_info_from_db(classid){
                 $.ajax({
-                      url: '/trainee/read_trainee_lecture_by_class_ajax/',
-                      data:{"class_id": classid},
+                      url: '/trainee/get_trainee_lecture_list/',
+                      data:{"class_id": classid, "auth_cd":'WAIT'},
                       dataType : 'html',
 
                       beforeSend:function(){

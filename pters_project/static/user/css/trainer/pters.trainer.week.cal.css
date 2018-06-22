@@ -17,9 +17,9 @@ body{
 	border-bottom: 1px solid #cccccc !important;
 }
 
-.td00,.td30{
+.td00, .td30{
 	display: table-cell;
-	background: transparent;
+	background: #f7f7f7;
 	position: relative;
 	width: 	12.5%;
 	/*height: 29px;*/
@@ -129,14 +129,16 @@ body{
 	height: 90%;
 	z-index: 3;
 	max-width: 1080px;
-	height: 100% !important;
+	height: 100%;
 	overflow-y: hidden;
 }
 
 
 .swiper-container{
 	overflow-y: hidden;
-	height: 100%;
+	/*height: 100%;*/
+
+	height: auto;
 }
 
 
@@ -381,11 +383,16 @@ img,a,div,span,p{
 .arrowButton a{
 	position: absolute;
 	top: 0%;
+	height: 100%;
 	font-size: 35px;
 	font-weight: 600;
 	color: #ffffff;
 	text-decoration: none;
 }
+	.arrowButton a:active{
+		opacity: 0.4;
+		background: #282828;
+	}
 
 .time-style{ /*week ìŠ¤íƒ€ì¼*/
 	background-color: #ffffff;
@@ -409,6 +416,7 @@ img,a,div,span,p{
 
 .timeindex_time{
 	color: #888888;
+	font-size: 12px;
 }
 
 ._morningday{
@@ -471,6 +479,27 @@ img,a,div,span,p{
 	*/
 }
 
+.groupTime{
+	position: absolute;
+	top: 0px;
+	width: 98.5%;
+	background: #ffacb7;
+	z-index: 100;
+	cursor: pointer;
+	font-size: 12px;
+}
+.groupTime:active,.groupTime:hover{
+	background: #ff6c7f;
+}
+
+.groupTime_checked{
+	background: #af757c !important;
+}
+
+.groupTime_checked:hover{
+	background: #946369 !important;
+}
+
 
 .classTimeIndicator{
 	position: absolute;
@@ -496,12 +525,33 @@ img,a,div,span,p{
 	letter-spacing: -0.3px;
 	color: black;
 	cursor: pointer;
-	line-height: 30px;
+	line-height: 25px;
 }
 
 .memberTime{
 	display: none;
 }
+
+.groupnametag{
+	overflow:hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin: 0;
+}
+
+.groupnumstatus{
+	font-size: 12.5px;
+	font-weight: 400;
+}
+	.bluetext{
+		color: blue;
+	}
+	.inlineelement{
+		display: inline;
+	}
+	.hideelement{
+		display: none;
+	}
 
 .hourType{
 	display: none;
@@ -560,13 +610,18 @@ img,a,div,span,p{
 	display: block;
 }
 
+@media(min-width: 400px){
+	.timeindex_time{
+		font-size: 13.5px;
+	}
+}
 
 
 @media(min-width: 600px){
 	#calendar{
 		position: relative;
 		background:#ffffff;
-		padding-top: 110px;
+		padding-top: 99px;
 		margin-bottom: 60px;
 	}
 
@@ -659,6 +714,9 @@ img,a,div,span,p{
 		border-top: 1px solid #cccccc;
 		border-right: 1px solid #f7f7f7;
 	}
+		.weekNum span:first-child{
+			height: 6px;
+		}
 
 	.holidayName{
 		display: inline;
@@ -690,8 +748,8 @@ img,a,div,span,p{
 		top: -20px;
 	}
 
-	.classTime{
-		top: 0.5px;
+	.classTime, .groupTime{
+		/*top: 0.5px;*/
 		left: 1px;
 	}
 
@@ -705,28 +763,31 @@ img,a,div,span,p{
 	
 	.memberName{
 		position: absolute;
-		width:100%;
+		width: 78%;
 		text-align: center;
-		left: 0%;
-		margin-top: px;
-		font-size: 16px;
+		right:  0;
+		font-size: 12.5px;
+		font-weight: 500;
+		padding-right: 5px;
 		letter-spacing: -0.3px;
 		color: black;
 		cursor: pointer;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	
-
 	.hourType{
 		display: block;
 		margin:0;
 		margin-bottom: -3px;
 	}
-
 	
 
 	.td00,.td30{
 		cursor: pointer;
+		background: #ffffff;
 	}
 
 
@@ -829,10 +890,14 @@ img,a,div,span,p{
 
 @media(min-width: 730px){
 
+	.memberName{
+		text-align: right;
+	}
+
 	.memberTime{
 		display: block;
 		position: absolute;
-		left: 5px;
+		left: 4px;
 		font-weight: 300;
 		margin-top: 0px;
 		font-size: 12px;
@@ -840,11 +905,6 @@ img,a,div,span,p{
 		color: black;
 		cursor: pointer;
 		text-align: left;
-	}
-
-	.memberName{
-		padding-right: 5px;
-		text-align: right;
 	}
 
 	.ymdText-pc-refresh{
@@ -872,14 +932,13 @@ img,a,div,span,p{
 		line-height: 50px;
 		position: absolute;
 		right: 0;
-		min-width: 220px;
 	}
 
 	.ymdText-pc-add-off{
 		display: inline;
 		margin-right: 5px;
 		padding:5px;
-		font-size: 14px;
+		font-size: 13px;
 		border:1px solid #282828;
 		cursor: pointer;
 	}
@@ -893,7 +952,7 @@ img,a,div,span,p{
 		margin-left: 5px;
 		padding:5px;
 		color: #fe4e65;
-		font-size: 14px;
+		font-size: 13px;
 		border:1px solid #fe4e65;
 		cursor: pointer;
 	}
@@ -913,11 +972,6 @@ img,a,div,span,p{
 	}
 }
 
-@media(min-width: 850px){
-	.memberName{
-		font-size: 18px;
-	}
-}
 
 @media(min-width:1030px){
 	.morningtext{
@@ -929,5 +983,46 @@ img,a,div,span,p{
 		font-weight: bold;
 	}
 }
+
+
+
+.listTitle_addByList{
+	position: relative;
+}
+	#subpopup_addByList_thisgroup, #subpopup_addByList_whole{
+		max-height: 400px;
+		overflow-y: auto;
+	}
+	.list_addByList > div:nth-child(1){
+		width: 43% !important;
+	}
+	.list_addByList > div:nth-child(2){
+		width: 37% !important;
+	}
+	.list_addByList > div:nth-child(3){
+		width: 20% !important;
+	}
+
+
+
+html{
+	background: #ffffff;
+}
+
+#gap{
+	width: 100%;
+	height: 50px;
+	background: #ffffff;
+}
+@media(min-width: 600px){
+	html{
+		background: #f7f7f7;
+	}
+
+	#gap{
+		background: #f7f7f7;
+	}
+}
+
 
 

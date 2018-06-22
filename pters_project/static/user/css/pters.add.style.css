@@ -12,6 +12,10 @@ ul a{
 	
 }
 
+.disabled_button{
+	opacity: 0.4;
+}
+
 .link-icon{
 	width: 17px;
 	margin-bottom: 4px;
@@ -121,7 +125,8 @@ ul a{
 }
 
 #memberName_mini button{
-	width: 185px;
+	position: relative;
+	width: 198px;
 	border: 1px solid #cccccc;
 	overflow-x: hidden;
 }
@@ -219,7 +224,7 @@ ul a{
 
 .pters_dropdown_custom li{
 	text-align: center;
-	font-size: 15px;
+	font-size: 12.5px;
 	padding-top:10px;
 	padding-bottom:10px;
 	box-shadow: 0 1px 0 0 #a2a2a2;
@@ -255,11 +260,13 @@ ul a{
 	-webkit-border-radius: 0px;
 }
 
+
 .pters_input_namefield{
 	width: 48%;
 	display: inline-block;
-	height: 40px;
+	/*height: 40px !important;*/ /*이거 대체 왜이래?? 그룹추가할때 40 important되어있으면 칸이 너무 크다.*/
 }
+
 
 .pters_input_custom{
 	border: 0px;
@@ -276,7 +283,7 @@ ul a{
 	border-radius: 0px;
 	-webkit-border-radius: 0px;	
 	height: 100%;
-	font-size: 14px;
+	font-size: 13px;
 }
 
 .pters_input_custom textarea{
@@ -311,7 +318,7 @@ ul a{
 }
 
 #memo_mini{
-	width: 70%;
+	width: 198px;
 	height: 23px;
 	margin-left: 12px;
 }
@@ -354,18 +361,25 @@ ul a{
 
 #remainCount{
 	position: relative;
+	display: none;
+}
+
+#groupInfo{
+	position: relative;
+	display: none;
 }
 
 
-#remainCount div:nth-child(2){
+#remainCount div:nth-child(2), #groupInfo div:nth-child(2){
 	background-color: #eaeaea;
 	box-shadow: 0 1px 0 0 #a2a2a2;
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
 	text-align: center;
-	border-top: 9px solid transparent;
+	padding-top: 2px;
 }
 
-#remainCount_mini{
+#remainCount_mini, #groupInfo_mini{
+	display: none;
 	position: relative;
 	padding: 0;
 	margin-top: 0px;
@@ -374,18 +388,18 @@ ul a{
 	vertical-align: middle;
 }
 
-#remainCount_mini_text{
+#remainCount_mini_text, #groupInfo_mini_text{
 	display: none;
 	margin-left: 97px;
 }
 
 
-#remainCount_mini div:nth-child(2){
+#remainCount_mini div:nth-child(2), #groupInfo_mini div:nth-child(2){
 	background-color: #eaeaea;
 	box-shadow: 0 1px 0 0 #a2a2a2;
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
 	text-align: center;
-	padding-top: 5px;
+	border-top: 9px solid transparent;
 }
 
 #classDuration_mini{
@@ -559,6 +573,7 @@ ul a{
 	box-shadow: unset !important;
 	height: 100%;
 	border:0 !important;
+	top: 0;
 }
 	.dropdown_trainee_popup button{
 		height: 100%;
@@ -714,6 +729,7 @@ button._info_baseedit_img{
 	width: 91.67%;
 	margin:0 auto;
 	border: 1px solid #cccccc;
+	background: #e3e3e3;
 }
 
 #simpleReg{
@@ -771,6 +787,7 @@ button._info_baseedit_img{
 	width: 78%;
 	height: 35px;
 	border:1px solid #8d8d8d;
+	border-radius: 0;
 }
 
 #memberSearchButton{
@@ -972,7 +989,7 @@ option{
 		height: 26px;
 	}
 
-	#membersSelected{
+	#membersSelected, #membersSelected_mini{
 		margin-left: 15px;
 	}
 
@@ -982,7 +999,7 @@ option{
 	}
 
 	#memberName_mini .dropdown_mini{
-		margin-left: 23px;
+		margin-left: 6px;
 	}
 
 	#durationsSelected{
@@ -998,7 +1015,13 @@ option{
 		border-color: #f4f4f4 !important;
 	}
 
+	#remainCount_mini div:nth-child(2){
+		border-top: 1px solid #8d8d8d;
+		padding-top: 3px;
+	}
+
 	#memberLastName_add, #memberFirstName_add{
+		display: inline-block;
 		width: 48% !important;
 		border:1px solid #8d8d8d;
 		height: 26px;
@@ -1036,7 +1059,6 @@ option{
 	
 	#page-addplan{
 		position: absolute;
-		top: 150px;
 		width: 400px;
 		margin-bottom: 50px;
 	}
@@ -1049,7 +1071,8 @@ option{
 		width: 300px;
 		border: 1px solid #eaeaea;
 		padding-bottom: 5px;
-		box-shadow: 0px 0.5px 0.5px 0 rgba(0, 0, 0, 0.2);
+		/*box-shadow: 0px 0.5px 0.5px 0 rgba(0, 0, 0, 0.2);*/
+		box-shadow: 4px 6.5px 12.5px 0 rgba(0, 0, 0, 0.2);
 		z-index: 3;
 		/*
 		border-top-right-radius: 20px;
@@ -1061,6 +1084,9 @@ option{
 		right: 25px;
 		bottom: 12px;
 		width: 10px;
+		
+		right: 10px;
+		bottom: 10px;
 	}
 
 

@@ -1,5 +1,7 @@
     {
-      "username":
+      "user_db_id" :
+        ["{{ user_db_id }}"],
+      "username" :
         ["{{ username }}"],
       "messageArray" :
       [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]

@@ -162,7 +162,7 @@ $(document).ready(function(){
     get_trainee_reg_history()
     function get_trainee_lecture_history(){
     	$.ajax({
-	          url: '/trainee/read_trainee_all_schedule_ajax/',
+	          url: '/trainee/get_trainee_schedule_history/',
 			  dataType : 'html',
 			  type:'POST',
 
@@ -203,7 +203,7 @@ $(document).ready(function(){
     						'<div class="cell5">노트</div>'+
     					   '</div>'
     	var html = []
-    	for(var i=jsondata.ptScheduleStateCdArray.length-1; i>=0; i--){
+    	for(var i=0; i<jsondata.ptScheduleStateCdArray.length; i++){
     		var number 	     = '<div class="cell1">'+jsondata.ptScheduleIdxArray[i]+'</div>'
     		if($('body').width()>600){
     			var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i])
@@ -240,8 +240,8 @@ $(document).ready(function(){
 
     function get_trainee_reg_history(){
     	$.ajax({
-	          url: '/trainee/read_trainee_lecture_view_by_class_ajax/',
-	          data:{"class_id":class_id[0]},
+	          url: '/trainee/get_trainee_lecture_list/',
+	          data:{"class_id":class_id[0], "auth_cd":'VIEW'},
 			  dataType : 'html',
 			  type:'POST',
 
@@ -277,11 +277,13 @@ $(document).ready(function(){
     	var $Loc = targetHTML
     	var tableHeader = '<div class="lecture_history_table_header">'+
     						'<div class="cell1">No.</div>'+
-    						'<div class="cell3">등록 날짜</div>'+
-    						'<div class="cell3">종료 날짜</div>'+
+    						'<div class="cell2">등록명</div>'+
+    						'<div class="cell3">수업당 인원</div>'+
+    						'<div class="cell3">등록일</div>'+
+    						'<div class="cell3">종료일</div>'+
     						'<div class="cell4">등록 횟수</div>'+
     						'<div class="cell4">남은 횟수</div>'+
-    						'<div class="cell4">상태</div>'+
+    						'<div class="cell3">상태</div>'+
     					   '</div>'
     	var html = []
     	for(var i=0; i<jsondata.countArray.length; i++){
@@ -293,12 +295,28 @@ $(document).ready(function(){
     			var sdateFormat = jsondata.startArray[i]
     			var edateFormat =jsondata.endArray[i]
     		}
-    		var sdate        = '<div class="cell3">'+sdateFormat+'</div>'
-    		var edate  		 = '<div class="cell3">'+edateFormat+'</div>'
+
+    		var typename = "1:1레슨"
+    		var maxnumber = "1"
+    		if(jsondata.groupNameArray[i] != ""){
+    			var typename = jsondata.groupNameArray[i]
+    			var maxnumber = jsondata.groupMemberNumArray[i]
+    		}
+    		var stateColor = ""
+    		if(jsondata.lectureStateNameArray[i] == "진행중"){
+    			var stateColor = "state_PE"
+    		}
+    		
+    		var type         = '<div class="cell2">'+typename+'</div>'
+    		var maxnum		 = '<div class="cell3">'+maxnumber+'</div>'
+    		//var sdate        = '<div class="cell3">'+sdateFormat+'</div>'
+    		//var edate  		 = '<div class="cell3">'+edateFormat+'</div>'
+    		var sdate        = '<div class="cell3">'+jsondata.startArray[i]+'</div>'
+    		var edate  		 = '<div class="cell3">'+jsondata.endArray[i]+'</div>'
     		var regCount     = '<div class="cell4">'+jsondata.countArray[i]+'</div>'
     		var remCount     = '<div class="cell4">'+jsondata.remCountArray[i]+'</div>'
-    		var state     = '<div class="cell4">'+jsondata.lectureStateNameArray[i]+'</div>'
-    		html.push('<div class="lecture_history_table_row">'+number+sdate+edate+regCount+remCount+state+'</div>')
+    		var state     = '<div class="cell3 '+stateColor+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+    		html.push('<div class="lecture_history_table_row">'+number+type+maxnum+sdate+edate+regCount+remCount+state+'</div>')
     	}
     	$Loc.html(tableHeader+html.join(''))
     }

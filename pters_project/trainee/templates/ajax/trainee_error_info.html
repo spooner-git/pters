@@ -1,0 +1,12 @@
+    {
+        "push_class_id":
+      [{% for push_class_id_info in push_class_id %}"{{ push_class_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "push_title":
+      [{% for push_title_info in push_title %}"{{ push_title_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "push_message":
+      [{% for push_message_info in push_message %}"{{ push_message_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "messageArray" :
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }
+
+
