@@ -340,27 +340,32 @@ if (agent.indexOf("firefox") != -1) {
             if($('body').width()<600){
                var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
                var myRowSelect = $(this).parent('div').siblings('div.whatGroupType').find('select');
-               var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input') 
+               var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input')
+               var myRowParent = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div');
             }else if($('body').width()>=600){
                 var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
                 var myRowSelect = $('select[data-leid='+$(this).attr('data-leid')+']');
                 var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
-
+                var myRowParent = $(this).parent('div').siblings('div')
             }
             myRow.addClass('input_available').attr('disabled',false);
             myRowSelect.addClass('input_available').attr('disabled',false);
             myNoteRow.addClass('input_available').attr('disabled',false);
-
+            var myStartDate = myRowParent.find('.lec_start_date').val()
+            var myEndDate = myRowParent.find('.lec_end_date').val()
+            var myPrice = myRowParent.find('#regPrice').val()
+            var myRegCount = myRowParent.find('.lec_reg_count').val()
 
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide();
             $(this).text(text).attr('data-type',"modify");
             $('#form_member_dbid').val(dbID);
             $('#form_lecture_id').val(lectureID);
-            $('#form_start_date').val(date_format_yyyymmdd_to_yyyymmdd_split($(this).parent('div').siblings('div').find('.lec_start_date').val(),'-'))
-            $('#form_end_date').val(date_format_yyyymmdd_to_yyyymmdd_split($(this).parent('div').siblings('div').find('.lec_end_date').val(),'-'))
-            $('#form_price').val($(this).parent('div').siblings('div').find('#regPrice').val())
-            $('#form_lecture_reg_count').val($(this).parent('div').siblings('div').find('.lec_reg_count').val())
+            $('#form_start_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myStartDate,'-'))
+            $('#form_end_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myEndDate,'-'))
+            $('#form_price').val(myPrice)
+            $('#form_lecture_reg_count').val(myRegCount)
             $('#form_note').val(myNoteRow.val())
+            
         }else if($(this).attr('data-type')=="modify"){
             $('#form_price').val($('#form_price').val().replace(/,/gi,''))
             send_member_modified_data(dbID);
