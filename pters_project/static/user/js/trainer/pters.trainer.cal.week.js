@@ -892,7 +892,7 @@ $(document).ready(function(){
 	//페이지 이동에 대한 액션 클래스
 	var slideControl = {
 		'append' : function(){ //다음페이지로 넘겼을때
-			var lastdateinfo = $('.swiper-slide:last-child').find('.td00:first-child').attr('id').split('_');
+			var lastdateinfo = $('.swiper-slide:last-child').find('.td00').attr('id').split('_');
 			var last = Number($('.swiper-slide:last-child').attr('id').replace(/slide/gi,""))
 			var lastYY = Number(lastdateinfo[0]);
 			var lastMM = Number(lastdateinfo[1]);
@@ -904,7 +904,7 @@ $(document).ready(function(){
 		},
 
 		'prepend' : function(){
-			var firstdateinfo = $('.swiper-slide:first-child').find('.td00:first-child').attr('id').split('_');
+			var firstdateinfo = $('.swiper-slide:first-child').find('.td00').attr('id').split('_');
 			var first = Number($('.swiper-slide:first-child').attr('id').replace(/slide/gi,""));
 			var firstYY = Number(firstdateinfo[0]);
 			var firstMM = Number(firstdateinfo[1]);
