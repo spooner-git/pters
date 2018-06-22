@@ -4344,7 +4344,7 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
     })
 }
 
-
+/*
 //ajax 로딩이미지 표기
 function beforeSend(){
     $('html').css("cursor","wait");
@@ -4359,6 +4359,7 @@ function completeSend(){
     $('.ajaxloadingPC').hide();
     //alert('complete: 일정 정상 등록')
 }
+*/
 
 function numberWithCommas(x) { //천단위 콤마 찍기
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

@@ -1744,12 +1744,13 @@ function ajaxClassTime(use, callfunction){
 			}else{
 				set_schedule_time(jsondata);
 			}
-			/*
+			
 			completeSend_();
+			
 			$('.ymdText-pc-add div').removeClass('disabled_button')
 			$('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)')
 			$('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)')
-			*/
+			
 		  },
 
 		  complete:function(){

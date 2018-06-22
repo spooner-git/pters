@@ -14,6 +14,23 @@ $(document).on("touchend",'html',function(e){
 });
 //플로팅 버튼 스크롤시 숨기기 End
 
+function beforeSend(use, callback){
+  if(use == "callback"){
+    callback()
+  }
+  $('html').css("cursor","wait");
+  $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+  $('.ajaxloadingPC').show();
+}
+
+function completeSend(use, callback){
+  if(use == "callback"){
+    callback()
+  }
+  $('html').css("cursor","auto");
+  $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+  $('.ajaxloadingPC').hide();
+}
 
 function upTouchEvent(){
     if($('#mshade').css('z-index')<0){
