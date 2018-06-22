@@ -1725,8 +1725,7 @@ function ajaxClassTime(use, callfunction){
 		
 		//var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
 		$.ajax({
-		  //url: '/trainer/get_trainer_schedule/',
-		  url: '/trainer/get_error_info/',
+		  url: '/trainer/get_trainer_schedule/',
 		  type : 'POST',
 		  data : {"date":today_form, "day":14},
 		  dataType : 'html',
@@ -1743,7 +1742,7 @@ function ajaxClassTime(use, callfunction){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				//set_schedule_time(jsondata)
+				set_schedule_time(jsondata)
 			}
 		  },
 
