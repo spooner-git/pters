@@ -1281,8 +1281,9 @@ function float_btn_addplan(option){
     }else if(option == 1){
         clear_pt_off_add_popup()
         open_pt_off_add_popup('ptadd')
-        shade_index(100)
         ajaxTimeGraphSet()
+        shade_index(100)
+        
         //scrollToDom($('#calendar'))
         
     }else if(option == 2){
@@ -1296,33 +1297,22 @@ function float_btn_addplan(option){
     }
 }
 
+var bodywidth = $('body').width()
 function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     addTypeSelect = option
 
-    $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
-      $('#page-base-addstyle, #page-addplan').show();
-      $('#page-addplan').css('top',50);
-      $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-      $('#calendar').css('height','0')
-      $('#upbutton-x').attr('data-page','addplan')
-
-/*
-    if($('body').width()<=600){
-
+    if(bodywidth<=600){
       $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
       $('#page-base-addstyle, #page-addplan').show();
       $('#page-addplan').css('top',50);
       $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
       $('#calendar').css('height','0')
       $('#upbutton-x').attr('data-page','addplan')
-
     }else{
       $('#page-addplan').fadeIn('fast').css({'top':(($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()),
                                                 'left':(($(window).width()-$('#page-addplan').outerWidth())/2+$(window).scrollLeft())})
       $('#page-addplan-pc').css('display','none')
     }
-*/
-
 
     if(date != undefined){
         $('#datepicker').datepicker('setDate', date)
