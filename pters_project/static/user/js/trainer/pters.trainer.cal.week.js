@@ -836,17 +836,18 @@ $(document).ready(function(){
 	calTable_Set(2,currentYear,currentPageMonth,currentDate,0); // 이번주
 	calTable_Set(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
 	//calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
-	weekNum_Set_fixed()
 
-	ajaxClassTime('callbefore',function(){
-		
-		dateText();
-		krHoliday()
-		reserveAvailable()
-		toDay();
-		addcurrentTimeIndicator_blackbox()
-		todayFinderArrow();
-	})	
+
+	
+	
+	weekNum_Set_fixed()
+	dateText();
+	krHoliday()
+	reserveAvailable()
+	toDay();
+	addcurrentTimeIndicator_blackbox()
+	todayFinderArrow();
+	ajaxClassTime()	
 
 	draw_time_graph(30,'')
 	draw_time_graph(30,'mini')
@@ -859,34 +860,30 @@ $(document).ready(function(){
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlideNextEnd',function(){
+			closeAddPopup_mini()
+			slideControl.append();
+			weekNum_Set_fixed()
+			toDay();
+			addcurrentTimeIndicator_blackbox()	
+			dateText();
+			reserveAvailable()
+			todayFinderArrow();
+			krHoliday()
 			
-			ajaxClassTime('callbefore', function(){
-				closeAddPopup_mini()
-				slideControl.append();
-				weekNum_Set_fixed()
-				toDay();
-				addcurrentTimeIndicator_blackbox()	
-				dateText();
-				reserveAvailable()
-				todayFinderArrow();
-				krHoliday()
-			})
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlidePrevEnd',function(){
-			
-			ajaxClassTime('callbefore', function(){
-				closeAddPopup_mini()
-				slideControl.prepend();
-				weekNum_Set_fixed()
-				toDay();
-				addcurrentTimeIndicator_blackbox()
-				dateText();
-				reserveAvailable()
-				todayFinderArrow();	
-				krHoliday()
-			})
+			closeAddPopup_mini()
+			slideControl.prepend();
+			weekNum_Set_fixed()
+			toDay();
+			addcurrentTimeIndicator_blackbox()
+			dateText();
+			reserveAvailable()
+			todayFinderArrow();	
+			krHoliday()
+
 	});
 
 	
@@ -903,7 +900,7 @@ $(document).ready(function(){
 			myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
 			myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>') //마지막 슬라이드에 새슬라이드 추가
 			calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기	
-			//ajaxClassTime()
+			ajaxClassTime()
 		},
 
 		'prepend' : function(){
@@ -915,7 +912,7 @@ $(document).ready(function(){
 			myswiper.removeSlide(4);
 			myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
 			calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);
-			//ajaxClassTime()
+			ajaxClassTime()
 		},
 	};
 
@@ -1714,13 +1711,13 @@ function fake_show(){
 function ajaxClassTime(use, callfunction){
 		if(use == "callbefore"){
 			var beforeSend_ = function(){beforeSend('callback', function(){callfunction();})}
-			var completeSend_ = function(){completeSend();}
+			var completeSend_ = function(){completeSend()}
 		}else if(use == "callafter"){
-			var beforeSend_ = function(){beforeSend();}
+			var beforeSend_ = function(){beforeSend()}
 			var completeSend_ = function(){completeSend('callback', function(){callfunction();})}
 		}else{
-			var beforeSend_ = function(){beforeSend();}
-			var completeSend_ = function(){completeSend();}
+			var beforeSend_ = function(){beforeSend()}
+			var completeSend_ = function(){completeSend()}
 		}
 
 		var $weekNum4 = $('#weekNum_4').attr('data-date')
@@ -1728,7 +1725,8 @@ function ajaxClassTime(use, callfunction){
 		
 		//var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
 		$.ajax({
-		  url: '/trainer/get_trainer_schedule/',
+		  //url: '/trainer/get_trainer_schedule/',
+		  url: '/trainer/get_error_info/',
 		  type : 'POST',
 		  data : {"date":today_form, "day":14},
 		  dataType : 'html',
@@ -1745,7 +1743,7 @@ function ajaxClassTime(use, callfunction){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				set_schedule_time(jsondata)
+				//set_schedule_time(jsondata)
 			}
 		  },
 
