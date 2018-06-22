@@ -1311,7 +1311,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#datepicker_repeat_start').parent('p').addClass('dropdown_selected')
     }
 
-    $('#page-addplan #timeGraph').show()
+    //$('#page-addplan #timeGraph').show()
 
     if(option == "ptadd"){
         $('#remainCount, #groupInfo').css('display','none');
