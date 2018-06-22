@@ -829,7 +829,7 @@ $(document).ready(function(){
 
 // ############################구동시 실행################################################################################
 // ****************************구동시 실행********************************************************************************
-	ajaxClassTime(currentYear+'-'+(currentMonth+1)+'-'+currentDate)
+	//ajaxClassTime(currentYear+'-'+(currentMonth+1)+'-'+currentDate)
 
 	//calTable_Set(1,currentYear,currentPageMonth,currentDate,-14); // 이번주-2
 	calTable_Set(1,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
@@ -846,7 +846,8 @@ $(document).ready(function(){
 	reserveAvailable()
 	toDay();
 	addcurrentTimeIndicator_blackbox()
-	todayFinderArrow();	
+	todayFinderArrow();
+	ajaxClassTime()	
 
 	draw_time_graph(30,'')
 	draw_time_graph(30,'mini')
@@ -1707,23 +1708,30 @@ function fake_show(){
 
 
 
-function ajaxClassTime(reference){
-		if(reference){
-
+function ajaxClassTime(use, callfunction){
+		if(use == "callbefore"){
+			var beforeSend_ = function(){beforeSend('callback', function(){callfunction();})}
+			var completeSend_ = function(){completeSend()}
+		}else if(use == "callafter"){
+			var beforeSend_ = function(){beforeSend()}
+			var completeSend_ = function(){completeSend('callback', function(){callfunction();})}
 		}else{
-			var $weekNum4 = $('#weekNum_4').attr('data-date')
-			var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
+			var beforeSend_ = function(){beforeSend()}
+			var completeSend_ = function(){completeSend()}
 		}
 
+		var $weekNum4 = $('#weekNum_4').attr('data-date')
+		var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
+		
 		//var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
 		$.ajax({
 		  url: '/trainer/get_trainer_schedule/',
 		  type : 'POST',
-		  data : {"date":today_form, "day":14},
+		  data : {"date":today_form, "day":18},
 		  dataType : 'html',
 
 		  beforeSend:function(){
-			beforeSend();
+			beforeSend_();
 			$('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick','')
 		  },
 
@@ -1734,15 +1742,19 @@ function ajaxClassTime(reference){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				set_schedule_time(jsondata)
+				set_schedule_time(jsondata);
 			}
-		  },
-
-		  complete:function(){
-			completeSend();
+			
+			completeSend_();
+			
 			$('.ymdText-pc-add div').removeClass('disabled_button')
 			$('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)')
 			$('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)')
+			
+		  },
+
+		  complete:function(){
+			
 		  },
 
 		  error:function(){

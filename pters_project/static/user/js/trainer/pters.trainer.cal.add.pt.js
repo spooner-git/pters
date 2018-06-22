@@ -2136,18 +2136,25 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
 };
 
 
-
-function beforeSend(){
+/*
+function beforeSend(use, callback){
+  if(use == "callback"){
+    callback()
+  }
   $('html').css("cursor","wait");
   $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
   $('.ajaxloadingPC').show();
 }
 
-function completeSend(){
+function completeSend(use, callback){
+  if(use == "callback"){
+    callback()
+  }
   $('html').css("cursor","auto");
   $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
   $('.ajaxloadingPC').hide();
 }
+*/
 
 function closeAddPopup(){
   //$('body').css('overflow-y','overlay');
