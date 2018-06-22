@@ -256,7 +256,7 @@ $(document).ready(function(){
 
 		$('#page-addplan-pc').hide()
 		$("#cal_popup_planinfo").fadeIn('fast');
-		shade_index(100)
+		//shade_index(100)
 		closeAlarm('pc')
 
 		$('#popup_info3_memo,#popup_info3_memo_modify').show()
