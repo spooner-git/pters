@@ -71,24 +71,26 @@ if (agent.indexOf("firefox") != -1) {
 
 
     $(document).on('click','#upbutton-x-modify',function(){
-        if($(this).attr("data-page") == "memberinfo"){
             closePopup('member_info');
-            closePopup('member_add');
             if($('body').width()<600){
                 //$('#calendar').css('display','block')
                 $('#calendar').css('height','100%')
             }
             $('#uptext3').text('회원 정보');
             $('#uptext-pc-modify').text('회원 정보');
-        }else if($(this).attr("data-page") == "memberadd"){
+    })
+    $(document).on('click','#upbutton-x',function(){
+        if($(this).attr("data-page") == "memberadd"){
             closePopup('member_add');
             if($('body').width()<600){
                 //$('#calendar').css('display','block')
                 $('#calendar').css('height','100%')
             }
         }
-
     })
+
+
+
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
     $('.alignSelect').change(function(){
