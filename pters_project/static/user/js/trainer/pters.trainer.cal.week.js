@@ -1736,6 +1736,7 @@ function ajaxClassTime(use, callfunction){
 		  },
 
 		  success:function(data){
+		  	/*
 			var jsondata = JSON.parse(data);
 			//TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
 			if(jsondata.messageArray.length>0){
@@ -1744,6 +1745,7 @@ function ajaxClassTime(use, callfunction){
 			}else{
 				set_schedule_time(jsondata);
 			}
+			*/
 		  },
 
 		  complete:function(){
