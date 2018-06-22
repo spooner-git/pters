@@ -1714,7 +1714,9 @@ function fake_show(){
 function ajaxClassTime(use, callfunction){
 		if(use == "callbefore"){
 			var beforeSend_ = function(){beforeSend('callback', function(){callfunction();})}
+			var completeSend_ = function(){completeSend();}
 		}else if(use == "callafter"){
+			var beforeSend_ = function(){beforeSend();}
 			var completeSend_ = function(){completeSend('callback', function(){callfunction();})}
 		}else{
 			var beforeSend_ = function(){beforeSend();}
