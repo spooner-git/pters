@@ -1279,11 +1279,10 @@ function float_btn_addplan(option){
         }
 
     }else if(option == 1){
+        clear_pt_off_add_popup()
         open_pt_off_add_popup('ptadd')
         shade_index(100)
-        clear_pt_off_add_popup()
         ajaxTimeGraphSet()
-        
         //scrollToDom($('#calendar'))
         
     }else if(option == 2){
@@ -1312,7 +1311,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#datepicker_repeat_start').parent('p').addClass('dropdown_selected')
     }
 
-    $('#page-addplan #timeGraph').css('display','block')
+    $('#page-addplan #timeGraph').show()
 
     if(option == "ptadd"){
         $('#remainCount, #groupInfo').css('display','none');
@@ -1338,13 +1337,10 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     }
     
     if($('body').width()<=600){
-      //$('#page-base').fadeOut();
-      $('#page-base').hide();
+      $('#page-base').fadeOut();
       $('#page-base-addstyle').fadeIn();
-      //$('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-      $('#float_btn_wrap').fadeOut('fast',function(){
-        $('#float_inner1, #float_inner2').css({'opacity':'0','bottom':'25px'});
-      });
+      $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+      $('#float_btn_wrap').fadeOut();
       //$('#calendar').hide();
       $('#calendar').css('height','0')
       $('#addpopup_pc_label_pt, #addpopup_pc_label_off').css('display','none')
