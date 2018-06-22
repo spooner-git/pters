@@ -244,7 +244,6 @@ a:focus, a:hover{
     padding: 16px 8px 18px 57px;
     text-decoration: none;
     display: block;
-    transition: 0.3s;
 }
 
 /* Sidebar에서 선택했을때 선택된 Text 색상 변경

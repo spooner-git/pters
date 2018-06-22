@@ -552,16 +552,27 @@
             })
 
              function openNav(){
+                /*
                $("#outer_Sidenav").show();
                $("#inner_Sidenav").css({'width':'250px'});
-               $('#float_btn_wrap, #float_btn').fadeOut('fast')
+               $('#float_btn_wrap, #float_btn').hide('fast')
+               */
+               document.getElementById('outer_Sidenav').style.display = 'block';
+               document.getElementById('inner_Sidenav').style.width = '250px';
+               document.getElementById('float_btn_wrap').style.display = 'none'
+               
                //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
              }
 
              function closeNav(){
+                /*
               $("#outer_Sidenav").hide();
               $("#inner_Sidenav").css({'width':'0'});
-              $('#float_btn_wrap, #float_btn').fadeIn('fast')
+              $('#float_btn_wrap, #float_btn').show('fast')
+              */
+              document.getElementById('outer_Sidenav').style.display = 'none';
+              document.getElementById('inner_Sidenav').style.width = '0px';
+              document.getElementById('float_btn_wrap').style.display = 'block'
               //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
              }; 
 
