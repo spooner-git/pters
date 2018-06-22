@@ -863,12 +863,12 @@ $(document).ready(function(){
 			slideControl.append();
 			weekNum_Set_fixed()
 			toDay();
-			addcurrentTimeIndicator_blackbox()	
+			addcurrentTimeIndicator_blackbox()
 			dateText();
 			reserveAvailable()
 			todayFinderArrow();
 			krHoliday()
-			
+
 	});
 
 	//이전페이지로 슬라이드 했을때 액션
@@ -880,7 +880,7 @@ $(document).ready(function(){
 			addcurrentTimeIndicator_blackbox()
 			dateText();
 			reserveAvailable()
-			todayFinderArrow();	
+			todayFinderArrow();
 			krHoliday()
 
 	});

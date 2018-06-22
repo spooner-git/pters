@@ -22,7 +22,7 @@
         {% load static_url %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <meta name="viewport" content="width=device-width,user-scalable:no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
         <title>{% block title %}PTERS{% endblock %}</title>
@@ -478,9 +478,9 @@
     <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
-    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
-    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
-    <link rel="manifest" href={% static_url "manifest.json" %}>
+{#    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
+{#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
+{#    <link rel="manifest" href={% static_url "manifest.json" %}>#}
     <!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
     <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
     <script>
