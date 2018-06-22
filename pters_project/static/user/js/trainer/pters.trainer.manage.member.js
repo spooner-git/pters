@@ -332,7 +332,6 @@ if (agent.indexOf("firefox") != -1) {
             var text =　"OK"
         }
 
-        $(this).attr('src','/static/user/res/btn-pt-complete.png');
         var dbID = $(this).attr('data-dbid');
         var userName = $(this).attr('data-username')
         var lectureID = $(this).attr('data-leid');
@@ -361,6 +360,7 @@ if (agent.indexOf("firefox") != -1) {
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide();
             $(this).text(text).attr('data-type',"modify");
             $('img.regHistoryModifyBtn[data-type="view"]').addClass('disabled_button')
+            $(this).attr('src','/static/user/res/btn-pt-complete.png');
             $('#form_member_dbid').val(dbID);
             $('#form_lecture_id').val(lectureID);
             $('#form_start_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myStartDate,'-'))
