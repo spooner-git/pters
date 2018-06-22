@@ -831,13 +831,15 @@ $(document).ready(function(){
 // ****************************구동시 실행********************************************************************************
 	//ajaxClassTime(currentYear+'-'+(currentMonth+1)+'-'+currentDate)
 
+	//calTable_Set(1,currentYear,currentPageMonth,currentDate,-14); // 이번주-2
+	calTable_Set(1,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
+	calTable_Set(2,currentYear,currentPageMonth,currentDate,0); // 이번주
+	calTable_Set(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
+	//calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
+	weekNum_Set_fixed()
+
 	ajaxClassTime('callbefore',function(){
-		//calTable_Set(1,currentYear,currentPageMonth,currentDate,-14); // 이번주-2
-		calTable_Set(1,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
-		calTable_Set(2,currentYear,currentPageMonth,currentDate,0); // 이번주
-		calTable_Set(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
-		//calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
-		weekNum_Set_fixed()
+		
 		dateText();
 		krHoliday()
 		reserveAvailable()
@@ -857,10 +859,11 @@ $(document).ready(function(){
 
 	//다음페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlideNextEnd',function(){
+			weekNum_Set_fixed()
 			ajaxClassTime('callbefore', function(){
 				closeAddPopup_mini()
 				slideControl.append();
-				weekNum_Set_fixed()
+				
 				toDay();
 				addcurrentTimeIndicator_blackbox()	
 				dateText();
@@ -872,10 +875,11 @@ $(document).ready(function(){
 
 	//이전페이지로 슬라이드 했을때 액션
 	myswiper.on('onSlidePrevEnd',function(){
+			weekNum_Set_fixed()
 			ajaxClassTime('callbefore', function(){
 				closeAddPopup_mini()
 				slideControl.prepend();
-				weekNum_Set_fixed()
+				
 				toDay();
 				addcurrentTimeIndicator_blackbox()
 				dateText();
