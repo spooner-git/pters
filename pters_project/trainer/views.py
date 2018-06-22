@@ -2691,8 +2691,8 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
         if error is not None:
 
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
-                self.request.user.id) + ']' + error)
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
+                request.user.id) + ']' + error)
             messages.error(request, error)
 
         context['member_data'] = member_data
@@ -2711,35 +2711,44 @@ class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
     def post(self, request, *args, **kwargs):
         context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
         group_schedule_id = request.POST.get('group_schedule_id', '')
+        error = None
+        group_schedule_data = None
+        if group_schedule_id is None or group_schedule_id == '':
+            error = '그룹 일정 정보를 불러오지 못했습니다.'
 
-        group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=USE).order_by('start_dt')
-        for group_schedule_info in group_schedule_data:
-            # member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
-            member_info = group_schedule_info.lecture_tb.member
-            if member_info.reg_info is None or str(member_info.reg_info) != str(self.request.user.id):
-                lecture_count = MemberLectureTb.objects.filter(auth_cd='VIEW', use=USE).count()
-                if lecture_count == 0:
+        if error is None:
+            group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=USE).order_by('start_dt')
+            for group_schedule_info in group_schedule_data:
+                # member_info = MemberTb.objects.get(member_id=group_schedule_info.lecture_tb.member_id)
+                member_info = group_schedule_info.lecture_tb.member
+                if member_info.reg_info is None or str(member_info.reg_info) != str(self.request.user.id):
+                    lecture_count = MemberLectureTb.objects.filter(auth_cd='VIEW', use=USE).count()
+                    if lecture_count == 0:
+                        member_info.sex = ''
+                        member_info.birthday_dt = ''
+                        if member_info.phone is None:
+                            member_info.phone = ''
+                        else:
+                            member_info.phone = '***-****-'+member_info.phone[7:]
+                        member_info.user.email = ''
+
+                if member_info.sex is None:
                     member_info.sex = ''
-                    member_info.birthday_dt = ''
-                    if member_info.phone is None:
-                        member_info.phone = ''
-                    else:
-                        member_info.phone = '***-****-'+member_info.phone[7:]
-                    member_info.user.email = ''
+                if member_info.phone is None:
+                    member_info.phone = ''
+                group_schedule_info.member_info = member_info
+                group_schedule_info.start_dt = str(group_schedule_info.start_dt)
+                group_schedule_info.end_dt = str(group_schedule_info.end_dt)
+                if group_schedule_info.state_cd == 'PE':
+                    group_schedule_info.finish_check = 1
+                else:
+                    group_schedule_info.finish_check = 0
 
-            if member_info.sex is None:
-                member_info.sex = ''
-            if member_info.phone is None:
-                member_info.phone = ''
-            group_schedule_info.member_info = member_info
-            group_schedule_info.start_dt = str(group_schedule_info.start_dt)
-            group_schedule_info.end_dt = str(group_schedule_info.end_dt)
-            if group_schedule_info.state_cd == 'PE':
-                group_schedule_info.finish_check = 1
-            else:
-                group_schedule_info.finish_check = 0
-
-        context['schedule_data'] = group_schedule_data
+        if error is not None:
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        else:
+            context['schedule_data'] = group_schedule_data
 
         return render(request, self.template_name, context)
 
