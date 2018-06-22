@@ -387,16 +387,16 @@ $(document).ready(function(){
 		e.stopPropagation()
 		shade_index(100)
 		closeAlarm('pc')
-		if($('body').width()>600){
-			toggleGroupParticipantsList('on')
-		}else{
-			//$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
-		}
 		$('#subpopup_addByList_plan').hide()
 		$('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'), 
 															'data-groupid': $(this).attr('data-groupid'),
 															'group-schedule-id':$(this).attr('group-schedule-id'),
 															})
+		if($('body').width()>600){
+			toggleGroupParticipantsList('on')
+		}else{
+			//$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
+		}
 		$('.pt_memo_guide_popup').css('display','block')
 		deleteTypeSelect = ''
 		addTypeSelect ='ptadd'
