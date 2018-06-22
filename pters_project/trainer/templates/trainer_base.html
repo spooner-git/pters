@@ -374,7 +374,7 @@
                     </div>
                     -->
                 </div>
-                <div id="loginInfo" class="centermenu_div" style="float:right;" onclick="openAlarm('pc')">
+                <div id="loginInfo" class="centermenu_div" style="float:right;" onclick="open_lecture_select_popup_pc(); openAlarm('pc'); ">
                     <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
                     <span class="pcwhere">{{ request.session.class_type_name }}</span>
                     <span class="pcwho">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
@@ -517,7 +517,7 @@
     </script>-->
     <script>    
             var class_name = '{{ request.session.class_type_name }}'
-            open_lecture_select_popup_pc()
+{#            open_lecture_select_popup_pc()#}
 
             /* Shade 클릭해서 팝업 닫기
             $('.pshade').click(function(){
