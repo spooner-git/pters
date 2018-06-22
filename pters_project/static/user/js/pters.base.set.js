@@ -79,9 +79,11 @@ function shade_index(option){
         if($('#memberInfoPopup').css('display')=='block'){
           $('#mshade_popup').css({'z-index':$('#memberInfoPopup').css('z-index'),'display':'block'});
         }
+        /*
         if($('#cal_popup_planinfo').css('display')=="block"){
           $('#mshade_popup').css({'display':'none'});
         }
+        */
         $('#mshade').css({'z-index':option,'display':'block'});
       }
     }
