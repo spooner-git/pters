@@ -253,7 +253,6 @@ $(document).ready(function(){
                       closeDeletePopup();
                       deleteCompleteSend();
                       ajaxClassTime()
-                      console.log('success111')
                       },
 
                     //보내기후 팝업창 닫기

@@ -1864,7 +1864,7 @@ function send_memo(option){
 	$.ajax({
         url:'/schedule/update_memo_schedule/',
         type:'POST',
-        data:{"schedule_id":schedule_id,"add_memo":memo,"next_page":'/trainer/cal_week'},
+        data:{"schedule_id":schedule_id,"add_memo":memo},
 
         beforeSend:function(){
         	//beforeSend();

@@ -463,8 +463,8 @@ def upload_sign_image_logic(request):
 def update_memo_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     note = request.POST.get('add_memo', '')
-    next_page = request.POST.get('next_page')
-
+    # next_page = request.POST.get('next_page')
+    # context = {'error': None}
     error = None
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
@@ -481,11 +481,11 @@ def update_memo_schedule_logic(request):
         schedule_info.save()
 
     if error is None:
-        return redirect(next_page)
+        return render(request, 'ajax/schedule_error_info.html', None)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        return redirect(next_page)
+        return render(request, 'ajax/schedule_error_info.html', None)
 
 
 # 반복 일정 추가
