@@ -644,10 +644,10 @@ def add_repeat_schedule_logic(request):
                                     error_date = str(repeat_schedule_date_info).split(' ')[0]
 
                         if error_date is None:
-                            if lecture_id is not None and lecture_id != '':
-                                error_date = func_date_check(class_id, schedule_result['schedule_id'],
-                                                             str(repeat_schedule_date_info).split(' ')[0],
-                                                             schedule_start_datetime, schedule_end_datetime)
+                            # if lecture_id is not None and lecture_id != '':
+                            error_date = func_date_check(class_id, schedule_result['schedule_id'],
+                                                         str(repeat_schedule_date_info).split(' ')[0],
+                                                         schedule_start_datetime, schedule_end_datetime)
 
                         if error_date is not None:
                             raise ValidationError()
