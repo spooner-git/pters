@@ -83,7 +83,7 @@ function shade_index(option){
           $('#mshade_popup').css({'display':'none'});
         }
         //$('#mshade').css({'z-index':option,'display':'block'});
-        $('#mshade').css({'display':'block'});
+        //$('#mshade').css({'z-index':option,'display':'block'});
       }
     }
 }
