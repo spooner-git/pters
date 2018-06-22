@@ -70,7 +70,7 @@ if (agent.indexOf("firefox") != -1) {
 
 
 
-    $(document).on('click','#upbutton-x, #upbutton-x-modify',function(){
+    $(document).on('click','#upbutton-x-modify',function(){
         if($(this).attr("data-page") == "memberinfo"){
             closePopup('member_info');
             closePopup('member_add');
@@ -80,6 +80,12 @@ if (agent.indexOf("firefox") != -1) {
             }
             $('#uptext3').text('회원 정보');
             $('#uptext-pc-modify').text('회원 정보');
+        }else if($(this).attr("data-page") == "memberadd"){
+            closePopup('member_add');
+            if($('body').width()<600){
+                //$('#calendar').css('display','block')
+                $('#calendar').css('height','100%')
+            }
         }
 
     })
@@ -1273,7 +1279,7 @@ function float_btn_managemember(option){
         initialize_add_member_sheet()
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
         $('#page_addmember').fadeIn('fast');
-        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberinfo')
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd')
         $('#shade').hide();
         $('#shade3').fadeIn('fast');
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
