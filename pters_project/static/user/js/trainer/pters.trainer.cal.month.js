@@ -426,7 +426,7 @@ $(document).ready(function(){
 				if(schedule_on_off == 1){
 					//PT 일정 완료 처리시
 					send_plan_complete('callback',function(json, senddata){
-						send_memo()
+						send_memo("blank")
 						signImageSend(senddata);
 		          		close_info_popup('cal_popup_planinfo')
 	                    completeSend();
@@ -447,7 +447,7 @@ $(document).ready(function(){
 					$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'))
 					if(len == 0){
 						send_group_plan_complete('callback', function(json, senddata){
-							send_memo()
+							send_memo("blank")
 							signImageSend(senddata);
 							completeSend();
 							// set_schedule_time(json);
@@ -459,7 +459,7 @@ $(document).ready(function(){
 						
 					}else{
 						send_group_plan_complete('callback', function(json, senddata){
-							send_memo()
+							send_memo("blank")
 							signImageSend(senddata);
 							completeSend();
 							// set_schedule_time(json);
@@ -1321,7 +1321,7 @@ function send_memo(option){
 	$.ajax({
         url:'/schedule/update_memo_schedule/',
         type:'POST',
-        data:{"schedule_id":schedule_id,"add_memo":memo,"next_page":'/trainer/cal_week'},
+        data:{"schedule_id":schedule_id,"add_memo":memo},
 
         beforeSend:function(){
         	//beforeSend();
