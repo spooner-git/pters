@@ -520,7 +520,7 @@ $(document).ready(function(){
 					if(schedule_on_off==1){
 						//PT 일정 완료 처리시
 						send_plan_complete('callback',function(json, senddata){
-							send_memo()
+							send_memo("blank")
 		                	signImageSend(senddata);
 		                    close_info_popup('cal_popup_planinfo')
 		                    completeSend();
@@ -541,7 +541,7 @@ $(document).ready(function(){
 						$('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'))
 						if(len == 0){
 							send_group_plan_complete('callback', function(json, senddata){
-								send_memo()
+								send_memo("blank")
 								signImageSend(senddata);
 								completeSend();
 								// set_schedule_time(json);
@@ -553,7 +553,7 @@ $(document).ready(function(){
 							
 						}else{
 							send_group_plan_complete('callback', function(json, senddata){
-								send_memo()
+								send_memo("blank")
 								signImageSend(senddata);
 								completeSend();
 								// set_schedule_time(json);
@@ -1723,7 +1723,7 @@ function ajaxClassTime(use, callfunction){
 		var $weekNum4 = $('#weekNum_4').attr('data-date')
 		var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2)
 		
-		//var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
+		//=var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
 		$.ajax({
 		  url: '/trainer/get_trainer_schedule/',
 		  type : 'POST',
@@ -1802,6 +1802,7 @@ function send_plan_complete(use, callback){
                 	callback(jsondata, send_data)
                 }
             }
+                      console.log('success222')
           },
 
         //보내기후 팝업창 닫기

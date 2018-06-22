@@ -674,6 +674,14 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
         pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
         pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
         pt_schedule_info.idx = idx
+        # try:
+        #     member_info = LectureTb.objects.get(lecture_id=pt_schedule_info.lecture_tb_id)
+        # except ObjectDoesNotExist:
+        #     error = None
+        # pt_schedule_info.member_name = member_info.member.name
+        # pt_schedule_info.member_id = member_info.member.member_id
+        # pt_schedule_info.member_name = pt_schedule_info.lecture_tb.member.name
+        # pt_schedule_info.member_id = pt_schedule_info.lecture_tb.member.member_id
         if pt_schedule_info.note is None:
             pt_schedule_info.note = ''
         if pt_schedule_info.state_cd == 'PE':
