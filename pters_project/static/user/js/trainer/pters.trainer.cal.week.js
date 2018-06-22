@@ -900,7 +900,7 @@ $(document).ready(function(){
 			myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
 			myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>') //마지막 슬라이드에 새슬라이드 추가
 			calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기	
-			ajaxClassTime()
+			//ajaxClassTime()
 		},
 
 		'prepend' : function(){
@@ -912,7 +912,7 @@ $(document).ready(function(){
 			myswiper.removeSlide(4);
 			myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
 			calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);
-			ajaxClassTime()
+			//ajaxClassTime()
 		},
 	};
 
@@ -1742,7 +1742,7 @@ function ajaxClassTime(use, callfunction){
 				$('#errorMessageBar').show()
 				$('#errorMessageText').text(jsondata.messageArray)
 			}else{
-				//set_schedule_time(jsondata)
+				set_schedule_time(jsondata)
 			}
 		  },
 
