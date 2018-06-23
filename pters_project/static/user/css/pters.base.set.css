@@ -6,6 +6,16 @@ html,body{
 }
 
 
+.display_block{
+    display: block;
+}
+.display_inline{
+    display: inline;
+}
+.display_none{
+    display: none;
+}
+
 
 #how_to_use_pters{
     display: none;

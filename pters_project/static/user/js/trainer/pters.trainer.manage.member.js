@@ -2582,7 +2582,8 @@ function open_member_info_popup_pc(dbID, jsondata){
 
     function about_member_window_show2(){
         $('#memberInfoPopup_PC').attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
-        $('#memberInfoPopup_PC').show()
+        //$('#memberInfoPopup_PC').show()
+        $('#memberInfoPopup_PC').addClass('display_block')
     }
     
     $('#memberName_info_PC').val(userName)
@@ -2683,8 +2684,8 @@ function open_member_info_popup_pc(dbID, jsondata){
     
     function about_etc1(){
         $('#memberInfoPopup_PC input, #memberInfoPopup_PC select, #memberName_info_lastName_PC, #memberName_info_firstName_PC').removeClass('input_available').attr('disabled',true);
-        $('#memberName_info_PC').show()
-        $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide()
+        $('#memberName_info_PC').css('display','inline-block')
+        $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').css('display','none')
         //$('button._info_modify').text('수정').attr('data-type',"view")
     }
     
@@ -2692,7 +2693,8 @@ function open_member_info_popup_pc(dbID, jsondata){
         $('#memberRegHistory_info_PC img').text('수정').attr('data-type',"view")
         $('._info_baseedit_img').attr('data-view','view')
         $('._info_baseedit_img img').attr('src','/static/user/res/icon-pencil.png')
-        $('#inputError_info_PC').css('display','none')
+        //$('#inputError_info_PC').css('display','none')
+        $('#inputError_info_PC').addClass('display_none')
     }
     
 }
