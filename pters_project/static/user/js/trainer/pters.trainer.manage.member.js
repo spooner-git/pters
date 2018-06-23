@@ -2694,7 +2694,7 @@ function open_member_info_popup_pc(dbID, jsondata){
         $('._info_baseedit_img').attr('data-view','view')
         $('._info_baseedit_img img').attr('src','/static/user/res/icon-pencil.png')
         //$('#inputError_info_PC').css('display','none')
-        $('#inputError_info_PC').addClass('display_none')
+        $('#inputError_info_PC').css('display','none')
     }
     
 }
