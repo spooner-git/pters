@@ -1572,7 +1572,6 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View
         member_id = request.POST.get('member_id', '')
 
         context['error'] = None
-
         context = func_get_lecture_list(context, class_id, member_id)
         if context['error'] is not None:
             logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+context['error'])
