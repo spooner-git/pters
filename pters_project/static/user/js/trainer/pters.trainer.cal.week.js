@@ -648,23 +648,25 @@ $(document).ready(function(){
 		            	enable_delete_btns_after_ajax()
 				        close_info_popup('cal_popup_plandelete')
 			            get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
-			            set_schedule_time(jsondata)
+			            // set_schedule_time(jsondata)
+	                	ajaxClassTime()
 			            $('#members_mobile, #members_pc').html('')
 			            get_current_member_list()
       					get_current_group_list()
-      					get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function(jsondata){
-		                    var availCount_personal = 0
-		                    for(var i= 0; i<jsondata.availCountArray.length; i++){
-		                      if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
-		                        availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
-		                      }
-		                    }
-		                    $("#countsSelected").text(availCount_personal);
-		                })
+						if(schedule_on_off==1) {
+                            get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function (jsondata) {
+                                var availCount_personal = 0
+                                for (var i = 0; i < jsondata.availCountArray.length; i++) {
+                                    if (jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1") {
+                                        availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
+                                    }
+                                }
+                                $("#countsSelected").text(availCount_personal);
+                            })
+                        }
 			            if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
-	                	ajaxClassTime()
 	                })
 
 				}else if(deleteTypeSelect == "repeatgroupptdelete"){
@@ -674,14 +676,14 @@ $(document).ready(function(){
 		            	enable_delete_btns_after_ajax()
 	            		close_info_popup('cal_popup_plandelete')
 	                  	get_repeat_info($('#cal_popup_repeatconfirm').attr('data-groupid'))
-	                  	set_schedule_time(jsondata)
+	                  	// set_schedule_time(jsondata)
+	                	ajaxClassTime()
 	                  	$('#members_mobile, #members_pc').html('')
 	                  	get_current_member_list()
       					get_current_group_list()
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
-	                	ajaxClassTime()
 		            })
 		            // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
 		            // 	for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
