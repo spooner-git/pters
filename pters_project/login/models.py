@@ -15,10 +15,10 @@ class MemberTb(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     name = models.CharField(db_column='NAME', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    phone = models.CharField(db_column='PHONE', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    phone = models.CharField(db_column='PHONE', max_length=20, default='', blank=True)  # Field name made lowercase.
     age = models.IntegerField(db_column='AGE', blank=True, null=True)  # Field name made lowercase.
-    sex = models.CharField(db_column='SEX', max_length=2, blank=True, null=True)  # Field name made lowercase.
-    birthday_dt = models.DateField(db_column='BIRTHDAY_DT', blank=True, null=True)  # Field name made lowercase.
+    sex = models.CharField(db_column='SEX', max_length=2, default='', blank=True)  # Field name made lowercase.
+    birthday_dt = models.DateField(db_column='BIRTHDAY_DT', blank=True)  # Field name made lowercase.
     country = models.CharField(db_column='COUNTRY', max_length=255, blank=True, null=True)  # Field name made lowercase.
     address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, null=True)  # Field name made lowercase.
     job = models.CharField(db_column='JOB', max_length=20, blank=True, null=True)  # Field name made lowercase.
@@ -92,6 +92,7 @@ class PushInfoTb(models.Model):
     badge_counter = models.IntegerField(db_column='BADGE_COUNTER', blank=True, null=True, default='0')  # Field name made lowercase.
     last_login = models.DateTimeField(db_column='LAST_LOGIN', blank=True, null=True)  # Field name made lowercase.
     session_info = models.CharField(db_column='SESSION_INFO', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
+    device_info = models.CharField(db_column='DEVICE_INFO', max_length=255, blank=True, null=True, default='')  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
 
     class Meta:

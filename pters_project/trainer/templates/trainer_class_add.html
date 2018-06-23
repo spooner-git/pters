@@ -21,6 +21,7 @@
             border:3px solid #fe4e65;
             border-radius: 9px;
             padding: 20px;
+            margin-bottom: 30px;
           }
           #myClassHourSetting{
             display: none;
@@ -78,6 +79,7 @@
             width: 400px;
           }
             .detailSelectBox{
+              background: #fbfbfb;
               border:1px solid #cccccc;
               padding: 5px;
               margin-top: 10px;
@@ -110,6 +112,24 @@
               display: none;
             }
 
+          .buttonsWrap{
+            margin-top: 10px;
+            text-align: center;
+          }
+            .buttonsWrap button:nth-child(1){
+              width: 50px;
+              background: #ffffff;
+              color: #282828;
+              border: 1px solid #282828;
+            }
+            .buttonsWrap button:nth-child(2){
+              width: 50px;
+              background: #fe4e65;
+              color: #ffffff;
+              border:1px solid #fe4e65;
+            }
+            
+
           button:focus{
             outline: unset;
           }
@@ -120,6 +140,7 @@
           }
 
           .fixfooter{
+            display: none;
             z-index: -1;
           }
 
@@ -145,8 +166,9 @@
   <input type="hidden" name="setting_trainer_work_time_available" id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
   <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
   <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->
+  <input type="hidden" name="setting_member_cancel_time_prohibition"   id="id_setting_member_cancel_time_prohibition" value=""> <!--시간 숫자-->
   <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
-  <input type="hidden" name="next_page" value = '{% url 'trainer:trainer_error_info' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
 
 <div id="myClassCreate" class="classSettingBox">
@@ -194,8 +216,11 @@
         </div>
     {% endfor %}
     <input type="text" name="subject_detail_nm" id="id_input_subject_detail_nm" placeholder="상세 과목명" style="display: none;">
-    <button onclick="goNext('0')">다음</button>
-    <button onclick="goNext('home')">취소</button>
+    <div class="buttonsWrap">
+      <button onclick="goNext('home')">취소</button>
+      <button onclick="goNext('0')">다음</button>
+    </div>
+    
 </div>
 
 <div id="myClassSetting" class="classSettingBox">
@@ -244,13 +269,13 @@
         </div>
 
         <label>b) 나의 회원님 예약 기능 여부</label>
-        <p>OFF로 설정시 나의 회원님은 스케쥴 확인만 가능하고,<br> 예약 및 취소는 불가능 합니다.</p>
+        <p>'회원 예약 기능 끄기'로 설정시 나의 회원님은 스케쥴 확인만 가능하고,<br> 예약 및 취소는 불가능 합니다.</p>
         <button class="reserveOnOffToggle" data-onoff='0'>회원 예약 기능 켜기</button>
         <button class="reserveOnOffToggle" data-onoff='1'>회원 예약 기능 끄기</button>
 
         <div class="memberConnectSettingBox">
           <label>c) 나의 회원님 예약 가능 시간대</label>
-          <p>나의 회원님께서 일정을 예약하거나 취소할 수 있는 시간대를 설정합니다.</p>
+          <p>나의 회원님께서 <span style="color:#fe4e65;font-weight:bold;font-size:12.5px;">일정을 예약하거나 취소할 수 있는 시간대</span>를 설정합니다.</p>
           <div class="dropdown">
               <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
               <ul id="myReserveTimeStart" class="dropdown-menu">
@@ -287,9 +312,9 @@
               </ul>
           </div>
 
-          <label>d) 근접 예약/취소 설정</label>
-          <p>내 회원님이 약속된 시간에 임박해서 예약을 하거나 <br> 취소하는 것을 방지합니다.</p>
-          <p>ex)'2시간전' 설정시 17:00에 예약하기 위해서는 <br> 적어도 15:00 전에 예약 혹은 취소해야합니다.</p>
+          <label>d) 근접 예약 제한 설정</label>
+          <p>내 회원님이 시간에 <span style="color:#fe4e65;font-weight:bold;font-size:12.5px;">임박해서 예약 하는 것을 방지</span>합니다.</p>
+          <p>ex)'2시간전' 설정시 17:00에 예약하기 위해서는 <br> 적어도 15:00 전에 예약 해야합니다.</p>
           <div class="dropdown">
               <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
               <ul id="myReserveProhibitTime" class="dropdown-menu">
@@ -310,10 +335,37 @@
                   <li><a data-time="72">3일 전</a></li>
               </ul>
           </div>
+
+          <label>e) 근접 취소 제한 설정</label>
+          <p>내 회원님이 약속된 시간에 <span style="color:#fe4e65;font-weight:bold;font-size:12.5px;">임박해서 취소 하는 것을 방지</span>합니다.</p>
+          <p>ex)'2시간전' 설정시 17:00 일정을 취소하기 위해서는 <br> 적어도 15:00 전에 취소 해야합니다.</p>
+          <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+              <ul id="myCancelProhibitTime" class="dropdown-menu">
+                  <li><a data-time="1">1시간 전</a></li>
+                  <li><a data-time="2">2시간 전</a></li>
+                  <li><a data-time="3">3시간 전</a></li>
+                  <li><a data-time="4">4시간 전</a></li>
+                  <li><a data-time="5">5시간 전</a></li>
+                  <li><a data-time="6">6시간 전</a></li>
+                  <li><a data-time="7">7시간 전</a></li>
+                  <li><a data-time="8">8시간 전</a></li>
+                  <li><a data-time="9">9시간 전</a></li>
+                  <li><a data-time="10">10시간 전</a></li>
+                  <li><a data-time="11">11시간 전</a></li>
+                  <li><a data-time="12">12시간 전</a></li>
+                  <li><a data-time="24">1일 전</a></li>
+                  <li><a data-time="48">2일 전</a></li>
+                  <li><a data-time="72">3일 전</a></li>
+              </ul>
+          </div>
         </div>
     </div>
-    <button  onclick="goNext('-1')">이전</button>
-    <button onclick="goNext('1')">다음</button>
+    <div class="buttonsWrap">
+      <button onclick="goNext('-1')">이전</button>
+      <button onclick="goNext('1')">다음</button>
+    </div>
+    
 </div>
 
 <div id="myClassHourSetting" class="classSettingBox">
@@ -346,8 +398,10 @@
       <p>'진행시간'을 2시간으로 입력해도 횟수는 1회 차감됩니다.</p>
       <p>회원님께서는 1회 1시간씩만 예약이 가능합니다.</p>
     </div>
-    <button  onclick="goNext('-2')">이전</button>
-    <button onclick="goNext('submit')">완료</button>
+    <div class="buttonsWrap">
+      <button  onclick="goNext('-2')">이전</button>
+      <button onclick="goNext('submit')">완료</button>
+    </div>
 </div>
 
 
@@ -442,10 +496,17 @@
 
           /*회원 근접 예약 금지*/
           $('#myReserveProhibitTime li a').click(function(){
-              var prohibit_time = $(this).attr('data-time')
+              var prohibit_time = Number($(this).attr('data-time'))*60
               $('#id_setting_member_reserve_time_prohibition').val(prohibit_time)
           })
           /*회원 근접 예약 금지*/
+
+          /*회원 근접 취소 금지*/
+           $('#myCancelProhibitTime li a').click(function(){
+              var prohibit_time = Number($(this).attr('data-time'))*60
+              $('#id_setting_member_cancel_time_prohibition').val(prohibit_time)
+          })
+          /*회원 근접 취소 금지*/
 
 
           $('.reserveOnOffToggle').click(function(){
@@ -535,7 +596,9 @@
                           alert('예약 가능 종료 시간을 입력 해주세요.')
                         }else{
                           if($('#id_setting_member_reserve_time_prohibition').val().length==0){
-                            alert('근접 예약/취소 설정을 해주세요')
+                            alert('근접 예약 제한 설정을 해주세요')
+                          }else if($('#id_setting_member_cancel_time_prohibition').val().length==0){
+                            alert('근접 취소 제한 설정을 해주세요')
                           }else{
                             $('#myClassSetting').css('display','none')
                             $('#myClassHourSetting').css('display','block')

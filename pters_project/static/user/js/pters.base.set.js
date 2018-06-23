@@ -14,6 +14,24 @@ $(document).on("touchend",'html',function(e){
 });
 //플로팅 버튼 스크롤시 숨기기 End
 
+function beforeSend(use, callback){
+  if(use == "callback"){
+    callback()
+  }
+  //$('html').css("cursor","wait");
+  $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+  $('.ajaxloadingPC').css('display','block')
+}
+
+function completeSend(use, callback){
+  if(use == "callback"){
+    callback()
+  }
+  //$('html').css("cursor","auto");
+  $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+  $('.ajaxloadingPC').css('display','none');
+}
+
 function upTouchEvent(){
     if($('#mshade').css('z-index')<0){
       $("#float_btn_wrap").show()
@@ -72,6 +90,8 @@ function shade_index(option){
 function close_info_popup(option){
   if(option=="cal_popup_planinfo"){
       $("#"+option).css({'display':'none'})
+      $('#groupParticipants').html("")
+      toggleGroupParticipantsList('off')
       if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
         shade_index(100)
       }else{
@@ -81,7 +101,8 @@ function close_info_popup(option){
   }
   else if(option =="cal_popup_plandelete"){
       $("#"+option).css({'display':'none'})
-      if($('#pshade').css('z-index')==200 || $('#mshade').css('z-index') == 200){
+      console.log('1')
+      if($('#pshade').css('z-index')== 200 || $('#mshade').css('z-index') == 200){
         shade_index(100)
       }else{
         shade_index(-100)
@@ -105,18 +126,39 @@ function close_info_popup(option){
       if($('body').width()>=600){
           $('#calendar').css('position','relative')
       }else{
-          $('._calmonth').css({'height':'90%','position':'fixed'})
-          $('body').css('overflow-y','overlay');
-          $('#page-addplan').hide('fast','swing');
-          $('#float_btn_wrap').fadeIn();
-          $('#float_btn').removeClass('rotate_btn');
-          $('#page-base').show();
-          $('#page-base-addstyle').hide();
+          //$('._calmonth').css({'height':'90%','position':'fixed'})
+          //$('body').css('overflow-y','overlay');
       }
   }
   else if(option = "cal_popup_plancheck"){
       $('#'+option).css('display','none')
       shade_index(-100)
+  }
+}
+
+var toggleGroupParticipants = 'off'
+function toggleGroupParticipantsList(onoff){
+  switch(onoff){
+    case 'on':
+      toggleGroupParticipants = 'on'
+      $('#groupParticipants').animate({'height':'200px'},200)
+      //$('#groupParticipants').css('height','200px')
+      $('#popup_btn_viewGroupParticipants img').css('transform','rotate(180deg)')
+      var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
+      var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
+      var group_schedule_id = $('#popup_btn_viewGroupParticipants').attr('group-schedule-id')
+      $('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
+      get_group_plan_participants(group_schedule_id,'callback',function(jsondata){
+        $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
+        draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
+        completeSend();
+      })
+    break;
+    case 'off':
+      toggleGroupParticipants = 'off'
+      $('#groupParticipants').animate({'height':0},200).html('')
+      $('#popup_btn_viewGroupParticipants img').css('transform','rotate(0deg)')
+    break;
   }
 }
 
@@ -147,86 +189,6 @@ function shade3(option){
 
 $(document).ready(function(){
 
-
-	//setInterval(function(){
-	//    if(platform_check=='pc')
-    //    {
-            //if (Push.Permission.has()){
-                //ajaxCheckAlarm();
-            //}
-	//	}
-	//}, 60000);// 자동 ajax 새로고침(일정가져오기)
-
-	function ajaxCheckAlarm(){
-            $.ajax({
-              url: '/trainer/check_alarm/',
-			  dataType : 'html',
-
-              beforeSend:function(){
-              	//AjaxBeforeSend();
-              },
-
-              success:function(data){
-              	var jsondata = JSON.parse(data);
-              	if(jsondata.messageArray.length>0){
-                  	$('#errorMessageBar').show()
-                  	$('#errorMessageText').text(jsondata.messageArray)
-                }else{
-                	var update_data_changed = jsondata.data_changed;
-					if(update_data_changed[0]=="1"){
-						//ajaxAlarmPush();
-					}
-                }
-
-			  },
-
-              complete:function(){
-              	//AjaxCompleteSend();
-              },
-
-              error:function(){
-                console.log('server error')
-              }
-            })
-     }
-
-	function ajaxAlarmPush(){
-
-		$.ajax({
-		  url: '/trainer/read_push_alarm/',
-		  dataType : 'html',
-
-		  beforeSend:function(){
-			//AjaxBeforeSend();
-		  },
-
-		  success:function(data){
-			var jsondata = JSON.parse(data);
-			if(jsondata.messageArray.length>0){
-				$('#errorMessageBar').show()
-				$('#errorMessageText').text(jsondata.messageArray)
-			}else{
-				var log_info_array = jsondata.log_info_array;
-
-				for(var i=0; i<log_info_array.length; i++){
-					//Push.create("PTERS Alarm", {
-					//	body: log_info_array[i],
-					//	icon: '/static/common/favicon.ico',
-					//});
-				};
-			}
-
-		  },
-
-		  complete:function(){
-			//AjaxCompleteSend();
-		  },
-
-		  error:function(){
-			console.log('server error')
-		  }
-		})
- 	}
     var upText = "PTERS";
     var thisfilefullname = document.URL.substring(document.URL.lastIndexOf("/") + 1, document.URL.length);
 
@@ -250,6 +212,7 @@ $(document).ready(function(){
       $('.__weekplan').text("日程表")
       $('.__monthplan').text("カレンダー")
       $('.__membermanage').text("会員管理")
+      $('.__groupmanage').text("グループ管理")
       $('.__workmanage').text("業務管理")
       $('.__setting').text("設定")
       $('._nameAttach').text("様")
@@ -266,6 +229,7 @@ $(document).ready(function(){
       $('.__weekplan').text("Schedule")
       $('.__monthplan').text("Calendar")
       $('.__membermanage').text("Members")
+      $('.__groupmanage').text("Groups")
       $('.__workmanage').text("Work")
       $('.__setting').text("Settings")
       $('._nameAttach').text("")
@@ -282,6 +246,7 @@ $(document).ready(function(){
       $('.__weekplan').text("주간 일정")
       $('.__monthplan').text("월간 일정")
       $('.__membermanage').text("회원 관리")
+      $('.__groupmanage').text("그룹 관리")
       $('.__workmanage').text("업무 통계")
       $('.__setting').text("설정")
       $('._nameAttach').text("님")
@@ -436,6 +401,7 @@ function date_format_to_yyyymmdd(hanguldate, resultSplit){
 }
 
 
+//20180511 을 2018-5-11, 2018/5/11 등 원하는 split
 function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
   if(String(yyyymmdd).length==8){
     var yyyy = yyyymmdd.substr(0,4)
@@ -444,6 +410,16 @@ function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
     var result = yyyy+resultSplit+mm+resultSplit+dd
   }
   return result
+}
+
+//2018-05-11등을 2018.05.11, 2018/05/11 등 원하는 split
+function date_format_yyyymmdd_to_yyyymmdd_split(yyyymmdd,resultSplit){
+    var splitChar = yyyymmdd.substr(4,1)
+    var yyyy = yyyymmdd.split(splitChar)[0]
+    var mm = yyyymmdd.split(splitChar)[1]
+    var dd = yyyymmdd.split(splitChar)[2]
+    var result = yyyy+resultSplit+mm+resultSplit+dd
+    return result
 }
 
 function date_format_yyyy_m_d_to_yyyymmdd(yyyy_m_d){
@@ -459,22 +435,34 @@ function date_format_yyyy_m_d_to_yyyymmdd(yyyy_m_d){
     return yyyy+mm+dd
 }
 
-function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd){
-    var yyyy = String(yyyy_mm_dd.split('-')[0])
-    var mm = Number(yyyy_mm_dd.split('-')[1])
-    var dd = Number(yyyy_mm_dd.split('-')[2])
-    return yyyy+'-'+mm+'-'+dd
+//2018-05-11 을 2018-5-11
+function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd, resultSplit){
+    var splitChar = yyyy_mm_dd.substr(4,1)
+    var yyyy = String(yyyy_mm_dd.split(splitChar)[0])
+    var mm = Number(yyyy_mm_dd.split(splitChar)[1])
+    var dd = Number(yyyy_mm_dd.split(splitChar)[2])
+
+    return yyyy+resultSplit+mm+resultSplit+dd
 }
 
+
+
 function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d,resultSplit){
-    var yyyy = String(yyyy_m_d.split('-')[0])
-    var mm = String(yyyy_m_d.split('-')[1])
-    var dd = String(yyyy_m_d.split('-')[2])
+    if(yyyy_m_d.split('-').length == 3){
+      var yyyy = String(yyyy_m_d.split('-')[0])
+      var mm = String(yyyy_m_d.split('-')[1])
+      var dd = String(yyyy_m_d.split('-')[2])
+    }else if(yyyy_m_d.split('_').length == 3){
+      var yyyy = String(yyyy_m_d.split('_')[0])
+      var mm = String(yyyy_m_d.split('_')[1])
+      var dd = String(yyyy_m_d.split('_')[2])
+    }
+
     if(mm.length<2){
-      var mm = '0' + String(yyyy_m_d.split('-')[1])
+      var mm = '0' + mm
     }
     if(dd.length<2){
-      var dd = '0' + String(yyyy_m_d.split('-')[2])
+      var dd = '0' + dd
     }
     return yyyy+resultSplit+mm+resultSplit+dd
 }
@@ -531,6 +519,84 @@ function db_datatimehangul_format_realign(dbhangul){
    }
    return realign.join(' ')
 }
+
+
+function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, planEndTime){ //반복일정 요약에 진행시간 계산 (시작시간이랑 종료시간으로 구함)
+    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+    if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+      lastDay[1] = 29;
+    }else{
+      lastDay[1] = 28;
+    };
+
+
+    var planYear    = Number(planStartDate.split('-')[0])
+    var planMonth   = Number(planStartDate.split('-')[1])
+    var planDate    = Number(planStartDate.split('-')[2])
+    var planHour    = Number(planStartTime.split(':')[0])
+    var planMinute  =        planStartTime.split(':')[1]
+
+    var planEDate   = Number(planEndDate.split('-')[2]) 
+    var planEndHour = Number(planEndTime.split(':')[0])
+    var planEndMin  =        planEndTime.split(':')[1]
+
+    if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00 
+        if(planEndHour-planHour == 0){
+          var planDura = "0.5"
+        }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
+          var planDura = String((planEndHour-planHour-1))+'.5'
+        }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == 30){
+          var planDura = String((planEndHour-planHour))+'.5'
+        }
+    }else{
+      var planDura = planEndHour - planHour;
+    }
+    
+    //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+    if(planEDate == planDate+1 && planEndHour==planHour){
+      var planDura = 24
+    }else if(planEDate == planDate+1 && planEndHour == 0){
+      var planDura = 24-planHour
+    }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
+      var planDura = 24-planHour
+    }
+    
+    /*
+    if(planMinute == '00'){
+      if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
+        
+        var planDura = planDura - (Options.workStartTime - planHour) // 2 - (10 - 8)
+        var planHour = Options.workStartTime
+         //2018_4_22_8_30_2_OFF_10_30 
+      }
+    }else if(planMinute == '30'){
+        //(10>8)  (2>=10-8)
+      if(Options.workStartTime>planHour && planDura >= Options.workStartTime - planHour){
+        
+        var planDura = planDura - (Options.workStartTime - planHour)+0.5 // 2 - (10 - 8)
+        var planHour = Options.workStartTime
+        var planMinute = '00'
+         //2018_4_22_8_30_2_OFF_10_30 
+      }
+    }
+    */
+
+    return planDura
+}
+
+function duration_number_to_hangul(number){  // 0.5시간, 1.5시간, 1시간 --> 30분, 1시간 30분, 1시간
+  if(number - parseInt(number) == 0.5){
+      if(parseInt(number) != 0){
+          var number = parseInt(number)+'시간' + ' 30분'
+      }else if(parseInt(number) == 0){
+          var number = '30분'
+      }
+  }else{
+      var number = number + '시간'
+  }
+  return number
+}
+
 
 function count_format_to_nnnn(rawData){
   if(rawData == '0'){
@@ -641,6 +707,7 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
 }
 */
 
+/*
 function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
     //DB데이터 가공
     var classTimeLength = startarray.length
@@ -715,8 +782,15 @@ function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 
       }
     }
 }
+*/
 
+function show_ajax_error_message(){
 
+}
+
+function hide_ajax_error_message(){
+  
+}
 
 function scrollToDom(dom){
     var offset = dom.offset();
@@ -776,3 +850,68 @@ function alarm_change_easy_read(data){ // data : 2018-04-11 02:00:00/2018-04-11 
 }
 
 
+
+
+
+
+///////////////////////////////////////////////////여기서부터 회원모드!!///////////////////////////////////////////////////
+function get_trainee_participate_group(use, callback){
+  $.ajax({
+        url: '/trainee/get_trainee_group_ing_list/',
+        //data: $('#pt-add-form').serialize(),
+    dataType : 'html',
+    //type:'POST',
+
+        beforeSend:function(){
+          beforeSend();
+        },
+
+        success:function(data){
+          var jsondata = JSON.parse(data);
+          console.log('get_trainee_group_ing_list',jsondata)
+          if(jsondata.messageArray.length>0){
+              $('#errorMessageBar').show()
+              $('#errorMessageText').text(jsondata.messageArray)
+          }else{
+            if(use == "callback"){
+              callback(jsondata)
+            }
+
+            //ajaxClassTime();
+            //close_reserve_popup()
+          }
+          
+    },
+
+        complete:function(){
+          completeSend()
+        },
+
+        error:function(){
+          console.log('server error')
+        }
+    })
+}
+
+
+///////////////////////////////////////////////////여기서부터 회원모드!!///////////////////////////////////////////////////
+
+
+
+
+///////////////////////////////////////////////////AJAX 속도측정테스트 코드///////////////////////////////////////////////////
+function TEST_CODE_FOR_AJAX_TIMER_starts(yourMessage){
+  console.log('S************************************** Ajax Sending Start......'+yourMessage)
+  var testtimer = 0
+  var testtime = setInterval(function(){
+            testtimer = testtimer+0.5
+            console.log('Waiting for receiving JSON Data......'+testtimer+'second from Request......'+yourMessage)
+          },500)
+  return {"func":testtime, "message":yourMessage}
+}
+
+function TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER){
+  clearInterval(AJAXTESTTIMER["func"])
+  console.log('E************************************** Ajax Data Receiving COMPLETE.....JSON.parse() END......'+AJAXTESTTIMER["message"])
+}
+///////////////////////////////////////////////////AJAX 속도측정테스트 코드///////////////////////////////////////////////////

@@ -18,44 +18,60 @@ from trainee import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^blank/$', views.BlankView.as_view(), name='blank'),
-    url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
-    url(r'^add_pt/$', views.WeekAddView.as_view(), name='add_pt'),
-    url(r'^add_pt_day/$', views.DayAddView.as_view(), name='add_pt_day'),
-    url(r'^pt_delete_logic/$', views.pt_delete_logic, name='pt_delete_logic'),
-    url(r'^pt_add_logic/$', views.pt_add_logic, name='pt_add_logic'),
-    url(r'^pt_add_array_logic/$', views.pt_add_array_logic, name='pt_add_array_logic'),
-    url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
-    url(r'^mypage_trainee_ajax/$', views.MyPageViewAjax.as_view(), name='mypage_trainee_ajax'),
-    url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
+    url(r'^get_trainee_error_info/$', views.GetTraineeErrorInfoView.as_view(), name='get_trainee_error_info'),
 
-    url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
+    # 일정 기능 #####################################################################################################
+    # 회원 일정 등록 - 1:1/Group
+    url(r'^add_trainee_schedule/$', views.add_trainee_schedule_logic, name='add_trainee_schedule'),
+    # 회원 일정 취소 - 1:1/Group
+    url(r'^delete_trainee_schedule/$', views.delete_trainee_schedule_logic, name='delete_trainee_schedule'),
+    # 회원 스케쥴 조회 - 1:1/Group/Off
+    url(r'^get_trainee_schedule/$', views.GetTraineeScheduleView.as_view(), name='get_trainee_schedule'),
+    # 회원 스케쥴 이력 조회 - 1:1/Group
+    url(r'^get_trainee_schedule_history/$', views.GetTraineeScheduleHistoryView.as_view(), name='get_trainee_schedule_history'),
 
+    # 수강 정보 기능 #####################################################################################################
+    # 강좌 정보 list 조회
+    url(r'^get_trainee_class_list/$', views.GetTraineeClassListView.as_view(), name='get_trainee_class_list'),
+    # 수강 정보 list 조회 - auth_cd(연결상태) 종류별
+    url(r'^get_trainee_lecture_list/$', views.GetTraineeLectureListView.as_view(), name='get_trainee_lecture_list'),
+    # 수강 정보 연결 안된 정보 조회
+    url(r'^get_trainee_lecture_connection_list/$', views.GetTraineeLectureConnectionListView.as_view(), name='get_trainee_lecture_connection_list'),
+    # 수강 횟수 정보 가져오기
+    url(r'^get_trainee_count/$', views.GetTraineeCountView.as_view(), name='get_trainee_count'),
+    # 수강정보 선택/연동 기능
     url(r'^lecture_processing/$', views.lecture_processing, name='lecture_processing'),
 
-    url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
-
-    url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),
-    url(r'^delete_member_lecture_info/$', views.delete_member_lecture_info_logic, name='delete_member_lecture_info'),
-
-    # 회원정보로 스케쥴 정보 list 조회
-    url(r'^read_trainee_schedule_ajax/$', views.ReadTraineeScheduleViewAjax.as_view(), name='read_trainee_schedule_ajax'),
-    url(r'^read_trainee_all_schedule_ajax/$', views.ReadTraineeAllScheduleViewAjax.as_view(), name='read_trainee_all_schedule_ajax'),
-
-    # 회원정보로 강좌 정보 list 조회
-    url(r'^read_trainee_lecture_ajax/$', views.ReadTraineeLectureViewAjax.as_view(), name='read_trainee_lecture_ajax'),
-    # 회원정보로 수강 정보 list 조회
-    url(r'^read_trainee_lecture_by_class_ajax/$', views.ReadLectureByClassAjax.as_view(), name='read_trainee_lecture_by_class_ajax'),
-
-    url(r'^read_trainee_lecture_view_by_class_ajax/$', views.ReadLectureViewByClassAjax.as_view(), name='read_trainee_lecture_view_by_class_ajax'),
-
-    url(r'^trainee_push_ajax/$', views.TraineePushAjax.as_view(), name='trainee_push_ajax'),
-
+    # Mypage 기능 #####################################################################################################
+    # 회원 정보 조회
+    url(r'^get_trainee_info/$', views.GetTraineeInfoView.as_view(), name='get_trainee_info'),
+    # 회원 정보 수정
     url(r'^update_trainee_info/$', views.update_trainee_info_logic, name='update_trainee_info'),
 
-    # 피터스 탈퇴 확인 페이지로 이동
-    url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
+    # 그룹 기능 #####################################################################################################
+    # 회원이 자신이 속한 그룹중 진행중 상태인 그룹 list 조회
+    url(r'^get_trainee_group_ing_list/$', views.GetTraineeGroupIngListViewAjax.as_view(), name='get_trainee_group_ing_list'),
+    url(r'^get_trainee_group_end_list/$', views.GetTraineeGroupEndListViewAjax.as_view(), name='get_trainee_group_end_list'),
 
+    # 알람 기능 #####################################################################################################
+    url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
+    url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),
+
+
+
+    # 페이지 #####################################################################################################
+    # 회원 빈 월간 일정 페이지
+    url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),
+    # 회원 빈 Mypage 페이지
+    url(r'^mypage_trainee_blank/$', views.MyPageBlankView.as_view(), name='mypage_trainee_blank'),
+    # 월간 일정 페이지
+    url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
+    # Mypage 페이지
+    url(r'^mypage_trainee/$', views.MyPageView.as_view(), name='mypage_trainee'),
+    # 강좌 선택 페이지
+    url(r'^lecture_select/$', views.LectureSelectView.as_view(), name='lecture_select'),
+    # 회원 탈퇴 페이지
+    url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
 ]
 
 
