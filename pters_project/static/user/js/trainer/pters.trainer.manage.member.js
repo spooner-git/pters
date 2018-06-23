@@ -2563,21 +2563,21 @@ function open_member_info_popup_pc(dbID, jsondata){
     var userSex   = jsondata.sexInfo;
     var userActivation = jsondata.emailActiveInfo; 
 
-    about_member_window_show()
     about_member_sex()
     about_set_birthdata()
     about_form_set()
     about_value_set()
     about_etc1()
     about_etc2()
+    about_member_window_show()
 
     function about_member_window_show(){
-        $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
         if(userActivation == 'True'){
-            $('button._info_baseedit').hide()
+            $('button._info_baseedit').css('visibility','hidden')
         }else{
-            $('button._info_baseedit').show()
+            $('button._info_baseedit').css('visibility','visible')
         }
+        $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
     }
     
     $('#memberName_info_PC').val(userName)
