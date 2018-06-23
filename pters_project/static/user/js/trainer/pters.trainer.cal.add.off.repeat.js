@@ -5,19 +5,25 @@ $(document).ready(function(){
         $(this).addClass('mode_active')
         $(this).siblings('.mode_switch_button').removeClass('mode_active')
 
-        if(addTypeSelect == "ptadd" && pageSelector == 'repeat'){
+        if((addTypeSelect == "ptadd" || addTypeSelect == "groupptadd") && pageSelector == 'repeat'){
             repeatStartTimeSet()
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','none')
             $('._REPEAT_ADD_wrap').css('display','block')
             $('._NORMAL_ADD_timegraph').hide()
             /*애니메이션*/
-            addTypeSelect = "repeatptadd"
-            deleteTypeSelect = "repeatptdelete"
+            if(addTypeSelect == "ptadd"){
+              addTypeSelect = "repeatptadd"
+              deleteTypeSelect = "repeatptdelete"
+            }else if(addTypeSelect == "groupptadd"){
+              addTypeSelect = "repeatgroupptadd"
+              deleteTypeSelect = "repeatgroupptdelete"
+            }
             $("#id_repeat_member_id").val($('#id_member_id').val());
             $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
             $("#id_repeat_member_name").val($('#id_member_name').val());
-            check_dropdown_selected()
+            check_dropdown_selected_addplan()
+            //console.log("$('#membersSelected button').val().length",$('#membersSelected button').val().length, $('#membersSelected button').val())
             if($('#membersSelected button').val().length == 0){
               $('#offRepeatSummary').html('').hide()
             }
@@ -30,90 +36,44 @@ $(document).ready(function(){
             /*애니메이션*/
             addTypeSelect = "repeatoffadd"
             deleteTypeSelect = "repeatoffdelete"
-            check_dropdown_selected()
-            fill_repeat_info('off')
-          }else if(addTypeSelect == "repeatptadd" && pageSelector == ''){
+            check_dropdown_selected_addplan()
+          }else if((addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd") && pageSelector == ''){
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','block')
             $('._REPEAT_ADD_wrap').css('display','none')
 
             if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').show('slow')
+                $('._NORMAL_ADD_timegraph').css('display','block')
             }
             /*애니메이션*/
-            addTypeSelect = "ptadd"
-            check_dropdown_selected()
+            if(addTypeSelect == "repeatptadd"){
+              addTypeSelect = "ptadd"
+            }else if(addTypeSelect == "repeatgroupptadd"){
+              addTypeSelect = "groupptadd"
+            }
+            
+            check_dropdown_selected_addplan()
           }else if(addTypeSelect == "repeatoffadd" && pageSelector == ''){
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','block')
             $('._REPEAT_ADD_wrap').css('display','none')
             if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').show('slow')
+                $('._NORMAL_ADD_timegraph').css('display','block')
             }
             /*애니메이션*/
             addTypeSelect = "offadd"
-            check_dropdown_selected()
-          }  
+            check_dropdown_selected_addplan()
+          }
+
+          else if(pageSelector == "thisgroup"){
+            $('#subpopup_addByList_thisgroup').show()
+            $('#subpopup_addByList_whole').hide()
+          }else if(pageSelector == "whole"){
+            $('#subpopup_addByList_whole').show()
+            $('#subpopup_addByList_thisgroup').hide()
+          }
       })
 
-      /*
-      $('#repeatSchedule').click(function(){ //일정추가 팝업에서 반복일정을 누르면 반복일정 관련 메뉴 나타남
-          
-          if(addTypeSelect == "ptadd"){
-            repeatStartTimeSet()
-         
-            $('._NORMAL_ADD_wrap').css('display','none')
-            $('._REPEAT_ADD_wrap').css('display','block')
-            $('._NORMAL_ADD_timegraph').hide()
-           
-            addTypeSelect = "repeatptadd"
-            deleteTypeSelect = "repeatptdelete"
-            $("#id_repeat_member_id").val($('#id_member_id').val());
-            $("#id_repeat_lecture_id").val($('#id_lecture_id').val());
-            $("#id_repeat_member_name").val($('#id_member_name').val());
-            //$(this).find('.icons-next-button').addClass('rotate_90')
-            check_dropdown_selected()
-            if($('#membersSelected button').val().length == 0){
-              $('#offRepeatSummary').html('').hide()
-            }
-          }else if(addTypeSelect == "offadd"){
-            repeatStartTimeSet()
-            
-            $('._NORMAL_ADD_wrap').css('display','none')
-            $('._REPEAT_ADD_wrap').css('display','block')
-            $('._NORMAL_ADD_timegraph').hide()
-            
-            addTypeSelect = "repeatoffadd"
-            deleteTypeSelect = "repeatoffdelete"
-            check_dropdown_selected()
-            //$(this).find('.icons-next-button').addClass('rotate_90')
-            fill_repeat_info('off')
-          }else if(addTypeSelect == "repeatptadd"){
-            
-            $('._NORMAL_ADD_wrap').css('display','block')
-            $('._REPEAT_ADD_wrap').css('display','none')
-
-            if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').show('slow')
-            }
-            
-            //$(this).find('.icons-next-button').removeClass('rotate_90')
-            addTypeSelect = "ptadd"
-            check_dropdown_selected()
-          }else if(addTypeSelect == "repeatoffadd"){
-            
-            $('._NORMAL_ADD_wrap').css('display','block')
-            $('._REPEAT_ADD_wrap').css('display','none')
-            if($('#datepicker').val().length>0){
-                $('._NORMAL_ADD_timegraph').show('slow')
-            }
-            
-            //$(this).find('.icons-next-button').removeClass('rotate_90')
-            addTypeSelect = "offadd"
-            check_dropdown_selected()
-          }   
-      })
-      */
 
       $(document).on('click','.summaryInnerBoxText, .summaryInnerBoxText2',function(){ //반복일정 텍스트 누르면 휴지통 닫힘
         var $btn = $('.deleteBtnBin')
@@ -123,7 +83,7 @@ $(document).ready(function(){
 
 
       $("#repeats li a").click(function(){ //반복 빈도 드랍다운 박스 - 선택시 선택한 아이템이 표시
-        if(addTypeSelect == "repeatptadd"){
+        if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
           $("#repeattypeSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-repeat'));
           $("#id_repeat_freq").val($(this).attr('data-repeat'));
         }else if(addTypeSelect == "repeatoffadd"){
@@ -131,13 +91,13 @@ $(document).ready(function(){
           $("#id_repeat_freq_off").val($(this).attr('data-repeat'));
         }
           
-          check_dropdown_selected();
+          check_dropdown_selected_addplan();
       }); 
 
       $(document).on('click', '#repeatstarttimes li a',function(){
           $('.tdgraph').removeClass('graphindicator')
           $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-trainingtime'));
-          if(addTypeSelect == "repeatptadd"){
+          if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
             $("#id_repeat_start_time").val($(this).attr('data-trainingtime'));
           }else if(addTypeSelect == "repeatoffadd"){
             $("#id_repeat_start_time_off").val($(this).attr('data-trainingtime'));
@@ -147,7 +107,7 @@ $(document).ready(function(){
           $("#durationsSelected button").removeClass("dropdown_selected");
           $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
           $("#durationsSelected .btn:first-child").val("");
-          check_dropdown_selected();
+          check_dropdown_selected_addplan();
           repeatDurationTimeSet()
       })
 
@@ -259,13 +219,13 @@ $(document).ready(function(){
               selectedDayGroup.splice(index,1) 
             }
           }
-          if(addTypeSelect == "repeatptadd"){
+          if(addTypeSelect == "repeatptadd"  || addTypeSelect == "repeatgroupptadd"){
             $('#id_repeat_day').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
           }else if(addTypeSelect == "repeatoffadd"){
             $('#id_repeat_day_off').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
           }
           console.log($('#id_repeat_day_off').val())
-          check_dropdown_selected();
+          check_dropdown_selected_addplan();
       })
 
     $("#submitBtn").click(function(){
@@ -277,74 +237,6 @@ $(document).ready(function(){
          }
      })
 
-    
-    function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-        var memberSelect = $("#membersSelected button");
-        var dateSelect = $("#dateSelector p");
-        var durSelect = $("#durationsSelected button");
-        var durSelect_mini = $('#classDuration_mini #durationsSelected button')
-        var startSelect = $("#starttimesSelected button")
-
-        var repeatSelect = $("#repeattypeSelected button");
-        var startSelect_repeat = $('#repeatstarttimesSelected button')
-        var durSelect_repeat = $('#repeatdurationsSelected button')
-        var dateSelect_repeat_start = $("#datepicker_repeat_start").parent('p');
-        var dateSelect_repeat_end = $("#datepicker_repeat_end").parent('p');
-
-        if(addTypeSelect == "ptadd"){
-            if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
-                select_all_check=true;
-            }else if($('#page-addplan-pc').css('display')=='block' && (memberSelect).hasClass("dropdown_selected")==true){
-                $('#submitBtn_mini').css('background','#fe4e65');
-                select_all_check=true;
-            }else{
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
-                $('#submitBtn_mini').css('background','#282828');
-                select_all_check=false;
-            }
-        }else if(addTypeSelect == "offadd"){
-            if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
-                select_all_check=true;
-            }else if($('#page-addplan-pc').css('display')=='block' && durSelect_mini.hasClass("dropdown_selected")==true){
-                $('#submitBtn_mini').css('background','#fe4e65');
-                select_all_check=true;
-            }else{
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#submitBtn_mini').css('background','#282828');
-                $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
-                select_all_check=false;
-            }
-        }else if(addTypeSelect == "repeatptadd"){
-            if((memberSelect).hasClass("dropdown_selected")==true && (repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
-                select_all_check=true;
-            }else{
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#submitBtn_mini').css('background','#282828');
-                $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
-                select_all_check=false;
-            }
-            console.log(select_all_check)
-        }else if(addTypeSelect == "repeatoffadd"){
-          console.log('add_repeat의 checkdropdown')
-            if((repeatSelect).hasClass("dropdown_selected")==true && (dateSelect_repeat_start).hasClass("dropdown_selected")==true && (dateSelect_repeat_end).hasClass("dropdown_selected")==true && (durSelect_repeat).hasClass("dropdown_selected")==true &&(startSelect_repeat).hasClass("dropdown_selected")==true){
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated')
-                select_all_check=true;
-            }else{
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#submitBtn_mini').css('background','#282828');
-                $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated')
-                select_all_check=false;
-            }
-        }
-    }
 
     /*미니달력 관련*/
     $("#datepicker_repeat_start").datepicker({

@@ -103,6 +103,7 @@ body{
 #page_managemember th{
 	text-align: center;
 	background:#eeeeee;
+	vertical-align: middle;
 }
 
 #page_managemember button:focus{
@@ -168,6 +169,28 @@ body{
 	margin-right: auto;
 }
 
+#selectBox_type.list_switch_wrap{
+		max-width: 800px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 20px;
+		font-size: 15px;
+		text-align: center;
+	}
+		#selectBox_type.list_switch_wrap div.list_switch{
+			display: inline-block;
+			cursor: pointer;
+		}
+		#selectBox_type.list_switch_wrap span.list_switch_divider{
+			margin-right: 15px;
+			margin-left: 15px;
+			color: #cccccc;
+		}
+		.list_switch_selected{
+			color: #282828;
+			font-weight: 500;
+		}
+
 .alignSelect{
 	width: 100%;
 	height: 35px;
@@ -179,6 +202,9 @@ body{
 	text-align-last:center;
 	-webkit-text-align: center;
 }
+	#align_select_dropdown_arrow{
+		right: 5%;
+	}
 
 select:focus > option:checked { 
     color: #fe4e65 !important;
@@ -193,6 +219,17 @@ select:focus > option:checked {
 	width: 91.6%;
 	max-width: 800px;
 }
+	#align_type_text{
+		display: none;
+		/*
+		font-size:14px; 
+		position: absolute; 
+		left: 0;
+		*/
+	}
+	#alignBox div._info_download{
+		display: none;
+	}
 
 .btn{
 	border-radius: 0;
@@ -239,6 +276,9 @@ select:focus > option:checked {
 	border-right-color: transparent;
 }
 
+._GROUP_THEAD{
+	display: none;
+}
 
 ._countnum,._id,._email,._finday,._manage{
 	display: none;
@@ -258,6 +298,10 @@ select:focus > option:checked {
 	vertical-align: middle !important;
 	padding-top: 8px;
 	padding-bottom: 8px;
+}
+
+._grouptype{
+	display: none;
 }
 
 ._id{
@@ -324,18 +368,18 @@ select:focus > option:checked {
 .memberline:hover{
 	background:#fdfdfd;
 	color: #fe4e65 !important;
-	font-weight: bold;
+	
 }
 
 
-#currentMemberList,#finishedMemberList{
+#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
 	width: 91.6%;
 }
 
-
-#finishedMemberList{
+#finishedMemberList, #currentGroupList, #finishedGroupList{
 	display: none;
 }
+
 
 #float_btn_wrap{
 	display: block;
@@ -423,7 +467,8 @@ select:focus > option:checked {
 	z-index: 150;
 	max-width: 700px !important;
 	top: 50px;
-	left: 5%;
+
+	height: auto;
 }
 
 	#mobile_basic_info{
@@ -519,6 +564,9 @@ select:focus > option:checked {
 		margin-bottom: 10px;
 		padding: 10px 0px 10px 0px;
 	}
+		#mobile_lecture_info div.mobileinfo_wrap{
+			display: none;
+		}
 
 	#mobile_repeat_info,#mobile_history_info{
 		display: none;
@@ -558,6 +606,30 @@ select:focus > option:checked {
 				-webkit-opacity:1;
 				margin-bottom: 0;
 			}
+			.howManyReg{
+				font-weight:bold;
+				font-size:14px;
+				color:#fe4e65;
+				width: 25% !important;
+				text-align: left !important;
+				padding-left: 10px !important;
+				border: 0 !important;
+			}
+			.whatGroupType{
+				font-weight:bold;
+				font-size:12px;
+				color:#fe4e65;
+				width: 50% !important;
+				text-align: left !important;
+				border: 0 !important;
+			}
+				.whatGroupType select{
+					border: 0;
+					-webkit-appearance:none;
+					-moz-appearance:none;
+					appearance:none;
+					text-align-last: center;
+				}
 			.mobile_member_note{
 				color: #7d7d7d;
 				padding-left: 6px !important;
@@ -663,6 +735,11 @@ select:focus > option:checked {
 			width: 47%;
 			font-size: 14px;
 		}
+
+		#memberRegCount_info_PC_wrap, #memberRemainCount_info_PC_wrap, #memberAvailCount_info_PC_wrap, #memberFinishCount_info_PC_wrap{
+			display: none;
+		}
+
 		#memberRegHistory_info_PC_wrap{
 			width: 100%;
 		}
@@ -672,12 +749,36 @@ select:focus > option:checked {
 		}
 			.member_info_PC_wrap label{
 				display: inline-block;
-				width: 120px;
+				width: 100px;
 				color: #7d7d7d;
 				font-size: 13px;
 				font-weight: 500;
 				margin-bottom: 0px;
 			}
+
+			.howManyReg_PC{
+				font-weight:bold;
+				font-size:12px;
+				color:#fe4e65;
+				width: 5% !important;
+				text-align: left !important;
+				padding-left: 10px !important;
+				border: 0 !important;
+			}
+			.whatGroupType_PC{
+				font-weight:bold;
+				font-size:12px;
+				color:#fe4e65;
+				width: 25% !important;
+				text-align: left !important;
+				border: 0 !important;
+			}
+				.whatGroupType_PC select{
+					border: 0;
+					-webkit-appearance:none;
+					-moz-appearance:none;
+					appearance:none;
+				}
 			#memberBirth_select_wrap{
 				display: inline-block;
 				width: 275px;
@@ -713,7 +814,7 @@ select:focus > option:checked {
 			}
 			
 			#memberRegCount_info_PC, #memberRemainCount_info_PC, #memberAvailCount_info_PC, #memberFinishCount_info_PC{
-				width: 45px;
+				width: auto;
 			}
 
 			.member_info_PC_wrap >label img{
@@ -725,6 +826,7 @@ select:focus > option:checked {
 				font-size:12px;
 				width: 100%;
 				padding: 0;
+				margin-top: 5px;
 			}
 			#memberRegHistory_info_PC > div{
 				display: table;
@@ -745,8 +847,9 @@ select:focus > option:checked {
 			.pc_member_note{
 				color: #7d7d7d;
 				padding-left: 6px !important;
-				margin-bottom: 7px !important;
-				border-bottom: 1px solid #cccccc !important;
+				margin-bottom: 4px !important;
+				margin-top: 2px !important;
+				/*border-bottom: 1px solid #cccccc !important;*/
 			}
 			#memberRegHistory_info_PC img{
 					width: 12px;
@@ -870,6 +973,7 @@ select:focus > option:checked {
 				display: block;
 				color: #282828;
 				border-bottom:1px solid #cccccc;
+				height: 55px;
 			}
 			#memberRepeat_info_PC p:nth-child(1), #memberRepeat_info p:nth-child(1){
 				color: #fe4e65;
@@ -881,11 +985,18 @@ select:focus > option:checked {
 				color: #444444;
 				margin: 0;
 				line-height: unset;
-				font-size: unset;
+				font-size: 13px;
 			}
+			#memberRepeat_info_PC p:nth-child(3), #memberRepeat_info p:nth-child(3){
+				color: #777777;
+				margin: 0;
+				line-height: unset;
+				font-size: 13px;
+			}
+
 			.deleteBtn{
 				position: absolute;
-				line-height: 35px;
+
 				width: 15px !important;
 				margin-left: 15px;
 				padding-left: 3px !important;
@@ -894,11 +1005,17 @@ select:focus > option:checked {
 				text-align: center;
 				background: #cccccc !important;
 				cursor: pointer;
+				height: 100%;
+			}
+			.deleteBtn img{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
 			}
 
 			.deleteBtnBin img{
 				display: none;
-				margin: 9px 10px 10px 13px;
 			}
 
 			.deleteBtnBin{
@@ -906,7 +1023,7 @@ select:focus > option:checked {
 				top: 0;
 				right: 0px;
 				width: 0px;
-				height: 35px;
+				height: 100%;
 				background:#fe4e65;
 				z-index: 100;
 			}
@@ -1047,13 +1164,6 @@ select:focus > option:checked {
 /*-----------------PC 회원정보 팝업-----------------------*/
 
 
-
-
-
-
-
-
-
 ._tdname,._tdnamee{
 	font-size: 105%;
 }
@@ -1091,10 +1201,10 @@ select:focus > option:checked {
 
 .newRegImg{
 	display: none;
-	width: 35px;
+	width: 17px;
 	position: absolute;
 	left: 0;
-	margin-left: 0px;
+	margin-left: 2px;
 }
 
 
@@ -1180,6 +1290,17 @@ select:focus > option:checked {
 	display:none;
 }
 
+.button_add_member_lecture{
+	font-weight: bold !important;
+	border: 1px solid #cccccc !important;
+	color:#fe4e65 !important;
+	width: 15px !important;
+	line-height: 15px !important;
+	text-align:center !important;
+	padding:0 !important;
+	cursor: pointer !important;
+}
+
 @media(min-width: 600px){
 
 	.input_available{
@@ -1193,11 +1314,16 @@ select:focus > option:checked {
 	}
 
 	#page_addmember{
-
+		top: unset;
 	}
 
 	#float_btn_wrap{
 		display: none !important;
+	}
+
+	._grouptype{
+		display: table-cell;
+		width: 17%;
 	}
 
 	._regcount{
@@ -1240,16 +1366,19 @@ select:focus > option:checked {
 		background: #d7f3ff;
 	}
 
-	#page_addmember,#memberInfoPopup{
-		top: 75px;
+	#page_addmember, #memberInfoPopup{
+		/*
+		top:50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		*/
 	}
 
 	.ymdText-pc-add-member-wrap{
 		display: inline-block;
 		line-height: 33px;
 		position: relative;
-		margin-left: 10px;
-		width: 200px;
+		width: 250px;
 	}
 
 	#please_add_member_pc{
@@ -1293,9 +1422,10 @@ select:focus > option:checked {
 				margin-bottom:5px;
 			}
 
+
 	.ymdText-pc-add-member{
 		display: inline;
-		margin-left: 5px;
+		margin-left: 2px;
 		padding:3px 13px 3px 13px;
 		color: #fe4e65;
 		font-size: 14px;
@@ -1319,16 +1449,6 @@ select:focus > option:checked {
 			background: #282828;
 			color: #ffffff;
 		}
-	.button_add_member_lecture{
-		font-weight: bold !important;
-		border: 1px solid #cccccc !important;
-		color:#fe4e65 !important;
-		width: 15px !important;
-		line-height: 15px !important;
-		text-align:center !important;
-		padding:0 !important;
-		cursor: pointer !important;
-	}
 
 	#float_btn{
 		display: none !important;
@@ -1352,9 +1472,26 @@ select:focus > option:checked {
 
 @media(min-width: 1000px){
 
-	#tableThead{
+	#align_type_text{
+		display: inline;
+		right: 290px;
+	}
+
+	#align_select_dropdown_arrow{
+		right: 130px;
+	}
+
+	.tableThead{
 		width: 1080px;
-		
+		display: table;
+	}
+
+	._MEMBER_THEAD{
+
+	}
+
+	._GROUP_THEAD{
+		display: none;
 	}
 
 	.centeralign{
@@ -1372,9 +1509,10 @@ select:focus > option:checked {
 	}
 
 	
-	#currentMemberList, #finishedMemberList{
+	#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
 		/*width: 1080px;*/
-		height: 600px;
+		/*height: 600px;*/
+		height: auto;
 		overflow-y: overlay;
 	}
 
@@ -1396,7 +1534,7 @@ select:focus > option:checked {
 		display: table-cell;
 	}
 
-	img._info_view,img._info_modify{
+	._manage img._info_view,._manage img._info_modify{
 		display: none;
 	}
 
@@ -1404,9 +1542,12 @@ select:focus > option:checked {
 		width: 30px;
 	}
 
+	._grouptype{
+		width: 40px;
+	}
+
 	._tdname,._tdnamee{
 		width: 85px;
-		font-size: 14px;
 	}
 
 	._id{
@@ -1472,15 +1613,14 @@ select:focus > option:checked {
 	.alignSelect{
 		position: absolute;
 		top: 0;
-		right: 0;
+		right: 120px;
 		margin-top: 0 !important;
-		margin-right: 20px;
 		border:1px solid #eeeeee;
 		width: 160px !important;
-		height: 30px !important;
+		height: 29px !important;
 		font-size: 13px;
 		color: #afafaf;
-		padding-left: 29px;
+		padding: 2px 0 0 29px;
 		text-align-last: unset;
 	}
 
@@ -1493,12 +1633,18 @@ select:focus > option:checked {
 		max-width: 1080px;
 		height: 30px;
 		margin-bottom: 5px;
+		margin-top: 20px;
 		padding-right: 190px;
 	}
+		#alignBox div._info_download{
+			display: inline;
+		}
 
 	.memberNum{
-		float:left;
-		line-height: 30px;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		line-height: 24px;
 	}
 
 	.memberAlign{
@@ -1511,6 +1657,36 @@ select:focus > option:checked {
 		width: 350px;
 		height: 45px;
 	}
+	#selectBox_type.list_switch_wrap{
+		border: 0;
+		height: 33px;
+		margin-top: 20px;
+		color: #cccccc;
+		font-weight: 300;
+		font-size: 15px;
+		text-align: center;
+	}
+		#selectBox_type.list_switch_wrap div.list_switch{
+			padding: 0;
+			display: inline-block;
+			cursor: pointer;
+		}
+		#selectBox_type.list_switch_wrap div.list_switch:hover{
+			color: #282828;
+			font-weight: 400;
+		}
+		#selectBox_type.list_switch_wrap span.list_switch_divider{
+			margin-right: 15px;
+			margin-left: 15px;
+			color: #cccccc;
+		}
+		.list_switch_selected{
+			color: #282828;
+			font-weight: 500;
+		}
+
+
+
 
 	.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
 		border-color:#282828;

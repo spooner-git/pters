@@ -8,6 +8,17 @@ body{
 	background-color: #ffffff;
 }
 
+.pshade,.mshade{
+	position: fixed;
+	display: none;
+	background: black;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	opacity: 0.7;
+	z-index: -100
+}
+
 #blank_member_popup{
 	position: absolute;
 	width: 90%;
@@ -462,7 +473,7 @@ img,a,div,span,p{
 .balloon{
 	position: absolute;
 	background: transparent;
-	color: #9e9e9e;
+	color: #6f6f6f;
 	height: 16px;
 	width: 90%;
 	bottom: 5px;
@@ -523,33 +534,45 @@ img,a,div,span,p{
 	border-radius: 50%;
 }
 
-
-#cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
+.monthplans{
 	display: none;
-	position: fixed;
-	top: 35%;
-	background-color: #ffffff;
-	border: 1px solid #a2a2a2;
-	z-index: -2;
-	text-align: center;
-	left:50%;
-	transform: translateX(-50%);
-	z-index: 150;
 }
+.monthplans_count{
+	display: block;
+	margin-top: 4px;
+}
+	._classTime img{
+		width: 10px;
+		margin-bottom: 2px;
+		margin-right: 1.5px;
+	}
+
+.group_plan_indicate{
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	top:15px;
+	width: 10px;
+}
+	.group_plan_indicate_past{
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		top:15px;
+		width: 10px;
+		opacity: 0.5;
+
+	}
+
+
+
+
 
 #cal_popup_plancheck .popup_inner:hover{
 	background : white;
 }
 
-._classTime img{
-	position: absolute;
-	display: inline;
-	left: 0;
-	top: 0;
-	width: 9px;
-	height: 10px;
-	opacity: 0.7;
-}
+
 
 
 /*팝업 css*/
@@ -578,16 +601,17 @@ img,a,div,span,p{
 #cal_popup{
 	display: none;
 	position: fixed;
-	background: transparent;
+	background: #ffffff;
 	border-color: transparent;
-	top: 35%;
-	left: 10%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	width: 80%;
 	/*
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	*/
-	z-index: -2;
+	z-index: 200;
 	text-align: center;
 }
 
@@ -603,7 +627,7 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	*/
-	z-index: -2;
+	z-index: 200;
 	text-align: center;
 }
 
@@ -619,19 +643,149 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	*/
-	z-index: -2;
+	z-index: 200;
 	text-align: center;
 }
 
 #addpopup{
 	position: absolute;
 	display: none;
-	left: 5%;
-	top: 30%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 	width: 90%;
 	background: #ffffff;
-	z-index: 105;
+	z-index: 150;
 }
+.groupreserve{
+	display: none;
+	min-height: 128px;
+}
+
+
+
+
+/*월간달력 팝업*/
+#cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
+	display: none;
+	position: fixed;
+	width: 300px;
+	background-color: #ffffff;
+	border: 1px solid #a2a2a2;
+	text-align: center;
+	top: 50%;
+	left:50%;
+	transform: translate(-50%,-50%);
+	z-index: 125;
+}
+
+#cal_popup_plancheck .popup_inner:hover{
+	background : white;
+}
+
+.img_cal{
+	position: relative;
+	width: 25px;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#btn_close5{
+	position: absolute;
+	top: 10%;
+	left: 85%;
+	padding: 10px;
+	width: 35px;
+	float: right;
+	cursor: pointer;
+}
+
+#countNum{
+	position: absolute;
+	font-size: 9px;
+	background:#fe4e65;
+	color: #ffffff;
+	width: 13px;
+	line-height: 13px;
+	border-radius: 50%;
+	text-align: center;
+	font-weight: 500;
+	top: 6px;
+	left: 155px;
+}
+
+.popup_ymdText{
+	margin-top:9px;
+	margin-bottom: 3px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.plan_raw{
+	height: 45px;
+	vertical-align: middle;
+	border-bottom: 1px solid #a2a2a2;
+}
+
+.plan_raw span{
+	position: relative;
+	top: unset;
+	left: unset;
+	transform: unset;
+	line-height: 45px;
+	font-size: 13px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.popup_inner_month{
+	background: #ffffff;
+	position: relative;
+	height: 50px;
+	border-top: 1px solid #a2a2a2;
+}
+
+.plan_raw_blank{
+	line-height: 45px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.planchecktime, .plancheckname{
+	display: inline-grid;
+	text-align: left;
+}
+
+.planchecktime{
+	width: 34%;
+}
+
+.plancheckname{
+	position: relative;
+	width: 46%;
+	text-overflow: ellipsis;
+}
+
+.plancheckmorningday{
+	display: inline-grid;
+	width: 20%;
+}
+
+.plancheckname img{
+	width: 12px;
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+/*월간달력 팝업*/
+
+
+
+
+
+
 
 #popup_info,#popup_info2,#popup_info3,#popup_info4,#popup_info3_memo{
 	background: #ffffff;
@@ -754,21 +908,27 @@ img,a,div,span,p{
 }
 
 
+.ptersCheckbox{
+	display: inline-block;
+	margin-right: 4px !important;
+}
 
-@media(min-width:415px){
+
+@media(min-width:450px){
 	#cal_popup{
 		display: none;
 		position: fixed;
-		background: transparent;
+		background: #ffffff;
 		border-color: transparent;
-		top: 35%;
-		left: 0;
-		width: 100%;
+		top: 50%;
+		left: 50%;
+		max-width: 330px;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;
 		*/
-		z-index: -2;
+		transform: translate(-50%, -50%);
+		z-index: 200;
 		text-align: center;
 	}
 
@@ -777,14 +937,15 @@ img,a,div,span,p{
 		position: fixed;
 		background: transparent;
 		border-color: transparent;
-		top: 35%;
-		left: 0;
+		top: 50%;
+		left: 50%;
 		width: 100%;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;
 		*/
-		z-index: -2;
+		transform: translate(-50%, -50%);
+		z-index: 200;
 		text-align: center;
 	}
 
@@ -793,39 +954,46 @@ img,a,div,span,p{
 		position: fixed;
 		background: transparent;
 		border-color: transparent;
-		top: 35%;
-		left: 0;
+		top: 50%;
+		left: 50%;
 		width: 100%;
 		/*
 		background-color: #ffffff;
 		border: 1px solid #a2a2a2;
 		*/
-		z-index: -2;
+		transform: translate(-50%, -50%);
+		z-index: 200;
 		text-align: center;
 	}
 
 	#addpopup{
 		position: fixed;
 		display: none;
-		left: 0;
-		top: 30%;
-		width: 100%;
+		width: auto;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
 		background: transparent;
-		z-index: 105;
+		z-index: 250;
 	}
 
-	#dateSelector,#offStartTime,#offDuration,#submitBtn{
+	#dateSelector, #offStartTime, #offDuration, #submitBtn, .mode_switch_button_wrap_cal{
 		position: relative;
 		background: #ffffff;
 		margin : 0 auto;
 		width: 450px;
 	}
 
-	#timeGraph{
+	#timeGraph.personalreserve, .groupreserve{
 		position: relative;
 		background: #f4f4f4;
 		margin : 0 auto;
 		width: 450px;
+	}
+
+	.groupreserve{
+		display: none;
+		min-height: 128px;
 	}
 
 	#popup_info,#popup_info2,#popup_info3,#popup_info4, #popup_info3_memo{
@@ -847,7 +1015,7 @@ img,a,div,span,p{
 		position: relative;
 		margin :0 auto;
 		background: #ffffff;
-		height: 70px;
+		height: 50px;
 		padding-top: 22.5px;
 		padding-bottom: 22.5px;
 		width: 330px;
@@ -930,6 +1098,10 @@ img,a,div,span,p{
 /*미디어 쿼리*/
 
 @media(min-width: 600px){
+	.ptaddboxtext{
+		display: block !important;
+	}
+
 	.bottomfooter2{
 		display:block;
 	}
@@ -957,8 +1129,8 @@ img,a,div,span,p{
 	}
 
 	#calendar td:hover{
-		background : #eaeaea;
-		opacity: 0.2;
+		background : #fffcfc;
+		opacity: 0.9;
 	}
 	
 	#ymdText{
@@ -1125,37 +1297,80 @@ img,a,div,span,p{
 		color: #868686 !important;
 	}
 
+	.group_plan_indicate{
+		position: unset;
+		left: unset;
+		transform: unset;
+		display: inline;
+		float: left;
+		margin-top: 3px;
+		margin-left: 3px;
+		width: 20px;
+	}
+		.group_plan_indicate_past{
+			position: unset;
+			left: unset;
+			transform: unset;
+			display: inline;
+			float: left;
+			opacity: 0.5;
+			margin-top: 3px;
+			margin-left: 3px;
+			width: 20px;
+		}
+
 	.balloon{
-		position: absolute;
-		background: #e4e4e4;
-		height: 21px;
-		width: 40px;
-		top: 43px;
-		border-radius: 2px;
-		font-size: 13.5px;
+		position: relative;
+		/*background: #e4e4e4;
+		width: 40px;*/
+		height: auto;
+		width: 95%;
+		font-size: 12.5px;
 		font-weight: 400;
 		padding-top: 1px;
 		z-index: -2;
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		text-align: center;
+	}
+	.balloon div{
+		background: #e4e4e4;
+		margin: 1px;
+		border-radius: 2px;
 	}
 
 	.blackballoon{
-		position: absolute;
+		position: relative;
 		color: #ffffff;
-		background: #3b3d3d;
-		height: 21px;
-		width: 40px;
-		top: 43px;
-		border-radius: 2px;
-		font-size: 13.5px;
+		/*background: #3b3d3d;
+		width: 40px;*/
+		height: auto;
+		width: 95%;
+		font-size: 12.5px;
 		font-weight: 300;
 		padding-top: 1px;
 		z-index: -2;
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		text-align: center;
+	}
+	.blackballoon div{
+		background: #3b3d3d;
+		margin: 1px;
+		border-radius: 2px;
+	}
+
+	.monthplans{
+		display: block;
+		height: 19px;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		/*white-space: nowrap;*/
+	}
+	.monthplans_count{
+		display: none;
 	}
 
 	.holidayName{
@@ -1238,11 +1453,11 @@ img,a,div,span,p{
 	}
 
 	._classTime img{
-		position: absolute;
+		position: relative;
 		display: inline;
-		width: 15px;
-		margin-left: 5px;
-		margin-top: 3px;
+		width: 12px;
+		margin-left: 1px;
+		margin-right: 1px;
 		left: unset;
 		top: unset;
 		height: unset;
@@ -1254,9 +1469,12 @@ img,a,div,span,p{
 
 	#calendar td{
 		vertical-align: unset;
+		height: 100%;
 		padding-top: 3px;
-		padding-right: 10px;
 		cursor: pointer;
+	}
+	#calendar td span:nth-of-type(2){
+		margin-right: 10px;
 	}
 
 	.today{

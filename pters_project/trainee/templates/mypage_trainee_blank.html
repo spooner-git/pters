@@ -10,8 +10,8 @@
 {% block content %}
 <div id="blank_member_popup">
     <label>PTERS에 오신걸 환영합니다!</label>
-    <p>PT회원님께서는 <br>트레이너와 연결된 후부터 모든 기능 사용이 가능합니다.</p>
-    <p>담당 트레이너께 회원님의 아이디를 알려 드리고 등록을 요청해주세요.</p>
+      <p><br>담당 강사와 연결된 후부터 사용이 가능합니다.</p>
+      <p>담당 강사에게 회원님의 아이디를 알려 드리고 등록을 요청해주세요.</p>
     <span>닫기</span>
 </div>
 
@@ -66,23 +66,23 @@
         <p><span>0</span>회</p>
       </div>
       <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">진행 완료</p>
-        <p class="countBoard_explain">트레이너님과 진행완료한 횟수</p>
+        <p class="countBoard_explain">담당 강사와 진행완료한 횟수</p>
         <p><span>0 </span>회</p>
       </div>
   </div>
 
   <div id="planBoardWrap" class="boardWrap">
-      <div class="planBoard _Next_Info"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 PT 일정</p><p></p></div>
-      <div class="planBoard _Repeat_Info"><p><img src="/static/user/res/member/icon-repeat.png" alt="">PT 반복 일정</p><p style="margin:0;"></p><span></span></div> 
+      <div class="planBoard _Next_Info"><p><img src="/static/user/res/member/icon-bell.png" alt="">다음 일정</p><p></p></div>
+      <div class="planBoard _Repeat_Info"><p><img src="/static/user/res/member/icon-repeat.png" alt="">반복 일정</p><p style="margin:0;"></p><span></span></div>
   </div>
 
   <div id="dateBoardWrap" class="boardWrap">
-      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 시작일</p><p style="margin:0;">{{ pt_start_date }}</p></div></div>
-      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 종료일</p><p style="margin:0;">{{ pt_end_date }}</p></div></div>
+      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">레슨 시작일</p><p style="margin:0;"></p></div></div>
+      <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">레슨 종료일</p><p style="margin:0;"></p></div></div>
   </div>
 
   <div class="mypage_label">
-      <img src="/static/user/res/member/icon-user.png" alt=""><span>담당 트레이너 정보</span>
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>담당 강사 정보</span>
   </div>
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
@@ -90,16 +90,18 @@
         <a href='tel:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-call.png"></a>
         <a href='sms:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-message.png" alt=""></a>
       </div>
+      <!--
       <div class="trainerWorkTimeInfo">
         <span>업무 시간</span><span></span>
       </div>
+      -->
   </div>
 </div>
 
 <div id="history_wrap" class="mypage_page"> 
     <div class="mypage_label">
-      <img src="/static/user/res/member/icon-user.png" alt=""><span>등록 이력</span>
-      <p class="label_explain">{{ class_info.mem_info.name }} 트레이너에게 등록한 이력</p>
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>수강 이력</span>
+{#      <p class="label_explain">{{ class_info.mem_info.name }} 강사에게 등록한 이력</p>#}
     </div>
 
     <div id="myRegHistory" class="boardWrap">
@@ -107,8 +109,8 @@
     </div>
 
     <div class="mypage_label">
-      <img src="/static/user/res/member/icon-user.png" alt=""><span>활동 이력</span>
-      <p class="label_explain">{{ class_info.mem_info.name }} 트레이너에게 현재 등록된 강의의 수행 이력</p>
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>레슨 이력</span>
+{#      <p class="label_explain">{{ class_info.mem_info.name }} 강사에게 현재 등록된 강의의 수행 이력</p>#}
     </div>
 
     <div id="myActiveHistory" class="boardWrap">
@@ -215,7 +217,7 @@
         <script>
 
             $('#uptext').text("마이페이지")
-            $('#upbutton').attr('onclick',"location.href='{% url 'trainee:blank'%}'")
+            $('#upbutton').attr('onclick',"location.href='{% url 'trainee:cal_month_blank'%}'")
             $('#upbutton img').attr('src','/static/user/res/icon-setting-arrow.png').css({'transform':'rotate(180deg)','height':'20px','width':'unset'})
             if('{{next_schedule_start_dt }}'.length>0){
               var trainee_next_schedule = date_format_to_user_hangul('{{next_schedule_start_dt }}')

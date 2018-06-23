@@ -18,12 +18,12 @@
     <div id="ymdTextWrap">
          <div id="countRemain">
           <div style="position: absolute;width: 100%;height: 100%;background: #ffffff;opacity: 0.16;"></div>
-            <span id="countRemainData">~
-              <span style="color:#fe4e65;font-weight: bold;font-size: 16px;">~ </span>
+            <span id="countRemainData">
+              <span style="color:#fe4e65;font-weight: bold;font-size: 16px;"> </span>
             </span>
          </div>
         <div id="yearText">내 정보</div>
-        <div id="monthText"></div>
+        <div id="monthText"> </div>
         <div id="menuName">마이 페이지
         </div>
         <div id="menuDescription">나의 정보를 확인할 수 있습니다.
@@ -54,7 +54,7 @@
 
   <div id="countBoardWrap" class="boardWrap">
       <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">총 완료</p>
-        <p class="countBoard_explain">현재까지 완료한 총 강의 횟수</p>
+        <p class="countBoard_explain">현재까지 완료한 총 레슨 횟수</p>
         <p><span>{{end_schedule_num}} </span>회</p>
       </div>
       <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">신규 회원</p>
@@ -84,7 +84,7 @@
   <div id="trainerInfoWrap" class="boardWrap">
       <div class="trainerInfo">
         <div>
-          <span class="menuName">ID(이메일)</span>
+          <span class="menuName">ID</span>
           <div class="menuButton"><button onclick="goPage('delAccount')">탈퇴</button></div>
         </div>
         <span>{{ request.user.username }}</span>
@@ -441,15 +441,16 @@
       </div>
   </div>
 
-
+    {% if center_name != '없음' %}
   <div class="mypage_label">
-      <img src="/static/user/res/member/icon-user.png" alt=""><span>소속 기관</span>
+      <img src="/static/user/res/member/icon-user.png" alt=""><span>소속 센터</span>
   </div>
   <div id="trainerGymInfoWrap" class="boardWrap">
       <div class="trainerInfo"><span style="line-height: 60px;">{{ center_name }} </span>
         <!--<img src="/static/user/res/member/icon-call.png" alt=""><img src="/static/user/res/member/icon-message.png" alt="">-->
       </div>
   </div>
+{% endif %}
 </div>
 
 
@@ -519,7 +520,7 @@
     <input type="hidden" name="address" id="newcity" value="" >
     <input type="hidden" name="phone" id="newphone" value="" >
     <input type="hidden" name="contents" id="contents" value="" >
-    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:trainer_mypage_ajax' %}">
+    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:get_trainer_info' %}">
 </form>
 
 {% endblock %}
@@ -661,10 +662,27 @@
                                                 };
                         var off_startdate = jsondata.off_repeat_schedule_start_date_data[i]
                         var off_enddate = jsondata.off_repeat_schedule_end_date_data[i]
+                        var off_starttime = jsondata.off_repeat_schedule_start_time_data[i]
+                        var off_starttimehour = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
+                        var off_starttimemin = jsondata.off_repeat_schedule_start_time_data[i].split(':')[1]
+                        var off_endtime = jsondata.off_repeat_schedule_end_time_data[i]
+                        var off_endtimehour = jsondata.off_repeat_schedule_end_time_data[i].split(':')[0]
+                        var off_endtimemin = jsondata.off_repeat_schedule_end_time_data[i].split(':')[1]
                         var off_time = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
-                        var off_dur = jsondata.off_repeat_schedule_time_duration_data[i]
-                        var off_endtime = Number(off_time)+Number(off_dur)
-                        var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_time+'시 ~ '+off_endtime+'시 ('+off_dur+'시간)'+'</p>'
+                        //var off_dur = jsondata.off_repeat_schedule_time_duration_data[i]
+                        var off_dur = calc_duration_by_start_end(off_startdate, off_starttime, off_enddate, off_endtime)
+                        
+                        if(off_dur - parseInt(off_dur) == 0.5){
+                            if(parseInt(off_dur) != 0){
+                                var off_dur = parseInt(off_dur)+'시간' + ' 30분'
+                            }else if(parseInt(off_dur) == 0){
+                                var off_dur = '30분'
+                            }
+                        }else{
+                            var off_dur = off_dur + '시간'
+                        }
+
+                        var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_starttimehour+':'+off_starttimemin+' ~ '+off_endtimehour+':'+off_endtimemin+' ('+off_dur+')'+'</p>'
                         var offText2 = '<span>'+off_startdate+'부터 ~ '+off_enddate+"까지"+'</span>'
                         repeatList.push(offText+offText2)
                         //$('._Repeat_Info p:nth-child(2)').text(offText)

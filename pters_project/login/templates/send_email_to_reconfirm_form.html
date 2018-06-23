@@ -100,7 +100,7 @@
 		<div class="explaintype" id="submit_input">
 			<form method="post" action="../../templates/registration" style="text-align: center!important;padding-left: 20px;">
 			  	{% csrf_token %} 
-
+                <input type="hidden" name="member_id" value="{{ request.session.user_id }}">
                 <input type="hidden" name="username" value="{{ request.session.username }}">
                 <input type="hidden" name="member_type" value="re">
 

@@ -7,7 +7,7 @@
 	height: 100%;
 	top: 0;
 	opacity: 0.7;
-	z-index: -100
+
 }
 .mshade_popup{
 	position: fixed;
@@ -16,7 +16,6 @@
 	width: 100%;
 	height: 100%;
 	top: 0;
-	z-index: -100
 }
 /*
 	#pshade{
@@ -92,6 +91,67 @@
 	z-index: 150;
 	text-align: center;
 }
+
+#popup_btn_viewGroupParticipants{
+	display: none;
+	text-align: left;
+	height: 25px;
+	margin-top: 8px;
+	cursor: pointer;
+}
+	#popup_btn_viewGroupParticipants:hover{
+		background: #f4f4f4;
+	}
+	#popup_btn_viewGroupParticipants img{
+		width: 12px;
+		float: left;
+		margin: 9px 5px 0px 28px;
+	}
+#groupParticipants{
+	height: 0px;
+	width: 100%;
+	background: #ffffff;
+	overflow-y:auto;
+}
+	.groupParticipantsRow{
+		text-align: left;
+		margin-top: 3px;
+		margin-bottom: 3px;
+	}
+	.groupParticipantsRow span{
+		cursor: pointer;
+	}
+	.groupParticipantsRow span:hover{
+		text-decoration: underline;
+	}
+	#groupParticipants img{
+		width: 12px;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	#groupParticipants img.group_member_cancel{
+		float: right;
+		cursor: pointer;
+	}
+	#groupParticipants img.add_groupmember_plan{
+		width: 20px;
+		cursor:pointer;
+	}
+
+	#subpopup_addByList_plan{
+		
+	}
+
+	#subpopup_addByList_thisgroup{
+		display: block;
+	}
+
+	#subpopup_addByList_whole{
+		display: none;
+	}
+
+	
+
 
 @media(max-height: 445px){
 	#cal_popup_planinfo{
@@ -178,9 +238,9 @@
 
 }
 
-.popup_inner:hover{
-	background: #a2a2a2;
-	-webkit-background:#a2a2a2;
+.popup_inner:active{
+	background: #f4f4f4 !important;
+	-webkit-background:#f4f4f4 !important;
 }
 
 .popup_inner span{
@@ -241,6 +301,9 @@
 	vertical-align: middle;
 	border-bottom: 1px solid #a2a2a2;
 }
+	.plan_raw:active{
+		background: #f4f4f4;
+	}
 
 .plan_raw span{
 	position: relative;
@@ -251,6 +314,8 @@
 	font-size: 14px;
 	font-weight: bold;
 	cursor: pointer;
+
+	overflow:hidden;
 }
 
 .popup_inner_month{
@@ -266,15 +331,21 @@
 	font-weight: bold;
 }
 
-.planchecktime,.plancheckname{
+.planchecktime, .plancheckname{
 	display: inline-grid;
-	width: 40%;
 	text-align: left;
+}
+
+.planchecktime{
+	width: 34%;
 }
 
 .plancheckname{
 	position: relative;
-	font-weight: bold;
+	width: 46%;
+	text-overflow: ellipsis;
+	overflow:hidden;
+	white-space: nowrap;
 }
 
 .plancheckmorningday{
@@ -290,6 +361,7 @@
 	top: 50%;
 	transform: translateY(-50%);
 }
+
 /*월간달력 팝업*/
 
 
@@ -516,9 +588,16 @@
 	}
 
 	.popup_inner:hover{
-		background: #a2a2a2;
-		-webkit-background:#a2a2a2;
+		background: #f4f4f4 !important;
+		-webkit-background:#f4f4f4 !important;
 	}
+			#popup_delete_btn_yes:hover, #popup_delete_btn_yes:active{
+				background: #ff6478 !important;
+			}
+
+			#popup_delete_btn_no:hover, #popup_delete_btn_no:active{
+				background: #3c3c3c !important;
+			}
 
 
 	/*월간 달력 팝업*/

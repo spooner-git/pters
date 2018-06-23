@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'configs.urls'
 
 AUTHENTICATION_BACKENDS = (
@@ -95,7 +96,7 @@ DATABASES = {
         'NAME': 'pters',
         'USER': os.environ.get("PTERS_DB_USER", ''),
         'PASSWORD': os.environ.get("PTERS_DB_PASSWORD", ''),
-        'HOST': os.environ.get("PTERS_DB_HOST", ''),
+        'HOST': os.environ.get("PTERS_TEST_DB_HOST", ''),
         'PORT': '3306',
     }
 }

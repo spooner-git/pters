@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width,user-scalable:no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-        <title>{% block title %}피터스 - 트레이너{% endblock %}</title>
+        <title>{% block title %}피터스 - 강사{% endblock %}</title>
             
         <link rel="icon" href="/static/common/favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
@@ -40,7 +40,7 @@
         </div>
 
         <div id="popup_lecture_select" class="popups">
-            <form action="{% url 'trainer:class_processing' %}" id="lecture-check-form" method="post">
+            <form action="{% url 'trainer:select_class_processing' %}" id="lecture-check-form" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="class_id" id="id_class_id">
                 <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
@@ -74,7 +74,7 @@
                 <span class="KRtext">일정 완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
             </div>
             <div id="popup_btn_delete" class="popup_inner popup_inner_delete">
-                <span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
+                <span class="KRtext">일정 취소</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
             </div>
             <div id="canvasWrap">
                 <span class="KRtext">회원님 완료 서명을 입력해주세요.</span>
@@ -95,9 +95,9 @@
                 <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
                 <img src="/static/user/res/ptadd/btn-x.png" id="btn_close3" class="popup_close_x_button">
             </div>
-            <div id="popup_delete_question" class="KRtext popup_info_text">정말 일정을 삭제하시겠습니까?</div>
+            <div id="popup_delete_question" class="KRtext popup_info_text">정말 일정을 취소하시겠습니까?</div>
             <div id="popup_delete_question" class="JPtext popup_info_text">日程を削除しますか</div>
-            <div id="popup_delete_question" class="ENtext popup_info_text">Are you sure to delete the schedule?</div>
+            <div id="popup_delete_question" class="ENtext popup_info_text">Are you sure to cancel the schedule?</div>
             <div id="popup_delete_btn_yes" class="popup_inner popup_inner_delete">
                 <span class="KRtext">예</span>
                 <span class="JPtext">はい</span>
@@ -425,7 +425,7 @@
             function ajax_read_lecture_info_from_db(){
                 $.ajax({
 
-                      url: ' /trainer/get_class_data/',
+                      url: ' /trainer/get_class_list/',
                       dataType : 'html',
 
                       beforeSend:function(){
@@ -462,8 +462,8 @@
 
             function ajax_read_lecture_detail_info_from_db(classid){
                 $.ajax({
-                      url: '/trainee/read_trainee_lecture_by_class_ajax/',
-                      data:{"class_id": classid},
+                      url: '/trainee/get_trainee_lecture_list/',
+                      data:{"class_id": classid, "auth_cd":'WAIT'},
                       dataType : 'html',
 
                       beforeSend:function(){

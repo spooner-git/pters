@@ -18,20 +18,20 @@
     <input type="hidden" name="schedule_id" id="id_schedule_id">
     <input type="hidden" name="member_name"   id="id_member_name_delete">
     <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
   </form>
   <form action="{% url 'schedule:delete_schedule' %}" id="daily-off-delete-form" method="post">
     {% csrf_token %}
     <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
     <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
   </form>
   <form action="{% url 'schedule:finish_schedule' %}" id="pt-finish-form" method="get">
     {% csrf_token %}
     <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
     <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
     <input type="hidden" name="member_name"   id="id_member_name_finish">
-    <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+    <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
   </form>
    
   <!--팝업메뉴-->
@@ -39,7 +39,7 @@
       <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div>
       <div id="popup_text0" class="popup_inner popup_inner_finish"><span class="KRtext">일정 완료</span><span class="JPtext">日程완료</span><span class="ENtext">Finish Schedule</span></div>
       <!--<div id="popup_text1" class="popup_inner popup_inner_change"><span class="KRtext">일정 변경</span><span class="JPtext">日程変更</span><span class="ENtext">Change Schedule</span></div>-->
-      <div id="popup_text2" class="popup_inner popup_inner_delete"><span class="KRtext">일정 삭제</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span></div>
+      <div id="popup_text2" class="popup_inner popup_inner_delete"><span class="KRtext">일정 취소</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span></div>
     </div>
     <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
   <!--팝업메뉴-->
@@ -47,7 +47,7 @@
   <!--삭제 확인 팝업메뉴-->
     <div id="cal_popup3">
       <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close3"></div>
-      <div id="popup_info3" class="KRtext">정말 일정을 삭제하시겠습니까?</div><div id="popup_info3" class="JPtext">日程を削除しますか</div><div id="popup_info3" class="ENtext">Are you sure to delete the schedule?</div>
+      <div id="popup_info3" class="KRtext">정말 일정을 취소하시겠습니까?</div><div id="popup_info3" class="JPtext">日程を削除しますか</div><div id="popup_info3" class="ENtext">Are you sure to cancel the schedule?</div>
       <div id="popup_text3" class="popup_inner popup_inner_delete"><span style="color:#282828;" class="KRtext">예</span><span style="color:#282828;" class="JPtext">はい</span><span style="color:#282828;" class="ENtext">Yes</span></div>
       <div id="popup_text4" class="popup_inner popup_inner_delete"><span class="KRtext">아니오</span><span class="JPtext">いいえ</span><span class="ENtext">No</span></div>
     </div>
@@ -158,7 +158,7 @@
         <input type="hidden" name="time_duration" id="id_time_duration">
         <input type="hidden" name="training_time" id="id_training_time">
         <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
     </form>
 
     <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
@@ -167,18 +167,18 @@
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
         <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
     </form>
     
     <div class="ptaddbox" id="pcaddpopup">
-      <span class="KRtext">레슨 일정 추가</span>
+      <span class="KRtext">레슨 일정 등록</span>
       <span class="JPtext">PT 日程追加</span>
       <span class="ENtext">Add PT Schedule</span>
       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
     </div>
 
     <div class="ptaddbox" id="pcaddpopup_off">
-      <span class="KRtext">OFF 일정 추가</span>
+      <span class="KRtext">OFF 일정 등록</span>
       <span class="JPtext">OFF 日程追加</span>
       <span class="ENtext">Add OFF Schedule</span>
       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">
@@ -339,7 +339,7 @@
     </form>
     
     <div class="ptaddbox" id="pcaddpopup">
-      <span class="KRtext">레슨 일정 추가</span>
+      <span class="KRtext">레슨 일정 등록</span>
       <span class="JPtext">PT 日程追加</span>
       <span class="ENtext">Add PT Schedule</span>
       <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons cancelBtn">

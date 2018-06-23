@@ -10,7 +10,7 @@
 
 {% block content %}
 
-<form action="{% url 'trainer:class_processing' %}" id="lecture-check-form" method="post">
+<form action="{% url 'trainer:select_class_processing' %}" id="lecture-check-form" method="post">
     {% csrf_token %}
     <input type="hidden" name="class_id" id="id_class_id">
     <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
@@ -52,6 +52,8 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
+            $('a.__setting').css('color','#fe4e65;')
+
               if($('body').width()<600){
                 $('#page-base').css('display','none')
                 $('#page-base-modifystyle').css('display','block')
@@ -104,7 +106,7 @@
             function ajax_read_lecture_info_from_db_PAGE(){
                 $.ajax({
 
-                      url: ' /trainer/get_class_data/',
+                      url: ' /trainer/get_class_list/',
                       dataType : 'html',
 
                       beforeSend:function(){

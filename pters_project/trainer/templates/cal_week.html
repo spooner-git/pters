@@ -5,6 +5,7 @@
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.week.cal.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.off.repeat.add.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.group.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
         <meta name="description" content="weekcal">
@@ -16,15 +17,16 @@
     {% csrf_token %}
   <input type="hidden" name="schedule_id" id="id_schedule_id">
   <input type="hidden" name="member_name"   id="id_member_name_delete">
+  <input type="hidden" name="member_id"   id="id_member_dbid_delete">
   <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
-  <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
 
 <form action="{% url 'schedule:delete_schedule' %}" id="daily-off-delete-form" method="post">
     {% csrf_token %}
   <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
   <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
-  <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
 
 <form action="{% url 'schedule:finish_schedule' %}" id="pt-finish-form" method="post" enctype='multipart/form-data'>
@@ -32,15 +34,34 @@
   <input type="hidden" name="schedule_id" id="id_schedule_id_finish">
   <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
   <input type="hidden" name="member_name"   id="id_member_name_finish">
-  <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+  <input type="hidden" name="member_id"   id="id_member_dbid_finish">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
+</form>
+
+<form action="{% url 'schedule:finish_group_schedule' %}" id="group-finish-form" method="post" enctype='multipart/form-data'>
+    {% csrf_token %}
+  <input type="hidden" name="schedule_id" id="id_group_schedule_id_finish">
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
 
 <form action="{% url 'schedule:add_repeat_schedule_confirm' %}" id="confirm-repeat-schedule-form" method="get">
     {% csrf_token %}
   <input type="hidden" name="repeat_schedule_id" id="id_repeat_schedule_id_confirm"> <!--ajax로 받은 id-->
   <input type="hidden" name="repeat_confirm"   id="id_repeat_confirm">  <!--val 1, 0-->
-  <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+  <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
 </form>
+
+<form action="{% url 'schedule:add_member_group_schedule' %}" id="add_groupmember-plan-form" method="get">
+    {% csrf_token %}
+    <input type="hidden" name="member_id" id="form_add_member_group_plan_memberid"> <!--ajax로 받은 id-->
+    <input type="hidden" name="schedule_id" id="form_add_member_group_plan_scheduleid"> <!--ajax로 받은 id-->
+    <input type="hidden" name="add_memo" id="form_add_member_group_plan_addmemo"> <!--ajax로 받은 id-->
+    <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
+
+    <input type="hidden" name="group_id" id="form_add_member_group_plan_groupid"> <!--추가정보-->
+    <input type="hidden" name="max" id="form_add_member_group_plan_max"> <!--추가정보-->
+</form>
+
     
    <!--플로팅 버튼-->
 <div id="float_btn_wrap">
@@ -119,12 +140,12 @@
 
     <div class="ymdText-pc-add">
       <div class="ymdText-pc-add-off" onclick="float_btn_addplan(2)">
-        <span class="KRtext">+ OFF 일정추가</span>
+        <span class="KRtext">+ OFF 일정 등록</span>
         <span class="JPtext">+ OFF 追加</span>
         <span class="ENtext">+ Add OFF</span>
       </div>
       <div class="ymdText-pc-add-pt" onclick="float_btn_addplan(1)">
-        <span class="KRtext">+ 레슨 일정추가</span>
+        <span class="KRtext">+ 레슨 일정 등록</span>
         <span class="JPtext">+ プラン 追加</span>
         <span class="ENtext">+ Add plan</span>
       </div>
@@ -225,11 +246,12 @@
           </div> 
       </div> 
       <div id="cal_box" class="cal_box"></div>
-      <div id="gap" style="width: 100%;height: 50px;background:#f7f7f7;">
+      <div id="gap">
       </div>
+      
       <div class="ads_cal_insideTop ads_wrap">
+          <!--달력하단_반응형_디스플레이-->
            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- 달력하단_반응형_디스플레이 -->
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-4554121851965192"
@@ -239,12 +261,13 @@
             (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
       </div>
+        
 </div>
 
 
 <div class="ads_cal_side ads_wrap">
+    <!--달력 사이드 광고-->
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- 달력 사이드 광고 -->
     <ins class="adsbygoogle"
          style="display:inline-block;width:160px;height:600px"
          data-ad-client="ca-pub-4554121851965192"
@@ -265,8 +288,9 @@
         <input type="hidden" name="time_duration" id="id_time_duration">
         <input type="hidden" name="training_time" id="id_training_time">
         <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
         <input type="hidden" name="add_memo" id="id_memo_mini">
+        <input type="hidden" name="group_id"    id="id_group_id">
     </form>
 
     <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
@@ -275,13 +299,14 @@
         <input type="hidden" name="time_duration" id="id_time_duration_off">
         <input type="hidden" name="training_time" id="id_training_time_off">
         <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
-        <input type="hidden" name="next_page" value = '{% url 'trainer:cal_day_ajax' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
         <input type="hidden" name="add_memo" id="id_memo_mini_off">
     </form>
 
     <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
         {% csrf_token %}
-        <input type="hidden" name="member_id"        id="id_repeat_member_id">
+        <input type="hidden" name="member_id"         id="id_repeat_member_id">
+        <input type="hidden" name="group_id"          id="id_repeat_group_id">
         <input type="hidden" name="lecture_id"        id="id_repeat_lecture_id">
         <input type="hidden" name="member_name"       id="id_repeat_member_name">
         <input type="hidden" name="repeat_freq"       id="id_repeat_freq">
@@ -291,7 +316,7 @@
         <input type="hidden" name="repeat_start_time" id="id_repeat_start_time">
         <input type="hidden" name="repeat_dur"        id="id_repeat_dur">
         <input type="hidden" name="en_dis_type" value="1">
-        <input type="hidden" name="next_page" value="{% url 'trainer:cal_day_ajax' %}">
+        <input type="hidden" name="next_page" value="{% url 'trainer:get_trainer_schedule' %}">
     </form>
 
     <form action="{% url 'schedule:add_repeat_schedule' %}"  id="add-off-repeat-schedule-form" method="post">
@@ -303,17 +328,17 @@
         <input type="hidden" name="repeat_start_time"   id="id_repeat_start_time_off">
         <input type="hidden" name="repeat_dur"          id="id_repeat_dur_off">
         <input type="hidden" name="en_dis_type" value="0">
-        <input type="hidden" name="next_page" value="{% url 'trainer:cal_day_ajax' %}">
+        <input type="hidden" name="next_page" value="{% url 'trainer:get_trainer_schedule' %}">
     </form>
     
     <div class="ptaddbox" id="addpopup_pc_label_pt">
-      <span class="KRtext">레슨 일정 추가</span>
+      <span class="KRtext">레슨 일정 등록</span>
       <span class="JPtext">PT 日程追加</span>
       <span class="ENtext">Add PT Schedule</span>
     </div>
 
     <div class="ptaddbox" id="addpopup_pc_label_off">
-      <span class="KRtext">OFF 일정 추가</span>
+      <span class="KRtext">OFF 일정 등록</span>
       <span class="JPtext">OFF 日程追加</span>
       <span class="ENtext">Add OFF Schedule</span>
     </div>
@@ -324,10 +349,11 @@
     </div>
 
     <div id="memberName" class="ptaddbox">
-      <div class="ptaddboxtext"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
+      <div class="ptaddboxtext"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원/그룹명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
       <div id="membersSelected" class="dropdown">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
-          <span class="KRtext" style="color:#cccccc;">회원명 선택</span>
+          <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloading_dropdown">
+          <span class="KRtext" style="color:#cccccc;">회원/그룹 선택</span>
           <span class="JPtext" style="color:#cccccc;">選択</span>
           <span class="ENtext" style="color:#cccccc;">Select</span></button>
         <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
@@ -347,7 +373,13 @@
     <div id="remainCount" class="ptaddbox">
       <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 예약 가능 횟수</span><span class="JPtext">予約可能回数</span><span class="ENtext">Available Reserv. Counts</span></div>
       <!-- 남은 횟수 DB연동 필요 -->
-            <div id="countsSelected" class="dropdown" placeholder="ー"></div>
+            <div id="countsSelected" class="dropdown" placeholder="ー">-</div>
+    </div>
+
+    <div id="groupInfo" class="ptaddbox">
+      <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 그룹 정원/형식</span><span class="JPtext">予約可能回数</span><span class="ENtext">Available Reserv. Counts</span></div>
+      <!-- 남은 횟수 DB연동 필요 -->
+            <div id="grouptypenumInfo" class="dropdown" placeholder="ー"></div>
     </div>
 
     <div class="_NORMAL_ADD_wrap _page_shift">
@@ -607,10 +639,11 @@
     </div>
 
     <div id="memberName_mini" class="ptaddbox_mini _MINI_ptadd">
-      <div class="ptaddboxtext_mini"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
-      <div id="membersSelected" class="dropdown_mini">
+      <div class="ptaddboxtext_mini"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원/그룹</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
+      <div id="membersSelected_mini" class="dropdown_mini">
         <button class="btn btn-default dropdown-toggle pters_dropdown_custom_mini" type="button" data-toggle="dropdown">
-          <span class="KRtext" style="color:#cccccc;">회원명 선택</span>
+          <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloading_dropdown">
+          <span class="KRtext" style="color:#cccccc;">회원/그룹 선택</span>
           <span class="JPtext" style="color:#cccccc;">選択</span>
           <span class="ENtext" style="color:#cccccc;">Select</span></button>
         <ul id="members_pc" class="dropdown-menu dropdownlist_mini">
@@ -634,7 +667,18 @@
             <span class="JPtext">予約可能回数</span>
             <span class="ENtext">Reserve. Available count</span>
       </span>
-      <div id="countsSelected" class="dropdown_mini countsSelected" placeholder="ー"></div>
+      <div id="countsSelected_mini" class="dropdown_mini countsSelected" placeholder="ー"></div>
+    </div>
+
+    <div id="groupInfo_mini" class="ptaddbox_mini">
+      <div class="ptaddboxtext_mini"></div>
+      <!-- 남은 횟수 DB연동 필요 -->
+      <span id="groupInfo_mini_text">
+            <span class="KRtext">그룹 정보 :</span>
+            <span class="JPtext">予約可能回数</span>
+            <span class="ENtext">Reserve. Available count</span>
+      </span>
+      <div id="groupInfoSelected" class="dropdown_mini groupInfoSelected" placeholder="ー"></div>
     </div>
 
     <div id="timeGraph" class="ptaddbox_mini" style="display: none;">
@@ -662,7 +706,7 @@
     <div id="classDuration_mini" class="ptaddbox_mini">
       <div class="ptaddboxtext_mini"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Period</span></div>
       <div id="durationsSelected" class="dropdown_mini">
-        <button class="btn btn-default dropdown-toggle pters_dropdown_custom_mini" type="button" data-toggle="dropdown" style="width: 184px;">
+        <button class="btn btn-default dropdown-toggle pters_dropdown_custom_mini" type="button" data-toggle="dropdown" style="width: 198px;">
           <span class="KRtext" style="color:#cccccc;">선택</span>
           <span class="JPtext" style="color:#cccccc;">選択</span>
           <span class="ENtext" style="color:#cccccc;">Select</span>
@@ -721,14 +765,16 @@
         </div>
     </div>
         <div id="mobile_basic_info">
+            <!--
             <div class="member_info_tool">
                 <button class="_info_delete _info_delete_img">
                     <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:17px;">
                 </button>
             </div>
+            -->
             <div class="mobileinfo_wrap form-group">
                 <label for="memberName_info" class="ptaddboxtext">
-                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원/그룹명
                     <span id="npSituationPresent"></span>
                 </label>
                 <div class="mobileinfo">
@@ -779,7 +825,7 @@
         <div id="member_info_type_select" style="margin-left: 5px;">
             <div class="button_shift_info  button_active" id="select_info_shift_lecture_mobile">수강 정보</div>
             <div class="button_shift_info" id="select_info_shift_schedule_mobile">반복 일정</div>
-            <div class="button_shift_info" id="select_info_shift_history_mobile">일정 이력</div>
+            <div class="button_shift_info" id="select_info_shift_history_mobile">레슨 이력</div>
         </div>
 
         <div id="mobile_lecture_info">
@@ -798,7 +844,7 @@
                     <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 남은 횟수
                 </label>
                 <div class="mobileinfo">
-                    <input type="tel" class="mobileinfo_input" id="memberCount_info" name="counts" readonly>
+                    <input type="tel" class="mobileinfo_input" id="memberRemainCount_info" name="counts" readonly>
                 </div>
             </div>
 
@@ -823,8 +869,8 @@
 
             <div id="memberRegHistory_info_wrap" class="member_info_wrap">
                 <label class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록 이력
-                    <span class="button_add_member_lecture" onclick="pc_add_member(3)">+</span>
+                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 이력
+                    <!--<span class="button_add_member_lecture" onclick="pc_add_member(3)">+</span>-->
                 </label>
                 <div id="memberRegHistory_info">
                       
@@ -847,7 +893,7 @@
         <div id="mobile_history_info">
             <div id="memberLectureHistory_info_wrap" class="member_info_wrap history_view">
                 <label for="memberHistory" class="ptaddboxtext">
-                        <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 활동 내역
+                        <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 활동 이력
                 </label>
                 <div id="memberLectureHistory_info">
                           
@@ -929,7 +975,7 @@
     <div id="member_info_type_select">
         <div class="button_shift_info  button_active" id="select_info_shift_lecture">수강 정보</div>
         <div class="button_shift_info" id="select_info_shift_schedule">반복 일정</div>
-        <div class="button_shift_info" id="select_info_shift_history">일정 이력</div>
+        <div class="button_shift_info" id="select_info_shift_history">레슨 이력</div>
         <!--
         <button class="submitBtn _info_download _info_download_img">
                 <img src="/static/user/res/member/pters-download.png" style="margin-bottom: 4px;height:17px;">
@@ -959,8 +1005,8 @@
             <span id="memberFinishCount_info_PC" readonly></span>회
         </div>
         <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
-            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">등록 이력
-                <span class="button_add_member_lecture" onclick="pc_add_member(2)">+</span>
+            <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">수강 이력
+                <!--<span class="button_add_member_lecture" onclick="pc_add_member(2)">+</span>-->
             </label>
             <div id="memberRegHistory_info_PC">
                   
@@ -1104,17 +1150,29 @@
     -->
 </div>
 
-<form action="{% url 'trainer:update_member_lecture_info' %}" method="POST" class="member-form" id="update_member_lecture_info">
+<form action="{% url 'trainer:update_lecture_info' %}" method="POST" class="member-form" id="update_member_lecture_info">
     {% csrf_token %}
     <input type="hidden" name="lecture_id" id="form_lecture_id">
-    <input type="hidden" name="member_name" id="form_member_name">
-    <input type="hidden" name="next_page" value="{% url 'trainer:member_manage_ajax' %}">
+    <input type="hidden" name="member_id" id="form_member_dbid">
+    <input type="hidden" name="next_page" value="{% url 'trainer:get_member_list' %}">
     <input type="hidden" name="start_date" id="form_start_date">
     <input type="hidden" name="end_date" id="form_end_date">
     <input type="hidden" name="price" id="form_price">
     <input type="hidden" name="refund_price" id="form_refund_price">
     <input type="hidden" name="lecture_reg_count" id="form_lecture_reg_count">
     <input type="hidden" name="note" id="form_note">
+</form>
+
+<form action="{% url 'trainer:update_member_info' %}" method="POST" class="member-form" id="member-add-form-modify">
+    {% csrf_token %}
+    <input type="hidden" name="next_page" value="{% url 'trainer:get_member_list' %}">
+    <input type="hidden" name="sex" id="form_sex_modify">
+    <input type="hidden" name="birthday" id="form_birth_modify">
+    <input type="hidden" name="name" id="form_name_modify">
+    <input type="hidden" name="first_name" id="form_firstname_modify">
+    <input type="hidden" name="last_name" id="form_lastname_modify">
+    <input type="hidden" name="phone" id="form_phone_modify">
+    <input type="hidden" name="member_id" id="form_dbid_modify">
 </form>
 
 
@@ -1127,7 +1185,7 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
-
+          $('a.__weekplan').css('color','#fe4e65;')
 
           var date = new Date();
           var currentYear = date.getFullYear(); //현재 년도
@@ -1141,66 +1199,10 @@
           var oriMonth = date.getMonth()+1;
           var oriDate = date.getDate();
           //front-end에서 다뤄야하는 데이터
+          var initialJSON;
 
           var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
           var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
-
-          //PT 일정 등록시 필요한 정보
-          var memberIdArray =[{% for member_info in member_data %}'{{ member_info.user.id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var memberUserIdArray =[{% for member_info in member_data %}'{{ member_info.user }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-          var memberNameArray = [{% for member_info in member_data %}'{{ member_info.name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var memberAvailCountArray = [{% for member_info in member_data %}'{{ member_info.lecture_avail_count }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var memberLectureIdArray = [{% for member_info in member_data %}'{{ member_info.lecture_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-          //OFF 일정 관련 정보
-          var offScheduleIdArray = [{% for off_schedule_id_info in off_schedule_id %}'{{ off_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var offScheduleNoteArray =  [{% for off_schedule_note_info in off_schedule_note %}'{{ off_schedule_note_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-          //PT 일정 관련 정보
-          //pt schedule id
-          var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          //pt schedule 에 해당하는 lecture id
-          var classArray_lecture_id = [{% for pt_schedule_lecture_id_info in pt_schedule_lecture_id %}'{{ pt_schedule_lecture_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          //pt schedule 에 해당하는 회원명
-          var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          //pt schedule 에 해당하는 회원 ID
-          var classTimeArray_member_id = [{% for pt_schedule_member_id_info in pt_schedule_member_id %}'{{ pt_schedule_member_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-          var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          //pt schedule이 끝났는지 확인
-          var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var scheduleNoteArray =  [{% for pt_schedule_note_info in pt_schedule_note %}'{{ pt_schedule_note_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var scheduleIdxArray =  [{% for pt_schedule_idx_info in pt_schedule_idx %}'{{ pt_schedule_idx_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-
-          var messageArray = [{% for message in messages %}'{% if message.tags == "error" %}{{ message }}{% endif %}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var RepeatDuplicationDateArray = [{% for message in messages %}'{% if message.tags == "info" %}{{ message }}{% endif %}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var repeatArray = [{{ request.session.repeat_schedule_id }}];
-
-          var offRepeatScheduleIdArray =  [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}'{{ off_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var offRepeatScheduleTypeArray =  [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}'{{ off_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var offRepeatScheduleWeekInfoArray =  [{% for off_repeat_schedule_week_info_info in off_repeat_schedule_week_info_data %}'{{ off_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var offRepeatScheduleStartDateArray =  [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}'{{ off_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var offRepeatScheduleEndDateArray =  [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}'{{ off_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var offRepeatScheduleStartTimeArray =  [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}'{{ off_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var offRepeatScheduleTimeDurationArray =  [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}'{{ off_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-          var ptRepeatScheduleIdArray =  [{% for pt_repeat_schedule_id_info in pt_repeat_schedule_id_data %}'{{ pt_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var ptRepeatScheduleTypeArray =  [{% for pt_repeat_schedule_type_info in pt_repeat_schedule_type_data %}'{{ pt_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var ptRepeatScheduleWeekInfoArray =  [{% for pt_repeat_schedule_week_info_info in pt_repeat_schedule_week_info_data %}'{{ pt_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var ptRepeatScheduleStartDateArray =  [{% for pt_repeat_schedule_start_date_info in pt_repeat_schedule_start_date_data %}'{{ pt_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var ptRepeatScheduleEndDateArray =  [{% for pt_repeat_schedule_end_date_info in pt_repeat_schedule_end_date_data %}'{{ pt_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var ptRepeatScheduleStartTimeArray =  [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}'{{ pt_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var ptRepeatScheduleTimeDurationArray =  [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}'{{ pt_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var ptRepeatScheduleStateCdArray =  [{% for pt_repeat_schedule_state_cd_info in pt_repeat_schedule_state_cd %}'{{ pt_repeat_schedule_state_cd_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-          var ptRepeatScheduleStateCdNameArray =  [{% for pt_repeat_schedule_state_cd_nm_info in pt_repeat_schedule_state_cd_nm %}'{{ pt_repeat_schedule_state_cd_nm_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-          var classTimeArray = [];
-          var offTimeArray = [];
 
           var classDateData = []
           var classTimeData = []
@@ -1292,9 +1294,11 @@
               $(this).fadeOut('fast')
             })
 
+            /* 일정 필터링
             $('.slidegap').click(function(){
                 $('#filterPopup_mini').fadeIn();
             })
+            */
 
             $('#filterPopupClose').click(function(){
                 $('#filterPopup_mini').fadeOut();
@@ -1323,8 +1327,13 @@
                 }
             })
 
+            var DB = {};
+            var DBe = {};
+            var DB_All = {};
+
         </script>
         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>
         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.off.repeat.js" %}></script>
         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
+        <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script>
 {% endblock %}

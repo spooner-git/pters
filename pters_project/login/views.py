@@ -13,7 +13,6 @@ from django.db import InternalError
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
-from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -24,15 +23,12 @@ from registration.backends.hmac.views import RegistrationView
 # Create your views here.
 from django.views.generic import TemplateView
 
-#from login.forms import ProfileForm
-from django.views.generic.base import ContextMixin
 from registration.forms import RegistrationForm
 
 from configs import settings
+from configs.const import USE
 from login.forms import MyPasswordResetForm
 from login.models import MemberTb, PushInfoTb, QATb
-# from schedule.models import ClassTb
-from schedule.models import MemberLectureTb
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +62,8 @@ def login_trainer(request):
     if next_page is None:
         next_page = '/trainer/'
 
+    user_agent = request.META['HTTP_USER_AGENT']
+
     if not error:
         user = authenticate(username=username, password=password)
 
@@ -74,9 +72,8 @@ def login_trainer(request):
             if auto_login_check == '0':
                 request.session.set_expiry(0)
 
-            token_exist = False
             try:
-                token_data = PushInfoTb.objects.get(token=keyword, use=1)
+                token_data = PushInfoTb.objects.get(token=keyword, use=USE)
                 if token_data.member_id == user.id:
                     token_exist = True
                     token_data.last_login = timezone.now()
@@ -89,13 +86,12 @@ def login_trainer(request):
 
             if token_exist is False:
                 if keyword is not None and keyword != '':
-                    token_info = PushInfoTb(member_id=user.id, token=keyword,last_login=timezone.now(),
-                                            session_info=request.session.session_key, use=1)
+                    token_info = PushInfoTb(member_id=user.id, token=keyword, last_login=timezone.now(),
+                                            session_info=request.session.session_key,
+                                            device_info=str(user_agent), use=USE)
                     token_info.save()
 
             request.session['push_token'] = keyword
-            # request.session['is_first_login'] = True
-            # request.session['member_id'] = member_detail.member_id
 
             return redirect(next_page)
         elif user is not None and user.is_active == 0:
@@ -105,7 +101,7 @@ def login_trainer(request):
                 error = 'ID/비밀번호를 확인해주세요.'
             if error is None:
                 if member.use == 1:
-                    request.session['username'] = user.username
+                    request.session['user_id'] = user.id
                     if user.email is None or user.email == '':
                         next_page = '/login/send_email_member/'
                     else:
@@ -180,95 +176,78 @@ def logout_trainer(request):
 
 # 회원가입 api
 class ResendEmailAuthenticationView(RegistrationView, View):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
-        username = request.POST.get('before_user_id', '')
-        user_id = request.POST.get('id', '')
+        form = RegistrationForm(request.POST, request.FILES)
+        user_id = request.POST.get('username', '')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
         member_type = request.POST.get('member_type', '')
+        member_id = request.POST.get('member_id', '')
         error = None
         user = None
-
-        if username is None or username == '':
+        username = None
+        if member_id is None or member_id == '':
             error = 'ID를 입력해주세요.'
-
-        if error is None:
-            if member_type == 'new':
-                if password is None or password == '':
-                    error = '비밀번호를 입력해주세요.'
-                else:
-                    if len(password) < 8:
-                        error = '비밀번호는 8자 이상 입력해주세요.'
-
-        if error is None:
-            if member_type == 'new':
-                if email is None or email == '':
-                    error = 'email을 입력해주세요'
-
-        if error is None:
-            if member_type == 'id':
-                if email is None or email == '':
-                    error = 'id를 입력해주세요'
-
-        if error is None:
-            if member_type == 'new':
-                try:
-                    User.objects.get(username=user_id)
-                except ObjectDoesNotExist:
-                    error = '존재 하지 않음'
+        else:
+            if form.is_valid():
                 if error is None:
-                    error = '이미 가입된 ID 입니다.'
-                else:
-                    error = None
+                    if member_type == 'new':
+                        if email is None or email == '':
+                            error = 'Email을 입력해주세요.'
+                        elif user_id is None or user_id == '':
+                            error = 'ID를 입력해주세요.'
 
-        if error is None:
-            if member_type == 'new':
-                try:
-                    User.objects.get(email=email)
-                except ObjectDoesNotExist:
-                    error = '존재 하지 않음'
                 if error is None:
-                    error = '이미 가입된 email 입니다.'
-                else:
-                    error = None
+                    try:
+                        user = User.objects.get(id=member_id)
+                    except ObjectDoesNotExist:
+                        error = '가입되지 않은 회원입니다.'
 
-        if error is None:
-            try:
-                user = User.objects.get(username=username)
-            except ObjectDoesNotExist:
-                error = '가입되지 않은 회원입니다.'
-
-        if error is None:
-            if member_type == 'new':
                 if error is None:
-                    user.username = user_id
-                    user.email = email
-                    user.set_password(password)
-                    user.save()
-        if error is None:
-            # user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    error = '이미 인증된 ID 입니다.'
-                else:
-                    self.send_activation_email(user)
+                    username = user.username
+                    if member_type == 'new':
+                        if error is None:
+                            user.username = user_id
+                            user.email = email
+                            user.set_password(password)
+                            user.save()
+                if error is None:
+                    # user = authenticate(username=username, password=password)
+                    if user is not None:
+                        if user.is_active:
+                            error = '이미 인증된 ID 입니다.'
+                        else:
+                            self.send_activation_email(user)
+                    else:
+                        error = 'ID가 존재하지 않습니다.'
+
             else:
-                error = 'ID가 존재하지 않습니다.'
+                for field in form:
+                    if field.errors:
+                        for err in field.errors:
+                            if error is None or error == '':
+                                if field.name == 'username':
+                                    error = '사용할수 없는 ID 입니다.'
+                                else:
+                                    error = err
+                            else:
+                                if field.name != 'username':
+                                    error += err
 
         if error is not None:
-            logger.error(username+'->'+user_id+'['+email+']'+error)
+            logger.error(str(username)+'->'+str(user_id)+'['+str(email)+']'+str(error))
             messages.error(request, error)
         else:
-            logger.error(username+'->'+user_id+'['+email+'] 회원가입 완료')
+            logger.error(str(username)+'->'+str(user_id)+'['+str(email)+'] 회원가입 완료')
 
         return render(request, self.template_name)
 
 
 # 회원가입 api
 class ResetPasswordView(View):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
         email = request.POST.get('email', '')
@@ -371,27 +350,27 @@ def add_member_info_logic_test(request):
                 user.save()
                 if birthday_dt == '':
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=USE)
                 else:
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                      birthday_dt=birthday_dt,user_id=user.id, use=1)
+                                      birthday_dt=birthday_dt,user_id=user.id, use=USE)
                 member.save()
                 # if group_type == 'trainer':
                 #     class_info = ClassTb(member_id=user.id, class_type_cd='PT',
                 #                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
                 #                         class_hour=1, start_hour_unit=1, class_member_num=100,
-                #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
 
                 #    class_info.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '이미 가입된 회원입니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
-            error = '등록 값의 형태가 문제 있습니다.1'
-        except ValidationError as e:
-            error = '등록 값의 형태가 문제 있습니다.2'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다.'
         except InternalError:
             error = '이미 가입된 회원입니다.'
 
@@ -406,7 +385,7 @@ def add_member_info_logic_test(request):
 
 
 class AddMemberView(RegistrationView, View):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
 
@@ -446,27 +425,27 @@ class AddMemberView(RegistrationView, View):
                         if birthday_dt == '':
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                               country=country, address=address,
-                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=USE)
                         else:
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                               country=country, address=address,
                                               birthday_dt=birthday_dt,
-                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=1)
+                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=USE)
                         member.save()
                         # if group_type == 'trainer':
                         #    class_info = ClassTb(member_id=user.id, subject_cd='WP',
                         #                         start_date=datetime.date.today(), end_date=datetime.date.today()+timezone.timedelta(days=3650),
                         #                         class_hour=1, start_hour_unit=1, class_member_num=100,
-                        #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=1)
+                        #                         state_cd='IP', reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
 
                         #    class_info.save()
-                except ValueError as e:
+                except ValueError:
                     error = '이미 가입된 회원입니다.'
-                except IntegrityError as e:
+                except IntegrityError:
                     error = '등록 값에 문제가 있습니다.'
-                except TypeError as e:
+                except TypeError:
                     error = '등록 값의 형태가 문제 있습니다.'
-                except ValidationError as e:
+                except ValidationError:
                     error = '등록 값의 형태가 문제 있습니다.'
                 except InternalError:
                     error = '이미 가입된 회원입니다.'
@@ -491,70 +470,29 @@ class AddMemberView(RegistrationView, View):
 
 
 class AddMemberNoEmailView(View):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request, *args, **kwargs):
 
         first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
         name = request.POST.get('name', '')
-        phone = request.POST.get('username', '')
+        # phone = request.POST.get('username', '')
         sex = request.POST.get('sex', '')
         birthday_dt = request.POST.get('birthday', '')
-        # contents = request.POST.get('contents', '')
+        phone = request.POST.get('phone', '')
+        # group_id = request.POST.get('group_id', '')
+        context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
+        if context['error'] is not None:
+            logger.error(name+'[강사 회원가입]'+context['error'])
+            messages.error(request, context['error'])
 
-        error = None
-        if name == '':
-            error = '이름을 입력해 주세요.'
-        else:
-            name = name.replace(' ', '')
-
-        if error is None:
-            username = name
-            password = '0000'
-        if error is None:
-            count = MemberTb.objects.filter(name=username).count()
-            if count != 0:
-                username += str(count+1)
-        # elif User.objects.filter(email=email).exists():
-        #    error = '이미 가입된 회원 입니다.'
-
-        if error is None:
-            try:
-                with transaction.atomic():
-                    user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password, is_active=0)
-                    group = Group.objects.get(name='trainee')
-                    user.groups.add(group)
-                    if birthday_dt == '':
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=request.user.id,
-                                          mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
-                    else:
-                        member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=request.user.id,
-                                          birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                          user_id=user.id)
-                    member.save()
-
-            except ValueError as e:
-                error = '이미 가입된 회원입니다.'
-            except IntegrityError as e:
-                error = '등록 값에 문제가 있습니다.'
-            except TypeError as e:
-                error = '등록 값의 형태가 문제 있습니다.'
-            except ValidationError as e:
-                error = '등록 값의 형태가 문제 있습니다'
-            except InternalError:
-                error = '이미 가입된 회원입니다.'
-
-        if error is not None:
-            logger.error(name+'[강사 회원가입]'+error)
-            messages.error(request, error)
-
-        return render(request, self.template_name, {'username': username})
+        return render(request, self.template_name, {'username': context['username'], 'user_db_id': context['user_db_id']})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CheckMemberIdView(View):
-    template_name = 'id_check_ajax.html'
+    template_name = 'ajax/id_check_ajax.html'
     error = ''
 
     def get(self, request, *args, **kwargs):
@@ -569,7 +507,7 @@ class CheckMemberIdView(View):
         else:
             if form.is_valid():
                 if User.objects.filter(username=user_id).exists():
-                    self.error = '이미 가입된 회원 입니다.'
+                    self.error = '사용중인 아이디 입니다.'
             else:
                 for field in form:
                     if field.errors:
@@ -585,12 +523,14 @@ class CheckMemberIdView(View):
 
         if self.error != '':
             self.error = self.error.replace("이름", "ID")
+            if self.error == '해당 사용자 ID은 이미 존재합니다.':
+                self.error = '사용중인 이이디 입니다.'
         return render(request, self.template_name, {'error': self.error})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CheckMemberEmailView(View):
-    template_name = 'id_check_ajax.html'
+    template_name = 'ajax/id_check_ajax.html'
     error = ''
 
     def get(self, request, *args, **kwargs):
@@ -605,12 +545,12 @@ class CheckMemberEmailView(View):
         else:
 
             if User.objects.filter(email=user_email).exists():
-                self.error = '이미 가입된 회원 입니다.'
+                self.error = '사용중인 이메일 입니다.'
 
             if self.error is None or self.error == '':
                 if form.is_valid():
                     if User.objects.filter(email=user_email).exists():
-                        self.error = '이미 가입된 회원 입니다.'
+                        self.error = '사용중인 이메일 입니다.'
                 else:
                     for field in form:
                         if field.errors:
@@ -629,7 +569,7 @@ class CheckMemberEmailView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CheckMemberValidationView(View):
-    template_name = 'id_check_ajax.html'
+    template_name = 'ajax/id_check_ajax.html'
     error = ''
 
     def get(self, request, *args, **kwargs):
@@ -656,7 +596,7 @@ class CheckMemberValidationView(View):
 
 
 class RegisterErrorView(TemplateView):
-    template_name = 'registration_error_ajax.html'
+    template_name = 'ajax/registration_error_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(RegisterErrorView, self).get_context_data(**kwargs)
@@ -678,14 +618,14 @@ class NewMemberReSendEmailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(NewMemberReSendEmailView, self).get_context_data(**kwargs)
-        user_name = self.request.session.get('username', '')
+        user_id = self.request.session.get('user_id', '')
         error = None
         user = None
-        if user_name is None or user_name == '':
+        if user_id is None or user_id == '':
             error = '회원 정보를 불러오지 못했습니다.'
         if error is None:
             try:
-                user = User.objects.get(username=user_name)
+                user = User.objects.get(id=user_id)
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
 
@@ -717,7 +657,7 @@ def out_member_logic(request):
 
     if error is None:
         try:
-            member = MemberTb.objects.get(user_id=user.id, use=1)
+            member = MemberTb.objects.get(user_id=user.id, use=USE)
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
@@ -733,13 +673,13 @@ def out_member_logic(request):
                 member.mod_dt = timezone.now()
                 member.save()
 
-        except ValueError as e:
+        except ValueError:
             error = '등록 값에 문제가 있습니다.'
-        except IntegrityError as e:
+        except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
-        except TypeError as e:
+        except TypeError:
             error = '등록 값의 형태가 문제 있습니다.'
-        except ValidationError as e:
+        except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
@@ -755,19 +695,14 @@ def out_member_logic(request):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AddPushTokenView(View):
-    template_name = 'token_check_ajax.html'
+    template_name = 'ajax/token_check_ajax.html'
     error = ''
-
-    def get(self, request, *args, **kwargs):
-
-        return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
         keyword = request.POST.get('keyword', '')
-        token_exist = False
-        # print(keyword)
+        user_agent = request.META['HTTP_USER_AGENT']
         try:
-            token_data = PushInfoTb.objects.get(token=keyword, use=1)
+            token_data = PushInfoTb.objects.get(token=keyword, use=USE)
             if token_data.member_id == request.user.id:
                 token_exist = True
                 token_data.last_login = timezone.now()
@@ -781,7 +716,8 @@ class AddPushTokenView(View):
         if token_exist is False:
             if keyword is not None and keyword != '':
                 token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(),
-                                        session_info=request.session.session_key, use=1)
+                                        session_info=request.session.session_key,
+                                        device_info=str(user_agent), use=USE)
                 token_info.save()
 
         request.session['push_token'] = keyword
@@ -790,7 +726,7 @@ class AddPushTokenView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DeletePushTokenView(View):
-    template_name = 'token_check_ajax.html'
+    template_name = 'ajax/token_check_ajax.html'
     error = ''
 
     def get(self, request, *args, **kwargs):
@@ -800,7 +736,7 @@ class DeletePushTokenView(View):
     def post(self, request, *args, **kwargs):
         keyword = request.POST.get('keyword', '')
         try:
-            token_data = PushInfoTb.objects.get(token=keyword, use=1)
+            token_data = PushInfoTb.objects.get(token=keyword, use=USE)
             token_data.delete()
             token_exist = False
         except ObjectDoesNotExist:
@@ -810,7 +746,7 @@ class DeletePushTokenView(View):
 
 
 class ClearBadgeCounterView(TemplateView):
-    template_name = 'token_check_ajax.html'
+    template_name = 'ajax/token_check_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(ClearBadgeCounterView, self).get_context_data(**kwargs)
@@ -831,7 +767,7 @@ def clear_badge_counter_logic(request):
     logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+push_token)
     if error is None:
         try:
-            token_data = PushInfoTb.objects.get(token=push_token, use=1)
+            token_data = PushInfoTb.objects.get(token=push_token, use=USE)
         except ObjectDoesNotExist:
             error = '푸시 정보를 가져올 수 없습니다'
 
@@ -840,12 +776,12 @@ def clear_badge_counter_logic(request):
         token_data.save()
 
     if error is None:
-        return render(request, 'token_check_ajax.html', {'token_check': token_data.token})
+        return render(request, 'ajax/token_check_ajax.html', {'token_check': token_data.token})
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         # messages.error(request, error)
 
-        return render(request, 'token_check_ajax.html', {'token_check': error})
+        return render(request, 'ajax/token_check_ajax.html', {'token_check': error})
 
 
 @csrf_exempt
@@ -862,12 +798,13 @@ def question_reg_logic(request):
 
     if error is None:
         qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents,
-                       status='0', mod_dt=timezone.now(), reg_dt=timezone.now(), use=1)
+                       status='0', mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
         qa_info.save()
 
     if error is None:
         email = EmailMessage('[PTERS 질문]'+request.user.last_name+request.user.first_name+'회원-'+title,
-                             '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + str(timezone.now()),
+                             '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + request.user.email +
+                             '\n\n' + str(timezone.now()),
                              to=['support@pters.co.kr'])
         email.send()
 
@@ -878,4 +815,89 @@ def question_reg_logic(request):
         messages.info(request, qa_type_cd+'/'+title+'/'+contents)
 
         return redirect(next_page)
+
+
+def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthday_dt):
+    error = None
+    name = ''
+    context = {'error': None, 'user_db_id': '', 'username': ''}
+
+    if last_name is None or last_name == '':
+        error = '성을 입력해 주세요.'
+
+    if first_name is None or first_name == '':
+        error = '이름을 입력해 주세요.'
+
+    if error is None:
+        name = last_name + first_name
+        if name == '':
+            error = '이름을 입력해 주세요.'
+        else:
+            name = name.replace(' ', '')
+    if sex == '':
+        sex = None
+
+    if phone == '':
+        phone = None
+    else:
+        if len(phone) != 11 and len(phone) != 10:
+            error = '연락처 자릿수를 확인해주세요.'
+        elif not phone.isdigit():
+            error = '연락처는 숫자만 입력 가능합니다.'
+
+    if error is None:
+        username = name
+        password = '0000'
+    if error is None:
+
+        count = MemberTb.objects.filter(name=username).count()
+        if count != 0:
+            # username += str(count + 1)
+            test = False
+            i = count + 1
+
+            while True:
+                username = last_name + first_name + str(i)
+                try:
+                    User.objects.get(username=username)
+                except ObjectDoesNotExist:
+                    test = True
+
+                if test:
+                    break
+                else:
+                    i += 1
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,
+                                                password=password, is_active=0)
+                group = Group.objects.get(name='trainee')
+                user.groups.add(group)
+                if birthday_dt == '':
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=user_id,
+                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
+                else:
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=user_id,
+                                      birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
+                                      user_id=user.id)
+                member.save()
+                context['username'] = username
+                context['user_db_id'] = user.id
+
+        except ValueError:
+            error = '이미 가입된 회원입니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '이미 가입된 회원입니다.'
+
+    context['error'] = error
+
+    return context
 
