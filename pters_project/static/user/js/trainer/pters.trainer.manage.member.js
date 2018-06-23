@@ -2565,9 +2565,9 @@ function open_member_info_popup_pc(dbID, jsondata){
 
     $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
     if(userActivation == 'True'){
-    	$('button._info_baseedit').hide()
+    	$('button._info_baseedit').css('visibility','hidden')
     }else{
-    	$('button._info_baseedit').show()
+    	$('button._info_baseedit').css('visibility','visible')
     }
     
     $('#memberName_info_PC').val(userName)
@@ -2577,14 +2577,14 @@ function open_member_info_popup_pc(dbID, jsondata){
 
     //var member_info_PC = '\'member_info_PC\'';
     $('#memberSex_info_PC .selectboxopt').removeClass('selectbox_checked')
-    $('#memberMale_info_PC, #memberFemale_info_PC').hide()
+    $('#memberMale_info_PC, #memberFemale_info_PC').css('visibility','hidden')
     if(userSex == "M"){
-      $('#memberMale_info_PC').show()
-      $('#memberFemale_info_PC').hide()
+      $('#memberMale_info_PC').css('visibility','visibile')
+      $('#memberFemale_info_PC').css('visibility','hidden')
       $('#form_sex_modify').val('M');
     }else if(userSex == "W"){
-      $('#memberFemale_info_PC').show()
-      $('#memberMale_info_PC').hide()
+      $('#memberFemale_info_PC').css('visibility','visibile')
+      $('#memberMale_info_PC').css('visibility','hidden')
       $('#form_sex_modify').val('W');
     }else{
       $('#form_sex_modify').val('');
