@@ -664,6 +664,7 @@ $(document).ready(function(){
 			            if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
+	                	ajaxClassTime()
 	                })
 
 				}else if(deleteTypeSelect == "repeatgroupptdelete"){
@@ -680,6 +681,7 @@ $(document).ready(function(){
 	                	if($('body').width()>=600){
 	                		$('#calendar').css('position','relative')	
 	                	}
+	                	ajaxClassTime()
 		            })
 		            // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
 		            // 	for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
