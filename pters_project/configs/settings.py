@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("PTERS_DJANGO_SECRET", '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = False 
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -96,7 +96,7 @@ DATABASES = {
         'NAME': 'pters',
         'USER': os.environ.get("PTERS_DB_USER", ''),
         'PASSWORD': os.environ.get("PTERS_DB_PASSWORD", ''),
-        'HOST': os.environ.get("PTERS_TEST_DB_HOST", ''),
+        'HOST': os.environ.get("PTERS_DB_HOST", ''),
         'PORT': '3306',
     }
 }

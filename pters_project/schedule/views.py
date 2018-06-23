@@ -446,7 +446,7 @@ def upload_sign_image_logic(request):
 
         data = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
 
-        bucket.put_object(Key='/spooner_test/'+schedule_id+'.png', Body=data, ContentType='image/png',
+        bucket.put_object(Key=schedule_id+'.png', Body=data, ContentType='image/png',
                           ACL='public-read')
     else:
         context['error'] = error_code
