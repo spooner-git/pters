@@ -2569,15 +2569,20 @@ function open_member_info_popup_pc(dbID, jsondata){
     about_value_set()
     about_etc1()
     about_etc2()
-    about_member_window_show()
+    about_member_window_show1()
+    about_member_window_show2()
 
-    function about_member_window_show(){
+    function about_member_window_show1(){
         if(userActivation == 'True'){
             $('button._info_baseedit').css('visibility','hidden')
         }else{
             $('button._info_baseedit').css('visibility','visible')
         }
-        $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
+    }
+
+    function about_member_window_show2(){
+        $('#memberInfoPopup_PC').attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
+        $('#memberInfoPopup_PC').show()
     }
     
     $('#memberName_info_PC').val(userName)
