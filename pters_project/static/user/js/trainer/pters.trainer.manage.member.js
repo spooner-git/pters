@@ -2719,7 +2719,8 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#page-base').fadeOut('fast');
     $('#page-base-modifystyle').fadeIn('fast');
     $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberinfo')
-    $('#memberInfoPopup').fadeIn('fast').attr({'data-username': userName, 'data-userid' : userID});
+    $('#memberInfoPopup').attr({'data-username': userName, 'data-userid' : userID});
+    $('#memberInfoPopup').addClass('display_block')
     $('#memberName_info').val(userName)
     $('#memberName_info_lastName, #form_lastname_modify').val(jsondata.lastnameInfo)
     $('#memberName_info_firstName, #form_firstname_modify').val(jsondata.firstnameInfo)
@@ -2758,7 +2759,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#memberName_info').show()
     $('#memberName_info_lastName, #memberName_info_firstName').hide()
     //$('#shade3').fadeIn('fast');
-    scrollToDom($('#page_managemember'));
+    //scrollToDom($('#page_managemember'));
     if($('body').width()<600){
       //$('#page_managemember').hide();
       $('#page_managemember').css({'height':'0','overflow-y':'hidden'})
@@ -3988,7 +3989,7 @@ function closePopup(option){
         $('#upbutton-modify').attr('data-type','view')
         $('#uptext-pc-modify').text(text)
 
-        $('#memberInfoPopup').fadeOut('fast')
+        $('#memberInfoPopup').removeClass('display_block')
 
         $('#memberRegHistory_info').html("")
         $('#memberRepeat_info').html("")
@@ -4018,7 +4019,7 @@ function closePopup(option){
             close_info_popup('cal_popup_planinfo')
         }
     }else if(option == 'member_info_PC'){
-        $('#memberInfoPopup_PC').fadeOut('fast')
+        $('#memberInfoPopup_PC').removeClass('display_block')
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
         
         }else{
