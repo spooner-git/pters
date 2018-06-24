@@ -2542,7 +2542,6 @@ function get_indiv_member_info(dbID){
                     $('#errorMessageText').text('')
                     if(bodywidth < 600){
                         open_member_info_popup_mobile(dbID, jsondata);
-                        //shade_index(100)
                     }else{
                         open_member_info_popup_pc(dbID, jsondata);
                     }
@@ -2744,6 +2743,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberinfo')
     $('#memberInfoPopup').attr({'data-username': userName, 'data-userid' : userID});
     $('#memberInfoPopup').addClass('display_block')
+    shade_index(100)
     $('#memberName_info').val(userName)
     $('#memberName_info_lastName, #form_lastname_modify').val(jsondata.lastnameInfo)
     $('#memberName_info_firstName, #form_firstname_modify').val(jsondata.firstnameInfo)
