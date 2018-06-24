@@ -198,6 +198,10 @@ $(document).ready(function(){
 
 
 	//스케쥴 클릭시 팝업 Start
+
+	$('div.classTime').addEventListener('mouseenter', function(){$('#cal_popup_planinfo').css('will-change','display')})
+
+
 	$(document).on('click','div.classTime',function(e){ //일정을 클릭했을때 팝업 표시
 		e.stopPropagation()
 		shade_index(100)
@@ -259,7 +263,7 @@ $(document).ready(function(){
 		$('#canvasWrap span').hide();
 
 		$('#page-addplan-pc').hide()
-		$("#cal_popup_planinfo").fadeIn('fast');
+		$("#cal_popup_planinfo").fadeIn('fast', function(){$(this).css('will-change','auto')});
 		//shade_index(100)
 		//closeAlarm('pc')
 
