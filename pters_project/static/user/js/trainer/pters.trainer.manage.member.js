@@ -71,10 +71,11 @@ if (agent.indexOf("firefox") != -1) {
 
 
     $(document).on('click','#upbutton-x-modify',function(){
+            var bodywidth = $('body').width();
             $('#uptext3').text('회원 정보');
             $('#uptext-pc-modify').text('회원 정보');
             closePopup('member_info');
-            if($('body').width()<600 && $('#calendar').length != 0){
+            if(bodywidth<600 && $('#calendar').length != 0){
                 //$('#calendar').css('display','block')
                 $('#calendar').css('height','100%')
             }
