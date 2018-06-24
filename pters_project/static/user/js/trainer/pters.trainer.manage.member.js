@@ -1295,20 +1295,18 @@ function float_btn_managemember(option){
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet()
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').css('display','block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd')
-        $('#shade').hide();
-        $('#shade3').fadeIn('fast');
-        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
+        $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
+        $('#float_btn_wrap').css('display','none');
         $('#uptext2').text(text);
         
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
             //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'})
-            $('#page-base').fadeOut();
-            $('#page-base-addstyle').fadeIn();
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
         }
 
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -1325,18 +1323,16 @@ function float_btn_managemember(option){
         $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
     }else if(option == "group"){
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
-        $('#shade').hide();
-        $('#shade3').fadeIn('fast');
-        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
+        $('#page_addmember').css('display','block');
+        $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
+        $('#float_btn_wrap').css('display','none');
 
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
             //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'})
-            $('#page-base').fadeOut();
-            $('#page-base-addstyle').fadeIn();
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
         }
         
         $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
@@ -1346,18 +1342,16 @@ function float_btn_managemember(option){
 
     }else if(option == "groupmember"){
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
-        $('#shade').hide();
-        $('#shade3').fadeIn('fast');
-        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
+        $('#page_addmember').css('display','block');
+        $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
+        $('#float_btn_wrap').css('display','none');
 
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
             //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'})
-            $('#page-base').fadeOut();
-            $('#page-base-addstyle').fadeIn();
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
         }
 
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
@@ -4082,11 +4076,11 @@ function closePopup(option){
             $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
         }
-        $('#page_addmember').fadeOut('fast');
+        $('#page_addmember').css('display','none');
         
-        $('#float_btn').fadeIn('fast');
-        $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
+        $('#float_btn').css('display','block');
+        $('#page-base').css('display','block');
+        $('#page-base-addstyle').css('display','none');
 
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
         $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
@@ -4106,11 +4100,11 @@ function closePopup(option){
             $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
         }
-        $('#page_addgroup').fadeOut('fast');
+        $('#page_addgroup').css('display','block');
         
-        $('#float_btn').fadeIn('fast');
-        $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
+        $('#float_btn').css('display','block');
+        $('#page-base').css('display','block');
+        $('#page-base-addstyle').css('display','none');
 
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
 
