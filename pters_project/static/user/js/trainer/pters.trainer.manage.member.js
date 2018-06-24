@@ -2542,7 +2542,7 @@ function get_indiv_member_info(dbID){
                     $('#errorMessageText').text('')
                     if(bodywidth < 600){
                         open_member_info_popup_mobile(dbID, jsondata);
-                        shade_index(100)
+                        //shade_index(100)
                     }else{
                         open_member_info_popup_pc(dbID, jsondata);
                     }
