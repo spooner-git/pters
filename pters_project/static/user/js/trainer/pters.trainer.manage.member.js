@@ -4033,12 +4033,20 @@ function closePopup(option){
         $('#comment_info').attr('readonly',true);
         */
 
-        $('#cal_popup_plandelete').css('display','none')
-        
-        if($('._calmonth').css('display')=="block"){
-            close_info_popup('cal_popup_plancheck')
-            close_info_popup('cal_popup_planinfo')
+        hide_plandelete()
+        close_others()
+
+        function hide_plandelete(){
+            $('#cal_popup_plandelete').css('display','none')
         }
+        
+        function close_others(){
+            if($('._calmonth').css('display')=="block"){
+                close_info_popup('cal_popup_plancheck')
+                close_info_popup('cal_popup_planinfo')
+            }
+        }
+        
     }else if(option == 'member_info_PC'){
         $('#memberInfoPopup_PC').removeClass('display_block')
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
