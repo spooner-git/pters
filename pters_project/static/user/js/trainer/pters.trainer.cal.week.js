@@ -199,7 +199,7 @@ $(document).ready(function(){
 
 	//스케쥴 클릭시 팝업 Start
 
-	var $classTime = document.getElementByClassName('.classTime')
+	var $classTime = document.getElementsByClassName('.classTime')
 	$classTime.addEventListener('mouseenter', function(){$('#cal_popup_planinfo').css('will-change','display')})
 
 
