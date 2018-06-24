@@ -682,9 +682,9 @@ if (agent.indexOf("firefox") != -1) {
                     deleteTypeSelect = "memberinfodelete";
                     if($('#calendar').length!=0){
                         ajaxClassTime()
+                        get_current_member_list()
+                        get_current_group_list()
                     }
-                    get_current_member_list()
-                    get_current_group_list()
                 })
 
             }else if(deleteTypeSelect == "memberinfodelete"){
@@ -718,9 +718,11 @@ if (agent.indexOf("firefox") != -1) {
                     get_group_repeat_info(group_id)
                     if($('body').width()>=600){
                         $('#calendar').css('position','relative')   
+                    }else{
+                        get_current_member_list()
+                        get_current_group_list()
                     }
-                    get_current_member_list()
-                    get_current_group_list()
+                    
                 })
                 // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
                 //     for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
