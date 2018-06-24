@@ -3983,15 +3983,25 @@ function closePopup(option){
 
     }
     if(option == 'member_info'){
-        //if($('body').width()<600){
-        //$('#page_managemember').show();
         hide_this()
         $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
-        $('#float_btn_wrap').show();
-        $('#float_btn').removeClass('rotate_btn');
-        //}
-        $('#page-base').fadeIn('fast');
-        $('#page-base-modifystyle').fadeOut('fast');
+
+        float_btn_show()
+        base_show()
+        base_modify_hide()
+        
+        function float_btn_show(){
+            $('#float_btn_wrap').show();
+            $('#float_btn').removeClass('rotate_btn');
+        }
+        
+        function base_show(){
+           $('#page-base').fadeIn('fast'); 
+        }
+        function base_modify_hide(){
+           $('#page-base-modifystyle').css('display','none');
+        }
+        
         $('#upbutton-modify').find('img').attr({'src':'/static/user/res/icon-pencil.png'});
         $('#upbutton-modify').attr({'data-type':'view'})
         $('#uptext-pc-modify').text(text)
