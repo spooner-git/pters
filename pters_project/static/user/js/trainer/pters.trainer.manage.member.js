@@ -3985,17 +3985,26 @@ function closePopup(option){
     if(option == 'member_info'){
         //if($('body').width()<600){
         //$('#page_managemember').show();
+        hide_this()
         $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
         $('#float_btn_wrap').show();
         $('#float_btn').removeClass('rotate_btn');
         //}
         $('#page-base').fadeIn('fast');
         $('#page-base-modifystyle').fadeOut('fast');
-        $('#upbutton-modify').find('img').attr('src','/static/user/res/icon-pencil.png');
-        $('#upbutton-modify').attr('data-type','view')
+        $('#upbutton-modify').find('img').attr({'src':'/static/user/res/icon-pencil.png'});
+        $('#upbutton-modify').attr({'data-type':'view'})
         $('#uptext-pc-modify').text(text)
 
-        $('#memberInfoPopup').removeClass('display_block')
+        function hide_this(){
+            $('#memberInfoPopup').removeClass('display_block')
+            if($('#mshade').css('z-index')==150){
+                shade_index(150)
+            }else{
+                shade_index(-100)
+            }
+        }
+        
 
         $('#memberRegHistory_info').html("")
         $('#memberRepeat_info').html("")
@@ -4015,11 +4024,7 @@ function closePopup(option){
 
 
         $('#cal_popup_plandelete').fadeOut('fast')
-        if($('#mshade').css('z-index')==150){
-            shade_index(150)
-        }else{
-            shade_index(-100)
-        }
+        
         if($('._calmonth').css('display')=="block"){
             close_info_popup('cal_popup_plancheck')
             close_info_popup('cal_popup_planinfo')
