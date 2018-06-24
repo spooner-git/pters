@@ -49,7 +49,8 @@ function sideGoPage(page){
 }
 
 function shade_index(option){
-    if($('body').width()>600){
+    var bodywidth = window.innerWidth;
+    if(bodywidth > 600){
       if(option<0){
         if($('#memberInfoPopup_PC').css('display')=="block" && $('._calmonth').css('display')=="block"){
           $('#pshade').css({'z-index':150,'display':'block'});
@@ -61,7 +62,7 @@ function shade_index(option){
         $('#pshade').css({'z-index':option,'display':'block'});
       }
       
-    }else if($('body').width()<=600){
+    }else if(bodywidth <= 600){
       if(option<0){
         if($('#page-addplan').css('display') == 'block'){
           $('#mshade_popup').css({'display':'none','z-index':$('#page-addplan').css('z-index')});
@@ -88,6 +89,7 @@ function shade_index(option){
 }
 
 function close_info_popup(option){
+  var bodywidth = window.innerWidth;
   if(option=="cal_popup_planinfo"){
       $("#"+option).css({'display':'none'})
       $('#groupParticipants').html("")
@@ -123,7 +125,7 @@ function close_info_popup(option){
       }else{
         shade_index(-100)
       }
-      if($('body').width()>=600){
+      if(bodywidth>=600){
           $('#calendar').css('position','relative')
       }else{
           //$('._calmonth').css({'height':'90%','position':'fixed'})
@@ -162,7 +164,7 @@ function toggleGroupParticipantsList(onoff){
   }
 }
 
-
+/*
 function shade1(option){
   if($('body').width()>600){
     $('#pshade').css({'display':option});  
@@ -186,6 +188,7 @@ function shade3(option){
     $('#mshade3').css({'display':option});
   }
 }
+*/
 
 $(document).ready(function(){
 
@@ -279,9 +282,10 @@ $(document).ready(function(){
    });
   */  
    $('#alarm button').click(function(){
+      var bodywidth = window.innerWidth;
       /*$('#alarm').css('transform','translate(-50%,-200%)');*/
       $('#alarm').css('height','0');
-      if($('body').width()>600){
+      if(bodywidth>600){
           shade_index(-100)
       }else{
           shade_index(-100)

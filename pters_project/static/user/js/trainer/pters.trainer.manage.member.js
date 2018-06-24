@@ -81,9 +81,10 @@ if (agent.indexOf("firefox") != -1) {
             }
     })
     $(document).on('click','#upbutton-x',function(){
+        var bodywidth = window.innerWidth;
         if($(this).attr("data-page") == "memberadd"){
             closePopup('member_add');
-            if($('body').width()<600){
+            if(bodywidth < 600){
                 //$('#calendar').css('display','block')
                 $('#calendar').css('height','100%')
             }
@@ -154,14 +155,15 @@ if (agent.indexOf("firefox") != -1) {
 //#####################회원정보 팝업 //#####################
 
     $(document).on('click','.memberline',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+        var bodywidth = window.innerWidth;
         var dbID = $(this).find('._id').attr('data-dbid');
         shade_index(100)
-        if($('body').width()<600){
+        if(bodywidth < 600){
             get_indiv_member_info(dbID)
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
-        }else if($('body').width()>=600){
+        }else if(bodywidth >= 600){
             get_indiv_member_info(dbID)
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
@@ -333,6 +335,7 @@ if (agent.indexOf("firefox") != -1) {
 
     //회원 등록이력 수정 버튼
     $(document).on('click','#memberRegHistory_info_PC img, #memberRegHistory_info img',function(){
+        var bodywidth = window.innerWidth;
         if(Options.language == "KOR"){
             var text = "완료"
         }else if(Options.language == "JPN"){
@@ -347,12 +350,12 @@ if (agent.indexOf("firefox") != -1) {
 
         
         if($(this).attr('data-type')=="view" && !$(this).hasClass('disabled_button')){
-            if($('body').width()<600){
+            if(bodywidth < 600){
                var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
                var myRowSelect = $(this).parent('div').siblings('div.whatGroupType').find('select');
                var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input')
                var myRowParent = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div');
-            }else if($('body').width()>=600){
+            }else if(bodywidth >= 600){
                 var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
                 var myRowSelect = $('select[data-leid='+$(this).attr('data-leid')+']');
                 var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
@@ -486,13 +489,14 @@ if (agent.indexOf("firefox") != -1) {
 
     //진행중
     $(document).on('click','div.lecConnectType_IP',function(){
+        var bodywidth = window.innerWidth;
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
         $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
                                                                 'data-dbid':$(this).attr('data-dbid'),
                                                                 'data-username':$(this).parents('._member_info_popup').attr('data-username'),
                                                                 'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
         $('._resume, ._delete').css('display','none')
-        if($('body').width()>600){
+        if(bodywidth > 600){
             $('._complete, ._refund').css('display','inline-block')
         }else{
             $('._complete, ._refund').css('display','block')
@@ -503,13 +507,14 @@ if (agent.indexOf("firefox") != -1) {
 
     //진행완료, 환불
     $(document).on('click','div.lecConnectType_PE, div.lecConnectType_RF',function(){
+        var bodywidth = window.innerWidth;
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
         $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
                                                                 'data-dbid':$(this).attr('data-dbid'),
                                                                 'data-username':$(this).parents('._member_info_popup').attr('data-username'),
                                                                 'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
         $('._complete, ._refund').css('display','none')
-        if($('body').width()>600){
+        if(bodywidth > 600){
             $('._resume, ._delete').css('display','inline-block')
         }else{
             $('._resume, ._delete').css('display','block')
@@ -670,7 +675,8 @@ if (agent.indexOf("firefox") != -1) {
 
     
     $('#popup_delete_btn_yes').click(function(){
-        //if($('#calendar').length==0){
+            var bodywidth = window.innerWidth;
+            //if($('#calendar').length==0){
            if(deleteTypeSelect == "repeatinfodelete"){
                 var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
                 var dbID = $(this).parent('#cal_popup_plandelete').attr('data-dbid');
@@ -717,7 +723,7 @@ if (agent.indexOf("firefox") != -1) {
                     enable_delete_btns_after_ajax();
                     close_info_popup('cal_popup_plandelete')
                     get_group_repeat_info(group_id)
-                    if($('body').width()>=600){
+                    if(bodywidth >= 600){
                         $('#calendar').css('position','relative')   
                     }else{
                         get_current_member_list()
@@ -1200,6 +1206,7 @@ if (agent.indexOf("firefox") != -1) {
 });
 
 function send_modified_member_base_data(){
+    var bodywidth = window.innerWidth;
 	var $form = $('#member-add-form-modify');
 	$.ajax({
         url:'/trainer/update_member_info/',
@@ -1230,7 +1237,7 @@ function send_modified_member_base_data(){
             else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth < 600){
                 	closePopup('member_info');
                    //$('#page_managemember').show();
                    $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
@@ -1265,6 +1272,7 @@ function send_modified_member_base_data(){
 
 
 function float_btn_managemember(option){
+    var bodywidth = window.innerWidth;
     if(Options.language == "KOR"){
         var text = '신규 회원 등록'
     }else if(Options.language == "JPN"){
@@ -1296,7 +1304,7 @@ function float_btn_managemember(option){
         $('#uptext2').text(text);
         
         scrollToDom($('#page_addmember'));
-        if($('body').width()<600){
+        if(bodywidth < 600){
             //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'})
             $('#page-base').fadeOut();
@@ -1324,7 +1332,7 @@ function float_btn_managemember(option){
         $('#float_btn_wrap').fadeOut();
 
         scrollToDom($('#page_addmember'));
-        if($('body').width()<600){
+        if(bodywidth < 600){
             //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'})
             $('#page-base').fadeOut();
@@ -1345,7 +1353,7 @@ function float_btn_managemember(option){
         $('#float_btn_wrap').fadeOut();
 
         scrollToDom($('#page_addmember'));
-        if($('body').width()<600){
+        if(bodywidth < 600){
             //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'})
             $('#page-base').fadeOut();
@@ -1940,6 +1948,7 @@ function DataFormattingDict(Option, jsondata){
 //서버로부터 회원 목록 가져오기
 var global_json;
 function get_member_list(use, callback){
+    var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
@@ -1969,7 +1978,7 @@ function get_member_list(use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
                 }
@@ -1997,6 +2006,7 @@ function get_member_list(use, callback){
 
 
 function get_member_ing_list(use, callback){
+    var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
@@ -2026,7 +2036,7 @@ function get_member_ing_list(use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     //$('#page_managemember').show();
                    $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
                 }
@@ -2052,6 +2062,7 @@ function get_member_ing_list(use, callback){
 }
 
 function get_member_end_list(use, callback){
+    var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
@@ -2081,7 +2092,7 @@ function get_member_end_list(use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
                 }
@@ -2109,6 +2120,7 @@ function get_member_end_list(use, callback){
 
 //회원목록을 테이블로 화면에 뿌리는 함수
 function memberListSet (type,option,Reverse, jsondata){
+    var bodywidth = window.innerWidth;
     if(Options.language == "KOR"){
         var text = '소진시까지'
         var text2 = '이번달 신규회원'
@@ -2307,7 +2319,7 @@ function memberListSet (type,option,Reverse, jsondata){
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
         var resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>'
-        if($('body').width()>600){
+        if(bodywidth > 600){
             $('#please_add_member_pc').fadeIn()
         }else{
             $('#please_add_member').fadeIn()
@@ -2324,7 +2336,8 @@ function memberListSet (type,option,Reverse, jsondata){
 
 //shade 보이기, 숨기기
 function hide_shadow_responsively(){
-    if($('body').width()>600){
+    var bodywidth = window.innerWidth;
+    if(bodywidth > 600){
         $('#shade3').css('display','none');
     }else{
         $('#shade').css('display','none');
@@ -2332,7 +2345,8 @@ function hide_shadow_responsively(){
 }
 
 function show_shadow_reponsively(){
-    if($('body').width()>600){
+    var bodywidth = window.innerWidth;
+    if(bodywidth > 600){
         $('#shade3').fadeIn('fast');
     }else{
         $('#shade').fadeIn('fast');
@@ -2507,6 +2521,7 @@ function limit_char(e){
 //회원정보////////////////////////////////////////////////////////
 //서버로부터 회원의 기본정보를 받아온다.
 function get_indiv_member_info(dbID){
+    var bodywidth = window.innerWidth;
     $.ajax({
               url: '/trainer/get_member_info/',
               type:'POST',
@@ -2525,7 +2540,7 @@ function get_indiv_member_info(dbID){
                 }else{
                     $('#errorMessageBar').hide()
                     $('#errorMessageText').text('')
-                    if($('body').width() < 600){
+                    if(bodywidth < 600){
                         open_member_info_popup_mobile(dbID, jsondata);
                         shade_index(100)
                     }else{
@@ -2708,6 +2723,7 @@ function open_member_info_popup_pc(dbID, jsondata){
 
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. MOBILE
 function open_member_info_popup_mobile(dbID, jsondata){
+    var bodywidth = window.innerWidth;
     var userName  = jsondata.lastnameInfo + jsondata.firstnameInfo;
     var userID    = jsondata.idInfo;
     var userBirth = jsondata.birthdayInfo;
@@ -2767,7 +2783,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#memberName_info_lastName, #memberName_info_firstName').hide()
     //$('#shade3').fadeIn('fast');
     //scrollToDom($('#page_managemember'));
-    if($('body').width()<600){
+    if(bodywidth < 600){
       //$('#page_managemember').hide();
       $('#page_managemember').css({'height':'0','overflow-y':'hidden'})
       if($('._calmonth').length != 0 || $('._calweek').length != 0){
@@ -3163,6 +3179,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
 
 //회원의 등록 이력을 서버로부터 받아온다.
 function get_member_lecture_list(dbID, use, callback){
+    var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/get_lecture_list/',
         type:'POST',
@@ -3190,7 +3207,7 @@ function get_member_lecture_list(dbID, use, callback){
                 if(use == "callback"){
                     callback(jsondata)
                 }else{
-                    if($('body').width() < 600){
+                    if(bodywidth < 600){
                         draw_member_lecture_list_table(jsondata, dbID, 'mobile')
                     }else{
                         draw_member_lecture_list_table(jsondata, dbID, 'pc') 
@@ -3211,6 +3228,7 @@ function get_member_lecture_list(dbID, use, callback){
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
 function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
+    var bodywidth = window.innerWidth;
     if(PCorMobile == "pc"){
         var $regHistory = $('#memberRegHistory_info_PC')
     }else if(PCorMobile == "mobile"){
@@ -3234,10 +3252,10 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
             var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
             var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
-            if($('body').width()>600){
+            if(bodywidth > 600){
                 var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
                 var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
-            }else if($('body').width()<=600){
+            }else if(bodywidth <= 600){
                 var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
                 var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
             }
@@ -3340,10 +3358,10 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
             var regDateTime = '<div>'+jsondata_regDateTimeArray[i]+'</div>'
             var remcount =    '<div class="lec_rem_count">'+jsondata_remCountArray[i]+'</div>'
-            if($('body').width()>600){
+            if(bodywidth > 600){
                 var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>' 
                 var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>' 
-            }else if($('body').width()<=600){
+            }else if(bodywidth <= 600){
                 var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>' 
                 var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>' 
             }
@@ -3419,6 +3437,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 }
 
 function get_member_history_list(dbID){
+    var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/get_member_schedule/',
         type:'POST',
@@ -3443,7 +3462,7 @@ function get_member_history_list(dbID){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width() < 600){
+                if(bodywidth < 600){
                     draw_member_history_list_table(jsondata, 'mobile') 
                 }else{
                     draw_member_history_list_table(jsondata, 'pc') 
@@ -3601,7 +3620,7 @@ function fill_member_info_by_ID_search(){
 
 //새로운 회원 정보 서버로 보내 등록하기
 function add_member_form_func(){
-
+    var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/add_lecture_info/',
         type:'POST',
@@ -3629,7 +3648,7 @@ function add_member_form_func(){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
                 }
@@ -3709,6 +3728,7 @@ function add_member_form_noemail_func(){
 
 //새로운 그룹 정보 서버로 보내 등록하기
 function add_group_form_func(){
+    var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/add_group_info/',
         type:'POST',
@@ -3741,7 +3761,7 @@ function add_group_form_func(){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
                 }
@@ -3778,6 +3798,7 @@ function add_group_form_func(){
 
 //새로운 그룹멤버 정보 서버로 보내 등록하기
 function add_groupmember_form_func(){
+    var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/add_group_member/',
         type:'POST',
@@ -3805,7 +3826,7 @@ function add_groupmember_form_func(){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
                 }
@@ -3838,6 +3859,7 @@ function add_groupmember_form_func(){
 
 //회원을 삭제 요청을 서버로 보낸다.
 function deleteMemberAjax(){
+    var bodywidth = window.innerWidth;
     var $form = $('#member-delete-form');
     $.ajax({
         url: '/trainer/delete_member_info/',
@@ -3863,7 +3885,7 @@ function deleteMemberAjax(){
                 $('#errorMessageText').text('')
                 close_info_popup('cal_popup_plandelete')
 
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
                 }
@@ -3973,6 +3995,7 @@ function deleteMemberAjax(){
 
 //여러종류의 팝업을 닫는다.
 function closePopup(option){
+    var bodywidth = window.innerWidth;
     if(Options.language == "KOR"){
         var text = '회원 정보 조회'
 
@@ -3986,7 +4009,6 @@ function closePopup(option){
     if(option == 'member_info'){
         hide_this()
         $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
-
         float_btn_show()
         base_show()
         base_modify_hide()
@@ -4016,12 +4038,10 @@ function closePopup(option){
                 shade_index(-100)
             }
         }
-        
 
         $('#memberRegHistory_info').html("")
         $('#memberRepeat_info').html("")
         $('#memberLectureHistory_info').html("")
-
 
         /*
         $('#memberName_info').attr('disabled',true)
@@ -4056,7 +4076,7 @@ function closePopup(option){
             shade_index(-100)
         }
     }else if(option == 'member_add'){
-        if($('body').width()<600){
+        if(bodywidth < 600){
             //$('#page_managemember').show();
             $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
             $('#float_btn_wrap').show();
@@ -4080,7 +4100,7 @@ function closePopup(option){
             shade_index(-100)
         }
     }else if(option == 'group_add'){
-        if($('body').width()<600){
+        if(bodywidth<600){
             //$('#page_managemember').show();
             $('#page_managemember').css({'height':'100%','overflow-y':'auto'})
             $('#float_btn_wrap').show();
@@ -4148,6 +4168,7 @@ function initialize_add_member_sheet(){
 
 //서버로부터 회원의 반복일정 정보를 받아온다.
 function get_indiv_repeat_info(dbID){
+    var bodywidth = window.innerWidth;
     $.ajax({
               url: '/trainer/get_member_repeat_schedule/',
               type:'POST',
@@ -4166,7 +4187,7 @@ function get_indiv_repeat_info(dbID){
                 }else{
                     $('#errorMessageBar').hide()
                     $('#errorMessageText').text('')
-                    if($('body').width() < 600){
+                    if(bodywidth < 600){
                         set_indiv_repeat_info(dbID, jsondata, 'mobile')
                     }else{
                         set_indiv_repeat_info(dbID, jsondata, 'pc')
