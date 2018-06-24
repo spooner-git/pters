@@ -71,7 +71,7 @@ if (agent.indexOf("firefox") != -1) {
 
 
     $(document).on('click','#upbutton-x-modify',function(){
-            var bodywidth = $('body').width();
+            var bodywidth = window.innerWidth;
             $('#uptext3').text('회원 정보');
             $('#uptext-pc-modify').text('회원 정보');
             closePopup('member_info');
