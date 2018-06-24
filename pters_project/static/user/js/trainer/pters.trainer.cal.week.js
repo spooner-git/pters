@@ -199,7 +199,8 @@ $(document).ready(function(){
 
 	//스케쥴 클릭시 팝업 Start
 
-	$('div.classTime').addEventListener('mouseenter', function(){$('#cal_popup_planinfo').css('will-change','display')})
+	var $classTime = document.getElementByClassName('.classTime')
+	$classTime.addEventListener('mouseenter', function(){$('#cal_popup_planinfo').css('will-change','display')})
 
 
 	$(document).on('click','div.classTime',function(e){ //일정을 클릭했을때 팝업 표시
