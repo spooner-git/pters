@@ -3989,15 +3989,16 @@ function closePopup(option){
         float_btn_show()
         base_show()
         base_modify_hide()
-        
+
         function float_btn_show(){
             $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
         }
         
         function base_show(){
-           $('#page-base').fadeIn('fast'); 
+           $('#page-base').css('display','block'); 
         }
+
         function base_modify_hide(){
            $('#page-base-modifystyle').css('display','none');
         }
