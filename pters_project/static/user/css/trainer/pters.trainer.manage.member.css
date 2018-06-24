@@ -1315,6 +1315,7 @@ select:focus > option:checked {
 
 	#page_addmember{
 		top: unset;
+		max-width: 450px !important;
 	}
 
 	#float_btn_wrap{

@@ -1363,7 +1363,7 @@ function float_btn_managemember(option){
 
 function pc_add_member(option){
     if(Options.language == "KOR"){
-        var text = '신규 회원 등록22'
+        var text = '신규 회원 등록'
         var text2 = '회원 재등록'
     }else if(Options.language == "JPN"){
         var text = '新規会員登録'
