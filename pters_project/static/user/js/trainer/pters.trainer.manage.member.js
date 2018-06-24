@@ -4033,8 +4033,7 @@ function closePopup(option){
         $('#comment_info').attr('readonly',true);
         */
 
-
-        $('#cal_popup_plandelete').fadeOut('fast')
+        $('#cal_popup_plandelete').css('display','none')
         
         if($('._calmonth').css('display')=="block"){
             close_info_popup('cal_popup_plancheck')

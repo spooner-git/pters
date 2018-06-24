@@ -64,11 +64,11 @@ function shade_index(option){
     }else if($('body').width()<=600){
       if(option<0){
         if($('#page-addplan').css('display') == 'block'){
-          $('#mshade_popup').css({'z-index':$('#page-addplan').css('z-index'),'display':'none'});
+          $('#mshade_popup').css({'display':'none','z-index':$('#page-addplan').css('z-index')});
         }else{
-          $('#mshade_popup').css({'z-index':option,'display':'none'})
+          $('#mshade_popup').css({'display':'none','z-index':option})
         }
-        $('#mshade').css({'z-index':option,'display':'none'});
+        $('#mshade').css({'display':'none','z-index':option});
       }else{
         if($('#page-addplan').css('display') == 'block'){
           $('#mshade_popup').css({'z-index':$('#page-addplan').css('z-index'),'display':'block'});
