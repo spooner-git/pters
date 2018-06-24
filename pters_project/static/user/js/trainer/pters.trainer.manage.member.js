@@ -72,7 +72,7 @@ if (agent.indexOf("firefox") != -1) {
 
     $(document).on('click','#upbutton-x-modify',function(){
             closePopup('member_info');
-            if($('body').width()<600){
+            if($('body').width()<600 && $('#calendar').length != 0){
                 //$('#calendar').css('display','block')
                 $('#calendar').css('height','100%')
             }
