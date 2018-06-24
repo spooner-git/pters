@@ -2738,9 +2738,9 @@ function open_member_info_popup_mobile(dbID, jsondata){
     }
 
     birth_dropdown_set()
-    $('#float_btn_wrap').fadeOut();
-    $('#page-base').fadeOut('fast');
-    $('#page-base-modifystyle').fadeIn('fast');
+    $('#float_btn_wrap').css('display','none');
+    $('#page-base').css('display','none');
+    $('#page-base-modifystyle').css('display','block');
     $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberinfo')
     $('#memberInfoPopup').attr({'data-username': userName, 'data-userid' : userID});
     $('#memberInfoPopup').addClass('display_block')
@@ -2779,8 +2779,8 @@ function open_member_info_popup_mobile(dbID, jsondata){
     }
 
     $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
-    $('#memberName_info').show()
-    $('#memberName_info_lastName, #memberName_info_firstName').hide()
+    $('#memberName_info').css('display','block')
+    $('#memberName_info_lastName, #memberName_info_firstName').css('display','none')
     //$('#shade3').fadeIn('fast');
     //scrollToDom($('#page_managemember'));
     if(bodywidth < 600){
