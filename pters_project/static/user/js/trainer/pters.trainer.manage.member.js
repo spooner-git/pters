@@ -72,12 +72,14 @@ if (agent.indexOf("firefox") != -1) {
 
     $(document).on('click','#upbutton-x-modify',function(){
             closePopup('member_info');
+            /*
             if($('body').width()<600 && $('#calendar').length != 0){
                 //$('#calendar').css('display','block')
                 $('#calendar').css('height','100%')
             }
             $('#uptext3').text('회원 정보');
             $('#uptext-pc-modify').text('회원 정보');
+            */
     })
     $(document).on('click','#upbutton-x',function(){
         if($(this).attr("data-page") == "memberadd"){
