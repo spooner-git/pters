@@ -264,7 +264,7 @@ $(document).ready(function(){
 		$('#canvasWrap span').hide();
 
 		$('#page-addplan-pc').hide()
-		$("#cal_popup_planinfo").fadeIn('fast', function(){$(this).css('will-change','auto')});
+		$("#cal_popup_planinfo").fadeIn('fast');
 		//shade_index(100)
 		//closeAlarm('pc')
 
