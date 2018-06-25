@@ -903,6 +903,7 @@ function modify_group_status(group_id, option){
                     get_group_end_list()
                     //groupListSet('finished',jsondata)
                 }
+                $('.lectureStateChangeSelectPopup').css('display','none')
 
                 console.log('success');
             }
