@@ -663,7 +663,7 @@ $(document).ready(function(){
 			            get_current_member_list()
       					get_current_group_list()
       					console.log('반복일정 삭제할떄 schedule_on_off',schedule_on_off)
-						if(schedule_on_off==1){
+						//if(schedule_on_off==1){
                             get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function (jsondata){
                             	console.log('반복일정 삭제후 get_member_lecture_list',jsondata)
                                 var availCount_personal = 0
@@ -674,7 +674,7 @@ $(document).ready(function(){
                                 }
                                 $("#countsSelected").text(availCount_personal);
                             })
-                        }
+                        //}
 			            if(bodywidth >= 600){
 	                		$('#calendar').css('position','relative')	
 	                	}
