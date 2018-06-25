@@ -5,6 +5,10 @@ html,body{
     background: #f7f7f7;
 }
 
+.beta_tag{
+    width: 30px;
+    position: absolute;
+}
 
 .display_block{
     display: block !important;
@@ -587,6 +591,11 @@ a:focus, a:hover{
 
 /*미디어 쿼리*/
 @media(min-width:600px){
+    .beta_tag{
+        width: 28px;
+        top: 18px;
+        position: absolute;
+    }
 
     #errorMessageBar{
         display: none;
