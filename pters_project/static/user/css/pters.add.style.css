@@ -556,10 +556,19 @@ ul a{
 	bottom: 13px;
 	width: 13px;
 }
+.dropdown-menu>li>a{
+	color: unset;
+}
 
-.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
+.dropdown-menu>li:focus, .dropdown-menu>li:active{
 	background: #282828;
 	color: #fe4e65;
+}
+
+
+.dropdown-menu>li>a:hover{
+	color: unset;
+	background: unset;
 }
 
 .dropdown_trainee_popup{
@@ -1134,6 +1143,11 @@ option{
 	.btnok{
 		line-height: 50px !important;
 		font-size: 15px !important;
+	}
+
+	.dropdown-menu>li:hover, .dropdown-menu>li>a:focus{
+		background: #282828 !important;
+		color: #fe4e65 !important;
 	}
 
 }
