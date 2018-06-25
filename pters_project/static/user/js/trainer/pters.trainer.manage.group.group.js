@@ -225,6 +225,7 @@ $(document).on('click','img.add_listedMember',function(){
 })
 
 function draw_memberlist_for_addByList(targetHTML){
+    var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/get_member_list/',
 
@@ -251,7 +252,7 @@ function draw_memberlist_for_addByList(targetHTML){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -479,6 +480,7 @@ var ori_group_capacity;
 var ori_group_memo;
 //그룹 리스트에서 그룹 수정버튼을 누른다.
 $(document).on('click','._groupmanage img._info_modify',function(e){
+    var bodywidth = window.innerWidth;
     if(!$(this).hasClass('disabled_button')){
         e.stopPropagation()
         var group_id = $(this).attr('data-groupid')
@@ -516,7 +518,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
             $(this).hide()
             $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
             $('img._info_modify').removeClass('disabled_button')
-            if($('body').width()>600){
+            if(bodywidth > 600){
                 $('img._info_download, img._info_delete').show()
             }else{
                 $('img._info_delete').show()
@@ -564,10 +566,11 @@ $(document).on('click','.groupWrap input',function(e){
 
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 $(document).on('click','img.btn_add_member_to_group',function(){
+    var bodywidth = window.innerWidth;
     var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid')
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname')
     var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity')
-    if($('body').width()<600){
+    if(bodywidth < 600){
         float_btn_managemember("groupmember")
     }else{
         pc_add_member('groupmember')
@@ -580,6 +583,7 @@ $(document).on('click','img.btn_add_member_to_group',function(){
 
 //서버로부터 그룹 목록 가져오기
 function get_group_ing_list(use, callback){
+    var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
@@ -608,7 +612,7 @@ function get_group_ing_list(use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -635,6 +639,7 @@ function get_group_ing_list(use, callback){
 
 //서버로부터 그룹 목록 가져오기
 function get_group_end_list(use, callback){
+    var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
@@ -663,7 +668,7 @@ function get_group_end_list(use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -690,6 +695,7 @@ function get_group_end_list(use, callback){
 
 //그룹 지우기
 function delete_group_from_list(group_id){
+    var bodywidth = window.innerWidth;
 	$.ajax({
         url:'/trainer/delete_group_info/',
         type:'POST',
@@ -717,7 +723,7 @@ function delete_group_from_list(group_id){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -788,6 +794,7 @@ function delete_groupmember_from_grouplist(){
 
 //그룹 정보 수정
 function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type){
+    var bodywidth = window.innerWidth;
 	$.ajax({
         url:'/trainer/update_group_info/',
         type:'POST',
@@ -815,7 +822,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -828,7 +835,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 }
                 toggle_lock_unlock_inputfield_grouplist(group_id, true)
                 $('img._info_cancel').hide()
-                if($('body').width()>600){
+                if(bodywidth > 600){
                     $('img._info_download, img._info_delete').show()
                 }else{
                     $('img._info_delete').show()
@@ -848,12 +855,13 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
 
 //그룹 완료/재개 하기
 function modify_group_status(group_id, option){
+    var bodywidth = window.innerWidth;
     if(option == 'complete'){
         var _URL = '/trainer/finish_group_info/'
     }else if(option == 'resume'){
         var _URL = '/trainer/progress_group_info/'
     }
-    
+
     $.ajax({
         url: _URL,
         type:'POST',
@@ -881,7 +889,7 @@ function modify_group_status(group_id, option){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -971,6 +979,7 @@ function groupListSet(option, jsondata){ //option : current, finished
 
 //그룹원 목록을 그룹에 뿌리기
 function get_groupmember_list(group_id, use, callback){
+    var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/get_group_member/',
         data: {"group_id":group_id},
@@ -998,7 +1007,7 @@ function get_groupmember_list(group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
