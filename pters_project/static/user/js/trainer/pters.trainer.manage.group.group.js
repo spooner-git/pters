@@ -539,6 +539,7 @@ $(document).on('click','._groupstatus_disabled_false',function(e){
     e.stopPropagation()
     $('.lectureStateChangeSelectPopup').css('display','block')
     $('.lectureStateChangeSelectPopup ._complete').attr('data-groupid', $(this).attr('data-groupid'))
+    $('.lectureStateChangeSelectPopup ._resume').attr('data-groupid', $(this).attr('data-groupid'))
 
     if($(this).attr('data-groupstatus') == "IP"){
         $('._complete').css('display','block')
@@ -896,10 +897,13 @@ function modify_group_status(group_id, option){
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if($('#currentGroupList').css('display') == "block"){
-                    groupListSet('current',jsondata)
+                    get_group_ing_list()
+                    //groupListSet('current',jsondata)
                 }else if($('#finishedGroupList').css('display') == "block"){
-                    groupListSet('finished',jsondata)
+                    get_group_end_list()
+                    //groupListSet('finished',jsondata)
                 }
+                $('.lectureStateChangeSelectPopup').css('display','none')
 
                 console.log('success');
             }
