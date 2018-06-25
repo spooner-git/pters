@@ -662,8 +662,10 @@ $(document).ready(function(){
 			            $('#members_mobile, #members_pc').html('')
 			            get_current_member_list()
       					get_current_group_list()
-						if(schedule_on_off==1) {
-                            get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function (jsondata) {
+      					console.log('반복일정 삭제할떄 schedule_on_off',schedule_on_off)
+						if(schedule_on_off==1){
+                            get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function (jsondata){
+                            	console.log('반복일정 삭제후 get_member_lecture_list',jsondata)
                                 var availCount_personal = 0
                                 for (var i = 0; i < jsondata.availCountArray.length; i++) {
                                     if (jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1") {
