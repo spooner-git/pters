@@ -537,9 +537,6 @@ $(document).on('click','._groupstatus_disabled_false',function(e){
     e.stopPropagation()
     $('.lectureStateChangeSelectPopup').css('display','block')
     $('.lectureStateChangeSelectPopup ._complete').attr('data-groupid', $(this).attr('data-groupid'))
-    
-
-    
 
     if($(this).attr('data-groupstatus') == "IP"){
         $('._complete').css('display','block')

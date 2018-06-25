@@ -1848,6 +1848,7 @@ def finish_lecture_info_logic(request):
     lecture_info = None
     member_info = None
     group_info = None
+
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
@@ -2713,13 +2714,12 @@ def finish_group_info_logic(request):
             group_info = GroupTb.objects.get(group_id=group_id)
         except ObjectDoesNotExist:
             error = '그룹 정보를 불러오지 못했습니다.'
+    if error is None:
+        group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
 
     if error is None:
-        group_data = GroupLectureTb.objects.get(group_tb_id=group_id, use=USE)
-
-    if error is None:
-        for group_info in group_data:
-            lecture_info = group_info.lecture_tb
+        for group_datum in group_data:
+            lecture_info = group_datum.lecture_tb
             schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
             repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
             # func_refresh_lecture_count(lecture_id)
@@ -2736,7 +2736,7 @@ def finish_group_info_logic(request):
 
     if error is None:
         if group_info is not None:
-            func_refresh_group_status(group_info.group_tb_id, None, None)
+            func_refresh_group_status(group_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -2746,12 +2746,12 @@ def finish_group_info_logic(request):
 
         log_data.save()
 
-        return render(request, 'trainer_error_ajax.html')
+        return render(request, 'ajax/trainer_error_ajax.html')
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
-        return render(request, 'trainer_error_ajax.html')
+        return render(request, 'ajax/trainer_error_ajax.html')
 
 
 @csrf_exempt
@@ -2770,11 +2770,11 @@ def progress_group_info_logic(request):
             error = '그룹 정보를 불러오지 못했습니다.'
 
     if error is None:
-        group_data = GroupLectureTb.objects.get(group_tb_id=group_id, use=USE)
+        group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
 
     if error is None:
-        for group_info in group_data:
-            lecture_info = group_info.lecture_tb
+        for group_datum in group_data:
+            lecture_info = group_datum.lecture_tb
             schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
             schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
             lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
@@ -2786,7 +2786,7 @@ def progress_group_info_logic(request):
 
     if error is None:
         if group_info is not None:
-            func_refresh_group_status(group_info.group_tb_id, None, None)
+            func_refresh_group_status(group_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -2796,12 +2796,12 @@ def progress_group_info_logic(request):
 
         log_data.save()
 
-        return render(request, 'trainer_error_ajax.html')
+        return render(request, 'ajax/trainer_error_ajax.html')
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
-        return render(request, 'trainer_error_ajax.html')
+        return render(request, 'ajax/trainer_error_ajax.html')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
