@@ -549,7 +549,7 @@ $(document).on('click','._groupstatus_disabled_false',function(e){
     }else{
         $('._resume').css('display','block')
         $('._complete, ._refund, ._delete').css('display','none')
-        $(document).on('click', '.resume', function(){
+        $(document).on('click', '._resume', function(){
             modify_group_status($(this).attr('data-groupid'), 'resume')
         })
     }
