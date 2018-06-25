@@ -896,9 +896,11 @@ function modify_group_status(group_id, option){
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if($('#currentGroupList').css('display') == "block"){
-                    groupListSet('current',jsondata)
+                    get_group_ing_list()
+                    //groupListSet('current',jsondata)
                 }else if($('#finishedGroupList').css('display') == "block"){
-                    groupListSet('finished',jsondata)
+                    get_group_end_list()
+                    //groupListSet('finished',jsondata)
                 }
 
                 console.log('success');
