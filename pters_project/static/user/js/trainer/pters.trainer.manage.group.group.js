@@ -547,7 +547,7 @@ $(document).on('click','._groupstatus_disabled_false',function(e){
         $(document).on('click', '._complete', function(){
             modify_group_status($(this).attr('data-groupid'), 'complete')
         })
-    }else{
+    }else if($(this).attr('data-groupstatus') == "PE"){
         $('._resume').css('display','block')
         $('._complete, ._refund, ._delete').css('display','none')
         $(document).on('click', '._resume', function(){
