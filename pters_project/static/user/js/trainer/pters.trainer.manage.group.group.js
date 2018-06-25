@@ -526,12 +526,37 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
             $(this).parent('div').siblings('._groupmemo').find('input').val(ori_group_memo)
             toggle_lock_unlock_inputfield_grouplist(group_id, true)
             e.stopPropagation()
-            
         })
         //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
     }
 
     
+})
+
+$(document).on('click','._groupstatus_disabled_false',function(e){
+    e.stopPropagation()
+    $('.lectureStateChangeSelectPopup').css('display','block')
+    $('.lectureStateChangeSelectPopup ._complete').attr('data-groupid', $(this).attr('data-groupid'))
+    
+
+    
+
+    if($(this).attr('data-groupstatus') == "IP"){
+        $('._complete').css('display','block')
+        $('._resume, ._refund, ._delete').css('display','none')
+        $(document).on('click', '._complete', function(){
+            modify_group_status($(this).attr('data-groupid'), 'complete')
+        })
+    }else{
+        $('._resume').css('display','block')
+        $('._complete, ._refund, ._delete').css('display','none')
+        $(document).on('click', '.resume', function(){
+            modify_group_status($(this).attr('data-groupid'), 'resume')
+        })
+    }
+
+
+
 })
 
 $(document).on('click','.groupWrap input',function(e){
@@ -824,6 +849,67 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
 }
 //그룹 정보 수정
 
+//그룹 완료/재개 하기
+function modify_group_status(group_id, option){
+    if(option == 'complete'){
+        var _URL = '/trainer/finish_group_info/'
+    }else if(option == 'resume'){
+        var _URL = '/trainer/progress_group_info/'
+    }
+    
+    $.ajax({
+        url: _URL,
+        type:'POST',
+        data: {"group_id":group_id},
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                scrollToDom($('#page_addmember'))
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if($('body').width()<600){
+                    $('#page_managemember').show();
+                }
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                if($('#currentGroupList').css('display') == "block"){
+                    groupListSet('current',jsondata)
+                }else if($('#finishedGroupList').css('display') == "block"){
+                    groupListSet('finished',jsondata)
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
+//그룹 완료/재개 하기
+
 //그룹 목록을 화면에 뿌리기
 function groupListSet(option, jsondata){ //option : current, finished
     switch(option){
@@ -838,7 +924,7 @@ function groupListSet(option, jsondata){ //option : current, finished
             var text_membernum = "종료된 그룹 " 
         break;
     }
-
+    console.log('groupListSet',jsondata)
     var htmlToJoin = [];
     var groupNum = jsondata.group_id.length;
     for(var i=0; i<groupNum; i++){
@@ -851,6 +937,8 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_memberlist = []
         var group_membernum = jsondata.group_member_num[i];
         var group_capacity = jsondata.member_num[i];
+        var groupstatus = jsondata.state_cd_name[i];
+        var groupstatus_cd = jsondata.state_cd[i];
         
         var full_group = ""
         if(group_membernum == group_capacity && group_type == "NORMAL"){
@@ -872,9 +960,10 @@ function groupListSet(option, jsondata){ //option : current, finished
                     '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
                     '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-                    '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '&nbsp;&nbsp; /' + '<input style="width:40px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
+                    '<div class="_grouppartystatus '+full_group+'"><span>'+ group_membernum + ' /</span> ' + '<input style="width:40px;text-align:left;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
+                    '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
                     '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
     }
@@ -1229,6 +1318,7 @@ function send_delete_member_repeat_infos(jsondata){
 
 function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=false 수정가능, disable=true 수정불가
 	$('div[data-groupid="'+group_id+'"] input._editable').attr('disabled',disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable))
+    $('div[data-groupid="'+group_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable))
 }
 
 
