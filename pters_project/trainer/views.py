@@ -2733,10 +2733,7 @@ def finish_group_info_logic(request):
             lecture_info.state_cd = 'PE'
             lecture_info.save()
         group_info.state_cd = 'PE'
-
-    if error is None:
-        if group_info is not None:
-            func_refresh_group_status(group_id, None, None)
+        group_info.save()
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
@@ -2771,7 +2768,6 @@ def progress_group_info_logic(request):
 
     if error is None:
         group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
-
     if error is None:
         for group_datum in group_data:
             lecture_info = group_datum.lecture_tb
@@ -2783,10 +2779,7 @@ def progress_group_info_logic(request):
             lecture_info.state_cd = 'IP'
             lecture_info.save()
         group_info.state_cd = 'IP'
-
-    if error is None:
-        if group_info is not None:
-            func_refresh_group_status(group_id, None, None)
+        group_info.save()
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
