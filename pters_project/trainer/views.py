@@ -2703,7 +2703,7 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 def finish_group_info_logic(request):
 
     group_id = request.POST.get('group_id', '')
-    next_page = request.POST.get('next_page', '')
+    # next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
     group_info = None
@@ -2746,19 +2746,19 @@ def finish_group_info_logic(request):
 
         log_data.save()
 
-        return redirect(next_page)
+        return render(request, 'trainer_error_ajax.html')
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
-        return redirect(next_page)
+        return render(request, 'trainer_error_ajax.html')
 
 
 @csrf_exempt
 def progress_group_info_logic(request):
 
     group_id = request.POST.get('group_id', '')
-    next_page = request.POST.get('next_page', '')
+    # next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     error = None
     group_info = None
@@ -2796,12 +2796,12 @@ def progress_group_info_logic(request):
 
         log_data.save()
 
-        return redirect(next_page)
+        return render(request, 'trainer_error_ajax.html')
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
-        return redirect(next_page)
+        return render(request, 'trainer_error_ajax.html')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
