@@ -2699,6 +2699,111 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         return render(request, self.template_name, context)
 
 
+@csrf_exempt
+def finish_group_info_logic(request):
+
+    group_id = request.POST.get('group_id', '')
+    # next_page = request.POST.get('next_page', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    group_info = None
+
+    if error is None:
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id)
+        except ObjectDoesNotExist:
+            error = '그룹 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        group_data = GroupLectureTb.objects.get(group_tb_id=group_id, use=USE)
+
+    if error is None:
+        for group_info in group_data:
+            lecture_info = group_info.lecture_tb
+            schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
+            repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+            # func_refresh_lecture_count(lecture_id)
+            if len(schedule_data) > 0:
+                schedule_data.delete()
+            if len(repeat_schedule_data) > 0:
+                repeat_schedule_data.delete()
+            lecture_info.lecture_avail_count = 0
+            lecture_info.lecture_rem_count = 0
+            lecture_info.mod_dt = timezone.now()
+            lecture_info.state_cd = 'PE'
+            lecture_info.save()
+        group_info.state_cd = 'PE'
+
+    if error is None:
+        if group_info is not None:
+            func_refresh_group_status(group_info.group_tb_id, None, None)
+
+    if error is None:
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name+' 그룹 수강 정보', log_how='완료 처리',
+                         reg_dt=timezone.now(), use=USE)
+
+        log_data.save()
+
+        return render(request, 'trainer_error_ajax.html')
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+        return render(request, 'trainer_error_ajax.html')
+
+
+@csrf_exempt
+def progress_group_info_logic(request):
+
+    group_id = request.POST.get('group_id', '')
+    # next_page = request.POST.get('next_page', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    group_info = None
+
+    if error is None:
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id)
+        except ObjectDoesNotExist:
+            error = '그룹 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        group_data = GroupLectureTb.objects.get(group_tb_id=group_id, use=USE)
+
+    if error is None:
+        for group_info in group_data:
+            lecture_info = group_info.lecture_tb
+            schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+            schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
+            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
+            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
+            lecture_info.mod_dt = timezone.now()
+            lecture_info.state_cd = 'IP'
+            lecture_info.save()
+        group_info.state_cd = 'IP'
+
+    if error is None:
+        if group_info is not None:
+            func_refresh_group_status(group_info.group_tb_id, None, None)
+
+    if error is None:
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name+' 그룹 수강 정보', log_how='재개 처리',
+                         reg_dt=timezone.now(), use=USE)
+
+        log_data.save()
+
+        return render(request, 'trainer_error_ajax.html')
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+        return render(request, 'trainer_error_ajax.html')
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
