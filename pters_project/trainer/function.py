@@ -829,4 +829,3 @@ def func_get_lecture_list(context, class_id, member_id):
         context['error'] = error
 
     return context
-

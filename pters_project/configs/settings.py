@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'trainer',
     'schedule',
     'center',
+    'payment',
     'el_pagination',
 ]
 
