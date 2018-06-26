@@ -87,13 +87,13 @@ img.prev_page{
 
 @keyframes blink{
 	0%{
-		opacity: 1;
+		opacity: 0.8;
 	}
 	50%{
-		opacity: 0.3;
+		opacity: 0.4;
 	}
 	100%{
-		opacity: 1;
+		opacity: 0.8;
 	}
 
 }
