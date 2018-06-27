@@ -474,7 +474,8 @@ ul a{
 }
 
 .tdgraph_trainee_popup{
-	height: 88px;
+	height: 96px;
+	overflow-y: auto;
 	background: #f4f4f4;
 	border-top: 0.5px solid #3b3d3d;
 	border-bottom: 0.5px solid #3b3d3d;
@@ -935,6 +936,7 @@ option{
 	border:2px solid #fe4e65;
 	margin-left: 3px;
 	margin-top: 2px;
+	z-index: 1;
 }
 /*
 .blankSelected{
