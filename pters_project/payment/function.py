@@ -5,14 +5,14 @@ from django.utils import timezone
 
 
 def func_set_billing_schedule(customer_uid):
-    error = None
     today = timezone.now()
     today = today.replace(hour=14, minute=0)
     # next_year = int(month_first_day.strftime('%Y')) + 1
     this_month = int(today.strftime('%m'))
     if this_month == 2:
         next_month_today = today + datetime.timedelta(days=28)
-    elif this_month == 1 or this_month == 3 or this_month == 5 or this_month == 7 or this_month == 8 or this_month == 10 or this_month == 12:
+    elif this_month == 1 or this_month == 3 or this_month == 5 or this_month == 7\
+            or this_month == 8 or this_month == 10 or this_month == 12:
         next_month_today = today + datetime.timedelta(days=31)
     else:
         next_month_today = today + datetime.timedelta(days=30)
@@ -54,7 +54,8 @@ def func_get_payment_token():
     context = {'error': None, 'access_token': None}
     data_token = {
         'imp_key': "3714680457579852",  # REST API키
-        'imp_secret': "2lsGAvxWcGqTtsjZcSK8LimgEuzYnJRq5j6GPEC1k3VOveNH6yQSQd8uIIt6rkwxEDdthPvBTqpoFd6M"  # REST API Secret
+        'imp_secret': "2lsGAvxWcGqTtsjZcSK8LimgEuzYnJRq5j6GPEC1k3VOveNH6yQSQd8uIIt6rkwxEDdthPvBTqpoFd6M"
+        # REST API Secret
     }
 
     body = json.dumps(data_token)
@@ -110,4 +111,3 @@ def func_resend_payment_info(customer_uid, merchant_uid):
             error = '통신중 에러가 발생했습니다.'
 
     return error
-

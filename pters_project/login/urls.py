@@ -27,7 +27,8 @@ urlpatterns = [
     url(r'^add_member_info_email/$', views.add_member_info_logic_test, name='add_member_info_email'),
     url(r'^check_member_id/$', views.CheckMemberIdView.as_view(), name='check_member_id'),
     url(r'^check_member_email/$', views.CheckMemberEmailView.as_view(), name='check_member_email'),
-    url(r'^check_member_form_validation/$', views.CheckMemberValidationView.as_view(), name='check_member_form_validation'),
+    url(r'^check_member_form_validation/$', views.CheckMemberValidationView.as_view(),
+        name='check_member_form_validation'),
 
     url(r'^add_member_info/$', views.AddMemberView.as_view(), name='add_member_info'),
     url(r'^add_member_info_no_email/$', views.AddMemberNoEmailView.as_view(), name='add_member_info_no_email'),
