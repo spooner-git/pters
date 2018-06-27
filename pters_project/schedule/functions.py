@@ -22,7 +22,8 @@ def func_get_lecture_id(class_id, member_id):
                                                  lecture_tb__member_id=member_id,
                                                  lecture_tb__state_cd='IP',
                                                  lecture_tb__lecture_avail_count__gt=0,
-                                                 lecture_tb__use=USE).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
+                                                 lecture_tb__use=USE).order_by('lecture_tb__start_date',
+                                                                               'lecture_tb__reg_dt')
 
     for lecture_info in lecture_data:
         try:
@@ -119,7 +120,8 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
         except ObjectDoesNotExist:
             group_repeat_schedule_info = None
 
-        group_repeat_schedule_total_count = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id).count()
+        group_repeat_schedule_total_count = \
+            RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id).count()
         group_repeat_schedule_end_count = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id,
                                                                           state_cd='PE').count()
         if group_repeat_schedule_info is not None:
@@ -138,9 +140,9 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
                 group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                                           lecture_tb__use=USE,
                                                                           use=USE).count()
-                group_lecture_end_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                        lecture_tb__use=USE,
-                                                                        use=USE).exclude(lecture_tb__state_cd='IP').count()
+                group_lecture_end_count = \
+                    GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__use=USE,
+                                                  use=USE).exclude(lecture_tb__state_cd='IP').count()
                 if group_info is not None:
                     if group_lecture_total_count == group_lecture_end_count:
                         group_info.state_cd = 'PE'
@@ -228,6 +230,7 @@ def func_add_repeat_schedule(class_id, lecture_id, group_id, group_schedule_id, 
 def func_delete_schedule(schedule_id,  user_id):
     error = None
     context = {'error': None, 'schedule_id': ''}
+    schedule_info = None
 
     if schedule_id is None or schedule_id == '':
         error = '스케쥴 정보를 불러오지 못했습니다.'
@@ -270,6 +273,7 @@ def func_delete_schedule(schedule_id,  user_id):
 def func_delete_repeat_schedule(repeat_schedule_id):
     error = None
     context = {'error': None, 'schedule_info': ''}
+    repeat_schedule_info = None
 
     if repeat_schedule_id is None or repeat_schedule_id == '':
         error = '반복일정 정보를 불러오지 못했습니다.'
@@ -280,32 +284,32 @@ def func_delete_repeat_schedule(repeat_schedule_id):
             repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
         except ObjectDoesNotExist:
             error = '반복일정 정보를 불러오지 못했습니다.'
+    if error is None:
+        try:
+            with transaction.atomic():
+                delete_repeat_schedule = DeleteRepeatScheduleTb(
+                    repeat_schedule_id=repeat_schedule_info.repeat_schedule_id,
+                    class_tb_id=repeat_schedule_info.class_tb_id,
+                    lecture_tb_id=repeat_schedule_info.lecture_tb_id,
+                    group_tb_id=repeat_schedule_info.group_tb_id,
+                    group_schedule_id=repeat_schedule_info.group_schedule_id,
+                    repeat_type_cd=repeat_schedule_info.repeat_type_cd,
+                    week_info=repeat_schedule_info.week_info,
+                    start_date=repeat_schedule_info.start_date,
+                    end_date=repeat_schedule_info.end_date,
+                    start_time=repeat_schedule_info.start_time,
+                    time_duration=repeat_schedule_info.time_duration,
+                    state_cd=repeat_schedule_info.state_cd, en_dis_type=repeat_schedule_info.en_dis_type,
+                    reg_member_id=repeat_schedule_info.reg_member_id,
+                    reg_dt=repeat_schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
 
-    try:
-        with transaction.atomic():
-            delete_repeat_schedule = DeleteRepeatScheduleTb(
-                repeat_schedule_id=repeat_schedule_info.repeat_schedule_id,
-                class_tb_id=repeat_schedule_info.class_tb_id,
-                lecture_tb_id=repeat_schedule_info.lecture_tb_id,
-                group_tb_id=repeat_schedule_info.group_tb_id,
-                group_schedule_id=repeat_schedule_info.group_schedule_id,
-                repeat_type_cd=repeat_schedule_info.repeat_type_cd,
-                week_info=repeat_schedule_info.week_info,
-                start_date=repeat_schedule_info.start_date,
-                end_date=repeat_schedule_info.end_date,
-                start_time=repeat_schedule_info.start_time,
-                time_duration=repeat_schedule_info.time_duration,
-                state_cd=repeat_schedule_info.state_cd, en_dis_type=repeat_schedule_info.en_dis_type,
-                reg_member_id=repeat_schedule_info.reg_member_id,
-                reg_dt=repeat_schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
-
-            delete_repeat_schedule.save()
-            repeat_schedule_info.delete()
-            context['schedule_info'] = delete_repeat_schedule
-    except TypeError:
-        error = '등록 값의 형태에 문제가 있습니다.'
-    except ValueError:
-        error = '등록 값에 문제가 있습니다.'
+                delete_repeat_schedule.save()
+                repeat_schedule_info.delete()
+                context['schedule_info'] = delete_repeat_schedule
+        except TypeError:
+            error = '등록 값의 형태에 문제가 있습니다.'
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
     context['error'] = error
 
     return context
@@ -313,7 +317,7 @@ def func_delete_repeat_schedule(repeat_schedule_id):
 
 def func_update_repeat_schedule(repeat_schedule_id):
     error = None
-
+    repeat_schedule_info = None
     if repeat_schedule_id is None or repeat_schedule_id == '':
         error = '반복일정 정보를 불러오지 못했습니다.'
 
@@ -419,7 +423,8 @@ def func_update_member_schedule_alarm(class_id):
 
 
 # 로그정보 쓰기
-def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_name, en_dis_type, log_type, request):
+def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, member_name,
+                       en_dis_type, log_type, request):
 
     # 일정 등록
     log_type_name = ''
@@ -474,6 +479,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
 def func_check_group_schedule_enable(group_id):
 
     error = None
+    group_info = None
     try:
         group_info = GroupTb.objects.get(group_id=group_id)
     except ObjectDoesNotExist:
@@ -566,6 +572,7 @@ def func_get_not_available_group_member_list(group_id):
 
 # 강사 -> 회원 push 메시지 전달
 def func_send_push_trainer(lecture_id, title, message):
+    error = None
     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
     if lecture_id is not None and lecture_id != '':
         # member_lecture_data = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
@@ -593,11 +600,16 @@ def func_send_push_trainer(lecture_id, title, message):
                 resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
                                           headers={'Content-Type': 'application/json;',
                                                    'Authorization': 'key=' + push_server_id})
+                if resp['status'] != '200':
+                    error = '통신중 에러가 발생했습니다.'
+
+    return error
 
 
 # 회원 -> 강사 push 메시지 전달
 def func_send_push_trainee(class_id, title, message):
     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+    error = None
     if class_id is not None and class_id != '':
 
         member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
@@ -625,6 +637,10 @@ def func_send_push_trainee(class_id, title, message):
                 resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
                                           headers={'Content-Type': 'application/json;',
                                                    'Authorization': 'key=' + push_server_id})
+                if resp['status'] != '200':
+                    error = '통신중 에러가 발생했습니다.'
+
+    return error
 
 
 def func_get_trainer_schedule(context, class_id, start_date, end_date):
@@ -638,7 +654,7 @@ def func_get_trainer_schedule(context, class_id, start_date, end_date):
         error = '강좌 정보를 불러오지 못했습니다.'
     func_get_trainer_on_schedule(context, class_id, start_date, end_date)
     func_get_trainer_off_schedule(context, class_id, start_date, end_date)
-    func_get_trainer_group_schedule(context, class_id, start_date, end_date, None)
+    func_get_trainer_group_schedule(context, class_id, start_date, end_date, '')
 
     if error is None:
         class_info.schedule_check = 0
@@ -769,6 +785,7 @@ def func_get_trainer_off_repeat_schedule(context, class_id):
     for off_repeat_schedule_info in off_repeat_schedule_data:
         off_repeat_schedule_info.start_date = str(off_repeat_schedule_info.start_date)
         off_repeat_schedule_info.end_date = str(off_repeat_schedule_info.end_date)
+        state_cd_name = None
         try:
             state_cd_name = CommonCdTb.objects.get(common_cd=off_repeat_schedule_info.state_cd)
         except ObjectDoesNotExist:
@@ -834,4 +851,3 @@ def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_s
                 check_date = check_date + datetime.timedelta(days=7)
 
     return repeat_schedule_date_list
-

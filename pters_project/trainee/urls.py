@@ -28,7 +28,8 @@ urlpatterns = [
     # 회원 스케쥴 조회 - 1:1/Group/Off
     url(r'^get_trainee_schedule/$', views.GetTraineeScheduleView.as_view(), name='get_trainee_schedule'),
     # 회원 스케쥴 이력 조회 - 1:1/Group
-    url(r'^get_trainee_schedule_history/$', views.GetTraineeScheduleHistoryView.as_view(), name='get_trainee_schedule_history'),
+    url(r'^get_trainee_schedule_history/$', views.GetTraineeScheduleHistoryView.as_view(),
+        name='get_trainee_schedule_history'),
 
     # 수강 정보 기능 #####################################################################################################
     # 강좌 정보 list 조회
@@ -36,7 +37,8 @@ urlpatterns = [
     # 수강 정보 list 조회 - auth_cd(연결상태) 종류별
     url(r'^get_trainee_lecture_list/$', views.GetTraineeLectureListView.as_view(), name='get_trainee_lecture_list'),
     # 수강 정보 연결 안된 정보 조회
-    url(r'^get_trainee_lecture_connection_list/$', views.GetTraineeLectureConnectionListView.as_view(), name='get_trainee_lecture_connection_list'),
+    url(r'^get_trainee_lecture_connection_list/$', views.GetTraineeLectureConnectionListView.as_view(),
+        name='get_trainee_lecture_connection_list'),
     # 수강 횟수 정보 가져오기
     url(r'^get_trainee_count/$', views.GetTraineeCountView.as_view(), name='get_trainee_count'),
     # 수강정보 선택/연동 기능
@@ -50,8 +52,10 @@ urlpatterns = [
 
     # 그룹 기능 #####################################################################################################
     # 회원이 자신이 속한 그룹중 진행중 상태인 그룹 list 조회
-    url(r'^get_trainee_group_ing_list/$', views.GetTraineeGroupIngListViewAjax.as_view(), name='get_trainee_group_ing_list'),
-    url(r'^get_trainee_group_end_list/$', views.GetTraineeGroupEndListViewAjax.as_view(), name='get_trainee_group_end_list'),
+    url(r'^get_trainee_group_ing_list/$', views.GetTraineeGroupIngListViewAjax.as_view(),
+        name='get_trainee_group_ing_list'),
+    url(r'^get_trainee_group_end_list/$', views.GetTraineeGroupEndListViewAjax.as_view(),
+        name='get_trainee_group_end_list'),
 
     # 알람 기능 #####################################################################################################
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
@@ -73,5 +77,3 @@ urlpatterns = [
     # 회원 탈퇴 페이지
     url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
 ]
-
-

@@ -50,9 +50,11 @@ urlpatterns = [
     # 그룹 반복일정 등록
     url(r'^add_group_repeat_schedule/$', views.add_group_repeat_schedule_logic, name='add_group_repeat_schedule'),
     # 그룹 반복일정 확인
-    url(r'^add_group_repeat_schedule_confirm/$', views.add_group_repeat_schedule_confirm, name='add_group_repeat_schedule_confirm'),
+    url(r'^add_group_repeat_schedule_confirm/$', views.add_group_repeat_schedule_confirm,
+        name='add_group_repeat_schedule_confirm'),
     # 그룹 반복일정 취소
-    url(r'^delete_group_repeat_schedule/$', views.delete_group_repeat_schedule_logic, name='delete_group_repeat_schedule'),
+    url(r'^delete_group_repeat_schedule/$', views.delete_group_repeat_schedule_logic,
+        name='delete_group_repeat_schedule'),
 
 
     # 푸시 알림 기능 #####################################################################################################
