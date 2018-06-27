@@ -923,6 +923,7 @@ $(document).ready(function(){
 
       var ajax_block_during_submit = true
       $("#upbutton-check, #submitBtn_pt, #submitBtn_mini").click(function(e){
+        var bodywidth = window.innerWidth;
          e.preventDefault();
          if(addTypeSelect=="ptadd"){
             var $form = $('#pt-add-form')
@@ -1045,7 +1046,7 @@ $(document).ready(function(){
                                 shade_index(-100)
                                 
                                 $('#calendar').css('height','100%')
-                                if($('body').width()>=600){
+                                if(bodywidth >= 600){
                                     $('#calendar').css('position','relative')
                                 }
                             }
@@ -1298,8 +1299,9 @@ function float_btn_addplan(option){
 
 function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     addTypeSelect = option
+    var bodywidth = window.innerWidth;
 
-    if($('body').width()<=600){
+    if(bodywidth <= 600){
       $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
       $('#page-base-addstyle, #page-addplan').show();
       $('#page-addplan').css('top',50);
@@ -1307,7 +1309,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
       $('#calendar').css('height','0')
       $('#upbutton-x').attr('data-page','addplan')
     }else{
-      $('#page-addplan').fadeIn('fast').css({'top':(($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()),
+      $('#page-addplan').css({'display':'block','top':(($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()),
                                                 'left':(($(window).width()-$('#page-addplan').outerWidth())/2+$(window).scrollLeft())})
       $('#page-addplan-pc').css('display','none')
     }
@@ -1330,7 +1332,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#uptext2').text('레슨 일정 등록')
         $('#id_training_date').val($('#datepicker').val())
         $('#id_repeat_start_date').val($('#datepicker_repeat_start').val())
-        if($('body').width()>600){
+        if(bodywidth > 600){
           $('#addpopup_pc_label_pt').show()
           $('#addpopup_pc_label_off').hide()
         }
@@ -1340,7 +1342,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#uptext2').text('OFF 일정 등록')
         $('#id_training_date_off').val($('#datepicker').val())
         $('#id_repeat_start_date_off').val($('#datepicker_repeat_start').val())
-        if($('body').width()>600){
+        if(bodywidth > 600){
           $('#addpopup_pc_label_off').show()
           $('#addpopup_pc_label_pt').hide()
         }
@@ -1892,7 +1894,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
                           {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
                            'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
                          }
-    $('#cal_popup_repeatconfirm').fadeIn('fast')
+    $('#cal_popup_repeatconfirm').css('display','block')
     shade_index(200)
     if(addTypeSelect == "repeatoffadd"){
       var $id_repeat_freq = $('#id_repeat_freq_off')
@@ -2159,7 +2161,7 @@ function completeSend(use, callback){
 function closeAddPopup(){
   //$('body').css('overflow-y','overlay');
   $('#page-addplan').hide('fast','swing');
-  $('#float_btn_wrap').fadeIn();
+  $('#float_btn_wrap').css('display','block');
   $('#float_btn').removeClass('rotate_btn');
   $('#page-base').show();
   $('#page-base-addstyle').hide();

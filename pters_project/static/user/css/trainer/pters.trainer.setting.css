@@ -132,8 +132,10 @@ body{
 	
 	#upperImg{
 		display: block;
+		/*
 		background-image:url(/static/user/res/bg.png);
 		background-size: 100%;
+		*/
 		margin:0 auto;
 		height: 100px;
 		width: 100%;

@@ -103,16 +103,18 @@ $(document).ready(function(){
 
     //등록횟수(빠른입력방식) 선택
     $(document).on('click','#groupTimeSelect .ptersCheckbox',function(){
-    	$('#id_group_schedule_id').val($(this).attr('group-schedule-id'))
-    	$('#id_training_time').val($(this).attr('data-time'))
-    	$('#id_time_duration').val($(this).attr('data-dur'))
+    	if(!$(this).hasClass('disabled_button')){
+    		$('#id_group_schedule_id').val($(this).attr('group-schedule-id'))
+	    	$('#id_training_time').val($(this).attr('data-time'))
+	    	$('#id_time_duration').val($(this).attr('data-dur'))
 
 
-    	$('#groupTimeSelect div.checked').removeClass('checked ptersCheckboxInner');
-        var pterscheckbox = $(this).find('div');
-        $(this).addClass('checked');
-        pterscheckbox.addClass('ptersCheckboxInner checked');
-        check_dropdown_selected();
+	    	$('#groupTimeSelect div.checked').removeClass('checked ptersCheckboxInner');
+	        var pterscheckbox = $(this).find('div');
+	        $(this).addClass('checked');
+	        pterscheckbox.addClass('ptersCheckboxInner checked');
+	        check_dropdown_selected();
+    	}
     })
 
     $(document).on('click','.admonth',function(){
@@ -1039,7 +1041,38 @@ $(document).ready(function(){
 				    }
 
 
-					htmlTojoin.push('<div><div class="ptersCheckbox" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
+				    //그룹 일정중 지난시간 일정은 선택 불가능 하도록, 근접예약 방지 옵션 값 적용
+				    var disable = ""
+				    var selecteddate = date_format_yyyymmdd_to_yyyymmdd_split(jsondata.group_schedule_start_datetime[i].split(' ')[0],'')   		
+		    		var today = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'_'+oriMonth+'_'+oriDate,'');
+	
+			        var todayandlimitSum = Number(today)+parseInt(Options.limit/24);
+			        if(Number(oriDate)+parseInt(Options.limit/24) > lastDay[Number(oriMonth)-1]){
+			        	var todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'-'+(Number(oriMonth)+1)+'-'+parseInt(Options.limit/24),'')
+			        }
+
+			        if(selecteddate > today && selecteddate < todayandlimitSum){
+			        	console.log(selecteddate+'>'+today+' && '+selecteddate+'<'+todayandlimitSum)
+			            var disable = "disabled_button"
+			        }else if(selecteddate == today){
+			            if(planHour < currentHour + Options.limit +1){
+			              var disable = "disabled_button"
+			            }
+			        }
+			        //그룹 일정중 지난시간 일정은 선택 불가능 하도록, 근접예약 방지 옵션 값 적용
+
+			        //내 일정중 그룹일정 리스트와 같은 시간 항목이 있으면 그 그룹시간은 비활성화 
+			        if(jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) !=  -1){
+			        	var disable = "disabled_button"
+			        }
+
+			        //완료된 그룹은 비활성화
+			        if(jsondata.group_schedule_finish_check[i] == 1){
+			        	var disable = "disabled_button"
+			        }
+
+
+					htmlTojoin.push('<div><div class="ptersCheckbox '+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
 																	'" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
 																	'" data-dur="'+planDura+
 																	'" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div></div></div>'+
@@ -1702,6 +1735,7 @@ var currentYear = date.getFullYear(); //현재 년도
 var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 var currentDate = date.getDate(); //오늘 날짜
 var currentHour = date.getHours(); //현재시간
+var currentMinute = date.getMinutes();
 var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
     if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
         lastDay[1] = 29;

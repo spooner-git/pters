@@ -1,0 +1,113 @@
+{% extends "trainer_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.work.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
+
+        
+{% endblock %}
+
+
+
+{% block content %}
+
+  <div id="ymText">
+    <div id="yText"></div>
+    <div id="mText"></div>
+  </div>
+
+
+<!--매출 그래프--> <!--총매출, 차감 매출, 등록 매출, 회원수(이번달신규등록, 이번달종료예정), 트레이너 고용임금, 관리비용-->
+  <div id="salesGraph">
+    <table>
+      <thead>
+        <tr>
+          <th id="description">항목</th>
+          <th id="gap"></th>
+          <th id="cost"> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="totalSales" class="salesRow" onclick="payment(); "><td>그룹 기능 결제 </td><td class="tablegap"></td><td></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div id="warningMsg">
+    <p>※ 이익금 계산은 세금(종합소득세, 부가가치세등)이 반영되지 않은 금액으로, 세무 증빙으로 사용할 수 없는 참고용 자료입니다.</p>
+    <img src="/static/user/res/PTERS_logo.jpg" alt="" style="width: 50%;opacity: 0.15; padding-top: 15px;">
+  </div>
+
+<!--통계 그래프-->
+  <div id="analyGraph">
+    <div>
+      
+    </div>
+  </div>
+
+
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+         <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+{#         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.work.js" %}></script>#}
+         <script>
+            var IMP = window.IMP; // 생략가능
+            IMP.init({{ payment_id }}); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+
+            function payment(){
+                console.log('payment function test')
+                IMP.request_pay({
+                    pg : 'jtnet', // version 1.1.0부터 지원.
+                    pay_method : 'card',
+                    merchant_uid : 'pters_group_007',
+                    customer_uid: 'pters_customer_uid_{{request.user.id}}_02', // 카드(빌링키)와 1:1로 대응하는 값
+                    name : 'PTERS 그룹 기능',
+                    amount : 3000,
+                    buyer_email : '{{ request.user.email }}',
+                    buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                    buyer_tel : '',
+                    buyer_addr : '서울특별시 강남구 삼성동',
+                    buyer_postcode : '123-456',
+{#                    m_redirect_url : '/trainer/billings/'#}
+                }, function(rsp) {
+                    if ( rsp.success ) {
+                        var msg = '결제가 완료되었습니다.';
+                        msg += '고유ID : ' + rsp.imp_uid;
+                        msg += '상점 거래ID : ' + rsp.merchant_uid;
+                        msg += '결제 금액 : ' + rsp.paid_amount;
+                        msg += '카드 승인번호 : ' + rsp.apply_num;
+                        jQuery.ajax({
+                            url: "/trainer/billings/", // 서비스 웹서버
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            data: JSON.stringify({
+                                        start_date: '2018-06-26',
+                                        end_date: '2018-07-26',
+                                        payment_type_cd: 'PERIOD',
+                                        merchandise_type_cd: 'group',
+                                        merchant_uid: 'pters_group_007',
+                                        customer_uid: 'pters_customer_uid_{{request.user.id}}_02', // 카드(빌링키)와 1:1로 대응하는 값
+                                    })
+                        })
+                    } else {
+                        var msg = '결제에 실패하였습니다.';
+                        msg += '에러내용 : ' + rsp.error_msg;
+                    }
+                    alert(msg);
+                });
+            }
+            //ajax////////////////////////////////////////////////////////////////////////////////////////////////////////          
+         </script>
+
+{% endblock %}

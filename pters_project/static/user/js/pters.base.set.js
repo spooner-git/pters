@@ -49,7 +49,8 @@ function sideGoPage(page){
 }
 
 function shade_index(option){
-    if($('body').width()>600){
+    var bodywidth = window.innerWidth;
+    if(bodywidth > 600){
       if(option<0){
         if($('#memberInfoPopup_PC').css('display')=="block" && $('._calmonth').css('display')=="block"){
           $('#pshade').css({'z-index':150,'display':'block'});
@@ -61,14 +62,14 @@ function shade_index(option){
         $('#pshade').css({'z-index':option,'display':'block'});
       }
       
-    }else if($('body').width()<=600){
+    }else if(bodywidth <= 600){
       if(option<0){
         if($('#page-addplan').css('display') == 'block'){
-          $('#mshade_popup').css({'z-index':$('#page-addplan').css('z-index'),'display':'none'});
+          $('#mshade_popup').css({'display':'none','z-index':$('#page-addplan').css('z-index')});
         }else{
-          $('#mshade_popup').css({'z-index':option,'display':'none'})
+          $('#mshade_popup').css({'display':'none','z-index':option})
         }
-        $('#mshade').css({'z-index':option,'display':'none'});
+        $('#mshade').css({'display':'none','z-index':option});
       }else{
         if($('#page-addplan').css('display') == 'block'){
           $('#mshade_popup').css({'z-index':$('#page-addplan').css('z-index'),'display':'block'});
@@ -88,6 +89,7 @@ function shade_index(option){
 }
 
 function close_info_popup(option){
+  var bodywidth = window.innerWidth;
   if(option=="cal_popup_planinfo"){
       $("#"+option).css({'display':'none'})
       $('#groupParticipants').html("")
@@ -123,7 +125,7 @@ function close_info_popup(option){
       }else{
         shade_index(-100)
       }
-      if($('body').width()>=600){
+      if(bodywidth>=600){
           $('#calendar').css('position','relative')
       }else{
           //$('._calmonth').css({'height':'90%','position':'fixed'})
@@ -162,7 +164,7 @@ function toggleGroupParticipantsList(onoff){
   }
 }
 
-
+/*
 function shade1(option){
   if($('body').width()>600){
     $('#pshade').css({'display':option});  
@@ -186,6 +188,7 @@ function shade3(option){
     $('#mshade3').css({'display':option});
   }
 }
+*/
 
 $(document).ready(function(){
 
@@ -246,7 +249,7 @@ $(document).ready(function(){
       $('.__weekplan').text("주간 일정")
       $('.__monthplan').text("월간 일정")
       $('.__membermanage').text("회원 관리")
-      $('.__groupmanage').text("그룹 관리")
+      $('.__groupmanage').html("그룹 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>")
       $('.__workmanage').text("업무 통계")
       $('.__setting').text("설정")
       $('._nameAttach').text("님")
@@ -279,9 +282,10 @@ $(document).ready(function(){
    });
   */  
    $('#alarm button').click(function(){
+      var bodywidth = window.innerWidth;
       /*$('#alarm').css('transform','translate(-50%,-200%)');*/
       $('#alarm').css('height','0');
-      if($('body').width()>600){
+      if(bodywidth>600){
           shade_index(-100)
       }else{
           shade_index(-100)
@@ -915,3 +919,21 @@ function TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER){
   console.log('E************************************** Ajax Data Receiving COMPLETE.....JSON.parse() END......'+AJAXTESTTIMER["message"])
 }
 ///////////////////////////////////////////////////AJAX 속도측정테스트 코드///////////////////////////////////////////////////
+
+
+var bodywidth = $('body').width()
+if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match(/バレエ/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_ballet')
+}else if(class_name.match(/요가/) || class_name.match(/Yoga/) || class_name.match(/ヨガ/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_weight')
+}else if(class_name.match(/웨이트/)|| class_name.match(/PT/) || class_name.match(/피티/) ){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_weight')
+}else if(class_name.match(/필라테스/)|| class_name.match(/pilates/) || class_name.match(/기구필라테스/) ){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_pilates')
+}else if(class_name.match(/당구/)|| class_name.match(/billiard/) || class_name.match(/ビリヤード/) ){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_weight')
+}else if(class_name.match(/골프/)|| class_name.match(/golf/) || class_name.match(/ゴルフ/) ){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_golf')
+}else{
+    $('#upperImg, #ymdText').addClass('bg_ymdText_weight')
+}

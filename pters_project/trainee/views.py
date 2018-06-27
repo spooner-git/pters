@@ -377,15 +377,20 @@ def add_trainee_schedule_logic(request):
                 group_schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id)
             except ObjectDoesNotExist:
                 group_schedule_info = None
+
             if group_schedule_info is not None:
-                group_schedule_data = ScheduleTb.objects.filter(group_tb_id=group_schedule_info.group_tb_id,
-                                                                group_schedule_id=group_schedule_id,
-                                                                lecture_tb__member_id=request.user.id)
-                if len(group_schedule_data) == 0:
-                    lecture_id = func_get_group_lecture_id(group_schedule_info.group_tb_id, request.user.id)
-                else:
-                    lecture_id = None
-                    error = '이미 그룹 일정에 포함되어있습니다.'
+                if group_schedule_info.state_cd == 'PE':
+                    error = '이미 완료된 그룹 일정입니다.'
+
+                if error is None:
+                    group_schedule_data = ScheduleTb.objects.filter(group_tb_id=group_schedule_info.group_tb_id,
+                                                                    group_schedule_id=group_schedule_id,
+                                                                    lecture_tb__member_id=request.user.id)
+                    if len(group_schedule_data) == 0:
+                        lecture_id = func_get_group_lecture_id(group_schedule_info.group_tb_id, request.user.id)
+                    else:
+                        lecture_id = None
+                        error = '이미 그룹 일정에 포함되어있습니다.'
 
     if error is None:
         if lecture_id is None:

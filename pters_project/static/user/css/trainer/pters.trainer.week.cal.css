@@ -131,6 +131,7 @@ body{
 	max-width: 1080px;
 	height: 100%;
 	overflow-y: hidden;
+	overflow-x: hidden;
 }
 
 

@@ -157,7 +157,7 @@ body{
 	position: absolute;
 	top: 50px;
 	width:100%;
-	max-width: 450px !important;
+	max-width: 700px !important;
 	background: #f4f4f4;
 	z-index: 350;
 }
@@ -1315,6 +1315,7 @@ select:focus > option:checked {
 
 	#page_addmember{
 		top: unset;
+		max-width: 450px !important;
 	}
 
 	#float_btn_wrap{
@@ -1342,8 +1343,10 @@ select:focus > option:checked {
 
 	#upperImg{
 		display: block;
+		/*
 		background-image:url(/static/user/res/bg.png);
 		background-size: 100%;
+		*/
 		margin:0 auto;
 		height: 100px;
 		width: 100%;

@@ -73,9 +73,10 @@ $(document).ready(function(){
 
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
     $(document).on('click','.memberNameForInfoView, .groupParticipantsRow span',function(){
+    	var bodywidth = window.innerWidth;
     	var dbID = $(this).attr('data-dbid')
     	//$('.popups').hide()
-    	if($('body').width()<600){
+    	if(bodywidth < 600){
     		$('.popups').hide()
     		//$('#calendar').css('display','none')
             $('#calendar').css('height','0')
@@ -84,7 +85,7 @@ $(document).ready(function(){
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
             shade_index(100)
-        }else if($('body').width()>=600){
+        }else if(bodywidth >= 600){
             get_indiv_member_info(dbID)
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
@@ -98,17 +99,18 @@ $(document).ready(function(){
 
 
 	$('#upbutton-x').click(function(){
+		var bodywidth = window.innerWidth;
 		//$('#calendar').css('height','90%')
 		if($(this).attr('data-page') == "addplan"){
-			$('#page-addplan').fadeOut('fast','swing');
-		    if($('body').width()<600){
+			$('#page-addplan').css('display','none');
+		    if(bodywidth < 600){
 		        //$('#calendar').show();
 		        $('#calendar').css('height','100%')
 		    }
-		    $('#float_btn_wrap').fadeIn();
+		    $('#float_btn_wrap').css('display','block');
 		    $('#float_btn').removeClass('rotate_btn');
-		    $('#page-base').fadeIn();
-		    $('#page-base-addstyle').fadeOut();
+		    $('#page-base').css('display','block');
+		    $('#page-base-addstyle').css('display','none');
 
 		    $("#membersSelected button").removeClass("dropdown_selected");
 	        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
@@ -148,7 +150,7 @@ $(document).ready(function(){
 		closeAlarm('pc')
 		if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
 			deleteTypeSelect = ''
-			$('#cal_popup_plancheck').fadeIn('fast');
+			$('#cal_popup_plancheck').css('display','block');
 			shade_index(100)
 			var info = $(this).attr('data-date').split('_')
 			var yy=info[0]
@@ -170,6 +172,7 @@ $(document).ready(function(){
 	mini_popup_event()
 	//일정을 클릭해서 나오는 미니 팝업의 이벤트 모음
 	function mini_popup_event(){
+		var bodywidth = window.innerWidth;
 		//날짜를 클릭해서 나오는 일정들을 클릭했을때
 		$(document).on('click','.plan_raw',function(){
 			switch(Options.language){
@@ -205,7 +208,7 @@ $(document).ready(function(){
 			}
 			
 			var infoText2 = '[그룹]'+name+' '+selectedTime+':'+selectedMinute+yourplan
-			$("#cal_popup_planinfo").fadeIn('fast').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
+			$("#cal_popup_planinfo").css('display','block').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
 			$('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
 			$('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
 			$('#popup_info').text(selectedDate);
@@ -253,7 +256,7 @@ $(document).ready(function(){
 																	'group-schedule-id':$(this).attr('schedule-id'),
 																	})
 				//$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
-				if($('body').width()>600){
+				if(bodywidth > 600){
 					toggleGroupParticipantsList('on')
 				}else{
 					//$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
@@ -296,7 +299,7 @@ $(document).ready(function(){
 				}
 				shade_index(200)
 				$('#cal_popup_planinfo').hide()
-				$('#cal_popup_plandelete').fadeIn('fast').attr({'schedule-id': $(this).parent('#cal_popup_planinfo').attr('schedule-id')})
+				$('#cal_popup_plandelete').css('display','block').attr({'schedule-id': $(this).parent('#cal_popup_planinfo').attr('schedule-id')})
 			}
 			
 		})
@@ -313,6 +316,7 @@ $(document).ready(function(){
 		//일정삭제 확인 팝업 예 버튼
 		//var ajax_block_during_delete_monthcal = true
 		$('#popup_delete_btn_yes').click(function(){
+			var bodywidth = window.innerWidth;
 			//if(ajax_block_during_delete_monthcal == true){
 			if(!$(this).hasClass('disabled_button')){
 				//ajax_block_during_delete_monthcal = false;
@@ -338,7 +342,7 @@ $(document).ready(function(){
 	                  	$('#members_mobile, #members_pc').html('')
 	                  	get_current_member_list()
       					get_current_group_list()
-	                	if($('body').width()>=600){
+	                	if(bodywidth >= 600){
 	                		$('#calendar').css('position','relative')	
 	                	}
 	                	//ajax_block_during_delete_monthcal = true
@@ -516,7 +520,7 @@ $(document).ready(function(){
 		})
 
 		function closeAddPlanPopup(){
-	  	  	$('#page-addplan').fadeOut('fast','swing')
+	  	  	$('#page-addplan').css('display','none')
 	      	$('._NORMAL_ADD_wrap').css('display','block')
 	      	$('._REPEAT_ADD_wrap').css('display','none')
 	      	$('#timeGraph').css('display','none')
@@ -1413,4 +1417,22 @@ function clear_badge_counter(){
                 //console.log('error:clear_badge_counter')
             },
         })
+}
+
+
+var bodywidth = $('body').width()
+if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match(/バレエ/)){
+	$('#ymdText').addClass('bg_ymdText_ballet')
+}else if(class_name.match(/요가/) || class_name.match(/Yoga/) || class_name.match(/ヨガ/)){
+	$('#ymdText').addClass('bg_ymdText_weight')
+}else if(class_name.match(/웨이트/)|| class_name.match(/PT/) || class_name.match(/피티/) ){
+	$('#ymdText').addClass('bg_ymdText_weight')
+}else if(class_name.match(/필라테스/)|| class_name.match(/pilates/) || class_name.match(/기구필라테스/) ){
+	$('#ymdText').addClass('bg_ymdText_pilates')
+}else if(class_name.match(/당구/)|| class_name.match(/billiard/) || class_name.match(/ビリヤード/) ){
+	$('#ymdText').addClass('bg_ymdText_weight')
+}else if(class_name.match(/골프/)|| class_name.match(/golf/) || class_name.match(/ゴルフ/) ){
+	$('#ymdText').addClass('bg_ymdText_golf')
+}else{
+	$('#ymdText').addClass('bg_ymdText_weight')
 }
