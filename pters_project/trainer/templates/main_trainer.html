@@ -31,7 +31,7 @@
           padding:20px;
           z-index: 100;
       }
-          #notice_popup_close_main{
+          #notice_popup_close_main, #notice_popup_close_temp{
               cursor: pointer;
           }
     </style>
@@ -86,7 +86,10 @@
             <p>많은 이용과 서비스 피드백을 부탁드립니다.</p>
             <br>
             <p>-피터스팀 드림</p>
-            <p style="text-align: right;margin-bottom: 0;"><span id="notice_popup_close_main"><img src="/static/user/res/member/icon-x-grey.png" style="width: 12px;"> 닫기</span></p>
+            <p style="text-align: right;margin-bottom: 0;font-size: 11px;">
+              <span id="notice_popup_close_temp" style="margin-right: 10px;"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;margin-right"> 닫기</span>
+              <span id="notice_popup_close_main"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;"> 오늘 더 보지 않기</span>
+            </p>
         </div>
         
 {% endblock %}
@@ -96,6 +99,11 @@
     <script type="text/javascript">
             $('#notice_popup_main').click(function(){
                 $(this).css('display','none')
+            })
+
+            $('#notice_popup_close_temp').click(function(e){
+                e.stopPropagation()
+                $('#notice_popup_main').css('display','none')
             })
 
             $('#notice_popup_close_main').click(function(e){
