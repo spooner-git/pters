@@ -551,15 +551,13 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                         #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
                         # except ObjectDoesNotExist:
                         #     error = '그룹 정보를 불러오지 못했습니다.'
-                        if error is None:
+                        if group_info_data.use == USE:
                             if group_data_total_size == group_data_end_size:
                                 group_info_data.state_cd = 'PE'
                                 group_info_data.save()
                             else:
                                 group_info_data.state_cd = 'IP'
                                 group_info_data.save()
-                        else:
-                            error = None
             else:
                 if len(group_data) > 0:
                     group_data.update(use=UN_USE)
@@ -588,15 +586,13 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                         #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
                         # except ObjectDoesNotExist:
                         #     error = '그룹 정보를 불러오지 못했습니다.'
-                        if error is None:
+                        if group_info_data.use == USE:
                             if group_data_total_size == group_data_end_size:
                                 group_info_data.state_cd = 'PE'
                                 group_info_data.save()
                             else:
                                 group_info_data.state_cd = 'IP'
                                 group_info_data.save()
-                        else:
-                            error = None
         else:
             class_lecture_info.delete()
             member_lecture_list.delete()
@@ -612,13 +608,11 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                     group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
                                                                         use=USE).exclude(lecture_tb__state_cd='IP').count()
 
-                    if group_data_total_size == group_data_end_size:
-                        try:
-                            group_info_data = group_info.group_tb
+                    group_info_data = group_info.group_tb
+                    if group_info_data.use == USE:
+                        if group_data_total_size == group_data_end_size:
                             group_info_data.state_cd = 'PE'
                             group_info_data.save()
-                        except ObjectDoesNotExist:
-                            error = None
 
             if member.reg_info is not None:
                 if str(member.reg_info) == str(user_id):
@@ -829,4 +823,3 @@ def func_get_lecture_list(context, class_id, member_id):
         context['error'] = error
 
     return context
-

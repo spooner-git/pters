@@ -1,0 +1,94 @@
+{% extends "trainer_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.work.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
+
+        
+{% endblock %}
+
+
+
+{% block content %}
+
+  <div id="ymText">
+    <div id="yText"></div>
+    <div id="mText"></div>
+  </div>
+
+
+<!--매출 그래프--> <!--총매출, 차감 매출, 등록 매출, 회원수(이번달신규등록, 이번달종료예정), 트레이너 고용임금, 관리비용-->
+  <div id="salesGraph">
+    <table>
+      <thead>
+        <tr>
+          <th id="description">항목</th>
+          <th id="gap"></th>
+          <th id="cost">비용</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="totalSales" class="salesRow"><td>총 매출<br>(등록+기타)</td><td class="tablegap"></td><td></td>
+        </tr>
+
+        <tr id="regiSales" class="salesRow"><td>등록 매출<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="regiSalesChild" class="salesRow childRow"><td>>>등록 건수</td><td class="tablegap"></td><td></td>
+
+        <tr id="subsSales" class="salesRow"><td>기타 매출<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="subsSalesChild" class="salesRow childRow"><td>>>차감 수</td><td class="tablegap"></td><td></td>
+        </tr>
+
+        <tr id="totalMember" class="salesRow"><td>총 회원수<img src="/static/user/res/icon-down-grey.png" alt="" class="icondown_"></td><td class="tablegap"></td><td></td>
+        </tr>
+        <tr id="newMember" class="salesRow childRow"><td>>>이번달 신규</td><td class="tablegap"></td><td></td>
+        </tr>
+
+        <tr id="trainerSalary" class="salesRow"><td>강사 고용임금</td><td class="tablegap"></td><td><input type="tel" id=salaryInput></td>
+        </tr>
+        <tr id="manageCost" class="salesRow"><td>운영 관리비용</td><td class="tablegap"></td><td><input type="tel" id="costInput"></td>
+        </tr>
+        <tr id="profit" class="profitRow"><td>이익금<br>(총 매출 기준)</td><td class="tablegap"></td><td></td>
+        </tr>
+        <!--
+        <tr id="profit2" class="profitRow"><td>이익금<br>(차감 매출 기준)</td><td class="tablegap"></td><td></td>
+        </tr>
+      -->
+        <tr id="profit3" class="profitRow"><td>이익금<br>(등록 매출 기준)</td><td class="tablegap"></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="warningMsg">
+    <p>※ 이익금 계산은 세금(종합소득세, 부가가치세등)이 반영되지 않은 금액으로, 세무 증빙으로 사용할 수 없는 참고용 자료입니다.</p>
+    <img src="/static/user/res/PTERS_logo.jpg" alt="" style="width: 50%;opacity: 0.15; padding-top: 15px;">
+  </div>
+
+<!--통계 그래프-->
+  <div id="analyGraph">
+    <div>
+      
+    </div>
+  </div>
+
+
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+         <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.work.js" %}></script>
+         <script>
+            //ajax////////////////////////////////////////////////////////////////////////////////////////////////////////          
+         </script>
+
+{% endblock %}

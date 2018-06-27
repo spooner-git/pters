@@ -6,6 +6,11 @@ html,body{
 }
 
 
+.beta_tag{
+    width: 30px;
+    position: absolute;
+}
+
 .display_block{
     display: block !important;
 }
@@ -580,13 +585,38 @@ a:focus, a:hover{
     font-weight: 500;
     line-height: 62px;
 }
-
-
 /*PC버전 상단,하단네비바*/
+
+.bg_ymdText_weight{
+    background-image: url("/static/user/res/pt.png");
+    background-size:cover;
+    background-position-x:center; 
+}
+.bg_ymdText_ballet{
+    background-image: url("/static/user/res/ballet.png");
+    background-size:cover;
+    background-position-x:center; 
+}
+.bg_ymdText_pilates{
+    background-image: url("/static/user/res/pilates.png");
+    background-size:cover;
+    background-position-x:center; 
+}
+.bg_ymdText_golf{
+    background-image: url("/static/user/res/golf.png");
+    background-size:cover;
+    background-position-x:center; 
+}
+
 
 
 /*미디어 쿼리*/
 @media(min-width:600px){
+    .beta_tag{
+        width: 28px;
+        top: 18px;
+        position: absolute;
+    }
 
     #errorMessageBar{
         display: none;

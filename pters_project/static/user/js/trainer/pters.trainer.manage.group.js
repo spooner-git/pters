@@ -507,6 +507,7 @@ if (agent.indexOf("firefox") != -1) {
     });
     */
 
+    /*그룹 진행완료, 재개와 겹침
     //진행 완료 처리 버튼
     $('.lectureStateChangeSelectPopup ._complete').click(function(){
         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
@@ -522,6 +523,7 @@ if (agent.indexOf("firefox") != -1) {
         resume_member_reg_data_pc(lectureID, dbID)
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
+    그룹 진행완료, 재개와 겹침*/
 
     //삭제 처리 버튼
     $('.lectureStateChangeSelectPopup ._delete').click(function(){

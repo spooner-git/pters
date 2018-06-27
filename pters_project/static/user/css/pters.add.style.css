@@ -474,7 +474,8 @@ ul a{
 }
 
 .tdgraph_trainee_popup{
-	height: 88px;
+	height: 96px;
+	overflow-y: auto;
 	background: #f4f4f4;
 	border-top: 0.5px solid #3b3d3d;
 	border-bottom: 0.5px solid #3b3d3d;
@@ -556,10 +557,19 @@ ul a{
 	bottom: 13px;
 	width: 13px;
 }
+.dropdown-menu>li>a{
+	color: unset;
+}
 
-.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
+.dropdown-menu>li:focus, .dropdown-menu>li:active{
 	background: #282828;
 	color: #fe4e65;
+}
+
+
+.dropdown-menu>li>a:hover{
+	color: unset;
+	background: unset;
 }
 
 .dropdown_trainee_popup{
@@ -926,6 +936,7 @@ option{
 	border:2px solid #fe4e65;
 	margin-left: 3px;
 	margin-top: 2px;
+	z-index: 1;
 }
 /*
 .blankSelected{
@@ -1134,6 +1145,11 @@ option{
 	.btnok{
 		line-height: 50px !important;
 		font-size: 15px !important;
+	}
+
+	.dropdown-menu>li:hover, .dropdown-menu>li>a:focus{
+		background: #282828 !important;
+		color: #fe4e65 !important;
 	}
 
 }

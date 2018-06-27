@@ -268,12 +268,10 @@
                             <a class="sidebar_text __membermanage">
                             </a>
                         </div>
-                        <!--
                         <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src={% static_url "user/res/icon-group-setting.png" %} class="sidebar_icon" alt="#">
                             <a class="sidebar_text __groupmanage">
                             </a>
                         </div>
-                        -->
                         <!--
                         <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
                             <a href="{% url 'trainer:work_manage' %}" class="sidebar_text __workmanage">
@@ -353,11 +351,10 @@
                     <div class="centermenu_div">
                         <a href="{% url 'trainer:member_manage' %}" class="centermenu_text __membermanage"></a>
                     </div>
-                    <!--
-                    <div class="centermenu_div">
+                    <div class="centermenu_div" style="margin-right: 25px;">
                         <a href="{% url 'trainer:group_manage' %}" class="centermenu_text __groupmanage"></a>
                     </div>
-                    -->
+
                     <!--
                     <div class="centermenu_div">
                         <a href="{% url 'trainer:work_manage' %}" class="centermenu_text __workmanage"></a>
@@ -485,7 +482,7 @@
     <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
-    <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+    
 {#    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
 {#    <link rel="manifest" href={% static_url "manifest.json" %}>#}
@@ -556,27 +553,22 @@
             })
 
              function openNav(){
-                /*
+                
                $("#outer_Sidenav").show();
                $("#inner_Sidenav").css({'width':'250px'});
                $('#float_btn_wrap, #float_btn').hide('fast')
-               */
-               document.getElementById('outer_Sidenav').style.display = 'block';
-               document.getElementById('inner_Sidenav').style.width = '250px';
-               document.getElementById('float_btn_wrap').style.display = 'none'
                
+
                //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
              }
              
              function closeNav(){
-                /*
+            
               $("#outer_Sidenav").hide();
               $("#inner_Sidenav").css({'width':'0'});
               $('#float_btn_wrap, #float_btn').show('fast')
-              */
-              document.getElementById('outer_Sidenav').style.display = 'none';
-              document.getElementById('inner_Sidenav').style.width = '0px';
-              document.getElementById('float_btn_wrap').style.display = 'block'
+              
+
               //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
              }; 
 
@@ -878,6 +870,8 @@
             ///********************* 강의 선택*************************************///
 
     </script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.cookie.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
 
     {% block local_js_footer %}
     {% endblock %}

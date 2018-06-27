@@ -147,3 +147,4 @@ class CommentTb(models.Model):
     class Meta:
         managed = False
         db_table = 'COMMENT_TB'
+

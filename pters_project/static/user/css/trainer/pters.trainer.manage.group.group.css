@@ -229,7 +229,7 @@
 		width: 16%;
 	}
 	._grouptypecd{
-		width: 10%;
+		width: 8%;
 	}
 	._groupparticipants{
 		width: 7%;
@@ -240,8 +240,22 @@
 		display: none !important;
 	}
 	._grouppartystatus{
-		width: 12%;
+		width: 14%;
 	}
+		._groupstatus span{
+			font-size: 12px;
+		}
+		._groupstatus_IP{
+			color: green;
+			font-weight: 400;
+		}
+		._groupstatus_disabled_false{
+			text-decoration: underline;
+		}
+		._groupstatus_disabled_true{
+			text-decoration: none;
+		}
+
 	._groupmemo{
 		width: 22%;
 	}
@@ -249,6 +263,9 @@
 		display: table-cell;
 		width: 17%;
 		font-size: 13px;
+	}
+	._groupstatus{
+		width:8%;
 	}
 	._groupmanage{
 		width: 10%;

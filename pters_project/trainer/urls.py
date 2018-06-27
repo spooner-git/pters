@@ -66,7 +66,7 @@ urlpatterns = [
     url(r'^update_lecture_info/$', views.update_lecture_info_logic, name='update_lecture_info'),
     # 수강정보 삭제
     url(r'^delete_lecture_info/$', views.delete_lecture_info_logic, name='delete_lecture_info'),
-    # 수강정보 완료 상태 변경
+    # 수강정보 종료 상태 변경
     url(r'^finish_lecture_info/$', views.finish_lecture_info_logic, name='finish_lecture_info'),
     # 수강정보 환불 상태 변경
     url(r'^refund_lecture_info/$', views.refund_lecture_info_logic, name='refund_lecture_info'),
@@ -92,6 +92,10 @@ urlpatterns = [
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
     # 그룹 회원 조회
     url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
+    # 그룹 종료 상태 변경
+    url(r'^finish_group_info/$', views.finish_group_info_logic, name='finish_group_info'),
+    # 그룹 재개 상태 변경
+    url(r'^progress_group_info/$', views.progress_group_info_logic, name='progress_group_info'),
 
 
     # 강좌 기능 ##########################################################################################################

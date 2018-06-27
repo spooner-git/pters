@@ -67,6 +67,36 @@ nav.upperbar{
 	display: none;
 }
 
+img.next_page{
+	position: absolute;
+	right: 15px;
+	bottom: 150px;
+	width: 12px;
+	animation: blink 2s;
+	animation-iteration-count: infinite;
+}
+img.prev_page{
+	position: absolute;
+	left: 15px;
+	bottom: 150px;
+	width: 12px;
+	transform: rotate(180deg);
+	animation: blink 2s;
+	animation-iteration-count: infinite;
+}
+
+@keyframes blink{
+	0%{
+		opacity: 0.8;
+	}
+	50%{
+		opacity: 0.4;
+	}
+	100%{
+		opacity: 0.8;
+	}
+
+}
 
 
 .album_wrap{
@@ -174,6 +204,27 @@ nav.upperbar{
 		background-repeat: no-repeat;
 		background-position-x: center;
 		left: unset;
+	}
+
+	img.next_page{
+		position: absolute;
+		width: 12px;
+		bottom: 50px;
+		left: 50%;
+		transform: translateX(-50%);
+		transform: rotate(90deg);
+		animation: blink 2s;
+		animation-iteration-count: infinite;
+	}
+	img.prev_page{
+		position: absolute;
+		width: 12px;
+		top: 50px;
+		left: 50%;
+		transform: translateX(-50%);
+		transform: rotate(-90deg);
+		animation: blink 2s;
+		animation-iteration-count: infinite;
 	}
 }
 

@@ -225,6 +225,7 @@ $(document).on('click','img.add_listedMember',function(){
 })
 
 function draw_memberlist_for_addByList(targetHTML){
+    var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/get_member_list/',
 
@@ -251,7 +252,7 @@ function draw_memberlist_for_addByList(targetHTML){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -365,7 +366,6 @@ function draw_memberlist_for_addBySearch(jsondata){
 //ajax로 서버에 보낼 때, 추가된 회원들의 정보를 form에 채운다.
 function added_member_info_to_jsonformat(){
     var fast_check = $('#fast_check').val();
-    var memo = $('#comment').val();
     var search_confirm = $('#id_search_confirm').val()
     var group_id = $('#form_member_groupid').val()
     if(fast_check == 1){
@@ -373,13 +373,15 @@ function added_member_info_to_jsonformat(){
         var price = $('#lecturePrice_add_value').val()
         var start_date = $('#datepicker_add').val()
         var end_date = $('#datepicker2_add').val()
+        var memo = $('#comment').val();
     }else if(fast_check == 0){
         var counts = $('#memberCount_add_fast').val()
         var price = $('#lecturePrice_add_value_fast').val()
         var start_date = $('#datepicker_fast').val()
         var end_date = $('#memberDue_add_2_fast').val()
+        var memo = $('#comment_fast').val();
     }
-
+    console.log(memo)
     var dataObject = {
                         "new_member_data":[],
                         "old_member_data":[],
@@ -479,6 +481,7 @@ var ori_group_capacity;
 var ori_group_memo;
 //그룹 리스트에서 그룹 수정버튼을 누른다.
 $(document).on('click','._groupmanage img._info_modify',function(e){
+    var bodywidth = window.innerWidth;
     if(!$(this).hasClass('disabled_button')){
         e.stopPropagation()
         var group_id = $(this).attr('data-groupid')
@@ -516,7 +519,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
             $(this).hide()
             $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
             $('img._info_modify').removeClass('disabled_button')
-            if($('body').width()>600){
+            if(bodywidth > 600){
                 $('img._info_download, img._info_delete').show()
             }else{
                 $('img._info_delete').show()
@@ -526,12 +529,35 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
             $(this).parent('div').siblings('._groupmemo').find('input').val(ori_group_memo)
             toggle_lock_unlock_inputfield_grouplist(group_id, true)
             e.stopPropagation()
-            
         })
         //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
     }
 
     
+})
+
+$(document).on('click','._groupstatus_disabled_false',function(e){
+    e.stopPropagation()
+    $('.lectureStateChangeSelectPopup').css('display','block')
+    $('.lectureStateChangeSelectPopup ._complete').attr('data-groupid', $(this).attr('data-groupid'))
+    $('.lectureStateChangeSelectPopup ._resume').attr('data-groupid', $(this).attr('data-groupid'))
+
+    if($(this).attr('data-groupstatus') == "IP"){
+        $('._complete').css('display','block')
+        $('._resume, ._refund, ._delete').css('display','none')
+        $(document).on('click', '._complete', function(){
+            modify_group_status($(this).attr('data-groupid'), 'complete')
+        })
+    }else if($(this).attr('data-groupstatus') == "PE"){
+        $('._resume').css('display','block')
+        $('._complete, ._refund, ._delete').css('display','none')
+        $(document).on('click', '._resume', function(){
+            modify_group_status($(this).attr('data-groupid'), 'resume')
+        })
+    }
+
+
+
 })
 
 $(document).on('click','.groupWrap input',function(e){
@@ -542,10 +568,11 @@ $(document).on('click','.groupWrap input',function(e){
 
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 $(document).on('click','img.btn_add_member_to_group',function(){
+    var bodywidth = window.innerWidth;
     var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid')
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname')
     var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity')
-    if($('body').width()<600){
+    if(bodywidth < 600){
         float_btn_managemember("groupmember")
     }else{
         pc_add_member('groupmember')
@@ -558,6 +585,7 @@ $(document).on('click','img.btn_add_member_to_group',function(){
 
 //서버로부터 그룹 목록 가져오기
 function get_group_ing_list(use, callback){
+    var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
@@ -586,7 +614,7 @@ function get_group_ing_list(use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -613,6 +641,7 @@ function get_group_ing_list(use, callback){
 
 //서버로부터 그룹 목록 가져오기
 function get_group_end_list(use, callback){
+    var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
@@ -641,7 +670,7 @@ function get_group_end_list(use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -668,10 +697,17 @@ function get_group_end_list(use, callback){
 
 //그룹 지우기
 function delete_group_from_list(group_id){
+    var bodywidth = window.innerWidth;
+    var next_page = '/trainer/get_group_ing_list'
+    if($('#currentGroupList').css('display') == "block"){
+        next_page = '/trainer/get_group_ing_list'
+    }else if($('#finishedGroupList').css('display') == "block"){
+        next_page = '/trainer/get_group_end_list'
+    }
 	$.ajax({
         url:'/trainer/delete_group_info/',
         type:'POST',
-        data: {"group_id":group_id},
+        data: {"group_id":group_id, "next_page":next_page},
         dataType : 'html',
 
         beforeSend:function(){
@@ -686,6 +722,7 @@ function delete_group_from_list(group_id){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(data)
             if(jsondata.messageArray.length>0){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -695,7 +732,7 @@ function delete_group_from_list(group_id){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -766,6 +803,7 @@ function delete_groupmember_from_grouplist(){
 
 //그룹 정보 수정
 function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type){
+    var bodywidth = window.innerWidth;
 	$.ajax({
         url:'/trainer/update_group_info/',
         type:'POST',
@@ -793,7 +831,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -806,7 +844,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 }
                 toggle_lock_unlock_inputfield_grouplist(group_id, true)
                 $('img._info_cancel').hide()
-                if($('body').width()>600){
+                if(bodywidth > 600){
                     $('img._info_download, img._info_delete').show()
                 }else{
                     $('img._info_delete').show()
@@ -824,6 +862,71 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
 }
 //그룹 정보 수정
 
+//그룹 완료/재개 하기
+function modify_group_status(group_id, option){
+    var bodywidth = window.innerWidth;
+    if(option == 'complete'){
+        var _URL = '/trainer/finish_group_info/'
+    }else if(option == 'resume'){
+        var _URL = '/trainer/progress_group_info/'
+    }
+
+    $.ajax({
+        url: _URL,
+        type:'POST',
+        data: {"group_id":group_id},
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                scrollToDom($('#page_addmember'))
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                $('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+
+                if($('#currentGroupList').css('display') == "block"){
+                    get_group_ing_list()
+                    //groupListSet('current',jsondata)
+                }else if($('#finishedGroupList').css('display') == "block"){
+                    get_group_end_list()
+                    //groupListSet('finished',jsondata)
+                }
+                $('.lectureStateChangeSelectPopup').css('display','none')
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
+//그룹 완료/재개 하기
+
 //그룹 목록을 화면에 뿌리기
 function groupListSet(option, jsondata){ //option : current, finished
     switch(option){
@@ -838,7 +941,7 @@ function groupListSet(option, jsondata){ //option : current, finished
             var text_membernum = "종료된 그룹 " 
         break;
     }
-
+    console.log('groupListSet',jsondata)
     var htmlToJoin = [];
     var groupNum = jsondata.group_id.length;
     for(var i=0; i<groupNum; i++){
@@ -851,6 +954,8 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_memberlist = []
         var group_membernum = jsondata.group_member_num[i];
         var group_capacity = jsondata.member_num[i];
+        var groupstatus = jsondata.state_cd_name[i];
+        var groupstatus_cd = jsondata.state_cd[i];
         
         var full_group = ""
         if(group_membernum == group_capacity && group_type == "NORMAL"){
@@ -872,9 +977,10 @@ function groupListSet(option, jsondata){ //option : current, finished
                     '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
                     '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-                    '<div class="_grouppartystatus '+full_group+'">'+ group_membernum + '&nbsp;&nbsp; /' + '<input style="width:40px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
+                    '<div class="_grouppartystatus '+full_group+'"><span>'+ group_membernum + ' /</span> ' + '<input style="width:40px;text-align:left;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
+                    '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
                     '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
     }
@@ -885,6 +991,7 @@ function groupListSet(option, jsondata){ //option : current, finished
 
 //그룹원 목록을 그룹에 뿌리기
 function get_groupmember_list(group_id, use, callback){
+    var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/get_group_member/',
         data: {"group_id":group_id},
@@ -912,7 +1019,7 @@ function get_groupmember_list(group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if($('body').width()<600){
+                if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto")
@@ -1229,6 +1336,7 @@ function send_delete_member_repeat_infos(jsondata){
 
 function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=false 수정가능, disable=true 수정불가
 	$('div[data-groupid="'+group_id+'"] input._editable').attr('disabled',disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable))
+    $('div[data-groupid="'+group_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable))
 }
 
 

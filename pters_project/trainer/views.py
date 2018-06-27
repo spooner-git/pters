@@ -210,8 +210,8 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             today_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
                                                             group_tb__isnull=False,
                                                             lecture_tb__isnull=True,
-                                                           start_dt__gte=today, start_dt__lt=one_day_after,
-                                                           en_dis_type=ON_SCHEDULE_TYPE).count()
+                                                            start_dt__gte=today, start_dt__lt=one_day_after,
+                                                            en_dis_type=ON_SCHEDULE_TYPE).count()
 
         context['today_schedule_num'] = today_schedule_num
 
@@ -1848,6 +1848,7 @@ def finish_lecture_info_logic(request):
     lecture_info = None
     member_info = None
     group_info = None
+
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
@@ -2212,11 +2213,23 @@ def delete_group_info_logic(request):
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     group_info = None
+
     try:
         group_info = GroupTb.objects.get(group_id=group_id)
     except ObjectDoesNotExist:
         error = '그룹 정보를 불러오지 못했습니다.'
 
+    if error is None:
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                  group_tb_id=group_id,
+                                                  lecture_tb__isnull=True,
+                                                  start_dt__gte=timezone.now(),
+                                                  en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                               group_tb_id=group_id,
+                                                               lecture_tb__isnull=True)
+        schedule_data.delete()
+        repeat_schedule_data.delete()
     if error is None:
         group_info.state_cd = 'PE'
         group_info.use = 0
@@ -2699,6 +2712,103 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         return render(request, self.template_name, context)
 
 
+@csrf_exempt
+def finish_group_info_logic(request):
+
+    group_id = request.POST.get('group_id', '')
+    # next_page = request.POST.get('next_page', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    group_info = None
+
+    if error is None:
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id)
+        except ObjectDoesNotExist:
+            error = '그룹 정보를 불러오지 못했습니다.'
+    if error is None:
+        group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
+
+    if error is None:
+        for group_datum in group_data:
+            lecture_info = group_datum.lecture_tb
+            schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
+            repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+            # func_refresh_lecture_count(lecture_id)
+            if len(schedule_data) > 0:
+                schedule_data.delete()
+            if len(repeat_schedule_data) > 0:
+                repeat_schedule_data.delete()
+            lecture_info.lecture_avail_count = 0
+            lecture_info.lecture_rem_count = 0
+            lecture_info.mod_dt = timezone.now()
+            lecture_info.state_cd = 'PE'
+            lecture_info.save()
+        group_info.state_cd = 'PE'
+        group_info.save()
+
+    if error is None:
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name+' 그룹 수강 정보', log_how='완료 처리',
+                         reg_dt=timezone.now(), use=USE)
+
+        log_data.save()
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+
+
+@csrf_exempt
+def progress_group_info_logic(request):
+
+    group_id = request.POST.get('group_id', '')
+    # next_page = request.POST.get('next_page', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    group_info = None
+
+    if error is None:
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id)
+        except ObjectDoesNotExist:
+            error = '그룹 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
+    if error is None:
+        for group_datum in group_data:
+            lecture_info = group_datum.lecture_tb
+            schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+            schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
+            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
+            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
+            lecture_info.mod_dt = timezone.now()
+            lecture_info.state_cd = 'IP'
+            lecture_info.save()
+        group_info.state_cd = 'IP'
+        group_info.save()
+
+    if error is None:
+        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id, from_member_name=request.user.last_name+request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name+' 그룹 수강 정보', log_how='재개 처리',
+                         reg_dt=timezone.now(), use=USE)
+
+        log_data.save()
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
@@ -2760,7 +2870,7 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
         context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_id = request.GET.get('group_id', '')
 
-        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id, group_schedule_id__isnull = True).order_by('start_date')
+        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id, group_schedule_id__isnull=True).order_by('start_date')
         for group_repeat_schedule_info in group_repeat_schedule_data:
             group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
             group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
@@ -2772,7 +2882,7 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
         context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_id = request.POST.get('group_id', '')
 
-        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id, group_schedule_id__isnull = True).order_by('start_date')
+        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id, group_schedule_id__isnull=True).order_by('start_date')
         for group_repeat_schedule_info in group_repeat_schedule_data:
             group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
             group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
