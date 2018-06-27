@@ -3665,7 +3665,12 @@ function add_member_form_func(){
                     })
                 }
                 
-                closePopup('member_add')
+                closePopup('member_add');
+                if($('#memberInfoPopup_PC').css('display') == "block"){
+                    closePopup('member_info_PC')
+                }else if($('#memberInfoPopup').css('display') == "block"){
+                    closePopup('member_info')
+                }
                 console.log('success');
             }
         },
