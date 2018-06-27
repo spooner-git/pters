@@ -2221,12 +2221,12 @@ def delete_group_info_logic(request):
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                  group_tb__isnull=False,
+                                                  group_tb_id=group_id,
                                                   lecture_tb__isnull=True,
                                                   start_dt__gte=timezone.now(),
-                                                  en_dis_type=ON_SCHEDULE_TYPE).exclue(state_cd='PE')
+                                                  en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                               group_tb__isnull=False,
+                                                               group_tb_id=group_id,
                                                                lecture_tb__isnull=True)
         schedule_data.delete()
         repeat_schedule_data.delete()

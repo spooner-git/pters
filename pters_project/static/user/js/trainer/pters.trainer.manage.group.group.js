@@ -698,10 +698,16 @@ function get_group_end_list(use, callback){
 //그룹 지우기
 function delete_group_from_list(group_id){
     var bodywidth = window.innerWidth;
+    var next_page = '/trainer/get_group_ing_list'
+    if($('#currentGroupList').css('display') == "block"){
+        next_page = '/trainer/get_group_ing_list'
+    }else if($('#finishedGroupList').css('display') == "block"){
+        next_page = '/trainer/get_group_end_list'
+    }
 	$.ajax({
         url:'/trainer/delete_group_info/',
         type:'POST',
-        data: {"group_id":group_id},
+        data: {"group_id":group_id, "next_page":next_page},
         dataType : 'html',
 
         beforeSend:function(){
@@ -716,6 +722,7 @@ function delete_group_from_list(group_id){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(data)
             if(jsondata.messageArray.length>0){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
