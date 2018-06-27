@@ -357,7 +357,6 @@ function draw_memberlist_for_addBySearch(jsondata){
 //ajax로 서버에 보낼 때, 추가된 회원들의 정보를 form에 채운다.
 function added_member_info_to_jsonformat(){
     var fast_check = $('#fast_check').val();
-    var memo = $('#comment').val();
     var search_confirm = $('#id_search_confirm').val()
     var group_id = $('#form_member_groupid').val()
     if(fast_check == 1){
@@ -365,11 +364,13 @@ function added_member_info_to_jsonformat(){
         var price = $('#lecturePrice_add_value').val()
         var start_date = $('#datepicker_add').val()
         var end_date = $('#datepicker2_add').val()
+        var memo = $('#comment').val();
     }else if(fast_check == 0){
         var counts = $('#memberCount_add_fast').val()
         var price = $('#lecturePrice_add_value_fast').val()
         var start_date = $('#datepicker_fast').val()
         var end_date = $('#memberDue_add_2_fast').val()
+        var memo = $('#comment_fast').val();
     }
 
     var dataObject = {
