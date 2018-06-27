@@ -10,7 +10,31 @@ body{
 	background-repeat: no-repeat;
 	background-position-x:center;
 	background-size:100%;
+	background-size: cover;
 	background-color: black;
+}
+
+.bg_weight{
+	background-image: url("/static/user/res/main/bg-image.jpg")
+}
+
+.bg_ballet{
+	background-image: url("/static/user/res/main/bg-image-ballet-mobile.jpg")
+}
+.bg_yoga{
+	background-image: url("/static/user/res/main/bg-image-yoga-mobile.jpg")
+}
+.bg_pilates{
+	background-image: url("/static/user/res/main/bg-image-pilates-mobile.jpg")
+}
+.bg_billiard{
+	background-image: url("/static/user/res/main/bg-image-billiards-mobile.jpg")
+}
+.bg_golf{
+	background-image: url("/static/user/res/main/bg-image-golf-mobile.jpg")
+}
+.bg_brick{
+	background-image: url("/static/user/res/main/bg-image-brick-mobile.jpg")
 }
 
 .navbar-default{
@@ -180,12 +204,13 @@ body{
 	color: #ffffff;
 }
 
+/*
 @media(min-height: 800px) and (max-width: 380px){
 	body{
 		background-position-y:50px;
 	}
 }
-
+*/
 @media(max-height:630px) and (min-width:600px){
 	html,body{
 		height: auto;
@@ -205,6 +230,30 @@ body{
 	body{
 		/*background-image: url("/static/user/res/main/bg-image-pc.jpg");*/
 		background-size: auto;
+		background-size: cover;
+	}
+
+	.bg_weight{
+		background-image: url("/static/user/res/main/bg-image-pc.jpg")
+	}
+
+	.bg_ballet{
+		background-image: url("/static/user/res/main/bg-image-ballet-pc.jpg")
+	}
+	.bg_yoga{
+		background-image: url("/static/user/res/main/bg-image-yoga-pc.jpg")
+	}
+	.bg_pilates{
+		background-image: url("/static/user/res/main/bg-image-pilates-pc.jpg")
+	}
+	.bg_billiard{
+		background-image: url("/static/user/res/main/bg-image-billiards-pc.jpg")
+	}
+	.bg_golf{
+		background-image: url("/static/user/res/main/bg-image-golf-pc.jpg")
+	}
+	.bg_brick{
+		background-image: url("/static/user/res/main/bg-image-brick-pc.jpg")
 	}
 
 	#main_content{

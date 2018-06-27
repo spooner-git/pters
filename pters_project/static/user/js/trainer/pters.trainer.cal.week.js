@@ -1969,3 +1969,6 @@ function clear_badge_counter(){
             },
         })
 }
+
+
+
