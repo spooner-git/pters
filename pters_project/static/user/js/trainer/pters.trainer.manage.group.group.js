@@ -981,7 +981,8 @@ function groupListSet(option, jsondata){ //option : current, finished
                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
                     '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
-                    '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
+                    //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
+                    '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+groupNum+'</span>');

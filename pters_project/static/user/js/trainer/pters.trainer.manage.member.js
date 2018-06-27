@@ -1438,7 +1438,7 @@ function pc_add_member(option){
         $('#memberSearchButton').trigger('click');
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
 
-        closePopup('member_info');
+        
         float_btn_managemember(1);
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         $('#uptext2').text(text2);
@@ -1446,6 +1446,7 @@ function pc_add_member(option){
             var userID = $('#memberId').val();
             $('#memberSearch_add').val(userID);
         }
+        closePopup('member_info');
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
@@ -1457,6 +1458,7 @@ function pc_add_member(option){
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
         $('#memberSearchButton').trigger('click');
+
     }else if(option == 'group'){
         initialize_add_member_sheet();
         
