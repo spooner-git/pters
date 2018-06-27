@@ -3263,7 +3263,7 @@ def select_class_processing_logic(request):
 
     error = None
     class_info = None
-
+    # test
     if class_id == '':
         error = '강좌를 선택해 주세요.'
 
