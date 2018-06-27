@@ -366,7 +366,6 @@ function draw_memberlist_for_addBySearch(jsondata){
 //ajax로 서버에 보낼 때, 추가된 회원들의 정보를 form에 채운다.
 function added_member_info_to_jsonformat(){
     var fast_check = $('#fast_check').val();
-    var memo = $('#comment').val();
     var search_confirm = $('#id_search_confirm').val()
     var group_id = $('#form_member_groupid').val()
     if(fast_check == 1){
@@ -374,13 +373,15 @@ function added_member_info_to_jsonformat(){
         var price = $('#lecturePrice_add_value').val()
         var start_date = $('#datepicker_add').val()
         var end_date = $('#datepicker2_add').val()
+        var memo = $('#comment').val();
     }else if(fast_check == 0){
         var counts = $('#memberCount_add_fast').val()
         var price = $('#lecturePrice_add_value_fast').val()
         var start_date = $('#datepicker_fast').val()
         var end_date = $('#memberDue_add_2_fast').val()
+        var memo = $('#comment_fast').val();
     }
-
+    console.log(memo)
     var dataObject = {
                         "new_member_data":[],
                         "old_member_data":[],
@@ -697,10 +698,16 @@ function get_group_end_list(use, callback){
 //그룹 지우기
 function delete_group_from_list(group_id){
     var bodywidth = window.innerWidth;
+    var next_page = '/trainer/get_group_ing_list'
+    if($('#currentGroupList').css('display') == "block"){
+        next_page = '/trainer/get_group_ing_list'
+    }else if($('#finishedGroupList').css('display') == "block"){
+        next_page = '/trainer/get_group_end_list'
+    }
 	$.ajax({
         url:'/trainer/delete_group_info/',
         type:'POST',
-        data: {"group_id":group_id},
+        data: {"group_id":group_id, "next_page":next_page},
         dataType : 'html',
 
         beforeSend:function(){
@@ -715,6 +722,7 @@ function delete_group_from_list(group_id){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(data)
             if(jsondata.messageArray.length>0){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
