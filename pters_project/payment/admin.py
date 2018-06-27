@@ -15,4 +15,3 @@ class PaymentInfoTbAdmin(admin.ModelAdmin):
 class BillingInfoTbAdmin(admin.ModelAdmin):
     list_display = ('billing_info_id', 'member', 'payment_type_cd', 'customer_uid', 'payment_date',
                     'reg_dt', 'mod_dt', 'use')
-

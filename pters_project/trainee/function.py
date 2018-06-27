@@ -45,10 +45,12 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         if all_schedule_check == 0:
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
-                                                      start_dt__gte=start_date, end_dt__lt=end_date).order_by('-start_dt')
+                                                      start_dt__gte=start_date,
+                                                      end_dt__lt=end_date).order_by('-start_dt')
         else:
-            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                                      lecture_tb_id=member_lecture_info.lecture_tb_id).order_by('-start_dt')
+            schedule_data = \
+                ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                          lecture_tb_id=member_lecture_info.lecture_tb_id).order_by('-start_dt')
 
         idx2 = len(schedule_data)+1
 
@@ -92,10 +94,11 @@ def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_
             group_schedule_info.end_dt = str(group_schedule_info.end_dt)
 
             if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
-                schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                        group_tb_id=group_schedule_info.group_tb.group_id,
-                                                                        lecture_tb__isnull=False,
-                                                                        group_schedule_id=group_schedule_info.schedule_id).count()
+                schedule_current_member_num = \
+                    ScheduleTb.objects.filter(class_tb_id=class_id,
+                                              group_tb_id=group_schedule_info.group_tb.group_id,
+                                              lecture_tb__isnull=False,
+                                              group_schedule_id=group_schedule_info.schedule_id).count()
                 group_schedule_info.current_member_num = schedule_current_member_num
 
             if group_schedule_info.note is None:
@@ -133,7 +136,8 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
 def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
     repeat_schedule_list = []
 
-    member_lecture_data = MemberLectureTb.objects.filter(auth_cd='VIEW', member_id=user_id).order_by('lecture_tb__start_date')
+    member_lecture_data = MemberLectureTb.objects.filter(auth_cd='VIEW',
+                                                         member_id=user_id).order_by('lecture_tb__start_date')
 
     for member_lecture_info in member_lecture_data:
         pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
@@ -170,9 +174,11 @@ def func_get_trainee_group_ing_list(class_id, user_id):
 
             try:
                 state_cd_nm = CommonCdTb.objects.get(common_cd=group_lecture_info.group_tb.state_cd)
-                group_lecture_info.group_tb.state_cd_nm = state_cd_nm.common_cd_nm
             except ObjectDoesNotExist:
-                error = '그룹 정보를 불러오지 못했습니다.'
+                state_cd_nm = None
+
+            if state_cd_nm is not None:
+                group_lecture_info.group_tb.state_cd_nm = state_cd_nm.common_cd_nm
 
             if len(group_list) == 0:
                 group_list.append(group_lecture_info)
@@ -207,9 +213,11 @@ def func_get_trainee_lecture_ing_list(class_id, user_id):
 
             try:
                 state_cd_nm = CommonCdTb.objects.get(common_cd=group_lecture_info.group_tb.state_cd)
-                group_lecture_info.group_tb.state_cd_nm = state_cd_nm.common_cd_nm
             except ObjectDoesNotExist:
-                error = '그룹 정보를 불러오지 못했습니다.'
+                state_cd_nm = None
+
+            if state_cd_nm is not None:
+                group_lecture_info.group_tb.state_cd_nm = state_cd_nm.common_cd_nm
 
             if len(group_list) == 0:
                 group_list.append(group_lecture_info)
@@ -237,6 +245,7 @@ def func_get_class_lecture_count(context, class_id, user_id):
     group_lecture_avail_count_sum = 0
     lecture_flag = False
     group_lecture_flag = False
+    lecture_list = None
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
@@ -311,7 +320,7 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                                                      use=USE).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
 
         for lecture_info in lecture_list:
-
+            lecture_info_data = None
             for auth_cd_info in auth_cd_list:
                 try:
                     lecture_info_data = MemberLectureTb.objects.get(auth_cd=auth_cd_info,
@@ -333,7 +342,8 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 except ObjectDoesNotExist:
                     lecture_info_data.auth_cd_name = ''
                 try:
-                    lecture_info_data.lecture_tb.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.lecture_tb.state_cd)
+                    lecture_info_data.lecture_tb.state_cd_name = \
+                        CommonCdTb.objects.get(common_cd=lecture_info_data.lecture_tb.state_cd)
                 except ObjectDoesNotExist:
                     lecture_info_data.lecture_tb.state_cd_name = ''
 
@@ -389,7 +399,7 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
                                                      use=USE).order_by('-lecture_tb__start_date')
 
         for lecture_info in lecture_list:
-
+            lecture_info_data = None
             for auth_cd_info in auth_cd_list:
                 try:
                     lecture_info_data = MemberLectureTb.objects.get(auth_cd=auth_cd_info,
@@ -411,7 +421,8 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
                 except ObjectDoesNotExist:
                     lecture_info_data.auth_cd_name = ''
                 try:
-                    lecture_info_data.lecture_tb.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.lecture_tb.state_cd)
+                    lecture_info_data.lecture_tb.state_cd_name = \
+                        CommonCdTb.objects.get(common_cd=lecture_info_data.lecture_tb.state_cd)
                 except ObjectDoesNotExist:
                     lecture_info_data.lecture_tb.state_cd_name = ''
 
@@ -470,6 +481,7 @@ def func_get_class_list(context, member_id):
             class_lecture_info.lecture_counts = 0
 
             for lecture_list_info in lecture_list_data:
+                member_lecture_data = None
                 try:
                     member_lecture_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id,
                                                                       lecture_tb_id=lecture_list_info.lecture_tb_id)
@@ -486,7 +498,8 @@ def func_get_class_list(context, member_id):
             if error is None and class_lecture_info.lecture_counts > 0:
                 class_lecture_info.class_type_name = pt_type_name.common_cd_nm
 
-                if class_lecture_info.class_tb.subject_detail_nm is not None and class_lecture_info.class_tb.subject_detail_nm != '':
+                if class_lecture_info.class_tb.subject_detail_nm is not None\
+                        and class_lecture_info.class_tb.subject_detail_nm != '':
                     class_lecture_info.class_type_name = class_lecture_info.class_tb.subject_detail_nm
 
                 check = 0
@@ -510,7 +523,8 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
     disable_time = timezone.now()
     now_time = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
     today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-
+    reserve_avail_date = 0
+    class_info = None
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:

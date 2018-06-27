@@ -4,7 +4,7 @@ import json
 import httplib2
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
@@ -32,6 +32,13 @@ def billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
     error = None
+    merchandise_type_cd = None
+    payment_type_cd = None
+    merchant_uid = None
+    customer_uid = None
+    start_date = None
+    end_date = None
+
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -87,8 +94,8 @@ def billing_check_logic(request):
             payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오는데 실패했습니다.'
-        if error is None:
-            user_id = payment_user_info.member_id
+        # if error is None:
+        #     user_id = payment_user_info.member_id
 
     if error is None:
         h = httplib2.Http()
@@ -118,4 +125,3 @@ class PaymentCompleteView(LoginRequiredMixin, TemplateView):
         context = super(PaymentCompleteView, self).get_context_data(**kwargs)
 
         return context
-
