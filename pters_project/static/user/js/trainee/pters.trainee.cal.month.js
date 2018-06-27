@@ -1061,8 +1061,13 @@ $(document).ready(function(){
 			        }
 			        //그룹 일정중 지난시간 일정은 선택 불가능 하도록, 근접예약 방지 옵션 값 적용
 
-			        //
+			        //내 일정중 그룹일정 리스트와 같은 시간 항목이 있으면 그 그룹시간은 비활성화 
 			        if(jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) !=  -1){
+			        	var disable = "disabled_button"
+			        }
+
+			        //완료된 그룹은 비활성화
+			        if(jsondata.group_schedule_finish_check[i] == 1){
 			        	var disable = "disabled_button"
 			        }
 
