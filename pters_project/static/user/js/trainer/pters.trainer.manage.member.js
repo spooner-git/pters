@@ -1398,7 +1398,6 @@ function pc_add_member(option){
 
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         initialize_add_member_sheet();
-        $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
@@ -1416,8 +1415,6 @@ function pc_add_member(option){
 
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
-        
-        $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
@@ -3665,7 +3662,12 @@ function add_member_form_func(){
                     })
                 }
                 
-                closePopup('member_add')
+                closePopup('member_add');
+                if($('#memberInfoPopup_PC').css('display') == "block"){
+                    closePopup('member_info_PC')
+                }else if($('#memberInfoPopup').css('display') == "block"){
+                    closePopup('member_info')
+                }
                 console.log('success');
             }
         },
