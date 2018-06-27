@@ -181,6 +181,7 @@ PTERS_PUSH_SERVER_KEY = os.environ.get("PTERS_PUSH_SERVER_KEY", '')
 # db data upload size
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
+PAYMENT_ID = os.environ.get("PAYMENT_ID", '')
 
 LOG_FILE = os.path.join(os.path.dirname(__file__), '..', 'logs/default_log.log')
 LOG_FILE_LOGIN = os.path.join(os.path.dirname(__file__), '..', 'logs/login_log.log')

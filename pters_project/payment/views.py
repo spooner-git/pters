@@ -12,6 +12,7 @@ from django.views.generic import TemplateView
 
 from django.utils import timezone
 
+from configs import settings
 from configs.const import USE
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info
 from payment.models import PaymentInfoTb, BillingInfoTb
@@ -22,6 +23,7 @@ class PaymentView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PaymentView, self).get_context_data(**kwargs)
+        context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
         return context
 
 

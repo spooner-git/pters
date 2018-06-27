@@ -63,7 +63,7 @@
 {#         <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.work.js" %}></script>#}
          <script>
             var IMP = window.IMP; // 생략가능
-            IMP.init('imp53133818'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+            IMP.init({{ payment_id }}); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
             function payment(){
                 console.log('payment function test')
