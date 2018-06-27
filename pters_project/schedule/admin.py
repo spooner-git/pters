@@ -24,7 +24,7 @@ class ScheduleTbAdmin(admin.ModelAdmin):
     list_display = ('schedule_id', 'class_tb', 'lecture_tb', 'group_tb', 'group_schedule_id',
                     'repeat_schedule_tb', 'start_dt', 'end_dt',
                     'permission_state_cd', 'state_cd', 'sign_data_url', 'note', 'member_note', 'en_dis_type',
-                    'reg_member', 'reg_dt', 'mod_dt')
+                    'reg_member', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(DeleteScheduleTb)
