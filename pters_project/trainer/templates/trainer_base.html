@@ -33,7 +33,7 @@
 
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
         <!-- Bootstrap core CSS -->
-        <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
+        <link rel="stylesheet" href={% static_url "common/css/bootstrap.min.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/pters.base.popup.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
@@ -105,7 +105,7 @@
             <div class="popup_info_text">
                 <p id="popup_info"></p>
                 <p id="popup_info2"></p>
-                <input id="popup_info3_memo" type="text" maxlength="15" readonly>
+                <input id="popup_info3_memo" type="text" maxlength="15" title="메모" readonly>
                 <img src="/static/user/res/icon-pencil.png" style="width: 12px;cursor:pointer;margin-left: 5px;" title="메모 수정" id="popup_info3_memo_modify" data-type="view">
                 <p style="font-size:10px;color:#282828;opacity:0.6;text-align: center;" class="pt_memo_guide_popup">레슨일정의 메모는 회원님께 공유됩니다.</p>
             </div>
@@ -227,7 +227,7 @@
                         <a id="uptext" class="uptext">{{ user.last_name}} {{user.first_name }}  <span></span></a>
                     {% endblock %}
                     <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="openAlarm('mobile')">
-                        <a><img src={% static_url "user/res/main/alarm-on.png" %} style="width:20px;"></a>
+                        <a><img src="{% static_url "user/res/main/alarm-on.png" %}" style="width:20px;"></a>
                     </button>
                     
                     <div id="outer_Sidenav" class="outer_Sidenav">
@@ -239,7 +239,7 @@
                         
                         <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
                             <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
-                            <div style="z-index: -1"><img src={% static_url "user/res/icon-pf.png" %} alt="#"></div>
+                            <div style="z-index: -1"><img src="{% static_url "user/res/icon-pf.png" %}" alt="#"></div>
                             <div id="user_name">{{user.last_name}} {{user.first_name}}
                                 <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
                             </div>
@@ -252,23 +252,23 @@
                             </div>
                         </div>                     
 
-                        <div class="sidebar_div" id="cal_day" onclick="sideGoPage('cal_day')"><img src={% static_url "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" id="cal_day" onclick="sideGoPage('cal_day')"><img src="{% static_url "user/res/icon-calendar-day.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text __todayplan">
                             </a>
                         </div>
-                        <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text __weekplan">
                             </a>
                         </div>
-                        <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src={% static_url "user/res/icon-calendar-week.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text __monthplan">
                             </a>
                         </div>
-                        <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src={% static_url "user/res/icon-user-setting.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src="{% static_url "user/res/icon-user-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text __membermanage">
                             </a>
                         </div>
-                        <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src={% static_url "user/res/icon-group-setting.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text __groupmanage">
                             </a>
                         </div>
@@ -278,15 +278,15 @@
                             </a>
                         </div>
                         -->
-                        <div class="sidebar_div" onclick="open_lecture_select_popup()"><img src={% static_url "user/res/member/icon-repeat.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="open_lecture_select_popup()"><img src="{% static_url "user/res/member/icon-repeat.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text __calSelect">
                             </a>
                         </div>
-                        <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div"><img src="{% static_url "user/res/icon-pencil.png" %}" class="sidebar_icon" alt="#">
                             <a href="{% url 'trainer:help_setting' %}" class="sidebar_text __help">
                             </a>
                         </div>
-                        <div style="height: 100%;border-top:0.5px solid #cccccc;background:#ffffff;"></div>
+                        <div style="height: 100%; border-top:0.5px solid #cccccc;background:#ffffff;"></div>
                         <div class="sidebar_div_last">
                           <div class="sidebar_div_last1" onclick="sideGoPage('trainer_setting')">
                             <img src="{% static_url "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
@@ -294,7 +294,7 @@
                             </a>
                           </div>
                           <div class="sidebar_div_last2" onclick="sideGoPage('help_setting')">
-                            <img src={% static_url "user/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon">
+                            <img src="{% static_url "user/res/icon-info.png" %}" alt="#" class="sidebar_icon_info sidebar_icon">
                           </div>
                         </div>
                     </div>
@@ -307,13 +307,13 @@
             <div class="container">
                 <div class="navbar-header">
                     <button id="upbutton-x" class="navbar-toggle" aria-controls="navbar">
-                        <img src={% static_url "user/res/ptadd/btn-x.png" %} style="width:90%;">
+                        <img src="{% static_url "user/res/ptadd/btn-x.png" %}" style="width:90%;">
                     </button>
                     {% block nav_center_img1 %}
                         <a id="uptext2" class="uptext"></a>
                     {% endblock %}
                     <button id="upbutton-check" class="navbar-toggle" aria-controls="navbar">
-                        <img src={% static_url "user/res/ptadd/btn-complete.png" %} style="width:100%;">
+                        <img src="{% static_url "user/res/ptadd/btn-complete.png" %}" style="width:100%;">
                     </button>
                 </div>
             </div><!-- /.container -->
@@ -323,13 +323,13 @@
             <div class="container">
                 <div class="navbar-header">
                     <button id="upbutton-x-modify" class="navbar-toggle" aria-controls="navbar">
-                        <img src={% static_url "user/res/ptadd/btn-x.png" %} style="width:90%;">
+                        <img src="{% static_url "user/res/ptadd/btn-x.png" %}" style="width:90%;">
                     </button>
                     {% block nav_center_img2 %}
                         <a id="uptext3" class="uptext"><span class="KRtext">회원 정보</span><span class="JPtext">メンバー</span><span class="ENtext">Member Info.</span></a>
                     {% endblock %}
                     <button id="upbutton-modify" class="navbar-toggle" aria-controls="navbar" data-type = "view">
-                        <img src={% static_url "user/res/member/icon-edit.png" %} style="width:100%;">
+                        <img src="{% static_url "user/res/member/icon-edit.png" %}" style="width:100%;">
                     </button>
                 </div>
             </div><!-- /.container -->
@@ -422,7 +422,7 @@
     {% endblock %}
         <footer class="fixfooter bottomzero">
             <div class="bottomfooter1">
-                <form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
+                <form action="{% url 'trainer:update_setting_language' %}" id="update-setting-language-form" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
                     <input type="hidden" name = "next_page" value="/trainer/trainer_main">
@@ -517,7 +517,7 @@
         messageCommunicationWithWorker();
     </script>-->
     <script type="text/javascript">    
-            var class_name = '{{ request.session.class_type_name }}'
+            var class_name = '{{ request.session.class_type_name }}';
 {#            open_lecture_select_popup_pc()#}
 
             /* Shade 클릭해서 팝업 닫기
@@ -546,50 +546,52 @@
                 }else{
                     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 }
-            })
+            });
 
             $('#uptext').click(function(){
-                window.location.reload()
-            })
+                window.location.reload();
+            });
 
              function openNav(){
                 
-               $("#outer_Sidenav").show();
+{#               $("#outer_Sidenav").css('display_block', 'block');#}
+               $("#outer_Sidenav").show();
                $("#inner_Sidenav").css({'width':'250px'});
-               $('#float_btn_wrap, #float_btn').hide('fast')
+               $('#float_btn_wrap, #float_btn').hide('fast');
                
 
                //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
              }
              
              function closeNav(){
-            
+
+{#               $("#outer_Sidenav").css('display', 'none');#}
               $("#outer_Sidenav").hide();
               $("#inner_Sidenav").css({'width':'0'});
-              $('#float_btn_wrap, #float_btn').show('fast')
+              $('#float_btn_wrap, #float_btn').show('fast');
               
 
               //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
-             }; 
+             }
 
 
             function openAlarm(option){ // pc or mobile
                 if(option == 'mobile'){
                     if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
-                        $('#alarm_delete').hide()
+                        $('#alarm_delete').hide();
                     }else{
-                        $('#alarm_delete').show()
+                        $('#alarm_delete').show();
                     }
-                    shade_index(100)
+                    shade_index(100);
                     $('#alarm').css('height','70%');
                     $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
                 }
                 else if(option == 'pc'){
                     //open_lecture_select_popup_pc()
                     if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
-                        $('#alarm_delete').hide()
+                        $('#alarm_delete').hide();
                     }else{
-                        $('#alarm_delete').show()
+                        $('#alarm_delete').show();
                     }
                     $('.pcver-slide-menu').css({'height':'auto','box-shadow':'1px 1px 1px 1px #c5c5c5'});
                     $('#alarm-iframe-div-pc').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="100%" height="300" frameborder="0"></iframe>');
@@ -598,48 +600,54 @@
 
             function closeAlarm(option){
                 if(option=='pc'){
+                    var selector_alarm_iframe_div_pc = $('#alarm-iframe-div-pc');
                     $('.pcver-slide-menu').css({'height':'0','box-shadow':'unset'});
-                    $('#alarm-iframe-div-pc').css('height','0px')
-                    $('#alarm-close-pc').fadeOut()
-                    $('#alarm-iframe-div-pc').html('');
+                    selector_alarm_iframe_div_pc.css('height','0px');
+                    $('#alarm-close-pc').fadeOut();
+                    selector_alarm_iframe_div_pc.html('');
                 }
             }
 
             $('#alarm-notify').click(function(){
-                $('#alarm-iframe-div-pc').css('height','300px')
-                $('#alarm-close-pc').fadeIn()
-            })
+                $('#alarm-iframe-div-pc').css('height','300px');
+                $('#alarm-close-pc').fadeIn();
+            });
 
             $('#alarm-close-pc').click(function(){
-                $('#alarm-iframe-div-pc').css('height','0px')
-                $('#alarm-close-pc').fadeOut()
-            })
+                $('#alarm-iframe-div-pc').css('height','0px');
+                $('#alarm-close-pc').fadeOut();
+            });
 
             var class_hour = '{{ request.session.class_hour }}';
 
 
-            var worktime = '{{ request.session.setting_trainer_work_time_available }}'
-            var stoptime = '{{ request.session.setting_member_reserve_time_available }}'
+            var worktime = '{{ request.session.setting_trainer_work_time_available }}';
+            var stoptime = '{{ request.session.setting_member_reserve_time_available }}';
+            var stoptimeStart = '';
+            var stoptimeEnd = '';
+            var worktimeStart = '';
+            var worktimeEnd = '';
+
              if(stoptime.length>0){
-                var stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0])
-                var stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0])
+                stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0]);
+                stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0]);
              }else{
-                var stoptimeStart = ''
-                var stoptimeEnd = ''
+                stoptimeStart = '';
+                stoptimeEnd = '';
              }
 
              if(worktime.length>0){
-                var worktimeStart = Number('{{ request.session.setting_trainer_work_time_available }}'.split(':')[0])
-                var worktimeEnd = Number('{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[0])
+                worktimeStart = Number('{{ request.session.setting_trainer_work_time_available }}'.split(':')[0]);
+                worktimeEnd = Number('{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[0]);
                 if('{{ request.session.setting_trainer_work_time_available }}'.split(':')[0] == '23' && '{{ request.session.setting_trainer_work_time_available }}'.split(':')[1] == '59'){
-                    var worktimeStart = 24
+                    worktimeStart = 24;
                 }
                 if('{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[0] == '23' && '{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[1] == '59' ){
-                    var worktimeEnd = 24
+                    worktimeEnd = 24;
                 }
              }else{
-                var worktimeStart = ''
-                var worktimeEnd = ''
+                worktimeStart = '';
+                worktimeEnd = '';
              }
 
             var Options = {   "hourunit" : 30, // 30 or 60
@@ -662,8 +670,8 @@
 
 
                               "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
-                              "location" : "Japan",           //Korea, Japan, English, Chinese
-            }
+                              "location" : "Japan"           //Korea, Japan, English, Chinese
+            };
 
               if(Options.language=="JPN"){
                 $(".KRtext, .ENtext").remove();
@@ -676,19 +684,19 @@
                 $(".KRtext").show();
               }
 
-              var varUA = navigator.userAgent.toLowerCase()
+              var varUA = navigator.userAgent.toLowerCase();
                 if(varUA.match('android') != null){
-                    $('._company').css('display','none')
-                    $('.ads_wrap').css('display','none')
+                    $('._company').css('display','none');
+                    $('.ads_wrap').css('display','none');
                 }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-                    $('._company').css('display','none')
-                    $('.ads_wrap').css('display','none')
+                    $('._company').css('display','none');
+                    $('.ads_wrap').css('display','none');
                 }else{
                     
                 }
 
               function languageSet(language){
-                    $('#id_setting_language').val(language)
+                    $('#id_setting_language').val(language);
                     document.getElementById('update-setting-language-form').submit();
               }
 
@@ -696,14 +704,14 @@
             ///********************* 강의 선택*************************************///
             ///********************* 강의 선택*************************************///
 
-            var lec_select_regCountArray = []
-            var lec_select_countArray = []
-            var lec_select_startArray = []
-            var lec_select_endArray = []
-            var lec_select_lectureIdArray = []
-            var lec_select_trainerNameArray = []
-            var lec_select_availCountArray = []
-            var lec_select_classIdArray = []
+            var lec_select_regCountArray = [];
+            var lec_select_countArray = [];
+            var lec_select_startArray = [];
+            var lec_select_endArray = [];
+            var lec_select_lectureIdArray = [];
+            var lec_select_trainerNameArray = [];
+            var lec_select_availCountArray = [];
+            var lec_select_classIdArray = [];
 
 
             function ajax_read_lecture_info_from_db(HTMLselector){
@@ -718,12 +726,12 @@
                       success:function(data){
                         var jsondata = JSON.parse(data);
                         if(jsondata.messageArray.length>0){
-                            $('#errorMessageBar').show()
-                            $('#errorMessageText').text(jsondata.messageArray)
+                            $('#errorMessageBar').show();
+                            $('#errorMessageText').text(jsondata.messageArray);
                         }else if(jsondata.classIdArray.length == 0){
                             
                         }else{
-                            lec_select_classIdArray = jsondata.classIdArray
+                            lec_select_classIdArray = jsondata.classIdArray;
                             lec_select_centerNameArray = jsondata.centerNameArray;
                             lec_select_subjectNameArray = jsondata.subjectNameArray;
                             lec_select_startDateArray = jsondata.startDateArray;
@@ -740,9 +748,9 @@
                             //Options.classDur = lec_select_classHourArray[lec_select_classIdArray.indexOf(lec_select_currentClassId[0])]
 
                             if(lec_select_classIdArray.length == 0){
-                                location.href="{% url 'trainer:add_class' %}"
+                                location.href="{% url 'trainer:add_class' %}";
                             }else{
-                                fill_lecture_select_popup(HTMLselector)
+                                fill_lecture_select_popup(HTMLselector);
                             }
                         }
                       },
@@ -752,7 +760,7 @@
                       },
 
                       error:function(){
-                        console.log('server error')
+                        console.log('server error');
                       }
                     })
             }
@@ -770,8 +778,8 @@
                       success:function(data){
                         var jsondata = JSON.parse(data);
                         if(jsondata.messageArray.length>0){
-                            $('#errorMessageBar').show()
-                            $('#errorMessageText').text(jsondata.messageArray)
+                            $('#errorMessageBar').show();
+                            $('#errorMessageText').text(jsondata.messageArray);
                         }else{
                             lec_select_regCountArray = jsondata.countArray;
                             lec_select_startArray = jsondata.startArray;
@@ -786,7 +794,7 @@
                             lec_select_classInfoArray = jsondata.classInfoArray;
                             lec_select_classIdArray = jsondata.classIdArray;
                             
-                            fill_lecture_connect_select_popup(classid) 
+                            fill_lecture_connect_select_popup(classid) ;
                         }
                       },
 
@@ -795,66 +803,68 @@
                       },
 
                       error:function(){
-                        console.log('server error')
+                        console.log('server error');
                       }
                     })
             }
 
             function open_lecture_select_popup(){
-                $('.popups').hide()
-                $('#popup_lecture_select').fadeIn('fast')
-                closeNav()
-                shade_index(100)
-                ajax_read_lecture_info_from_db($('.lecture_select_table_list'))
+                $('.popups').hide();
+                $('#popup_lecture_select').fadeIn('fast');
+                closeNav();
+                shade_index(100);
+                ajax_read_lecture_info_from_db($('.lecture_select_table_list'));
             }
 
             function open_lecture_select_popup_pc(){
-                $('.popups').hide()
-                closeNav()
-                ajax_read_lecture_info_from_db($('#subject-selector'))
+                $('.popups').hide();
+                closeNav();
+                ajax_read_lecture_info_from_db($('#subject-selector'));
             }
 
             function fill_lecture_select_popup(HTMLselector){
                 var len = lec_select_subjectNameArray.length;
-                var list_table_to_join = []
+                var list_table_to_join = [];
                 var center_counter = 0;
                 for(var i=0; i<len; i++){
                   //if(lec_select_npLectureCountsArray[i] == '0'){
+                    var currentClass = "";
+                    var table = "";
                       if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
-                          var currentClass = 'currentClass'
+                          currentClass = 'currentClass';
                           //var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
-                          var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
+                          table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">';
                       }else{
-                          var currentClass = ""
+                          currentClass = "";
                           //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
-                          var table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'>'
+                          table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'>';
                       }
                       //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
-                      var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>'
-                      var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>'
-                      var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>'
-                      var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
-                      var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>'
-                      //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
-                    var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>'
-                      list_table_to_join.push(sum)
+                      var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>';
+                      var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>';
+                      var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>';
+                      var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>';
+                      var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>';
+                      //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>';
+                    var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>';
+                      list_table_to_join.push(sum);
                         if(lec_select_centerNameArray[i] != ''){
                               center_counter += 1;
                         }
                 }
-                var list_table = list_table_to_join.join('')
-                HTMLselector.html(list_table)
+                var list_table = list_table_to_join.join('');
+                HTMLselector.html(list_table);
 
                 if(center_counter==0){
-                    $('.table_center_name').css('display', 'none')
+                    $('.table_center_name').css('display', 'none');
                 }
                 //$('.lecture_select_table_list').html(list_table)
             }
 
             $('#popup_lecture_select .button_close_popup').click(function(){
-                $(this).parents('div.popups').fadeOut('fast')
-                shade_index(-100)
-            })
+                $(this).parents('div.popups').fadeOut('fast');
+                shade_index(-100);
+            });
 
 
             function lecture_check(class_id){

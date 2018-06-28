@@ -66,7 +66,7 @@
    <!--플로팅 버튼-->
 <div id="float_btn_wrap">
     <div id="float_btn" onclick="float_btn_addplan(0)">
-      <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
+      <img src="{% static_url "user/res/floatbtn/btn-plus.png" %}" alt="">  <!--2017.10.2-->
     </div>
     <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
     <a class="KRtext">레슨<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
@@ -85,13 +85,13 @@
 <div id="ymdText" class="">
     <div class='arrowButton'>
             <a id="leftArrowButton" style="left: 4%">
-              <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
-              <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="leftArrowButtonImg">
+              <img src="{% static_url "user/res/btn-today-left.png" %}" alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
+              <img src="{% static_url "user/res/daycal_arrow.png" %}" alt="" id="leftArrowButtonImg">
               <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible">Today</span>
             </a>
             <a id="rightArrowButton" style="right: 4%">
-              <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="rightArrowButtonImg">
-              <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
+              <img src="{% static_url "user/res/daycal_arrow.png" %}" alt="" id="rightArrowButtonImg">
+              <img src="{% static_url "user/res/btn-today-left.png" %}" alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
               <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible">Today</span>
             </a>
     </div>
@@ -441,8 +441,8 @@
           <span class="ENtext">Memo</span>
           <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
         </div>
-        <input type="text" name="add_memo" class="dropdown" maxlength="15">
-        <p style="font-size:12px;color:#fe4e65;margin:0;margin-top:7px;text-align: right;" class="pt_memo_guide">
+        <input type="text" name="add_memo" class="dropdown" maxlength="15" title="메모">
+        <p style="font-size:12px;color:#fe4e65;margin: 7px 0 0;text-align: right;" class="pt_memo_guide">
           <img src="/static/user/res/stopmark.png" style="height: 12px;margin-bottom: 1px;"> 레슨 일정의 메모는 해당 회원님께도 공유됩니다.
         </p>
       </div>
@@ -485,7 +485,7 @@
       </div>
         
       <div id="repeatSetting" class="ptaddbox _REPEAT_ADD">
-        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/offadd/icon-repeat.png" %} style="width:14px;">
+        <div class="ptaddboxtext"><img class="icons" src="{% static_url "user/res/offadd/icon-repeat.png" %}" style="width:14px;">
           <span class="KRtext">반복 일정</span>
           <span class="JPtext">繰り返し登録</span>
           <span class="ENtext">Repeat Plan</span>
@@ -506,7 +506,7 @@
       </div>
 
       <div id="daySelect" class="ptaddbox _REPEAT_ADD">
-        <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %} style="width:14px;">
+        <div class="ptaddboxtext"><img class="icons" src="{% static_url "user/res/ptadd/icon-cal.png" %}" style="width:14px;">
           <span class="KRtext">요일별 일정</span>
           <span class="JPtext">予約日選択</span>
           <span class="ENtext">Day Select</span>
@@ -727,7 +727,7 @@
           <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
         </div>
         <input type="text" name="memo_mini" maxlength="15" value="" placeholder="15자 이내" id="memo_mini">
-        <p style="font-size:12px;color:#fe4e65;margin:0;margin-top:2px;text-align: right;padding-right:15px;" class="pt_memo_guide_mini">
+        <p style="font-size:12px;color:#fe4e65;margin: 2px 0 0;text-align: right;padding-right:15px;" class="pt_memo_guide_mini">
           <img src="/static/user/res/stopmark.png" style="height: 12px;margin-bottom: 1px;"> 이 메모는 회원님께도 공유됩니다.
         </p>
     </div>
@@ -779,9 +779,9 @@
                     <span id="npSituationPresent"></span>
                 </label>
                 <div class="mobileinfo">
-                    <input type="text" class="mobileinfo_input" id="memberName_info" name="name" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" disabled>
+                    <input type="text" class="mobileinfo_input" id="memberName_info" name="name" title="name" disabled>
+                    <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" title="lastName" disabled>
+                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" title="firstName" disabled>
                     <div id="memberSex_info">
                         <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
                         <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
@@ -794,7 +794,7 @@
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 ID
                 </label>
                 <div class="mobileinfo">
-                    <input type="text" class="mobileinfo_input" id="memberId" name="id" disabled>
+                    <input type="text" class="mobileinfo_input" id="memberId" name="id" title="id" disabled>
                 </div>
             </div>
 
@@ -803,11 +803,11 @@
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 생년월일
                 </label>
                 <div id="memberBirth_info">
-                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_year_info" disabled>
+                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_year_info" title="년" disabled>
                     </select>
-                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_month_info" disabled>
+                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_month_info" title="월" disabled>
                     </select>
-                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_date_info" disabled>
+                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_date_info" title="일" disabled>
                     </select>
                 </div>
             </div>
@@ -835,7 +835,7 @@
                     <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록 횟수
                 </label>
                 <div class="mobileinfo">
-                    <input type="tel" class="mobileinfo_input" id="memberRegCount_info" name="counts" readonly>
+                    <input type="tel" class="mobileinfo_input" id="memberRegCount_info" name="counts" title="등록 횟수" readonly>
                 </div>
             </div>
 
@@ -845,7 +845,7 @@
                     <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 남은 횟수
                 </label>
                 <div class="mobileinfo">
-                    <input type="tel" class="mobileinfo_input" id="memberRemainCount_info" name="counts" readonly>
+                    <input type="tel" class="mobileinfo_input" id="memberRemainCount_info" name="counts" title="남은 횟수" readonly>
                 </div>
             </div>
 
@@ -854,7 +854,7 @@
                     <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 예약 가능 횟수
                 </label>
                 <div class="mobileinfo">
-                    <input type="tel" class="mobileinfo_input" id="memberAvailCount_info" name="counts" readonly>
+                    <input type="tel" class="mobileinfo_input" id="memberAvailCount_info" name="counts" title="예약 가능 횟수" readonly>
                 </div>
             </div>
 
@@ -864,7 +864,7 @@
                     <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 완료 횟수
                 </label>
                 <div class="mobileinfo">
-                    <input type="tel" class="mobileinfo_input" id="memberFinishCount_info" name="counts" readonly>
+                    <input type="tel" class="mobileinfo_input" id="memberFinishCount_info" name="counts" title="완료 횟수" readonly>
                 </div>
             </div>
 
@@ -916,9 +916,9 @@
             <div id="memberMale_info_PC" class="selectboxopt selectboxopt_left selectbox_disable" value="M"><img src="/static/user/res/member/icon-male-blue.png" style="margin-top: 2px;"></div>
             <div id="memberFemale_info_PC" class="selectboxopt selectboxopt_right selectbox_disable" value="W"><img src="/static/user/res/member/icon-female-pink.png"></div>
         </div>
-        <input type="" name="" id="memberName_info_PC">
-        <input type="" name="" id="memberName_info_lastName_PC" maxlength="4">
-        <input type="" name="" id="memberName_info_firstName_PC" maxlength="4">
+        <input type="text" name="" id="memberName_info_PC">
+        <input type="text" name="" id="memberName_info_lastName_PC" maxlength="4">
+        <input type="text" name="" id="memberName_info_firstName_PC" maxlength="4">
         <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('member_info_PC')">
     </label>
 
@@ -937,7 +937,7 @@
         <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
             <label><img src="/static/user/res/member/icon-user.png">아이디</label>
             <!--<span id="memberId_info_PC"></span>-->
-            <input id="memberId_info_PC">
+            <input id="memberId_info_PC" title="id">
         </div>
         <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
             <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
@@ -945,15 +945,15 @@
             <!--<span id="memberBirth_Month_info_PC"></span>-->
             <!--<span id="memberBirth_Date_info_PC"></span>-->
             <div id="memberBirth_select_wrap">
-               <select id="memberBirth_Year_info_PC" disabled></select>
-                <select id="memberBirth_Month_info_PC" disabled></select>
-                <select id="memberBirth_Date_info_PC" disabled></select> 
+               <select id="memberBirth_Year_info_PC" title="년" disabled></select>
+                <select id="memberBirth_Month_info_PC" title="월"  disabled></select>
+                <select id="memberBirth_Date_info_PC" title="일"  disabled></select>
             </div>
         </div>
         <div id="memberPhone_info_PC_wrap" class="member_info_PC_wrap">
             <label><img src="/static/user/res/member/icon-phone-grey.png">연락처</label>
             <!--<span id="memberPhone_info_PC"></span>-->
-            <input id="memberPhone_info_PC" maxlength="11">
+            <input type="text" id="memberPhone_info_PC" title="연락처" maxlength="11">
         </div>
 
         <!--
@@ -1043,7 +1043,7 @@
 
 <div class="lectureStateChangeSelectPopup popups">
     <div style="height: 50px;">
-        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
+        <img src="{% static_url "user/res/stopmark.png" %}" style="width:35px;margin-top:10px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
     <div class="KRtext confirmText">등록 진행상태 변경<br>원하는 상태를 선택해주세요.</div>
@@ -1079,7 +1079,7 @@
 
 <div class="lectureRefundPopup popups">
     <div style="height: 50px;">
-        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
+        <img src="{% static_url "user/res/stopmark.png" %}" style="width:35px;margin-top:10px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
     <div class="KRtext confirmText">회원 등록 환불<br>환불 금액을 입력해 주세요.</div>
@@ -1087,7 +1087,7 @@
     <div class="JPtext confirmText">会員登録を取り消ししますか<br>払戻金額を入力してください</div>
     <div class="ENtext confirmText">Are you sure to delete this member from the list?<br>Please enter a refund</div>
     <div style="text-align: center;margin-bottom: 10px;">
-        <input type="" name="refund_price" style="border:1px solid #fe4e65;">
+        <input type="text" name="refund_price" style="border:1px solid #fe4e65;" title="환불 금액">
         <span class="KRtext">　원</span><span class="JPtext"> 円</span><span class="ENtext">　＄</span>
     </div>
     <div class="popup_inner popup_inner_resend" style="background: #fe4e65">
@@ -1104,7 +1104,7 @@
 
 <div class="lectureConnectStateChangePopup popups">
     <div style="height: 50px;">
-        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
+        <img src="{% static_url "user/res/stopmark.png" %}" style="width:35px; margin-top:10px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
     <div class="KRtext confirmText">회원 달력 연동상태 변경<br>변경을 원하는 상태를 선택해주세요.</div>
@@ -1125,7 +1125,7 @@
 
 <div class="resendPopup popups">
     <div style="height: 40px;">
-        <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:5px;">
+        <img src="{% static_url "user/res/stopmark.png" %}" style="width:35px;margin-top:5px;">
         <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_resend_PC" class="_btn_close_resend_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
     </div>
     <div class="KRtext confirmText">회원님과 연결되어있지 않습니다.<br>원하는 추가 작업을 선택해주세요.<br></div>
@@ -1186,14 +1186,14 @@
         <!-- Placed at the end of the document so the pages load faster -->
 
         <script>
-          $('a.__weekplan').css('color','#fe4e65;')
+          $('a.__weekplan').css('color','#fe4e65;');
 
           var date = new Date();
           var currentYear = date.getFullYear(); //현재 년도
           var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
           var currentDate = date.getDate(); //오늘 날짜
           var currentHour = date.getHours(); //현재시간
-          var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
+          var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
           var currentPageMonth = currentMonth+1; //현재 달
           var date2 = new Date();
           var oriYear = date.getFullYear();
@@ -1205,17 +1205,17 @@
           var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
           var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
 
-          var classDateData = []
-          var classTimeData = []
-          var offDateData=[]
-          var offTimeData = []
+          var classDateData = [];
+          var classTimeData = [];
+          var offDateData=[];
+          var offTimeData = [];
 
-          var offAddOkArray = [] //OFF 등록 시작 시간 리스트
-          var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+          var offAddOkArray = []; //OFF 등록 시작 시간 리스트
+          var durAddOkArray = []; //OFF 등록 시작시간 선택에 따른 진행시간 리스트
 
-          var addTypeSelect = "ptadd" //팝업 종류 선택 (PT or OFF)
+          var addTypeSelect = "ptadd"; //팝업 종류 선택 (PT or OFF)
           var deleteTypeSelect;
-          var selectedDayGroup = [] //반복일정에서 요일 선택
+          var selectedDayGroup = []; //반복일정에서 요일 선택
           var select_all_check;
           var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
         </script>
@@ -1233,67 +1233,67 @@
                 preventClicksPropagation : true,
                 threshold : 40,
                 resistance: 1,
-                onlyExternal: true,
+                onlyExternal: true
             });
             
 
             $('#hidetoggle').click(function(){
               if($(this).attr('data-type') == '0'){
-                $(this).css({'margin-top':'0px','color':'#282828','background':'#f7f7f7'}).attr('data-type','1')
-                $(this).find('img').css('-webkit-transform','rotate(-90deg)')
-                $('#ymdText-pc').css({'margin-top':'17px'})
-                $('#week').css({'padding-top':'24px'})
-                $('#calendar').css('padding-top','19px')
-                $('#ymdText').css('display','none')
+                $(this).css({'margin-top':'0px','color':'#282828','background':'#f7f7f7'}).attr('data-type','1');
+                $(this).find('img').css('-webkit-transform','rotate(-90deg)');
+                $('#ymdText-pc').css({'margin-top':'17px'});
+                $('#week').css({'padding-top':'24px'});
+                $('#calendar').css('padding-top','19px');
+                $('#ymdText').css('display','none');
               }else{
-                $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type','0')
-                $(this).find('img').css('-webkit-transform','rotate(90deg)')
-                $('#ymdText-pc').css({'margin-top':'100px'})
-                $('#week').css({'padding-top':'115px'})
-                $('#calendar').css('padding-top','110px')
-                $('#ymdText').css('display','block')
+                $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type','0');
+                $(this).find('img').css('-webkit-transform','rotate(90deg)');
+                $('#ymdText-pc').css({'margin-top':'100px'});
+                $('#week').css({'padding-top':'115px'});
+                $('#calendar').css('padding-top','110px');
+                $('#ymdText').css('display','block');
               }
-            })
+            });
 
-            var count = 0 
-            var count1 = 0
+            var count = 0 ;
+            var count1 = 0;
             $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(){
               left_page();
-            })
+            });
 
             $('#ymdText-pc-next-btn, #rightArrowButton').click(function(){
               right_page();
-            })
+            });
 
             function left_page(){
                 if(count==0){
-                    myswiper.slidePrev(300)
-                    count++
-                    setTimeout(function(){count=0},400)
+                    myswiper.slidePrev(300);
+                    count++;
+                    setTimeout(function(){count=0},400);
                   }else if(count>0){
-                    console.log('wait!')
+                    console.log('wait!');
                   }
             }
             function right_page(){
                 if(count1==0){
-                myswiper.slideNext(300)
-                count1++
-                setTimeout(function(){count1=0},400)
-              }else if(count>0){
-                console.log('wait!')
-              }
+                    myswiper.slideNext(300);
+                    count1++;
+                    setTimeout(function(){count1=0},400);
+                  }else if(count>0){
+                    console.log('wait!');
+                  }
             }
 
 
-            $('footer').css('display','none')
+            $('footer').css('display','none');
 
-            $('td')
+            $('td');
 
 
             //sk 테스트중, 클릭 팝업
             $('#commonPopup').click(function(){
-              $(this).fadeOut('fast')
-            })
+              $(this).fadeOut('fast');
+            });
 
             /* 일정 필터링
             $('.slidegap').click(function(){
@@ -1303,30 +1303,30 @@
 
             $('#filterPopupClose').click(function(){
                 $('#filterPopup_mini').fadeOut();
-            })
+            });
 
             $('#members_li a').click(function(){
-              var selectedMemberID = $(this).attr('data-lectureid')
+              var selectedMemberID = $(this).attr('data-lectureid');
               if($(this).attr('id')=='viewEntire'){
-                $('.classTime').show()
+                $('.classTime').show();
               }else{
-                $('.classTime').hide()
+                $('.classTime').hide();
                 $('.classTime[data-lectureid='+selectedMemberID+']').show();
               }   
-            })
+            });
 
             var offVisible = true;
             $('#offFilter').click(function(){
                 if(offVisible==true){
                   $('.offTime').hide();
-                  $(this).css('background','#fe4e65')
+                  $(this).css('background','#fe4e65');
                   offVisible = false;
                 }else{
                   $('.offTime').show();
-                  $(this).css('background','#eaeaea')
+                  $(this).css('background','#eaeaea');
                   offVisible = true;
                 }
-            })
+            });
 
             var DB = {};
             var DBe = {};

@@ -19,8 +19,8 @@
 <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.register.css" %}>
 
 <link rel="icon" href="/static/common/favicon.ico">
-<link rel="apple-touch-icon" href="/static/common/favicon-152.png">
-<link rel="shortcut icon" href="/static/common/favicon-152.png">
+    {#<link rel="apple-touch-icon" href="/static/common/favicon-152.png">#}
+{#<link rel="shortcut icon" href="/static/common/favicon-152.png">#}
 
 {% endblock %}
     </head>
@@ -98,17 +98,17 @@
 
            <div class="outerbox">
                 <input type="text" name="" placeholder="새로운 ID" id="id_input" maxlength="20">
-                <button class="register_button" onclick="javascript:check_id();">중복 확인</button>
+                <button class="register_button" onclick="check_id();">중복 확인</button>
                 <span class="id_confirm"></span>
                <p class="pw_notice">최소 4자이상 영문, 숫자 그리고 ./-/_만 가능합니다.</p>
            </div>
 
            <div class="outerbox">
-               <input type="" name="" placeholder="이메일"  id="email_input"> @
-               <input type="" name="" placeholder="이메일 뒷부분"  id="email_input_re" readonly>
+               <input type="text" name="email_first" placeholder="이메일"  id="email_input"> @
+               <input type="text" name="email_last" placeholder="이메일 뒷부분"  id="email_input_re" readonly>
                <div style="display: inline-block;">
                 <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:14px;margin-left:66px;opacity: 0.5;">
-                 <select class="login_dropdown" id="email_option">
+                 <select class="login_dropdown" id="email_option" title="email">
                      <option id="optionnone">선택</option>
                      <option id="gmail">gmail.com</option>
                      <option id="naver">naver.com</option>
@@ -116,7 +116,7 @@
                      <option id="self">직접 입력</option>
                  </select>
                </div>
-                <button class="register_button" onclick="javascript:check_email();">중복 확인</button>
+                <button class="register_button" onclick="check_email();">중복 확인</button>
                 <span class="email_confirm"></span>
                 <p class="pw_notice">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
            </div>
@@ -718,7 +718,7 @@
               </div>
            </div>
            <div class="contractread_check">
-               <input type="checkbox" name="" id="checkbox1"><span style="font-size: 12px;">위 약관에 동의합니다.</span>
+               <input type="checkbox" name="" id="checkbox1" title="약관 동의"><span style="font-size: 12px;">위 약관에 동의합니다.</span>
            </div>
             <br/>
            <p class="registerbox_smalllabel">개인정보 처리 방침</p>
@@ -840,7 +840,7 @@
               </div>
            </div>
            <div class="contractread_check">
-               <input type="checkbox" name="" id="checkbox2"><span style="font-size: 12px;">위 방침에 동의합니다.</span>
+               <input type="checkbox" name="" id="checkbox2" title="약관 동의"><span style="font-size: 12px;">위 방침에 동의합니다.</span>
            </div>
            <div class="buttongroup">
                 <button id="cancelMember" onclick="goPrev()">
@@ -896,7 +896,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 
-  var varUA = navigator.userAgent.toLowerCase()
+  var varUA = navigator.userAgent.toLowerCase();
   if(varUA.match('android') != null){
       $('._company').css('display','none')
   }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
@@ -909,54 +909,55 @@
 
   $('div.explainbox').click(function(){
       if($(this).find('.explaintype').css('height') == '0px'){
-        $(this).find('.explaintype').css('height','auto')
-        $(this).find('button').css('visibility','visible')
-        $(this).siblings('.explainbox').find('button').css('visibility','hidden')
-        $(this).siblings('.explainbox').find('.explaintype').css('height','0px')
+        $(this).find('.explaintype').css('height','auto');
+        $(this).find('button').css('visibility','visible');
+        $(this).siblings('.explainbox').find('button').css('visibility','hidden');
+        $(this).siblings('.explainbox').find('.explaintype').css('height','0px');
       }
-  })
+  });
 
 
   $('.explainbox button').click(function(){
-      $('._step1_label').css('transform','translateX(-250%)')
-      $('.outerbox_horizontal').css('transform','translateX(-250%)')
-      $('.registerbox_add').css('transform','translateX(-50%)')
-      $('._step2_label').css('transform','translateX(-50%)')
-      scrollToIndicator($('.typeselectbox'),500)
+      var selector_outerbox_horizontal = $('.outerbox_horizontal');
+      $('._step1_label').css('transform','translateX(-250%)');
+      selector_outerbox_horizontal.css('transform','translateX(-250%)');
+      $('.registerbox_add').css('transform','translateX(-50%)');
+      $('._step2_label').css('transform','translateX(-50%)');
+      scrollToIndicator($('.typeselectbox'),500);
 
-      $('.outerbox_horizontal').attr('data-view',0)
-      $('._step2_label span').text($(this).text())
+      selector_outerbox_horizontal.attr('data-view',0);
+
+      $('._step2_label span').text($(this).text());
       if($(this).text() == "수강 회원 가입"){
-        group_type = 'trainee'
-        $form = $('#add-member-id-form')
+        group_type = 'trainee';
+        $form = $('#add-member-id-form');
       }else if($(this).text() == "강사 가입"){
-        group_type = 'trainer'
-        $form = $('#add-member-id-form')
+        group_type = 'trainer';
+        $form = $('#add-member-id-form');
       }else if($(this).text() == "센터사업자 가입"){
-        group_type = 'center'
-        $form = $('#add-member-id-form')
+        group_type = 'center';
+        $form = $('#add-member-id-form');
       }
-      $('#id_group_type').val(group_type)
-      input_birth_to_form()
-  })
+      $('#id_group_type').val(group_type);
+      input_birth_to_form();
+  });
 
   function scrollToIndicator(dom, delaytime){
     var offset = dom.offset();
-      $('body, html').animate({scrollTop : offset.top}, delaytime)
+      $('body, html').animate({scrollTop : offset.top}, delaytime);
   }
 
 
   $('button#registerMember').click(function(){
-    var duplicate_check = $form.find('#id_duplicate_check').val()
+    var duplicate_check = $form.find('#id_duplicate_check').val();
     var duplicate_check_email = $form.find('#email_duplicate_check').val();
-    var error_msg;
 
       if(duplicate_check == 1){
           if(duplicate_check_email == 1){
               if(blank_input_check() == 1){
                   var $form2 = $('#add-member-id-form');
                   var serializeArray = $form2.serializeArray();
-                  var error_msg = ''
+                  var error_msg = '';
                     $.ajax({
                             url:'/login/check_member_form_validation/',
                             type:'POST',
@@ -969,23 +970,23 @@
                             //통신성공시 처리
                             success:function(data){
                                 var jsondata = JSON.parse(data);
-                                var id_check_message = jsondata.id_check_result
+                                var id_check_message = jsondata.id_check_result;
                                 if(id_check_message[0].length>0){
-                                   error_msg = id_check_message[0]
+                                   error_msg = id_check_message[0];
 
-                                  $('#global_error_msg').show().html(error_msg)
+                                  $('#global_error_msg').show().html(error_msg);
                                   setTimeout(function(){
-                                    $('#global_error_msg').fadeOut()
+                                    $('#global_error_msg').fadeOut();
                                     //$('ul.errorlist').remove()
-                                  },10000)
-                                   return;
-                                }else{
-                                  $('.registerbox_add').css('transform','translateX(-400%)')
-                                  $('._step2_label').css('transform','translateX(-400%)')
+                                  },10000);
 
-                                  $('.promise_wrap').css('transform','translateX(-50%)')
-                                  $('._step3_label').css('transform','translateX(-50%)')
-                                  $('.outerbox_horizontal').attr('data-view',1)
+                                }else{
+                                  $('.registerbox_add').css('transform','translateX(-400%)');
+                                  $('._step2_label').css('transform','translateX(-400%)');
+
+                                  $('.promise_wrap').css('transform','translateX(-50%)');
+                                  $('._step3_label').css('transform','translateX(-50%)');
+                                  $('.outerbox_horizontal').attr('data-view',1);
                                 }
                               },
 
@@ -996,43 +997,37 @@
 
                             //통신 실패시 처리
                             error:function(){
-                              alert("에러: 서버 통신 실패")
-                            },
+                              alert("에러: 서버 통신 실패");
+                            }
                         })
               }else{
-                  console.log('test')
-                alert(blank_input_check(),'---')
+                  console.log('test');
+                  alert(blank_input_check());
               }
           }else if(duplicate_check_email == 0){
-              alert('사용할 수 없는 email입니다.')
-              return;
+              alert('사용할 수 없는 email입니다.');
           }else if(duplicate_check_email == 'none'){
-              alert('email 중복을 확인해 주세요.')
-              return;
+              alert('email 중복을 확인해 주세요.');
           }
       }else if(duplicate_check == 0){
-          alert('사용할 수 없는 아이디입니다.')
-          return;
+          alert('사용할 수 없는 아이디입니다.');
       }else if(duplicate_check == 'none'){
-          alert('id 중복을 확인해주세요.')
-          return;
+          alert('id 중복을 확인해주세요.');
       }
-
-      
-  })
+  });
 
   function blank_input_check(){
-      var pw_input_length = $('#pw_input').val().length
-      var pw_input_re_length = $('#pw_input_re').val().length
-      var pw_confirm_text = $('.pw_confirm').text()
-      var result = 1
+      var pw_input_length = $('#pw_input').val().length;
+      var pw_input_re_length = $('#pw_input_re').val().length;
+      var pw_confirm_text = $('.pw_confirm').text();
+      var result = 1;
 
       if($('#first_name').val().length == 0 ){
-        result = '이름을 입력해주세요'
+        result = '이름을 입력해주세요';
       }else if($('#last_name').val().length == 0 ){
-        result = '성을 입력해주세요'
+        result = '성을 입력해주세요';
       }else if($('#newsex').val().length == 0 ){
-        result = '성별을 입력해주세요'
+        result = '성별을 입력해주세요';
       }
       /*else if($('#newbirth').val().length == 0 ){
         result = '생일을 입력해주세요'
@@ -1046,18 +1041,18 @@
         }
       }*/
       else{
-          result = 1
+          result = 1;
       }
       if(result == 1){
           if(pw_input_length == 0){
-              result = '비밀번호를 입력해주세요'
+              result = '비밀번호를 입력해주세요';
           }else if(pw_input_re_length == 0){
-              result = '비밀번호 확인을 입력해주세요'
+              result = '비밀번호 확인을 입력해주세요';
           }else if(pw_confirm_text != '비밀번호 일치'){
-             result = '비밀번호가 일치하지 않습니다.'
+             result = '비밀번호가 일치하지 않습니다.';
           }
           else{
-              result = 1
+              result = 1;
           }
       }
       return result
@@ -1065,184 +1060,191 @@
 
 
   function goPrev(){
-    if($('.outerbox_horizontal').attr('data-view')==0){
-        $('._step1_label').css('transform','translateX(-50%)')
-        $('.outerbox_horizontal').css('transform','translateX(-50%)')
-        $('.registerbox_add').css('transform','translateX(250%)')
-        $('._step2_label').css('transform','translateX(250%)')
-        $('.outerbox_horizontal').attr('data-view','init')
-    }else if($('.outerbox_horizontal').attr('data-view')==1){
-        $('.registerbox_add').css('transform','translateX(-50%)')
-        $('._step2_label').css('transform','translateX(-50%)')
-        $('.promise_wrap').css('transform','translateX(250%)')
-        $('._step3_label').css('transform','translateX(250%)')
-        $('.outerbox_horizontal').attr('data-view',0)
+      var selector_outerbox_horizontal = $('.outerbox_horizontal');
+    if(selector_outerbox_horizontal.attr('data-view')==0){
+        $('._step1_label').css('transform','translateX(-50%)');
+        selector_outerbox_horizontal.css('transform','translateX(-50%)');
+        $('.registerbox_add').css('transform','translateX(250%)');
+        $('._step2_label').css('transform','translateX(250%)');
+        selector_outerbox_horizontal.attr('data-view','init');
+    }else if(selector_outerbox_horizontal.attr('data-view')==1){
+        $('.registerbox_add').css('transform','translateX(-50%)');
+        $('._step2_label').css('transform','translateX(-50%)');
+        $('.promise_wrap').css('transform','translateX(250%)');
+        $('._step3_label').css('transform','translateX(250%)');
+        selector_outerbox_horizontal.attr('data-view',0);
     }else{
-        location.href='{% url 'login:logout' %}'
+        location.href='{% url 'login:logout' %}';
     }
   }
 
 
    $('#id_input').keyup(function(){
-        var userinput = $(this).val()
-        $('#id_username').attr('value',userinput)
-        $form.find('#newid2').attr('value',userinput)
-    })
+        var userinput = $(this).val();
+        $('#id_username').attr('value',userinput);
+        $form.find('#newid2').attr('value',userinput);
+    });
 
     $('#pw_input_re').keyup(function(){
-        if($('#pw_input').val().length > 7){
+        var selector_pw_input = $('#pw_input');
+        if(selector_pw_input.val().length > 7){
             if($(this).val().length==0){
-                $('.pw_confirm').css({'display':'none'})
-                $form.find()
-                $('#id_password1').attr('value',"")
-                $('#id_password2').attr('value',"")
-            }else if($(this).val() != $('#pw_input').val()){
-                $('.pw_confirm').text('비밀번호 불일치').css({'display':'inline','color':'#fe4e65'})
-                $('#id_password1').attr('value',"")
-                $('#id_password2').attr('value',"")
+                $('.pw_confirm').css({'display':'none'});
+                $form.find();
+                $('#id_password1').attr('value',"");
+                $('#id_password2').attr('value',"");
+            }else if($(this).val() != selector_pw_input.val()){
+                $('.pw_confirm').text('비밀번호 불일치').css({'display':'inline','color':'#fe4e65'});
+                $('#id_password1').attr('value',"");
+                $('#id_password2').attr('value',"");
             }else{
-                $('.pw_confirm').text('비밀번호 일치').css({'display':'inline','color':'green'})
-                $('#id_password1').attr('value',$(this).val())
-                $('#id_password2').attr('value',$(this).val())
+                $('.pw_confirm').text('비밀번호 일치').css({'display':'inline','color':'green'});
+                $('#id_password1').attr('value',$(this).val());
+                $('#id_password2').attr('value',$(this).val());
             }
         }else{
-            $('.pw_confirm').text('8자 이상 입력').css({'display':'inline','color':'#fe4e65'})
+            $('.pw_confirm').text('8자 이상 입력').css({'display':'inline','color':'#fe4e65'});
             //$('.pw_confirm').css({'display':'none'})
-            $('#id_password1').attr('value',"")
-            $('#id_password2').attr('value',"")
+            $('#id_password1').attr('value',"");
+            $('#id_password2').attr('value',"");
         }
-    })
+    });
 
-    var yearoption = ['<option>연도</option>']
+    var yearoption = ['<option>연도</option>'];
     for(var i=2018; i>=1908; i--){
         if(i == 1990){
-            yearoption.push('<option selected>'+i+'년</option>')
+            yearoption.push('<option selected>'+i+'년</option>');
         }else{
-            yearoption.push('<option>'+i+'년</option>')
+            yearoption.push('<option>'+i+'년</option>');
         }
     }
-    var birth_year_options = yearoption.join('')
-    $('#birth_year').html(birth_year_options)
+    var birth_year_options = yearoption.join('');
+    $('#birth_year').html(birth_year_options);
 
 
-    var monthoption = ['<option>월</option>']
-    for(var i=1; i<=12; i++){
+    var monthoption = ['<option>월</option>'];
+    for(i=1; i<=12; i++){
         if(i == 10){
-            monthoption.push('<option data-month="'+i+'" selected>'+i+'월</option>')
+            monthoption.push('<option data-month="'+i+'" selected>'+i+'월</option>');
         }else{
-            monthoption.push('<option data-month="'+i+'">'+i+'월</option>')
+            monthoption.push('<option data-month="'+i+'">'+i+'월</option>');
         }
     }
-    var birth_month_options = monthoption.join('')
-    $('#birth_month').html(birth_month_options)
+    var birth_month_options = monthoption.join('');
+    var selector_birth_month = $('#birth_month');
+    selector_birth_month.html(birth_month_options);
 
 
-    var dateoption = ['<option>일</option>']
-    for(var i=1; i<=31; i++){
+    var dateoption = ['<option>일</option>'];
+    for(i=1; i<=31; i++){
         if(i == 10){
-            dateoption.push('<option selected>'+i+'일</option>')
+            dateoption.push('<option selected>'+i+'일</option>');
         }else{
-            dateoption.push('<option>'+i+'일</option>')
+            dateoption.push('<option>'+i+'일</option>');
         }
         
     }
-    var birth_date_options = dateoption.join('')
-    $('#birth_date').html(birth_date_options)
+    var birth_date_options = dateoption.join('');
+    $('#birth_date').html(birth_date_options);
 
 
-    $('#birth_month').change(function(){
-        var dateoption = []
-        $('#birth_date').html("")
+    selector_birth_month.change(function(){
+        var dateoption = [];
+        var selector_birth_date = $('#birth_date');
+        selector_birth_date.html("");
         var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31];
-        var month = $(this).val().replace(/월/gi,"")
+        var month = $(this).val().replace(/월/gi,"");
         for(var i=1; i<=lastDay[month-1]; i++){
-            dateoption.push('<option>'+i+'일</option>')
+            dateoption.push('<option>'+i+'일</option>');
         }
-        var birth_date_options = dateoption.join('')
-        $('#birth_date').html(birth_date_options)
-    })
+        var birth_date_options = dateoption.join('');
+        selector_birth_date.html(birth_date_options);
+    });
 
 
     $('.selector_button').click(function(){
-        $(this).addClass('selector_button_checked')
-        $(this).siblings().removeClass('selector_button_checked')
-        $form.find('#newsex').attr('value',$(this).attr('data-type'))
-    })
+        $(this).addClass('selector_button_checked');
+        $(this).siblings().removeClass('selector_button_checked');
+        $form.find('#newsex').attr('value',$(this).attr('data-type'));
+    });
 
     $('#familyname_input').keyup(function(){
         if($(this).val().length>0){
-            $form.find('#newname').attr('value', $(this).val() + '' + $('#lastname_input').val())
-            $form.find('#last_name').attr('value', $(this).val())
+            $form.find('#newname').attr('value', $(this).val() + '' + $('#lastname_input').val());
+            $form.find('#last_name').attr('value', $(this).val());
         }else{
-            $form.find('#newname').attr('value',"")
+            $form.find('#newname').attr('value',"");
         }
-    })
+    });
     
     $('#lastname_input').keyup(function(){
         if($(this).val().length>0){
-            $form.find('#newname').attr('value', $('#familyname_input').val() + '' + $(this).val())
-            $form.find('#first_name').attr('value', $(this).val())
+            $form.find('#newname').attr('value', $('#familyname_input').val() + '' + $(this).val());
+            $form.find('#first_name').attr('value', $(this).val());
         }else{
-            $form.find('#newname').attr('value',"")
+            $form.find('#newname').attr('value',"");
         }
-    })
+    });
 
     $('#email_input').keyup(function(){
-        if($('#email_input_re').val().length>0){
-            $('#id_email').attr('value', $(this).val()+'@'+$('#email_input_re').val())
+        var selector_email_input_re = $('#email_input_re');
+        if(selector_email_input_re.val().length>0){
+            $('#id_email').attr('value', $(this).val()+'@'+selector_email_input_re.val());
         }else{
-            $('#id_email').attr('value',"")
+            $('#id_email').attr('value',"");
         }
-    })
+    });
 
     $('#email_option').change(function(){
+        var selector_email_input = $('#email_input');
+        var selector_email_input_re = $('#email_input_re');
         if($(this).val() =="직접 입력"){
-            $('#email_input_re').attr('readonly',false).val("")
-            $('#email_input_re').keyup(function(){
-                if($('#email_input').val().length>0){
-                    $('#id_email').attr('value', $('#email_input').val()+'@'+$('#email_input_re').val())
+            selector_email_input_re.attr('readonly',false).val("");
+            selector_email_input_re.keyup(function(){
+                if(selector_email_input.val().length>0){
+                    $('#id_email').attr('value', selector_email_input.val()+'@'+selector_email_input_re.val());
                 }else{
-                    $('#id_email').attr('value',"")
+                    $('#id_email').attr('value',"");
                 }
             })
         }else if($(this).val()!="선택"){
-            $('#email_input_re').val($(this).val())
-            $('#email_input_re').attr('readonly',true)
+            selector_email_input_re.val($(this).val());
+            selector_email_input_re.attr('readonly',true);
         }else{
-            $('#email_input_re').attr('readonly',true).val("")
+            selector_email_input_re.attr('readonly',true).val("");
         }
 
-        if($('#email_input').val().length>0){
-            $('#id_email').attr('value', $('#email_input').val()+'@'+$('#email_input_re').val())
+        if(selector_email_input.val().length>0){
+            $('#id_email').attr('value', selector_email_input.val()+'@'+selector_email_input_re.val());
         }else{
-            $('#id_email').attr('value',"")
+            $('#id_email').attr('value',"");
         }
-    })
+    });
 
     $('#birth_year, #birth_month, #birth_date').change(function(){
-        input_birth_to_form()
-    })
+        input_birth_to_form();
+    });
 
     $('#country_input').change(function(){
         if($(this).val() == "KOR"){
-          $('#city-KOR').show()
+          $('#city-KOR').show();
         }else{
-          $('#city-KOR').hide()
-          $('#newcity').val('')
+          $('#city-KOR').hide();
+          $('#newcity').val('');
         }
-        $('#newcountry').val($(this).val())
-    })
+        $('#newcountry').val($(this).val());
+    });
 
 
     $('#region_input').change(function(){
-        $form.find('#newcity').attr('value',$(this).val())
-    })
+        $form.find('#newcity').attr('value',$(this).val());
+    });
 
 
     $('button#registerMemberFinal').click(function(){
         if($('#checkbox2').is(':checked') && $('#checkbox1').is(':checked')){
             //document.getElementById('add-member-id-form').submit();
-              var $form = $('#add-member-id-form')
+              var $form = $('#add-member-id-form');
               var serializeArray = $form.serializeArray();
               $.ajax({
                   //url:'/accounts/register/',
@@ -1252,8 +1254,8 @@
                   dataType : 'html',
 
                   beforeSend:function(){
-                      $('.ajaxloadingPC').css('display','block')
-                      $('.promise_wrap').css('opacity','0.3')
+                      $('.ajaxloadingPC').css('display','block');
+                      $('.promise_wrap').css('opacity','0.3');
                   },
 
                   //통신성공시 처리
@@ -1263,59 +1265,59 @@
 
                   //보내기후 팝업창 닫기
                   complete:function(){
-                    $('.ajaxloadingPC').css('display','none')
-                    $('.promise_wrap').css('opacity','1')
+                    $('.ajaxloadingPC').css('display','none');
+                    $('.promise_wrap').css('opacity','1');
                   },
 
                   //통신 실패시 처리
                   error:function(){
                     
-                  },
+                  }
               })
         }else{
-            alert('약관 동의필요 : 테스트 페이지 입니다.')
+            alert('약관 동의필요 : 테스트 페이지 입니다.');
         }
-    })
+    });
 
     function input_birth_to_form(){
-        var year = $('#birth_year').val().replace(/년/gi,"")
-        var month = $('#birth_month').val().replace(/월/gi,"")
-        var date = $('#birth_date').val().replace(/일/gi,"")
-        var birthdata = year+'-'+month+'-'+date
-        $form.find('#newbirth').attr('value',birthdata)
+        var year = $('#birth_year').val().replace(/년/gi,"");
+        var month = $('#birth_month').val().replace(/월/gi,"");
+        var date = $('#birth_date').val().replace(/일/gi,"");
+        var birthdata = year+'-'+month+'-'+date;
+        $form.find('#newbirth').attr('value',birthdata);
     }
 
     function memberInfo_add(data){
                     var jsondata = JSON.parse(data);
                     if(jsondata.messageArray.length > 0){
-                      $('#global_error_msg').show().html(jsondata.messageArray)
-                      $('.registerbox_add').css('transform','translateX(-50%)')
-                      $('._step2_label').css('transform','translateX(-50%)')
-                      $('.promise_wrap').css('transform','translateX(250%)')
-                      $('._step3_label').css('transform','translateX(250%)')
-                      $('.outerbox_horizontal').attr('data-view',0)
+                      $('#global_error_msg').show().html(jsondata.messageArray);
+                      $('.registerbox_add').css('transform','translateX(-50%)');
+                      $('._step2_label').css('transform','translateX(-50%)');
+                      $('.promise_wrap').css('transform','translateX(250%)');
+                      $('._step3_label').css('transform','translateX(250%)');
+                      $('.outerbox_horizontal').attr('data-view',0);
                       setTimeout(function(){
-                        $('#global_error_msg').fadeOut()
+                        $('#global_error_msg').fadeOut();
                         //$('ul.errorlist').remove()
                       },10000)
                     }else{
-                      alert('이메일 인증후 로그인 해주세요')
-                      goHome()
+                      alert('이메일 인증후 로그인 해주세요');
+                      goHome();
                     }
     }
 
     function goHome(){
-        location.href="{% url 'login:logout' %}"
+        location.href="{% url 'login:logout' %}";
     }
 
 
     function check_id(){
       var inputLimit = /^[A-Za-z]+[a-z0-9.-_]{3,19}$/g;
-      var userIDinput = $('#id_input').val()
+      var userIDinput = $('#id_input').val();
       if(inputLimit.test(userIDinput)!=true){
-        alert('4자이상 20자 이내 영문과 숫자, 허용된 특수문자만 입력해주세요. \n 아이디는 반드시 영문으로 시작 해야합니다.')
-        $('.id_confirm').text('사용 불가').css({'display':'inline','color':'#fe4e65'})
-        $('#add-member-id-form').find('#id_duplicate_check').val(0)
+        alert('4자이상 20자 이내 영문과 숫자, 허용된 특수문자만 입력해주세요. \n 아이디는 반드시 영문으로 시작 해야합니다.');
+        $('.id_confirm').text('사용 불가').css({'display':'inline','color':'#fe4e65'});
+        $('#add-member-id-form').find('#id_duplicate_check').val(0);
       }else{
         var $form = $('#add-member-id-form');
         var serializeArray = $form.serializeArray();
@@ -1332,14 +1334,14 @@
                   //통신성공시 처리
                   success:function(data){
                       var jsondata = JSON.parse(data);
-                      var id_check_message = jsondata.id_check_result
+                      var id_check_message = jsondata.id_check_result;
                       if(id_check_message[0].length>0){
-                        var error_msg = id_check_message[0]
-                        $('.id_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
-                        $form.find('#id_duplicate_check').val(0)
+                        var error_msg = id_check_message[0];
+                        $('.id_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'});
+                        $form.find('#id_duplicate_check').val(0);
                       }else{
-                        $('.id_confirm').text('사용 가능').css({'display':'inline','color':'green'})
-                        $form.find('#id_duplicate_check').val(1)
+                        $('.id_confirm').text('사용 가능').css({'display':'inline','color':'green'});
+                        $form.find('#id_duplicate_check').val(1);
                       }
                     },
 
@@ -1351,7 +1353,7 @@
                   //통신 실패시 처리
                   error:function(){
                     alert("에러: 서버 통신 실패")
-                  },
+                  }
           })
       }       
     }
@@ -1364,7 +1366,7 @@
                 url:'/login/check_member_email/',
                 type:'POST',
                 //data:{"email" : $('#id_email').val() },
-                  data:serializeArray,
+                data:serializeArray,
                 dataType : 'html',
 
                 beforeSend:function(){
@@ -1373,14 +1375,14 @@
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
-                    var id_check_message = jsondata.id_check_result
+                    var id_check_message = jsondata.id_check_result;
                     if(id_check_message[0].length>0){
-                      var error_msg = id_check_message[0]
-                      $('.email_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'})
-                      $form.find('#email_duplicate_check').val(0)
+                      var error_msg = id_check_message[0];
+                      $('.email_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'});
+                      $form.find('#email_duplicate_check').val(0);
                     }else{
-                      $('.email_confirm').text('사용 가능').css({'display':'inline','color':'green'})
-                      $form.find('#email_duplicate_check').val(1)
+                      $('.email_confirm').text('사용 가능').css({'display':'inline','color':'green'});
+                      $form.find('#email_duplicate_check').val(1);
                     }
                   },
 
@@ -1391,13 +1393,10 @@
 
                 //통신 실패시 처리
                 error:function(){
-                  alert("에러: 서버 통신 실패")
-                },
+                  alert("에러: 서버 통신 실패");
+                }
             })
     }
-
-
-
 
 </script>
 {% endblock %}
