@@ -2,51 +2,51 @@ $(document).ready(function(){
 
     //ESC키를 눌러서 팝업 닫기
     $(document).keyup(function(e){
-      if(e.keyCode == 27){
-        if($('#memberInfoPopup_PC').css('display') == 'block'){
-            closePopup('member_info_PC')
-        }else{
-            close_info_popup('cal_popup_plandelete')
-            closePopup('member_add')
+        if(e.keyCode == 27){
+            if($('#memberInfoPopup_PC').css('display') == 'block'){
+                closePopup('member_info_PC')
+            }else{
+                close_info_popup('cal_popup_plandelete')
+                closePopup('member_add')
+            }
         }
-      }
     })
     //ESC키를 눌러서 팝업 닫기
 
 
-$('form button').click(function(e){
-    e.preventDefault()
-})
-var db_id_flag = 0;
-var user_id_flag = 1;
-var filter = "win16|win32|win64|mac|macintel";
-var platform_check;
-var browser_check;
-var agent = navigator.userAgent.toLowerCase();
-if ( navigator.platform ) {
-    if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
-        //mobile
-        platform_check = 'mobile'
+    $('form button').click(function(e){
+        e.preventDefault()
+    })
+    var db_id_flag = 0;
+    var user_id_flag = 1;
+    var filter = "win16|win32|win64|mac|macintel";
+    var platform_check;
+    var browser_check;
+    var agent = navigator.userAgent.toLowerCase();
+    if ( navigator.platform ) {
+        if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
+            //mobile
+            platform_check = 'mobile'
+        }
+        else {
+            //pc
+            platform_check = 'pc'
+        }
     }
-    else {
-        //pc
-        platform_check = 'pc'
-    }
-}
 
-if (agent.indexOf("safari") != -1) {
-    browser_check = 'safari'
-}
-if (agent.indexOf("chrome") != -1) {
-    browser_check = 'chrome'
-}
-if (agent.indexOf("firefox") != -1) {
-    browser_check = 'firefox'
-}
+    if (agent.indexOf("safari") != -1) {
+        browser_check = 'safari'
+    }
+    if (agent.indexOf("chrome") != -1) {
+        browser_check = 'chrome'
+    }
+    if (agent.indexOf("firefox") != -1) {
+        browser_check = 'firefox'
+    }
 
     $(".btn-group > .btn").click(function(){
- 		$(this).addClass("active").siblings().removeClass("active");
-	});
+        $(this).addClass("active").siblings().removeClass("active");
+    });
 
     $('.list_switch').click(function(){
         $(this).addClass("list_switch_selected").siblings().removeClass("list_switch_selected")
@@ -58,15 +58,15 @@ if (agent.indexOf("firefox") != -1) {
     $('li').click(function(){
         if($('#calendar').length==0){
             if($('.dropdown').hasClass('open')){
-              $('html, body').css('overflow-y','auto');
+                $('html, body').css('overflow-y','auto');
             }else{
-              $('html, body').css('overflow-y','hidden');
-            } 
+                $('html, body').css('overflow-y','hidden');
+            }
         }
     })
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
-    
+
 
 
 
@@ -167,28 +167,28 @@ if (agent.indexOf("firefox") != -1) {
     })
 
     /*
-    //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 진행중 멤버)
-    $(document).on('click','#currentMemberList div._info_download',function(){
+     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 진행중 멤버)
+     $(document).on('click','#currentMemberList div._info_download',function(){
 
-        if(platform_check == 'mobile'){
-            alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.')
-        }else {
-            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
-            location.href = "/trainer/export_excel_member_list/?finish_flag=0"
-        }
-    })
+     if(platform_check == 'mobile'){
+     alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.')
+     }else {
+     alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+     location.href = "/trainer/export_excel_member_list/?finish_flag=0"
+     }
+     })
 
-    //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 종료된 멤버)
-    $(document).on('click','#finishedMemberList div._info_download',function(){
+     //PC 회원 리스트 엑셀 다운로드 버튼 (회원목록에서, 종료된 멤버)
+     $(document).on('click','#finishedMemberList div._info_download',function(){
 
-        if(platform_check == 'mobile'){
-            alert('엑셀 다운로드는 PC에서만 사용 가능합니다.')
-        }else {
-            alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
-            location.href = "/trainer/export_excel_member_list/?finish_flag=1"
-        }
-    })
-    */
+     if(platform_check == 'mobile'){
+     alert('엑셀 다운로드는 PC에서만 사용 가능합니다.')
+     }else {
+     alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.')
+     location.href = "/trainer/export_excel_member_list/?finish_flag=1"
+     }
+     })
+     */
 
     $(document).on('click', '#alignBox div._info_download', function(){
         if(platform_check == 'mobile'){
@@ -211,54 +211,54 @@ if (agent.indexOf("firefox") != -1) {
 
     modify_member_base_info_eventGroup()
     function modify_member_base_info_eventGroup(){
-    	if(varUA.match('firefox')){
-	        $('#memberName_info_lastName_PC, #memberName_info_lastName').bind('keydown',function(e){
-	        	var keyCode = e.which || e.keyCode;
-	            if(keyCode === 13 || keyCode === 9){
-	            	$('#form_lastname_modify').val($(this).val())
-	            }
-		    })
+        if(varUA.match('firefox')){
+            $('#memberName_info_lastName_PC, #memberName_info_lastName').bind('keydown',function(e){
+                var keyCode = e.which || e.keyCode;
+                if(keyCode === 13 || keyCode === 9){
+                    $('#form_lastname_modify').val($(this).val())
+                }
+            })
 
-		    $('#memberName_info_firstName_PC, #memberName_info_firstName').bind('keydown',function(e){
-		    	var keyCode = e.which || e.keyCode;
-	            if(keyCode === 13 || keyCode === 9){
-	                $('#form_firstname_modify').val($(this).val())
-	            }
-		    })
-	    }else{
-	        $('#memberName_info_lastName_PC, #memberName_info_lastName').keyup(function(){
-		    	$('#form_lastname_modify').val($(this).val())
-		    })
+            $('#memberName_info_firstName_PC, #memberName_info_firstName').bind('keydown',function(e){
+                var keyCode = e.which || e.keyCode;
+                if(keyCode === 13 || keyCode === 9){
+                    $('#form_firstname_modify').val($(this).val())
+                }
+            })
+        }else{
+            $('#memberName_info_lastName_PC, #memberName_info_lastName').keyup(function(){
+                $('#form_lastname_modify').val($(this).val())
+            })
 
-		    $('#memberName_info_firstName_PC, #memberName_info_firstName').keyup(function(){
-		    	$('#form_firstname_modify').val($(this).val())
-		    })
-	    }
+            $('#memberName_info_firstName_PC, #memberName_info_firstName').keyup(function(){
+                $('#form_firstname_modify').val($(this).val())
+            })
+        }
 
-	    $('#memberPhone_info, #memberPhone_info_PC').keyup(function(){
-    		$('#form_phone_modify').val($(this).val())
-    	})
-    
+        $('#memberPhone_info, #memberPhone_info_PC').keyup(function(){
+            $('#form_phone_modify').val($(this).val())
+        })
 
-    	//Mobile 버전 회원정보창 생년월입 드랍다운
-    	$('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
-    		var birth = $('#birth_year_info').val().replace(/년/gi,'')+'-'+$('#birth_month_info').val().replace(/월/gi,'')+'-'+$('#birth_date_info').val().replace(/일/gi,'')
-    		if($('#birth_year_info').val().length < 1 || $('#birth_month_info').val().length < 1 || $('#birth_date_info').val().length < 1){
-    			$('#form_birth_modify').val('')
-    		}else{
-    			$('#form_birth_modify').val(birth)
-    		}
-    	})
 
-    	//PC버전 회원정보창 생년월입 드랍다운
-    	$('#memberBirth_Year_info_PC, #memberBirth_Month_info_PC, #memberBirth_Date_info_PC').change(function(){
-    		var birth = $('#memberBirth_Year_info_PC').val().replace(/년/gi,'')+'-'+$('#memberBirth_Month_info_PC').val().replace(/월/gi,'')+'-'+$('#memberBirth_Date_info_PC').val().replace(/일/gi,'')
-    		$('#form_birth_modify').val(birth)
-    		
-    	})
-        
+        //Mobile 버전 회원정보창 생년월입 드랍다운
+        $('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
+            var birth = $('#birth_year_info').val().replace(/년/gi,'')+'-'+$('#birth_month_info').val().replace(/월/gi,'')+'-'+$('#birth_date_info').val().replace(/일/gi,'')
+            if($('#birth_year_info').val().length < 1 || $('#birth_month_info').val().length < 1 || $('#birth_date_info').val().length < 1){
+                $('#form_birth_modify').val('')
+            }else{
+                $('#form_birth_modify').val(birth)
+            }
+        })
+
+        //PC버전 회원정보창 생년월입 드랍다운
+        $('#memberBirth_Year_info_PC, #memberBirth_Month_info_PC, #memberBirth_Date_info_PC').change(function(){
+            var birth = $('#memberBirth_Year_info_PC').val().replace(/년/gi,'')+'-'+$('#memberBirth_Month_info_PC').val().replace(/월/gi,'')+'-'+$('#memberBirth_Date_info_PC').val().replace(/일/gi,'')
+            $('#form_birth_modify').val(birth)
+
+        })
+
     }
-    
+
 
     //PC 회원삭제버튼 (회원목록에서)
     $(document).on('click','._manage img._info_delete',function(e){
@@ -282,7 +282,7 @@ if (agent.indexOf("firefox") != -1) {
         $('#popup_delete_title').text(text);
         $('#popup_delete_question').html(text2+selectedUserName+text3);
 
-        
+
         $('#deleteMemberId').val(selectedUserId);
         //$('.confirmPopup').fadeIn('fast');
         $('#cal_popup_plandelete').fadeIn('fast');
@@ -291,10 +291,10 @@ if (agent.indexOf("firefox") != -1) {
 
     //PC & Mobile 회원삭제버튼 (회원정보창에서)
     $(document).on('click','button._info_delete',function(){
-      //$('.confirmPopup').fadeIn('fast');
-      deleteTypeSelect = "memberinfodelete";
-      $('#cal_popup_plandelete').fadeIn('fast');
-      $('#popup_delete_question').text('정말 회원님을 삭제하시겠습니까?')
+        //$('.confirmPopup').fadeIn('fast');
+        deleteTypeSelect = "memberinfodelete";
+        $('#cal_popup_plandelete').fadeIn('fast');
+        $('#popup_delete_question').text('정말 회원님을 삭제하시겠습니까?')
     })
 
 
@@ -314,9 +314,9 @@ if (agent.indexOf("firefox") != -1) {
         var lectureID = $(this).attr('data-leid');
         if($(this).attr('data-type')=="view"){
             if($('body').width()<600){
-               var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
-               var myRowSelect = $(this).parent('div').siblings('div.whatGroupType').find('select');
-               var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input') 
+                var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
+                var myRowSelect = $(this).parent('div').siblings('div.whatGroupType').find('select');
+                var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input')
             }else if($('body').width()>=600){
                 var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
                 var myRowSelect = $('select[data-leid='+$(this).attr('data-leid')+']');
@@ -412,32 +412,32 @@ if (agent.indexOf("firefox") != -1) {
         $(this).addClass('button_active')
         $(this).siblings('.button_shift_info').removeClass('button_active')
     });
-    
+
 
     //???
     $(document).on('click','div.lectureType_RJ',function(){
         $('.resendPopup').fadeIn('fast').attr({'data-type':'resend',
-                                                'data-leid':$(this).attr('data-leid'), 
-                                                'data-dbid':$(this).attr('data-dbid'), 
-                                                'data-name':$(this).attr('data-name')});
+            'data-leid':$(this).attr('data-leid'),
+            'data-dbid':$(this).attr('data-dbid'),
+            'data-name':$(this).attr('data-name')});
         show_shadow_reponsively();
     });
 
     //미연결
     $(document).on('click','div.lectureType_DELETE',function(){
         $('.resendPopup').fadeIn('fast').attr({'data-type':'resend',
-                                                'data-leid':$(this).attr('data-leid'), 
-                                                'data-dbid':$(this).attr('data-dbid'), 
-                                                'data-name':$(this).attr('data-name')});
+            'data-leid':$(this).attr('data-leid'),
+            'data-dbid':$(this).attr('data-dbid'),
+            'data-name':$(this).attr('data-name')});
         show_shadow_reponsively();
     });
 
     //연결됨, 대기
     $(document).on('click','div.lectureType_WAIT, div.lectureType_VIEW',function(){
         $('.lectureConnectStateChangePopup').fadeIn('fast').attr({'data-type':'resend',
-                                                                    'data-leid':$(this).attr('data-leid'), 
-                                                                    'data-dbid':$(this).attr('data-dbid'),
-                                                                    'data-name':$(this).attr('data-name')});
+            'data-leid':$(this).attr('data-leid'),
+            'data-dbid':$(this).attr('data-dbid'),
+            'data-name':$(this).attr('data-name')});
         show_shadow_reponsively();
     });
 
@@ -446,9 +446,9 @@ if (agent.indexOf("firefox") != -1) {
     $(document).on('click','div.lecConnectType_IP',function(){
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
         $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
-                                                                'data-dbid':$(this).attr('data-dbid'),
-                                                                'data-username':$(this).parents('._member_info_popup').attr('data-username'),
-                                                                'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
+            'data-dbid':$(this).attr('data-dbid'),
+            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
+            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
         $('._resume, ._delete').css('display','none')
         if($('body').width()>600){
             $('._complete, ._refund').css('display','inline-block')
@@ -463,9 +463,9 @@ if (agent.indexOf("firefox") != -1) {
     $(document).on('click','div.lecConnectType_PE, div.lecConnectType_RF',function(){
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
         $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
-                                                                'data-dbid':$(this).attr('data-dbid'),
-                                                                'data-username':$(this).parents('._member_info_popup').attr('data-username'),
-                                                                'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
+            'data-dbid':$(this).attr('data-dbid'),
+            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
+            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
         $('._complete, ._refund').css('display','none')
         if($('body').width()>600){
             $('._resume, ._delete').css('display','inline-block')
@@ -476,11 +476,11 @@ if (agent.indexOf("firefox") != -1) {
         show_shadow_reponsively();
     });
 
-    
+
 
     $('._btn_close_resend_PC, ._btn_close_statechange_PC').click(function(){
-       $(this).parents('.popups').fadeOut('fast');
-       hide_shadow_responsively();
+        $(this).parents('.popups').fadeOut('fast');
+        hide_shadow_responsively();
     });
 
     $('span.resend').parent('div').click(function(){
@@ -497,33 +497,33 @@ if (agent.indexOf("firefox") != -1) {
     });
 
     /*
-    $('span.delete_resend').parent('div').click(function(){
-        var lectureID;
-        var userName;
-        var userId;
-        delete_member_reg_data_pc(lectureID, userName, userId)
-        $('.resendPopup').css('display','none');
-        hide_shadow_responsively();
-    });
-    */
+     $('span.delete_resend').parent('div').click(function(){
+     var lectureID;
+     var userName;
+     var userId;
+     delete_member_reg_data_pc(lectureID, userName, userId)
+     $('.resendPopup').css('display','none');
+     hide_shadow_responsively();
+     });
+     */
 
     /*그룹 진행완료, 재개와 겹침
-    //진행 완료 처리 버튼
-    $('.lectureStateChangeSelectPopup ._complete').click(function(){
-        var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-        complete_member_reg_data_pc(lectureID, dbID)
-        $('.lectureStateChangeSelectPopup').css('display','none')
-    })
+     //진행 완료 처리 버튼
+     $('.lectureStateChangeSelectPopup ._complete').click(function(){
+     var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+     var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+     complete_member_reg_data_pc(lectureID, dbID)
+     $('.lectureStateChangeSelectPopup').css('display','none')
+     })
 
-    //재개 처리 버튼
-    $('.lectureStateChangeSelectPopup ._resume').click(function(){
-        var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-        resume_member_reg_data_pc(lectureID, dbID)
-        $('.lectureStateChangeSelectPopup').css('display','none')
-    })
-    그룹 진행완료, 재개와 겹침*/
+     //재개 처리 버튼
+     $('.lectureStateChangeSelectPopup ._resume').click(function(){
+     var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+     var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+     resume_member_reg_data_pc(lectureID, dbID)
+     $('.lectureStateChangeSelectPopup').css('display','none')
+     })
+     그룹 진행완료, 재개와 겹침*/
 
     //삭제 처리 버튼
     $('.lectureStateChangeSelectPopup ._delete').click(function(){
@@ -537,9 +537,9 @@ if (agent.indexOf("firefox") != -1) {
     $('.lectureStateChangeSelectPopup ._refund').click(function(){
         $('.lectureStateChangeSelectPopup').css('display','none')
         $('.lectureRefundPopup').css('display','block').attr({'data-leid':$('.lectureStateChangeSelectPopup').attr('data-leid'),
-                                                              'data-username':$('.lectureStateChangeSelectPopup').attr('data-username'),
-                                                               'data-dbid':$('.lectureStateChangeSelectPopup').attr('data-dbid')
-                                                             })
+            'data-username':$('.lectureStateChangeSelectPopup').attr('data-username'),
+            'data-dbid':$('.lectureStateChangeSelectPopup').attr('data-dbid')
+        })
     })
 
     $('.lectureStateChangeSelectPopup ._cancel').click(function(){
@@ -559,7 +559,7 @@ if (agent.indexOf("firefox") != -1) {
     $('.lectureRefundPopup input').keyup(function(){
         var priceInputValue = Number($(this).val().replace(/,/g, ""));
         $(this).val(numberWithCommas(priceInputValue));
-        
+
     })
 
     $('span.cancel_refund').parent('div').click(function(){
@@ -581,7 +581,7 @@ if (agent.indexOf("firefox") != -1) {
     });
 
 
-    
+
 
 
     //회원 정보팝업의 일정정보내 반복일정 취소버튼
@@ -589,10 +589,10 @@ if (agent.indexOf("firefox") != -1) {
         e.stopPropagation()
         var $btn = $(this).find('div');
         if($btn.css('width')=='0px'){
-          $btn.animate({'width':'40px'},300);
-          $btn.find('img').css({'display':'block'});
-        $('.deleteBtnBin').not($btn).animate({'width':'0px'},230);
-        $('.deleteBtnBin img').not($btn.find('img')).css({'display':'none'});
+            $btn.animate({'width':'40px'},300);
+            $btn.find('img').css({'display':'block'});
+            $('.deleteBtnBin').not($btn).animate({'width':'0px'},230);
+            $('.deleteBtnBin img').not($btn.find('img')).css({'display':'none'});
         }
     });
 
@@ -618,69 +618,69 @@ if (agent.indexOf("firefox") != -1) {
             deleteTypeSelect = 'repeatgroupptdelete';
             shade_index(200)
         }
-        
+
     });
 
     $(document).on('click','.summaryInnerBox',function(e){ //반복일정 텍스트 누르면 휴지통 닫힘
         e.stopPropagation()
         var $btn = $('.deleteBtnBin');
-          $btn.animate({'width':'0px'},230);
-          $btn.find('img').css({'display':'none'});
+        $btn.animate({'width':'0px'},230);
+        $btn.find('img').css({'display':'none'});
     });
 
-    
+
     $('#popup_delete_btn_yes').click(function(){
         //if($('#calendar').length==0){
-           if(deleteTypeSelect == "repeatinfodelete"){
-                var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
-                var dbID = $(this).parent('#cal_popup_plandelete').attr('data-dbid');
-                send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
-                    get_indiv_repeat_info(dbID);
-                    get_member_lecture_list(dbID);
-                    get_member_history_list(dbID);
-                    close_info_popup('cal_popup_plandelete')
-                    deleteTypeSelect = "memberinfodelete";
-                    if($('#calendar').length!=0){
-                        ajaxClassTime()
-                    }
-                })
-
-            }else if(deleteTypeSelect == "memberinfodelete"){
-                deleteMemberAjax();
-                closePopup('member_info');
-                closePopup('member_info_PC')
-
-            }else if(deleteTypeSelect == "groupdelete"){
-                var group_id = group_delete_JSON.group_id
-                var groupmember_fullnames = group_delete_JSON.fullnames
-                var groupmember_ids = group_delete_JSON.ids
-
-                //그룹을 지운다.
-                delete_group_from_list(group_delete_JSON.group_id)
-                //그룹원들에게서 그룹에 대한 수강이력을 지운다.
-                delete_groupmember_from_grouplist()
-
-                group_delete_JSON.group_id = ""
-                group_delete_JSON.fullnames = []
-                group_delete_JSON.ids = []
+        if(deleteTypeSelect == "repeatinfodelete"){
+            var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
+            var dbID = $(this).parent('#cal_popup_plandelete').attr('data-dbid');
+            send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
+                get_indiv_repeat_info(dbID);
+                get_member_lecture_list(dbID);
+                get_member_history_list(dbID);
                 close_info_popup('cal_popup_plandelete')
+                deleteTypeSelect = "memberinfodelete";
+                if($('#calendar').length!=0){
+                    ajaxClassTime()
+                }
+            })
 
-            }else if(deleteTypeSelect == "grouprepeatinfodelete"){
-                var group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid')
-                var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
-                send_repeat_delete_group(repeat_schedule_id, 'callback', function(){
-                    close_info_popup('cal_popup_plandelete')
-                    get_group_repeat_info(group_id)
-                    if($('body').width()>=600){
-                        $('#calendar').css('position','relative')   
-                    }
-                })
-                // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
-                //     for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
-                //         send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
-                //     }
-                // })
-            }               
+        }else if(deleteTypeSelect == "memberinfodelete"){
+            deleteMemberAjax();
+            closePopup('member_info');
+            closePopup('member_info_PC')
+
+        }else if(deleteTypeSelect == "groupdelete"){
+            var group_id = group_delete_JSON.group_id
+            var groupmember_fullnames = group_delete_JSON.fullnames
+            var groupmember_ids = group_delete_JSON.ids
+
+            //그룹을 지운다.
+            delete_group_from_list(group_delete_JSON.group_id)
+            //그룹원들에게서 그룹에 대한 수강이력을 지운다.
+            delete_groupmember_from_grouplist()
+
+            group_delete_JSON.group_id = ""
+            group_delete_JSON.fullnames = []
+            group_delete_JSON.ids = []
+            close_info_popup('cal_popup_plandelete')
+
+        }else if(deleteTypeSelect == "grouprepeatinfodelete"){
+            var group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid')
+            var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
+            send_repeat_delete_group(repeat_schedule_id, 'callback', function(){
+                close_info_popup('cal_popup_plandelete')
+                get_group_repeat_info(group_id)
+                if($('body').width()>=600){
+                    $('#calendar').css('position','relative')
+                }
+            })
+            // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
+            //     for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
+            //         send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
+            //     }
+            // })
+        }
     });
 
 
@@ -689,40 +689,40 @@ if (agent.indexOf("firefox") != -1) {
         $.ajax({
             url: '/trainer/get_group_member_repeat_schedule_list/',
             type : 'POST',
-            data : {"group_repeat_schedule_id":group_repeat_id}, 
+            data : {"group_repeat_schedule_id":group_repeat_id},
             dataType : 'html',
 
             beforeSend:function(){
-              beforeSend()
+                beforeSend()
             },
 
             success:function(data){
-              //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
-              var jsondata = JSON.parse(data);
-              if(jsondata.messageArray.length>0){
-                $('#errorMessageBar').show()
-                $('#errorMessageText').text(jsondata.messageArray)
-              }else{
-                if(use == "callback"){
-                  callback(jsondata)
+                //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show()
+                    $('#errorMessageText').text(jsondata.messageArray)
+                }else{
+                    if(use == "callback"){
+                        callback(jsondata)
+                    }
                 }
-              }
             },
 
             complete:function(){
-              completeSend()
+                completeSend()
             },
 
             error:function(){
-              $('#errorMessageBar').show()
-              $('#errorMessageText').text('통신 에러: 관리자 문의')
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
             }
-          })
+        })
     }
 
 
 
-    
+
 //#####################회원정보 팝업 //#####################
 
 
@@ -752,13 +752,13 @@ if (agent.indexOf("firefox") != -1) {
         }
     });
 
- 
+
     $('#alignBox,.centeralign').mouseenter(function(){
         $('.instructPopup').fadeOut();
-    }); 
+    });
 //#####################회원정보 도움말 팝업 //#####################
 
-    
+
 
     $('#memberSearchButton').click(function(e){
         e.preventDefault()
@@ -787,22 +787,22 @@ if (agent.indexOf("firefox") != -1) {
                 }else{
                     $('#errorMessageBar').hide();
                     $('#errorMessageText').text('');
-                  id_search_memberLastName = jsondata.lastnameInfo;
-                  id_search_memberFirstName = jsondata.firstnameInfo;
-                  id_search_memberPhone = jsondata.phoneInfo;
-                  id_search_memberBirth = jsondata.birthdayInfo + ''; //형식 1999년 02월 08일
-                  id_search_memberEmail = jsondata.emailInfo;
-                  id_search_memberId = jsondata.idInfo;
-                  id_search_memberSex = jsondata.sexInfo;
-                  $('#id_username_info').val(jsondata.idInfo);
-                  $('#id_user_id').val(jsondata.dbIdInfo);
-                  $('#memberSex .selectboxopt').removeClass('selectbox_checked');
-                  fill_member_info_by_ID_search();
-                  $('#memberSearchButton').attr('data-type','searched');
-                  $('#memberSex .selectboxopt').addClass('selectbox_disable');
-                  $('._ADD_MEMBER_NEW').show();
+                    id_search_memberLastName = jsondata.lastnameInfo;
+                    id_search_memberFirstName = jsondata.firstnameInfo;
+                    id_search_memberPhone = jsondata.phoneInfo;
+                    id_search_memberBirth = jsondata.birthdayInfo + ''; //형식 1999년 02월 08일
+                    id_search_memberEmail = jsondata.emailInfo;
+                    id_search_memberId = jsondata.idInfo;
+                    id_search_memberSex = jsondata.sexInfo;
+                    $('#id_username_info').val(jsondata.idInfo);
+                    $('#id_user_id').val(jsondata.dbIdInfo);
+                    $('#memberSex .selectboxopt').removeClass('selectbox_checked');
+                    fill_member_info_by_ID_search();
+                    $('#memberSearchButton').attr('data-type','searched');
+                    $('#memberSex .selectboxopt').addClass('selectbox_disable');
+                    $('._ADD_MEMBER_NEW').show();
                 }
-                
+
             },
 
             //통신 실패시 처리
@@ -832,7 +832,7 @@ if (agent.indexOf("firefox") != -1) {
             check_dropdown_selected();
         }
     });
-    
+
 
     $(document).on("focus","input.lec_start_date, input.lec_end_date",function(){
         $(this).datepicker({
@@ -863,22 +863,22 @@ if (agent.indexOf("firefox") != -1) {
             var keyCode = e.which || e.keyCode;
             if(keyCode === 13 || keyCode === 9){
                 if($(this).val().length>=1){
-	                limit_char(this);
-	                $(this).addClass("dropdown_selected");
-	                check_dropdown_selected();
-	            }else{
-	                limit_char(this);
-	                $(this).removeClass("dropdown_selected");
-	                check_dropdown_selected();
-	            }
-	            $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
-	            $('#add_member_form_first_name').val($('#memberFirstName_add').val());
-	            $('#add_member_form_last_name').val($('#memberLastName_add').val());
-	            $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+                    limit_char(this);
+                    $(this).addClass("dropdown_selected");
+                    check_dropdown_selected();
+                }else{
+                    limit_char(this);
+                    $(this).removeClass("dropdown_selected");
+                    check_dropdown_selected();
+                }
+                $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+                $('#add_member_form_first_name').val($('#memberFirstName_add').val());
+                $('#add_member_form_last_name').val($('#memberLastName_add').val());
+                $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
             }
-        }); 
+        });
     }else{
-       $("#memberLastName_add, #memberFirstName_add").keyup(function(){  //이름 입력시 하단에 핑크선
+        $("#memberLastName_add, #memberFirstName_add").keyup(function(){  //이름 입력시 하단에 핑크선
             if($(this).val().length>=1){
                 limit_char(this);
                 $(this).addClass("dropdown_selected");
@@ -892,14 +892,14 @@ if (agent.indexOf("firefox") != -1) {
             $('#add_member_form_first_name').val($('#memberFirstName_add').val());
             $('#add_member_form_last_name').val($('#memberLastName_add').val());
             $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
-        }); 
+        });
     }
 
-    
+
 
     $(document).on('click','#memberSex .selectboxopt',function(){
         if($('#memberSearchButton').attr('data-type') == "searched"){
-        
+
         }else{
             $(this).addClass('selectbox_checked');
             $(this).siblings().removeClass('selectbox_checked');
@@ -944,7 +944,7 @@ if (agent.indexOf("firefox") != -1) {
         }
     });
 
-    
+
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
     $('.btnCallSimple').click(function(){
         $(this).parent('div').siblings('.manualReg').hide()
@@ -1008,7 +1008,7 @@ if (agent.indexOf("firefox") != -1) {
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
     //회원 등록 폼 작성후 완료버튼 클릭
-    $("#upbutton-check, #pcBtn").click(function(e){ 
+    $("#upbutton-check, #pcBtn").click(function(e){
         e.preventDefault()
         //회원 추가, 재등록
         if($('#page_addmember').css('display')=='block' && $('._ADD_GROUP_NEW').css('display') == "none" && $('._ADD_GROUPMEMBER_NEW').css('display') == "none"){
@@ -1027,13 +1027,13 @@ if (agent.indexOf("firefox") != -1) {
                 //입력값 확인 메시지 출력 가능
             }
 
-        //그룹 추가
+            //그룹 추가
         }else if($('#page_addmember').css('display')=='block' && $('._ADD_GROUP_NEW').css('display') == "block"){
             if(select_all_check==true){
                 add_group_form_func()
             }
 
-        //그룹원 추가
+            //그룹원 추가
         }else if($('#page_addmember').css('display')=='block' && $('._ADD_GROUPMEMBER_NEW').css('display') == "block"){
             if(select_all_check==true){
                 add_groupmember_form_func()
@@ -1050,10 +1050,10 @@ if (agent.indexOf("firefox") != -1) {
             $(this).find('img').attr('src','/static/user/res/btn-pt-complete.png')
             $('#memberPhone_info_PC, #memberBirth_select_wrap select, #memberName_info_PC, #memberName_info_lastName_PC, #memberName_info_firstName_PC').addClass('input_available').attr('disabled',false);
             $('#memberSex_info_PC .selectboxopt').show()
-  			$('#memberSex_info_PC .selectboxopt[value="'+$('#form_sex_modify').val()+'"]').addClass('selectbox_checked')
+            $('#memberSex_info_PC .selectboxopt[value="'+$('#form_sex_modify').val()+'"]').addClass('selectbox_checked')
 
-  			$('#memberName_info_PC').hide()
-  			$('#memberName_info_lastName_PC, #memberName_info_firstName_PC').show()
+            $('#memberName_info_PC').hide()
+            $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').show()
 
 
         }else if($(this).attr('data-view') == 'edit'){
@@ -1064,7 +1064,7 @@ if (agent.indexOf("firefox") != -1) {
             $('#memberSex_info_PC .selectbox_checked').show().removeClass('selectbox_checked')
 
             $('#memberName_info_PC').show().val($('#memberName_info_lastName_PC').val()+$('#memberName_info_firstName_PC').val())
-  			$('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide()
+            $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide()
 
             send_modified_member_base_data()
         }
@@ -1101,17 +1101,17 @@ if (agent.indexOf("firefox") != -1) {
 
         }else if($(this).attr('data-type') == "modify" ){
             if(select_all_check==false){
-               send_modified_member_base_data()
-               $('#memberName_info').show().val($('#memberName_info_lastName').val()+$('#memberName_info_firstName').val())
-               $('#memberName_info_lastName, #memberName_info_firstName').hide()
-            
+                send_modified_member_base_data()
+                $('#memberName_info').show().val($('#memberName_info_lastName').val()+$('#memberName_info_firstName').val())
+                $('#memberName_info_lastName, #memberName_info_firstName').hide()
+
             }else{
                 scrollToDom($('#memberInfoPopup'));
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(text2);
                 //입력값 확인 메시지 출력 가능
             }
-        }      
+        }
     });
 
 
@@ -1131,8 +1131,8 @@ if (agent.indexOf("firefox") != -1) {
 });
 
 function send_modified_member_base_data(){
-	var $form = $('#member-add-form-modify');
-	$.ajax({
+    var $form = $('#member-add-form-modify');
+    $.ajax({
         url:'/trainer/update_member_info/',
         type:'POST',
         data:$form.serialize(),
@@ -1162,7 +1162,7 @@ function send_modified_member_base_data(){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if($('body').width()<600){
-                	closePopup('member_info');
+                    closePopup('member_info');
                     $('#page_managemember').show();
                 }
                 $('html').css("cursor","auto");
@@ -1187,7 +1187,7 @@ function send_modified_member_base_data(){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         },
-  })
+    })
 }
 
 
@@ -1220,7 +1220,7 @@ function float_btn_managemember(option){
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
         $('#float_btn_wrap').fadeOut();
         $('#uptext2').text(text);
-        
+
         scrollToDom($('#page_addmember'));
         if($('body').width()<600){
             $('#page_managemember').hide();
@@ -1262,7 +1262,7 @@ function float_btn_managemember(option){
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
         $('#addgrouptypename').text('신규 고정 그룹')
-        
+
         $('#uptext2, #uptext2_PC').text('신규 고정 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
@@ -1346,7 +1346,7 @@ function pc_add_member(option){
         }
 
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
 
@@ -1365,13 +1365,13 @@ function pc_add_member(option){
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
 
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
-        
+
         $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
@@ -1390,7 +1390,7 @@ function pc_add_member(option){
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
 
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
 
@@ -1407,7 +1407,7 @@ function pc_add_member(option){
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         closePopup('member_info');
         float_btn_managemember(1);
-        
+
 
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
@@ -1418,7 +1418,7 @@ function pc_add_member(option){
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
-        
+
     }else if(option == 'group'){
         initialize_add_member_sheet();
 
@@ -1428,18 +1428,18 @@ function pc_add_member(option){
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
         $('#addgrouptypename').text('신규 고정 그룹')
-        
+
         $('#uptext2, #uptext2_PC').text('신규 고정 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
     }else if(option == 'openlesson'){
         initialize_add_member_sheet();
-        
+
         $('#grouptype').hide()
         $('#explain_open_lesson').show()
         $('#explain_group_lesson').hide()
@@ -1453,7 +1453,7 @@ function pc_add_member(option){
         $('._ADD_GROUP_NEW').show();
 
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
     }else if(option == 'groupmember'){
         initialize_add_member_sheet();
@@ -1462,7 +1462,7 @@ function pc_add_member(option){
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
 
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-                                                'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
     }
 }
 
@@ -1476,14 +1476,14 @@ function shiftMemberList(type){
             $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display','none')
             $('._GROUP_THEAD, ._groupaddbutton').show()
             $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
-        break;
+            break;
         case "finished":
             get_group_end_list()
             $('#finishedGroupList, #memberNumber_finish_group').css('display','block');
             $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display','none')
             $('._GROUP_THEAD, ._groupaddbutton').show()
             $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
-        break;
+            break;
     }
 }
 
@@ -1584,16 +1584,16 @@ function birth_dropdown_set(){
     });
 
     /*
-    $('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
-        $(this).addClass("dropdown_selected");
-        $(this).css('color','#282828');
-        var year = $('#birth_year_info').val().replace(/년|\\.|年/gi,"");
-        var month = $('#birth_month_info').val().replace(/월|\\.|月/gi,"");
-        var date = $('#birth_date_info').val().replace(/일|日/gi,"");
-        var birthdata = year+'-'+month+'-'+date;
-        $('#form_birth_modify').attr('value',birthdata);
-    });
-    */
+     $('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
+     $(this).addClass("dropdown_selected");
+     $(this).css('color','#282828');
+     var year = $('#birth_year_info').val().replace(/년|\\.|年/gi,"");
+     var month = $('#birth_month_info').val().replace(/월|\\.|月/gi,"");
+     var date = $('#birth_date_info').val().replace(/일|日/gi,"");
+     var birthdata = year+'-'+month+'-'+date;
+     $('#form_birth_modify').attr('value',birthdata);
+     });
+     */
 }
 
 //등록유형 드랍다운
@@ -1630,7 +1630,7 @@ function DataFormatting(jsondata){
     var rjCountInfoArray = jsondata.rjLectureCountsArray;
     var yetRegCountInfoArray = jsondata.yetRegCountArray;
     var yetCountInfoArray = jsondata.yetCountArray;
-    var len = jsondata.db_id.length; 
+    var len = jsondata.db_id.length;
 
 
 
@@ -1672,198 +1672,198 @@ function DataFormattingDict(Option, jsondata){
         case 'name':
             var DBlength = jsondata.nameArray.length;
             for(var i=0; i<DBlength;i++){
-            DB[jsondata.nameArray[i]] = {'id':jsondata.idArray[i],
-                                'dbId':jsondata.dIdArray[i],
-                                'email':jsondata.emailArray[i],
-                                'count':jsondata.countArray[i],
-                                'regcount':jsondata.regCountArray[i],
-                                'availCount':jsondata.availCountArray[i], 
-                                'phone':jsondata.phoneArray[i],
-                                'contents':jsondata.contentsArray[i],
-                                'start':jsondata.startArray[i],
-                                'end':jsondata.endArray[i], 
-                                'birth':jsondata.birthdayArray[i], 
-                                'sex':jsondata.sexArray[i],
-                                'npCount':jsondata.npLectureCountsArray[i],
-                                'rjCount':jsondata.rjLectureCountsArray[i],
-                                'yetRegCount':jsondata.yetRegCountArray[i],
-                                'yetCount':jsondata.yetCountArray[i],
-                                'activation':jsondata.activationArray[i],
-                                'firstName':jsondata.firstNameArray[i],
-                                'lastName':jsondata.lastNameArray[i],
-                                'groupType':jsondata.groupInfoArray[i]
-                              };
+                DB[jsondata.nameArray[i]] = {'id':jsondata.idArray[i],
+                    'dbId':jsondata.dIdArray[i],
+                    'email':jsondata.emailArray[i],
+                    'count':jsondata.countArray[i],
+                    'regcount':jsondata.regCountArray[i],
+                    'availCount':jsondata.availCountArray[i],
+                    'phone':jsondata.phoneArray[i],
+                    'contents':jsondata.contentsArray[i],
+                    'start':jsondata.startArray[i],
+                    'end':jsondata.endArray[i],
+                    'birth':jsondata.birthdayArray[i],
+                    'sex':jsondata.sexArray[i],
+                    'npCount':jsondata.npLectureCountsArray[i],
+                    'rjCount':jsondata.rjLectureCountsArray[i],
+                    'yetRegCount':jsondata.yetRegCountArray[i],
+                    'yetCount':jsondata.yetCountArray[i],
+                    'activation':jsondata.activationArray[i],
+                    'firstName':jsondata.firstNameArray[i],
+                    'lastName':jsondata.lastNameArray[i],
+                    'groupType':jsondata.groupInfoArray[i]
+                };
             }
             var DBendlength = finishnameArray.length;
             for(var j=0; j<DBendlength;j++){
-            DBe[jsondata.finishnameArray[j]] = {'id':jsondata.finishIdArray[j],
-                                        'dbId':jsondata.finishDidArray[j],
-                                        'email':jsondata.finishemailArray[j],
-                                        'count':jsondata.finishcountArray[j],
-                                        'regcount':jsondata.finishRegCountArray[j],
-                                        'availCount':jsondata.finishAvailCountArray[j],
-                                        'phone':jsondata.finishphoneArray[j],
-                                        'contents':jsondata.finishContentsArray[j],
-                                        'start':jsondata.finishstartArray[j],
-                                        'end':jsondata.finishendArray[j], 
-                                        'birth':jsondata.finishbirthdayArray[j], 
-                                        'sex':jsondata.finishsexArray[j],
-                                        'activation':jsondata.activationArray[j],
-                                        'firstName':jsondata.finishFirstNameArray[j],
-                                		'lastName':jsondata.finishLastNameArray[j],
-                                        'groupType':jsondata.finishGroupInfoArray[j]
-                                    };
+                DBe[jsondata.finishnameArray[j]] = {'id':jsondata.finishIdArray[j],
+                    'dbId':jsondata.finishDidArray[j],
+                    'email':jsondata.finishemailArray[j],
+                    'count':jsondata.finishcountArray[j],
+                    'regcount':jsondata.finishRegCountArray[j],
+                    'availCount':jsondata.finishAvailCountArray[j],
+                    'phone':jsondata.finishphoneArray[j],
+                    'contents':jsondata.finishContentsArray[j],
+                    'start':jsondata.finishstartArray[j],
+                    'end':jsondata.finishendArray[j],
+                    'birth':jsondata.finishbirthdayArray[j],
+                    'sex':jsondata.finishsexArray[j],
+                    'activation':jsondata.activationArray[j],
+                    'firstName':jsondata.finishFirstNameArray[j],
+                    'lastName':jsondata.finishLastNameArray[j],
+                    'groupType':jsondata.finishGroupInfoArray[j]
+                };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
             $('#finishMemberNum').text(text2+DBendlength+text3);
-        break;
+            break;
 
         case 'ID':
             var DBlength = jsondata.idArray.length;
             for(var i=0; i<DBlength;i++){
-            DB[jsondata.idArray[i]] = {'id':jsondata.idArray[i],
-                              'name':jsondata.nameArray[i],
-                              'dbId':jsondata.dIdArray[i],
-                              'email':jsondata.emailArray[i],
-                              'count':jsondata.countArray[i],
-                              'regcount':jsondata.regCountArray[i],
-                              'availCount':jsondata.availCountArray[i], 
-                              'phone':jsondata.phoneArray[i],
-                              'contents':jsondata.contentsArray[i],
-                              'start':jsondata.startArray[i],
-                              'end':jsondata.endArray[i], 
-                              'birth':jsondata.birthdayArray[i], 
-                              'sex':jsondata.sexArray[i],
-                              'npCount':jsondata.npLectureCountsArray[i],
-                              'rjCount':jsondata.rjLectureCountsArray[i],
-                              'yetRegCount':jsondata.yetRegCountArray[i],
-                              'yetCount':jsondata.yetCountArray[i],
-                              'activation':jsondata.activationArray[i],
-                              'firstName':jsondata.firstNameArray[i],
-                              'lastName':jsondata.lastNameArray[i],
-                              'groupType':jsondata.groupInfoArray[i]
-                            };
+                DB[jsondata.idArray[i]] = {'id':jsondata.idArray[i],
+                    'name':jsondata.nameArray[i],
+                    'dbId':jsondata.dIdArray[i],
+                    'email':jsondata.emailArray[i],
+                    'count':jsondata.countArray[i],
+                    'regcount':jsondata.regCountArray[i],
+                    'availCount':jsondata.availCountArray[i],
+                    'phone':jsondata.phoneArray[i],
+                    'contents':jsondata.contentsArray[i],
+                    'start':jsondata.startArray[i],
+                    'end':jsondata.endArray[i],
+                    'birth':jsondata.birthdayArray[i],
+                    'sex':jsondata.sexArray[i],
+                    'npCount':jsondata.npLectureCountsArray[i],
+                    'rjCount':jsondata.rjLectureCountsArray[i],
+                    'yetRegCount':jsondata.yetRegCountArray[i],
+                    'yetCount':jsondata.yetCountArray[i],
+                    'activation':jsondata.activationArray[i],
+                    'firstName':jsondata.firstNameArray[i],
+                    'lastName':jsondata.lastNameArray[i],
+                    'groupType':jsondata.groupInfoArray[i]
+                };
             }
             var DBendlength = jsondata.finishIdArray.length;
             for(var j=0; j<DBendlength;j++){
-            DBe[jsondata.finishIdArray[j]] = {'id':jsondata.finishIdArray[i],
-                                    'name':jsondata.finishnameArray[j], 
-                                    'dbId':jsondata.finishDidArray[j],
-                                    'email':jsondata.finishemailArray[j],
-                                    'count':jsondata.finishcountArray[j],
-                                    'regcount':jsondata.finishRegCountArray[j],
-                                    'availCount':jsondata.finishAvailCountArray[j],
-                                    'phone':jsondata.finishphoneArray[j],
-                                    'contents':jsondata.finishContentsArray[j],
-                                    'start':jsondata.finishstartArray[j],
-                                    'end':jsondata.finishendArray[j], 
-                                    'birth':jsondata.finishbirthdayArray[j], 
-                                    'sex':jsondata.finishsexArray[j],
-                                    'activation':jsondata.activationArray[j],
-                                    'firstName':jsondata.finishFirstNameArray[j],
-                                	'lastName':jsondata.finishLastNameArray[j],
-                                    'groupType':jsondata.finishGroupInfoArray[j]
-                                     };
+                DBe[jsondata.finishIdArray[j]] = {'id':jsondata.finishIdArray[i],
+                    'name':jsondata.finishnameArray[j],
+                    'dbId':jsondata.finishDidArray[j],
+                    'email':jsondata.finishemailArray[j],
+                    'count':jsondata.finishcountArray[j],
+                    'regcount':jsondata.finishRegCountArray[j],
+                    'availCount':jsondata.finishAvailCountArray[j],
+                    'phone':jsondata.finishphoneArray[j],
+                    'contents':jsondata.finishContentsArray[j],
+                    'start':jsondata.finishstartArray[j],
+                    'end':jsondata.finishendArray[j],
+                    'birth':jsondata.finishbirthdayArray[j],
+                    'sex':jsondata.finishsexArray[j],
+                    'activation':jsondata.activationArray[j],
+                    'firstName':jsondata.finishFirstNameArray[j],
+                    'lastName':jsondata.finishLastNameArray[j],
+                    'groupType':jsondata.finishGroupInfoArray[j]
+                };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
             $('#finishMemberNum').text(text2+DBendlength+text3);
-        break;
+            break;
 
         case 'DBID':
             var DBlength = jsondata.dIdArray.length;
             for(var i=0; i<DBlength;i++){
-            DB[jsondata.dIdArray[i]] = {'id':jsondata.idArray[i],
-                              'name':jsondata.nameArray[i],
-                              'dbId':jsondata.dIdArray[i],
-                              'email':jsondata.emailArray[i],
-                              'count':jsondata.countArray[i],
-                              'regcount':jsondata.regCountArray[i],
-                              'availCount':jsondata.availCountArray[i], 
-                              'phone':jsondata.phoneArray[i],
-                              'contents':jsondata.contentsArray[i],
-                              'start':jsondata.startArray[i],
-                              'end':jsondata.endArray[i], 
-                              'birth':jsondata.birthdayArray[i], 
-                              'sex':jsondata.sexArray[i],
-                              'npCount':jsondata.npLectureCountsArray[i],
-                              'rjCount':jsondata.rjLectureCountsArray[i],
-                              'yetRegCount':jsondata.yetRegCountArray[i],
-                              'yetCount':jsondata.yetCountArray[i],
-                              'activation':jsondata.activationArray[i],
-                              'firstName':jsondata.firstNameArray[i],
-                              'lastName':jsondata.lastNameArray[i],
-                              'groupType':jsondata.groupInfoArray[i]
-                            };
+                DB[jsondata.dIdArray[i]] = {'id':jsondata.idArray[i],
+                    'name':jsondata.nameArray[i],
+                    'dbId':jsondata.dIdArray[i],
+                    'email':jsondata.emailArray[i],
+                    'count':jsondata.countArray[i],
+                    'regcount':jsondata.regCountArray[i],
+                    'availCount':jsondata.availCountArray[i],
+                    'phone':jsondata.phoneArray[i],
+                    'contents':jsondata.contentsArray[i],
+                    'start':jsondata.startArray[i],
+                    'end':jsondata.endArray[i],
+                    'birth':jsondata.birthdayArray[i],
+                    'sex':jsondata.sexArray[i],
+                    'npCount':jsondata.npLectureCountsArray[i],
+                    'rjCount':jsondata.rjLectureCountsArray[i],
+                    'yetRegCount':jsondata.yetRegCountArray[i],
+                    'yetCount':jsondata.yetCountArray[i],
+                    'activation':jsondata.activationArray[i],
+                    'firstName':jsondata.firstNameArray[i],
+                    'lastName':jsondata.lastNameArray[i],
+                    'groupType':jsondata.groupInfoArray[i]
+                };
             }
             var DBendlength = jsondata.finishDidArray.length;
             for(var j=0; j<DBendlength;j++){
-            DBe[jsondata.finishDidArray[j]] = {'id':jsondata.finishIdArray[i],
-                                    'name':jsondata.finishnameArray[j], 
-                                    'dbId':jsondata.finishDidArray[j],
-                                    'email':jsondata.finishemailArray[j],
-                                    'count':jsondata.finishcountArray[j],
-                                    'regcount':jsondata.finishRegCountArray[j],
-                                    'availCount':jsondata.finishAvailCountArray[j],
-                                    'phone':jsondata.finishphoneArray[j],
-                                    'contents':jsondata.finishContentsArray[j],
-                                    'start':jsondata.finishstartArray[j],
-                                    'end':jsondata.finishendArray[j], 
-                                    'birth':jsondata.finishbirthdayArray[j], 
-                                    'sex':jsondata.finishsexArray[j],
-                                    'activation':jsondata.activationArray[j],
-                                    'firstName':jsondata.finishFirstNameArray[j],
-                                    'lastName':jsondata.finishLastNameArray[j],
-                                    'groupType':jsondata.finishGroupInfoArray[j]
-                                     };
+                DBe[jsondata.finishDidArray[j]] = {'id':jsondata.finishIdArray[i],
+                    'name':jsondata.finishnameArray[j],
+                    'dbId':jsondata.finishDidArray[j],
+                    'email':jsondata.finishemailArray[j],
+                    'count':jsondata.finishcountArray[j],
+                    'regcount':jsondata.finishRegCountArray[j],
+                    'availCount':jsondata.finishAvailCountArray[j],
+                    'phone':jsondata.finishphoneArray[j],
+                    'contents':jsondata.finishContentsArray[j],
+                    'start':jsondata.finishstartArray[j],
+                    'end':jsondata.finishendArray[j],
+                    'birth':jsondata.finishbirthdayArray[j],
+                    'sex':jsondata.finishsexArray[j],
+                    'activation':jsondata.activationArray[j],
+                    'firstName':jsondata.finishFirstNameArray[j],
+                    'lastName':jsondata.finishLastNameArray[j],
+                    'groupType':jsondata.finishGroupInfoArray[j]
+                };
             }
             for(var i=0; i<DBlength;i++){
-            DB_All[jsondata.dIdArray[i]] = {'id':jsondata.idArray[i],
-                              'name':jsondata.nameArray[i],
-                              'dbId':jsondata.dIdArray[i],
-                              'email':jsondata.emailArray[i],
-                              'count':jsondata.countArray[i],
-                              'regcount':jsondata.regCountArray[i],
-                              'availCount':jsondata.availCountArray[i], 
-                              'phone':jsondata.phoneArray[i],
-                              'contents':jsondata.contentsArray[i],
-                              'start':jsondata.startArray[i],
-                              'end':jsondata.endArray[i], 
-                              'birth':jsondata.birthdayArray[i], 
-                              'sex':jsondata.sexArray[i],
-                              'npCount':jsondata.npLectureCountsArray[i],
-                              'rjCount':jsondata.rjLectureCountsArray[i],
-                              'yetRegCount':jsondata.yetRegCountArray[i],
-                              'yetCount':jsondata.yetCountArray[i],
-                              'activation':jsondata.activationArray[i],
-                              'firstName':jsondata.firstNameArray[i],
-                              'lastName':jsondata.lastNameArray[i],
-                              'groupType':jsondata.groupInfoArray[i]
-                            };
+                DB_All[jsondata.dIdArray[i]] = {'id':jsondata.idArray[i],
+                    'name':jsondata.nameArray[i],
+                    'dbId':jsondata.dIdArray[i],
+                    'email':jsondata.emailArray[i],
+                    'count':jsondata.countArray[i],
+                    'regcount':jsondata.regCountArray[i],
+                    'availCount':jsondata.availCountArray[i],
+                    'phone':jsondata.phoneArray[i],
+                    'contents':jsondata.contentsArray[i],
+                    'start':jsondata.startArray[i],
+                    'end':jsondata.endArray[i],
+                    'birth':jsondata.birthdayArray[i],
+                    'sex':jsondata.sexArray[i],
+                    'npCount':jsondata.npLectureCountsArray[i],
+                    'rjCount':jsondata.rjLectureCountsArray[i],
+                    'yetRegCount':jsondata.yetRegCountArray[i],
+                    'yetCount':jsondata.yetCountArray[i],
+                    'activation':jsondata.activationArray[i],
+                    'firstName':jsondata.firstNameArray[i],
+                    'lastName':jsondata.lastNameArray[i],
+                    'groupType':jsondata.groupInfoArray[i]
+                };
             }
             var DBendlength = jsondata.finishDidArray.length;
             for(var j=0; j<DBendlength;j++){
-            DB_All[jsondata.finishDidArray[j]] = {'id':jsondata.finishIdArray[i],
-                                    'name':jsondata.finishnameArray[j], 
-                                    'dbId':jsondata.finishDidArray[j],
-                                    'email':jsondata.finishemailArray[j],
-                                    'count':jsondata.finishcountArray[j],
-                                    'regcount':jsondata.finishRegCountArray[j],
-                                    'availCount':jsondata.finishAvailCountArray[j],
-                                    'phone':jsondata.finishphoneArray[j],
-                                    'contents':jsondata.finishContentsArray[j],
-                                    'start':jsondata.finishstartArray[j],
-                                    'end':jsondata.finishendArray[j], 
-                                    'birth':jsondata.finishbirthdayArray[j], 
-                                    'sex':jsondata.finishsexArray[j],
-                                    'activation':jsondata.activationArray[j],
-                                    'firstName':jsondata.finishFirstNameArray[j],
-                                    'lastName':jsondata.finishLastNameArray[j],
-                                    'groupType':jsondata.finishGroupInfoArray[j]
-                                     };
+                DB_All[jsondata.finishDidArray[j]] = {'id':jsondata.finishIdArray[i],
+                    'name':jsondata.finishnameArray[j],
+                    'dbId':jsondata.finishDidArray[j],
+                    'email':jsondata.finishemailArray[j],
+                    'count':jsondata.finishcountArray[j],
+                    'regcount':jsondata.finishRegCountArray[j],
+                    'availCount':jsondata.finishAvailCountArray[j],
+                    'phone':jsondata.finishphoneArray[j],
+                    'contents':jsondata.finishContentsArray[j],
+                    'start':jsondata.finishstartArray[j],
+                    'end':jsondata.finishendArray[j],
+                    'birth':jsondata.finishbirthdayArray[j],
+                    'sex':jsondata.finishsexArray[j],
+                    'activation':jsondata.activationArray[j],
+                    'firstName':jsondata.finishFirstNameArray[j],
+                    'lastName':jsondata.finishLastNameArray[j],
+                    'groupType':jsondata.finishGroupInfoArray[j]
+                };
             }
             $('#currentMemberNum').text(text+DBlength+text3);
             $('#finishMemberNum').text(text2+DBendlength+text3);
-        break;
+            break;
     }
 }
 
@@ -2047,7 +2047,7 @@ function memberListSet (type,option,Reverse, jsondata){
         var text = ''
         var text2 = 'New Member this month'
     }
-    
+
     var tbodyStart = '<tbody>';
     var tbodyEnd = '</tbody>';
     var tbodyToAppend = $(tbodyStart);
@@ -2061,7 +2061,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var $tabletbody = $('#currentMember tbody');
             var $membernum = $('#memberNumber_current_member')
             var text_membernum = "진행중인 회원 "
-        break;
+            break;
         case 'finished':
             var data = DataFormatting(jsondata);
             var countList = data["countSorted"]
@@ -2071,7 +2071,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var $tabletbody = $('#finishedMember tbody');
             var $membernum = $('#memberNumber_finish_member')
             var text_membernum = "종료된 회원 "
-        break;
+            break;
     }
 
     if(Reverse == 'yes'){
@@ -2100,7 +2100,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var ends = array[7];
             var phoneToEdit = array[4].replace(/-| |/gi,"");
             if(name.length105){
-              var name = array[2].substr(0,9)+'..';
+                var name = array[2].substr(0,9)+'..';
             }
             var npCounts = array[9];
             var rjCounts = array[10];
@@ -2125,7 +2125,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var ends = array[7];
             var phoneToEdit = array[2].replace(/-| |/gi,"");
             if(name.length>10){
-              var name = array[0].substr(0,9)+'..'
+                var name = array[0].substr(0,9)+'..'
             }
             var npCounts = array[9];
             var rjCounts = array[10];
@@ -2151,7 +2151,7 @@ function memberListSet (type,option,Reverse, jsondata){
             var ends = array[7];
             var phoneToEdit = array[3].replace(/-| |/gi,"");
             if(name.length>10){
-              var name = array[1].substr(0,9)+'..';
+                var name = array[1].substr(0,9)+'..';
             }
             var npCounts = array[9];
             var rjCounts = array[10];
@@ -2164,7 +2164,7 @@ function memberListSet (type,option,Reverse, jsondata){
                 var groupType2 = ''
             }
         }
-        
+
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
         var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2);
         if(end == "9999.12.31"){
@@ -2199,11 +2199,11 @@ function memberListSet (type,option,Reverse, jsondata){
             var yet = '(+'+yetCounts+')';
         }
 
-        
+
 
         var count = remove_front_zeros(count);
         var regcount = remove_front_zeros(regcount);
-        
+
         var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>';
         var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
         var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
@@ -2264,7 +2264,7 @@ function show_shadow_reponsively(){
         $('#shade3').fadeIn('fast');
     }else{
         $('#shade').fadeIn('fast');
-    } 
+    }
 }
 
 //모든 입력란을 채웠을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
@@ -2318,7 +2318,7 @@ function check_dropdown_selected(){
                 select_all_check=false;
             }
         }
-    //그룹 추가 창일때
+        //그룹 추가 창일때
     }else if($('._ADD_GROUP_NEW').css('display')=="block"){
         //if(groupname.val().length > 0 && grouptype.val().length > 0 && groupcapacity.val().length > 0){
         if(groupname.val().length > 0 && $('#form_grouptype').val().length > 0 && groupcapacity.val().length > 0){
@@ -2332,7 +2332,7 @@ function check_dropdown_selected(){
             select_all_check=false;
         }
 
-    //그룹원 추가 창일때
+        //그룹원 추가 창일때
     }else if($('._ADD_GROUPMEMBER_NEW').css('display')=="block"){
         if(fast=='1'){ //상세 입력 방식
             if((countInput).hasClass("dropdown_selected")==true && (priceInput_detail).length>0 && (startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
@@ -2383,7 +2383,7 @@ function autoDateInput(){
     var yy = String(finishDate).substr(0,4);
     var mm = String(finishDate).substr(4,2);
     var dd = String(finishDate).substr(6,2);
-      
+
 
     if(mm>12){ //해 넘어갈때 날짜처리
         //var finishDate = finishDate + 10000 - 1200
@@ -2393,15 +2393,15 @@ function autoDateInput(){
     if(String(mm).length<2){
         var mm = "0"+mm;
     }
-      var finishDate = yy +"-"+ mm +"-"+ dd;
+    var finishDate = yy +"-"+ mm +"-"+ dd;
     if(dd>lastDay[Number(mm)-1]){
         var dd = Number(dd)-lastDay[Number(mm)-1];
         var mm = Number(mm)+1;
         if(String(dd).length<2){
-          var dd = "0"+dd;
+            var dd = "0"+dd;
         }
         if(String(mm).length<2){
-          var mm = "0"+mm;
+            var mm = "0"+mm;
         }
         var finishDate = yy +"-"+ mm +"-"+ dd;
     }
@@ -2437,44 +2437,44 @@ function limit_char(e){
 //서버로부터 회원의 기본정보를 받아온다.
 function get_indiv_member_info(dbID){
     $.ajax({
-              url: '/trainer/get_member_info/',
-              type:'POST',
-              data: {"member_id": dbID, 'id_flag':db_id_flag},
-              dataType : 'html',
+        url: '/trainer/get_member_info/',
+        type:'POST',
+        data: {"member_id": dbID, 'id_flag':db_id_flag},
+        dataType : 'html',
 
-              beforeSend:function(){
-                  //beforeSend(); //ajax 로딩이미지 출력
-              },
+        beforeSend:function(){
+            //beforeSend(); //ajax 로딩이미지 출력
+        },
 
-              success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text(jsondata.messageArray)
-                }else{
-                    $('#errorMessageBar').hide()
-                    $('#errorMessageText').text('')
-                    if($('body').width() < 600){
-                        open_member_info_popup_mobile(dbID, jsondata);
-                        shade_index(100)
-                    }else{
-                        open_member_info_popup_pc(dbID, jsondata);
-                    }
-                    
-                }
-                
-                
-              },
-
-              complete:function(){
-                //completeSend(); //ajax 로딩이미지 숨기기
-              },
-
-              error:function(){
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
-                $('#errorMessageText').text('통신 에러: 관리자 문의')
-              }
-        })
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if($('body').width() < 600){
+                    open_member_info_popup_mobile(dbID, jsondata);
+                    shade_index(100)
+                }else{
+                    open_member_info_popup_pc(dbID, jsondata);
+                }
+
+            }
+
+
+        },
+
+        complete:function(){
+            //completeSend(); //ajax 로딩이미지 숨기기
+        },
+
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        }
+    })
 }
 
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
@@ -2497,15 +2497,15 @@ function open_member_info_popup_pc(dbID, jsondata){
     var userBirth = jsondata.birthdayInfo;
     var userPhone = jsondata.phoneInfo;
     var userSex   = jsondata.sexInfo;
-    var userActivation = jsondata.emailActiveInfo; 
+    var userActivation = jsondata.emailActiveInfo;
 
     $('#memberInfoPopup_PC').fadeIn('fast').attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
     if(userActivation == 'True'){
-    	$('button._info_baseedit').hide()
+        $('button._info_baseedit').hide()
     }else{
-    	$('button._info_baseedit').show()
+        $('button._info_baseedit').show()
     }
-    
+
     $('#memberName_info_PC').val(userName)
     $('#memberName_info_lastName_PC, #form_lastname_modify').val(jsondata.lastnameInfo)
     $('#memberName_info_firstName_PC, #form_firstname_modify').val(jsondata.firstnameInfo)
@@ -2515,15 +2515,15 @@ function open_member_info_popup_pc(dbID, jsondata){
     $('#memberSex_info_PC .selectboxopt').removeClass('selectbox_checked')
     $('#memberMale_info_PC, #memberFemale_info_PC').hide()
     if(userSex == "M"){
-      $('#memberMale_info_PC').show()
-      $('#memberFemale_info_PC').hide()
-      $('#form_sex_modify').val('M');
+        $('#memberMale_info_PC').show()
+        $('#memberFemale_info_PC').hide()
+        $('#form_sex_modify').val('M');
     }else if(userSex == "W"){
-      $('#memberFemale_info_PC').show()
-      $('#memberMale_info_PC').hide()
-      $('#form_sex_modify').val('W');
+        $('#memberFemale_info_PC').show()
+        $('#memberMale_info_PC').hide()
+        $('#form_sex_modify').val('W');
     }else{
-      $('#form_sex_modify').val('');
+        $('#form_sex_modify').val('');
     }
 
 
@@ -2539,9 +2539,9 @@ function open_member_info_popup_pc(dbID, jsondata){
     });
 
     if(userBirth[0].length < 1){
-      var birth_year = "-"
-      var birth_month = "-"
-      var birth_date = "-" 
+        var birth_year = "-"
+        var birth_month = "-"
+        var birth_date = "-"
     }else{
         var birth_year = Number(userBirth[0].split('-')[0]) + '년'
         var birth_month = Number(userBirth[0].split('-')[1]) + '월'
@@ -2571,23 +2571,23 @@ function open_member_info_popup_pc(dbID, jsondata){
     var birth_date_options = dateoption.join('');
     $('#memberBirth_Date_info_PC').html(birth_date_options);
     if(birth_year != '-'){
-    	$('#memberBirth_Year_info_PC option[data-year="'+birth_year+'"]').prop('selected',true)
-    	$('#memberBirth_Month_info_PC option[data-month="'+birth_month+'"]').prop('selected',true)
-    	$('#memberBirth_Date_info_PC option[data-date="'+birth_date+'"]').prop('selected',true)
+        $('#memberBirth_Year_info_PC option[data-year="'+birth_year+'"]').prop('selected',true)
+        $('#memberBirth_Month_info_PC option[data-month="'+birth_month+'"]').prop('selected',true)
+        $('#memberBirth_Date_info_PC option[data-date="'+birth_date+'"]').prop('selected',true)
     }else{
 
     }
-    
+
     if(userBirth[0] != 'None' && userBirth[0] != '' ){
-      $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0], '-'))
+        $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0], '-'))
     }else{
-      $('#form_birth_modify').val('')
+        $('#form_birth_modify').val('')
     }
 
     $('#form_name_modify').val(userName)
     $('#form_dbid_modify').val(dbID)
     $('#form_phone_modify').val(userPhone)
-    
+
     $('#deleteMemberId').val(userID);
     $('#memberName_info').val(userName)
     $('#memberId').text(userID).val(userID).attr('data-dbid', dbID);
@@ -2612,12 +2612,12 @@ function open_member_info_popup_mobile(dbID, jsondata){
     var userBirth = jsondata.birthdayInfo;
     var userPhone = jsondata.phoneInfo;
     var userSex   = jsondata.sexInfo;
-    var userActivation = jsondata.emailActiveInfo; 
+    var userActivation = jsondata.emailActiveInfo;
 
     if(userActivation == 'True'){
-    	$('#upbutton-modify').hide()
+        $('#upbutton-modify').hide()
     }else{
-    	$('#upbutton-modify').show()
+        $('#upbutton-modify').show()
     }
 
     birth_dropdown_set()
@@ -2649,9 +2649,9 @@ function open_member_info_popup_mobile(dbID, jsondata){
 
     $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked');
     if(userSex == "M"){
-      $('#memberMale_info').addClass('selectbox_checked')
+        $('#memberMale_info').addClass('selectbox_checked')
     }else if(userSex == "W"){
-      $('#memberFemale_info').addClass('selectbox_checked')
+        $('#memberFemale_info').addClass('selectbox_checked')
     }
     $('#memberInfoPopup').fadeIn('fast').attr({'data-username': userName, 'data-userid' : userID});
     $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
@@ -2660,7 +2660,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#shade3').fadeIn('fast');
     scrollToDom($('#page_managemember'));
     if($('body').width()<600){
-      $('#page_managemember').hide();
+        $('#page_managemember').hide();
     }
 
     $('#inputError_info').css('display','none')
@@ -2691,7 +2691,7 @@ function modify_member_lec_info_pc(){
         }else{
             $('#form_note').val($(this).val())
         }
-        
+
     })
 }
 
@@ -2700,44 +2700,44 @@ function modify_member_lec_info_pc(){
 //회원의 수정된 수강정보를 서버로 전송한다.
 function send_member_modified_data(dbID){
     var $form = $('#update_member_lecture_info');
-       $.ajax({
-          url:'/trainer/update_lecture_info/',
-          type:'POST',
-          data: $form.serialize(),
-          dataType : 'html',
+    $.ajax({
+        url:'/trainer/update_lecture_info/',
+        type:'POST',
+        data: $form.serialize(),
+        dataType : 'html',
 
-          beforeSend:function(){
+        beforeSend:function(){
             beforeSend()
-          },
+        },
 
-          //보내기후 팝업창 닫기
-          complete:function(){
+        //보내기후 팝업창 닫기
+        complete:function(){
             completeSend()
-          },
+        },
 
-          //통신성공시 처리
-          success:function(data){
-              var jsondata = JSON.parse(data)
-              if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show();
-                    $('#errorMessageText').text(jsondata.messageArray)
-              }else{
-                    $('#errorMessageBar').hide()
-                    $('#errorMessageText').text('')
-                    $('#startR').attr('selected','selected')
-                    $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
-                    get_member_list()
-                    get_member_lecture_list(dbID)
-                    console.log('success');
-              }
-          },
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data)
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                $('#startR').attr('selected','selected')
+                $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show()
+                get_member_list()
+                get_member_lecture_list(dbID)
+                console.log('success');
+            }
+        },
 
-          //통신 실패시 처리
-          error:function(){
+        //통신 실패시 처리
+        error:function(){
             $('#errorMessageBar').show()
             $('#errorMessageText').text('통신 에러: 관리자 문의')
-          },
-      })
+        },
+    })
 }
 
 //회원에게 재연결 요청을 전송한다.
@@ -2767,7 +2767,7 @@ function resend_member_reg_data_pc(lectureID, dbID){
             else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                
+
                 get_member_list()
                 get_member_lecture_list(dbID)
                 console.log('success');
@@ -2922,48 +2922,48 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
 
     if(refund_price.length>0){
         $.ajax({
-                url:'/trainer/refund_lecture_info/',
-                type:'POST',
-                data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price ,"next_page":'/trainer/get_member_list/'},
-                dataType : 'html',
+            url:'/trainer/refund_lecture_info/',
+            type:'POST',
+            data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price ,"next_page":'/trainer/get_member_list/'},
+            dataType : 'html',
 
-                beforeSend:function(){
-                    beforeSend()
-                },
+            beforeSend:function(){
+                beforeSend()
+            },
 
-                //보내기후 팝업창 닫기
-                complete:function(){
-                    completeSend()
-                },
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend()
+            },
 
-                //통신성공시 처리
-                success:function(data){
-                    var jsondata = JSON.parse(data)
-                    if(jsondata.messageArray.length>0){
-                        $('#errorMessageBar').show();
-                        $('#errorMessageText').text(jsondata.messageArray)
-                    }
-                    else{
-                        $('#errorMessageBar').hide()
-                        $('#errorMessageText').text('')
-                        $('#startR').attr('selected','selected')
-                        get_member_list()
-                        get_member_lecture_list(dbID)
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray)
+                }
+                else{
+                    $('#errorMessageBar').hide()
+                    $('#errorMessageText').text('')
+                    $('#startR').attr('selected','selected')
+                    get_member_list()
+                    get_member_lecture_list(dbID)
 
-                        $('#shade3').css('display','none')
-                        $('div.lectureRefundPopup.popups input[type="number"]').val('')
-                        console.log('success');
+                    $('#shade3').css('display','none')
+                    $('div.lectureRefundPopup.popups input[type="number"]').val('')
+                    console.log('success');
 
-                        alert(userName + text)
-                    }
-                },
+                    alert(userName + text)
+                }
+            },
 
-                //통신 실패시 처리
-                error:function(){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text('통신 에러: 관리자 문의')
-                },
-            })
+            //통신 실패시 처리
+            error:function(){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text('통신 에러: 관리자 문의')
+            },
+        })
     }else{
         alert(text2)
     }
@@ -2971,49 +2971,49 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
 
 //회원의 진행상태 연결해제를 한다.
 function disconnect_member_lecture_data(stateCode, lectureID, dbID){
-        $.ajax({
-                url:'/trainer/update_lecture_connection_info/',
-                type:'POST',
-                data:{"lecture_id":lectureID, "member_id": dbID, "member_view_state_cd": stateCode ,"next_page":'/trainer/get_member_list/'},
-                dataType : 'html',
+    $.ajax({
+        url:'/trainer/update_lecture_connection_info/',
+        type:'POST',
+        data:{"lecture_id":lectureID, "member_id": dbID, "member_view_state_cd": stateCode ,"next_page":'/trainer/get_member_list/'},
+        dataType : 'html',
 
-                beforeSend:function(){
-                    beforeSend()
-                },
+        beforeSend:function(){
+            beforeSend()
+        },
 
-                //보내기후 팝업창 닫기
-                complete:function(){
-                    completeSend()
-                },
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
 
-                //통신성공시 처리
-                success:function(data){
-                    var jsondata = JSON.parse(data)
-                    if(jsondata.messageArray.length>0){
-                        $('#errorMessageBar').show();
-                        $('#errorMessageText').text(jsondata.messageArray)
-                    }
-                    else{
-                        $('#errorMessageBar').hide()
-                        $('#errorMessageText').text('')
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data)
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }
+            else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
 
-                        $('#startR').attr('selected','selected')
-                        get_member_list()
-                        get_member_lecture_list(dbID)
+                $('#startR').attr('selected','selected')
+                get_member_list()
+                get_member_lecture_list(dbID)
 
-                        $('#shade3').css('display','none')
-                        $('div.lectureRefundPopup.popups input[type="number"]').val('')
-                        console.log('success');
+                $('#shade3').css('display','none')
+                $('div.lectureRefundPopup.popups input[type="number"]').val('')
+                console.log('success');
 
-                    }
-                },
+            }
+        },
 
-                //통신 실패시 처리
-                error:function(){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text('통신 에러: 관리자 문의')
-                },
-            })
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
 }
 
 //회원의 등록 이력을 서버로부터 받아온다.
@@ -3048,12 +3048,12 @@ function get_member_lecture_list(dbID, use, callback){
                     if($('body').width() < 600){
                         draw_member_lecture_list_table(jsondata, dbID, 'mobile')
                     }else{
-                        draw_member_lecture_list_table(jsondata, dbID, 'pc') 
+                        draw_member_lecture_list_table(jsondata, dbID, 'pc')
                     }
                 }
-                
+
             }
-            
+
         },
 
         //통신 실패시 처리
@@ -3090,11 +3090,11 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
             var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
             if($('body').width()>600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
-                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>'
+                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>'
             }else if($('body').width()<=600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
-                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>'
+                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>'
             }
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
@@ -3103,9 +3103,9 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.endArray[i],'.')+'" disabled readonly></div>'
             var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
-            
 
-            
+
+
             if(jsondata.groupNameArray[i] != '1:1'){
                 var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
                 if(jsondata.lectureStateArray[i] == "IP"){
@@ -3114,7 +3114,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                     availCount_group_personal.push('G'+jsondata.availCountArray[i])
                     finishCount_group_personal.push('G'+jsondata.finishCountArray[i])
                 }
-                
+
             }else if(jsondata.groupNameArray[i] == '1:1'){
                 var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
                 if(jsondata.lectureStateArray[i] == "IP"){
@@ -3125,7 +3125,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                 }
             }
             var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
-            
+
 
 
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
@@ -3177,11 +3177,11 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
             var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
             if($('body').width()>600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
-                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>'
+                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>'
             }else if($('body').width()<=600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>' 
-                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>' 
+                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>'
+                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>'
             }
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
@@ -3190,7 +3190,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.endArray[i],'.')+'" disabled readonly></div>'
             var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
-            
+
             if(jsondata.groupNameArray[i] != '1:1'){
                 var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
                 if(jsondata.lectureStateArray[i] == "IP"){
@@ -3199,7 +3199,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                     availCount_group_personal.push('G'+jsondata.availCountArray[i])
                     finishCount_group_personal.push('G'+jsondata.finishCountArray[i])
                 }
-                
+
             }else if(jsondata.groupNameArray[i] == '1:1'){
                 var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
                 if(jsondata.lectureStateArray[i] == "IP"){
@@ -3230,11 +3230,11 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var note = '<div class="mobile_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
 
             result_history_html.push('<div class="wraps"><div data-leid='+jsondata.lectureIdArray[i]+' style="text-align:right;">'+howManyReg+whatGroupType+'수정: '+modifyActiveBtn+'</div>'+
-                                    table_title1+
-                                    '<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+'</div>'+
-                                    table_title2+
-                                    '<div data-leid='+jsondata.lectureIdArray[i]+'>'+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+'</div>'+
-                                    note+'</div>')
+                table_title1+
+                '<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+'</div>'+
+                table_title2+
+                '<div data-leid='+jsondata.lectureIdArray[i]+'>'+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+'</div>'+
+                note+'</div>')
         }
         $('#memberRegCount_info').val(sumCount(jsondata.regCountArray)+' ('+regCount_group_personal.join(',')+')')  //전체 등록횟수
         $('#memberRemainCount_info').val(sumCount(jsondata.remCountArray)+' ('+remCount_group_personal.join(',')+')')  //전체 남은횟수
@@ -3280,13 +3280,13 @@ function get_member_history_list(dbID){
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
                 if($('body').width() < 600){
-                    draw_member_history_list_table(jsondata, 'mobile') 
+                    draw_member_history_list_table(jsondata, 'mobile')
                 }else{
-                    draw_member_history_list_table(jsondata, 'pc') 
+                    draw_member_history_list_table(jsondata, 'pc')
                 }
-                
+
             }
-            
+
         },
 
         //통신 실패시 처리
@@ -3343,7 +3343,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2])
         var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60
         var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60
-        
+
         if(endDate == startDate+1 && endTime==0){
             var duration = 24 - startTime
         }else if(endTime==0 && endDate == 1){
@@ -3378,7 +3378,7 @@ function fill_member_info_by_ID_search(){
     $('#memberLastName_add').val(id_search_memberLastName);
     $('#memberFirstName_add').val(id_search_memberFirstName);
     $('#form_name').val(id_search_memberLastName+id_search_memberFirstName);
-    $('#memberPhone_add').val(id_search_memberPhone); 
+    $('#memberPhone_add').val(id_search_memberPhone);
     $('#memberEmail_add').val(id_search_memberEmail);
     // $('#id_user_id').val(id_search_memberId);
     if(id_search_memberSex != ''){
@@ -3418,7 +3418,7 @@ function fill_member_info_by_ID_search(){
     $('#birth_year').addClass('dropdown_selected');
     $('#birth_month').addClass('dropdown_selected');
     $('#birth_date').addClass('dropdown_selected');
-} 
+}
 
 //새로운 회원 정보 서버로 보내 등록하기
 function add_member_form_func(){
@@ -3453,16 +3453,16 @@ function add_member_form_func(){
                     $('#page_managemember').show();
                 }
                 /*
-                if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
-                    get_member_lecture_list(dbID)
-                }
-                */
+                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
+                 get_member_lecture_list(dbID)
+                 }
+                 */
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                
+
                 $('#startR').attr('selected','selected')
                 get_member_list()
-                
+
                 closePopup('member_add')
                 console.log('success');
             }
@@ -3473,7 +3473,7 @@ function add_member_form_func(){
             $('#errorMessageBar').show()
             $('#errorMessageText').text('통신 에러: 관리자 문의')
         },
-     })
+    })
 }
 
 
@@ -3485,7 +3485,7 @@ function add_member_form_noemail_func(){
         dataType : 'html',
 
         beforeSend:function(){
-          beforeSend();
+            beforeSend();
         },
 
         //보내기후 팝업창 닫기
@@ -3512,8 +3512,8 @@ function add_member_form_noemail_func(){
 
         //통신 실패시 처리
         error:function(){
-          $('#errorMessageBar').show();
-          $('#errorMessageText').text('통신 에러: 관리자 문의');
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
         },
     })
 }
@@ -3524,11 +3524,11 @@ function add_group_form_func(){
         url:'/trainer/add_group_info/',
         type:'POST',
         data: {
-                "name" : $('#groupname').val(),
-                "group_type_cd" : $('#form_grouptype').val(),
-                "member_num" : $('#form_groupcapacity').val(),
-                "note" : $('#comment').val()
-              },
+            "name" : $('#groupname').val(),
+            "group_type_cd" : $('#form_grouptype').val(),
+            "member_num" : $('#form_groupcapacity').val(),
+            "note" : $('#comment').val()
+        },
         dataType : 'html',
 
         beforeSend:function(){
@@ -3556,10 +3556,10 @@ function add_group_form_func(){
                     $('#page_managemember').show();
                 }
                 /*
-                if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
-                    get_member_lecture_list(dbID)
-                }
-                */
+                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
+                 get_member_lecture_list(dbID)
+                 }
+                 */
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
@@ -3569,7 +3569,7 @@ function add_group_form_func(){
                 }else if($('#finishedGroupList').css('display') == "block"){
                     groupListSet('finished',jsondata)
                 }
-                
+
                 closePopup('member_add')
                 console.log('success');
             }
@@ -3621,10 +3621,10 @@ function add_groupmember_form_func(){
                     $('#page_managemember').show();
                 }
                 /*
-                if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
-                    get_member_lecture_list(dbID)
-                }
-                */
+                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
+                 get_member_lecture_list(dbID)
+                 }
+                 */
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
@@ -3646,7 +3646,7 @@ function add_groupmember_form_func(){
             $('#errorMessageText').text('통신 에러: 관리자 문의')
         },
     })
-    
+
 }
 
 
@@ -3685,7 +3685,7 @@ function deleteMemberAjax(){
 
                 $('#startR').attr('selected','selected')
                 switch(alignType){
-                  case 'name':
+                    case 'name':
                         get_member_ing_list('callback',function(json){
                             memberListSet ('current','name','no',json)
                             $('#name').attr('selected','selected')
@@ -3694,9 +3694,9 @@ function deleteMemberAjax(){
                             memberListSet('finished','name','no',json)
                             $('#name').attr('selected','selected')
                         })
-                        
-                  break;
-                  case 'countH':
+
+                        break;
+                    case 'countH':
                         get_member_ing_list('callback',function(json){
                             memberListSet('current','count','yes',json);
                             $('#countH').attr('selected','selected')
@@ -3705,48 +3705,48 @@ function deleteMemberAjax(){
                             memberListSet('finished','count','yes',json);
                             $('#countH').attr('selected','selected')
                         })
-                        
-                  break;
-                  case 'countL':
+
+                        break;
+                    case 'countL':
                         get_member_ing_list('callback',function(json){
-                                memberListSet('current','count','no',json);
-                                $('#countL').attr('selected','selected')
+                            memberListSet('current','count','no',json);
+                            $('#countL').attr('selected','selected')
                         })
                         get_member_end_list('callback',function(json){
-                                memberListSet('finished','count','no',json);
-                                $('#countL').attr('selected','selected')
+                            memberListSet('finished','count','no',json);
+                            $('#countL').attr('selected','selected')
                         })
-                  break;
-                  case 'startP':
+                        break;
+                    case 'startP':
                         get_member_ing_list('callback',function(json){
-                                memberListSet('current','date','no',json);
-                                $('#startP').attr('selected','selected')
+                            memberListSet('current','date','no',json);
+                            $('#startP').attr('selected','selected')
                         })
                         get_member_end_list('callback',function(json){
-                                memberListSet('finished','date','no',json);
-                                $('#startP').attr('selected','selected')
+                            memberListSet('finished','date','no',json);
+                            $('#startP').attr('selected','selected')
                         })
-                  break;
-                  case 'startR':
+                        break;
+                    case 'startR':
                         get_member_ing_list('callback',function(json){
-                                memberListSet('current','date','yes',json);
-                                $('#startR').attr('selected','selected')
+                            memberListSet('current','date','yes',json);
+                            $('#startR').attr('selected','selected')
                         })
                         get_member_end_list('callback',function(json){
-                                memberListSet('finished','date','yes',json);
-                                $('#startR').attr('selected','selected')
+                            memberListSet('finished','date','yes',json);
+                            $('#startR').attr('selected','selected')
                         })
-                  break;
-                  case 'recent':
+                        break;
+                    case 'recent':
                         get_member_ing_list('callback',function(json){
-                                memberListSet('current','date','yes',json);
-                                $('#recent').attr('selected','selected')
+                            memberListSet('current','date','yes',json);
+                            $('#recent').attr('selected','selected')
                         })
                         get_member_end_list('callback',function(json){
-                                memberListSet('finished','date','yes',json);
-                                $('#recent').attr('selected','selected')
+                            memberListSet('finished','date','yes',json);
+                            $('#recent').attr('selected','selected')
                         })
-                  break;
+                        break;
                 }
                 console.log('success');
             }
@@ -3817,7 +3817,7 @@ function closePopup(option){
     }else if(option == 'member_info_PC'){
         $('#memberInfoPopup_PC').fadeOut('fast')
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
-        
+
         }else{
             shade_index(-100)
         }
@@ -3828,7 +3828,7 @@ function closePopup(option){
             $('#float_btn').removeClass('rotate_btn');
         }
         $('#page_addmember').fadeOut('fast');
-        
+
         $('#float_btn').fadeIn('fast');
         $('#page-base').fadeIn();
         $('#page-base-addstyle').fadeOut();
@@ -3851,7 +3851,7 @@ function closePopup(option){
             $('#float_btn').removeClass('rotate_btn');
         }
         $('#page_addgroup').fadeOut('fast');
-        
+
         $('#float_btn').fadeIn('fast');
         $('#page-base').fadeIn();
         $('#page-base-addstyle').fadeOut();
@@ -3885,7 +3885,7 @@ function initialize_add_member_sheet(){
     }else if($('#page_addmember .btnCallManual').hasClass('selectbox_checked')){
         $('#fast_check').val('1')
     }
-    
+
     $('.ptaddbox input,#memberDue_add_2').val("");
     $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
     $('#birth_year, #birth_month, #birth_date').css('color','#cccccc')
@@ -3912,40 +3912,40 @@ function initialize_add_member_sheet(){
 //서버로부터 회원의 반복일정 정보를 받아온다.
 function get_indiv_repeat_info(dbID){
     $.ajax({
-              url: '/trainer/get_member_repeat_schedule/',
-              type:'POST',
-              data: {"member_id": dbID},
-              dataType : 'html',
+        url: '/trainer/get_member_repeat_schedule/',
+        type:'POST',
+        data: {"member_id": dbID},
+        dataType : 'html',
 
-              beforeSend:function(){
-                  //beforeSend(); //ajax 로딩이미지 출력
-              },
+        beforeSend:function(){
+            //beforeSend(); //ajax 로딩이미지 출력
+        },
 
-              success:function(data){
-                var jsondata = JSON.parse(data);
-                if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text(jsondata.messageArray)
-                }else{
-                    $('#errorMessageBar').hide()
-                    $('#errorMessageText').text('')
-                    if($('body').width() < 600){
-                        set_indiv_repeat_info(dbID, jsondata, 'mobile')
-                    }else{
-                        set_indiv_repeat_info(dbID, jsondata, 'pc')
-                    }
-                }
-              },
-
-              complete:function(){
-                //completeSend(); //ajax 로딩이미지 숨기기
-              },
-
-              error:function(){
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
-                $('#errorMessageText').text('통신 에러: 관리자 문의')
-              }
-        })
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if($('body').width() < 600){
+                    set_indiv_repeat_info(dbID, jsondata, 'mobile')
+                }else{
+                    set_indiv_repeat_info(dbID, jsondata, 'pc')
+                }
+            }
+        },
+
+        complete:function(){
+            //completeSend(); //ajax 로딩이미지 숨기기
+        },
+
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        }
+    })
 }
 
 //서버로부터 받아온 반복일정을 회원정보 팝업에 그린다.
@@ -3969,15 +3969,15 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
         var text3 = 'Repeat : '
     }
     var repeat_info_dict= { 'KOR':
-                              {'DD':'매일', 'WW':'매주', '2W':'격주',
-                               'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
-                              'JPN':
-                              {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
-                               'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
-                              'JAP':
-                              {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
-                               'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
-                             }
+        {'DD':'매일', 'WW':'매주', '2W':'격주',
+            'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+        'JPN':
+            {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+        'JAP':
+            {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+    }
     var len = jsondata.ptRepeatScheduleIdArray.length
     var dbId = dbID
     var repeat_id_array = jsondata.ptRepeatScheduleIdArray
@@ -4043,20 +4043,20 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
 
 
         var repeat_day =  function(){
-                            var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
-                            var repeat_day_info = ""
-                            if(repeat_day_info_raw.length>1){
-                                for(var j=0; j<repeat_day_info_raw.length; j++){
-                                    var repeat_day_info = repeat_day_info + '/' + repeat_info_dict[Options.language][repeat_day_info_raw[j]].substr(0,1)
-                                }
-                            }else if(repeat_day_info_raw.length == 1){
-                                var repeat_day_info = repeat_info_dict[Options.language][repeat_day_info_raw[0]]
-                            }
-                            if(repeat_day_info.substr(0,1) == '/'){
-                                var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
-                            }
-                              return repeat_day_info
-                          };
+            var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
+            var repeat_day_info = ""
+            if(repeat_day_info_raw.length>1){
+                for(var j=0; j<repeat_day_info_raw.length; j++){
+                    var repeat_day_info = repeat_day_info + '/' + repeat_info_dict[Options.language][repeat_day_info_raw[j]].substr(0,1)
+                }
+            }else if(repeat_day_info_raw.length == 1){
+                var repeat_day_info = repeat_info_dict[Options.language][repeat_day_info_raw[0]]
+            }
+            if(repeat_day_info.substr(0,1) == '/'){
+                var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+            }
+            return repeat_day_info
+        };
         var summaryInnerBoxText_title = '<p class="summaryInnerBoxText">'+repeat_title+'</p>'
         var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur+')'+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
@@ -4098,7 +4098,7 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
                     callback(jsondata)
                 }
             }
-          },
+        },
 
         //보내기후 팝업창 닫기
         complete:function(){
@@ -4116,71 +4116,71 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
 function send_push_func(lecture_id, title, message){
 
     $.ajax({
-      url: '/schedule/send_push_to_trainee/',
-      type : 'POST',
-      dataType: 'html',
+        url: '/schedule/send_push_to_trainee/',
+        type : 'POST',
+        dataType: 'html',
         data : {"lecture_id":lecture_id, "title":title, "message":message, "next_page":'/trainer/get_error_info/'},
 
-      beforeSend:function(){
-        beforeSend();
-      },
+        beforeSend:function(){
+            beforeSend();
+        },
 
-      success:function(response){
-          console.log(response);
-      },
+        success:function(response){
+            console.log(response);
+        },
 
-      complete:function(){
-        completeSend();
-      },
+        complete:function(){
+            completeSend();
+        },
 
-      error:function(){
-        console.log('server error')
-      }
+        error:function(){
+            console.log('server error')
+        }
     })
 }
 
 //그룹의 반복일정을 지운다
 function send_repeat_delete_group(repeat_schedule_id, use, callback){
     $.ajax({
-            url:'/schedule/delete_group_repeat_schedule/',
-            type:'POST',
-            data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_error_info/'},
-            dataType:'html',
+        url:'/schedule/delete_group_repeat_schedule/',
+        type:'POST',
+        data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_error_info/'},
+        dataType:'html',
 
-            beforeSend:function(){
-                beforeSend()
-            },
+        beforeSend:function(){
+            beforeSend()
+        },
 
-            //통신성공시 처리
-            success:function(data){
-                  var jsondata = JSON.parse(data);
-                  if(jsondata.messageArray.length>0){
-                        $('#errorMessageBar').show()
-                        $('#errorMessageText').text(jsondata.messageArray)
-                  }else{
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
 
-                        if(jsondata.push_lecture_id.length>0){
-                            for(var i=0; i<jsondata.push_lecture_id.length; i++) {
-                                send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
-                            }
-                        }
-                        ajaxClassTime()
-                        if(use == 'callback'){
-                            callback(jsondata)
-                        }
-                  }
-              },
+                if(jsondata.push_lecture_id.length>0){
+                    for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
+                    }
+                }
+                ajaxClassTime()
+                if(use == 'callback'){
+                    callback(jsondata)
+                }
+            }
+        },
 
-            //보내기후 팝업창 닫기
-            complete:function(){
-                completeSend()
-              },
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
 
-            //통신 실패시 처리
-            error:function(){
-              alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
-              completeSend()
-            },
+        //통신 실패시 처리
+        error:function(){
+            alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
+            completeSend()
+        },
     })
 }
 
