@@ -215,15 +215,15 @@ $(document).ready(function(){
 			
 			$('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
 
-			$('#canvas').hide().css({'border-color':'#282828'})
-			$('#canvasWrap').css({'height':'0px'})
+			$('#canvas').hide().css({'border-color':'#282828'});
+			$('#canvasWrap').css({'height':'0px'});
 			$('#canvasWrap span').hide();
 
 			$("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
 			$("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
 			$("#id_member_name").val(name); //회원 이름 저장
 			$("#id_member_name_delete").val(name); //회원 이름 저장
-			$('#id_member_dbid_delete').val(dbid)
+			$('#id_member_dbid_delete').val(dbid);
 			$("#id_member_name_finish").val(name); //회원 이름 저장
 			$('#id_member_dbid_finish').val(dbid)
 			$("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
@@ -240,7 +240,7 @@ $(document).ready(function(){
 				$("#popup_sign_img").css("display","block")
 				// $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
 				$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
-				myImage = document.getElementById("id_sign_img");
+				var myImage = document.getElementById("id_sign_img");
 				 myImage.onerror = function() {
 					  this.src="";
 					$("#popup_sign_img").css("display","none")
