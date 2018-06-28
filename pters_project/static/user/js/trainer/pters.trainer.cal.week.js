@@ -315,7 +315,8 @@ $(document).ready(function(){
             selector_popup_btn_complete.hide();
             $("#popup_text1").css("display","none");
             $("#popup_sign_img").css("display","block");
-            $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('class-schedule-id')+'.png');
+				// $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
+				$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
             myImage = document.getElementById("id_sign_img");
             myImage.onerror = function() {
                 this.src="";
@@ -517,7 +518,8 @@ $(document).ready(function(){
             selector_popup_btn_complete.hide();
             $("#popup_text1").css("display","none");
             $("#popup_sign_img").css("display","block");
-            $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('off-schedule-id')+'.png');
+            // $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
+            $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
             myImage = document.getElementById("id_sign_img");
             myImage.onerror = function() {
                 this.src="";
