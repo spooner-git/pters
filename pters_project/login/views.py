@@ -1,5 +1,3 @@
-import datetime
-
 import logging
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
@@ -33,19 +31,21 @@ from login.models import MemberTb, PushInfoTb, QATb
 logger = logging.getLogger(__name__)
 
 
-class IndexView(TemplateView):
+class IndexView(View):
     template_name = 'login.html'
 
-    def get_context_data(self, **kwargs):
-        logout(self.request)
-        context = super(IndexView, self).get_context_data(**kwargs)
+    # def get_context_data(self, **kwargs):
+    def get(self, request):
+        context = {}
+        logout(request)
+        # context = super(IndexView, self).get_context_data(**kwargs)
 
         # acceptLang = self.request.META['HTTP_ACCEPT_LANGUAGE']
         # firstLang = acceptLang.split(',')[0]
         # if 'ko' in firstLang:
         #    print('ko')
 
-        return context
+        return render(request, self.template_name, context)
 
 
 @csrf_exempt
@@ -95,6 +95,7 @@ def login_trainer(request):
 
             return redirect(next_page)
         elif user is not None and user.is_active == 0:
+            member = None
             try:
                 member = MemberTb.objects.get(member_id=user.id)
             except ObjectDoesNotExist:
@@ -251,7 +252,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
 class ResetPasswordView(View):
     template_name = 'ajax/registration_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         email = request.POST.get('email', '')
         error = None
         post_reset_redirect = None
@@ -314,8 +315,8 @@ class ResetPasswordView(View):
 
             return render(request, self.template_name, context)
         else:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name
-                         + '[' + str(self.request.user.id) + ']' + error)
+            logger.error(request.user.last_name + ' ' + request.user.first_name
+                         + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
             return render(request, self.template_name)
 
@@ -480,7 +481,7 @@ class AddMemberView(RegistrationView, View):
 class AddMemberNoEmailView(View):
     template_name = 'ajax/registration_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
 
         first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
@@ -504,11 +505,11 @@ class CheckMemberIdView(View):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
 
         return render(request, self.template_name)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         user_id = request.POST.get('id', '')
         form = RegistrationForm(request.POST, request.FILES)
         if user_id is None or user_id == '':
@@ -542,11 +543,11 @@ class CheckMemberEmailView(View):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
 
         return render(request, self.template_name)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         user_email = request.POST.get('email', '')
         form = RegistrationForm(request.POST, request.FILES)
         if user_email is None or user_email == '':
@@ -581,11 +582,11 @@ class CheckMemberValidationView(View):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
 
         return render(request, self.template_name)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = RegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             self.error = ''
@@ -622,12 +623,13 @@ class NewMemberSendEmailView(TemplateView):
         return context
 
 
-class NewMemberReSendEmailView(TemplateView):
+class NewMemberReSendEmailView(View):
     template_name = 'send_email_to_reconfirm_form.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(NewMemberReSendEmailView, self).get_context_data(**kwargs)
-        user_id = self.request.session.get('user_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(NewMemberReSendEmailView, self).get_context_data(**kwargs)
+        user_id = request.session.get('user_id', '')
         error = None
         user = None
         if user_id is None or user_id == '':
@@ -643,7 +645,7 @@ class NewMemberReSendEmailView(TemplateView):
 
         context['activation_days'] = getattr(settings, "ACCOUNT_ACTIVATION_DAYS", '')
 
-        return context
+        return render(request, self.template_name, context)
 
 
 # 회워탈퇴 api
@@ -708,7 +710,7 @@ class AddPushTokenView(View):
     template_name = 'ajax/token_check_ajax.html'
     error = ''
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         keyword = request.POST.get('keyword', '')
         user_agent = request.META['HTTP_USER_AGENT']
         try:
@@ -739,11 +741,11 @@ class DeletePushTokenView(View):
     template_name = 'ajax/token_check_ajax.html'
     error = ''
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
 
         return render(request, self.template_name)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         keyword = request.POST.get('keyword', '')
         try:
             token_data = PushInfoTb.objects.get(token=keyword, use=USE)

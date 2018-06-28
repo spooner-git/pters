@@ -17,7 +17,7 @@ class MemberForm(forms.ModelForm):
 
     class Meta:
         model = MemberTb
-        fields = ('name','phone','contents')
+        fields = ('name', 'phone', 'contents')
 
 
 class MyPasswordResetForm(PasswordResetForm):
