@@ -8,6 +8,11 @@
             background: #171717;
         }
 
+        #upbutton, #upbutton-alarm{
+            opacity: 0.3;
+        }
+
+
         #myClassCreate{
             display: block;
             background: #f4f4f4;
@@ -117,13 +122,13 @@
             text-align: center;
         }
         .buttonsWrap button:nth-child(1){
-            width: 50px;
+            width: 60px;
             background: #ffffff;
             color: #282828;
             border: 1px solid #282828;
         }
         .buttonsWrap button:nth-child(2){
-            width: 50px;
+            width: 60px;
             background: #fe4e65;
             color: #ffffff;
             border:1px solid #fe4e65;
@@ -414,6 +419,7 @@
 {% block local_js_footer %}
     <!-- for db by hk.kim 170805-->
     <script>
+        $('#uptext').text('클래스 추가')
         /*
          $('#popup_lecture_select').show().css('top','40%')
          ajax_read_lecture_info_from_db()
