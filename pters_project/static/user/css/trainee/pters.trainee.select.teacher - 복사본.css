@@ -308,9 +308,9 @@ th{
 	height: 40px;
 	padding: 11px;
 }
-	#infoMemberDelete img, #infoMemberModify img{
-		width: 100%;
-	}
+#infoMemberDelete img, #infoMemberModify img{
+	width: 100%;
+}
 
 .history_view{
 	width: 100%;
@@ -333,7 +333,7 @@ th{
 	.phonesms{
 		display:none;
 	}
-	
+
 	#shade3{
 		background-color: #282828;
 		opacity: 0.8;
@@ -359,7 +359,7 @@ th{
 		font-weight: 500;
 		line-height: 100px;
 	}
-	
+
 	.instructPopup{
 		position: absolute;
 		width: 200px;
@@ -389,10 +389,10 @@ th{
 		border:1px solid #cccccc;
 		cursor: pointer;
 	}
-		.ymdText-pc-add-member:hover{
-			background-color: #fe4e65;
-			color: #ffffff;
-		}
+	.ymdText-pc-add-member:hover{
+		background-color: #fe4e65;
+		color: #ffffff;
+	}
 
 	#float_btn{
 		display: none !important;
@@ -408,9 +408,9 @@ th{
 		height: 40px;
 		padding: 11px;
 	}
-		#infoMemberModify img{
-			width: 100%;
-		}
+	#infoMemberModify img{
+		width: 100%;
+	}
 
 }
 
@@ -418,7 +418,7 @@ th{
 
 	#tableThead{
 		width: 1080px;
-		
+
 	}
 
 	.centeralign{
@@ -430,12 +430,12 @@ th{
 		padding:0 !important;
 		background: #ffffff;
 	}
-	
+
 	#page_managemember{
 		background:#ffffff;
 	}
 
-	
+
 	#currentMemberList, #finishedMemberList{
 		width: 1080px;
 		height: 600px;
@@ -497,7 +497,7 @@ th{
 	tr{
 		border-bottom:0.5px solid #cccccc;
 	}
-	
+
 	td{
 		font-size : 13px;
 	}
@@ -513,7 +513,7 @@ th{
 	.nameimg{
 		display: none;
 	}
-	
+
 	.alignSelect{
 		position: absolute;
 		top: 0;
@@ -557,7 +557,7 @@ th{
 		width: 350px;
 		height: 45px;
 	}
-	
+
 	#upperImg{
 		margin-bottom: 20px;
 	}

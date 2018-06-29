@@ -7,30 +7,30 @@ body{
 	padding: 15px;
 	margin-top:10px;
 }
-	#help_setting>label>img{
-		width: 20px;
-		margin-bottom: 5px;
-		margin-right: 5px;
-	}
+#help_setting>label>img{
+	width: 20px;
+	margin-bottom: 5px;
+	margin-right: 5px;
+}
 
 
 .label_explain{
 	margin-bottom: 15px;
 }
-	.label_explain p{
-		padding-left: 0px;
-	}
+.label_explain p{
+	padding-left: 0px;
+}
 
 .inquire_type_wrap{
 	max-width: 600px;
 	margin-bottom: 10px;
 }
-	.inquire_type_wrap input{
-		width: 100%;
-		text-align: left;
-		font-weight: bold;
-		border:1px solid #cccccc;
-	}
+.inquire_type_wrap input{
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
+	border:1px solid #cccccc;
+}
 
 .textarea_wrap{
 	margin-top: 15px;
@@ -108,7 +108,7 @@ li a{
 	color: #3b3d3d;
 	margin-left: 14.5px;
 	margin-top: 10px;
-	height:35px; 
+	height:35px;
 }
 
 .iconText span{

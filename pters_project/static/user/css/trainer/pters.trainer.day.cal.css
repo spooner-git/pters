@@ -8,13 +8,13 @@ body{
 }
 
 img,a,div,span,p{
- 	-webkit-user-select: none;
-   	user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
 }
 
 table{
 	table-layout: fixed;
-	
+
 }
 
 
@@ -83,7 +83,7 @@ table{
 	left: 20%;
 	width: 200px;
 	height: 200px;
- }
+}
 
 
 #cal_popup{
@@ -203,7 +203,7 @@ table{
 #float_btn img{ /*2017.10.2*/
 	width: 100%;
 	height: 100%;
-	
+
 }
 
 .rotate_btn{
@@ -260,9 +260,9 @@ table{
 	background-color: grey;
 	opacity: 0;
 	border-radius: 50%;
-	z-index: 103;	
+	z-index: 103;
 	font-size: 13px;
-	text-align: center; 
+	text-align: center;
 }
 
 #monthText{
@@ -682,8 +682,8 @@ table{
 	}
 
 	.popup_inner:hover{
-	background: #a2a2a2;
-	-webkit-background:#a2a2a2;
+		background: #a2a2a2;
+		-webkit-background:#a2a2a2;
 	}
 }
 
@@ -716,7 +716,7 @@ table{
 	.slide-notice img{
 		margin-top: 200px;
 	}
-	
+
 	.hour{
 		font-size: 14px;
 		font-weight: 400;
@@ -763,13 +763,13 @@ table{
 	}
 
 	table{
-		
+
 	}
 
 	.timeindex{
 		width:15%;
 	}
-	
+
 	.daytd{
 		border:none;
 		width: 85%;
@@ -944,7 +944,7 @@ table{
 		right: 1.5%;
 		font-weight: bold;
 	}
-	
+
 
 	.arrowButton{
 		display:none;
@@ -988,7 +988,7 @@ table{
 	.arrowButton{
 		display: block;
 	}
-	
+
 	.arrowButton a{
 		width: auto;
 		top: 47%;

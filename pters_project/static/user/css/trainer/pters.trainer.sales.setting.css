@@ -166,22 +166,22 @@ td input{
 	color: #282828;
 	padding-top: 15px;
 }
-	.settingText{
-		margin: 0;
-		margin-left: 14.5px;
-	}
-	.settingText2{
-		margin: 0;
-		font-weight: 400;
-		font-size: 13px;
-		margin-left: 14.5px;
-		margin-top: 4px;
-	}
-	.settingText3{
-		margin-left: 14.5px;
-		line-height: 60.5px;
-		vertical-align: middle;
-	}
+.settingText{
+	margin: 0;
+	margin-left: 14.5px;
+}
+.settingText2{
+	margin: 0;
+	font-weight: 400;
+	font-size: 13px;
+	margin-left: 14.5px;
+	margin-top: 4px;
+}
+.settingText3{
+	margin-left: 14.5px;
+	line-height: 60.5px;
+	vertical-align: middle;
+}
 
 
 .iconText{
@@ -190,7 +190,7 @@ td input{
 	color: #3b3d3d;
 	margin-left: 14.5px;
 	margin-top: 10px;
-	height:35px; 
+	height:35px;
 }
 
 .iconText span{
@@ -220,7 +220,7 @@ td input{
 	position: absolute;
 	display: inline-block;
 	width: 53.5px;
-	height: 35px; 
+	height: 35px;
 	top: 13px;
 	right: 14.5px;
 }
@@ -230,7 +230,7 @@ td input{
 	width:53.5px;
 	height: 100%;
 	border-radius: 27px;
-	border:0.5px solid #a2a2a2; 
+	border:0.5px solid #a2a2a2;
 	background: #cbc9c4;
 }
 
@@ -238,7 +238,7 @@ td input{
 	position: absolute;
 	top: 3px;
 	width: 28px;
-	height: 28px; 
+	height: 28px;
 	border-radius: 14px;
 	border:2px solid #282828;
 }

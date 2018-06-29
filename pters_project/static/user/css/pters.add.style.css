@@ -9,7 +9,7 @@ ul a{
 }
 
 ._on{
-	
+
 }
 
 .disabled_button{
@@ -54,7 +54,7 @@ ul a{
 }
 
 #addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
-	display: none;	
+	display: none;
 }
 
 .mode_switch_button_wrap_cal{
@@ -80,10 +80,10 @@ ul a{
 	background:#cccccc;
 	color: 	#ffffff;
 }
-	.mode_active{
-		background:#fe4e65;
-		color: 	#ffffff;
-	}
+.mode_active{
+	background:#fe4e65;
+	color: 	#ffffff;
+}
 
 
 .pters_dropdown_custom{
@@ -216,10 +216,10 @@ ul a{
 }
 
 .dropdownlist_unselectable{
-   -moz-user-select: -moz-none;
-   -webkit-user-select: none;
-   -o-user-select: none;
-   user-select: none;
+	-moz-user-select: -moz-none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }
 
 .pters_dropdown_custom li{
@@ -274,14 +274,14 @@ ul a{
 	box-shadow: 0 1px 0 0 #a2a2a2;
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
 	border-radius: 0px;
-	-webkit-border-radius: 0px;	
+	-webkit-border-radius: 0px;
 }
 
 .pters_input_custom input{
 	margin-top: 0px;
 	border: 0px;
 	border-radius: 0px;
-	-webkit-border-radius: 0px;	
+	-webkit-border-radius: 0px;
 	height: 100%;
 	font-size: 13px;
 }
@@ -490,29 +490,29 @@ ul a{
 	animation-duration: 1s;
 	animation-iteration-count: infinite;
 }
-	.graphindicator_leftborder{
-		border-left-color:#fe4e65;
-		background: #fe4e65;
-		-webkit-animation-name:blink;
-		-webkit-animation-duration:1s;
-		animation-name: blink;
-		animation-duration: 1s;
-		animation-iteration-count: infinite;
-	}
+.graphindicator_leftborder{
+	border-left-color:#fe4e65;
+	background: #fe4e65;
+	-webkit-animation-name:blink;
+	-webkit-animation-duration:1s;
+	animation-name: blink;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+}
 
 
 @keyframes blink {
-    from {background-color: #fe4e65;
-    	  border-left-color:#fe4e65;}
-    to {background-color: #ffffff;
-    	border-left-color:#ffffff;}
+	from {background-color: #fe4e65;
+		border-left-color:#fe4e65;}
+	to {background-color: #ffffff;
+		border-left-color:#ffffff;}
 }
 
 @-webkit-keyframes blink {
-    from {background-color: #fe4e65;
-          border-left-color:#fe4e65;}
-    to {background-color: #ffffff;
-        border-left-color:#ffffff;}
+	from {background-color: #fe4e65;
+		border-left-color:#fe4e65;}
+	to {background-color: #ffffff;
+		border-left-color:#ffffff;}
 }
 
 .noktimegraph{
@@ -522,20 +522,20 @@ ul a{
 .pinktimegraph{
 	background: #ffc9d0;
 }
-	.pinktimegraph_pinkleft{
-		background: #ffc9d0;
-		border-left-color:#ffc9d0;
-	}
+.pinktimegraph_pinkleft{
+	background: #ffc9d0;
+	border-left-color:#ffc9d0;
+}
 
 .greytimegraph{
 	background: #616161;
 	/*background: #cccccc;
 	background: #e3e3e3;*/
 }
-	.greytimegraph_greyleft{
-		background: #616161;
-		border-left-color:#616161;
-	}
+.greytimegraph_greyleft{
+	background: #616161;
+	border-left-color:#616161;
+}
 
 .pointerList{
 	cursor: pointer;
@@ -585,9 +585,9 @@ ul a{
 	border:0 !important;
 	top: 0;
 }
-	.dropdown_trainee_popup button{
-		height: 100%;
-	}
+.dropdown_trainee_popup button{
+	height: 100%;
+}
 
 
 #submitBtn{
@@ -605,12 +605,12 @@ button._info_delete_img{
 	right: 0;
 	background: transparent;
 }
-	button._info_delete_img:focus, button._info_download_img:focus, button._info_baseedit_img:focus{
-		outline: 0;
-	}
-	button._info_delete_img:active, button._info_download_img:active, button._info_baseedit_img:active{
-		background: unset;
-	}
+button._info_delete_img:focus, button._info_download_img:focus, button._info_baseedit_img:focus{
+	outline: 0;
+}
+button._info_delete_img:active, button._info_download_img:active, button._info_baseedit_img:active{
+	background: unset;
+}
 button._info_download_img{
 	position: absolute;
 	display: inline-block;
@@ -714,7 +714,7 @@ button._info_baseedit_img{
 	float: right;
 	border-left:0.5px solid #cccccc;
 	border-right:0.5px solid #cccccc;
-	border-top:0.5px solid #cccccc;	
+	border-top:0.5px solid #cccccc;
 }
 
 .selectboxopt_left{
@@ -916,12 +916,12 @@ option{
 	border-radius: 10%;
 	cursor: pointer;
 }
-	@media(max-width: 350px){
-		.pricebuttonchild{
-			font-size: 11px;
-			width: 16%;
-		}
+@media(max-width: 350px){
+	.pricebuttonchild{
+		font-size: 11px;
+		width: 16%;
 	}
+}
 
 .pricebuttonchild:active{
 	background: #fe4e65;
@@ -1014,7 +1014,7 @@ option{
 	}
 
 	#durationsSelected{
-		
+
 	}
 
 	#classDuration_mini #durationsSelected{
@@ -1067,15 +1067,15 @@ option{
 		margin-top: 2%;
 		margin-bottom: 10px;
 	}
-	
+
 	#page-addplan{
 		position: absolute;
 		width: 400px;
 		margin-bottom: 50px;
 	}
-	
+
 	#page-addplan-pc{
-		position: absolute;	
+		position: absolute;
 		width: 300px;
 		z-index: 3;
 		background: #ffffff;
@@ -1095,7 +1095,7 @@ option{
 		right: 25px;
 		bottom: 12px;
 		width: 10px;
-		
+
 		right: 10px;
 		bottom: 10px;
 	}
@@ -1121,7 +1121,7 @@ option{
 	.popupBtn_mini{
 		display: block;
 	}
-	
+
 	.popupBtn_mini .submitBtn{
 		width: 100px;
 		height: 30px;
