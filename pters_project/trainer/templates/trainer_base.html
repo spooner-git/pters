@@ -720,7 +720,7 @@
             dataType : 'html',
 
             beforeSend:function(){
-                $('html').css("cursor","wait");
+                beforeSend()
             },
 
             success:function(data){
@@ -756,7 +756,7 @@
             },
 
             complete:function(){
-                $('html').css("cursor","auto");
+                completeSend()
             },
 
             error:function(){
@@ -772,7 +772,7 @@
             dataType : 'html',
 
             beforeSend:function(){
-
+                beforeSend()
             },
 
             success:function(data){
@@ -799,7 +799,7 @@
             },
 
             complete:function(){
-
+                completeSend()
             },
 
             error:function(){

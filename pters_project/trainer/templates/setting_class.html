@@ -113,7 +113,7 @@
                 dataType : 'html',
 
                 beforeSend:function(){
-                    $('html').css("cursor","wait");
+                    beforeSend()
                 },
 
                 success:function(data){
@@ -147,7 +147,7 @@
                 },
 
                 complete:function(){
-                    $('html').css("cursor","auto");
+                    completeSend()
                 },
 
                 error:function(){
@@ -166,7 +166,7 @@
                 type:'POST',
 
                 beforeSend:function(){
-
+                    beforeSend()
                 },
 
                 success:function(data){
@@ -180,7 +180,7 @@
                 },
 
                 complete:function(){
-
+                    completeSend()
                 },
 
                 error:function(){
@@ -355,7 +355,7 @@
                 type:'POST',
 
                 beforeSend:function(){
-
+                    beforeSend()
                 },
 
                 success:function(data){
@@ -371,7 +371,7 @@
                 },
 
                 complete:function(){
-
+                    completeSend()
                 },
 
                 error:function(){
