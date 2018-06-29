@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 # Create your views here.
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
@@ -18,13 +19,16 @@ from payment.function import func_set_billing_schedule, func_get_payment_token, 
 from payment.models import PaymentInfoTb, BillingInfoTb
 
 
-class PaymentView(LoginRequiredMixin, TemplateView):
+class PaymentView(LoginRequiredMixin, View):
     template_name = 'payment.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(PaymentView, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
+
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
-        return context
+
+        return render(request, self.template_name, context)
 
 
 @csrf_exempt

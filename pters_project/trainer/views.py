@@ -79,6 +79,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         class_name = CommonCdTb.objects.get(common_cd=class_info.class_tb.subject_cd)
                     except ObjectDoesNotExist:
                         error = '강좌 과목 정보를 불러오지 못했습니다.'
+
                     if error is None:
                         if class_info.class_tb.subject_detail_nm is None or class_info.class_tb.subject_detail_nm == '':
                             class_type_name = class_name.common_cd_nm
@@ -395,6 +396,7 @@ class AddClassView(LoginRequiredMixin, AccessTestMixin, View):
         # context = super(AddClassView, self).get_context_data(**kwargs)
 
         class_type_cd_data = CommonCdTb.objects.filter(common_cd='TR', use=USE).order_by('order')
+        class_type_cd_data |= CommonCdTb.objects.filter(common_cd='ETC', use=USE).order_by('order')
 
         for class_type_cd_info in class_type_cd_data:
             class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03',
@@ -3048,13 +3050,20 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
                     if len(class_lecture_list) > 0:
                         total_member_num += 1
-
-                subject_type_name_code = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
-                class_info.subject_type_name = subject_type_name_code.common_cd_nm
+                try:
+                    subject_type_name_code = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                except ObjectDoesNotExist:
+                    subject_type_name_code = None
+                if subject_type_name_code is not None:
+                    class_info.subject_type_name = subject_type_name_code.common_cd_nm
 
                 if class_info.subject_detail_nm is not None and class_info.subject_detail_nm != '':
                     class_info.subject_type_name = class_info.subject_detail_nm
-                class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
+
+                try:
+                    class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
+                except ObjectDoesNotExist:
+                    class_info.state_cd_name = ''
                 class_info.total_member_num = total_member_num
 
         context['class_data'] = member_class_data

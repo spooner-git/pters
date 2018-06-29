@@ -206,16 +206,21 @@
         </div>
 
         {% for class_type_cd_info in class_type_cd_data %}
-            <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
-                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-                <ul id="subject_type_{{ forloop.counter }}" class="dropdown-menu" display="none">
-                    {% for subject_type in class_type_cd_info.subject_type_cd %}
-                        <li><a data-time="{{ subject_type.common_cd }}">{{ subject_type.common_cd_nm }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
+            {% if class_type_cd_info.common_cd != 'ETC' %}
+                <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="subject_type_{{ forloop.counter }}" class="dropdown-menu" display="none">
+                        {% for subject_type in class_type_cd_info.subject_type_cd %}
+                            <li><a data-time="{{ subject_type.common_cd }}">{{ subject_type.common_cd_nm }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
+                    <input type="text" name="input_subject_detail_nm" id="id_input_subject_detail_nm" placeholder="상세 과목명">
+                </div>
+            {% endif %}
         {% endfor %}
-        <input type="text" name="subject_detail_nm" id="id_input_subject_detail_nm" placeholder="상세 과목명" style="display: none;">
         <div class="buttonsWrap">
             <button onclick="goNext('home')">취소</button>
             <button onclick="goNext('0')">다음</button>
@@ -414,6 +419,7 @@
          $('#popup_lecture_select').show().css('top','40%')
          ajax_read_lecture_info_from_db()
          */
+        var subject_selected = '';
         $('#pcver').css('background','#e2e2e2')
         $('.centermenu_text').css('color','#b1b1b1').attr('onclick','')
         $('#loginInfo').attr('onclick','')
@@ -443,24 +449,30 @@
 
         /*과목 선택*/
         $(document).on('click','a[data-time=TR]',function(){
-            $('#dropdown_subject_1').css('display','inline-block')
-            $('#dropdown_subject_2').css('display','none')
-        })
-
+            $('#dropdown_subject_1').css('display','inline-block');
+            $('#dropdown_subject_2').css('display','none');
+            $('#subject_cd').val(subject_selected);
+        });
         $(document).on('click','a[data-time=PL]',function(){
-            $('#dropdown_subject_1').css('display','none')
-            $('#dropdown_subject_2').css('display','inline-block')
-        })
+            $('#dropdown_subject_1').css('display','none');
+            $('#dropdown_subject_2').css('display','inline-block');
+        });
+        $(document).on('click','a[data-time=ETC]',function(){
+            $('#dropdown_subject_1').css('display','none');
+            $('#dropdown_subject_2').css('display','inline-block');
+            $('#subject_cd').val('ETC')
+        });
 
         $(document).on('click','#subject_type_1 li a, #subject_type_2 li a',function(){
-            var classcode = $(this).attr('data-time')
-            $('#subject_cd').val(classcode)
-        })
+            var classcode = $(this).attr('data-time');
+            $('#subject_cd').val(classcode);
+            subject_selected = classcode;
+        });
 
         $(document).on('click','#center_list li a',function(){
-            var centercode = $(this).attr('data-time')
-            $('#center_id').val(centercode)
-        })
+            var centercode = $(this).attr('data-time');
+            $('#center_id').val(centercode);
+        });
         /*과목 선택*/
 
 
@@ -697,6 +709,7 @@
         $('#id_input_subject_detail_nm').keyup(function(){
             var userinput = $(this).val();
             $('#id_subject_detail_nm').attr('value',userinput);
+            $('#subject_cd').val('ETC')
         });
     </script>
 
