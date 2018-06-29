@@ -185,6 +185,26 @@ button.classAdd{
 	margin-right: 8px;
 	cursor: pointer;
 }
+._icon_send{
+	display: none;
+	height: 13px;
+}
+._icon_cancel{
+	display: none;
+	height: 12px;
+}
+
+.table_lecture_name input{
+	display: none;
+	width: 100%;
+	height: 25px;
+	font-weight: 400;
+	color: #282828 !important;
+	border: 1px solid #cccccc;
+}
+.subjectnamespan:hover{
+	text-decoration: underline;
+}
 
 @media(min-width: 600px){
 	button.classAdd{

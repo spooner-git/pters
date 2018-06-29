@@ -195,7 +195,6 @@
             </div>
         {% endif %}
 
-
         <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
             <ul id="class_type" class="dropdown-menu">
@@ -217,7 +216,7 @@
                 </div>
             {% else %}
                 <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
-                    <input type="text" name="input_subject_detail_nm" id="id_input_subject_detail_nm" placeholder="상세 과목명">
+                    <input type="text" name="input_subject_detail_nm" id="id_input_subject_detail_nm" maxlength="12" placeholder="상세 과목명">
                 </div>
             {% endif %}
         {% endfor %}
