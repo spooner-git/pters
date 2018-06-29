@@ -68,8 +68,19 @@ body{
 		color: #282828;
 		border: 1px solid #cccccc;
 	}
+	@media(max-width: 390px){
+		.payment_monthly button, .payment_instant button{
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 100px;
+			font-size: 14px;
+			font-weight: 500;
+		}
+	}
 .function_label{
 	font-size: 20px;
+	margin-bottom: 0;
 }
 .inner_label{
 	font-size: 16px;
