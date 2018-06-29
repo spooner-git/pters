@@ -25,7 +25,7 @@ class PaymentView(LoginRequiredMixin, View):
     def get(self, request):
         context = {}
         payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
-
+        context['payment_count'] = payment_count
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
 
         return render(request, self.template_name, context)
