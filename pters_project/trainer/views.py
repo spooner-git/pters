@@ -589,6 +589,7 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
 
         return context
 
+
 class PaymentSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_payment.html'
 
