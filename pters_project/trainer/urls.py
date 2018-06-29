@@ -166,6 +166,8 @@ urlpatterns = [
     url(r'^delete_account/$', views.DeleteAccountView.as_view(), name='delete_account'),
     # Setting 페이지
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
+    # 이용권 구매 페이지
+    url(r'^payment_setting/$', views.PaymentSettingView.as_view(), name='payment_setting'),
     # 푸시 Setting 페이지
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     # 예약 관련 Setting 페이지

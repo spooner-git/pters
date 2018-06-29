@@ -587,6 +587,14 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
 
         return context
 
+class PaymentSettingView(AccessTestMixin, TemplateView):
+    template_name = 'setting_payment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentSettingView, self).get_context_data(**kwargs)
+
+        return context
+
 
 class PushSettingView(AccessTestMixin, View):
     template_name = 'setting_push.html'
