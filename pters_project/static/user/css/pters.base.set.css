@@ -607,6 +607,21 @@ a:focus, a:hover{
     background-size:cover;
     background-position-x:center;
 }
+.bg_ymdText_yoga{
+    background-image: url("/static/user/res/yoga.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_billiard{
+    background-image: url("/static/user/res/billiards.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_brick{
+    background-image: url("/static/user/res/brick.png");
+    background-size:cover;
+    background-position-x:center;
+}
 
 
 
