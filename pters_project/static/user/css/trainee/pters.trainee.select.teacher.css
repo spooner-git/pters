@@ -10,42 +10,42 @@
 	z-index: 110;
 	padding:0 5px 10px 5px;
 }
-	#popup_lecture_select label{
-		margin:10px 0 0 12px;
-		width: 100%;
-	}
-	#popup_lecture_select p{
-		margin-left: 15px;
-	}
-	#popup_lecture_select a{
-		cursor: pointer;
-	}
-	.pters_table{
-		display: table;
-		width: 100%;
-		margin-top: 10px;
-		text-align: center;
-	}	
-		.pters_table_cell_head{
-			display: table-cell;
-			background:#f4f4f4;
-			border-left: 1px solid #ffffff;
-			font-weight: bold;
-		}
-		.pters_table_cell{
-			display: table-cell;
-			background:#ffffff;
-			border-bottom: 1px solid #f4f4f4;
-		}
-		.table_lecture_name{
-			width: 30%;
-		}
-		.table_trainer_name{
-			width: 30%;
-		}
-		.table_selection{
-			width: 30%;
-		}
+#popup_lecture_select label{
+	margin:10px 0 0 12px;
+	width: 100%;
+}
+#popup_lecture_select p{
+	margin-left: 15px;
+}
+#popup_lecture_select a{
+	cursor: pointer;
+}
+.pters_table{
+	display: table;
+	width: 100%;
+	margin-top: 10px;
+	text-align: center;
+}
+.pters_table_cell_head{
+	display: table-cell;
+	background:#f4f4f4;
+	border-left: 1px solid #ffffff;
+	font-weight: bold;
+}
+.pters_table_cell{
+	display: table-cell;
+	background:#ffffff;
+	border-bottom: 1px solid #f4f4f4;
+}
+.table_lecture_name{
+	width: 30%;
+}
+.table_trainer_name{
+	width: 30%;
+}
+.table_selection{
+	width: 30%;
+}
 
 ._npOpen{
 	cursor: pointer;

@@ -2421,8 +2421,8 @@ function startTimeSet(option){   // offAddOkArray의 값을 가져와서 시작�
 
 
 function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래프 채우기
-                                                         //1. option인자 : "class", "off"
-                                                         //2. CSS테마인자 : "grey", "pink"
+    //1. option인자 : "class", "off"
+    //2. CSS테마인자 : "grey", "pink"
     var planStartDate = '';
     var planEndDate = '';
     var planMemberName = '';

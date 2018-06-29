@@ -7,9 +7,9 @@ body{
 	display: none;
 }
 
-	.bottomfooter2 a{
-		color: #7d7d7d;
-	}
+.bottomfooter2 a{
+	color: #7d7d7d;
+}
 
 .settingMenu{
 	width: 100%;
@@ -24,10 +24,10 @@ body{
 	margin:0 auto;
 	cursor: pointer;
 }
-	.settingMenu:hover,.settingMenu:focus,.settingMenu:active{
-		color: #fe4e65 !important;
-		background: #eaeaea !important;
-	}
+.settingMenu:hover,.settingMenu:focus,.settingMenu:active{
+	color: #fe4e65 !important;
+	background: #eaeaea !important;
+}
 
 .settingImg{
 	width: 20px;
@@ -54,7 +54,7 @@ body{
 	font-size: 15px;
 	font-weight: bold;
 	color: #282828;
-	text-align: center;	
+	text-align: center;
 }
 
 #logout span{
@@ -101,7 +101,7 @@ body{
 	}
 
 	.settingMenu:hover{
-		
+
 		color: #fe4e65;
 		font-weight: bold;
 		border-top:3px solid #fe4e65;
@@ -119,7 +119,7 @@ body{
 		height: 50px;
 		width: 37.5px;
 	}
-	
+
 	.settingText{
 		display: block;
 	}
@@ -129,7 +129,7 @@ body{
 		margin-top: -15px;
 		margin-right: 17.5px;
 	}
-	
+
 	#upperImg{
 		display: block;
 		/*

@@ -113,8 +113,8 @@ $(document).ready(function(){
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
 
-			var text1 = '회원/그룹 선택';
-			var text2 = '선택';
+            var text1 = '회원/그룹 선택';
+            var text2 = '선택';
             if(Options.language == "KOR"){
                 text1 = '회원/그룹 선택';
                 text2 = '선택';
@@ -315,8 +315,8 @@ $(document).ready(function(){
             selector_popup_btn_complete.hide();
             $("#popup_text1").css("display","none");
             $("#popup_sign_img").css("display","block");
-				// $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
-				$("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('class-schedule-id')+'.png');
+            // $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
+            $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('class-schedule-id')+'.png');
             var myImage = document.getElementById("id_sign_img");
             myImage.onerror = function() {
                 this.src="";
@@ -351,10 +351,10 @@ $(document).ready(function(){
         var dayarryJP = ['日','月','火','水','木','金','土'];
         var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat'];
 
-		var comment = "";
-		var yourplan = " OFF 일정";
-		var day = dayarryKR[dayraw];
-		var text = 'OFF 일정';
+        var comment = "";
+        var yourplan = " OFF 일정";
+        var day = dayarryKR[dayraw];
+        var text = 'OFF 일정';
         switch(Options.language){
             case "JPN" :
                 comment = "";
@@ -444,10 +444,10 @@ $(document).ready(function(){
         var dayarryKR = ['일','월','화','수','목','금','토'];
         var dayarryJP = ['日','月','火','水','木','金','土'];
         var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat'];
-		var member = " 회원님의 ";
-		var yourplan = " 일정";
-		var day = dayarryKR[dayraw];
-		var text = '그룹 레슨 일정';
+        var member = " 회원님의 ";
+        var yourplan = " 일정";
+        var day = dayarryKR[dayraw];
+        var text = '그룹 레슨 일정';
         switch(Options.language){
             case "KOR" :
                 member = " 회원님의 ";
@@ -1501,35 +1501,35 @@ $(document).ready(function(){
             }
         }
     }
-	/*
-	 function reserveAvailable(){
-	 var yy = currentYear;
-	 var mm = String(currentPageMonth);
-	 var dd = String(currentDate);
-	 if(mm.length<2){
-	 var mm = '0'+mm
-	 }
-	 if(dd.length<2){
-	 var dd = '0'+dd
-	 }
-	 var ymdArry = [yy,mm,dd]
-	 var yymmdd = ymdArry.join('')
-	 for(i=1;i<=7;i++){
-	 var scan = $('#weekNum_'+i).attr('data-date')
-	 if(yymmdd<=scan && scan<=Options.availDate+Number(yymmdd)){
-	 $('#weekNum_'+i).addClass('reserveavailable')
-	 }else if(scan.substr(0,4)==yy+1 && scan.substr(4,2) == '01' &&scan.substr(6,2)<=Number(dd)+Options.availDate-lastDay[currentMonth]){
-	 $('#weekNum_'+i).addClass('reserveavailable')
-	 }
-	 else if(scan.substr(4,2)== Number(mm)+1 && scan.substr(6,2)<=Number(dd)+Options.availDate-lastDay[currentMonth]){
-	 $('#weekNum_'+i).addClass('reserveavailable')
-	 }else{
-	 $('#weekNum_'+i).removeClass('reserveavailable')
+    /*
+     function reserveAvailable(){
+     var yy = currentYear;
+     var mm = String(currentPageMonth);
+     var dd = String(currentDate);
+     if(mm.length<2){
+     var mm = '0'+mm
+     }
+     if(dd.length<2){
+     var dd = '0'+dd
+     }
+     var ymdArry = [yy,mm,dd]
+     var yymmdd = ymdArry.join('')
+     for(i=1;i<=7;i++){
+     var scan = $('#weekNum_'+i).attr('data-date')
+     if(yymmdd<=scan && scan<=Options.availDate+Number(yymmdd)){
+     $('#weekNum_'+i).addClass('reserveavailable')
+     }else if(scan.substr(0,4)==yy+1 && scan.substr(4,2) == '01' &&scan.substr(6,2)<=Number(dd)+Options.availDate-lastDay[currentMonth]){
+     $('#weekNum_'+i).addClass('reserveavailable')
+     }
+     else if(scan.substr(4,2)== Number(mm)+1 && scan.substr(6,2)<=Number(dd)+Options.availDate-lastDay[currentMonth]){
+     $('#weekNum_'+i).addClass('reserveavailable')
+     }else{
+     $('#weekNum_'+i).removeClass('reserveavailable')
 
-	 }
-	 }
-	 }
-	 */
+     }
+     }
+     }
+     */
 
 
 
@@ -1757,8 +1757,8 @@ function fake_show(){
     if(selector_swiper_slide_active.find('.classTime').length == 0 && selector_swiper_slide_active.find('.offTime').length == 0 && selector_swiper_slide_active.find('.groupTime').length == 0){
         selector_swiper_slide_active.find('.fake_for_blankpage').css('display','block');
     }/*else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
-	 $('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
-	 }*/
+     $('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
+     }*/
 }
 
 

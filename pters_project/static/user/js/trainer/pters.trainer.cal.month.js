@@ -771,40 +771,40 @@ $(document).ready(function(){
         };
     };
 
-	/*
-	 function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
-	 for(var i=0; i<classDateArray.length; i++){
-	 var arr = classDateArray[i].split('_')
-	 var yy = arr[0]
-	 var mm = arr[1]
-	 var dd = arr[2]
-	 var omm = String(oriMonth)
-	 var odd = String(oriDate)
-	 if(mm.length==1){
-	 var mm = '0'+arr[1]
-	 }
-	 if(dd.length==1){
-	 var dd='0'+arr[2]
-	 }
-	 if(omm.length==1){
-	 var omm = '0'+oriMonth
-	 }
-	 if(odd.length==1){
-	 var odd='0'+oriDate
-	 }
+    /*
+     function classDates(){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
+     for(var i=0; i<classDateArray.length; i++){
+     var arr = classDateArray[i].split('_')
+     var yy = arr[0]
+     var mm = arr[1]
+     var dd = arr[2]
+     var omm = String(oriMonth)
+     var odd = String(oriDate)
+     if(mm.length==1){
+     var mm = '0'+arr[1]
+     }
+     if(dd.length==1){
+     var dd='0'+arr[2]
+     }
+     if(omm.length==1){
+     var omm = '0'+oriMonth
+     }
+     if(odd.length==1){
+     var odd='0'+oriDate
+     }
 
-	 if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
-	 $("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
-	 $("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
-	 $("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').text(classStartArray[i])
-	 }else{
-	 $("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
-	 $("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
-	 $("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').text(classStartArray[i])
-	 }
-	 };
-	 };
-	 */
+     if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
+     $("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
+     $("td[data-date="+classDateArray[i]+"] div._classDate").addClass('greydateMytime')
+     $("td[data-date="+classDateArray[i]+"] div._classTime").addClass('balloon').text(classStartArray[i])
+     }else{
+     $("td[data-date="+classDateArray[i]+"]").attr('schedule-id',scheduleIdArray[i])
+     $("td[data-date="+classDateArray[i]+"] div._classDate").addClass('dateMytime')
+     $("td[data-date="+classDateArray[i]+"] div._classTime").addClass('blackballoon').text(classStartArray[i])
+     }
+     };
+     };
+     */
 
 
 
@@ -923,55 +923,55 @@ $(document).ready(function(){
     }
 
 
-	/*
-	 function fill_repeat_info_off(){ //반복일정 요약 채우기
-	 var len = offRepeatScheduleTypeArray.length
-	 var repeat_info_dict= { 'KOR':
-	 {'DD':'매일', 'WW':'매주', '2W':'격주',
-	 'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
-	 'JAP':
-	 {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
-	 'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
-	 'JAP':
-	 {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
-	 'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
-	 }
-	 var schedulesHTML = []
-	 for(var i=0; i<len; i++){
-	 var repeat_id = offRepeatScheduleIdArray[i]
-	 var repeat_type = repeat_info_dict['KOR'][offRepeatScheduleTypeArray[i]]
-	 var repeat_start = offRepeatScheduleStartDateArray[i].replace(/-/gi,".");
-	 var repeat_end = '반복종료 : ' + offRepeatScheduleEndDateArray[i].replace(/-/gi,".");
-	 var repeat_time = Number(offRepeatScheduleStartTimeArray[i].split(':')[0])+0
-	 var repeat_dur = offRepeatScheduleTimeDurationArray[i]
-	 var repeat_sum = Number(repeat_time) + Number(repeat_dur)
-	 var repeat_day = function(){
-	 var repeat_day_info_raw = offRepeatScheduleWeekInfoArray[i].split('/')
-	 var repeat_day_info = ""
-	 if(repeat_day_info_raw.length>1){
-	 for(var j=0; j<repeat_day_info_raw.length; j++){
-	 var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
-	 }
-	 }else if(repeat_day_info_raw.length == 1){
-	 var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
-	 }
-	 if(repeat_day_info.substr(0,1) == '/'){
-	 var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
-	 }
+    /*
+     function fill_repeat_info_off(){ //반복일정 요약 채우기
+     var len = offRepeatScheduleTypeArray.length
+     var repeat_info_dict= { 'KOR':
+     {'DD':'매일', 'WW':'매주', '2W':'격주',
+     'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+     'JAP':
+     {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+     'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+     'JAP':
+     {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+     'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+     }
+     var schedulesHTML = []
+     for(var i=0; i<len; i++){
+     var repeat_id = offRepeatScheduleIdArray[i]
+     var repeat_type = repeat_info_dict['KOR'][offRepeatScheduleTypeArray[i]]
+     var repeat_start = offRepeatScheduleStartDateArray[i].replace(/-/gi,".");
+     var repeat_end = '반복종료 : ' + offRepeatScheduleEndDateArray[i].replace(/-/gi,".");
+     var repeat_time = Number(offRepeatScheduleStartTimeArray[i].split(':')[0])+0
+     var repeat_dur = offRepeatScheduleTimeDurationArray[i]
+     var repeat_sum = Number(repeat_time) + Number(repeat_dur)
+     var repeat_day = function(){
+     var repeat_day_info_raw = offRepeatScheduleWeekInfoArray[i].split('/')
+     var repeat_day_info = ""
+     if(repeat_day_info_raw.length>1){
+     for(var j=0; j<repeat_day_info_raw.length; j++){
+     var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+     }
+     }else if(repeat_day_info_raw.length == 1){
+     var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+     }
+     if(repeat_day_info.substr(0,1) == '/'){
+     var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+     }
 
-	 return repeat_day_info
-	 };
+     return repeat_day_info
+     };
 
-	 var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)</span>'
-	 var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end+'</span>'
-	 var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
-	 schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
-	 }
+     var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_time+' ~ '+repeat_sum+'시 ('+repeat_dur +'시간)</span>'
+     var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_end+'</span>'
+     var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
+     schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'
+     }
 
-	 var summaryText = '<span id="summaryText">일정요약</span>'
-	 $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
-	 }
-	 */
+     var summaryText = '<span id="summaryText">일정요약</span>'
+     $('#offRepeatSummary').html(summaryText + schedulesHTML.join(''))
+     }
+     */
 
 
 });//document(ready)

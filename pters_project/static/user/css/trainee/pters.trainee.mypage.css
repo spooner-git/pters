@@ -19,27 +19,27 @@ body{
 	transform: translate(-50%,-50%);
 	z-index: 100;
 }
-	#blank_member_popup label{
-		margin-top: 20px;
-		width: 100%;
-		font-size: 19px;
-		color: #fe4e65;
-	}
-	#blank_member_popup p{
-		margin-top: 30px;
-		width: 100%;
-		font-size: 15px;
-		color: #282828;
-	}
-	#blank_member_popup span{
-		position:absolute;
-		bottom: 0;
-		right: 0;
-		margin:10px;
-		font-size: 14px;
-		color: #282828;
-		cursor: pointer;
-	}
+#blank_member_popup label{
+	margin-top: 20px;
+	width: 100%;
+	font-size: 19px;
+	color: #fe4e65;
+}
+#blank_member_popup p{
+	margin-top: 30px;
+	width: 100%;
+	font-size: 15px;
+	color: #282828;
+}
+#blank_member_popup span{
+	position:absolute;
+	bottom: 0;
+	right: 0;
+	margin:10px;
+	font-size: 14px;
+	color: #282828;
+	cursor: pointer;
+}
 
 #ymdText{
 	position: fixed;
@@ -79,10 +79,10 @@ body{
 	background:#cccccc;
 	color: 	#ffffff;
 }
-	.mode_active{
-		background:#fe4e65;
-		color: 	#ffffff;
-	}
+.mode_active{
+	background:#fe4e65;
+	color: 	#ffffff;
+}
 
 
 
@@ -105,61 +105,61 @@ body{
 	margin:0 auto;
 	border: 1px solid #cccccc;
 
-	}
-	.label_explain{
-		padding-left: 5px;
-		color: #676767;
-	}
-	.lecture_history_table_header{
-		display: table;
-		width: 100%;
-		background: #ffffff;
-		padding-top: 5px;
-		padding-bottom: 5px;
-		font-weight: bold;
-		font-size: 12px;
-	}
-		.lecture_history_table_header div{
-			display: table-cell;
-			border: #f4f4f4;
-		}
-		.lecture_history_table_row{
-			display: table;
-			width: 100%;
-			margin-top: 10px;
-			margin-bottom: 10px;
-			font-size: 12.5px;
-		}
-			.lecture_history_table_row div{
-				display: table-cell;
-			}
-				.cell1{
-					width: 7%;
-				}
-				.cell2{
-					/*width: 40%;*/
-					width: 18%;
-				}
-				.cell3{
-					/*width: 20%;*/
-					width: 14%;
-				}
-				.cell4{
-					/*width: 15%;*/
-					width: 10%;
-				}
-				.cell5{
-					width: 30%;
-				}
-					.state_PE{
-						color: green;
-					}
-					.state_NP{
-						color: #fe4e65;
-					}
-					.state_IP{
-						color: #fe4e65;
-					}
+}
+.label_explain{
+	padding-left: 5px;
+	color: #676767;
+}
+.lecture_history_table_header{
+	display: table;
+	width: 100%;
+	background: #ffffff;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-weight: bold;
+	font-size: 12px;
+}
+.lecture_history_table_header div{
+	display: table-cell;
+	border: #f4f4f4;
+}
+.lecture_history_table_row{
+	display: table;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 12.5px;
+}
+.lecture_history_table_row div{
+	display: table-cell;
+}
+.cell1{
+	width: 7%;
+}
+.cell2{
+	/*width: 40%;*/
+	width: 18%;
+}
+.cell3{
+	/*width: 20%;*/
+	width: 14%;
+}
+.cell4{
+	/*width: 15%;*/
+	width: 10%;
+}
+.cell5{
+	width: 30%;
+}
+.state_PE{
+	color: green;
+}
+.state_NP{
+	color: #fe4e65;
+}
+.state_IP{
+	color: #fe4e65;
+}
 
 #yearText{
 	position: relative;
@@ -184,7 +184,7 @@ body{
 	height: 24px;
 	color: #ffffff;
 	font-size: 13.5px;
-	font-weight: 300; 
+	font-weight: 300;
 	margin-bottom: 3px;
 }
 
@@ -262,34 +262,34 @@ body{
 	border-right:5px solid #f4f4f4;
 	border-left:5px solid #f4f4f4;
 }
-	.trainerInfo img{
-		width: 15px;
-		margin-bottom: 4px;
-		margin-right: 10px;
-		margin-left: 10px;
-	}
-	.trainerInfo span{
-		line-height: 30px;
-		margin-right: 10px;
-		font-weight: 400;
-	}
+.trainerInfo img{
+	width: 15px;
+	margin-bottom: 4px;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+.trainerInfo span{
+	line-height: 30px;
+	margin-right: 10px;
+	font-weight: 400;
+}
 
-	.trainerInfo button{
-		background: #ffffff;
-		border:1px solid #282828;
-		color: #282828;
-		font-size: 10px;
-		line-height: 12px;
-		width: 25px;
-		padding-left: 0;
-		padding-right: 0;
-	}
-	.modifyInfoTool{
-		display: none;
-	}
-	.cancelMemberInfo{
-		display: none;
-	}
+.trainerInfo button{
+	background: #ffffff;
+	border:1px solid #282828;
+	color: #282828;
+	font-size: 10px;
+	line-height: 12px;
+	width: 25px;
+	padding-left: 0;
+	padding-right: 0;
+}
+.modifyInfoTool{
+	display: none;
+}
+.cancelMemberInfo{
+	display: none;
+}
 
 .trainerWorkTimeInfo{
 	width: 100%;
@@ -300,17 +300,17 @@ body{
 	border-right:5px solid #f4f4f4;
 	border-left:5px solid #f4f4f4;
 }
-	.trainerWorkTimeInfo span{
-		line-height: 40px;
-		margin-right: 10px;
-		font-weight: 500;
-	}
-	.trainerInfo img{
-		width: 15px;
-		margin-bottom: 4px;
-		margin-right: 10px;
-		margin-left: 10px;
-	}
+.trainerWorkTimeInfo span{
+	line-height: 40px;
+	margin-right: 10px;
+	font-weight: 500;
+}
+.trainerInfo img{
+	width: 15px;
+	margin-bottom: 4px;
+	margin-right: 10px;
+	margin-left: 10px;
+}
 
 
 /*그래프 ↓↓↓↓↓↓↓↓*/
@@ -514,9 +514,9 @@ body{
 	margin-bottom: 0px;
 }
 
- .dateBoard p:first-child,.planBoard p:first-child{
- 	margin-bottom: 5px;
- }
+.dateBoard p:first-child,.planBoard p:first-child{
+	margin-bottom: 5px;
+}
 
 .countBoard span{
 	font-size: 38px;
@@ -551,17 +551,17 @@ body{
 	padding-left: 16px;
 	margin-bottom: 7px;
 }
-	.mypage_label img{
-		width: 16px;
-		margin-bottom: 4px;
-		margin-right: 3px;
-		margin-left: 10px;
-	}
+.mypage_label img{
+	width: 16px;
+	margin-bottom: 4px;
+	margin-right: 3px;
+	margin-left: 10px;
+}
 
-	.mypage_label span{
-		font-size: 15px;
-		font-weight: 500;
-	}
+.mypage_label span{
+	font-size: 15px;
+	font-weight: 500;
+}
 
 .button_trainee_logout{
 	color: #fe4e65;
@@ -570,9 +570,9 @@ body{
 	padding-bottom: 50px;
 	text-align: center;
 }
-	.button_trainee_logout span{
-		cursor: pointer;
-	}
+.button_trainee_logout span{
+	cursor: pointer;
+}
 
 
 
@@ -623,14 +623,14 @@ body{
 		position: absolute;
 	}
 
-		#menuDescription{
-			display: block;
-			color : #ffffff;
-			font-size: 15px;
-			top: 70%;
-			width: 100%;
-			text-align: center;
-			position: absolute;
+	#menuDescription{
+		display: block;
+		color : #ffffff;
+		font-size: 15px;
+		top: 70%;
+		width: 100%;
+		text-align: center;
+		position: absolute;
 	}
 
 	.fixfooter{
