@@ -77,25 +77,28 @@
 
         $(document).on('click','._icon_del',function(e){
             e.stopPropagation()
-            var class_id = $(this).parent('div').attr('data-classid')
-            if(class_id != lec_select_currentClassId[0]){
-                $('#cal_popup_plandelete').fadeIn('fast')
-                $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
-                $('#shade').show()
-            }else{
-                alert('현재 활성화 되어있는 강의는 삭제 불가능합니다.\n 다른 강의로 이동후 현재 강의가 삭제 가능합니다.')
+            if(!$(this).hasClass('disabled_button')){
+                var class_id = $(this).parent('div').attr('data-classid')
+                if(class_id != lec_select_currentClassId[0]){
+                    $('#cal_popup_plandelete').fadeIn('fast')
+                    $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
+                    $('#shade').show()
+                }else{
+                    alert('현재 활성화 되어있는 강의는 삭제 불가능합니다.\n 다른 강의로 이동후 현재 강의가 삭제 가능합니다.')
+                }
+
+                $('#popup_delete_btn_yes').click(function(){
+                    ajax_del_lecture_info(class_id)
+                    $(this).parents('.popups').hide()
+                    $('#shade').hide()
+                })
+
+                $('#popup_delete_btn_no, .popup_close_x_button').click(function(){
+                    $(this).parents('.popups').hide()
+                    $('#shade').hide()
+                })
             }
-
-            $('#popup_delete_btn_yes').click(function(){
-                ajax_del_lecture_info(class_id)
-                $(this).parents('.popups').hide()
-                $('#shade').hide()
-            })
-
-            $('#popup_delete_btn_no, .popup_close_x_button').click(function(){
-                $(this).parents('.popups').hide()
-                $('#shade').hide()
-            })
+            
         })
 
 
@@ -189,12 +192,14 @@
 
 
         function fill_lecture_select_page(){
+
             var len = lec_select_subjectNameArray.length;
             var list_table_to_join = []
             var center_counter = 0;
             for(var i=0; i<len; i++){
                 //if(lec_select_npLectureCountsArray[i] == '0'){
                 if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
+                    $('.pcwhere').text(lec_select_subjectNameArray[i])
                     var table = '<div class="pters_table pters_table_at_setting_page" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                     var currentClass = 'currentClass'
                     var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'
@@ -207,7 +212,8 @@
                         var selected60 = ""
                     }
                     var goToLecture = ""
-                    var classUnitDropdown = '<select data-classid="'+lec_select_classIdArray[i]+'"><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
+                    var textdeco = ""
+                    var classUnitDropdown = '<select data-classid="'+lec_select_classIdArray[i]+'" data-subjectcd="'+lec_select_subjectCodeArray[i]+'" data-subjectname="'+lec_select_subjectNameArray[i]+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                 }else{
                     var table = '<div class="pters_table pters_table_at_setting_page _selection" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                     var currentClass = ""
@@ -220,22 +226,25 @@
                         var selected30 = "selected"
                         var selected60 = ""
                     }
-                    var goToLecture = '"onclick="lecture_check('+lec_select_classIdArray[i]+')"'
-                    var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+lec_select_classIdArray[i]+'"><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
+                    var goToLecture = '" onclick="lecture_check('+lec_select_classIdArray[i]+')"'
+                    var textdeco = ' class="subjectnamespan'
+                    var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+lec_select_classIdArray[i]+'" data-subjectcd="'+lec_select_subjectCodeArray[i]+'" data-subjectname="'+lec_select_subjectNameArray[i]+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                 }
                 var centerName__ = lec_select_centerNameArray[i]
                 if(lec_select_centerNameArray[i] == ""){
                     var centerName__ = '-'
                 }
                 var centerName = '<div class="pters_table_cell table_center_name '+currentClass+goToLecture+'">'+centerName__+'</div>'
-                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+goToLecture+'">'+lec_select_subjectNameArray[i]+'</div>'
+                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+'<span '+textdeco+goToLecture+'>'+lec_select_subjectNameArray[i]+'</span>'+'<input type="" name="subjectname" maxlength="12" placeholder="새로운 클래스명을 입력 해주세요.">'+'</div>'
                 var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+goToLecture+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>'
                 var startDate = '<div class="pters_table_cell table_start_date '+currentClass+goToLecture+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
                 var status = '<div class="pters_table_cell table_lecture_status '+currentClass+goToLecture+'">'+lec_select_stateNameArray[i]+'</div>'
                 var unitSelect = '<div class="pters_table_cell table_class_unit '+currentClass+'">'+classUnitDropdown+'</div>'
-                var manageIcon = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _icon_modify">'
+                var manageIcon = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _icon_modify" data-type="view">'
+                var manageIcon3 = '<img src="/static/user/res/btn-pt-complete-small.png" class="pcmanageicon _icon_send" data-classid="'+lec_select_classIdArray[i]+'">'
+                var manageIcon4 = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _icon_cancel" data-classid="'+lec_select_classIdArray[i]+'">'
 
-                var del = '<div class="pters_table_cell lecture_delete"  data-classid="'+lec_select_classIdArray[i]+'">'+manageIcon2+'</div>'
+                var del = '<div class="pters_table_cell lecture_delete"  data-classid="'+lec_select_classIdArray[i]+'">'+manageIcon+manageIcon2+manageIcon3+manageIcon4+'</div>'
                 var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
 
 
@@ -268,16 +277,80 @@
         $(document).on('change','.pters_table_row select, .table_class_unit select',function(){
             var selectedUnit = $(this).val()
             var selectedClassUnit = selectedUnit.replace(/시간|분|時間|分|h|m/gi,'')
+            var subject_cd = $(this).attr('data-subjectcd')
+            var subject_detail_nm = $(this).attr('data-subjectname')
             var class_id = $(this).attr('data-classid')
             if(selectedClassUnit == '1'){
                 var classUnit = "60"
             }else if(selectedClassUnit == '30'){
                 var classUnit = "30"
             }
-            console.log(class_id, classUnit)
+            var comment = '강의 시간 단위가 '+selectedUnit+'으로 변경 되었습니다.'
+            update_class_info(class_id, classUnit, subject_cd, subject_detail_nm, comment)
+        })
+
+        $(document).on('click','img._icon_modify',function(e){
+            e.stopPropagation();
+            if(!$(this).hasClass('disabled_button')){
+                var $this = $(this);
+                var $thiscancel = $this.siblings('._icon_cancel');
+                var $thisdel =  $this.siblings('._icon_del');
+                var $thissend = $this.siblings('._icon_send');
+                $('img._icon_modify, img._icon_del').addClass('disabled_button')
+                $this.css('display','none');
+                $thisdel.css('display','none');
+                $thissend.css('display','inline-block');
+                $thiscancel.css('display','inline-block');
+
+                $this.parent('div').siblings('.table_lecture_name').find('input').css('display','block')
+            }
+        })
+
+        $(document).on('click', '._icon_cancel', function(e){
+            e.stopPropagation()
+            var $this = $(this)
+            $this.off('click')
+            $('img._icon_modify, img._icon_del').removeClass('disabled_button');
+            $this.siblings('._icon_modify').css('display','inline-block');
+            $this.siblings('._icon_del').css('display','inline-block');
+            $this.css('display','none');
+            $this.siblings('._icon_send').css('display','none');
+            $this.parent('div').siblings('.table_lecture_name').find('input').css('display','none');
+            $this.parent('div').siblings('.table_lecture_name').attr('data-subjectname',"")
+        })
+
+        $(document).on('click', '._icon_send', function(e){
+            e.stopPropagation()
+            var class_id = $(this).attr('data-classid');
+            var classUnit = ""
+            var subject_cd;
+            var subject_detail_nm = $('#defaultFeeSetting div.pters_table_at_setting_page[data-classid='+class_id+'] .table_lecture_name').attr('data-subjectname')
+            if(subject_detail_nm == "요가"){var subject_cd = "YG"}
+                else if(subject_detail_nm == '발레'){var subject_cd = "BL"}
+                    else if(subject_detail_nm == '당구'){var subject_cd = "BILLIARD"}
+                        else if(subject_detail_nm == '골프'){var subject_cd = "GOLF"}
+                            else if(subject_detail_nm == '필라테스'){var subject_cd = "PI"}
+                                else if(subject_detail_nm == '웨이트 트레이닝'){var subject_cd = "WT"}
+                                    else{var subject_cd = "ETC"}
+            
+            var comment = "클래스명이 "+subject_detail_nm+"으로 변경 되었습니다."
+            if(subject_detail_nm.length>0){
+                update_class_info(class_id, classUnit, subject_cd, subject_detail_nm, comment)
+            }
+        })
+
+        $(document).on('keyup','.table_lecture_name input',function(){
+            $(this).parent('.table_lecture_name').attr('data-subjectname', $(this).val())
+        })
+        $(document).on('click','.table_lecture_name input',function(e){
+            e.stopPropagation();
+            e.preventDefault();
+        })
+
+        function update_class_info(class_id, classUnit, subject_cd, subject_detail_nm, comment){
             $.ajax({
                 url: '/trainer/update_class_info/',
-                data:{"class_id":class_id, "class_hour":classUnit},
+                data:{"class_id":class_id, "class_hour":classUnit, "subject_cd":subject_cd, "subject_detail_nm":subject_detail_nm},
                 dataType : 'html',
                 type:'POST',
 
@@ -287,12 +360,13 @@
 
                 success:function(data){
                     var jsondata = JSON.parse(data);
+                    console.log(jsondata)
                     if(jsondata.messageArray.length>0){
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)
                     }else{
-                        console.log(jsondata)
-                        alert('강의 시간 단위가 '+selectedUnit+'으로 변경 되었습니다.')
+                        alert(comment)
+                        ajax_read_lecture_info_from_db_PAGE()
                     }
                 },
 
@@ -305,7 +379,7 @@
                     $('#errorMessageText').text('통신 에러: 관리자 문의')
                 }
             })
-        })
+        }
 
 
         function lecture_check(class_id){
