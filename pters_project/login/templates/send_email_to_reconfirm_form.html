@@ -1,183 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
     <!-- End Google Tag Manager -->
 
-{% load static_url %}
-{% block local_css %}
+    {% load static_url %}
+    {% block local_css %}
 
-    <meta name="login" content="send_initial_mail_confirm_login">
-    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.register.css" %}>
-    <style type="text/css">
-    	#submit_input{
-    		overflow-y: hidden;
-    		margin: 0;
-    		transition: 0.3s;
-    		-webkit-transition: 0.3s;
-    	}
-    	#submit_complete{
-    		height: 0;
-    		transition: 0.5s;
-    		-webkit-transition: 0.5s;
-    		overflow-y: hidden;
-    		margin: 0;
-    		padding-left: 20px;
-    		font-size: 14px;
-    	}
-    	.submit_email_reconfirm,.submit_go_home{
-    		position: relative !important;
-    		margin: 0 auto !important;
-    		margin-top: 10px !important;
-    		left: unset !important;
-    		transform: unset !important;
-    	}
-    	.submit_go_home{
-    		color: #fe4e65 !important;
-    		position: relative !important;
-    		margin: 0 auto !important;
-    		margin-top: 15px !important;
-    		left: unset !important;
-    		transform: unset !important;
-    	}
-    	#ajaxloadingPC{
-			position: fixed;
-			display: none;
-			height: 60px;
-			left: 50%;
-			transform:translate(-50%,-50%);
-			z-index: 202;
-		  }
+        <meta name="login" content="send_initial_mail_confirm_login">
+        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.register.css" %}>
+        <style type="text/css">
+            #submit_input{
+                overflow-y: hidden;
+                margin: 0;
+                transition: 0.3s;
+                -webkit-transition: 0.3s;
+            }
+            #submit_complete{
+                height: 0;
+                transition: 0.5s;
+                -webkit-transition: 0.5s;
+                overflow-y: hidden;
+                margin: 0;
+                padding-left: 20px;
+                font-size: 14px;
+            }
+            .submit_email_reconfirm,.submit_go_home{
+                position: relative !important;
+                margin: 0 auto !important;
+                margin-top: 10px !important;
+                left: unset !important;
+                transform: unset !important;
+            }
+            .submit_go_home{
+                color: #fe4e65 !important;
+                position: relative !important;
+                margin: 0 auto !important;
+                margin-top: 15px !important;
+                left: unset !important;
+                transform: unset !important;
+            }
+            #ajaxloadingPC{
+                position: fixed;
+                display: none;
+                height: 60px;
+                left: 50%;
+                transform:translate(-50%,-50%);
+                z-index: 202;
+            }
 
-      #id_email{
-        width: 220px;
-        height: 25px;
-        font-size: 15px;
-      }
+            #id_email{
+                width: 220px;
+                height: 25px;
+                font-size: 15px;
+            }
 
-      .pw_confirm{
-        position: absolute;
-        margin: 0;
-        display: inline;
-        left: 0;
-        margin-left: 35px;
-      }
+            .pw_confirm{
+                position: absolute;
+                margin: 0;
+                display: inline;
+                left: 0;
+                margin-left: 35px;
+            }
 
 
-      #inputError_info{
-        display: none;
-      }
+            #inputError_info{
+                display: none;
+            }
 
-    </style>
+        </style>
 
-{% endblock %}
+    {% endblock %}
 
-    </head>
+</head>
 {% load i18n %}
 
-    <body>
+<body>
 
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 {% block content %}
-<div class="outerbox_horizontal" data-view="init" style="width:auto;">
-  <div id="inputError_info">
-        <div id="errorMsg_info" class="inputErrorInner">
-            <p style="line-height: 35px;vertical-align: middle;margin:0;"></p>
+    <div class="outerbox_horizontal" data-view="init" style="width:auto;">
+        <div id="inputError_info">
+            <div id="errorMsg_info" class="inputErrorInner">
+                <p style="line-height: 35px;vertical-align: middle;margin:0;"></p>
+            </div>
         </div>
-  </div>
-	<div class="explainbox _type_trainee" style="width: 315px;">
-		<img src="/static/user/res/login/icon-reg-user.png">
-		<p><span class="font-pink">이메일 인증</span></p>
-    <p>PTERS를 처음 이용하시는 분께서는<br>이메일 인증 후 서비스를 이용하실 수 있습니다.</p>
-		<div class="explaintype" id="submit_input">
-			<form method="post" action="../../templates/registration" style="text-align: center!important;padding-left: 20px;">
-			  	{% csrf_token %} 
-                <input type="hidden" name="member_id" value="{{ request.session.user_id }}">
-                <input type="hidden" name="username" value="{{ request.session.username }}">
-                <input type="hidden" name="member_type" value="re">
+        <div class="explainbox _type_trainee" style="width: 315px;">
+            <img src="/static/user/res/login/icon-reg-user.png">
+            <p><span class="font-pink">이메일 인증</span></p>
+            <p>PTERS를 처음 이용하시는 분께서는<br>이메일 인증 후 서비스를 이용하실 수 있습니다.</p>
+            <div class="explaintype" id="submit_input">
+                <form method="post" action="../../templates/registration" style="text-align: center!important;padding-left: 20px;">
+                    {% csrf_token %}
+                    <input type="hidden" name="member_id" value="{{ request.session.user_id }}">
+                    <input type="hidden" name="username" value="{{ request.session.username }}">
+                    <input type="hidden" name="member_type" value="re">
 
-			  	<!--<input type="submit" value="{% trans 'Submit' %}" />-->
-                <p>Email : {{ user_email }} </p>
-                <p>인증 메일은 {{ activation_days }}일간 유효합니다.</p>
-			</form>	
-			<button class="submit_email_reconfirm" >재인증 메일 보내기</button>
-			<button class="submit_go_home" onclick="goHome()">뒤로</button>
-			<img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC" id="ajaxloadingPC">
-		</div>
-		<div class="explaintype" id="submit_complete">
-			<p>입력하신 메일주소로</p>
-			<p>인증메일이 발송 되었습니다.</p>
-			<p>메일을 확인하여 계정을 활성화 해주세요.</p>
-			<button class="submit_go_home" onclick="goHome()">로그인 페이지</button>
-		</div>
-	</div>
-</div>
+                    <!--<input type="submit" value="{% trans 'Submit' %}" />-->
+                    <p>Email : {{ user_email }} </p>
+                    <p>인증 메일은 {{ activation_days }}일간 유효합니다.</p>
+                </form>
+                <button class="submit_email_reconfirm" >재인증 메일 보내기</button>
+                <button class="submit_go_home" onclick="goHome()">뒤로</button>
+                <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC" id="ajaxloadingPC">
+            </div>
+            <div class="explaintype" id="submit_complete">
+                <p>입력하신 메일주소로</p>
+                <p>인증메일이 발송 되었습니다.</p>
+                <p>메일을 확인하여 계정을 활성화 해주세요.</p>
+                <button class="submit_go_home" onclick="goHome()">로그인 페이지</button>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 
-	$('button.submit_email_reconfirm').click(function(){
-    //if($('.pw_confirm').attr('data-check') == 1){
-      $form = $('#submit_input form')
-      $.ajax({
-                url:'/login/resend_email_authentication/',
-                type:'POST',
-                data:$form.serialize(),
-                dataType : 'html',
+    $('button.submit_email_reconfirm').click(function(){
+        //if($('.pw_confirm').attr('data-check') == 1){
+        $form = $('#submit_input form')
+        $.ajax({
+            url:'/login/resend_email_authentication/',
+            type:'POST',
+            data:$form.serialize(),
+            dataType : 'html',
 
-                beforeSend:function(){
-                  beforeSend()
-                },
+            beforeSend:function(){
+                beforeSend()
+            },
 
-                //보내기후 팝업창 닫기
-                complete:function(){
-                  completeSend()
-                },
+            //보내기후 팝업창 닫기
+            complete:function(){
+                completeSend()
+            },
 
-                //통신성공시 처리
-                success:function(data){
-                    $('#submit_complete').css('height','200px')
-                    $('#submit_input').css('height','0px')
-                },
+            //통신성공시 처리
+            success:function(data){
+                $('#submit_complete').css('height','200px')
+                $('#submit_input').css('height','0px')
+            },
 
-                //통신 실패시 처리
-                error:function(){
-                  alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요")
-                },
-            })
-    //}else{
-    //  alert('비밀번호를 다시 확인해주세요')
-    //}
-		
-	})
+            //통신 실패시 처리
+            error:function(){
+                alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요")
+            },
+        })
+        //}else{
+        //  alert('비밀번호를 다시 확인해주세요')
+        //}
 
-	function beforeSend(){
+    })
+
+    function beforeSend(){
         $('html').css("cursor","wait");
         $('#ajaxloadingPC').css('display','block');
         $('#submit_input button').css('visibility','hidden')
-  }
+    }
 
-  function completeSend(){
-      $('html').css("cursor","auto");
-      $('#ajaxloadingPC').css('display','none');
-      $('#submit_input button').css('visibility','visible')
-  }
+    function completeSend(){
+        $('html').css("cursor","auto");
+        $('#ajaxloadingPC').css('display','none');
+        $('#submit_input button').css('visibility','visible')
+    }
 
-  function goHome(){
-      location.href="{% url 'login:logout' %}"
-  }
+    function goHome(){
+        location.href="{% url 'login:logout' %}"
+    }
 
 
 </script>
-    </body>
+</body>
 </html>

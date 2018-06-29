@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>피터스 - 레슨 일정 및 회원 관리 서비스</title>
-        <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+<head>
+    <title>피터스 - 레슨 일정 및 회원 관리 서비스</title>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
-        <!-- End Google Tag Manager -->
-        <!--Google Adsense-->
-{#        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>#}
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({
+    })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
+    <!-- End Google Tag Manager -->
+    <!--Google Adsense-->
+    {#        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>#}
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
             google_ad_client: "ca-pub-4554121851965192",
             enable_page_level_ads: true
-          });
-        </script>
-        <!--Google Adsense-->
+        });
+    </script>
+    <!--Google Adsense-->
     {% load static_url %}
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
-        <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
-        <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 피아노, 과외등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
-        <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 피아노, 과외등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
+    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 피아노, 과외등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 피아노, 과외등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
 
     {% block local_css %}
 
@@ -33,64 +33,64 @@
         <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
         <link rel="stylesheet" href={% static_url "common/css/bootstrap.min.css" %} >
         <link rel="icon" href="/static/common/favicon.ico">
-{#        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">#}
-{#        <link rel="shortcut icon" href="/static/common/favicon-152.png">#}
+        {#        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">#}
+        {#        <link rel="shortcut icon" href="/static/common/favicon-152.png">#}
 
-{#        <link rel="icon" href="/static/common/favicon.ico">#}
-{#        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">#}
-{#        <link rel="shortcut icon" href="/static/common/favicon-152.png">#}
+        {#        <link rel="icon" href="/static/common/favicon.ico">#}
+        {#        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">#}
+        {#        <link rel="shortcut icon" href="/static/common/favicon-152.png">#}
         <style type="text/css">
-          #errorMessageBar{
-              display: block;
-              width: 100%;
-              position: sticky;
-              top: 0;
-              left: 0;
-              height: 35px;
-              text-align: center;
-              background: red;
-              color: #ffffff;
-              font-size: 15px;
-              font-weight: bold;
-              z-index: 1500;
-          }
-              #errorMessageBar span{
-                  line-height: 35px;
-              }
-              #errorMessageBar span:nth-child(2){
-                  position: absolute;
-                  right: 0;
-                  margin-right: 10px;
-                  cursor: pointer;
-              }
+            #errorMessageBar{
+                display: block;
+                width: 100%;
+                position: sticky;
+                top: 0;
+                left: 0;
+                height: 35px;
+                text-align: center;
+                background: red;
+                color: #ffffff;
+                font-size: 15px;
+                font-weight: bold;
+                z-index: 1500;
+            }
+            #errorMessageBar span{
+                line-height: 35px;
+            }
+            #errorMessageBar span:nth-child(2){
+                position: absolute;
+                right: 0;
+                margin-right: 10px;
+                cursor: pointer;
+            }
 
-              @media(min-width: 600px){
-                    #errorMessageBar span:nth-child(2){
-                        margin-right: 85px;
-                    }
-              }
+            @media(min-width: 600px){
+                #errorMessageBar span:nth-child(2){
+                    margin-right: 85px;
+                }
+            }
 
         </style>
 
-{% endblock %}
-    </head>
+    {% endblock %}
+</head>
 {% block content %}
     <body>
 
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-        {% for message in messages %}
-            {% if message.tags == "error" %}
+    {% for message in messages %}
+        {% if message.tags == "error" %}
 
-        <div id="errorMessageBar">
-            <span id="errorMessageText">{{ message }}</span><span>닫기</span>
-        </div>
+            <div id="errorMessageBar">
+                <span id="errorMessageText">{{ message }}</span><span>닫기</span>
+            </div>
 
-            {% endif %}
-        {% endfor %}
-    
+        {% endif %}
+    {% endfor %}
+
     <div class="pters_login_promote_box">
         <!--
         <nav class="main_nav">   
@@ -129,7 +129,7 @@
                 <div><img src="/static/user/res/PTERS_logo_pure.png" id="pterstext" alt="피터스 로고"  onclick="location.href='{% url 'index' %}'"><span id="logintext">로그인</span></div>
             </div>
             <div id="loginboxbg">
-                
+
             </div>
             <div>
                 <form action="{% url 'login:login' %}" id="login-form" method="post">
@@ -259,11 +259,11 @@
 
     <footer class="fixfooter bottomzero">
         <div class="bottomfooter1">
-        <!--
-            <span>English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        -->
+            <!--
+                <span>English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+                <span>日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            -->
         </div>
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
@@ -298,83 +298,83 @@
 {% endblock %}
 
 {% block local_js_footer %}
-<script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
-<script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
-<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
-<script>
-    var varUA = navigator.userAgent.toLowerCase();
-    if(varUA.match('android') != null){
-        $('._company').css('display','none')
-    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        $('._company').css('display','none')
-    }else{
-                
-    }
+    <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
+    <script>
+        var varUA = navigator.userAgent.toLowerCase();
+        if(varUA.match('android') != null){
+            $('._company').css('display','none')
+        }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+            $('._company').css('display','none')
+        }else{
 
-
-    function goPage(option){
-        if(option == 0){
-            location.href="/accounts/register/";
-        }else if(option == 1){
-            location.href="/accounts/password/reset/";
         }
-    }
 
-    function goSlide(offset){
-        $('body, html').animate({scrollTop : offset},400)
-    }
 
-{#    Push.Permission.request(onGranted, onDenied);#}
-
-{#    function onDenied() {#}
-{#        console.log('알람 거절 상태')#}
-{#    }#}
-{#    function onGranted() {#}
-{#        console.log('알람 승인 상태')#}
-{#    }#}
-
-    $('#errorMessageBar span:nth-child(2)').click(function(){
-        $('#errorMessageBar').fadeOut('fast')
-    });
-
-{#    navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
-{#      registrations.forEach(function(v) {#}
-{#          if(v.active){#}
-{#              if(v.scope=="http://localhost:8000/static/user/js/push/" || v.scope=="https://pters.co.kr/static/user/js/push/"){#}
-{#                  v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')#}
-{#              }#}
-{#          }#}
-{#      });#}
-{#    });#}
-
-    function deleteToken(){
-     $.ajax({
-            url:'/login/delete_push_token/',
-            type:'POST',
-            data:{"keyword": document.getElementById('keyword').value},
-
-            beforeSend:function(){
-                //AjaxBeforeSend();
-            },
-
-            //통신성공시 처리
-            success:function(){
-                console.log('토큰 삭제 완료')
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function(){
-
-            },
-
-            //통신 실패시 처리
-            error:function(){
-
+        function goPage(option){
+            if(option == 0){
+                location.href="/accounts/register/";
+            }else if(option == 1){
+                location.href="/accounts/password/reset/";
             }
-        });
-    }
+        }
 
-</script>
+        function goSlide(offset){
+            $('body, html').animate({scrollTop : offset},400)
+        }
+
+        {#    Push.Permission.request(onGranted, onDenied);#}
+
+        {#    function onDenied() {#}
+        {#        console.log('알람 거절 상태')#}
+        {#    }#}
+        {#    function onGranted() {#}
+        {#        console.log('알람 승인 상태')#}
+        {#    }#}
+
+        $('#errorMessageBar span:nth-child(2)').click(function(){
+            $('#errorMessageBar').fadeOut('fast')
+        });
+
+        {#    navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
+        {#      registrations.forEach(function(v) {#}
+        {#          if(v.active){#}
+        {#              if(v.scope=="http://localhost:8000/static/user/js/push/" || v.scope=="https://pters.co.kr/static/user/js/push/"){#}
+        {#                  v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')#}
+        {#              }#}
+        {#          }#}
+        {#      });#}
+        {#    });#}
+
+        function deleteToken(){
+            $.ajax({
+                url:'/login/delete_push_token/',
+                type:'POST',
+                data:{"keyword": document.getElementById('keyword').value},
+
+                beforeSend:function(){
+                    //AjaxBeforeSend();
+                },
+
+                //통신성공시 처리
+                success:function(){
+                    console.log('토큰 삭제 완료')
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+
+                }
+            });
+        }
+
+    </script>
 {% endblock %}
 
 <!--
@@ -391,7 +391,7 @@
     skstyle.js ->> pters.base.set.js 상단바, 사이드바 js
 
 -->
-    </body>
+</body>
 
 
 
